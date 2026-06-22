@@ -57,11 +57,6 @@ Assets/Readme.asset.meta
 Thumbs.db
 desktop.ini
 
-# Standalone editor build output
-Tools/CardDatabaseEditor/bin/
-Tools/CardDatabaseEditor/obj/
-Tools/CardDatabaseEditor/publish/
-
 # SQLite transient files
 *.mtgbdb-journal
 *.mtgbdb-shm
