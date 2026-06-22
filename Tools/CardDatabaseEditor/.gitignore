@@ -1,8 +1,0 @@
-bin/
-obj/
-publish/
-*.user
-*.suo
-*.mtgbdb-journal
-*.mtgbdb-shm
-*.mtgbdb-wal
