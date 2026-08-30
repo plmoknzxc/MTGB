@@ -1310,7 +1310,6 @@ public class ArenaWhiteboxInteraction : MonoBehaviour
         if (stackBrowserZone == BrowserZone.LibrarySearch)
         {
             AddLibrarySearchCards(source, true);
-            AddLibrarySearchCards(source, false);
             return;
         }
 
@@ -1418,12 +1417,15 @@ public class ArenaWhiteboxInteraction : MonoBehaviour
     {
         return gameRules != null
             && gameRules.IsChoosingLibraryCard()
+            && gameRules.GetLibrarySearchPlayer() == OnlinePlayerContext.LocalPlayerId
             && stackBrowserZone == BrowserZone.LibrarySearch;
     }
 
     private void SyncLibrarySearchBrowserState()
     {
-        if (gameRules == null || !gameRules.IsChoosingLibraryCard())
+        if (gameRules == null
+            || !gameRules.IsChoosingLibraryCard()
+            || gameRules.GetLibrarySearchPlayer() != OnlinePlayerContext.LocalPlayerId)
         {
             if (stackBrowserZone == BrowserZone.LibrarySearch)
             {

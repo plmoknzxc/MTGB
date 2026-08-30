@@ -47,6 +47,7 @@ public static class OnlineProtocolValidationMenu
         ValidateOnlineCombatInteractionProjection();
         ValidateOnlineBlockInteractionProjection();
         ValidateOnlineChoiceConfirmationProjection();
+        ValidateOnlineLibrarySearchPresentation();
         ValidateContentManifest();
         ValidateMessageGuard();
         ValidateRoomIsolation();
@@ -1506,6 +1507,104 @@ public static class OnlineProtocolValidationMenu
         {
             UnityEngine.Object.DestroyImmediate(serverObject);
             UnityEngine.Object.DestroyImmediate(clientObject);
+        }
+    }
+
+    private static void ValidateOnlineLibrarySearchPresentation()
+    {
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        GameObject serverObject = new GameObject("Online Library Search Server");
+        GameObject playerOneObject = new GameObject("Online Library Search Player 1");
+        GameObject playerTwoObject = new GameObject("Online Library Search Player 2");
+        GameObject playerOneInteractionObject = new GameObject("Online Library Search Player 1 Interaction");
+        GameObject playerTwoInteractionObject = new GameObject("Online Library Search Player 2 Interaction");
+        try
+        {
+            GameRules server = serverObject.AddComponent<GameRules>();
+            typeof(GameRules).GetField("currentPlayer", flags)?.SetValue(server, 1);
+            typeof(GameRules).GetField("onlineAuthoritySession", flags)?.SetValue(server, true);
+
+            var source = new RuntimeCard(
+                new CardDefinition { cardName = "P1 Fetch Land", cardTypes = CardType.Land },
+                1,
+                false);
+            source.SetCurrentZone(GameZone.Battlefield);
+            var basicLand = new RuntimeCard(
+                new CardDefinition
+                {
+                    cardName = "P1 Searchable Basic",
+                    cardTypes = CardType.Land,
+                    supertypes = CardSupertype.Basic
+                },
+                1,
+                false);
+            basicLand.SetCurrentZone(GameZone.Library);
+            var nonbasicLand = new RuntimeCard(
+                new CardDefinition { cardName = "P1 Nonbasic Land", cardTypes = CardType.Land },
+                1,
+                false);
+            nonbasicLand.SetCurrentZone(GameZone.Library);
+            ((List<RuntimeCard>)typeof(GameRules).GetField("player1Battlefield", flags)?.GetValue(server))?.Add(source);
+            ((List<RuntimeCard>)typeof(GameRules).GetField("player1Library", flags)?.GetValue(server))?.Add(basicLand);
+            ((List<RuntimeCard>)typeof(GameRules).GetField("player1Library", flags)?.GetValue(server))?.Add(nonbasicLand);
+
+            MethodInfo activateFetch = typeof(GameRules).GetMethod("ActivateFetchBasicLandAbility", flags);
+            Require(activateFetch != null
+                    && (bool)activateFetch.Invoke(server, new object[] { source }),
+                "The online library-search presentation setup did not start a choice.");
+
+            GameRules playerOne = playerOneObject.AddComponent<GameRules>();
+            GameRules playerTwo = playerTwoObject.AddComponent<GameRules>();
+            Require(playerOne.ApplyOnlinePlayerView(server.CreateOnlinePlayerView(1), out string playerOneError),
+                playerOneError);
+            Require(playerTwo.ApplyOnlinePlayerView(server.CreateOnlinePlayerView(2), out string playerTwoError),
+                playerTwoError);
+
+            MethodInfo syncBrowser = typeof(ArenaWhiteboxInteraction).GetMethod(
+                "SyncLibrarySearchBrowserState", flags);
+            MethodInfo buildBrowserCards = typeof(ArenaWhiteboxInteraction).GetMethod(
+                "BuildBrowserSourceCards", flags);
+            FieldInfo gameRulesField = typeof(ArenaWhiteboxInteraction).GetField("gameRules", flags);
+            FieldInfo browserOpenField = typeof(ArenaWhiteboxInteraction).GetField("stackBrowserOpen", flags);
+            FieldInfo browserCardsField = typeof(ArenaWhiteboxInteraction).GetField("stackBrowserSourceCards", flags);
+            FieldInfo browserIndicesField = typeof(ArenaWhiteboxInteraction).GetField("stackBrowserDeckIndices", flags);
+            Require(syncBrowser != null && buildBrowserCards != null && gameRulesField != null
+                    && browserOpenField != null && browserCardsField != null && browserIndicesField != null,
+                "The library-search browser validation seam was unavailable.");
+
+            OnlinePlayerContext.SetLocalPlayer(2);
+            ArenaWhiteboxInteraction playerTwoInteraction =
+                playerTwoInteractionObject.AddComponent<ArenaWhiteboxInteraction>();
+            gameRulesField.SetValue(playerTwoInteraction, playerTwo);
+            syncBrowser.Invoke(playerTwoInteraction, null);
+            Require(!(bool)browserOpenField.GetValue(playerTwoInteraction),
+                "The non-choosing client opened the opponent's hidden library-search browser.");
+            Require(!playerTwo.CanConfirmLibrarySearch(1),
+                "The non-choosing client treated the opponent's redacted library search as confirmable.");
+
+            OnlinePlayerContext.SetLocalPlayer(1);
+            ArenaWhiteboxInteraction playerOneInteraction =
+                playerOneInteractionObject.AddComponent<ArenaWhiteboxInteraction>();
+            gameRulesField.SetValue(playerOneInteraction, playerOne);
+            syncBrowser.Invoke(playerOneInteraction, null);
+            Require((bool)browserOpenField.GetValue(playerOneInteraction),
+                "The choosing client did not open its library-search browser.");
+            buildBrowserCards.Invoke(playerOneInteraction, new object[] { null, 0, null });
+            var browserCards = browserCardsField.GetValue(playerOneInteraction) as List<RuntimeCard>;
+            var browserIndices = browserIndicesField.GetValue(playerOneInteraction) as List<int>;
+            Require(browserCards != null && browserCards.Count == 1
+                    && browserIndices != null && browserIndices.Count == 1
+                    && playerOne.CanSelectLibrarySearchCard(1, browserIndices[0]),
+                "The choosing client rendered illegal cards alongside the legal library-search choices.");
+        }
+        finally
+        {
+            OnlinePlayerContext.Reset();
+            UnityEngine.Object.DestroyImmediate(playerTwoInteractionObject);
+            UnityEngine.Object.DestroyImmediate(playerOneInteractionObject);
+            UnityEngine.Object.DestroyImmediate(playerTwoObject);
+            UnityEngine.Object.DestroyImmediate(playerOneObject);
+            UnityEngine.Object.DestroyImmediate(serverObject);
         }
     }
 

@@ -2016,7 +2016,8 @@ public partial class GameRules : MonoBehaviour
     {
         return IsChoosingLibraryCard()
             && activeChoice.choosingPlayerId == playerID
-            && activeChoice.CanConfirm;
+            && (!onlineViewOnly || playerID == OnlinePlayerContext.LocalPlayerId)
+            && CanConfirmActiveChoice();
     }
 
     public bool CanSelectLibrarySearchCard(int playerID, int deckIndex)
