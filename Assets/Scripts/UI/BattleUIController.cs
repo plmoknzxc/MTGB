@@ -39,22 +39,22 @@ public class BattleUIController : MonoBehaviour
 
         if (playerDeckCountText != null)
         {
-            playerDeckCountText.text = $"Deck: {gameRules.GetDeckCount(1)}";
+            playerDeckCountText.text = $"Deck: {gameRules.GetDeckCount(OnlinePlayerContext.LocalPlayerId)}";
         }
 
         if (opponentDeckCountText != null)
         {
-            opponentDeckCountText.text = $"Deck: {gameRules.GetDeckCount(2)}";
+            opponentDeckCountText.text = $"Deck: {gameRules.GetDeckCount(OnlinePlayerContext.OpponentPlayerId)}";
         }
 
         if (playerHandCountText != null)
         {
-            playerHandCountText.text = $"Hand: {gameRules.GetHandCount(1)}";
+            playerHandCountText.text = $"Hand: {gameRules.GetHandCount(OnlinePlayerContext.LocalPlayerId)}";
         }
 
         if (opponentHandCountText != null)
         {
-            opponentHandCountText.text = $"Hand: {gameRules.GetHandCount(2)}";
+            opponentHandCountText.text = $"Hand: {gameRules.GetHandCount(OnlinePlayerContext.OpponentPlayerId)}";
         }
 
         if (currentPlayerText != null)
@@ -64,15 +64,21 @@ public class BattleUIController : MonoBehaviour
 
         if (currentPhaseText != null)
         {
-            currentPhaseText.text = $"Phase: {gameRules.GetCurrentPhase()}";
+            currentPhaseText.text = $"Phase: {gameRules.GetCurrentPhaseLabel()}";
         }
     }
 
     private void OnEndTurn()
     {
-        if (gameRules != null)
+        if (gameRules != null && OnlineMatchService.Instance?.CanSubmitRuleAction != false)
         {
-            gameRules.EndTurn();
+            GameActionType actionType = gameRules.GetPrimaryAdvanceActionType(
+                OnlinePlayerContext.LocalPlayerId);
+            gameRules.ApplyAction(new GameAction
+            {
+                type = actionType,
+                playerId = OnlinePlayerContext.LocalPlayerId
+            });
         }
     }
 }

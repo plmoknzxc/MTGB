@@ -3,12 +3,14 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-internal sealed class NativeSqliteDatabase : IDisposable
+public sealed class NativeSqliteDatabase : IDisposable
 {
     private const int SqliteOk = 0;
     private const int SqliteRow = 100;
     private const int SqliteDone = 101;
     private const int OpenReadOnly = 0x00000001;
+    private const int OpenReadWrite = 0x00000002;
+    private const int OpenCreate = 0x00000004;
 
     private IntPtr handle;
 
@@ -23,6 +25,24 @@ internal sealed class NativeSqliteDatabase : IDisposable
         if (!File.Exists(path)) throw new FileNotFoundException("Card database was not found.", path);
 
         int result = Native.sqlite3_open_v2(ToUtf8(path), out IntPtr database, OpenReadOnly, IntPtr.Zero);
+        if (result != SqliteOk)
+        {
+            string message = database == IntPtr.Zero ? "Unknown SQLite open error." : GetError(database);
+            if (database != IntPtr.Zero) Native.sqlite3_close_v2(database);
+            throw new InvalidOperationException($"Could not open SQLite database '{path}': {message}");
+        }
+
+        return new NativeSqliteDatabase(database);
+    }
+
+    public static NativeSqliteDatabase OpenReadWriteDatabase(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Database path is required.", nameof(path));
+
+        string directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory);
+
+        int result = Native.sqlite3_open_v2(ToUtf8(path), out IntPtr database, OpenReadWrite | OpenCreate, IntPtr.Zero);
         if (result != SqliteOk)
         {
             string message = database == IntPtr.Zero ? "Unknown SQLite open error." : GetError(database);
@@ -64,6 +84,19 @@ internal sealed class NativeSqliteDatabase : IDisposable
         {
             Native.sqlite3_finalize(statement);
         }
+    }
+
+    public void ExecuteNonQuery(string sql)
+    {
+        if (handle == IntPtr.Zero) throw new ObjectDisposedException(nameof(NativeSqliteDatabase));
+        if (string.IsNullOrWhiteSpace(sql)) return;
+
+        int result = Native.sqlite3_exec(handle, ToUtf8(sql), IntPtr.Zero, IntPtr.Zero, out IntPtr errorMessage);
+        if (result == SqliteOk) return;
+
+        string message = errorMessage == IntPtr.Zero ? GetError(handle) : PtrToString(errorMessage);
+        if (errorMessage != IntPtr.Zero) Native.sqlite3_free(errorMessage);
+        throw new InvalidOperationException(message);
     }
 
     public void Dispose()
@@ -116,6 +149,17 @@ internal sealed class NativeSqliteDatabase : IDisposable
         return Encoding.UTF8.GetString(bytes);
     }
 
+    private static string PtrToString(IntPtr value)
+    {
+        if (value == IntPtr.Zero) return string.Empty;
+
+        int length = 0;
+        while (Marshal.ReadByte(value, length) != 0) length++;
+        byte[] bytes = new byte[length];
+        Marshal.Copy(value, bytes, 0, length);
+        return Encoding.UTF8.GetString(bytes);
+    }
+
     private static class Native
     {
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
@@ -138,6 +182,12 @@ internal sealed class NativeSqliteDatabase : IDisposable
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int sqlite3_finalize(IntPtr statement);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int sqlite3_exec(IntPtr database, byte[] sql, IntPtr callback, IntPtr callbackArg, out IntPtr errorMessage);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void sqlite3_free(IntPtr value);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int sqlite3_column_int(IntPtr statement, int column);

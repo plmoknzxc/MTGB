@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed19f815ce2aa9d46a1cf4b82968cbf8, type: 3}
+  m_Name: ArenaMatchLayoutProfile
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaMatchLayoutProfile
+  layout:
+    hand:
+      playerRootY: 0
+      playerRootHeight: 292
+      playerBaseY: 26
+      playerArcDepth: 38
+      playerMaxSpacing: 132
+      playerTotalWidth: 1540
+      playerRotationPerOffset: -3.65
+      playerCardWidth: 194
+      playerCardHeight: 274
+      playerMinScale: 0.6
+      opponentRootY: 0
+      opponentRootHeight: 121
+      opponentBaseY: 76
+      opponentArcDepth: 5
+      opponentMaxSpacing: 70
+      opponentTotalWidth: 780
+      opponentRotationPerOffset: 1.65
+      opponentCardWidth: 74
+      opponentCardHeight: 104
+      opponentMinScale: 0.62
+      fullScaleCardCount: 7
+    battlefield:
+      playerDropAreaPosition: {x: 0, y: 0.08, z: -1.62}
+      playerDropAreaScale: {x: 14, y: 0.08, z: 3.5}
+      opponentDropAreaPosition: {x: 0, y: 0.08, z: 1.62}
+      opponentDropAreaScale: {x: 14, y: 0.08, z: 3.5}
+      playerLandRowZ: -2.9
+      playerFrontRowZ: -1.18
+      opponentLandRowZ: 2.48
+      opponentFrontRowZ: 1.18
+      landRowY: 0.205
+      frontRowY: 0.255
+      rowYStep: 0.003
+      landSpacing: 0.78
+      frontSpacing: 0.92
+      rowWidth: 12.1
+      minimumScale: 0.42
+      creatureScale: {x: 0.58, y: 0.04, z: 0.8}
+      permanentScale: {x: 0.53, y: 0.036, z: 0.73}
+      attackOffsetZ: 0.46
+      idleYawPerCard: -0.85
+      idleYawLimit: 5.5
+      blockerPlayerZ: -0.18
+      blockerOpponentZ: 0.18
+      blockerBaseY: 0.285
+      blockerSpacingX: 0.48
+      blockerLayerY: 0.006
+    stack:
+      panelPosition: {x: -34, y: 74}
+      panelSize: {x: 430, y: 540}
+      cardSize: {x: 220, y: 310}
+      topCardPosition: {x: -106, y: 24}
+      depthOffset: {x: -46, y: 22}
+      firstBackRotation: -8
+      rotationStep: -6
+      maxVisibleCards: 4
+      inspectThreshold: 3
+      inspectButtonPosition: {x: -4, y: 74}
+      inspectButtonSize: {x: 72, y: 44}
+      targetPanelPosition: {x: 0, y: 318}
+      targetPanelSize: {x: 470, y: 86}
+      cancelButtonPosition: {x: -276, y: 18}
+      cancelButtonSize: {x: 106, y: 76}
+      previewPanelPosition: {x: 28, y: 0}
+      previewPanelSize: {x: 382, y: 546}
+      previewCardSize: {x: 334, y: 472}
+      browserViewportPosition: {x: 0, y: 8}
+      browserViewportSize: {x: 1320, y: 390}
+      browserCardSize: {x: 226, y: 320}
+      browserCardSpacing: 184
+      browserMargin: 54
+      browserContentHeight: 360
+      browserClosePosition: {x: 0, y: 52}
+      browserCloseSize: {x: 280, y: 70}
+      browserScrollbarPosition: {x: 0, y: 136}
+      browserScrollbarSize: {x: 980, y: 18}
+      targetArrowWidth: 5
+      targetArrowHeadSize: 30
+    hud:
+      playerPanelPosition: {x: 28, y: 24}
+      opponentPanelPosition: {x: -28, y: -24}
+      playerPanelSize: {x: 420, y: 116}
+      opponentPanelSize: {x: 420, y: 116}
+      zoneButtonSize: {x: 82, y: 112}
+      playerDeckPosition: {x: 116, y: 150}
+      playerGraveyardPosition: {x: 206, y: 150}
+      playerExilePosition: {x: 296, y: 150}
+      opponentDeckPosition: {x: -468, y: -84}
+      opponentGraveyardPosition: {x: -378, y: -84}
+      opponentExilePosition: {x: -288, y: -84}
+      phaseRingPosition: {x: -34, y: 216}
+      phaseRingSize: 174
+      phaseButtonSize: 150
+      actionPromptPosition: {x: -208, y: 310}
+      actionPromptSize: {x: 430, y: 44}
+      controlRingPosition: {x: -154, y: 24}
+      controlRingSize: 92
+      controlButtonSize: 78
+      endRingPosition: {x: -42, y: 18}
+      endRingSize: 106
+      endButtonSize: 90
+      skipOpponentPosition: {x: 26, y: -26}
+      skipOpponentSize: {x: 196, y: 58}
+      manaPanelPosition: {x: -34, y: 140}
+      manaPanelHeight: 58
+      manaEmptyWidth: 112
+      manaBaseWidth: 82
+      manaItemSpacing: 56
+      manaItemWidth: 52
+      manaTokenSize: 36

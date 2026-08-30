@@ -17,13 +17,13 @@ public static class ArenaPrototypeSceneFactory
         else if (GameObject.Find("ArenaWhitebox") != null) return;
 
         RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(0.46f, 0.50f, 0.64f);
+        RenderSettings.ambientLight = new Color(0.38f, 0.43f, 0.54f);
 
-        Material boardBase = Material("Arena Stone Blue", new Color(0.055f, 0.095f, 0.155f, 1f));
-        Material playerZone = Material("Arena Player Zone", new Color(0.075f, 0.145f, 0.210f, 0.72f), true);
-        Material opponentZone = Material("Arena Opponent Zone", new Color(0.070f, 0.120f, 0.190f, 0.64f), true);
-        Material rowBand = Material("Arena Row Band", new Color(0.105f, 0.190f, 0.270f, 0.42f), true);
-        Material boundary = Material("Arena Zone Boundary", new Color(0.18f, 0.40f, 0.54f, 0.55f), true);
+        Material boardBase = Material("Arena Obsidian", ObsidianArenaTheme.Void);
+        Material playerZone = Material("Arena Player Zone", new Color(0.10f, 0.25f, 0.52f, 0.72f), true);
+        Material opponentZone = Material("Arena Opponent Zone", new Color(0.34f, 0.07f, 0.12f, 0.64f), true);
+        Material rowBand = Material("Arena Row Band", new Color(0.10f, 0.13f, 0.19f, 0.48f), true);
+        Material boundary = Material("Arena Zone Boundary", new Color(0.26f, 0.36f, 0.53f, 0.60f), true);
         Material cardFace = Material("Card Face", new Color(0.74f, 0.78f, 0.72f, 1f));
         Material creatureFace = Material("Creature Face", new Color(0.08f, 0.43f, 0.62f, 1f));
         Material selectedGlow = HighlightMaterial("Selection Glow", new Color(0.12f, 0.94f, 1.00f, 0.82f));
@@ -40,9 +40,9 @@ public static class ArenaPrototypeSceneFactory
 
         CreateBattlefield(arena, cardFace, creatureFace, selectedGlow);
 
-        GameObject luaSystem = new GameObject("XLuaManager");
+        GameObject luaSystem = new GameObject("CardScriptRuntimeManager");
         luaSystem.SetActive(false);
-        luaSystem.AddComponent<XLuaManager>();
+        luaSystem.AddComponent<CardScriptRuntimeManager>();
 
         GameObject systems = new GameObject("Systems");
         systems.SetActive(false);
@@ -67,7 +67,7 @@ public static class ArenaPrototypeSceneFactory
         DestroyIfExists("Canvas");
         DestroyIfExists("EventSystem");
         DestroyIfExists("Systems");
-        DestroyIfExists("XLuaManager");
+        DestroyIfExists("CardScriptRuntimeManager");
         DestroyIfExists("Main Camera");
     }
 
@@ -94,7 +94,7 @@ public static class ArenaPrototypeSceneFactory
         camera.orthographic = false;
         camera.fieldOfView = 36f;
         camera.clearFlags = CameraClearFlags.SolidColor;
-        camera.backgroundColor = new Color(0.018f, 0.026f, 0.045f);
+        camera.backgroundColor = ObsidianArenaTheme.Void;
         camera.transform.SetPositionAndRotation(new Vector3(0f, 11.40f, -5.70f), Quaternion.Euler(68f, 0f, 0f));
     }
 
@@ -228,7 +228,7 @@ public static class ArenaPrototypeSceneFactory
 
     private static void BuildHud(Transform canvas, GameRules rules, ArenaWhiteboxInteraction interaction, Camera camera, Transform arena, Transform playerArea, Transform opponentArea)
     {
-        Font font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         Text(canvas, "PlayerName", "Sapphire Schnee", new Vector2(210, 64), new Vector2(360, 54), 28, font, TextAnchor.MiddleLeft);
         Text(canvas, "OpponentName", "jack//", new Vector2(116, 1000), new Vector2(260, 48), 28, font, TextAnchor.MiddleLeft);
         Text playerLife = Text(canvas, "ArenaPlayerLife", "19", new Vector2(960, 172), new Vector2(116, 92), 46, font, TextAnchor.MiddleCenter);
@@ -236,12 +236,12 @@ public static class ArenaPrototypeSceneFactory
         Text phase = Text(canvas, "ArenaPhaseStatusText", "P1 - Main1", new Vector2(960, 730), new Vector2(220, 34), 20, font, TextAnchor.MiddleCenter);
         Text stack = Text(canvas, "ArenaStackStatusText", "Stack: empty", new Vector2(960, 535), new Vector2(260, 34), 18, font, TextAnchor.MiddleCenter);
         Text hint = Text(canvas, "ArenaInteractionHintText", "\u62d6\u52a8\u624b\u724c\u5230\u5df1\u65b9\u6218\u573a\u6253\u51fa\u3002", new Vector2(960, 46), new Vector2(620, 36), 20, font, TextAnchor.MiddleCenter);
-        Image stackGlow = Panel(canvas, "ArenaStackGlow", new Vector2(960, 540), new Vector2(560, 48), new Color(0f, 0.75f, 1f, 0.08f));
+        Image stackGlow = Panel(canvas, "ArenaStackGlow", new Vector2(960, 540), new Vector2(560, 48), new Color(0.26f, 0.52f, 0.96f, 0.10f));
 
-        Button resolve = Button(canvas, "ArenaResolveButton", "\u4e0b\u4e00\u6b65", new Vector2(1755, 106), new Vector2(260, 74), font, new Color(1f, 0.34f, 0.08f, 0.98f));
-        Button endTurn = Button(canvas, "ArenaEndTurnButton", "\u7ed3\u675f\u56de\u5408", new Vector2(1765, 170), new Vector2(150, 46), font, new Color(0.10f, 0.32f, 0.70f, 0.95f));
-        Button(canvas, "AutoToggleButton", "Auto", new Vector2(1600, 126), new Vector2(70, 34), font, new Color(0.06f, 0.06f, 0.06f, 0.75f));
-        Button(canvas, "InfoButton", "i", new Vector2(1600, 82), new Vector2(42, 42), font, new Color(0.06f, 0.06f, 0.06f, 0.75f));
+        Button resolve = Button(canvas, "ArenaResolveButton", "\u4e0b\u4e00\u6b65", new Vector2(1755, 106), new Vector2(260, 74), font, ObsidianArenaTheme.BlueDeep);
+        Button endTurn = Button(canvas, "ArenaEndTurnButton", "\u7ed3\u675f\u56de\u5408", new Vector2(1765, 170), new Vector2(150, 46), font, ObsidianArenaTheme.RedDeep);
+        Button(canvas, "AutoToggleButton", "Auto", new Vector2(1600, 126), new Vector2(70, 34), font, ObsidianArenaTheme.Surface);
+        Button(canvas, "InfoButton", "i", new Vector2(1600, 82), new Vector2(42, 42), font, ObsidianArenaTheme.Surface);
 
         GameObject preview = LargePreview(canvas, font);
 
@@ -263,7 +263,7 @@ public static class ArenaPrototypeSceneFactory
 
     private static GameObject LargePreview(Transform parent, Font font)
     {
-        GameObject panel = Panel(parent, "ArenaLargeCardPreview", new Vector2(1695, 565), new Vector2(360, 520), new Color(0.04f, 0.07f, 0.10f, 0.96f)).gameObject;
+        GameObject panel = Panel(parent, "ArenaLargeCardPreview", new Vector2(1695, 565), new Vector2(360, 520), ObsidianArenaTheme.Surface).gameObject;
         Text(panel.transform, "TitleBand/Text", "\u5361\u724c\u9884\u89c8", new Vector2(0, 222), new Vector2(312, 38), 22, font, TextAnchor.MiddleLeft);
         Panel(panel.transform, "ArtBlock", new Vector2(0, 84), new Vector2(312, 244), new Color(0.08f, 0.26f, 0.42f, 1f));
         Text(panel.transform, "RulesBlock/Text", "Rules text", new Vector2(0, -132), new Vector2(300, 140), 18, font, TextAnchor.UpperLeft);

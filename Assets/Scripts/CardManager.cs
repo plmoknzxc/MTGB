@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
-    public List<CardData> allCards = new List<CardData>();
+    [System.NonSerialized] public List<CardDefinition> allCards = new List<CardDefinition>();
     [SerializeField] private bool loadExternalDatabases = true;
 
     void Start()
@@ -18,25 +18,18 @@ public class CardManager : MonoBehaviour
     {
         allCards.Clear();
         var knownIds = new HashSet<int>();
-        var cardAssets = Resources.LoadAll<CardData>(string.Empty);
-
-        foreach (var card in cardAssets)
-        {
-            if (card == null || !knownIds.Add(card.cardID)) continue;
-            allCards.Add(card);
-        }
 
         if (loadExternalDatabases)
         {
-            IReadOnlyList<CardData> databaseCards = CardDatabaseRepository.LoadAll();
+            IReadOnlyList<CardDefinition> databaseCards = CardDatabaseRepository.LoadAll();
             for (int i = 0; i < databaseCards.Count; i++)
             {
-                CardData card = databaseCards[i];
+                CardDefinition card = databaseCards[i];
                 if (card == null || !knownIds.Add(card.cardID)) continue;
                 allCards.Add(card);
             }
         }
 
-        Debug.Log($"CardManager loaded {allCards.Count} card definitions.");
+        Debug.Log($"CardManager loaded {allCards.Count} database card definitions.");
     }
 }

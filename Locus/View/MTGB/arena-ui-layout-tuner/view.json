@@ -1,0 +1,25 @@
+{
+  "schema": "locus.view.v1",
+  "apiVersion": "v0.5.6",
+  "id": "arena-ui-layout-tuner",
+  "name": "Arena 对局 UI 布局调节器",
+  "version": "0.3.8",
+  "template": "blank",
+  "displayPath": "MTGB/工具/Arena 对局 UI 布局",
+  "icon": "PanelsTopLeft",
+  "entry": "src/main.ts",
+  "style": "src/style.css",
+  "scripts": [
+    {
+      "name": "ArenaUiLayoutTunerApi",
+      "path": "unity/ViewApi.cs",
+      "entryType": "ArenaUiLayoutTunerApi"
+    }
+  ],
+  "capabilities": {
+    "unity": true
+  },
+  "requirements": {
+    "unityConnection": true
+  }
+}

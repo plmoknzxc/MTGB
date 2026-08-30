@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>MTGB · 曜石竞技场</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#080a0e;color:#edf1f5}
+body{font-family:Bahnschrift,"Microsoft YaHei UI",sans-serif}
+.stage{position:relative;width:100%;height:100%;isolation:isolate;background:#0b0e13}
+.stage:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(30,112,255,.12) 0 26%,transparent 43% 57%,rgba(230,55,72,.12) 74% 100%);z-index:-3}
+.grid{position:absolute;inset:0;z-index:-2;opacity:.32;background-image:linear-gradient(rgba(133,151,176,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(133,151,176,.11) 1px,transparent 1px);background-size:96px 96px;transform:perspective(900px) rotateX(62deg) scale(1.4);transform-origin:center 72%}
+.axis{position:absolute;left:50%;top:-120px;width:2px;height:1320px;background:#343b47;transform:rotate(14deg);box-shadow:-6px 0 0 rgba(47,126,255,.24),6px 0 0 rgba(236,64,79,.2);z-index:-1}
+.top{position:absolute;left:76px;right:76px;top:54px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2b313b}
+.brand-small{font-size:17px;letter-spacing:.28em;color:#aeb8c5}.status{display:flex;gap:34px;font-size:15px;letter-spacing:.12em;color:#748091}.status b{color:#dce3eb;font-weight:500}
+.hero{position:absolute;left:112px;top:238px;width:850px}
+.eyebrow{font-size:17px;letter-spacing:.42em;color:#4a8fff;margin-bottom:34px}.logo{margin:0;font-family:Impact,Bahnschrift,sans-serif;font-size:196px;line-height:.78;letter-spacing:-.025em;font-weight:900}.logo span{color:#3f83ff}.subtitle{margin-top:32px;font-size:29px;letter-spacing:.52em;color:#b9c2cf}.manifesto{margin-top:68px;width:650px;padding-top:24px;border-top:1px solid #323946;font-size:19px;line-height:1.8;color:#8d99a8;letter-spacing:.08em}.manifesto strong{color:#e8edf3;font-weight:500}
+.menu{position:absolute;right:118px;top:232px;width:590px}.menu-label{display:flex;justify-content:space-between;margin-bottom:24px;color:#697586;font-size:14px;letter-spacing:.22em}.action{position:relative;width:100%;height:112px;margin:0 0 18px;border:1px solid #343c48;background:rgba(18,22,29,.88);color:#dfe6ee;text-align:left;padding:0 42px;clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,24px 100%,0 calc(100% - 24px));font:600 29px Bahnschrift,"Microsoft YaHei UI",sans-serif;letter-spacing:.08em;cursor:pointer;transition:.2s transform,.2s border-color,.2s background}
+.action small{position:absolute;right:42px;top:43px;font-size:14px;letter-spacing:.18em;color:#657182}.action:hover{transform:translateX(-10px);border-color:#6f7d90;background:#171c24}.action.primary{height:132px;border-color:#3f83ff;background:#183a72;color:#fff}.action.primary:before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:#4b91ff}.action.primary small{color:#a8c8ff;top:52px}
+.duel{position:absolute;left:112px;bottom:70px;display:flex;gap:12px;align-items:center;font-size:13px;letter-spacing:.18em;color:#6f7a88}.duel .blue,.duel .red{width:38px;height:5px}.blue{background:#3f83ff}.red{background:#e34a58}.build{position:absolute;right:118px;bottom:70px;font-size:13px;letter-spacing:.16em;color:#626d7b}
+</style>
+</head>
+<body><main class="stage">
+<div class="grid"></div><div class="axis"></div>
+<header class="top"><div class="brand-small">MTGB // BATTLEGROUND</div><div class="status"><span>PROFILE <b>PLAYER</b></span><span>DECK <b>STARTER</b></span></div></header>
+<section class="hero"><div class="eyebrow">DEPLOY · COMMAND · RESOLVE</div><h1 class="logo">MTG<span>B</span></h1><div class="subtitle">BATTLEGROUND</div><p class="manifesto"><strong>牌组就是你的部署方案。</strong><br>进入战场，在每一次优先权交换中取得主动。</p></section>
+<nav class="menu"><div class="menu-label"><span>选择部署</span><span>01 / 03</span></div><button class="action primary">联机对战 <small>ENTER BATTLEGROUND</small></button><button class="action">卡组编辑 <small>CONFIGURE DECK</small></button><button class="action">游戏设置 <small>SYSTEM</small></button></nav>
+<div class="duel"><i class="blue"></i><span>PLAYER 1</span><span>VERSUS</span><span>PLAYER 2</span><i class="red"></i></div><div class="build">MTGB · DESIGN DIRECTION 01</div>
+</main></body></html>

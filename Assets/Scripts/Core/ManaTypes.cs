@@ -12,6 +12,17 @@ public enum ManaColor
     Colorless
 }
 
+[Flags]
+public enum ManaColorFlags
+{
+    None = 0,
+    White = 1 << 0,
+    Blue = 1 << 1,
+    Black = 1 << 2,
+    Red = 1 << 3,
+    Green = 1 << 4
+}
+
 [System.Serializable]
 public struct ManaPool
 {
@@ -116,6 +127,7 @@ public struct ManaCost
 
     public int ColoredPips => White + Blue + Black + Red + Green + Colorless;
     public int FlexiblePips => ManaSymbolUtility.CountSymbols(FlexibleSymbols);
+    public int XSymbols => ManaSymbolUtility.CountToken(Symbols, "X");
     public int Total => Generic + ColoredPips + FlexiblePips;
 
     public static ManaCost FromGeneric(int amount) => Parse(amount > 0 ? $"{{{amount}}}" : string.Empty);
@@ -178,6 +190,20 @@ public static class ManaSymbolUtility
         return string.IsNullOrEmpty(symbols) ? 0 : SymbolPattern.Matches(symbols).Count;
     }
 
+    public static int CountToken(string symbols, string expectedToken)
+    {
+        if (string.IsNullOrEmpty(symbols) || string.IsNullOrWhiteSpace(expectedToken)) return 0;
+
+        int count = 0;
+        MatchCollection matches = SymbolPattern.Matches(symbols.ToUpperInvariant());
+        string normalized = expectedToken.Trim().ToUpperInvariant();
+        for (int i = 0; i < matches.Count; i++)
+        {
+            if (matches[i].Groups[1].Value.Trim() == normalized) count++;
+        }
+        return count;
+    }
+
     public static string[] GetSymbolTokens(string symbols)
     {
         if (string.IsNullOrEmpty(symbols)) return Array.Empty<string>();
@@ -200,31 +226,92 @@ public static class ManaSymbolUtility
         return result.ToString();
     }
 
-    public static ManaColor FindFirstProducedColor(string rulesText)
-    {
-        if (string.IsNullOrWhiteSpace(rulesText)) return ManaColor.Colorless;
-        string upper = rulesText.ToUpperInvariant();
-        int addIndex = upper.IndexOf("ADD", StringComparison.Ordinal);
-        string search = addIndex >= 0 ? upper.Substring(addIndex) : upper;
-        MatchCollection matches = SymbolPattern.Matches(search);
-        foreach (Match match in matches)
-        {
-            switch (match.Groups[1].Value)
-            {
-                case "W": return ManaColor.White;
-                case "U": return ManaColor.Blue;
-                case "B": return ManaColor.Black;
-                case "R": return ManaColor.Red;
-                case "G": return ManaColor.Green;
-                case "C": return ManaColor.Colorless;
-            }
-        }
-        return ManaColor.Colorless;
-    }
-
     private static void Append(StringBuilder builder, string symbol, int count)
     {
         for (int i = 0; i < count; i++) builder.Append('{').Append(symbol).Append('}');
+    }
+}
+
+public static class ManaCostMath
+{
+    public static ManaCost ResolveX(ManaCost cost, int xValue)
+    {
+        int xSymbols = cost.XSymbols;
+        if (xSymbols <= 0) return cost;
+
+        ManaCost resolved = cost;
+        resolved.Generic += Math.Max(0, xValue) * xSymbols;
+        resolved.Symbols = BuildSymbols(resolved, true);
+        return resolved;
+    }
+
+    public static ManaCost Add(ManaCost left, ManaCost right)
+    {
+        int xSymbols = left.XSymbols + right.XSymbols;
+        var result = new ManaCost
+        {
+            Generic = left.Generic + right.Generic,
+            White = left.White + right.White,
+            Blue = left.Blue + right.Blue,
+            Black = left.Black + right.Black,
+            Red = left.Red + right.Red,
+            Green = left.Green + right.Green,
+            Colorless = left.Colorless + right.Colorless,
+            FlexibleSymbols = string.Concat(left.FlexibleSymbols, right.FlexibleSymbols)
+        };
+        result.Symbols = BuildSymbols(result, true, xSymbols);
+        return result;
+    }
+
+    public static ManaCost AddGeneric(ManaCost cost, int amount)
+    {
+        if (amount <= 0) return cost;
+        cost.Generic += amount;
+        cost.Symbols = BuildSymbols(cost, true);
+        return cost;
+    }
+
+    public static ManaCost ReduceGeneric(ManaCost cost, int amount)
+    {
+        if (amount <= 0) return cost;
+        cost.Generic = Math.Max(0, cost.Generic - amount);
+        cost.Symbols = BuildSymbols(cost, true);
+        return cost;
+    }
+
+    public static ManaCost EnforceMinimumTotal(ManaCost cost, int minimumTotal)
+    {
+        int missing = Math.Max(0, minimumTotal - cost.Total);
+        return AddGeneric(cost, missing);
+    }
+
+    private static string BuildSymbols(
+        ManaCost cost,
+        bool includeFlexible,
+        int xSymbols = 0)
+    {
+        var builder = new StringBuilder();
+        if (cost.Generic > 0) builder.Append('{').Append(cost.Generic).Append('}');
+        AppendSymbols(builder, "W", cost.White);
+        AppendSymbols(builder, "U", cost.Blue);
+        AppendSymbols(builder, "B", cost.Black);
+        AppendSymbols(builder, "R", cost.Red);
+        AppendSymbols(builder, "G", cost.Green);
+        AppendSymbols(builder, "C", cost.Colorless);
+        AppendSymbols(builder, "X", xSymbols);
+        if (includeFlexible && !string.IsNullOrEmpty(cost.FlexibleSymbols))
+        {
+            builder.Append(cost.FlexibleSymbols);
+        }
+        return builder.ToString();
+    }
+
+    private static void AppendSymbols(StringBuilder builder, string symbol, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            builder.Append('{').Append(symbol).Append('}');
+        }
     }
 }
 

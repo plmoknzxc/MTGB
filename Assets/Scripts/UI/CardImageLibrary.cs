@@ -6,9 +6,11 @@ using UnityEngine;
 public static class CardImageLibrary
 {
     public const string FolderName = "CardImages";
+    public const string AlternateFolderName = "卡图";
     private static readonly string[] Extensions = { ".png", ".jpg", ".jpeg" };
     private static readonly Dictionary<string, CacheEntry> Cache = new Dictionary<string, CacheEntry>(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> FailedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    private static Sprite cardBackSprite;
 
     private sealed class CacheEntry
     {
@@ -17,7 +19,8 @@ public static class CardImageLibrary
         public long Length;
     }
 
-    public static string ExternalRoot => Path.Combine(GetApplicationRoot(), FolderName);
+    public static string ExternalRoot => Path.Combine(PrintingKeyUtility.ApplicationRoot, FolderName);
+    public static string AlternateExternalRoot => Path.Combine(PrintingKeyUtility.ApplicationRoot, AlternateFolderName);
     public static string PersistentRoot => Path.Combine(Application.persistentDataPath, FolderName);
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -27,31 +30,86 @@ public static class CardImageLibrary
         EnsureDirectory(ExternalRoot);
     }
 
-    public static bool TryLoadFullCard(CardData card, out Sprite sprite)
+    public static bool TryLoadFullCard(CardDefinition card, out Sprite sprite)
     {
-        sprite = null;
-        if (!TryGetPrinting(card, out string setCode, out string collectorNumber)) return false;
-
-        foreach (string root in EnumerateRoots())
-        {
-            string setFolder = Path.Combine(root, setCode);
-            for (int i = 0; i < Extensions.Length; i++)
-            {
-                string path = Path.Combine(setFolder, collectorNumber + Extensions[i]);
-                if (!File.Exists(path)) continue;
-                sprite = LoadSprite(path);
-                return sprite != null;
-            }
-        }
-
-        return false;
+        return TryLoadFullCard(card, 0, out sprite);
     }
 
-    public static string GetExpectedRelativePath(CardData card)
+    public static bool TryLoadFullCard(CardDefinition card, int faceIndex, out Sprite sprite)
     {
-        return TryGetPrinting(card, out string setCode, out string collectorNumber)
-            ? Path.Combine(FolderName, setCode, collectorNumber + ".png")
-            : string.Empty;
+        sprite = null;
+        if (!TryFindImagePath(card, faceIndex, out string path)) return false;
+        sprite = LoadSprite(path);
+        return sprite != null;
+    }
+
+    public static bool TryLoadFeature(
+        CardDefinition card,
+        CardFeatureDefinition feature,
+        out Sprite sprite)
+    {
+        sprite = null;
+        return feature != null && TryLoadFullCard(card, feature.faceIndex, out sprite);
+    }
+
+    public static bool TryLoadBackFace(CardDefinition card, out Sprite sprite)
+    {
+        return TryLoadFullCard(card, 1, out sprite);
+    }
+
+    public static bool HasBackFace(CardDefinition card)
+    {
+        return HasCardFace(card, 1);
+    }
+
+    public static bool HasCardFace(CardDefinition card, int faceIndex)
+    {
+        return TryFindImagePath(card, faceIndex, out _);
+    }
+
+    public static bool TryLoadCardBack(out Sprite sprite)
+    {
+        if (cardBackSprite != null)
+        {
+            sprite = cardBackSprite;
+            return true;
+        }
+
+        sprite = Resources.Load<Sprite>("UI/CardBack");
+        if (sprite != null)
+        {
+            cardBackSprite = sprite;
+            return true;
+        }
+
+        Texture2D texture = Resources.Load<Texture2D>("UI/CardBack");
+        if (texture == null) return false;
+
+        cardBackSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
+        cardBackSprite.name = "CardBack";
+        sprite = cardBackSprite;
+        return true;
+    }
+
+    public static string GetExpectedRelativePath(CardDefinition card)
+    {
+        return GetExpectedRelativePath(card, 0);
+    }
+
+    public static string GetExpectedRelativePath(CardDefinition card, int faceIndex)
+    {
+        if (faceIndex < 0
+            || !PrintingKeyUtility.TryGetPrinting(card, out string setCode, out string collectorNumber))
+        {
+            return string.Empty;
+        }
+
+        return PrintingKeyUtility.BuildImagePath(
+            FolderName,
+            setCode,
+            collectorNumber,
+            faceIndex,
+            ".png");
     }
 
     public static void ClearCache()
@@ -65,6 +123,7 @@ public static class CardImageLibrary
         }
         Cache.Clear();
         FailedFiles.Clear();
+        cardBackSprite = null;
     }
 
     private static Sprite LoadSprite(string path)
@@ -121,26 +180,39 @@ public static class CardImageLibrary
         }
     }
 
-    private static bool TryGetPrinting(CardData card, out string setCode, out string collectorNumber)
+    private static bool TryFindImagePath(CardDefinition card, int faceIndex, out string path)
     {
-        setCode = card != null ? card.setCode?.Trim() : string.Empty;
-        collectorNumber = card != null ? card.CollectorNumber : string.Empty;
-        if (string.IsNullOrEmpty(setCode) || string.IsNullOrEmpty(collectorNumber)) return false;
-        if (setCode == "." || setCode == ".." || setCode.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) return false;
-        if (collectorNumber == "." || collectorNumber == ".." || collectorNumber.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) return false;
-        return true;
+        path = string.Empty;
+        if (faceIndex < 0
+            || !PrintingKeyUtility.TryGetPrinting(card, out string setCode, out string collectorNumber))
+        {
+            return false;
+        }
+
+        foreach (string root in EnumerateRoots())
+        {
+            for (int i = 0; i < Extensions.Length; i++)
+            {
+                string candidate = PrintingKeyUtility.BuildImagePath(
+                    root,
+                    setCode,
+                    collectorNumber,
+                    faceIndex,
+                    Extensions[i]);
+                if (!File.Exists(candidate)) continue;
+                path = candidate;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static IEnumerable<string> EnumerateRoots()
     {
         yield return ExternalRoot;
+        yield return AlternateExternalRoot;
         if (!string.Equals(ExternalRoot, PersistentRoot, StringComparison.OrdinalIgnoreCase)) yield return PersistentRoot;
-    }
-
-    private static string GetApplicationRoot()
-    {
-        DirectoryInfo parent = Directory.GetParent(Application.dataPath);
-        return parent != null ? parent.FullName : Application.dataPath;
     }
 
     private static void EnsureDirectory(string path)

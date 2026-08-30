@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class CardVisualStyle
 {
-    public static Sprite LoadFrame(CardData card)
+    public static Sprite LoadFrame(CardDefinition card)
     {
         if (card == null) return null;
 
@@ -11,10 +11,10 @@ public static class CardVisualStyle
         return Resources.Load<Sprite>($"UI/CardFrames/{kind}_{color}");
     }
 
-    public static ManaColor GetPrimaryColor(CardData card)
+    public static ManaColor GetPrimaryColor(CardDefinition card)
     {
         if (card == null) return ManaColor.Colorless;
-        if (card.HasType(CardType.Land)) return card.GetProducedManaColor();
+        if (card.HasType(CardType.Land)) return GetLandFrameColor(card);
 
         ManaCost cost = card.GetManaCost();
         int highest = 0;
@@ -29,6 +29,24 @@ public static class CardVisualStyle
 
         if (card.cardTypes.IsInstantOrSorcery()) return ManaColor.Red;
         if (card.HasType(CardType.Creature)) return ManaColor.Blue;
+        return ManaColor.Colorless;
+    }
+
+    private static ManaColor GetLandFrameColor(CardDefinition card)
+    {
+        ManaColorFlags colorIndicator = card.colorIndicator;
+        if ((colorIndicator & ManaColorFlags.White) != 0) return ManaColor.White;
+        if ((colorIndicator & ManaColorFlags.Blue) != 0) return ManaColor.Blue;
+        if ((colorIndicator & ManaColorFlags.Black) != 0) return ManaColor.Black;
+        if ((colorIndicator & ManaColorFlags.Red) != 0) return ManaColor.Red;
+        if ((colorIndicator & ManaColorFlags.Green) != 0) return ManaColor.Green;
+
+        string text = $"{card.subtypes} {card.cardName}".ToLowerInvariant();
+        if (text.Contains("island")) return ManaColor.Blue;
+        if (text.Contains("forest")) return ManaColor.Green;
+        if (text.Contains("mountain")) return ManaColor.Red;
+        if (text.Contains("swamp")) return ManaColor.Black;
+        if (text.Contains("plain")) return ManaColor.White;
         return ManaColor.Colorless;
     }
 

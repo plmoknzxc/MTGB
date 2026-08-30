@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private CardData cardData;
+    [SerializeField] private CardDefinition cardData;
     [SerializeField] private Text cardNameText;
     [SerializeField] private Text manaCostText;
     [SerializeField] private Image artworkImage;
@@ -33,7 +33,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Refresh();
     }
 
-    public void SetCardData(CardData data)
+    public void SetCardDefinition(CardDefinition data)
     {
         cardData = data;
         Refresh();
@@ -55,9 +55,9 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         SetText(cardNameText, string.IsNullOrEmpty(cardData.cardName) ? cardData.name : cardData.cardName);
         SetText(manaCostText, string.IsNullOrEmpty(manaCostOverride) ? cardData.GetManaCost().ToSymbolString() : manaCostOverride);
-        SetText(typeLineText, string.IsNullOrEmpty(typeLineOverride) ? cardData.cardTypes.ToDisplayString() : typeLineOverride);
+        SetText(typeLineText, string.IsNullOrEmpty(typeLineOverride) ? cardData.GetTypeLine() : typeLineOverride);
         SetText(rulesText, cardData.description);
-        SetText(powerToughnessText, cardData.HasType(CardType.Creature) ? $"{cardData.attack} / {cardData.defence}" : string.Empty);
+        SetText(powerToughnessText, BuildStatsText(cardData));
         SetText(collectorInfoText, BuildCollectorInfo());
         SetArtwork(cardData.artwork);
     }
@@ -115,5 +115,14 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             text.text = value;
         }
+    }
+
+    private static string BuildStatsText(CardDefinition card)
+    {
+        if (card == null) return string.Empty;
+        if (card.HasType(CardType.Creature)) return $"{card.attack} / {card.defence}";
+        if (card.HasType(CardType.Planeswalker)) return card.loyalty.ToString();
+        if (card.HasType(CardType.Battle)) return card.battleDefense.ToString();
+        return string.Empty;
     }
 }

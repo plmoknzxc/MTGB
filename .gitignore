@@ -14,19 +14,10 @@ Assets/Unity.VisualScripting.Generated/
 Assets/Unity.VisualScripting.Generated.meta
 Assets/StreamingAssets/
 Assets/StreamingAssets.meta
-Assets/XLua/Doc/
-Assets/XLua/Doc.meta
-Assets/XLua/Examples/
-Assets/XLua/Examples.meta
-Assets/XLua/Tutorial/
-Assets/XLua/Tutorial.meta
-Assets/XLua/Gen/
-Assets/XLua/Gen.meta
 Assets/TutorialInfo/
 Assets/TutorialInfo.meta
 Assets/Readme.asset
 Assets/Readme.asset.meta
-/docs/
 
 # IDE and local tooling
 .vs/

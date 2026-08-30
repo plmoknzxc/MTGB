@@ -11,18 +11,23 @@ MTGB is a Unity 6 prototype for a Magic-style card game. The current scene focus
 
 - `Assets/Scenes/MTGAPrototype.unity` - current prototype scene
 - `Assets/Scripts` - rules, UI, database loading, and scripting integration
-- `Assets/XLua` - XLua runtime used by the game to execute card scripts
-- `CardDatabases` - SQLite card databases and schema
+- `Assets/Plugins/LuaCSharp` - Lua-CSharp runtime binaries used to execute card scripts
+- `CardDatabases/*.mtgbdb` - SQLite card databases and schema
 - `CardImages/<set>/<collector>.png` - external card image convention
+- `CardScripts/<set>/m<collector>.lua` - external card script convention
+- `Decks/*.mdk` - deck files
 
 ## Card data
 
-The game loads `CardDatabases/core.mtgbdb`, then databases under `CardDatabases/Expansions`. A printing is identified by `(set_code, collector_number)`. Runtime state such as zones, damage, tapping, and ownership is not stored in the database.
+The game loads `CardDatabases/core.mtgbdb`, then other `*.mtgbdb` files directly under `CardDatabases`. A printing is identified by `(set_code, collector_number)`. Runtime state such as zones, damage, tapping, and ownership is not stored in the database.
 
-The standalone data editor is maintained separately in [MTGB-DataEditor](https://github.com/plmoknzxc/MTGB-DataEditor). It does not require Unity or XLua. XLua is required only by the Unity game when a card script is executed.
+Card images and scripts use the same printing key:
+
+- Images: `CardImages/<set>/<collector>.png`
+- Scripts: `CardScripts/<set>/m<collector>.lua`
+
+The runtime accepts schema V7 databases only. The standalone data editor is maintained separately in [MTGB-DataEditor](https://github.com/plmoknzxc/MTGB-DataEditor). It does not require Unity.
 
 ## Development tooling
 
-PuerTS MCP and related embedded packages are optional local editor tooling and are intentionally not committed because their native binaries are close to 1 GB. Install the Unity MCP package separately when editor automation is needed.
-
-XLua is distributed under its upstream MIT license; see `LICENSE.TXT` and the files under `Assets/XLua`.
+Editor automation uses MCP For Unity when available. Card scripts run through Lua-CSharp.

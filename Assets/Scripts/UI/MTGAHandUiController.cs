@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public sealed class MTGAHandUiController : MonoBehaviour
 {
+    private const float PlayerHandCenterOffsetX = -30f;
+    private const float PlayerHandSafeWidth = 1280f;
+
     [SerializeField] private GameRules gameRules;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private RectTransform playerHandRoot;
     [SerializeField] private RectTransform opponentHandRoot;
     [SerializeField] private Transform playerBattlefieldArea;
     [SerializeField] private Text hintText;
+    [SerializeField] private MTGAHandLayoutSettings layout = new MTGAHandLayoutSettings();
 
     private readonly List<MTGAHandUiCard> playerCards = new List<MTGAHandUiCard>(12);
     private readonly List<MTGAHandUiCard> opponentCards = new List<MTGAHandUiCard>(12);
@@ -22,6 +26,9 @@ public sealed class MTGAHandUiController : MonoBehaviour
     private Text playerLifeText;
     private Text opponentLifeText;
     private ArenaHudController arenaHud;
+    private ArenaWhiteboxInteraction whiteboxInteraction;
+    private int pendingCastOwner;
+    private int pendingCastHandIndex = -1;
 
     private void Awake()
     {
@@ -66,6 +73,7 @@ public sealed class MTGAHandUiController : MonoBehaviour
         if (phaseStatusText == null) phaseStatusText = GameObject.Find("ArenaPhaseStatusText")?.GetComponent<Text>();
         if (playerLifeText == null) playerLifeText = GameObject.Find("ArenaPlayerLife")?.GetComponent<Text>();
         if (opponentLifeText == null) opponentLifeText = GameObject.Find("ArenaOpponentLife")?.GetComponent<Text>();
+        if (whiteboxInteraction == null) whiteboxInteraction = Object.FindFirstObjectByType<ArenaWhiteboxInteraction>();
     }
 
     private void ConfigureCanvasAndRoots()
@@ -94,28 +102,30 @@ public sealed class MTGAHandUiController : MonoBehaviour
         EnsureEventSystem();
     }
 
-    private static void ConfigurePlayerRoot(RectTransform root)
+    private void ConfigurePlayerRoot(RectTransform root)
     {
         if (root == null) return;
+        MTGAHandLayoutSettings settings = EnsureLayout();
 
         root.anchorMin = new Vector2(0f, 0f);
         root.anchorMax = new Vector2(1f, 0f);
         root.pivot = new Vector2(0.5f, 0f);
-        root.anchoredPosition = Vector2.zero;
-        root.sizeDelta = new Vector2(0f, 292f);
+        root.anchoredPosition = new Vector2(0f, settings.playerRootY);
+        root.sizeDelta = new Vector2(0f, settings.playerRootHeight);
         root.localScale = Vector3.one;
         root.localRotation = Quaternion.identity;
     }
 
-    private static void ConfigureOpponentRoot(RectTransform root)
+    private void ConfigureOpponentRoot(RectTransform root)
     {
         if (root == null) return;
+        MTGAHandLayoutSettings settings = EnsureLayout();
 
         root.anchorMin = new Vector2(0f, 1f);
         root.anchorMax = new Vector2(1f, 1f);
         root.pivot = new Vector2(0.5f, 1f);
-        root.anchoredPosition = Vector2.zero;
-        root.sizeDelta = new Vector2(0f, 86f);
+        root.anchoredPosition = new Vector2(0f, settings.opponentRootY);
+        root.sizeDelta = new Vector2(0f, settings.opponentRootHeight);
         root.localScale = Vector3.one;
         root.localRotation = Quaternion.identity;
     }
@@ -162,79 +172,204 @@ public sealed class MTGAHandUiController : MonoBehaviour
     {
         if (gameRules == null) return;
 
-        RefreshHand(playerCards, gameRules.GetHandCards(1), false);
-        RefreshHand(opponentCards, gameRules.GetHandCards(2), true);
+        int localPlayer = OnlinePlayerContext.LocalPlayerId;
+        int opponentPlayer = OnlinePlayerContext.OpponentPlayerId;
+        RefreshHand(playerCards, playerHandRoot, gameRules.GetHandCards(localPlayer), false, localPlayer);
+        RefreshHand(opponentCards, opponentHandRoot, gameRules.GetHandCards(opponentPlayer), true, opponentPlayer);
         RefreshHud();
     }
 
-    private void RefreshHand(List<MTGAHandUiCard> visuals, IReadOnlyList<RuntimeCard> cards, bool hideFace)
+    private void RefreshHand(List<MTGAHandUiCard> visuals, RectTransform root, IReadOnlyList<RuntimeCard> cards, bool hideFace, int owner)
     {
+        EnsureHandCapacity(root, visuals, cards.Count, owner);
+
+        int visibleCount = 0;
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (!ShouldHideHandCard(i, hideFace)) visibleCount++;
+        }
+
+        int visibleIndex = 0;
         for (int i = 0; i < visuals.Count; i++)
         {
-            bool active = i < cards.Count;
+            bool active = i < cards.Count && !ShouldHideHandCard(i, hideFace);
             visuals[i].gameObject.SetActive(active);
             if (!active) continue;
 
             RuntimeCard card = cards[i];
             visuals[i].SetRuntimeCard(card, hideFace);
-            bool playable = !hideFace && gameRules != null && gameRules.CanPlayCard(visuals[i].Owner, i);
-            visuals[i].SetPlayable(playable);
-            LayoutCard(visuals[i], i, cards.Count, hideFace);
+            bool discardable = gameRules != null && gameRules.CanDiscardHandCardToMaxHandSize(owner, i);
+            bool selectedForDiscard = gameRules != null && gameRules.IsHandCardSelectedForDiscard(owner, i);
+            bool mulliganBottomSelectable = TryGetMulliganBottomOption(owner, i, out GameChoiceRequest mulliganChoice, out GameChoiceOption mulliganOption);
+            bool selectedForMulliganBottom = mulliganBottomSelectable
+                && mulliganChoice.selectedOptionIds.Contains(mulliganOption.optionId);
+            bool playable = !hideFace
+                && !IsCastInteractionLocked()
+                && gameRules != null
+                && (discardable || mulliganBottomSelectable || gameRules.CanPlayCard(visuals[i].Owner, i));
+            visuals[i].SetPlayable(playable, selectedForDiscard || selectedForMulliganBottom);
+            LayoutCard(visuals[i], visibleIndex, visibleCount, hideFace);
+            visibleIndex++;
         }
     }
 
-    private static void LayoutCard(MTGAHandUiCard visual, int index, int count, bool opponent)
+    private static void EnsureHandCapacity(RectTransform root, List<MTGAHandUiCard> visuals, int requiredCount, int owner)
+    {
+        if (root == null || visuals == null) return;
+
+        bool opponentPerspective = owner != OnlinePlayerContext.LocalPlayerId;
+        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        while (visuals.Count < requiredCount)
+        {
+            int index = visuals.Count;
+            string name = opponentPerspective ? $"OpponentHandCard_{index + 1}" : $"PlayerHandCard_{index + 1}";
+            Vector2 size = opponentPerspective ? new Vector2(74f, 104f) : new Vector2(194f, 274f);
+            MTGAHandUiCard card = MTGAUiCardFactory.CreateCard(root, name, font, owner, index, size);
+            visuals.Add(card);
+        }
+
+        for (int i = 0; i < visuals.Count; i++)
+        {
+            if (visuals[i] == null) continue;
+            visuals[i].Configure(owner, i);
+            visuals[i].name = opponentPerspective ? $"OpponentHandCard_{i + 1}" : $"PlayerHandCard_{i + 1}";
+        }
+    }
+
+    private bool ShouldHideHandCard(int handIndex, bool opponentHand)
+    {
+        int owner = opponentHand ? OnlinePlayerContext.OpponentPlayerId : OnlinePlayerContext.LocalPlayerId;
+        return pendingCastOwner == owner && pendingCastHandIndex == handIndex;
+    }
+
+    private void LayoutCard(MTGAHandUiCard visual, int index, int count, bool opponent)
     {
         if (visual == null || visual.IsDragging) return;
 
+        MTGAHandLayoutSettings settings = EnsureLayout();
         float center = (count - 1) * 0.5f;
         float offset = index - center;
 
         if (opponent)
         {
             float normalized = center > 0f ? Mathf.Abs(offset) / center : 0f;
-            Vector2 position = new Vector2(offset * 70f, 76f - normalized * 5f);
-            float rotation = offset * 1.65f;
-            visual.ApplyLayout(position, new Vector2(74f, 104f), rotation);
+            float spacing = count <= 1 ? 0f : Mathf.Min(settings.opponentMaxSpacing, settings.opponentTotalWidth / Mathf.Max(1, count - 1));
+            float scale = count <= settings.fullScaleCardCount ? 1f : Mathf.Clamp(spacing / Mathf.Max(0.01f, settings.opponentMaxSpacing), settings.opponentMinScale, 1f);
+            Vector2 position = new Vector2(offset * spacing, settings.opponentBaseY - normalized * settings.opponentArcDepth);
+            float rotation = offset * settings.opponentRotationPerOffset;
+            visual.ApplyLayout(position, new Vector2(settings.opponentCardWidth, settings.opponentCardHeight) * scale, rotation);
             return;
         }
 
         float playerNormalized = center > 0f ? Mathf.Abs(offset) / center : 0f;
-        Vector2 playerPosition = new Vector2(offset * 132f, 26f - playerNormalized * 38f);
-        float playerRotation = -offset * 3.65f;
-        visual.ApplyLayout(playerPosition, new Vector2(194f, 274f), playerRotation);
+        float usableWidth = Mathf.Min(settings.playerTotalWidth, PlayerHandSafeWidth);
+        float naturalWidth = settings.playerCardWidth + Mathf.Max(0, count - 1) * settings.playerMaxSpacing;
+        float playerScale = count <= settings.fullScaleCardCount
+            ? 1f
+            : Mathf.Clamp(usableWidth / Mathf.Max(1f, naturalWidth), settings.playerMinScale, 1f);
+        float playerSpacing = count <= 1 ? 0f : settings.playerMaxSpacing * playerScale;
+        Vector2 playerPosition = new Vector2(
+            PlayerHandCenterOffsetX + offset * playerSpacing,
+            settings.playerBaseY - playerNormalized * settings.playerArcDepth * playerScale);
+        float playerRotation = offset * settings.playerRotationPerOffset;
+        visual.ApplyLayout(playerPosition, new Vector2(settings.playerCardWidth, settings.playerCardHeight) * playerScale, playerRotation);
     }
 
     private void RefreshHud()
     {
         if (phaseStatusText != null)
         {
-            phaseStatusText.text = $"P{gameRules.GetCurrentPlayer()} - {gameRules.GetCurrentPhase()}";
+            string priority = gameRules.IsAwaitingPriority()
+                ? $" / P{gameRules.GetPriorityPlayer()} \u4f18\u5148\u6743"
+                : string.Empty;
+            phaseStatusText.text = $"P{gameRules.GetCurrentPlayer()} - {gameRules.GetCurrentPhaseLabel()}{priority}";
         }
 
-        if (playerLifeText != null) playerLifeText.text = gameRules.GetLife(1).ToString();
-        if (opponentLifeText != null) opponentLifeText.text = gameRules.GetLife(2).ToString();
+        if (playerLifeText != null) playerLifeText.text = gameRules.GetLife(OnlinePlayerContext.LocalPlayerId).ToString();
+        if (opponentLifeText != null) opponentLifeText.text = gameRules.GetLife(OnlinePlayerContext.OpponentPlayerId).ToString();
 
     }
 
     public bool CanDrag(MTGAHandUiCard card)
     {
-        return card != null && card.Owner == 1 && gameRules != null && gameRules.CanPlayCard(card.Owner, card.Index);
+        return card != null
+            && card.Owner == OnlinePlayerContext.LocalPlayerId
+            && !IsCastInteractionLocked()
+            && (gameRules == null || !gameRules.IsDiscardingToHandSize())
+            && gameRules != null
+            && gameRules.CanPlayCard(card.Owner, card.Index);
+    }
+
+    private bool IsCastInteractionLocked()
+    {
+        if (whiteboxInteraction == null) whiteboxInteraction = Object.FindFirstObjectByType<ArenaWhiteboxInteraction>();
+        return whiteboxInteraction != null && whiteboxInteraction.IsChoosingSpellTarget;
+    }
+
+    public void RestoreHandInputAfterExternalCancel()
+    {
+        ResolveReferences();
+        if (playerCards.Count == 0 || opponentCards.Count == 0) CacheCards();
+
+        RestoreHandInput(playerCards);
+        RestoreHandInput(opponentCards);
+        RefreshAll();
+    }
+
+    public void SetPendingCastCard(int owner, int handIndex)
+    {
+        pendingCastOwner = owner;
+        pendingCastHandIndex = handIndex;
+        RefreshAll();
+    }
+
+    public void ClearPendingCastCard()
+    {
+        pendingCastOwner = 0;
+        pendingCastHandIndex = -1;
+        RefreshAll();
+    }
+
+    private static void RestoreHandInput(List<MTGAHandUiCard> cards)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            cards[i]?.RestoreInputAfterExternalCancel();
+        }
     }
 
     public void OnCardHover(MTGAHandUiCard card)
     {
-        if (card == null || card.Owner != 1 || gameRules == null) return;
+        if (card == null || card.Owner != OnlinePlayerContext.LocalPlayerId || gameRules == null) return;
+        if (IsCastInteractionLocked()) return;
 
         RuntimeCard runtimeCard = gameRules.GetHandCard(card.Owner, card.Index);
         if (runtimeCard == null) return;
 
-        SetHint($"Preview: {runtimeCard.Data.cardName}. Drag it to your battlefield.");
+        if (gameRules.CanDiscardHandCardToMaxHandSize(card.Owner, card.Index))
+        {
+            SetHint($"清除步骤：点击弃掉 {runtimeCard.Data.cardName}。还需弃 {gameRules.GetDiscardToHandSizeRemaining()} 张。");
+            return;
+        }
+
+        if (TryGetMulliganBottomOption(card.Owner, card.Index, out GameChoiceRequest choice, out _))
+        {
+            int remaining = Mathf.Max(0, choice.minimumSelections - choice.selectedOptionIds.Count);
+            SetHint($"调度：点击选择 {runtimeCard.Data.cardName} 置于牌库底。还需选择 {remaining} 张。");
+            return;
+        }
+
+        string issue = gameRules.GetHandCardPlayIssue(card.Owner, card.Index);
+        SetHint(string.IsNullOrEmpty(issue)
+            ? $"Preview: {runtimeCard.Data.cardName}. Drag it to your battlefield."
+            : $"{runtimeCard.Data.cardName}: {issue}");
     }
 
     public void OnCardDragStarted(MTGAHandUiCard card)
     {
+        if (OnlineMatchService.Instance?.CanSubmitRuleAction == false) return;
         if (card == null || gameRules == null) return;
+        if (IsCastInteractionLocked()) return;
 
         RuntimeCard runtimeCard = gameRules.GetHandCard(card.Owner, card.Index);
         string cardName = runtimeCard != null ? runtimeCard.Data.cardName : "Card";
@@ -243,7 +378,21 @@ public sealed class MTGAHandUiController : MonoBehaviour
 
     public void OnCardDropped(MTGAHandUiCard card, PointerEventData eventData)
     {
+        if (OnlineMatchService.Instance?.CanSubmitRuleAction == false) return;
         if (card == null || gameRules == null) return;
+        if (gameRules.IsDiscardingToHandSize())
+        {
+            SetHint($"清除步骤：请选择要弃的手牌。还需弃 {gameRules.GetDiscardToHandSizeRemaining()} 张。");
+            RefreshAll();
+            return;
+        }
+
+        if (IsCastInteractionLocked())
+        {
+            SetHint("\u8bf7\u5148\u786e\u8ba4\u65bd\u653e\u3001\u53d6\u6d88\uff0c\u6216\u5b8c\u6210\u76ee\u6807\u9009\u62e9\u3002");
+            RefreshAll();
+            return;
+        }
 
         if (!IsPointerOverPlayerBattlefield(eventData))
         {
@@ -253,32 +402,140 @@ public sealed class MTGAHandUiController : MonoBehaviour
 
         RuntimeCard runtimeCard = gameRules.GetHandCard(card.Owner, card.Index);
         string cardName = runtimeCard != null ? runtimeCard.Data.cardName : "Card";
-        bool played = gameRules.PlayCard(card.Owner, card.Index);
-        if (played)
+        IReadOnlyList<CardFeatureRuntime> castFeatures =
+            gameRules.GetPlayableHandFeatures(card.Owner, card.Index);
+        if (castFeatures.Count > 1)
         {
-            SetHint(gameRules.HasPendingStack()
-                ? $"Played: {cardName}. Resolve the stack."
-                : $"Played: {cardName}.");
+            if (whiteboxInteraction == null) whiteboxInteraction = Object.FindFirstObjectByType<ArenaWhiteboxInteraction>();
+            if (whiteboxInteraction != null
+                && whiteboxInteraction.BeginHandCastFeatureSelection(card.Owner, card.Index))
+            {
+                SetHint($"Choose how to cast {cardName}.");
+                RefreshAll();
+                return;
+            }
+        }
+
+        if (whiteboxInteraction == null)
+        {
+            whiteboxInteraction = Object.FindFirstObjectByType<ArenaWhiteboxInteraction>();
+        }
+
+        bool castStarted = whiteboxInteraction != null
+            && whiteboxInteraction.BeginHandCastFeatureSelection(card.Owner, card.Index);
+        if (castStarted)
+        {
+            if (gameRules.IsChoosingSpellTarget())
+                SetHint($"Choose targets for {cardName}.");
+            else if (gameRules.IsConfirmingCast())
+                SetHint($"Confirm casting {cardName}.");
+            else if (gameRules.HasActiveChoice())
+                SetHint(gameRules.GetActiveChoice()?.prompt ?? $"Complete casting {cardName}.");
+            else if (gameRules.HasPendingStack())
+                SetHint($"Cast: {cardName}. Resolve the stack.");
+            else
+                SetHint($"Played: {cardName}.");
             RefreshAll();
             return;
         }
 
-        SetHint("Cannot play this card now. Check turn, phase, mana, or stack.");
+        SetHint(gameRules.GetHandCardPlayIssue(card.Owner, card.Index));
+    }
+
+    public void OnCardClicked(MTGAHandUiCard card, PointerEventData eventData)
+    {
+        if (OnlineMatchService.Instance?.CanSubmitRuleAction == false) return;
+        if (card == null || gameRules == null || eventData.button != PointerEventData.InputButton.Left) return;
+
+        RuntimeCard runtimeCard = gameRules.GetHandCard(card.Owner, card.Index);
+        string cardName = runtimeCard != null ? runtimeCard.Data.cardName : "Card";
+        if (gameRules.CanDiscardHandCardToMaxHandSize(card.Owner, card.Index))
+        {
+            if (gameRules.ApplyAction(new GameAction
+                {
+                    type = GameActionType.ToggleDiscard,
+                    playerId = card.Owner,
+                    zoneIndex = card.Index
+                }).accepted)
+            {
+                bool selected = gameRules.IsHandCardSelectedForDiscard(card.Owner, card.Index);
+                SetHint(selected
+                    ? $"已选择 {cardName}。选够 {gameRules.GetDiscardToHandSizeRequiredCount()} 张后点击确认。"
+                    : $"已取消 {cardName}，可以重新选择。");
+                RefreshAll();
+            }
+            return;
+        }
+
+        if (!TryGetMulliganBottomOption(card.Owner, card.Index, out GameChoiceRequest choice, out GameChoiceOption option)) return;
+        bool wasSelected = choice.selectedOptionIds.Contains(option.optionId);
+        if (gameRules.ApplyAction(new GameAction
+            {
+                type = GameActionType.ToggleChoiceOption,
+                playerId = card.Owner,
+                choiceRequestId = choice.requestId,
+                optionId = option.optionId
+            }).accepted)
+        {
+            bool selected = !wasSelected;
+            int selectedCount = choice.selectedOptionIds.Count + (selected ? 1 : -1);
+            SetHint(selected
+                ? $"已选择 {cardName} 置于牌库底（{selectedCount}/{choice.minimumSelections}）。"
+                : $"已取消 {cardName}，可以重新选择置底牌。");
+            RefreshAll();
+        }
+    }
+
+    private bool TryGetMulliganBottomOption(
+        int owner,
+        int handIndex,
+        out GameChoiceRequest choice,
+        out GameChoiceOption option)
+    {
+        choice = gameRules != null ? gameRules.GetActiveChoice() : null;
+        option = null;
+        if (choice == null
+            || choice.kind != GameChoiceKind.MulliganBottom
+            || choice.choosingPlayerId != owner
+            || owner != OnlinePlayerContext.LocalPlayerId)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < choice.options.Count; i++)
+        {
+            GameChoiceOption candidate = choice.options[i];
+            if (candidate != null
+                && candidate.legal
+                && candidate.zone == GameChoiceZone.Hand
+                && candidate.ownerPlayerId == owner
+                && candidate.zoneIndex == handIndex)
+            {
+                option = candidate;
+                return true;
+            }
+        }
+        return false;
     }
 
     private void OnPhaseButtonClicked()
     {
-        if (gameRules == null) return;
+        if (gameRules == null || OnlineMatchService.Instance?.CanSubmitRuleAction == false) return;
 
-        if (gameRules.HasPendingStack())
+        GameActionType actionType = gameRules.GetPrimaryAdvanceActionType(
+            OnlinePlayerContext.LocalPlayerId);
+        gameRules.ApplyAction(new GameAction
         {
-            gameRules.ResolveTopOfStack();
-            SetHint("Resolved top of stack.");
+            type = actionType,
+            playerId = OnlinePlayerContext.LocalPlayerId
+        });
+        if (actionType == GameActionType.CommitAttackers)
+        {
+            SetHint("\u5df2\u5ba3\u544a\u653b\u51fb\u8005\u3002");
         }
         else
         {
-            gameRules.NextPhase();
-            SetHint($"Phase: P{gameRules.GetCurrentPlayer()} - {gameRules.GetCurrentPhase()}.");
+            SetHint($"Phase: P{gameRules.GetCurrentPlayer()} - {gameRules.GetCurrentPhaseLabel()}.");
         }
 
         RefreshAll();
@@ -303,13 +560,53 @@ public sealed class MTGAHandUiController : MonoBehaviour
         return bounds.Contains(point);
     }
 
+    public void ApplyLayoutSettings(MTGAHandLayoutSettings settings)
+    {
+        if (settings == null) return;
+
+        EnsureLayout().CopyFrom(settings);
+        ConfigureCanvasAndRoots();
+        RefreshAll();
+    }
+
+    public string GetLayoutSettingsJson()
+    {
+        return JsonUtility.ToJson(EnsureLayout().Clone());
+    }
+
+    public void ApplyLayoutSettingsJson(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return;
+
+        MTGAHandLayoutSettings incoming = JsonUtility.FromJson<MTGAHandLayoutSettings>(json);
+        if (incoming == null) return;
+
+        EnsureLayout().CopyFrom(incoming);
+        ConfigureCanvasAndRoots();
+        RefreshAll();
+    }
+
+    public void ResetLayoutSettings()
+    {
+        layout = new MTGAHandLayoutSettings();
+        ConfigureCanvasAndRoots();
+        RefreshAll();
+    }
+
+    private MTGAHandLayoutSettings EnsureLayout()
+    {
+        if (layout == null) layout = new MTGAHandLayoutSettings();
+        layout.Sanitize();
+        return layout;
+    }
+
     private void SetHint(string value)
     {
         if (hintText != null) hintText.text = value;
     }
 }
 
-public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public sealed partial class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private const float DragAnchorHeight = 0.62f;
 
@@ -391,18 +688,21 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
     {
         if (runtimeCard == null) return;
 
-        CardData data = runtimeCard.Data;
+        CardDefinition data = runtimeCard.Data;
         Sprite fullCardSprite = null;
+        Sprite cardBackSprite = null;
+        bool hasCardBack = hideFace && CardImageLibrary.TryLoadCardBack(out cardBackSprite);
         bool hasImportedFace = !hideFace && CardImageLibrary.TryLoadFullCard(data, out fullCardSprite);
+        bool hasFullFace = hasCardBack || hasImportedFace;
         ApplyPsdFrame(data, hideFace || hasImportedFace);
         SetText("TitleBand/Text", hideFace || hasImportedFace ? "" : data.cardName);
-        SetText("RulesBox/Text", hideFace || hasImportedFace ? "" : data.cardTypes.ToDisplayString());
+        SetText("RulesBox/Text", hideFace || hasImportedFace ? "" : data.GetTypeLine());
         ApplyManaCost(data, hideFace || hasImportedFace);
         SetColor("Face", hideFace ? new Color(0.12f, 0.07f, 0.04f, 1f) : GetFaceColor(data.cardTypes));
         SetColor("Art", hideFace ? new Color(0.28f, 0.13f, 0.06f, 1f) : GetArtColor(data.cardTypes));
-        SetFallbackFaceActive(!hasImportedFace);
+        SetFallbackFaceActive(!hasFullFace);
         SetArtwork(data, hideFace || hasImportedFace);
-        ApplyImportedCardFace(fullCardSprite, hasImportedFace);
+        ApplyImportedCardFace(hasCardBack ? cardBackSprite : fullCardSprite, hasFullFace);
     }
 
     private void ApplyImportedCardFace(Sprite sprite, bool active)
@@ -441,7 +741,7 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         if (child != null) child.gameObject.SetActive(active);
     }
 
-    private void ApplyManaCost(CardData data, bool hideFace)
+    private void ApplyManaCost(CardDefinition data, bool hideFace)
     {
         Transform legacyText = transform.Find("CostPip");
         Transform legacyBackground = transform.Find("CostPipBg");
@@ -457,11 +757,7 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
 
         ManaCost cost = data.GetManaCost();
         var symbols = new System.Collections.Generic.List<string>();
-        if (cost.Generic > 0)
-        {
-            string genericSymbol = GetManaSymbolCode(CardVisualStyle.GetPrimaryColor(data));
-            for (int i = 0; i < cost.Generic; i++) symbols.Add(genericSymbol);
-        }
+        if (cost.Generic > 0) symbols.Add(cost.Generic.ToString());
         AddManaSymbols(symbols, "W", cost.White);
         AddManaSymbols(symbols, "U", cost.Blue);
         AddManaSymbols(symbols, "B", cost.Black);
@@ -478,7 +774,12 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
 
             icon.gameObject.SetActive(true);
             icon.name = $"ManaCostIcon_{i + 1}_{symbols[i]}";
-            icon.sprite = Resources.Load<Sprite>($"UI/ManaSymbols/Mana_{symbols[i]}");
+            bool generic = int.TryParse(symbols[i], out _);
+            string spriteCode = generic ? "C" : symbols[i];
+            Sprite sprite = Resources.Load<Sprite>($"UI/ManaSymbols/Mana_{spriteCode}");
+            icon.sprite = sprite;
+            icon.color = Color.white;
+            SetGenericManaLabel(icon, generic ? symbols[i] : string.Empty);
             RectTransform iconRect = icon.rectTransform;
             iconRect.anchorMin = new Vector2(1f, 1f);
             iconRect.anchorMax = new Vector2(1f, 1f);
@@ -507,6 +808,33 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         return icon;
     }
 
+    private static void SetGenericManaLabel(Image icon, string value)
+    {
+        if (icon == null) return;
+        Transform existing = icon.transform.Find("GenericLabel");
+        Text label = existing != null ? existing.GetComponent<Text>() : null;
+        if (label == null)
+        {
+            GameObject labelObject = new GameObject("GenericLabel", typeof(RectTransform), typeof(Text));
+            labelObject.transform.SetParent(icon.transform, false);
+            RectTransform rect = labelObject.GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            label = labelObject.GetComponent<Text>();
+            label.alignment = TextAnchor.MiddleCenter;
+            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.fontSize = 18;
+            label.fontStyle = FontStyle.Bold;
+            label.color = Color.white;
+            label.raycastTarget = false;
+        }
+
+        label.text = value;
+        label.gameObject.SetActive(!string.IsNullOrEmpty(value));
+    }
+
     private void SetManaCostIconsActive(bool active)
     {
         for (int i = 0; i < manaCostIcons.Count; i++)
@@ -533,7 +861,7 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         }
     }
 
-    private void ApplyPsdFrame(CardData data, bool hideFace)
+    private void ApplyPsdFrame(CardDefinition data, bool hideFace)
     {
         if (psdFrame == null)
         {
@@ -575,7 +903,7 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         SetPanelAlpha("RulesBox", 0f);
     }
 
-    private void SetArtwork(CardData data, bool hideFace)
+    private void SetArtwork(CardDefinition data, bool hideFace)
     {
         Transform artTransform = transform.Find("Art");
         Image artImage = artTransform != null ? artTransform.GetComponent<Image>() : null;
@@ -614,7 +942,7 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         rect.localPosition = localPosition;
     }
 
-    public void SetPlayable(bool playable)
+    public void SetPlayable(bool playable, bool selectedForDiscard = false)
     {
         ResolveReferences();
 
@@ -626,16 +954,16 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
             }
 
             Color color = selectedGlow.color;
-            color.r = 0.02f;
-            color.g = 0.92f;
-            color.b = 1f;
+            color.r = selectedForDiscard ? 1f : 0.02f;
+            color.g = selectedForDiscard ? 0.72f : 0.92f;
+            color.b = selectedForDiscard ? 0.08f : 1f;
             color.a = playable ? 0.72f : 0f;
             selectedGlow.color = color;
         }
 
         if (outline != null)
         {
-            outline.effectColor = Owner == 2
+            outline.effectColor = Owner != OnlinePlayerContext.LocalPlayerId
                 ? new Color(0f, 0f, 0f, 0.38f)
                 : Color.clear;
         }
@@ -689,6 +1017,11 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         controller?.OnCardHover(this);
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        controller?.OnCardClicked(this, eventData);
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         ResolveReferences();
@@ -724,6 +1057,13 @@ public sealed class MTGAHandUiCard : MonoBehaviour, IPointerEnterHandler, IBegin
         rect.anchoredPosition = startAnchoredPosition;
         rect.localRotation = startRotation;
         rect.SetSiblingIndex(startSiblingIndex);
+    }
+
+    public void RestoreInputAfterExternalCancel()
+    {
+        ResolveReferences();
+        dragging = false;
+        SetRaycastTarget(true);
     }
 
     private void SetRaycastTarget(bool value)

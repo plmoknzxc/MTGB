@@ -8,5 +8,8 @@ CardImages/MKM/223.jpg
 
 Supported extensions: .png, .jpg, .jpeg
 
-Set the same Set Code and Collector Number on the CardData asset. If no matching
+Set the same set_code and collector_number in the card database. If no matching
 image exists, the game uses its generated card template as a fallback.
+
+Lua scripts use the same set-code and collector-number convention under
+CardScripts/<SET CODE>/m<COLLECTOR NUMBER>.lua.

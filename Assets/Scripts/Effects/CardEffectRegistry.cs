@@ -28,6 +28,11 @@ public static class CardEffectRegistry
 
         public void OnPlay(GameRules rules, RuntimeCard card)
         {
+            if (card.HasSpellTarget && rules.DealDamageToSpellTarget(card, damage))
+            {
+                return;
+            }
+
             int target = card.OwnerPlayerID == 1 ? 2 : 1;
             rules.DealDamageToPlayer(target, damage);
         }
@@ -61,8 +66,7 @@ public static class CardEffectRegistry
 
         public void OnPlay(GameRules rules, RuntimeCard card)
         {
-            card.CurrentAttack += addAttack;
-            card.CurrentDefence += addDefence;
+            card.AddPowerToughnessModifier(addAttack, addDefence, "SelfPlus1Plus1");
         }
     }
 }

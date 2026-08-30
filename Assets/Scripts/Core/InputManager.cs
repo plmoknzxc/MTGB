@@ -13,7 +13,11 @@ public class InputManager : MonoBehaviour
         {
             if (gameRules != null)
             {
-                gameRules.NextPhase();
+                gameRules.ApplyAction(new GameAction
+                {
+                    type = GameActionType.AdvancePhase,
+                    playerId = OnlinePlayerContext.LocalPlayerId
+                });
             }
         }
 
@@ -39,7 +43,12 @@ public class InputManager : MonoBehaviour
             {
                 if (string.Equals(cardVisual.Zone, "Hand", StringComparison.OrdinalIgnoreCase))
                 {
-                    gameRules.PlayCard(cardVisual.OwnerID, cardVisual.Index);
+                    gameRules.ApplyAction(new GameAction
+                    {
+                        type = GameActionType.BeginHandCast,
+                        playerId = cardVisual.OwnerID,
+                        zoneIndex = cardVisual.Index
+                    });
                 }
             }
         }
