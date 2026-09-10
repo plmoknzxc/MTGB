@@ -3,14 +3,15 @@ using System.Collections.Generic;
 
 public static class OnlineProtocol
 {
-    public const int Version = 7;
-    public const string MessageName = "mtgb.protocol.v7";
+    public const int Version = 8;
+    public const string MessageName = "mtgb.protocol.v8";
 
     public const string Hello = "hello";
     public const string Welcome = "welcome";
     public const string Lobby = "lobby";
     public const string SubmitDeck = "submit-deck";
     public const string SetReady = "set-ready";
+    public const string RequestStartMatch = "request-start-match";
     public const string StartMatch = "start-match";
     public const string SceneReady = "scene-ready";
     public const string SubmitAction = "submit-action";
@@ -53,6 +54,7 @@ public sealed class OnlineWelcomeMessage
     public string reconnectToken;
     public string serverName;
     public bool resumingMatch;
+    public bool lanHosted;
     public string roomId;
     public OnlineContentManifest manifest;
 }
@@ -71,6 +73,7 @@ public sealed class OnlineLobbyPlayer
 public sealed class OnlineLobbyState
 {
     public string roomId;
+    public int hostSeat;
     public OnlineRoomConfig config;
     public OnlineSeriesState series;
     public List<OnlineLobbyPlayer> players = new List<OnlineLobbyPlayer>();

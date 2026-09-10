@@ -202,10 +202,11 @@ public sealed class GameEventContext
 public abstract class ScriptRuntimeEffect
 {
     public long Id { get; }
-    public long Timestamp { get; }
+    public long Timestamp { get; private set; }
     public RuntimeCard Source { get; }
-    public int ControllerId { get; }
-    public int SourceZoneChangeVersion { get; }
+    public int ControllerId { get; private set; }
+    public int SourceZoneChangeVersion { get; private set; }
+    public bool IsIntrinsicDeclaration { get; }
     public RuntimeEffectDuration Duration { get; }
     public string LinkId { get; }
 
@@ -222,6 +223,8 @@ public abstract class ScriptRuntimeEffect
         ControllerId = source?.ControllerPlayerID ?? 0;
         SourceZoneChangeVersion = source?.ZoneChangeVersion ?? -1;
         Duration = duration;
+        IsIntrinsicDeclaration = source != null && source.IsInitializingScript
+            && duration == RuntimeEffectDuration.WhileSourceRemains;
         LinkId = linkId?.Trim() ?? string.Empty;
     }
 
@@ -231,6 +234,13 @@ public abstract class ScriptRuntimeEffect
         if (Duration != RuntimeEffectDuration.WhileSourceRemains) return true;
         if (Source.ZoneChangeVersion != SourceZoneChangeVersion) return false;
         return isSourceActive != null && isSourceActive(Source);
+    }
+
+    internal void BindIntrinsicToBattlefield(long timestamp)
+    {
+        Timestamp = timestamp;
+        ControllerId = Source.ControllerPlayerID;
+        SourceZoneChangeVersion = Source.ZoneChangeVersion;
     }
 }
 
@@ -394,6 +404,23 @@ public sealed class GameEventPipeline
     public IReadOnlyList<ScriptReplacementRegistration> Replacements => replacements;
     public IReadOnlyList<ScriptContinuousRegistration> ContinuousEffects => continuousEffects;
     public IReadOnlyList<ScriptRuleRegistration> RuleEffects => ruleEffects;
+
+    // OnInit declarations belong to the card, not its old hand/stack identity.
+    // Keep inactive declarations across zones, and timestamp each new battlefield object.
+    public void BindIntrinsicEffects(RuntimeCard source)
+    {
+        BindIntrinsicEffects(triggers, source);
+        BindIntrinsicEffects(replacements, source);
+        BindIntrinsicEffects(continuousEffects, source);
+        BindIntrinsicEffects(ruleEffects, source);
+    }
+
+    private void BindIntrinsicEffects<T>(List<T> effects, RuntimeCard source) where T : ScriptRuntimeEffect
+    {
+        foreach (var effect in effects)
+            if (effect.IsIntrinsicDeclaration && ReferenceEquals(effect.Source, source))
+                effect.BindIntrinsicToBattlefield(nextTimestamp++);
+    }
 
     public ScriptTriggerRegistration RegisterTrigger(
         RuntimeCard source,
@@ -809,6 +836,7 @@ public sealed class GameEventPipeline
                 .Append(trigger.SourceZoneChangeVersion).Append('/')
                 .Append(trigger.ControllerId).Append('/')
                 .Append((int)trigger.Duration).Append('/')
+                .Append(trigger.IsIntrinsicDeclaration ? 1 : 0).Append('/')
                 .Append((int)trigger.EventType).Append('/')
                 .Append(trigger.HookName).Append('/')
                 .Append(trigger.ConditionHookName).Append('/')
@@ -825,6 +853,7 @@ public sealed class GameEventPipeline
                 .Append(replacement.SourceZoneChangeVersion).Append('/')
                 .Append(replacement.ControllerId).Append('/')
                 .Append((int)replacement.Duration).Append('/')
+                .Append(replacement.IsIntrinsicDeclaration ? 1 : 0).Append('/')
                 .Append((int)replacement.EventType).Append('/')
                 .Append((int)replacement.Operation).Append('/')
                 .Append(replacement.HookName).Append('/')
@@ -844,6 +873,7 @@ public sealed class GameEventPipeline
                 .Append(effect.SourceZoneChangeVersion).Append('/')
                 .Append(effect.ControllerId).Append('/')
                 .Append((int)effect.Duration).Append('/')
+                .Append(effect.IsIntrinsicDeclaration ? 1 : 0).Append('/')
                 .Append((int)effect.Operation).Append('/')
                 .Append(effect.FilterHookName).Append('/')
                 .Append(effect.DependencyKey).Append('/')
@@ -881,6 +911,7 @@ public sealed class GameEventPipeline
                 .Append(effect.SourceZoneChangeVersion).Append('/')
                 .Append(effect.ControllerId).Append('/')
                 .Append((int)effect.Duration).Append('/')
+                .Append(effect.IsIntrinsicDeclaration ? 1 : 0).Append('/')
                 .Append(effect.RuleKey).Append('/')
                 .Append((int)effect.Operation).Append('/')
                 .Append(effect.Value).Append('/')
@@ -923,6 +954,15 @@ public sealed class GameEventPipeline
                 context.amount = NormalizeReplacementAmount(context, replacement.Value);
                 break;
             case GameEventReplacementOperation.ChangeDestination:
+                if (string.IsNullOrEmpty(replacement.HookName)
+                    && Enum.IsDefined(typeof(GameZone), replacement.Value)
+                    && replacement.Value != (int)GameZone.None
+                    && replacement.Value != (int)GameZone.Stack)
+                {
+                    context.toZone = (GameZone)replacement.Value;
+                }
+                else invokeReplacement?.Invoke(replacement, context);
+                break;
             case GameEventReplacementOperation.InvokeHook:
                 invokeReplacement?.Invoke(replacement, context);
                 break;
@@ -946,19 +986,19 @@ public sealed class GameEventPipeline
     {
         triggers.RemoveAll(item =>
             item.Source == null
-            || (item.Duration == RuntimeEffectDuration.WhileSourceRemains
+            || (!item.IsIntrinsicDeclaration && item.Duration == RuntimeEffectDuration.WhileSourceRemains
                 && !item.IsActive(isSourceActive)));
         replacements.RemoveAll(item =>
             item.Source == null
-            || (item.Duration == RuntimeEffectDuration.WhileSourceRemains
+            || (!item.IsIntrinsicDeclaration && item.Duration == RuntimeEffectDuration.WhileSourceRemains
                 && !item.IsActive(isSourceActive)));
         continuousEffects.RemoveAll(item =>
             item.Source == null
-            || (item.Duration == RuntimeEffectDuration.WhileSourceRemains
+            || (!item.IsIntrinsicDeclaration && item.Duration == RuntimeEffectDuration.WhileSourceRemains
                 && !item.IsActive(isSourceActive)));
         ruleEffects.RemoveAll(item =>
             item.Source == null
-            || (item.Duration == RuntimeEffectDuration.WhileSourceRemains
+            || (!item.IsIntrinsicDeclaration && item.Duration == RuntimeEffectDuration.WhileSourceRemains
                 && !item.IsActive(isSourceActive)));
     }
 }

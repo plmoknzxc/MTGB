@@ -2,7 +2,7 @@
 
 本文档对应：
 
-- MTGB 数据库 Schema：`7`
+- MTGB 数据库 Schema：`8`
 - MTGB Lua API：`2`
 - Lua 运行时：Lua-CSharp
 - 数据编辑器仓库：`D:\WorkSpace\MTGB-DataEditor`
@@ -74,7 +74,7 @@ CardScripts/SOS/m65.lua
 
 ```lua
 local Card = {
-    ApiVersion = 1
+    ApiVersion = 2
 }
 
 function Card.OnInit(self)
@@ -146,7 +146,7 @@ Game:DrawForOwner(self.Card, 1)
 
 文档、模板和自动格式化统一推荐点调用 `Game.Function(...)`。
 
-`Game.ApiVersion` 是当前客户端公开的 Lua API 版本号，当前值为 `1`。
+`Game.ApiVersion` 是当前客户端公开的 Lua API 版本号，当前值为 `2`。
 
 ### 3.2 字符串 Hook 交叉检查
 
@@ -179,7 +179,7 @@ Game.RegisterTriggeredAbility(
 错误：
 
 - 文件未返回 table。
-- 使用高于 `1` 的 `ApiVersion`。
+- 使用高于 `2` 的 `ApiVersion`。
 - 注册 API 引用的必需 Hook 不存在。
 - 枚举成员不存在。
 - `script_path` 是绝对路径或逃逸 MTGB 根目录。
@@ -341,7 +341,7 @@ Game.Rule:
   MaxHandSize, LandPlaysPerTurn, CastAsThoughFlash
 ```
 
-`Game.CardType`、`Game.Supertype`、`Game.Color` 和 `Game.AbilityTrait` 是标志集合。需要组合时可使用 Lua 位运算符 `|`。
+`Game.CardType`、`Game.Supertype`、`Game.Color` 和 `Game.AbilityTrait` 是标志集合。当前编译器不接受 `|`；组合互不重复的单比特成员时使用 `+`，不得把同一位重复相加。
 无色卡牌在颜色标志中使用 `Game.Color.None`；当前没有 `Game.Color.Colorless` 成员。
 
 ## 6. API 签名
@@ -443,7 +443,7 @@ Game.AddCastTargetGroupAdvanced(card: Card, id: string, prompt: string,
 ```
 
 高级目标组支持永久物、玩家、区域中的牌、堆叠上的咒语和异能。标志值可使用 Lua
-按位或组合，例如 `Game.TargetKind.Permanent | Game.TargetKind.Player`。
+互不重复的标志相加组合，例如 `Game.TargetKind.Permanent + Game.TargetKind.Player`。
 `requiredCardTypes` 和 `requiredColors` 中指定的标志必须全部满足；需要表达“或”条件时，
 使用 `filterHookName` 做额外筛选。`relationGroupId` 指向另一个目标组，
 可配合 `SharesCardType`、`SharesColor`、`SameController`、
@@ -642,6 +642,8 @@ Game.RemoveLinkedEffects(card: Card, linkId: string): integer
 
 `Game.RegisterReplacementEffect` 会按 CR 616 在每次应用后重新检查。若同一事件同时有多个可用替代/防止效应，受影响玩家选择先应用哪一个；`category` 用于“自身替代、进场控制、复制进场、背面朝上、一般替代”的规则优先级。未指定时使用 `General`。
 
+`ChangeDestination` 的 `hookName` 留空时，`value` 为目标 `Game.Zone`（不能为 None 或 Stack），由内建操作更改目的地区域；提供 Hook 时仍由 Hook 调用 `SetEventDestination`。例如生物死亡改为放逐可以使用 `CardDied` 事件、空 Hook 和 `Game.Zone.Exile`，无需重复进入 Lua。
+
 持续效果按 CR 613 的复制、控制、文字、类别、颜色、异能、力量/防御力层执行。`dependencyKey` 是当前效果依赖的一个或多个 `linkId`，多个值以 `,`、`;` 或 `|` 分隔。动态筛选条件读取哪些特征、效果写入哪些特征，应分别写入 `reads` 与 `writes`，运行时据此在同层中计算依赖并让依赖关系覆盖时间戳。特征定义能力应设置 `characteristicDefining = true`。
 
 ### 6.11 当前事件
@@ -727,7 +729,7 @@ Counter:+1/+1:1
 - `LoyaltyAbility`：该异能是忠诚异能。
 - `MovesCardIntoOrOutOfLibrary`：该异能的费用或效果会使牌移入或移出牌库。
 
-需要组合多个特征时使用 Lua 位运算符 `|`。运行时依据 CR 605.1a 计算异能是否为法术力异能，而不是由脚本直接指定结论。只有声明了 `CouldAddMana`，且没有 `RequiresTarget`、`LoyaltyAbility` 或 `MovesCardIntoOrOutOfLibrary` 的启动式异能才不会进入堆叠。`Game.Timing.Mana` 只描述可用时机，不能把不符合条件的异能强制变成法术力异能。
+需要组合多个互不重复的特征时使用 `+`。运行时依据 CR 605.1a 计算异能是否为法术力异能，而不是由脚本直接指定结论。只有声明了 `CouldAddMana`，且没有 `RequiresTarget`、`LoyaltyAbility` 或 `MovesCardIntoOrOutOfLibrary` 的启动式异能才不会进入堆叠。`Game.Timing.Mana` 只描述可用时机，不能把不符合条件的异能强制变成法术力异能。
 
 评估 `MovesCardIntoOrOutOfLibrary` 时，只看该异能自身的费用、效果及自身替代效应；不要因为其他来源的替代效应可能改变事件而添加此标志。反之，只要费用或未被其他来源替代后的自身效果会移动牌库中的牌，就必须添加该标志。
 
@@ -743,7 +745,7 @@ Game.RegisterActivatedAbility(
     "",
     Game.Timing.AnyPriority,
     Game.AbilityTrait.CouldAddMana
-        | Game.AbilityTrait.MovesCardIntoOrOutOfLibrary
+        + Game.AbilityTrait.MovesCardIntoOrOutOfLibrary
 )
 ```
 
@@ -754,7 +756,7 @@ Game.RegisterActivatedAbility(
 基本地的能力也应由 Lua 注册，不要根据牌名、类别或规则文字猜测颜色。
 
 ```lua
-local Card = { ApiVersion = 1 }
+local Card = { ApiVersion = 2 }
 
 function Card.OnInit(self)
     Game.RegisterManaAbility(self.Card, "{U}")
@@ -766,7 +768,7 @@ return Card
 ### 8.2 抓两张牌
 
 ```lua
-local Card = { ApiVersion = 1 }
+local Card = { ApiVersion = 2 }
 
 function Card.OnPlay(self)
     Game.DrawForOwner(self.Card, 2)
@@ -778,7 +780,7 @@ return Card
 ### 8.3 启动式能力
 
 ```lua
-local Card = { ApiVersion = 1 }
+local Card = { ApiVersion = 2 }
 
 function Card.OnInit(self)
     Game.RegisterActivatedAbility(
@@ -807,7 +809,7 @@ return Card
 ### 8.4 触发式能力
 
 ```lua
-local Card = { ApiVersion = 1 }
+local Card = { ApiVersion = 2 }
 
 function Card.OnInit(self)
     Game.RegisterTriggeredAbility(
@@ -837,7 +839,7 @@ return Card
 ### 8.5 异步选择
 
 ```lua
-local Card = { ApiVersion = 1 }
+local Card = { ApiVersion = 2 }
 
 function Card.OnPlay(self)
     Game.ChooseOptions(
@@ -870,7 +872,7 @@ return Card
 ### 8.6 按特征角色分派
 
 ```lua
-local Card = { ApiVersion = 1 }
+local Card = { ApiVersion = 2 }
 
 function Card.OnPlay(self)
     local role = Game.GetFeatureRole(self.Card)
@@ -931,3 +933,9 @@ MTGB-DataEditor 的 Lua 功能至少应完成：
 8. 明确显示当前文件绑定的 `set_code`、`collector_number`、`script_path` 和所有相关特征。
 9. 正面、背面和副特征编辑页都打开同一个脚本，避免错误地产生 `_2.lua` 或按特征拆分脚本。
 10. 保持 UTF-8 无 BOM，并阻止脚本路径逃逸 MTGB 根目录。
+
+## 多库身份与嵌套回调（2026-09-05）
+
+数据库结构为 schema 8，Lua API 保持 2。cardID/ID 是库内整数编号，不保证不同数据库之间唯一。跨库定位卡牌使用系列代号与收藏编号；对局目标使用物件身份。
+
+Lua 发起的事件可以同步调用自定义 Lua 替代条件和处理 Hook；嵌套调用使用独立 VM 栈并共享外层执行预算，最多 32 层。每次回调至少计入 1000 指令预算，不能通过拆成短回调绕过 200000 指令总额。调用结束恢复外层事件上下文。

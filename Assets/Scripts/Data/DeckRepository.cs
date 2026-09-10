@@ -75,12 +75,12 @@ public static class DeckRepository
     public static DeckDefinition CreateDefaultDeck(IReadOnlyList<CardDefinition> cards)
     {
         var deck = new DeckDefinition { name = "Starter" };
-        AddKnownOrFirst(deck, cards, 1001, 40);
-        AddKnownOrFirst(deck, cards, 1002, 4);
-        AddKnownOrFirst(deck, cards, 1003, 4);
-        AddKnownOrFirst(deck, cards, 1004, 4);
-        AddKnownOrFirst(deck, cards, 1005, 4);
-        AddKnownOrFirst(deck, cards, 1006, 4);
+        AddKnownOrFirst(deck, cards, "MTGB", "1", 40);
+        AddKnownOrFirst(deck, cards, "MTGB", "8", 4);
+        AddKnownOrFirst(deck, cards, "MTGB", "10", 4);
+        AddKnownOrFirst(deck, cards, "MTGB", "9", 4);
+        AddKnownOrFirst(deck, cards, "MTGB", "11", 4);
+        AddKnownOrFirst(deck, cards, "SOS", "65", 4);
         Normalize(deck);
         return deck;
     }
@@ -223,15 +223,11 @@ public static class DeckRepository
                     return card;
                 }
             }
+            return null; // An explicit printing must never fall back to another card's local ID.
         }
 
-        if (entry.cardId == 0) return null;
-        for (int i = 0; i < cards.Count; i++)
-        {
-            if (cards[i] != null && cards[i].cardID == entry.cardId) return cards[i];
-        }
-
-        return null;
+        if (!string.IsNullOrWhiteSpace(setCode) || !string.IsNullOrWhiteSpace(collectorNumber)) return null;
+        return entry.cardId == 0 ? null : FindById(cards, entry.cardId);
     }
 
     private static bool LooksLikeJson(string content)
@@ -484,9 +480,9 @@ public static class DeckRepository
         return count;
     }
 
-    private static void AddKnownOrFirst(DeckDefinition deck, IReadOnlyList<CardDefinition> cards, int cardId, int count)
+    private static void AddKnownOrFirst(DeckDefinition deck, IReadOnlyList<CardDefinition> cards, string setCode, string collector, int count)
     {
-        CardDefinition card = FindById(cards, cardId);
+        CardDefinition card = ResolveCard(new DeckEntry { setCode = setCode, collectorNumber = collector }, cards);
         if (card == null && cards != null && cards.Count > 0) card = cards[Mathf.Min(deck.cards.Count, cards.Count - 1)];
         if (card == null) return;
 
@@ -496,11 +492,14 @@ public static class DeckRepository
     private static CardDefinition FindById(IReadOnlyList<CardDefinition> cards, int cardId)
     {
         if (cards == null) return null;
+        CardDefinition match = null;
         for (int i = 0; i < cards.Count; i++)
         {
-            if (cards[i] != null && cards[i].cardID == cardId) return cards[i];
+            if (cards[i] == null || cards[i].cardID != cardId) continue;
+            if (match != null) return null;
+            match = cards[i];
         }
-        return null;
+        return match;
     }
 
     private static DeckEntry FindEntry(DeckDefinition deck, CardDefinition card)
@@ -532,20 +531,21 @@ public static class DeckRepository
         return null;
     }
 
-    private static bool EntryMatchesCard(DeckEntry entry, CardDefinition card)
+    public static bool EntryMatchesCard(DeckEntry entry, CardDefinition card)
     {
         if (entry == null || card == null) return false;
-        if (entry.cardId != 0 && entry.cardId == card.cardID) return true;
-        return string.Equals(entry.setCode, card.setCode, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(entry.collectorNumber, card.CollectorNumber, StringComparison.OrdinalIgnoreCase);
+        if (!string.IsNullOrWhiteSpace(entry.PrintingKey))
+            return string.Equals(entry.PrintingKey, card.PrintingKey, StringComparison.OrdinalIgnoreCase);
+        return entry.cardId != 0 && ReferenceEquals(CardDatabaseRepository.FindById(entry.cardId), card);
     }
 
     private static bool EntryMatchesEntry(DeckEntry entry, DeckEntry match)
     {
         if (entry == null || match == null) return false;
-        if (entry.cardId != 0 && match.cardId != 0) return entry.cardId == match.cardId;
-        return string.Equals(entry.setCode, match.setCode, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(entry.collectorNumber, match.collectorNumber, StringComparison.OrdinalIgnoreCase);
+        if (!string.IsNullOrWhiteSpace(entry.PrintingKey) || !string.IsNullOrWhiteSpace(match.PrintingKey))
+            return !string.IsNullOrWhiteSpace(entry.PrintingKey)
+                && string.Equals(entry.PrintingKey, match.PrintingKey, StringComparison.OrdinalIgnoreCase);
+        return entry.cardId != 0 && entry.cardId == match.cardId;
     }
 
     private static void FillEntry(DeckEntry entry, CardDefinition card)

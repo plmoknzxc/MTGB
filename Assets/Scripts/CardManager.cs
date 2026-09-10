@@ -17,7 +17,6 @@ public class CardManager : MonoBehaviour
     public void LoadAllCards()
     {
         allCards.Clear();
-        var knownIds = new HashSet<int>();
 
         if (loadExternalDatabases)
         {
@@ -25,7 +24,7 @@ public class CardManager : MonoBehaviour
             for (int i = 0; i < databaseCards.Count; i++)
             {
                 CardDefinition card = databaseCards[i];
-                if (card == null || !knownIds.Add(card.cardID)) continue;
+                if (card == null) continue;
                 allCards.Add(card);
             }
         }

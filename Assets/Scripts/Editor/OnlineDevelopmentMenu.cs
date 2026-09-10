@@ -58,7 +58,9 @@ public static class OnlineDevelopmentMenu
         Debug.Log(
             "Local online profiles are ready. Configure a Multiplayer Play Mode scenario with " +
             "the Main Editor and two Additional Editor instances, leave streamed logs disabled, then press Play. " +
-            "Player1 starts the server; Player2 and Player3 auto-connect and auto-ready with isolated profiles." +
+            "Player1 starts the server; Player2 and Player3 use isolated profiles but do not auto-connect. " +
+            "Each player must open the lobby, click Join, submit a deck and click ready; after both are ready, " +
+            "the room host clicks Start Match." +
             (opened ? string.Empty : " Open Window > Multiplayer > Play Mode Scenarios manually."));
     }
 

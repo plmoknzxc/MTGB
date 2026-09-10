@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class CardDatabaseRepository
 {
-    public const int SupportedSchemaVersion = 7;
+    public const int SupportedSchemaVersion = 8;
     public const int MinimumSchemaVersion = SupportedSchemaVersion;
     public const string FolderName = "CardDatabases";
     public const string ScriptFolderName = "CardScripts";
@@ -23,24 +23,19 @@ SELECT
     c.rules_text,
     c.power,
     c.toughness,
-    {0},
-    {1},
-    {2},
-    {3},
-    {4},
+    COALESCE(c.supertype_flags, 0),
+    COALESCE(c.subtypes, ''),
+    COALESCE((SELECT cc.loyalty FROM card_characteristics cc WHERE cc.card_key = c.card_key LIMIT 1), 0),
+    COALESCE((SELECT cc.defense FROM card_characteristics cc WHERE cc.card_key = c.card_key LIMIT 1), 0),
     COALESCE(c.script_path, ''),
-    COALESCE((
-        SELECT ce.effect_key
-        FROM card_effects ce
-        WHERE ce.card_key = c.card_key AND ce.trigger = 'on_play'
-        ORDER BY ce.effect_order
-        LIMIT 1
-    ), '')
+    c.content_kind
 FROM cards c
 WHERE c.enabled <> 0
 ORDER BY c.card_id;";
 
     private static readonly List<CardDefinition> LoadedCards = new List<CardDefinition>();
+    private static readonly List<string> loadWarnings = new List<string>();
+    public static IReadOnlyList<string> LoadWarnings => loadWarnings;
     private static bool loaded;
 
     public static string ExternalRoot => Path.Combine(PrintingKeyUtility.ApplicationRoot, FolderName);
@@ -53,33 +48,59 @@ ORDER BY c.card_id;";
         Clear();
         EnsureFolders();
 
-        var printingKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var cardIds = new HashSet<int>();
-        foreach (string databasePath in EnumerateDatabasePaths())
-        {
-            try
-            {
-                LoadDatabase(databasePath, printingKeys, cardIds);
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"Could not load card database '{databasePath}': {exception.Message}");
-            }
-        }
-
+        LoadedCards.AddRange(LoadDatabases(EnumerateDatabasePaths(), loadWarnings));
         loaded = true;
         Debug.Log($"Loaded {LoadedCards.Count} cards from {FolderName}.");
         return LoadedCards;
     }
 
+    private static List<CardDefinition> LoadDatabases(IEnumerable<string> paths, List<string> warnings)
+    {
+        var cards = new Dictionary<string, CardDefinition>(StringComparer.OrdinalIgnoreCase);
+        foreach (string databasePath in paths)
+        {
+            try
+            {
+                // Read and validate the entire file before replacing any previous definitions.
+                foreach (CardDefinition card in LoadDatabase(databasePath))
+                {
+                    if (cards.TryGetValue(card.PrintingKey, out CardDefinition previous))
+                    {
+                        string warning = $"卡牌 {card.PrintingKey} 使用后加载的数据库 '{databasePath}'，覆盖 '{previous.sourceDatabasePath}'。";
+                        warnings.Add(warning);
+                        Debug.LogWarning(warning);
+                    }
+                    cards[card.PrintingKey] = card;
+                }
+            }
+            catch (Exception exception)
+            {
+                string warning = $"Could not load card database '{databasePath}': {exception.Message}";
+                warnings.Add(warning);
+                Debug.LogError(warning);
+            }
+        }
+        var result = new List<CardDefinition>(cards.Values);
+        result.Sort((a, b) => StringComparer.Ordinal.Compare(a.PrintingKey, b.PrintingKey));
+        return result;
+    }
+
+#if UNITY_EDITOR
+    public static IReadOnlyList<CardDefinition> LoadPathsForAutomation(params string[] paths)
+        => LoadDatabases(paths, new List<string>());
+#endif
+
     public static CardDefinition FindById(int cardId)
     {
         IReadOnlyList<CardDefinition> cards = LoadAll();
+        CardDefinition match = null;
         for (int i = 0; i < cards.Count; i++)
         {
-            if (cards[i].cardID == cardId) return cards[i];
+            if (cards[i].cardID != cardId) continue;
+            if (match != null) return null; // A library-local ID cannot identify an ambiguous printing.
+            match = cards[i];
         }
-        return null;
+        return match;
     }
 
     public static CardDefinition FindByPrintingKey(string setCode, string collectorNumber)
@@ -119,15 +140,12 @@ ORDER BY c.card_id;";
             }
         }
         LoadedCards.Clear();
+        loadWarnings.Clear();
         loaded = false;
     }
 
-    private static void LoadDatabase(string databasePath, HashSet<string> printingKeys, HashSet<int> cardIds)
+    private static List<CardDefinition> LoadDatabase(string databasePath)
     {
-        bool customContent = !string.Equals(
-            Path.GetFileName(databasePath),
-            CoreDatabaseName,
-            StringComparison.OrdinalIgnoreCase);
         using (NativeSqliteDatabase database = NativeSqliteDatabase.OpenReadOnlyDatabase(databasePath))
         {
             string versionText = database.ExecuteScalarString(
@@ -138,49 +156,28 @@ ORDER BY c.card_id;";
                     $"Unsupported schema version '{versionText}'. Expected {SupportedSchemaVersion}.");
             }
 
-            string targetModeExpression = HasColumn(database, "cards", "target_mode")
-                ? "COALESCE(c.target_mode, 0)"
-                : "0";
-            string supertypeExpression = HasColumn(database, "cards", "supertype_flags")
-                ? "COALESCE(c.supertype_flags, 0)"
-                : "0";
-            string subtypeExpression = HasColumn(database, "cards", "subtypes")
-                ? "COALESCE(c.subtypes, '')"
-                : "''";
-            bool hasCharacteristics = HasTable(database, "card_characteristics");
-            string loyaltyExpression = hasCharacteristics
-                ? "COALESCE((SELECT cc.loyalty FROM card_characteristics cc WHERE cc.card_key = c.card_key LIMIT 1), 0)"
-                : "0";
-            string battleDefenseExpression = hasCharacteristics
-                ? "COALESCE((SELECT cc.defense FROM card_characteristics cc WHERE cc.card_key = c.card_key LIMIT 1), 0)"
-                : "0";
-            string cardQuery = string.Format(
-                CardQueryTemplate,
-                targetModeExpression,
-                supertypeExpression,
-                subtypeExpression,
-                loyaltyExpression,
-                battleDefenseExpression);
-
             var cardsByKey = new Dictionary<string, CardDefinition>(StringComparer.OrdinalIgnoreCase);
-            database.Query(cardQuery, row =>
+            var databaseCards = new List<CardDefinition>();
+            var databasePrintingKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var databaseCardIds = new HashSet<int>();
+            database.Query(CardQueryTemplate, row =>
             {
                 int cardId = row.GetInt32(0);
                 string setCode = row.GetString(2).Trim();
                 string collectorText = row.GetString(3).Trim();
                 string printingKey = $"{setCode}/{collectorText}";
 
-                if (!cardIds.Add(cardId))
+                if (cardId <= 0 || !databaseCardIds.Add(cardId))
                 {
-                    Debug.LogWarning($"Skipped duplicate card ID {cardId} from '{databasePath}'.");
-                    return;
+                    throw new InvalidDataException($"Invalid or duplicate library-local card ID {cardId}.");
                 }
-                if (!printingKeys.Add(printingKey))
+                if (!databasePrintingKeys.Add(printingKey))
                 {
-                    cardIds.Remove(cardId);
-                    Debug.LogWarning($"Skipped duplicate printing {printingKey} from '{databasePath}'.");
-                    return;
+                    throw new InvalidDataException($"Duplicate printing {printingKey} within database.");
                 }
+                int contentKind = row.GetInt32(15);
+                if (contentKind != 0 && contentKind != 1)
+                    throw new InvalidDataException($"Invalid content category {contentKind} for {printingKey}.");
 
                 var card = new CardDefinition();
                 card.cardName = row.GetString(4);
@@ -194,31 +191,19 @@ ORDER BY c.card_id;";
                 card.description = row.GetString(7);
                 card.attack = row.GetInt32(8);
                 card.defence = row.GetInt32(9);
-                card.targetMode = (CardTargetMode)row.GetInt32(10);
-                card.supertypes = (CardSupertype)row.GetInt32(11);
-                card.subtypes = row.GetString(12);
-                card.loyalty = row.GetInt32(13);
-                card.battleDefense = row.GetInt32(14);
-                if (card.battleDefense == 0 && card.HasType(CardType.Battle) && !card.HasType(CardType.Creature))
-                {
-                    card.battleDefense = card.defence;
-                }
-                card.luaScript = LoadScript(card, databasePath, row.GetString(15));
-                card.effectKey = row.GetString(16);
-                card.customContent = customContent;
-                if (card.targetMode == CardTargetMode.None)
-                {
-                    card.targetMode = InferTargetMode(card);
-                }
-                card.Normalize();
-                LoadedCards.Add(card);
+                card.supertypes = (CardSupertype)row.GetInt32(10);
+                card.subtypes = row.GetString(11);
+                card.loyalty = row.GetInt32(12);
+                card.battleDefense = row.GetInt32(13);
+                card.luaScript = LoadScript(card, databasePath, row.GetString(14));
+                card.customContent = contentKind == 1;
+                card.sourceDatabasePath = Path.GetFullPath(databasePath);
+                databaseCards.Add(card);
                 cardsByKey[printingKey] = card;
             });
 
-            if (version >= 3 && HasTable(database, "card_features"))
-            {
-                LoadFeatures(database, cardsByKey);
-            }
+            LoadFeatures(database, cardsByKey);
+            return databaseCards;
         }
     }
 
@@ -266,64 +251,59 @@ ORDER BY card_key, face_index, feature_index;";
             featuresByKey[BuildFeatureKey(cardKey, feature.faceIndex, feature.featureIndex)] = feature;
         });
 
-        if (HasTable(database, "feature_rule_entries"))
-        {
-            database.Query(@"
+        database.Query(@"
 SELECT card_key, face_index, feature_index, entry_order, entry_kind, chapter_numbers, text
 FROM feature_rule_entries
 ORDER BY card_key, face_index, feature_index, entry_order;", row =>
-            {
-                string key = BuildFeatureKey(row.GetString(0), row.GetInt32(1), row.GetInt32(2));
-                if (!featuresByKey.TryGetValue(key, out CardFeatureDefinition feature)) return;
-                feature.ruleEntries.Add(new CardRuleEntryDefinition
-                {
-                    order = row.GetInt32(3),
-                    kind = (CardRuleEntryKind)row.GetInt32(4),
-                    chapterNumbers = row.GetString(5),
-                    text = row.GetString(6)
-                });
-            });
-        }
-
-        if (HasTable(database, "feature_effects"))
         {
-            database.Query(@"
+            string key = BuildFeatureKey(row.GetString(0), row.GetInt32(1), row.GetInt32(2));
+            if (!featuresByKey.TryGetValue(key, out CardFeatureDefinition feature)) return;
+            feature.ruleEntries.Add(new CardRuleEntryDefinition
+            {
+                order = row.GetInt32(3),
+                kind = (CardRuleEntryKind)row.GetInt32(4),
+                chapterNumbers = row.GetString(5),
+                text = row.GetString(6)
+            });
+        });
+
+        database.Query(@"
 SELECT card_key, face_index, feature_index, effect_order, trigger, effect_key, parameters_json
 FROM feature_effects
 ORDER BY card_key, face_index, feature_index, effect_order;", row =>
-            {
-                string key = BuildFeatureKey(row.GetString(0), row.GetInt32(1), row.GetInt32(2));
-                if (!featuresByKey.TryGetValue(key, out CardFeatureDefinition feature)) return;
-                feature.effects.Add(new CardEffectDefinition
-                {
-                    order = row.GetInt32(3),
-                    trigger = row.GetString(4),
-                    effectKey = row.GetString(5),
-                    parametersJson = row.GetString(6)
-                });
-            });
-        }
-
-        if (HasTable(database, "feature_strings"))
         {
-            database.Query(@"
+            string key = BuildFeatureKey(row.GetString(0), row.GetInt32(1), row.GetInt32(2));
+            if (!featuresByKey.TryGetValue(key, out CardFeatureDefinition feature)) return;
+            feature.effects.Add(new CardEffectDefinition
+            {
+                order = row.GetInt32(3),
+                trigger = row.GetString(4),
+                effectKey = row.GetString(5),
+                parametersJson = row.GetString(6)
+            });
+        });
+
+        database.Query(@"
 SELECT card_key, face_index, feature_index, string_index, text
 FROM feature_strings
 ORDER BY card_key, face_index, feature_index, string_index;", row =>
+        {
+            string key = BuildFeatureKey(row.GetString(0), row.GetInt32(1), row.GetInt32(2));
+            if (!featuresByKey.TryGetValue(key, out CardFeatureDefinition feature)) return;
+            feature.strings.Add(new CardStringDefinition
             {
-                string key = BuildFeatureKey(row.GetString(0), row.GetInt32(1), row.GetInt32(2));
-                if (!featuresByKey.TryGetValue(key, out CardFeatureDefinition feature)) return;
-                feature.strings.Add(new CardStringDefinition
-                {
-                    index = row.GetInt32(3),
-                    text = row.GetString(4)
-                });
+                index = row.GetInt32(3),
+                text = row.GetString(4)
             });
-        }
+        });
 
 
         foreach (CardDefinition card in cardsByKey.Values)
         {
+            ValidateV7Payload(card);
+            CardFeatureDefinition primary = FindFrontPrimaryFeature(card);
+            card.targetMode = CardTargetModeInference.Infer(primary.description, primary.effects);
+            card.effectKey = FindOnPlayEffectKey(primary);
             card.Normalize();
         }
     }
@@ -338,30 +318,109 @@ ORDER BY card_key, face_index, feature_index, string_index;", row =>
         return version >= MinimumSchemaVersion && version <= SupportedSchemaVersion;
     }
 
-    private static bool HasColumn(NativeSqliteDatabase database, string tableName, string columnName)
+    private static CardFeatureDefinition FindFrontPrimaryFeature(CardDefinition card)
     {
-        bool found = false;
-        database.Query($"PRAGMA table_info({tableName});", row =>
+        for (int i = 0; i < card.features.Count; i++)
         {
-            if (string.Equals(row.GetString(1), columnName, StringComparison.OrdinalIgnoreCase))
+            CardFeatureDefinition feature = card.features[i];
+            if (feature != null
+                && feature.faceIndex == 0
+                && feature.featureIndex == 0
+                && feature.role == CardFeatureRole.Primary)
             {
-                found = true;
+                return feature;
             }
-        });
-        return found;
+        }
+        return null;
     }
 
-    private static bool HasTable(NativeSqliteDatabase database, string tableName)
+    private static string FindOnPlayEffectKey(CardFeatureDefinition feature)
     {
-        bool found = false;
-        database.Query("SELECT name FROM sqlite_master WHERE type = 'table';", row =>
+        for (int i = 0; i < feature.effects.Count; i++)
         {
-            if (string.Equals(row.GetString(0), tableName, StringComparison.OrdinalIgnoreCase))
+            CardEffectDefinition effect = feature.effects[i];
+            if (effect != null && string.Equals(effect.trigger, "on_play", StringComparison.OrdinalIgnoreCase))
             {
-                found = true;
+                return effect.effectKey ?? string.Empty;
             }
-        });
-        return found;
+        }
+        return string.Empty;
+    }
+
+    private static void ValidateV7Payload(CardDefinition card)
+    {
+        var primaryCountsByFace = new Dictionary<int, int>();
+        for (int i = 0; i < card.features.Count; i++)
+        {
+            CardFeatureDefinition feature = card.features[i];
+            if (feature == null
+                || !Enum.IsDefined(typeof(CardFeatureRole), feature.role)
+                || string.IsNullOrWhiteSpace(feature.cardName)
+                || feature.cardTypes == CardType.None
+                || feature.cardTypes == CardType.Kindred
+                || string.IsNullOrWhiteSpace(feature.powerExpression)
+                || string.IsNullOrWhiteSpace(feature.toughnessExpression))
+            {
+                throw new InvalidDataException(
+                    $"Card '{card.PrintingKey}' has an incomplete schema v7 feature at index {i}.");
+            }
+            if (!string.IsNullOrEmpty(feature.description) && feature.ruleEntries.Count == 0)
+            {
+                throw new InvalidDataException(
+                    $"Card '{card.PrintingKey}' stores rules only in the legacy rules_text mirror.");
+            }
+
+            for (int ruleIndex = 0; ruleIndex < feature.ruleEntries.Count; ruleIndex++)
+            {
+                CardRuleEntryDefinition entry = feature.ruleEntries[ruleIndex];
+                if (entry == null
+                    || entry.order != ruleIndex
+                    || !Enum.IsDefined(typeof(CardRuleEntryKind), entry.kind))
+                {
+                    throw new InvalidDataException(
+                        $"Card '{card.PrintingKey}' has invalid schema v7 rule entries.");
+                }
+            }
+
+            if (!primaryCountsByFace.ContainsKey(feature.faceIndex))
+                primaryCountsByFace[feature.faceIndex] = 0;
+            if (feature.role == CardFeatureRole.Primary)
+            {
+                primaryCountsByFace[feature.faceIndex]++;
+                if (feature.featureIndex != 0)
+                    throw new InvalidDataException(
+                        $"Card '{card.PrintingKey}' has a primary feature outside feature index 0.");
+            }
+            else if (feature.featureIndex == 0)
+            {
+                throw new InvalidDataException(
+                    $"Card '{card.PrintingKey}' has a non-primary feature at feature index 0.");
+            }
+        }
+
+        foreach (KeyValuePair<int, int> pair in primaryCountsByFace)
+        {
+            if (pair.Value != 1)
+                throw new InvalidDataException(
+                    $"Card '{card.PrintingKey}' face {pair.Key} must have exactly one primary feature.");
+        }
+
+        CardFeatureDefinition primary = FindFrontPrimaryFeature(card);
+        if (primary == null
+            || !string.Equals(card.cardName, primary.cardName, StringComparison.Ordinal)
+            || card.cardTypes != primary.cardTypes
+            || card.supertypes != primary.supertypes
+            || !string.Equals(card.subtypes ?? string.Empty, primary.subtypes ?? string.Empty, StringComparison.Ordinal)
+            || !string.Equals(card.description ?? string.Empty, primary.description ?? string.Empty, StringComparison.Ordinal)
+            || !string.Equals(card.manaCost ?? string.Empty, primary.manaCost ?? string.Empty, StringComparison.Ordinal)
+            || card.attack != primary.attack
+            || card.defence != primary.defence
+            || card.loyalty != primary.loyalty
+            || card.battleDefense != primary.battleDefense)
+        {
+            throw new InvalidDataException(
+                $"Card '{card.PrintingKey}' root mirror does not match its schema v7 front primary feature.");
+        }
     }
 
     private static string LoadScript(CardDefinition card, string databasePath, string legacyRelativePath)
@@ -418,33 +477,6 @@ ORDER BY card_key, face_index, feature_index, string_index;", row =>
             Debug.LogWarning($"Could not read card script '{relativePath}': {exception.Message}");
             return false;
         }
-    }
-
-    private static CardTargetMode InferTargetMode(CardDefinition card)
-    {
-        if (card == null) return CardTargetMode.None;
-
-        string text = $"{card.description} {card.effectKey}".ToUpperInvariant();
-        if (!text.Contains("TARGET") && !text.Contains("目标")) return CardTargetMode.None;
-
-        if (text.Contains("OPPONENT") && (text.Contains("CREATURE OR PLAYER") || text.Contains("ANY TARGET")))
-            return CardTargetMode.OpponentCreatureOrPlayer;
-        if (text.Contains("CREATURE OR PLAYER") || text.Contains("ANY TARGET"))
-            return CardTargetMode.AnyCreatureOrPlayer;
-        if (text.Contains("OPPONENT") && text.Contains("CREATURE"))
-            return CardTargetMode.OpponentCreature;
-        if (text.Contains("CREATURE"))
-            return CardTargetMode.AnyCreature;
-        if (text.Contains("OPPONENT") && text.Contains("PERMANENT"))
-            return CardTargetMode.OpponentPermanent;
-        if (text.Contains("PERMANENT"))
-            return CardTargetMode.AnyPermanent;
-        if (text.Contains("OPPONENT") && text.Contains("PLAYER"))
-            return CardTargetMode.OpponentPlayer;
-        if (text.Contains("PLAYER"))
-            return CardTargetMode.AnyPlayer;
-
-        return CardTargetMode.None;
     }
 
     private static IEnumerable<string> EnumerateDatabasePaths()

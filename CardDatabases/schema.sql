@@ -8,6 +8,7 @@ CREATE TABLE metadata (
 CREATE TABLE cards (
     card_key TEXT PRIMARY KEY,
     card_id INTEGER NOT NULL UNIQUE,
+    content_kind INTEGER NOT NULL DEFAULT 1 CHECK(content_kind IN (0, 1)),
     oracle_id TEXT NOT NULL DEFAULT '',
     set_code TEXT NOT NULL,
     collector_number TEXT NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE cards (
     UNIQUE (set_code, collector_number)
 );
 
+-- 兼容旧数据。编辑器新版不再直接编辑这张表，但保存卡牌时会保留已有记录。
 CREATE TABLE card_effects (
     card_key TEXT NOT NULL,
     effect_order INTEGER NOT NULL,
@@ -34,6 +36,7 @@ CREATE TABLE card_effects (
     FOREIGN KEY (card_key) REFERENCES cards(card_key) ON DELETE CASCADE
 );
 
+-- 编辑器专用的提示文本。Unity 端目前可以忽略此表。
 CREATE TABLE card_strings (
     card_key TEXT NOT NULL,
     string_index INTEGER NOT NULL,
@@ -42,6 +45,8 @@ CREATE TABLE card_strings (
     FOREIGN KEY (card_key) REFERENCES cards(card_key) ON DELETE CASCADE
 );
 
+
+-- 编辑器保存鹏洛客初始忠诚与战役布防值。Unity 当前版本可以安全忽略此表。
 CREATE TABLE card_characteristics (
     card_key TEXT PRIMARY KEY,
     loyalty INTEGER NOT NULL DEFAULT 0,
@@ -49,6 +54,8 @@ CREATE TABLE card_characteristics (
     FOREIGN KEY (card_key) REFERENCES cards(card_key) ON DELETE CASCADE
 );
 
+-- 一个实体卡可有多面；每个面可有一个或多个特征（历险、分割、拼接等）。
+-- cards 始终镜像正面第一特征，供旧版运行端兼容读取。
 CREATE TABLE card_features (
     card_key TEXT NOT NULL,
     face_index INTEGER NOT NULL,

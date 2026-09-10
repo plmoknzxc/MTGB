@@ -1565,6 +1565,8 @@ public static class GameDeterminismValidationMenu
         Require(
             runtime.ValidateInstructionQuotaForAutomation(),
             "Lua instruction quota did not stop an unbounded script.");
+        Require(runtime.ValidateNestedQuotaForAutomation(false), "Short nested callbacks bypassed the shared instruction budget.");
+        Require(runtime.ValidateNestedQuotaForAutomation(true), "Recursive C#/Lua callbacks bypassed the depth limit.");
 
         using ICardScriptInstance instance = runtime.CreateCardInstance(
             card,

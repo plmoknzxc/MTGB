@@ -52,6 +52,10 @@ public sealed class MainMenuController : MonoBehaviour
     private bool listenersRegistered;
     private bool hasUnsavedDeckChanges;
     private bool suppressDeckDropdownEvent;
+    private string collectionQuery = string.Empty;
+    private int collectionContentFilter;
+    private GameObject collectionSearchDialog;
+    private Text collectionFilterLabel;
     private int loadedDeckIndex = -1;
     private Action pendingUnsavedProceed;
     private Action pendingUnsavedCancel;
@@ -225,6 +229,8 @@ public sealed class MainMenuController : MonoBehaviour
         SetStatus(cards.Count > 0
             ? $"Loaded {cards.Count} cards and {decks.Count} decks."
             : "No cards loaded. Put databases under CardDatabases before building a deck.");
+        if (CardDatabaseRepository.LoadWarnings.Count > 0)
+            SetStatus(string.Join("\n", CardDatabaseRepository.LoadWarnings));
     }
 
     private void ShowStartScreen()
@@ -263,7 +269,47 @@ public sealed class MainMenuController : MonoBehaviour
 
     private void OnAdvancedSearchPlaceholder()
     {
-        SetStatus("高级搜索还未接入。");
+        if (collectionSearchDialog != null) { collectionSearchDialog.SetActive(true); return; }
+        Canvas canvas = GetRootCanvas();
+        if (canvas == null) return;
+        collectionSearchDialog = new GameObject("CollectionSearch", typeof(RectTransform), typeof(Image));
+        collectionSearchDialog.transform.SetParent(canvas.transform, false);
+        Stretch(collectionSearchDialog.GetComponent<RectTransform>(), 0f, 0f, 0f, 0f);
+        collectionSearchDialog.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.65f);
+        var panel = new GameObject("Panel", typeof(RectTransform), typeof(Image));
+        panel.transform.SetParent(collectionSearchDialog.transform, false);
+        Place(panel.GetComponent<RectTransform>(), Vector2.zero, new Vector2(560f, 320f));
+        panel.GetComponent<Image>().color = ObsidianArenaTheme.SurfaceRaised;
+        Text title = AddText(panel.transform, "Title", "搜索卡牌", 26, Color.white, TextAnchor.MiddleLeft);
+        Place(title.rectTransform, new Vector2(0f, 122f), new Vector2(500f, 40f));
+        var inputObject = new GameObject("SearchInput", typeof(RectTransform), typeof(Image), typeof(InputField));
+        inputObject.transform.SetParent(panel.transform, false);
+        Place(inputObject.GetComponent<RectTransform>(), new Vector2(0f, 68f), new Vector2(500f, 42f));
+        inputObject.GetComponent<Image>().color = ObsidianArenaTheme.Surface;
+        var input = inputObject.GetComponent<InputField>();
+        input.textComponent = AddText(input.transform, "Text", string.Empty, 18, Color.white, TextAnchor.MiddleLeft);
+        Stretch(input.textComponent.rectTransform, 12f, 4f, 12f, 4f);
+        Text placeholder = AddText(input.transform, "Placeholder", "卡名、系列、编号或规则文字", 18, ObsidianArenaTheme.MutedText, TextAnchor.MiddleLeft);
+        Stretch(placeholder.rectTransform, 12f, 4f, 12f, 4f);
+        input.placeholder = placeholder;
+        input.text = collectionQuery;
+        input.onValueChanged.AddListener(value => { collectionQuery = value; RefreshCollectionGrid(); });
+        string[] labels = { "全部内容", "官方卡牌", "DIY 卡牌" };
+        for (int i = 0; i < labels.Length; i++)
+        {
+            int category = i;
+            CreateDialogButton(panel.transform, "Category" + i, labels[i], new Vector2((i - 1) * 176f, 5f),
+                ObsidianArenaTheme.Surface, () =>
+                {
+                    collectionContentFilter = category;
+                    collectionFilterLabel.text = "当前筛选：" + labels[category];
+                    RefreshCollectionGrid();
+                });
+        }
+        collectionFilterLabel = AddText(panel.transform, "Filter", "当前筛选：" + labels[collectionContentFilter], 18, Color.white, TextAnchor.MiddleCenter);
+        Place(collectionFilterLabel.rectTransform, new Vector2(0f, -48f), new Vector2(500f, 30f));
+        CreateDialogButton(panel.transform, "Close", "查看结果", new Vector2(0f, -110f), ObsidianArenaTheme.BlueDeep,
+            () => collectionSearchDialog.SetActive(false));
     }
 
     private static void SetScreenVisible(CanvasGroup group, bool visible)
@@ -288,12 +334,24 @@ public sealed class MainMenuController : MonoBehaviour
         ClearChildren(collectionContent);
         if (collectionContent == null) return;
 
+        int visible = 0;
         for (int i = 0; i < cards.Count; i++)
         {
+            if (!MatchesCollectionFilter(cards[i], collectionQuery, collectionContentFilter)) continue;
             CreateCardTile(collectionContent, cards[i], 0, MainMenuCardTileZone.Collection);
+            visible++;
         }
 
-        SetText(collectionCountText, $"Collection  {cards.Count}");
+        SetText(collectionCountText, $"卡牌  {visible} / {cards.Count}");
+    }
+
+    public static bool MatchesCollectionFilter(CardDefinition card, string query, int category)
+    {
+        if (card == null || (category == 1 && card.customContent) || (category == 2 && !card.customContent)) return false;
+        query = query?.Trim() ?? string.Empty;
+        return query.Length == 0 || (card.cardName ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
+            || card.PrintingKey.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
+            || (card.description ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     private void RefreshDeckGrids()
@@ -666,11 +724,7 @@ public sealed class MainMenuController : MonoBehaviour
 
     private static bool EntryMatchesCard(DeckEntry entry, CardDefinition card)
     {
-        if (entry == null || card == null) return false;
-        if (entry.cardId != 0 && entry.cardId == card.cardID) return true;
-
-        return string.Equals(entry.setCode, card.setCode, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(entry.collectorNumber, card.CollectorNumber, StringComparison.OrdinalIgnoreCase);
+        return DeckRepository.EntryMatchesCard(entry, card);
     }
 
     private void CreateDragGhost(MainMenuCardTile tile, PointerEventData eventData)

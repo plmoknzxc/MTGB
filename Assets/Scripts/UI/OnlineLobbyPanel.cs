@@ -47,7 +47,9 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     private Button hostButton;
     private Button connectButton;
     private Button readyButton;
+    private Button startMatchButton;
     private Button sideboardReadyButton;
+    private Button sideboardStartButton;
     private Button leaveRoomButton;
     private Button resetSideboardButton;
     private CanvasGroup contentGroup;
@@ -117,7 +119,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             new Vector2(132f, 50f), font, ObsidianArenaTheme.SurfaceRaised);
         AddText(content.transform, "Title", "联机对战", new Vector2(-540f, 484f), new Vector2(420f, 56f),
             40, font, TextAnchor.MiddleLeft, TextColor);
-        AddText(content.transform, "Subtitle", "局域网房间 · 双方提交牌组后开始", new Vector2(-440f, 442f),
+        AddText(content.transform, "Subtitle", "局域网房间 · 双方准备后由房主开始", new Vector2(-440f, 442f),
             new Vector2(620f, 32f), 18, font, TextAnchor.MiddleLeft, MutedTextColor);
         panel.connectionBadgeText = AddText(content.transform, "ConnectionBadge", "● 未连接",
             new Vector2(760f, 470f), new Vector2(250f, 46f), 20, font, TextAnchor.MiddleCenter, MutedTextColor);
@@ -192,7 +194,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             new Vector2(90f, 148f), new Vector2(620f, 46f), font, "留空表示允许全部；多个代码用逗号分隔");
 
         panel.customContentToggle = AddToggle(roomCard.transform, "CustomToggle", "允许 DIY 卡牌",
-            "开启后，房间允许牌组中包含 customContent 卡牌。", new Vector2(0f, 63f),
+            "开启后，允许使用在数据编辑器中标记为 DIY 的卡牌。", new Vector2(0f, 63f),
             new Vector2(780f, 72f), font, out panel.customContentStateText);
 
         AddPanel(roomCard.transform, "Divider", new Vector2(0f, 8f), new Vector2(780f, 2f),
@@ -253,9 +255,11 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             new Vector2(720f, 60f), 19, font, TextAnchor.MiddleLeft, TextColor);
 
         panel.readyButton = AddButton(preparationCard.transform, "ReadyButton", "提交牌组并准备",
-            new Vector2(0f, -42f), new Vector2(430f, 64f), font, AccentColor);
+            new Vector2(-190f, -42f), new Vector2(390f, 64f), font, AccentColor);
+        panel.startMatchButton = AddButton(preparationCard.transform, "StartMatchButton", "等待双方准备",
+            new Vector2(245f, -42f), new Vector2(300f, 64f), font, OpponentColor);
         AddText(preparationCard.transform, "ReadyHelp",
-            "牌组只会提交给当前局域网主机；双方准备后自动进入对局。",
+            "牌组只会提交给当前房间；双方准备后，由房主确认开始比赛。",
             new Vector2(0f, -107f), new Vector2(760f, 46f), 15, font,
             TextAnchor.MiddleCenter, MutedTextColor);
 
@@ -312,15 +316,19 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             new Vector2(0f, -356f), new Vector2(1040f, 42f), 16, font,
             TextAnchor.MiddleCenter, MutedTextColor);
         panel.resetSideboardButton = AddButton(sideboardPage.transform, "ResetSideboardButton", "撤销本次换备",
-            new Vector2(430f, -314f), new Vector2(280f, 54f), font, ObsidianArenaTheme.SurfaceRaised);
+            new Vector2(250f, -314f), new Vector2(240f, 54f), font, ObsidianArenaTheme.SurfaceRaised);
         panel.sideboardReadyButton = AddButton(sideboardPage.transform, "SideboardReadyButton", "完成换备并准备",
-            new Vector2(720f, -314f), new Vector2(300f, 54f), font, AccentColor);
+            new Vector2(520f, -314f), new Vector2(270f, 54f), font, AccentColor);
+        panel.sideboardStartButton = AddButton(sideboardPage.transform, "SideboardStartButton", "等待双方准备",
+            new Vector2(800f, -314f), new Vector2(260f, 54f), font, OpponentColor);
 
         panel.readyButton.interactable = false;
         panel.hostButton.onClick.AddListener(panel.Host);
         panel.connectButton.onClick.AddListener(panel.Connect);
         panel.readyButton.onClick.AddListener(panel.ToggleReady);
+        panel.startMatchButton.onClick.AddListener(panel.StartMatch);
         panel.sideboardReadyButton.onClick.AddListener(panel.ToggleReady);
+        panel.sideboardStartButton.onClick.AddListener(panel.StartMatch);
         panel.leaveRoomButton.onClick.AddListener(panel.LeaveRoom);
         panel.deckDropdown.onValueChanged.AddListener(panel.OnDeckSelected);
         panel.resetSideboardButton.onClick.AddListener(panel.ResetSideboardChanges);
@@ -543,7 +551,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     private void ToggleReady()
     {
         OnlineMatchService service = OnlineMatchService.Instance;
-        if (service == null || !service.IsConnected || selectedDeck == null) return;
+        if (service == null || !service.HasJoinedLobby || selectedDeck == null) return;
         if (!ready)
         {
             OnlineClientProfileStore.SaveDeck(profileInput.text, selectedDeck);
@@ -552,6 +560,11 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         ready = !ready;
         service.SetReady(ready);
         Refresh();
+    }
+
+    private void StartMatch()
+    {
+        OnlineMatchService.Instance?.RequestStartMatch();
     }
 
     private void Close()
@@ -613,14 +626,22 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     {
         OnlineMatchService service = OnlineMatchService.Instance;
         bool connected = service != null && service.IsConnected;
+        bool joinedRoom = service != null && service.HasJoinedLobby;
         bool online = service != null && service.IsOnline;
+        bool disconnecting = service != null && service.IsDisconnecting;
+        bool canStartConnection = !online && !disconnecting;
         bool host = service != null && service.IsHost;
         OnlineLobbyState lobby = service?.LobbyState;
         OnlineSeriesState series = lobby?.series;
-        bool betweenGames = connected && series != null && series.betweenGames && !series.finished;
+        bool betweenGames = joinedRoom && series != null && series.betweenGames && !series.finished;
+        bool roomHost = joinedRoom && lobby != null && lobby.hostSeat == service.LocalSeat;
+        bool allPlayersReady = lobby?.players != null
+            && lobby.players.Count == 2
+            && lobby.players.TrueForAll(player =>
+                player != null && player.connected && player.hasDeck && player.ready);
 
-        SetPageVisible(connectionPageGroup, !connected);
-        SetPageVisible(roomPageGroup, connected && !betweenGames);
+        SetPageVisible(connectionPageGroup, !joinedRoom);
+        SetPageVisible(roomPageGroup, joinedRoom && !betweenGames);
         SetPageVisible(sideboardPageGroup, betweenGames);
 
         if (connected && lobby?.players != null)
@@ -631,21 +652,28 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
 
         if (hostButton != null)
         {
-            hostButton.interactable = !online;
+            hostButton.interactable = canStartConnection;
             SetButtonLabel(hostButton, "创建局域网主机");
         }
         if (connectButton != null)
         {
-            connectButton.interactable = !online;
+            connectButton.interactable = canStartConnection;
             SetButtonLabel(connectButton, "加入已有主机");
         }
         if (readyButton != null)
         {
-            readyButton.interactable = connected && selectedDeck != null && !betweenGames;
+            readyButton.interactable = joinedRoom && selectedDeck != null && !betweenGames;
             string readyLabel = "提交牌组并准备";
             if (series != null && series.finished) readyLabel = "准备开始新比赛";
             if (ready) readyLabel = "取消准备";
             SetButtonLabel(readyButton, readyLabel);
+        }
+        if (startMatchButton != null)
+        {
+            startMatchButton.interactable = roomHost && allPlayersReady && !betweenGames;
+            SetButtonLabel(startMatchButton, roomHost
+                ? allPlayersReady ? "开始比赛" : "等待双方准备"
+                : "等待房主开始");
         }
         if (sideboardReadyButton != null)
         {
@@ -654,10 +682,17 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
                 ? "取消准备"
                 : $"准备第 {series?.gameNumber ?? 1} 局");
         }
+        if (sideboardStartButton != null)
+        {
+            sideboardStartButton.interactable = roomHost && allPlayersReady && betweenGames;
+            SetButtonLabel(sideboardStartButton, roomHost
+                ? allPlayersReady ? $"开始第 {series?.gameNumber ?? 1} 局" : "等待双方准备"
+                : "等待房主开始");
+        }
 
-        SetConnectionFieldsInteractable(!online);
-        SetRoomSettingsInteractable(!online);
-        RefreshConnectionBadge(connected, online, host);
+        SetConnectionFieldsInteractable(canStartConnection);
+        SetRoomSettingsInteractable(canStartConnection);
+        RefreshConnectionBadge(joinedRoom, online, host, disconnecting);
         RefreshDeckSummary();
 
         if (lobby?.config != null) ApplyAuthoritativeRoomConfig(lobby.config);
@@ -666,12 +701,19 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         RefreshSideboardControls(series);
 
         if (seatsText == null) return;
-        if (lobby == null || lobby.players == null)
+        if (lobby == null || lobby.players == null || lobby.players.Count == 0)
         {
-            seatsText.text = "玩家 1　空位\n玩家 2　空位";
+            seatsText.text = "等待玩家加入…";
             return;
         }
-        seatsText.text = FormatSeat(lobby, 1) + "\n" + FormatSeat(lobby, 2);
+        var occupiedSeats = new List<string>();
+        for (int seat = 1; seat <= 2; seat++)
+        {
+            OnlineLobbyPlayer player = lobby.players.Find(item => item != null && item.seat == seat && item.connected);
+            if (player != null) occupiedSeats.Add(FormatSeat(lobby, seat));
+        }
+        if (occupiedSeats.Count < 2) occupiedSeats.Add("等待另一名玩家加入…");
+        seatsText.text = string.Join("\n", occupiedSeats);
     }
 
     private void SetConnectionFieldsInteractable(bool interactable)
@@ -691,10 +733,15 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         if (customContentToggle != null) customContentToggle.interactable = interactable;
     }
 
-    private void RefreshConnectionBadge(bool connected, bool online, bool host)
+    private void RefreshConnectionBadge(bool connected, bool online, bool host, bool disconnecting)
     {
         if (connectionBadgeText == null) return;
-        if (!online)
+        if (disconnecting)
+        {
+            connectionBadgeText.text = "● 正在退出房间";
+            connectionBadgeText.color = ObsidianArenaTheme.Warning;
+        }
+        else if (!online)
         {
             connectionBadgeText.text = "● 未连接";
             connectionBadgeText.color = MutedTextColor;
@@ -968,7 +1015,8 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         OnlineLobbyPlayer player = lobby.players.Find(item => item != null && item.seat == seat);
         if (player == null || !player.connected) return $"玩家 {seat}　空位";
         string state = player.ready ? "已准备" : player.hasDeck ? "牌组已提交" : "等待牌组";
-        return $"玩家 {seat}　{player.displayName}　{state}";
+        string host = lobby.hostSeat == seat ? "（房主）" : string.Empty;
+        return $"玩家 {seat}{host}　{player.displayName}　{state}";
     }
 
     private static bool SameDeckName(DeckDefinition left, DeckDefinition right)

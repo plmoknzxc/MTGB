@@ -84,6 +84,7 @@ public sealed class OnlineRoomMember
 public sealed class OnlineRoomState : IDisposable
 {
     public string roomId;
+    public int hostSeat;
     public OnlineRoomConfig config = new OnlineRoomConfig();
     public OnlineSeriesState series = new OnlineSeriesState();
     public readonly Dictionary<int, OnlineRoomMember> members = new Dictionary<int, OnlineRoomMember>();

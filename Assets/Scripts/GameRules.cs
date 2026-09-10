@@ -3159,16 +3159,23 @@ public partial class GameRules : MonoBehaviour
     private bool CanPayPendingCastCost(ScriptAbilityCost cost)
     {
         if (pendingCast == null || cost == null) return false;
-        int playerId = pendingCast.PlayerId;
+        return CanPayCastingCost(pendingCast.Source, pendingCast.PlayerId,
+            pendingCast.SourceZone == GameChoiceZone.Hand, cost);
+    }
+
+    private bool CanPayCastingCost(RuntimeCard source, int playerId, bool sourceInHand, ScriptAbilityCost cost)
+    {
+        if (source == null || cost == null || cost.TapSource || cost.SacrificeSource
+            || cost.ExileSource || cost.CounterCount > 0) return false;
         if (cost.Life > 0 && GetLife(playerId) <= cost.Life) return false;
 
         List<RuntimeCard> hand = GetHandList(playerId);
         int availableHandCards = hand != null ? hand.Count : 0;
-        if (pendingCast.SourceZone == GameChoiceZone.Hand) availableHandCards--;
+        if (sourceInHand) availableHandCards--;
         if (cost.DiscardCount + cost.ExileHandCount > availableHandCards) return false;
         if (cost.RevealHandCount > (hand?.Count ?? 0)) return false;
         if (cost.SacrificePermanentCount
-            > CountSacrificeCostCandidates(pendingCast.Source, false))
+            > CountSacrificeCostCandidates(source, false))
         {
             return false;
         }
@@ -3188,7 +3195,7 @@ public partial class GameRules : MonoBehaviour
         List<RuntimeCard> candidates = new List<RuntimeCard>(
             GetHandList(pendingCast.PlayerId));
         candidates.Remove(pendingCast.Source);
-        if (pendingCast.PlayerId != 1)
+        if (pendingCast.PlayerId != 1 && !IsOnlineMatch())
         {
             AddAutomaticCards(candidates, cost.DiscardCount, pendingCastPayment.DiscardCards);
             pendingCast.Stage = SpellCastDeclarationStage.SacrificeCost;
@@ -3230,7 +3237,7 @@ public partial class GameRules : MonoBehaviour
 
         List<RuntimeCard> candidates =
             GetSacrificeCostCandidates(pendingCast.Source, false);
-        if (pendingCast.PlayerId != 1)
+        if (pendingCast.PlayerId != 1 && !IsOnlineMatch())
         {
             AddAutomaticCards(
                 candidates,
@@ -3280,7 +3287,7 @@ public partial class GameRules : MonoBehaviour
             GetHandList(pendingCast.PlayerId));
         candidates.Remove(pendingCast.Source);
         candidates.RemoveAll(card => pendingCastPayment.DiscardCards.Contains(card));
-        if (pendingCast.PlayerId != 1)
+        if (pendingCast.PlayerId != 1 && !IsOnlineMatch())
         {
             AddAutomaticCards(candidates, cost.ExileHandCount, pendingCastPayment.ExileHandCards);
             pendingCast.Stage = SpellCastDeclarationStage.RevealCost;
@@ -3322,7 +3329,7 @@ public partial class GameRules : MonoBehaviour
 
         List<RuntimeCard> candidates = new List<RuntimeCard>(
             GetHandList(pendingCast.PlayerId));
-        if (pendingCast.PlayerId != 1)
+        if (pendingCast.PlayerId != 1 && !IsOnlineMatch())
         {
             AddAutomaticCards(candidates, cost.RevealHandCount, pendingCastPayment.RevealHandCards);
             pendingCast.Stage = SpellCastDeclarationStage.Confirmation;
@@ -4800,26 +4807,24 @@ public partial class GameRules : MonoBehaviour
     {
         if (card == null || feature == null) return false;
         int x = card.CastProfile.UsesX ? card.CastProfile.MinimumX : 0;
-        var candidates = new List<ManaCost>
+        var candidates = new List<ScriptAbilityCost>
         {
-            ManaCostMath.ResolveX(feature.ManaCost, x)
+            new ScriptAbilityCost { Mana = feature.ManaCost }
         };
         for (int i = 0; i < card.CastProfile.AlternativeCosts.Count; i++)
         {
-            candidates.Add(ManaCostMath.ResolveX(
-                card.CastProfile.AlternativeCosts[i].Cost.Mana,
-                x));
+            candidates.Add(card.CastProfile.AlternativeCosts[i].Cost.Clone());
         }
 
         for (int candidateIndex = 0; candidateIndex < candidates.Count; candidateIndex++)
         {
-            ManaCost candidate = candidates[candidateIndex];
+            ScriptAbilityCost total = candidates[candidateIndex];
             for (int i = 0; i < card.CastProfile.AdditionalCosts.Count; i++)
             {
                 SpellCastCostOption additional = card.CastProfile.AdditionalCosts[i];
                 if (!additional.Optional)
                 {
-                    candidate = ManaCostMath.Add(candidate, additional.Cost.Mana);
+                    total = ScriptAbilityCost.Combine(total, additional.Cost);
                 }
             }
 
@@ -4838,10 +4843,12 @@ public partial class GameRules : MonoBehaviour
                 playerId,
                 card,
                 0));
+            ManaCost candidate = ManaCostMath.ResolveX(total.Mana, x);
             candidate = ManaCostMath.AddGeneric(candidate, increase);
             candidate = ManaCostMath.ReduceGeneric(candidate, reduction);
             candidate = ManaCostMath.EnforceMinimumTotal(candidate, minimum);
-            if (CanPayWithPoolOrAvailableMana(playerId, candidate)) return true;
+            total.Mana = candidate;
+            if (CanPayCastingCost(card, playerId, card.CurrentZone == GameZone.Hand, total)) return true;
         }
         return false;
     }
@@ -8595,6 +8602,13 @@ public partial class GameRules : MonoBehaviour
 
     private bool PerformStateBasedActions()
     {
+        // Script effects finish before an SBA checkpoint. Re-entering Lua here
+        // (for example an anthem filter during a buff hook) violates its runtime guard.
+        if (CardScriptRuntimeManager.Instance?.Runtime is LuaCSharpCardScriptRuntime lua && lua.IsExecutingHook)
+        {
+            stateBasedActionRecheckRequested = true;
+            return false;
+        }
         if (processingStateBasedActions)
         {
             stateBasedActionRecheckRequested = true;
@@ -11101,6 +11115,7 @@ public partial class GameRules : MonoBehaviour
         if (card == null) return;
         card.TurnEnteredBattlefield = turnNumber;
         card.BattlefieldEntrySequence = ++nextBattlefieldEntrySequence;
+        eventPipeline.BindIntrinsicEffects(card);
     }
 
     private List<RuntimeCard> GetGraveyardList(int playerID)
@@ -11838,9 +11853,10 @@ public partial class GameRules : MonoBehaviour
         GameEventContext gameEvent)
     {
         if (replacement?.Source == null || string.IsNullOrEmpty(replacement.HookName)) return;
+        GameEventContext previousContext = replacement.Source.ResolvingGameEvent;
         replacement.Source.SetResolvingGameEvent(gameEvent);
-        CardEffectExecutor.ExecuteTriggeredHook(this, replacement.Source, replacement.HookName);
-        replacement.Source.ClearResolvingGameEvent();
+        try { CardEffectExecutor.ExecuteTriggeredHook(this, replacement.Source, replacement.HookName); }
+        finally { replacement.Source.SetResolvingGameEvent(previousContext); }
     }
 
     private bool ShouldApplyScriptReplacement(
@@ -11853,13 +11869,11 @@ public partial class GameRules : MonoBehaviour
         RuntimeCard source = replacement.Source;
         GameEventContext previousContext = source.ResolvingGameEvent;
         source.SetResolvingGameEvent(gameEvent);
-        bool result = CardEffectExecutor.EvaluateCardScriptPredicate(
-            this,
-            source,
-            replacement.ConditionHookName,
-            false);
-        source.SetResolvingGameEvent(previousContext);
-        return result;
+        try
+        {
+            return CardEffectExecutor.EvaluateCardScriptPredicate(this, source, replacement.ConditionHookName, false);
+        }
+        finally { source.SetResolvingGameEvent(previousContext); }
     }
 
     private static ScriptReplacementRegistration SelectScriptReplacement(
@@ -11886,14 +11900,14 @@ public partial class GameRules : MonoBehaviour
         GameEventContext gameEvent)
     {
         if (trigger?.Source == null) return false;
+        GameEventContext previousContext = trigger.Source.ResolvingGameEvent;
         trigger.Source.SetResolvingGameEvent(gameEvent);
-        bool result = string.IsNullOrEmpty(trigger.ConditionHookName)
-            || CardEffectExecutor.EvaluateCardScriptPredicate(
-                this,
-                trigger.Source,
-                trigger.ConditionHookName);
-        trigger.Source.ClearResolvingGameEvent();
-        return result;
+        try
+        {
+            return string.IsNullOrEmpty(trigger.ConditionHookName)
+                || CardEffectExecutor.EvaluateCardScriptPredicate(this, trigger.Source, trigger.ConditionHookName);
+        }
+        finally { trigger.Source.SetResolvingGameEvent(previousContext); }
     }
 
     private void QueueScriptTrigger(

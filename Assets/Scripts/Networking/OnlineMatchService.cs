@@ -17,6 +17,7 @@ public sealed class OnlineMatchService : MonoBehaviour
     private const double ActionTimeoutSeconds = 10d;
     private const double ReconnectGraceSeconds = 30d;
     private const double ReconnectRetrySeconds = 2d;
+    private const double LobbyLeaseSeconds = 15d; // 客户端心跳 10s/次，15s 无消息视为已消失
     private const double HeartbeatIntervalSeconds = 10d;
     private const string DevelopmentServerFlag = "MTGB.Online.DevelopmentServerPending";
 
@@ -39,6 +40,8 @@ public sealed class OnlineMatchService : MonoBehaviour
     public bool IsClient => networkManager != null && networkManager.IsClient;
     public bool IsHost => networkManager != null && networkManager.IsHost;
     public bool IsConnected => networkManager != null && networkManager.IsConnectedClient;
+    public bool IsDisconnecting => IsManagerShutdownInProgress(shuttingDownManager);
+    public bool HasJoinedLobby => HasLobbyIdentity(IsConnected, LocalSeat, LobbyState);
     public bool IsInMatch { get; private set; }
     public bool HasPendingAction => actionGate.State == OnlineClientInteractionState.Submitting;
     public bool CanSubmitRuleAction => (IsServer && !IsHost) || !IsInMatch || (IsConnected && actionGate.CanSubmit);
@@ -50,6 +53,15 @@ public sealed class OnlineMatchService : MonoBehaviour
     public double ReconnectGraceRemainingSeconds => clientReconnectWindow.RemainingSeconds(Time.realtimeSinceStartupAsDouble);
     public int LocalSeat { get; private set; }
     public OnlineLobbyState LobbyState { get; private set; }
+
+    private static bool HasLobbyIdentity(bool transportConnected, int localSeat, OnlineLobbyState lobby)
+    {
+        return transportConnected
+            && localSeat > 0
+            && lobby?.players != null
+            && lobby.players.Exists(player =>
+                player != null && player.connected && player.seat == localSeat);
+    }
 
     private readonly OnlineRoomRegistry roomRegistry = new OnlineRoomRegistry();
     private readonly Dictionary<ulong, ClientLocation> clientLocations = new Dictionary<ulong, ClientLocation>();
@@ -67,9 +79,9 @@ public sealed class OnlineMatchService : MonoBehaviour
     private string currentProfileId = "default";
     private string currentRoomId = "main";
     private string matchId = string.Empty;
-    private DeckDefinition pendingAutoReadyDeck;
     private bool reconnectingMatch;
     private bool automaticReconnectEnabled;
+    private bool connectedToLanHost;
     private double nextReconnectAttemptAt;
     private double nextHeartbeatAt;
 
@@ -82,8 +94,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             && PlayerPrefs.GetInt(DevelopmentServerFlag, 0) == 1;
         bool developmentServer = string.Equals(normalizedPlayerName, "Player1", StringComparison.OrdinalIgnoreCase)
             || preparedMainEditorServer;
-        bool developmentClient = string.Equals(normalizedPlayerName, "Player2", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalizedPlayerName, "Player3", StringComparison.OrdinalIgnoreCase);
+        bool developmentClient = ShouldAutoStartNetworkClient(playerName, HasArgument("-mtgb-client"));
         if (HasArgument("-mtgb-server") || developmentServer)
         {
             if (preparedMainEditorServer)
@@ -94,7 +105,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             EnsureInstance().StartDedicatedServer(ReadPortArgument());
             return;
         }
-        if (!HasArgument("-mtgb-client") && !developmentClient) return;
+        if (!developmentClient) return;
 
         OnlineClientProfile profile = OnlineClientProfileStore.Load(OnlineClientProfileStore.ResolveCurrentProfileId());
         string address = OnlineClientProfileStore.ReadArgument("-address");
@@ -105,8 +116,14 @@ public sealed class OnlineMatchService : MonoBehaviour
         if (string.IsNullOrWhiteSpace(room)) room = profile.roomId;
 
         OnlineMatchService service = EnsureInstance();
-        service.pendingAutoReadyDeck = CloneDeck(profile.deck);
         service.Connect(address, ReadPortArgument(profile.port), displayName, profile.id, room);
+    }
+
+    private static bool ShouldAutoStartNetworkClient(string playerName, bool explicitClientRequested)
+    {
+        // Additional Editor 的名称只用于选择隔离配置，不能等同于玩家已经点击“加入”。
+        // 自动客户端只允许由明确的启动参数开启，避免 Player 2 在房主刚建房时抢先入座。
+        return explicitClientRequested;
     }
 
     public static OnlineMatchService EnsureInstance()
@@ -133,18 +150,49 @@ public sealed class OnlineMatchService : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         Shutdown();
+        if (shuttingDownManager != null)
+        {
+            if (shuttingDownManager.gameObject != null) Destroy(shuttingDownManager.gameObject);
+            shuttingDownManager = null;
+        }
         roomRegistry.Dispose();
         if (Instance == this) Instance = null;
     }
 
+    private bool pendingLobbyDisconnect;
+    private string pendingLobbyDisconnectReason;
+    private NetworkManager shuttingDownManager;
+
     private void Update()
     {
         double now = Time.realtimeSinceStartupAsDouble;
+        if (shuttingDownManager != null)
+        {
+            bool shutdownFinished;
+            try { shutdownFinished = !shuttingDownManager.ShutdownInProgress; }
+            catch { shutdownFinished = true; }
+            if (shutdownFinished)
+            {
+                if (shuttingDownManager.gameObject != null) Destroy(shuttingDownManager.gameObject);
+                shuttingDownManager = null;
+                ConnectionChanged?.Invoke(false);
+            }
+        }
+        if (pendingLobbyDisconnect && !IsInMatch)
+        {
+            // 延迟到 Update 执行断开，避免在网络消息回调内直接销毁网络对象
+            string rejectionReason = pendingLobbyDisconnectReason;
+            pendingLobbyDisconnect = false;
+            pendingLobbyDisconnectReason = null;
+            Disconnect();
+            if (!string.IsNullOrWhiteSpace(rejectionReason)) SetStatus(rejectionReason);
+            return;
+        }
         if (IsServer)
         {
             UpdateServerConnections(now);
         }
-        if (IsConnected && now >= nextHeartbeatAt)
+        if (IsConnected && networkManager is { IsListening: true } && now >= nextHeartbeatAt)
         {
             nextHeartbeatAt = now + HeartbeatIntervalSeconds;
             SendToServer(OnlineProtocol.Heartbeat, new OnlineHeartbeatMessage { nonce = DateTime.UtcNow.Ticks });
@@ -165,10 +213,12 @@ public sealed class OnlineMatchService : MonoBehaviour
 
     public bool StartDedicatedServer(ushort port = DefaultPort)
     {
+        connectedToLanHost = false;
         localManifest = OnlineContentManifest.Build();
         if (!CreateNetworkManager("0.0.0.0", port, true)) return false;
         RegisterNetworkCallbacks();
         bool started = networkManager.StartServer();
+        if (!started) Shutdown();
         SetStatus(started ? $"独立服务器正在监听 UDP {port}。" : "无法启动独立服务器。");
         return started;
     }
@@ -180,6 +230,9 @@ public sealed class OnlineMatchService : MonoBehaviour
         string roomId = null,
         OnlineRoomConfig roomConfig = null)
     {
+        pendingLobbyDisconnect = false;
+        pendingLobbyDisconnectReason = null;
+        connectedToLanHost = true;
         reconnectingMatch = false;
         automaticReconnectEnabled = false;
         ClearLobbyState();
@@ -190,11 +243,20 @@ public sealed class OnlineMatchService : MonoBehaviour
         requestedRoomConfig = CloneRoomConfig(roomConfig);
         localManifest = OnlineContentManifest.Build();
         ushort listenPort = port == 0 ? (ushort)DefaultPort : port;
-        if (!CreateNetworkManager("127.0.0.1", listenPort, true)) return false;
+        if (!CreateNetworkManager("127.0.0.1", listenPort, true))
+        {
+            connectedToLanHost = false;
+            return false;
+        }
         RegisterNetworkCallbacks();
         OnlineClientProfileStore.SaveConnection(
             currentProfileId, "127.0.0.1", listenPort, displayName, currentRoomId);
         bool started = networkManager.StartHost();
+        if (!started)
+        {
+            connectedToLanHost = false;
+            Shutdown();
+        }
         SetStatus(started
             ? $"局域网主机正在监听 UDP {listenPort}，房间 {currentRoomId}。"
             : "无法启动局域网主机。");
@@ -209,6 +271,9 @@ public sealed class OnlineMatchService : MonoBehaviour
         string roomId = null,
         OnlineRoomConfig roomConfig = null)
     {
+        pendingLobbyDisconnect = false;
+        pendingLobbyDisconnectReason = null;
+        connectedToLanHost = false;
         if (!reconnectingMatch) ClearLobbyState();
         if (string.IsNullOrWhiteSpace(address)) address = "127.0.0.1";
         currentProfileId = OnlineClientProfileStore.NormalizeId(
@@ -222,18 +287,22 @@ public sealed class OnlineMatchService : MonoBehaviour
         OnlineClientProfileStore.SaveConnection(currentProfileId, address, port, displayName, currentRoomId);
         bool started = networkManager.StartClient();
         if (started) nextReconnectAttemptAt = Time.realtimeSinceStartupAsDouble + ReconnectRetrySeconds;
+        else Shutdown();
         SetStatus(started ? $"正在连接 {address}:{port}，房间 {currentRoomId}…" : "无法启动网络客户端。");
         return started;
     }
 
     public void Disconnect()
     {
+        pendingLobbyDisconnect = false;
+        pendingLobbyDisconnectReason = null;
         Shutdown();
         OnlinePlayerContext.Reset();
         LocalSeat = 0;
         IsInMatch = false;
         reconnectingMatch = false;
         automaticReconnectEnabled = false;
+        connectedToLanHost = false;
         clientReconnectWindow.Reset();
         ClearLobbyState();
         SetInteractionConnected(false);
@@ -243,12 +312,19 @@ public sealed class OnlineMatchService : MonoBehaviour
 
     public void SubmitDeck(DeckDefinition deck)
     {
-        if (IsConnected && deck != null) SendToServer(OnlineProtocol.SubmitDeck, new OnlineDeckMessage { deck = CloneDeck(deck) });
+        if (HasJoinedLobby && deck != null)
+            SendToServer(OnlineProtocol.SubmitDeck, new OnlineDeckMessage { deck = CloneDeck(deck) });
     }
 
     public void SetReady(bool ready)
     {
-        if (IsConnected) SendToServer(OnlineProtocol.SetReady, new OnlineReadyMessage { ready = ready });
+        if (HasJoinedLobby) SendToServer(OnlineProtocol.SetReady, new OnlineReadyMessage { ready = ready });
+    }
+
+    public void RequestStartMatch()
+    {
+        if (HasJoinedLobby && !IsInMatch)
+            SendToServer(OnlineProtocol.RequestStartMatch, new OnlineReadyMessage { ready = true });
     }
 
     public void Concede()
@@ -298,26 +374,50 @@ public sealed class OnlineMatchService : MonoBehaviour
 
     private bool CreateNetworkManager(string address, ushort port, bool server)
     {
-        if (networkManager != null && networkManager.IsListening)
+        bool currentManagerListening = networkManager != null && networkManager.IsListening;
+        bool shutdownInProgress = IsManagerShutdownInProgress(shuttingDownManager);
+        if (!CanCreateNetworkManager(currentManagerListening, shutdownInProgress))
         {
-            SetStatus("网络已经在运行。");
+            SetStatus(shutdownInProgress ? "正在退出上一个房间，请稍候。" : "网络已经在运行。");
             return false;
         }
-        if (networkManager == null)
+        if (networkManager != null)
         {
-            GameObject managerObject = new GameObject("MTGBNetworkManager");
-            transport = managerObject.AddComponent<UnityTransport>();
-            networkManager = managerObject.AddComponent<NetworkManager>();
-            if (Application.isPlaying) DontDestroyOnLoad(managerObject);
-            networkManager.NetworkConfig = new NetworkConfig
-            {
-                NetworkTransport = transport,
-                EnableSceneManagement = false,
-                ConnectionApproval = false
-            };
+            // 上一次会话的 NetworkManager 已 Shutdown（甚至关闭中）：复用会对已释放的
+            // transport 调 StartClient 并抛 ObjectDisposedException，必须销毁重建
+            Destroy(networkManager.gameObject);
+            networkManager = null;
+            transport = null;
         }
+        if (shuttingDownManager != null)
+        {
+            if (shuttingDownManager.gameObject != null) Destroy(shuttingDownManager.gameObject);
+            shuttingDownManager = null;
+        }
+        GameObject managerObject = new GameObject("MTGBNetworkManager");
+        transport = managerObject.AddComponent<UnityTransport>();
+        networkManager = managerObject.AddComponent<NetworkManager>();
+        if (Application.isPlaying) DontDestroyOnLoad(managerObject);
+        networkManager.NetworkConfig = new NetworkConfig
+        {
+            NetworkTransport = transport,
+            EnableSceneManagement = false,
+            ConnectionApproval = false
+        };
         transport.SetConnectionData(address, port, server ? "0.0.0.0" : null);
         return true;
+    }
+
+    private static bool CanCreateNetworkManager(bool currentManagerListening, bool shutdownInProgress)
+    {
+        return !currentManagerListening && !shutdownInProgress;
+    }
+
+    private static bool IsManagerShutdownInProgress(NetworkManager manager)
+    {
+        if (manager == null) return false;
+        try { return manager.ShutdownInProgress; }
+        catch { return false; }
     }
 
     private void RegisterNetworkCallbacks()
@@ -386,7 +486,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             }
             else
             {
-                room.members.Remove(member.seat);
+                RemoveLobbyMember(room, member.seat);
                 roomRegistry.RemoveIfEmpty(room.roomId);
             }
             BroadcastLobby(room);
@@ -407,8 +507,34 @@ public sealed class OnlineMatchService : MonoBehaviour
         else
         {
             OnlineClientProfileStore.SaveReconnectToken(currentProfileId, string.Empty, currentRoomId);
-            SetStatus("连接已中断。");
+            HandleLobbyConnectionLost();
         }
+    }
+
+    private void HandleLobbyConnectionLost()
+    {
+        bool lanRoomClosed = connectedToLanHost;
+        string rejectionReason = pendingLobbyDisconnectReason;
+        string disconnectReason = !string.IsNullOrWhiteSpace(rejectionReason)
+            ? rejectionReason
+            : lanRoomClosed ? "局域网房主已退出，房间已解散。" : "连接已中断。";
+        connectedToLanHost = false;
+        LocalSeat = 0;
+        OnlinePlayerContext.Reset();
+        ClearLobbyState();
+        SetStatus(disconnectReason);
+        if (ShouldFinalizeLobbyTransport(networkManager != null, IsInMatch))
+        {
+            // NGO 的远端断开回调不会替客户端销毁本地 NetworkManager。
+            // 下一帧完成本地 Shutdown，否则 UI 会永久停在 IsOnline/“正在连接”状态。
+            pendingLobbyDisconnect = true;
+            pendingLobbyDisconnectReason = disconnectReason;
+        }
+    }
+
+    private static bool ShouldFinalizeLobbyTransport(bool hasNetworkManager, bool isInMatch)
+    {
+        return hasNetworkManager && !isInMatch;
     }
 
     private void HandleMessage(ulong senderClientId, FastBufferReader reader)
@@ -465,6 +591,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             case OnlineProtocol.Hello:
             case OnlineProtocol.SubmitDeck:
             case OnlineProtocol.SetReady:
+            case OnlineProtocol.RequestStartMatch:
             case OnlineProtocol.SceneReady:
             case OnlineProtocol.SubmitAction:
             case OnlineProtocol.HashReport:
@@ -484,6 +611,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             case OnlineProtocol.Hello: HandleHello(clientId, Deserialize<OnlineHelloMessage>(envelope)); break;
             case OnlineProtocol.SubmitDeck: HandleDeck(clientId, Deserialize<OnlineDeckMessage>(envelope)); break;
             case OnlineProtocol.SetReady: HandleReady(clientId, Deserialize<OnlineReadyMessage>(envelope)); break;
+            case OnlineProtocol.RequestStartMatch: HandleStartMatchRequest(clientId); break;
             case OnlineProtocol.SceneReady: HandleSceneReady(clientId, Deserialize<OnlineSceneReadyMessage>(envelope)); break;
             case OnlineProtocol.SubmitAction: HandleSubmittedAction(clientId, Deserialize<OnlineActionMessage>(envelope)); break;
             case OnlineProtocol.HashReport: HandleHashReport(clientId, Deserialize<OnlineHashReportMessage>(envelope)); break;
@@ -551,9 +679,24 @@ public sealed class OnlineMatchService : MonoBehaviour
                     IsInMatch = false;
                 }
                 SetStatus(protocolError?.message ?? "网络协议错误。");
+                if (ShouldResetLobbyConnectionOnError(IsServer, IsInMatch, HasJoinedLobby, protocolError))
+                {
+                    // 加入被拒（房间已满等）时立即复位，否则 UI 卡在连接态且无法重试
+                    pendingLobbyDisconnect = true;
+                    pendingLobbyDisconnectReason = protocolError.message;
+                }
                 break;
             case OnlineProtocol.HeartbeatAck: break;
         }
+    }
+
+    private static bool ShouldResetLobbyConnectionOnError(
+        bool isServer,
+        bool isInMatch,
+        bool hasJoinedLobby,
+        OnlineErrorMessage error)
+    {
+        return !isInMatch && !isServer && !hasJoinedLobby && error != null;
     }
 
     private void HandleWelcome(OnlineWelcomeMessage welcome)
@@ -566,6 +709,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             return;
         }
         LocalSeat = welcome.seat;
+        connectedToLanHost = welcome.lanHosted;
         currentRoomId = OnlineRoomRegistry.NormalizeRoomId(welcome.roomId);
         OnlinePlayerContext.SetLocalPlayer(LocalSeat);
         if (!string.IsNullOrEmpty(welcome.reconnectToken))
@@ -577,12 +721,6 @@ public sealed class OnlineMatchService : MonoBehaviour
             NotifyInteractionStateChanged();
         }
         SetStatus($"已作为玩家 {LocalSeat} 加入房间 {currentRoomId}。");
-        if (pendingAutoReadyDeck != null && !welcome.resumingMatch)
-        {
-            SubmitDeck(pendingAutoReadyDeck);
-            SetReady(true);
-            pendingAutoReadyDeck = null;
-        }
     }
 
     private void HandleHello(ulong clientId, OnlineHelloMessage hello)
@@ -644,6 +782,15 @@ public sealed class OnlineMatchService : MonoBehaviour
                 RejectClient(clientId, "match-in-progress", "房间对局已经开始。");
                 return;
             }
+            // 新加入时回收已消失的占座成员（连接不在列表或心跳租约过期），
+            // 否则离开过的玩家会一直被“房间已满”拒绝
+            var liveIds = new HashSet<ulong>(networkManager.ConnectedClientsIds);
+            if (PruneGoneLobbyMembers(room, liveIds, now))
+            {
+                roomRegistry.RemoveIfEmpty(room.roomId);
+                BroadcastLobby(room);
+                if (!roomRegistry.TryGet(room.roomId, out room)) return;
+            }
             int seat = !room.members.ContainsKey(1) ? 1 : !room.members.ContainsKey(2) ? 2 : 0;
             if (seat == 0)
             {
@@ -659,6 +806,7 @@ public sealed class OnlineMatchService : MonoBehaviour
         member.restoring = resuming;
         member.sceneReady = false;
         member.reconnectWindow.Reset();
+        if (room.hostSeat == 0) room.hostSeat = member.seat;
         clientLocations[clientId] = new ClientLocation { roomId = room.roomId, seat = member.seat };
         Send(clientId, OnlineProtocol.Welcome, new OnlineWelcomeMessage
         {
@@ -666,6 +814,7 @@ public sealed class OnlineMatchService : MonoBehaviour
             reconnectToken = member.reconnectToken,
             serverName = Application.productName,
             resumingMatch = resuming,
+            lanHosted = IsHost,
             roomId = room.roomId,
             manifest = localManifest
         });
@@ -699,8 +848,44 @@ public sealed class OnlineMatchService : MonoBehaviour
         if (!TryGetMember(clientId, out OnlineRoomState room, out OnlineRoomMember member) || room.match != null) return;
         member.ready = message?.ready == true && member.deck != null;
         BroadcastLobby(room);
-        if (room.members.Count == 2 && room.members.Values.All(item => item.connected && item.ready && item.deck != null))
-            StartRoomMatch(room);
+    }
+
+    private void HandleStartMatchRequest(ulong clientId)
+    {
+        if (!TryGetMember(clientId, out OnlineRoomState room, out OnlineRoomMember member)) return;
+        if (!CanStartRoomMatch(room, member.seat, out string error))
+        {
+            Send(clientId, OnlineProtocol.Error, new OnlineErrorMessage
+            {
+                code = "start-not-allowed",
+                message = error
+            });
+            return;
+        }
+        StartRoomMatch(room);
+    }
+
+    private static bool CanStartRoomMatch(OnlineRoomState room, int requesterSeat, out string error)
+    {
+        EnsureRoomHost(room);
+        if (room == null || room.match != null)
+        {
+            error = "房间当前不能开始新对局。";
+            return false;
+        }
+        if (requesterSeat != room.hostSeat)
+        {
+            error = "只有房主可以开始比赛。";
+            return false;
+        }
+        if (room.members.Count != 2
+            || !room.members.Values.All(item => item.connected && item.ready && item.deck != null))
+        {
+            error = "需要两名玩家都提交牌组并准备。";
+            return false;
+        }
+        error = string.Empty;
+        return true;
     }
 
     private void StartRoomMatch(OnlineRoomState room)
@@ -969,6 +1154,7 @@ public sealed class OnlineMatchService : MonoBehaviour
         }
         foreach (int seat in room.members.Where(pair => !pair.Value.connected).Select(pair => pair.Key).ToList())
             room.members.Remove(seat);
+        EnsureRoomHost(room);
         BroadcastLobby(room);
         roomRegistry.RemoveIfEmpty(room.roomId);
         RefreshServerMatchFlag();
@@ -976,19 +1162,52 @@ public sealed class OnlineMatchService : MonoBehaviour
 
     private void UpdateServerConnections(double now)
     {
+        var connectedIds = new HashSet<ulong>(networkManager.ConnectedClientsIds);
         var idleClients = networkManager.ConnectedClientsIds
             .Where(clientId => clientId != NetworkManager.ServerClientId && messageGuard.IsIdle(clientId, now))
             .ToList();
         for (int i = 0; i < idleClients.Count; i++) networkManager.DisconnectClient(idleClients[i], "Idle timeout");
         foreach (OnlineRoomState room in roomRegistry.Rooms.ToList())
         {
-            if (room.match == null) continue;
-            OnlineRoomMember expired = room.members.Values.FirstOrDefault(item =>
-                !item.connected && item.reconnectWindow.IsExpired(now));
-            if (expired == null) continue;
-            OnlineRoomMember opponent = room.members.Values.FirstOrDefault(item => item.connected);
-            EndRoomMatch(room, opponent?.seat ?? 0, $"玩家 {expired.seat} 未在 {ReconnectGraceSeconds:0} 秒内重连。");
+            if (room.match != null)
+            {
+                OnlineRoomMember expired = room.members.Values.FirstOrDefault(item =>
+                    !item.connected && item.reconnectWindow.IsExpired(now));
+                if (expired == null) continue;
+                OnlineRoomMember opponent = room.members.Values.FirstOrDefault(item => item.connected);
+                EndRoomMatch(room, opponent?.seat ?? 0, $"玩家 {expired.seat} 未在 {ReconnectGraceSeconds:0} 秒内重连。");
+                continue;
+            }
+
+            // 大厅（无对局）：按席位租约回收。消失的 UDP 连接在 NGO 在线列表里会残留很久，
+            // 因此以“连接不在列表”或“15 秒无任何消息（含心跳）”为准，命中即回收并广播
+            if (PruneGoneLobbyMembers(room, connectedIds, now))
+            {
+                roomRegistry.RemoveIfEmpty(room.roomId);
+                BroadcastLobby(room);
+            }
         }
+    }
+
+    /// <summary>大厅席位租约清理：连接已消失或心跳租约过期的成员视为已离开。
+    /// 返回是否有变更。</summary>
+    private bool PruneGoneLobbyMembers(OnlineRoomState room, HashSet<ulong> connectedIds, double now)
+    {
+        bool changed = false;
+        foreach (OnlineRoomMember member in room.members.Values.ToList())
+        {
+            if (member.clientId == NetworkManager.ServerClientId) continue; // 主机本地成员
+            bool connectionGone = !connectedIds.Contains(member.clientId);
+            bool leaseExpired = !messageGuard.WasSeenWithin(member.clientId, now, LobbyLeaseSeconds);
+            if (!connectionGone && !leaseExpired) continue;
+            room.members.Remove(member.seat);
+            clientLocations.Remove(member.clientId);
+            messageGuard.Remove(member.clientId);
+            if (!connectionGone) networkManager.DisconnectClient(member.clientId, "Lobby lease expired");
+            changed = true;
+        }
+        if (changed) EnsureRoomHost(room);
+        return changed;
     }
 
     private void UpdateAutomaticReconnect(double now)
@@ -1024,25 +1243,57 @@ public sealed class OnlineMatchService : MonoBehaviour
     private void BroadcastLobby(OnlineRoomState room)
     {
         if (room == null) return;
+        SendToRoom(room, OnlineProtocol.Lobby, BuildLobbyState(room));
+    }
+
+    private static OnlineLobbyState BuildLobbyState(OnlineRoomState room)
+    {
+        EnsureRoomHost(room);
         var state = new OnlineLobbyState
         {
             roomId = room.roomId,
+            hostSeat = room.hostSeat,
             config = room.config,
             series = CloneSeriesState(room.series)
         };
-        for (int seat = 1; seat <= 2; seat++)
+        foreach (OnlineRoomMember member in room.members.Values
+                     .Where(item => item != null && item.connected)
+                     .OrderBy(item => item.seat))
         {
-            room.members.TryGetValue(seat, out OnlineRoomMember member);
             state.players.Add(new OnlineLobbyPlayer
             {
-                seat = seat,
-                displayName = member?.displayName ?? "Open seat",
-                connected = member?.connected ?? false,
-                hasDeck = member?.deck != null,
-                ready = member?.ready ?? false
+                seat = member.seat,
+                displayName = member.displayName,
+                connected = true,
+                hasDeck = member.deck != null,
+                ready = member.ready
             });
         }
-        SendToRoom(room, OnlineProtocol.Lobby, state);
+        return state;
+    }
+
+    private static void EnsureRoomHost(OnlineRoomState room)
+    {
+        if (room == null) return;
+        if (room.hostSeat > 0
+            && room.members.TryGetValue(room.hostSeat, out OnlineRoomMember current)
+            && current != null
+            && current.connected)
+        {
+            return;
+        }
+        OnlineRoomMember next = room.members.Values
+            .Where(item => item != null && item.connected)
+            .OrderBy(item => item.seat)
+            .FirstOrDefault();
+        room.hostSeat = next?.seat ?? 0;
+    }
+
+    private static bool RemoveLobbyMember(OnlineRoomState room, int seat)
+    {
+        if (room == null || !room.members.Remove(seat)) return false;
+        EnsureRoomHost(room);
+        return true;
     }
 
     private void SendToRoom<T>(OnlineRoomState room, string type, T payload)
@@ -1054,7 +1305,8 @@ public sealed class OnlineMatchService : MonoBehaviour
 
     private void SendToServer<T>(string type, T payload)
     {
-        if (networkManager != null && networkManager.IsClient) Send(NetworkManager.ServerClientId, type, payload);
+        if (networkManager != null && networkManager.IsListening && networkManager.IsClient)
+            Send(NetworkManager.ServerClientId, type, payload);
     }
 
     private void Send<T>(ulong clientId, string type, T payload)
@@ -1132,8 +1384,7 @@ public sealed class OnlineMatchService : MonoBehaviour
         }
         foreach (DeckEntry entry in EnumerateDeckEntries(deck))
         {
-            CardDefinition card = CardDatabaseRepository.FindByPrintingKey(entry.setCode, entry.collectorNumber)
-                ?? CardDatabaseRepository.FindById(entry.cardId);
+            CardDefinition card = DeckRepository.ResolveCard(entry, CardDatabaseRepository.LoadAll());
             if (card == null)
             {
                 error = $"服务器未安装卡牌 {entry.PrintingKey}。";
@@ -1271,17 +1522,27 @@ public sealed class OnlineMatchService : MonoBehaviour
                 networkManager.OnClientDisconnectCallback -= OnClientDisconnected;
                 handlersRegistered = false;
             }
-            if (networkManager.IsListening) networkManager.Shutdown();
-            if (networkManager.gameObject != null) Destroy(networkManager.gameObject);
+            if (networkManager.IsListening)
+            {
+                // NGO 的 Shutdown 是异步的：立即销毁对象会在断开包发出前拆掉传输层，
+                // 对端收不到断开通知（座位残留、再进被拒、ObjectDisposedException 的根源）。
+                // 保留对象，由 Update 确认关闭完成后再销毁。
+                networkManager.Shutdown();
+                shuttingDownManager = networkManager;
+            }
+            else if (networkManager.gameObject != null)
+            {
+                Destroy(networkManager.gameObject);
+            }
         }
         networkManager = null;
         transport = null;
         gameRules = null;
         pendingPlayerView = null;
         matchId = string.Empty;
-        pendingAutoReadyDeck = null;
         reconnectingMatch = false;
         automaticReconnectEnabled = false;
+        connectedToLanHost = false;
         clientReconnectWindow.Reset();
         clientLocations.Clear();
         roomRegistry.Dispose();

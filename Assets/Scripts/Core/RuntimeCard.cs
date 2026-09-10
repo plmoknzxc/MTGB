@@ -130,6 +130,7 @@ public partial class RuntimeCard
     public bool HasDeathtouchDamageSinceStateCheck => hasDeathtouchDamageSinceStateCheck;
     public IReadOnlyList<SpellTargetReference> SpellTargets => spellTargets;
     public SpellCastProfile CastProfile => castProfile;
+    internal bool IsInitializingScript { get; private set; }
     public SpellCastDeclaration CurrentCastDeclaration { get; private set; }
     public RuntimeCard TargetCard =>
         spellTargets.Count > 0 && spellTargets[0].IsCardTarget
@@ -1518,7 +1519,9 @@ public partial class RuntimeCard
         var manager = CardScriptRuntimeManager.EnsureExists();
         if (manager == null) return;
 
-        ScriptInstance = manager.CreateCardInstance(this, Data.luaScript);
+        IsInitializingScript = true;
+        try { ScriptInstance = manager.CreateCardInstance(this, Data.luaScript); }
+        finally { IsInitializingScript = false; }
     }
 
     public void OnDestroy()

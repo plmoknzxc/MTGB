@@ -61,6 +61,13 @@ public sealed class OnlineMessageGuard
             && now - window.lastSeenAt > IdleTimeoutSeconds;
     }
 
+    /// <summary>该客户端在 withinSeconds 内有过消息（含心跳）。未跟踪的客户端视为过期。</summary>
+    public bool WasSeenWithin(ulong clientId, double now, double withinSeconds)
+    {
+        return clients.TryGetValue(clientId, out ClientWindow window)
+            && now - window.lastSeenAt <= withinSeconds;
+    }
+
     public void Remove(ulong clientId)
     {
         clients.Remove(clientId);

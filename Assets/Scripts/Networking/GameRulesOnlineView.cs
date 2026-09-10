@@ -357,7 +357,8 @@ public partial class GameRules
             CardDefinition definition = snapshot.hidden
                 ? OnlineHiddenCardDefinition.Value
                 : CardDatabaseRepository.FindByPrintingKey(snapshot.setCode, snapshot.collectorNumber)
-                    ?? CardDatabaseRepository.FindById(snapshot.cardId)
+                    ?? (string.IsNullOrWhiteSpace(snapshot.setCode) && string.IsNullOrWhiteSpace(snapshot.collectorNumber)
+                        ? CardDatabaseRepository.FindById(snapshot.cardId) : null)
                     ?? OnlineHiddenCardDefinition.Value;
             var card = new RuntimeCard(definition, snapshot.ownerPlayerId, initializeScript: false);
             card.ApplyOnlineSnapshot(snapshot);

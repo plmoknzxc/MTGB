@@ -9,6 +9,7 @@ using UnityEngine;
 public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
 {
     public const int SupportedApiVersion = 2;
+    public bool IsExecutingHook => remainingHookInstructions != int.MaxValue;
     private const int MaximumScriptBytes = 256 * 1024;
     private const int HookInstructionBudget = 200000;
     private const int HookInstructionInterval = 1000;
@@ -21,6 +22,8 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
     private readonly LuaTable gameTable;
     private readonly CardScriptApi api = new CardScriptApi();
     private int remainingHookInstructions = int.MaxValue;
+    private int executionDepth;
+    private const int MaximumExecutionDepth = 32;
 
     public LuaCSharpCardScriptRuntime()
     {
@@ -34,7 +37,12 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
         RegisterGameApi();
         RegisterConstants();
         state.Environment["Game"] = gameTable;
-        state.SetHook(
+        ConfigureInstructionGuard(state);
+    }
+
+    private void ConfigureInstructionGuard(LuaState thread)
+    {
+        thread.SetHook(
             CreateFunction("MTGB.InstructionGuard", context =>
             {
                 if (remainingHookInstructions == int.MaxValue) return context.Return();
@@ -67,7 +75,7 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
                 ? card.Data.PrintingKey
                 : card.Data?.cardName ?? "card";
             LuaValue[] results = ExecuteWithInstructionBudget(
-                () => state.DoStringAsync(scriptCode, chunkName));
+                thread => thread.DoStringAsync(scriptCode, chunkName));
             if (results == null || results.Length == 0 || !results[0].TryRead(out LuaTable table))
             {
                 Debug.LogWarning($"Lua card script for {card.Data?.cardName ?? "unknown card"} did not return a table.");
@@ -121,7 +129,7 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
         try
         {
             ExecuteWithInstructionBudget(
-                () => state.CallAsync(function, new LuaValue[] { luaInstance.Table }));
+                thread => thread.CallAsync(function, new LuaValue[] { luaInstance.Table }));
             EnforceResourceQuota(luaInstance, functionName);
         }
         catch (LuaResourceQuotaException exception)
@@ -152,7 +160,7 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
         try
         {
             LuaValue[] results = ExecuteWithInstructionBudget(
-                () => state.CallAsync(function, new LuaValue[] { luaInstance.Table }));
+                thread => thread.CallAsync(function, new LuaValue[] { luaInstance.Table }));
             EnforceResourceQuota(luaInstance, functionName);
             if (results == null || results.Length == 0) return defaultValue;
             if (results[0].TryRead(out bool boolValue)) return boolValue;
@@ -183,7 +191,7 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
         try
         {
             LuaValue[] results = ExecuteWithInstructionBudget(
-                () => state.DoStringAsync(
+                thread => thread.DoStringAsync(
                     "return { payload = string.rep('x', 4194305) }",
                     "MTGB.ResourceQuotaValidation"));
             if (results == null
@@ -222,7 +230,7 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
         try
         {
             ExecuteWithInstructionBudget(
-                () => state.DoStringAsync(
+                thread => thread.DoStringAsync(
                     "local value = 0 while true do value = value + 1 end",
                     "MTGB.InstructionQuotaValidation"));
             return false;
@@ -233,6 +241,27 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
                 "instruction budget exceeded",
                 StringComparison.OrdinalIgnoreCase);
         }
+    }
+
+    public bool ValidateNestedQuotaForAutomation(bool recursive)
+    {
+        gameTable["ValidationNestedCall"] = CreateFunction("Game.ValidationNestedCall", context =>
+        {
+            ExecuteWithInstructionBudget(thread => thread.DoStringAsync(
+                recursive ? "Game.ValidationNestedCall()" : "return 1", "NestedQuota"));
+            return context.Return();
+        });
+        try
+        {
+            ExecuteWithInstructionBudget(thread => thread.DoStringAsync(
+                recursive ? "Game.ValidationNestedCall()" : "for i=1,300 do Game.ValidationNestedCall() end", "OuterQuota"));
+            return false;
+        }
+        catch (Exception exception)
+        {
+            return exception.ToString().Contains(recursive ? "callback depth exceeded" : "instruction budget exceeded");
+        }
+        finally { gameTable["ValidationNestedCall"] = LuaValue.Nil; }
     }
 #endif
 
@@ -1741,21 +1770,29 @@ public sealed class LuaCSharpCardScriptRuntime : ICardScriptRuntime
         return task.IsCompletedSuccessfully ? task.Result : task.AsTask().GetAwaiter().GetResult();
     }
 
-    private T ExecuteWithInstructionBudget<T>(Func<ValueTask<T>> operation)
+    private T ExecuteWithInstructionBudget<T>(Func<LuaState, ValueTask<T>> operation)
     {
-        if (remainingHookInstructions != int.MaxValue)
-        {
-            throw new InvalidOperationException("Nested Lua execution is not allowed.");
-        }
-
-        remainingHookInstructions = HookInstructionBudget;
+        if (executionDepth >= MaximumExecutionDepth)
+            throw new InvalidOperationException($"Lua callback depth exceeded ({MaximumExecutionDepth}).");
+        bool outermost = executionDepth == 0;
+        // Nested callbacks share script tables, but must not overwrite the suspended VM stack.
+        LuaState thread = outermost ? state : state.CreateThread();
+        if (outermost) remainingHookInstructions = HookInstructionBudget;
+        else ConfigureInstructionGuard(thread);
+        executionDepth++;
         try
         {
-            return Complete(operation());
+            // Charge short callbacks too, so crossing threads cannot reset or evade the budget.
+            remainingHookInstructions -= HookInstructionInterval;
+            if (remainingHookInstructions <= 0)
+                throw new InvalidOperationException($"Lua instruction budget exceeded ({HookInstructionBudget}).");
+            return Complete(operation(thread));
         }
         finally
         {
-            remainingHookInstructions = int.MaxValue;
+            executionDepth--;
+            if (outermost) remainingHookInstructions = int.MaxValue;
+            else thread.Dispose();
         }
     }
 

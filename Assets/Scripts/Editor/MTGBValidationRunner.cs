@@ -37,6 +37,10 @@ public static class MTGBValidationRunner
     private static void ValidateAll()
     {
         CardDatabaseValidationMenu.ValidateForAutomation();
+        MultiDatabaseValidationMenu.ValidateForAutomation();
+        BoundaryCardValidationMenu.ValidateForAutomation();
+        SpecialistBoundaryValidationMenu.ValidateForAutomation();
+        BoundaryMatchValidationMenu.ValidateForAutomation();
         GameChoiceValidationMenu.ValidateForAutomation();
         GameDeterminismValidationMenu.ValidateForAutomation();
         OnlineProtocolValidationMenu.ValidateForAutomation();

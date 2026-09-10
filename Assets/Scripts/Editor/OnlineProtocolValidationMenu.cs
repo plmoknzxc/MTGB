@@ -24,6 +24,15 @@ public static class OnlineProtocolValidationMenu
         ValidateFromMenu();
     }
 
+    [MenuItem("MTGB/Networking/Validate LAN Lobby")]
+    [CliCommand("mtgb_validate_lan_lobby", "Validate LAN lobby occupancy, ownership, and manual start")]
+    public static void ValidateLanLobbyFromCli()
+    {
+        ValidateOnlineLobbyUiContract();
+        ValidateLobbyOwnershipAndManualStart();
+        Debug.Log("MTGB LAN lobby validation passed.");
+    }
+
     public static void ValidateForAutomation()
     {
         ValidateProtocolRoundTrip();
@@ -41,6 +50,7 @@ public static class OnlineProtocolValidationMenu
         ValidateServerRequestGate();
         ValidateProfileIsolation();
         ValidateLocalDevelopmentAndLanHost();
+        ValidateLobbyOwnershipAndManualStart();
         ValidatePlayerViewProjection();
         ValidateOnlineActionabilityProjection();
         ValidateOnlineSeatRelativeTargetButtons();
@@ -109,6 +119,10 @@ public static class OnlineProtocolValidationMenu
             Dropdown boundDeckDropdown = deckDropdownField?.GetValue(panel) as Dropdown;
             Require(boundDeckDropdown != null && boundDeckDropdown.transform.IsChildOf(roomPage),
                 "The in-room preparation page has no saved-deck selector.");
+            Require(roomPage.Find("DeckPreparationCard/StartMatchButton") != null,
+                "The room host has no explicit start-match button.");
+            Require(sideboardPage.Find("SideboardStartButton") != null,
+                "The room host has no explicit between-games start button.");
 
             FieldInfo mainDeckContentField = typeof(OnlineLobbyPanel).GetField(
                 "mainDeckContent", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -1137,6 +1151,179 @@ public static class OnlineProtocolValidationMenu
             if (managerObject != null) UnityEngine.Object.DestroyImmediate(managerObject);
             UnityEngine.Object.DestroyImmediate(serviceObject);
             DeleteValidationProfile(profileId);
+        }
+    }
+
+    private static void ValidateLobbyOwnershipAndManualStart()
+    {
+        const BindingFlags flags = BindingFlags.Static | BindingFlags.NonPublic;
+        MethodInfo shouldAutoStartClient = typeof(OnlineMatchService).GetMethod(
+            "ShouldAutoStartNetworkClient", flags);
+        MethodInfo hasLobbyIdentity = typeof(OnlineMatchService).GetMethod("HasLobbyIdentity", flags);
+        MethodInfo shouldResetOnError = typeof(OnlineMatchService).GetMethod(
+            "ShouldResetLobbyConnectionOnError", flags);
+        MethodInfo shouldFinalizeLobbyTransport = typeof(OnlineMatchService).GetMethod(
+            "ShouldFinalizeLobbyTransport", flags);
+        MethodInfo canCreateNetworkManager = typeof(OnlineMatchService).GetMethod(
+            "CanCreateNetworkManager", flags);
+        MethodInfo buildLobbyState = typeof(OnlineMatchService).GetMethod("BuildLobbyState", flags);
+        MethodInfo canStartRoomMatch = typeof(OnlineMatchService).GetMethod("CanStartRoomMatch", flags);
+        MethodInfo removeLobbyMember = typeof(OnlineMatchService).GetMethod("RemoveLobbyMember", flags);
+        FieldInfo hostSeatField = typeof(OnlineLobbyState).GetField("hostSeat");
+        Require(buildLobbyState != null && canStartRoomMatch != null
+            && removeLobbyMember != null && hostSeatField != null,
+            "The lobby has no explicit room-host/manual-start policy.");
+        Require(shouldAutoStartClient != null,
+            "The additional-editor client startup policy is not testable.");
+        Require(hasLobbyIdentity != null, "The lobby authentication/page-transition policy is not testable.");
+        Require(shouldResetOnError != null, "The lobby error recovery policy is not testable.");
+        Require(shouldFinalizeLobbyTransport != null,
+            "The lobby transport cleanup policy is not testable.");
+        Require(canCreateNetworkManager != null, "The leave/rejoin transport policy is not testable.");
+        Require(!(bool)hasLobbyIdentity.Invoke(null, new object[] { true, 0, null }),
+            "The UI entered the room before the server authenticated the player.");
+        var invalidDeckError = new OnlineErrorMessage { code = "invalid-deck", message = "Invalid deck" };
+        var roomFullError = new OnlineErrorMessage { code = "room-full", message = "Room full" };
+        Require(!(bool)shouldResetOnError.Invoke(null,
+                new object[] { false, false, true, invalidDeckError }),
+            "A recoverable in-room error disconnected the guest from the room.");
+        Require((bool)shouldResetOnError.Invoke(null,
+                new object[] { false, false, false, roomFullError }),
+            "A rejected join attempt did not return the player to the connection page.");
+        Require((bool)shouldFinalizeLobbyTransport.Invoke(null, new object[] { true, false })
+            && !(bool)shouldFinalizeLobbyTransport.Invoke(null, new object[] { true, true })
+            && !(bool)shouldFinalizeLobbyTransport.Invoke(null, new object[] { false, false }),
+            "A lobby disconnect left the local client transport running or interrupted match reconnection.");
+        Require(!(bool)canCreateNetworkManager.Invoke(null, new object[] { false, true }),
+            "A new room connection destroyed the previous NetworkManager before shutdown completed.");
+        Require(!(bool)shouldAutoStartClient.Invoke(null, new object[] { "Player 2", false })
+            && !(bool)shouldAutoStartClient.Invoke(null, new object[] { "Player3", false }),
+            "An Additional Editor joined the LAN room before its player clicked Join.");
+        Require((bool)shouldAutoStartClient.Invoke(null, new object[] { string.Empty, true }),
+            "The explicit -mtgb-client startup option no longer starts a network client.");
+
+        var room = new OnlineRoomState { roomId = "manual-start" };
+        room.members.Add(1, new OnlineRoomMember
+        {
+            seat = 1,
+            clientId = 10,
+            displayName = "Host",
+            connected = true,
+            deck = new DeckDefinition { name = "Host Deck" },
+            ready = true
+        });
+
+        OnlineLobbyState hostOnly = buildLobbyState.Invoke(null, new object[] { room }) as OnlineLobbyState;
+        Require(hostOnly != null && hostOnly.players.Count == 1
+            && hostOnly.players[0].seat == 1 && hostOnly.players[0].connected,
+            "A LAN room advertised Player 2 before a second player joined.");
+        Require((int)hostSeatField.GetValue(hostOnly) == 1,
+            "A newly created room did not identify Player 1 as its room host.");
+        Require((bool)hasLobbyIdentity.Invoke(null, new object[] { true, 1, hostOnly }),
+            "An authenticated host did not enter the room page.");
+        Require(!(bool)hasLobbyIdentity.Invoke(null, new object[] { true, 2, hostOnly })
+            && !(bool)hasLobbyIdentity.Invoke(null, new object[] { false, 1, hostOnly }),
+            "The room page accepted a missing or disconnected local player.");
+
+        room.members.Add(2, new OnlineRoomMember
+        {
+            seat = 2,
+            clientId = 11,
+            displayName = "Guest",
+            connected = true,
+            deck = new DeckDefinition { name = "Guest Deck" },
+            ready = true
+        });
+        object[] hostRequest = { room, 1, null };
+        object[] guestRequest = { room, 2, null };
+        Require((bool)canStartRoomMatch.Invoke(null, hostRequest),
+            hostRequest[2] as string ?? "The ready room host could not start the match.");
+        Require(!(bool)canStartRoomMatch.Invoke(null, guestRequest),
+            "A non-host player was allowed to start the match.");
+
+        Require((bool)removeLobbyMember.Invoke(null, new object[] { room, 2 }),
+            "The guest could not leave the room.");
+        OnlineLobbyState afterGuestLeft = buildLobbyState.Invoke(null, new object[] { room }) as OnlineLobbyState;
+        Require(afterGuestLeft != null && afterGuestLeft.players.Count == 1
+            && afterGuestLeft.players[0].seat == 1
+            && (int)hostSeatField.GetValue(afterGuestLeft) == 1,
+            "A guest leaving dissolved the room or changed its host.");
+
+        room.members.Add(2, new OnlineRoomMember
+        {
+            seat = 2,
+            clientId = 12,
+            displayName = "Returning Guest",
+            connected = true,
+            deck = new DeckDefinition { name = "Returning Guest Deck" },
+            ready = false
+        });
+        object[] beforeReturningGuestReady = { room, 1, null };
+        Require(!(bool)canStartRoomMatch.Invoke(null, beforeReturningGuestReady),
+            "The host could start before the returning guest prepared a deck.");
+        room.members[2].ready = true;
+        object[] afterReturningGuestReady = { room, 1, null };
+        Require((bool)canStartRoomMatch.Invoke(null, afterReturningGuestReady),
+            afterReturningGuestReady[2] as string ?? "The host could not start after the returning guest became ready.");
+
+        Require((bool)removeLobbyMember.Invoke(null, new object[] { room, 1 }),
+            "The dedicated-server room host could not leave.");
+        OnlineLobbyState transferred = buildLobbyState.Invoke(null, new object[] { room }) as OnlineLobbyState;
+        Require(transferred != null && transferred.players.Count == 1
+            && transferred.players[0].seat == 2
+            && (int)hostSeatField.GetValue(transferred) == 2,
+            "A dedicated-server room did not remain active and transfer ownership when its host left.");
+
+        room.members.Add(1, new OnlineRoomMember
+        {
+            seat = 1,
+            clientId = 13,
+            displayName = "New Guest",
+            connected = true
+        });
+        OnlineLobbyState afterNewGuestJoined = buildLobbyState.Invoke(null, new object[] { room }) as OnlineLobbyState;
+        Require(afterNewGuestJoined != null && afterNewGuestJoined.players.Count == 2
+            && (int)hostSeatField.GetValue(afterNewGuestJoined) == 2,
+            "A new guest stole room ownership after joining a dedicated-server room.");
+        Require((bool)removeLobbyMember.Invoke(null, new object[] { room, 2 }),
+            "The transferred dedicated-server room host could not leave.");
+        OnlineLobbyState transferredAgain = buildLobbyState.Invoke(null, new object[] { room }) as OnlineLobbyState;
+        Require(transferredAgain != null && transferredAgain.players.Count == 1
+            && transferredAgain.players[0].seat == 1
+            && (int)hostSeatField.GetValue(transferredAgain) == 1,
+            "Room ownership did not transfer to the remaining player a second time.");
+
+        using (var registry = new OnlineRoomRegistry())
+        {
+            Require(registry.TryGetOrCreate("leave-cycle", out OnlineRoomState registeredRoom, out _),
+                "The room registry could not create a room for the leave-cycle validation.");
+            registeredRoom.members.Add(1, new OnlineRoomMember { seat = 1, connected = true });
+            Require(!registry.RemoveIfEmpty("leave-cycle"),
+                "The registry dissolved a room while its host was still present.");
+            removeLobbyMember.Invoke(null, new object[] { registeredRoom, 1 });
+            Require(registry.RemoveIfEmpty("leave-cycle")
+                && !registry.TryGet("leave-cycle", out _),
+                "The registry retained an empty room after its final player left.");
+        }
+
+        GameObject serviceObject = new GameObject("LAN Lobby Disconnect Validation");
+        try
+        {
+            OnlineMatchService service = serviceObject.AddComponent<OnlineMatchService>();
+            typeof(OnlineMatchService).GetProperty("LobbyState")?.SetValue(service, hostOnly);
+            typeof(OnlineMatchService).GetProperty("LocalSeat")?.SetValue(service, 2);
+            typeof(OnlineMatchService).GetField("connectedToLanHost", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(service, true);
+            MethodInfo handleLost = typeof(OnlineMatchService).GetMethod(
+                "HandleLobbyConnectionLost", BindingFlags.Instance | BindingFlags.NonPublic);
+            Require(handleLost != null, "The LAN client has no host-loss cleanup path.");
+            handleLost.Invoke(service, null);
+            Require(service.LobbyState == null && service.LocalSeat == 0,
+                "A LAN client kept stale room seats after its host closed the room.");
+        }
+        finally
+        {
+            UnityEngine.Object.DestroyImmediate(serviceObject);
         }
     }
 

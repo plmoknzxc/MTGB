@@ -75,6 +75,8 @@ public class CardDefinition
 {
     public string cardName;
     public int cardID;
+    // cardID is local to sourceDatabasePath; PrintingKey identifies a definition across libraries.
+    [NonSerialized] public string sourceDatabasePath;
     public string oracleID;
     public string setCode;
     public int collectorNumber;
