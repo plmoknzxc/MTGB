@@ -12,6 +12,6 @@
 
 `Assets/Scripts/Editor/IntegratedBattlefieldArtPass.cs` 提供编辑器菜单 `MTGB/Art/Apply Obsidian Sanctum`，可重新应用这套布局。它会保存当前 IntegratedBattlefield 场景；后续手动编辑布局后不要随意重跑，以免覆盖手工位置。修改前场景备份位于 `.tools/scene-backups/IntegratedBattlefield-before-sanctum.unity`。
 
-本轮未改旧场景 MTGAPrototype。后续调度故障修复已清理 IntegratedBattlefield 中 17 个失效旧组件引用（含 6 个旧牌堆点击组件），重新加载检查无缺失组件，战场施法回归通过。清理前备份位于 `.tools/scene-backups/mulligan-fix/`。后续仍可继续制作三维环境、动画、头像素材与不同屏幕比例的专项适配。
+IntegratedBattlefield 重新加载检查无缺失组件，战场施法回归通过。后续仍可继续制作三维环境、动画、头像素材与不同屏幕比例的专项适配。
 
 验证：真实 Starter 牌组的施放、玩家目标、费用与优先权点击通过（闪电击 20→17）；扇形手牌版本的施放、敏捷攻击与战斗伤害通过（20→19），包含射线遮挡与重复点击检查。最终截图见 `Captures/IntegratedBattlefield-Sanctum.png`。详情卡文换行在保存场景后补充校正。

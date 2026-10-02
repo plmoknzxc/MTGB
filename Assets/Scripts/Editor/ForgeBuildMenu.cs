@@ -23,7 +23,7 @@ public static class ForgeBuildMenu
         string root = Path.GetFullPath("Builds/ForgeValidation");
         Directory.CreateDirectory(root);
         BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefield.unity", "Assets/Scenes/MTGAPrototype.unity" },
+            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefield.unity" },
             locationPathName = Path.Combine(root, "MTGB.exe"), target = BuildTarget.StandaloneWindows64,
             subtarget = (int)StandaloneBuildSubtarget.Player,
             options = BuildOptions.Development

@@ -68,7 +68,7 @@ Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
 
 ## 已实现协议
 
-- v8 联机协议，以及游戏版本、数据库模式和卡牌/Lua 分类内容哈希握手；拒绝时会明确指出是协议、卡牌数据库还是 Lua 脚本不一致。
+- 使用 `OnlineProtocol.Version` 检查通信兼容性；权威端负责检查开局运行资源和牌组，握手允许客户端使用不同的本地翻译和卡图。
 - 两个真实玩家席位、房主身份、牌组提交、服务器牌组合法性校验、准备状态和房主手动开局。
 - 房间号、房间生命值、BO1/BO3、服务器每局随机先手、允许系列与自定义内容开关。
 - 服务器检查主牌至少 60、备牌最多 15、复制数量、卡池、系列与 DIY 规则；BO3 局间只允许在本轮注册的主牌和备牌卡池内换备。
@@ -89,9 +89,9 @@ Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
 
 ## 联机验证
 
-`MTGB/Networking/Validate Protocol` 或 Unity CLI 命令 `unity command mtgb_validate_p1` 会验证所有 `GameActionType` 的协议往返、开局先后手与调度视图、动作请求关联、客户端输入状态机、重连窗口、重复和乱序请求、认证席位覆盖、双客户端配置隔离、隐藏信息投影、视图篡改检测、内容哈希握手、消息防护、房间配置和双房间状态隔离。大厅改动可以单独用 `MTGB/Networking/Validate LAN Lobby` 或 `unity command mtgb_validate_lan_lobby` 验证，避免运行完整规则验证。
+`MTGB/Validation/Online authority` 检查握手兼容性、权威端启动配置、牌组校验、席位隔离与输入拒绝。Windows 双客户端回归使用 `Tools/ForgeBridge/Run-NetworkSmoke.py`，具体构建与运行方式见 [ForgeBridge](../Tools/ForgeBridge/README.zh-CN.md)。
 
-`MTGB/Validate Project` 还会同时运行规则选择、确定性、复杂卡牌特性和协议验证。新增规则动作必须先进入 `GameAction`，并为规则层验证补充对应场景；网络层不需要为每种规则动作增加专用消息。
+`MTGB/Validate Project` 检查官方目录、牌组保存重载、真实 Forge 会话和进程隔离。规则机制与界面交互通过对应专项验证入口复核。
 
 ## 安全边界
 

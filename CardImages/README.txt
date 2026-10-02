@@ -16,4 +16,3 @@ Downloaded JPG files are excluded from Git and can be recreated.
 
 Image source: https://scryfall.com/
 Card artwork and game content belong to their respective rights holders.
-The former CardPacks/.mtgbpack and Lua instructions no longer apply here.

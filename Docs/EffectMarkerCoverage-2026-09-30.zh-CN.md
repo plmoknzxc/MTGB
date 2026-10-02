@@ -50,4 +50,4 @@ Unity 运行验收：11 个效果标记能进入界面；无来源牌的君主�
 
 验证：`Test-MarkerCoverage.py --special-states` PASS，真实引擎 API 设置 5 种玩家指示物和地城/魔戒/速度/祝福/Enduring Story/白昼状态，检查两席数值及入口；不是完整实际施放所有相关牌的对局认证。Unity 验证五种图标、双面辅助牌的不同图片、观战投影和地城详情；完整项目校验 `mtgb_validate_project` PASS（临时补齐缺失的 Forge-Validation 测试卡组，校验后移除）。
 
-运行时不联网取这些素材；图集已禁止 NPOT 缩放并保留原始 680×1920 尺寸。卡图和辅助资源导入不改旧 .mtgbdb、Lua 或 Data Editor schema，适用文档中的 Forge 迁移流程，未对旧库运行 --validate。
+运行时不联网取这些素材；图集已禁止 NPOT 缩放并保留原始 680×1920 尺寸。卡图和辅助资源导入检查文件完整性与 Unity 本地加载，不修改 Forge 规则。

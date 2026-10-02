@@ -24,7 +24,7 @@
 
 公开接口：https://mtgch.com/api/v1/docs 。导入脚本：`Tools/ForgeBridge/Import-ChineseRuleSupplements.py`。逐项来源、英文原文、译文摘要及剩余名称：`Tools/ForgeBridge/Reports/ChineseRuleSupplements.json`。
 
-游戏运行时只读取本地文本，不调用翻译或图片接口。导入脚本不调用自动翻译接口。本次未更改卡图、引擎规则或卡牌 Lua。
+游戏运行时只读取本地文本，不调用翻译或图片接口。导入脚本不调用自动翻译接口。本次未更改卡图或引擎规则。
 
 ## 验证与边界
 

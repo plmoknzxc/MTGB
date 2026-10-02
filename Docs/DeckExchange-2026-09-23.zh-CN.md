@@ -11,7 +11,7 @@
 
 ## 现有 MTGB 格式
 
-`Decks/*.mdk` 是 UTF-8 纯文本，主键为「系列/收集编号」，不是 Lua、Forge 卡牌脚本或二进制文件。
+`Decks/*.mdk` 是 UTF-8 纯文本，主键为「系列/收集编号」。
 
 ```text
 #name Example

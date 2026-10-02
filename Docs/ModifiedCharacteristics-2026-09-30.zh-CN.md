@@ -19,6 +19,6 @@
 - 截图：`.tools/modified-characteristics/colors.png` 与 `emblem-local.png`。
 - 正式桥接源码、编译类与 runtime 哈希已同步。
 
-没有修改卡牌规则、Lua 或旧 .mtgbdb 数据，因此旧 Data Editor 数据保存校验不适用。本次卡图使用现有官方 Forge/Scryfall 图号体系，并检查文件完整性与 Unity 本地解码。
+本次卡图使用官方 Forge/Scryfall 图号体系，并检查文件完整性与 Unity 本地解码，没有修改卡牌规则。
 
 完整 MTGB 项目校验通过（Temp/project-validation-result.txt = PASS），包括目录、持续会话与进程隔离。校验时缺少的 Forge-Validation 测试卡组由 Starter 临时副本提供，校验后已移除。

@@ -1,6 +1,6 @@
 # Forge ↔ Unity 最小适配验证
 
-这是独立的技术验证工程。主 MTGB 工程、Lua、正式卡库、组卡和联机入口均不依赖这些验证代码。
+这是独立的技术验证工程，用于验证 Forge 进程与 Unity 界面之间的通信。正式构建入口见 [ForgeBridge](../ForgeBridge/README.zh-CN.md)。
 
 ## 运行
 

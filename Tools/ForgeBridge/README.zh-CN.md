@@ -1,6 +1,6 @@
-# Forge 联机迁移实现
+# Forge 构建与联机
 
-本轮完成官方目录、现有房间接入、可靠性与旧核心清理。对局已接入 IntegratedBattlefield 的 Unity 战场；操作与验证见 [战场说明](../../Docs/ForgeBattlefield.zh-CN.md)。复杂交互仍有下述边界。总范围见 [迁移计划](../../Docs/ForgeMigration.zh-CN.md)。
+当前使用官方印刷目录、持久对局会话和独立进程，联机对局在 IntegratedBattlefield 战场展示。操作与验证见 [战场说明](../../Docs/ForgeBattlefield.zh-CN.md)，运行结构见 [项目架构](../../Docs/ForgeArchitecture.zh-CN.md)。
 
 当前固定版本：Forge 2.0.15（Reality Fracture），2026-09-30 同步。升级范围、验证和缺图见 [同步记录](../../Docs/ForgeUpdate-2.0.15.zh-CN.md)。
 
@@ -46,7 +46,7 @@ python -X utf8 Tools/ForgeBridge/Run-RuleSmoke.py --mulligans 2 --auto-bottom
 
 Unity 战场提交 Forge 当前请求的候选；已接入手牌、战场、玩家目标、费用、攻击与确认操作。排序、多选、部分费用与揭示信息等未实现回调必须明确异常终止，异常不计为玩家输局。目录规模不等于可玩性覆盖。
 
-持久会话替换了房间的旧规则执行链；旧规则、Lua DLL、卡包专属加载及旧校验入口已退出。展示类型和场景布局保留，IntegratedBattlefield 在联机开局时自动加载。旧代码及清理前未提交修改保存在本地 Git 引用 `codex/forge-legacy-reference-20260915`。旧 DIY 文件不执行，外部 Data Editor 后续迁移。
+IntegratedBattlefield 在联机开局时自动加载，按服务器下发的状态显示卡牌并提交玩家选择。
 
 ## 来源
 

@@ -113,7 +113,7 @@ python Tools/ForgeBridge/Import-CardImages.py --workers 12
 python Tools/ForgeBridge/Import-CardImages.py --refresh-metadata
 ```
 
-每张新图片先检查 JPEG 格式、尺寸及完整性，再原子写入；单文件失败重试，磁盘剩余不足 4 GiB 时保留空间。下载不修改规则脚本、卡牌目录或运行哈希。此前 Data Editor 的旧数据库/Lua 校验流程不适用于这次纯 Forge 卡图下载。
+每张新图片先检查 JPEG 格式、尺寸及完整性，再原子写入；单文件失败重试，磁盘剩余不足 4 GiB 时保留空间。下载不修改规则脚本、卡牌目录或运行哈希。
 
 ## 审计文件
 

@@ -16,8 +16,8 @@
 
 `.mdk` 是 UTF-8 文本。`#name` 指定名称，`#main` 指定主牌，`!side` 指定备牌。每行是“数量 系列代码/收藏编号”，例如 `4 2ED/162` 表示 4 张该印刷的 Lightning Bolt。
 
-旧本地数字 ID 无法用于当前 Forge 对局。主备牌合并按规则卡名检查数量限制，基本地及 Forge 定义的特殊数量规则除外。当前对局不支持 Commander。
+牌组条目使用精确印刷编号。主备牌合并按规则卡名检查数量限制，基本地及 Forge 定义的特殊数量规则除外。当前对局不支持 Commander。
 
-旧 MTGB/TST/SOS 卡包、数据库和脚本目录已移除，依赖它们的旧示例牌组也已退出。DIY 新卡包加载仍未实现。
+DIY 卡包加载尚未实现。
 
 验证命令：`python -X utf8 Tools/ForgeBridge/Run-RuleSmoke.py --deck Decks/Starter.mdk`。Unity 菜单 `MTGB/Forge/Validate Catalog` 校验两份牌组，`MTGB/Forge/Validate Persistent Session` 保存重载 Starter 并创建真实 Forge 对局。

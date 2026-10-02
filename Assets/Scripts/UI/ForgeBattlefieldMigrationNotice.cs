@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 public sealed class ForgeBattlefieldMigrationNotice : MonoBehaviour
 {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void ShowForLegacyScene()
+    private static void ShowForBattlefield()
     {
         string scene = SceneManager.GetActiveScene().name;
-        if ((scene == "MTGAPrototype" || scene == "IntegratedBattlefield") && OnlineMatchService.Instance?.IsInMatch != true)
+        if (scene == "IntegratedBattlefield" && OnlineMatchService.Instance?.IsInMatch != true)
             new GameObject("ForgeBattlefieldMigrationNotice").AddComponent<ForgeBattlefieldMigrationNotice>();
     }
     private void OnGUI()

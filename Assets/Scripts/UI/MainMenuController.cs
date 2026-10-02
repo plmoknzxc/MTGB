@@ -10,7 +10,6 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public sealed partial class MainMenuController : MonoBehaviour
 {
-    private const string BattleSceneName = "MTGAPrototype";
     private const float HoverPreviewDelay = 0.75f;
 
     private readonly List<CardDefinition> cards = new List<CardDefinition>();

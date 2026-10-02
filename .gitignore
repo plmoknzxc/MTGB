@@ -35,9 +35,6 @@ ForgeRuntime/
 __pycache__/
 .trae/
 *.csproj
-!Tools/RulesCoverage/RulesCoverage.csproj
-Tools/RulesCoverage/bin/
-Tools/RulesCoverage/obj/
 *.sln
 *.user
 *.suo
