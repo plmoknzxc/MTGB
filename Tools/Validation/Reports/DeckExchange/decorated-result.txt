@@ -1,0 +1,1 @@
+PASS: all 12 screenshot rows imported; 1 USG/290; 2 MUL/139; 1 WOT/40; 2 MH3/54; 2 MIR/299; 2 DOM/213; 2 PLST/DDU-45; 1 M20/227; 2 ELD/58; 1 THS/65; 1 MH3/212; 1 CM2/130

@@ -1,0 +1,1 @@
+PASS: curved rendered arrow; right-side full preview; creature target; invalid/stale/duplicate guard; cancel cleanup. Synthetic presentation fixture, not a rules test.

@@ -1,0 +1,1 @@
+PASS: three real Forge entries scroll and show individual effects; stack target arrow, correct instance, stale/empty/duplicate guards; separate inspect during targeting; explicit trigger order confirmation; 12-entry presentation stress and long effect scrolling.

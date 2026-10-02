@@ -17,13 +17,15 @@ $logPath = Join-Path $ProjectPath "Logs/validation.log"
 & $UnityPath `
     -batchmode `
     -nographics `
-    -quit `
     -projectPath $ProjectPath `
     -executeMethod MTGBValidationRunner.ValidateFromCommandLine `
     -logFile $logPath
 
 if ($LASTEXITCODE -ne 0) {
     throw "MTGB validation failed with exit code $LASTEXITCODE. See '$logPath'."
+}
+if ((Get-Content -LiteralPath (Join-Path $ProjectPath 'Temp/project-validation-result.txt') -Raw).Trim() -ne 'PASS') {
+    throw "Forge validation did not finish successfully. See '$logPath'."
 }
 
 Write-Host "MTGB validation passed. Log: $logPath"

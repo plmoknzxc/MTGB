@@ -1,0 +1,1 @@
+PASS: outside left/right click cancels; ability source art/effect; confirm/reselect; picker retains card instances and scroll position.

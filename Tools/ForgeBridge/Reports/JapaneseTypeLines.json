@@ -1,0 +1,615 @@
+{
+  "filledThisRun": 0,
+  "recordedFills": 120,
+  "remaining": 1,
+  "unknownTerms": {},
+  "entries": [
+    {
+      "name": "Abomination, Irradiated Brute",
+      "type": "伝説のクリーチャー — ガンマ・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Abomination, Terrifying Titan",
+      "type": "伝説のクリーチャー — ガンマ・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Abomination, World Ravager",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Adventurer's Inn",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agent 13, Sharon Carter",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agent Maria Hill",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agent Phil Coulson",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agent Venom",
+      "type": "伝説のクリーチャー — シンビオート・兵士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agent of Atlas",
+      "type": "クリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agents of HYDRA",
+      "type": "クリーチャー — 人間・スパイ・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Agents of S.H.I.E.L.D.",
+      "type": "クリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Anti-Venom, Horrifying Healer",
+      "type": "伝説のクリーチャー — シンビオート・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Appa, Aang's Companion",
+      "type": "伝説のクリーチャー — バイソン・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Appa, Loyal Sky Bison",
+      "type": "伝説のクリーチャー — バイソン・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Appa, Steadfast Guardian",
+      "type": "伝説のクリーチャー — バイソン・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Appa, the Vigilant",
+      "type": "伝説のクリーチャー — バイソン・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Balamb Garden, SeeD Academy",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Baron, Airship Kingdom",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Black Bolt, Inhuman King",
+      "type": "伝説のクリーチャー — インヒューマン・貴族・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Black Widow, Agile Avenger",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Black Widow, Daring Operative",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Black Widow, Intel Expert",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Black Widow, Super Spy",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Brawn, Amadeus Cho",
+      "type": "伝説のクリーチャー — ガンマ・科学者・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Capital City",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Captain Mar-Vell, Space-Born",
+      "type": "伝説のクリーチャー — クリー・兵士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Captain Marvel, Apex Avenger",
+      "type": "伝説のクリーチャー — 人間・クリー・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Captain Marvel, Earth's Protector",
+      "type": "伝説のクリーチャー — 人間・クリー・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Captain Marvel, Shooting Star",
+      "type": "伝説のクリーチャー — 人間・クリー・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Carnage, Crimson Chaos",
+      "type": "伝説のクリーチャー — シンビオート・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Claim the Kingdom",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Clive's Hideaway",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Construct a Cosmic Cube",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Crossroads Village",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Crystal, Inhuman Princess",
+      "type": "伝説のクリーチャー — インヒューマン・貴族・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Death to Our Enemies",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Director Nick Fury",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Doc Samson, Super Psychiatrist",
+      "type": "伝説のクリーチャー — ガンマ・ドクター・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Doom Reigns Supreme",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Eden, Seat of the Sanctum",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Gamma Grotesque",
+      "type": "クリーチャー — ガンマ・ホラー・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Glorious Purpose",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Gohn, Town of Ruin",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Gongaga, Reactor Town",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Grendel, Spawn of Knull",
+      "type": "伝説のクリーチャー — シンビオート・ドラゴン・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Guadosalam, Farplane Gateway",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Gwenom, Remorseless",
+      "type": "伝説のクリーチャー — シンビオート・蜘蛛・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hatut Zeraze Strike Force",
+      "type": "クリーチャー — 人間・スパイ・戦士",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulk, Always Angry",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulk, Bruce Banner",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulk, Brutal Brawler",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulk, Gamma Goliath",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulk, Strongest There Is",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulkling, Burgeoning Bruiser",
+      "type": "伝説のクリーチャー — クリー・スクラル・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hulkling, Young Avenger",
+      "type": "伝説のクリーチャー — クリー・スクラル・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hungry Graffalon",
+      "type": "クリーチャー — キリン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Hyperion, Supreme Hero",
+      "type": "伝説のクリーチャー — エターナル・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Imperial Cosmographer",
+      "type": "クリーチャー — クリー・科学者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Insomnia, Crown City",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Ishgard, the Holy See",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Jidoor, Aristocratic Capital",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Kree Commandos",
+      "type": "クリーチャー — クリー・兵士・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Kree Sentinel",
+      "type": "アーティファクト・クリーチャー — クリー・ロボット・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Leader, Super-Genius",
+      "type": "伝説のクリーチャー — ガンマ・科学者・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Lindblum, Industrial Regency",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Lockjaw, Slobbering Teleporter",
+      "type": "伝説のクリーチャー — インヒューマン・犬・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Marvel Boy, Noh-Varr",
+      "type": "伝説のクリーチャー — クリー・兵士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Medusa, Inhuman Queen",
+      "type": "伝説のクリーチャー — インヒューマン・貴族・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Midgar, City of Mako",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Mockingbird, Ace Agent",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Momo, Friendly Flier",
+      "type": "伝説のクリーチャー — キツネザル・コウモリ・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Momo, Playful Pet",
+      "type": "伝説のクリーチャー — キツネザル・コウモリ・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Momo, Rambunctious Rascal",
+      "type": "伝説のクリーチャー — キツネザル・コウモリ・同盟者",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Ms. Marvel, Elastic Ally",
+      "type": "伝説のクリーチャー — ミュータント・インヒューマン・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Ms. Marvel, Kamala Khan",
+      "type": "伝説のクリーチャー — ミュータント・インヒューマン・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Nick Fury, Agent of S.H.I.E.L.D.",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Nick Fury, Spymaster",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Peggy Carter, Secret Agent",
+      "type": "伝説のクリーチャー — 人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Platypus-Bear",
+      "type": "クリーチャー — カモノハシ・熊",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Political Triumph",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Professor Dellian Fel",
+      "type": "伝説のプレインズウォーカー — デリアン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Professor Hulk",
+      "type": "伝説のクリーチャー — ガンマ・科学者・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Quake, Agent of S.H.I.E.L.D.",
+      "type": "伝説のクリーチャー — インヒューマン・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Quina, Qu Gourmet",
+      "type": "伝説のクリーチャー — ク族",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Rabanastre, Royal City",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Rabaroo Troop",
+      "type": "クリーチャー — 兎・カンガルー",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Red Hulk",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Red Room Recruit",
+      "type": "クリーチャー — 人間・スパイ・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Rewrite History",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Robot Domination",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Sharlayan, Nation of Scholars",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "She-Hulk, Attorney-at-Law",
+      "type": "伝説のクリーチャー — ガンマ・アドバイザー・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "She-Hulk, Jade Defender",
+      "type": "伝説のクリーチャー — ガンマ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "She-Hulk, Jennifer Walters",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "She-Hulk, Wallbreaker",
+      "type": "伝説のクリーチャー — ガンマ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Shi'ar Soldier",
+      "type": "クリーチャー — シーア・兵士",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Spider-Woman, Secret Agent",
+      "type": "伝説のクリーチャー — 蜘蛛・人間・スパイ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Starting Town",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Super-Skrull",
+      "type": "伝説のクリーチャー — スクラル・多相の戦士・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Symbiote Spawn",
+      "type": "クリーチャー — シンビオート・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Symbiote Spider-Man",
+      "type": "伝説のクリーチャー — シンビオート・蜘蛛・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Thanos, Death's Consort",
+      "type": "伝説のクリーチャー — エターナル・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Thanos, the Mad Titan",
+      "type": "伝説のクリーチャー — エターナル・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "The Gold Saucer",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "The Incredible Hulk",
+      "type": "伝説のクリーチャー — ガンマ・狂戦士・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "The Mind Stone",
+      "type": "伝説のアーティファクト — インフィニティ・ストーン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "The Sensational She-Hulk",
+      "type": "伝説のクリーチャー — ガンマ・英雄",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "The Soul Stone",
+      "type": "伝説のアーティファクト — インフィニティ・ストーン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Treno, Dark City",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Undercover Skrull",
+      "type": "クリーチャー — スクラル・多相の戦士・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Valentina Allegra de Fontaine",
+      "type": "伝説のクリーチャー — 人間・スパイ・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Vector, Imperial Capital",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Venom, Deadly Devourer",
+      "type": "伝説のクリーチャー — シンビオート・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Venom, Eddie Brock",
+      "type": "伝説のクリーチャー — シンビオート・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Venom, Evil Unleashed",
+      "type": "伝説のクリーチャー — シンビオート・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Venom, Lethal Protector",
+      "type": "伝説のクリーチャー — シンビオート・英雄・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Venomized Cat",
+      "type": "クリーチャー — シンビオート・猫・悪人",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Villainous Syndication",
+      "type": "エンチャント — プラン",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Windurst, Federation Center",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    },
+    {
+      "name": "Zanarkand, Ancient Metropolis",
+      "type": "土地 — 街",
+      "source": "local-known-type-terms"
+    }
+  ],
+  "unresolved": [
+    {
+      "name": "Atinlay Igpay",
+      "reason": "Nonstandard silver-border Eaturecray type, not an ordinary English fallback; retained."
+    }
+  ],
+  "filledInThisTask": 2811
+}

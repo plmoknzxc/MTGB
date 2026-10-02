@@ -1,0 +1,324 @@
+{
+  "scope": "Local main-face rule line and mana-symbol structural heuristics, not exhaustive semantic translation review",
+  "candidates": 35,
+  "corrections": 1,
+  "entries": [
+    {
+      "name": "A-Excavation Explosion",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Excavation Explosion deals 4 damage to target creature or planeswalker. Create a tapped Powerstone token.",
+      "previousChinese": "掘古爆破对目标生物或鹏洛客造成4点伤害。派出一个已横置的魔力石衍生物。 (它是具有「{T}：加{C}。此法术力不能用来施放非神器咒语」的神器。)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "A-Geology Enthusiast",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Vigilance\\nAt the beginning of your end step, create a tapped Powerstone token.\\n{5}: Draw a card and put a +1/+1 counter on Geology Enthusiast.",
+      "previousChinese": "警戒\\n在你的结束步骤开始时，派出一个已横置的魔力石衍生物。 (它是具有「{T}：加{C}。此法术力不能用来施放非神器咒语」的神器。)\\n{5}：抓一张牌并在狂热地质家上放置一个+1/+1指示物。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "A-Karn, Living Legacy",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "[+1]: Create a tapped Powerstone token.\\n[0]: Pay any amount of mana. Look at that many cards from the top of your library, then put one of those cards into your hand and the rest on the bottom of your library in a random order.\\n[-6]: You get an emblem with \"Tap an untapped artifact you control: This emblem deals 1 damage to any target.\"",
+      "previousChinese": "+1：派出一个已横置的魔力石衍生物。 (它是具有「{T}：加{C}。此法术力不能用来施放非神器咒语」的神器。)\\n0：支付任意数量的法术力。检视你牌库顶等量的牌，然后将其中一张置于你手上，其余则以随机顺序置于你的牌库底。\\n-6：你获得具有以下异能的徽记～「横置一个由你操控且未横置的神器：此徽记对任意一个目标造成1点伤害。」",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "A-Visions of Phyrexia",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "At the beginning of your upkeep, exile the top two cards of your library. You may play one of those cards this turn.\\nAt the beginning of your end step, if you didn't play a card from exile this turn, create a tapped Powerstone token.",
+      "previousChinese": "在你的维持开始时，放逐你牌库顶的两张牌。你本回合可以使用其中的一张。\\n在你的结束步骤开始时，若你本回合中未从放逐区使用过牌，则派出一个已横置的魔力石衍生物。 (它是具有「{T}：加{C}。此法术力不能用来施放非神器咒语」的神器。)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Dawnsire, Sunstar Dreadnought",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 20+.)\nSTATION 10+\nWhenever you attack, Dawnsire deals 100 damage to up to one target creature or planeswalker.\nSTATION 20+\nFlying",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到20+后它便是神器生物。)\n10+ VERT 每当你攻击时，曙君号对至多一个目标生物或鹏洛客造成100点伤害。\n20+ VERT 飞行",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Dryad Militant",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "If an instant or sorcery card would be put into a graveyard from anywhere, exile it instead.",
+      "previousChinese": "({G/W}可用{G}或{W}来支付。)\\n如果任一瞬间或法术牌将从任何地方置入坟墓场，改为将它放逐。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Entropic Battlecruiser",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 8+.)\nSTATION 1+\nWhenever an opponent discards a card, they lose 3 life.\nSTATION 8+\nFlying, deathtouch\nWhenever this Spacecraft attacks, each opponent discards a card. Each opponent who can't loses 3 life.",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到8+后它便是神器生物。)\n1+ VERT 每当任一对手弃一张牌时，其失去3点生命。\n8+ VERT 飞行，死触\n每当此太空船攻击时，每位对手各弃一张牌。每位无法如此作的对手各失去3点生命。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Everythingamajig",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "<Unsupported Variant>",
+      "previousChinese": "{2}，{T}：将一个指示物从一个永久物移到另一个永久物上。若后者永久物提及任意种类的指示物，则该指示物成为其中一种指示物。若否，则它成为一个+1/+1指示物。\\n{3}，{T}：在目标生物上放置一个+1/+1指示物。\\n{4}，{T}：增殖。（选择任意数量的永久物和／或牌手，然后为其已有之每种指示物各多放置一个同类的指示物。）",
+      "result": "local-engine-unsupported-variant; no gameplay-rule-completeness claim"
+    },
+    {
+      "name": "Exploration Broodship",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 8+.)\nSTATION 3+\nYou may play an additional land on each of your turns.\nSTATION 8+\nFlying\nOnce during each of your turns, you may cast a permanent spell from your graveyard by sacrificing a land in addition to paying its other costs.",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到8+后它便是神器生物。)\n3+ VERT 你在自己的每个回合中可以额外使用一个地。\n8+ VERT 飞行\n仅于你的每个回合中且每回合限一次，你可以从你坟墓场中施放永久物咒语，但在其他费用以外，还须牺牲一个地。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Fetching Garden",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Fetching Garden enters tapped if it was played from your hand.",
+      "previousChinese": "({T}：加{G}或{W}。)\\n如果待寻花园是从你手上使用，则它须横置进战场。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Gate of the Black Dragon",
+      "checks": [
+        "missing-mana-and-lines"
+      ],
+      "localEnglish": "Gate of the Black Dragon enters tapped.\n{3}{B}, {T}: Seek a nonland card. Activate only once.\n{T}: Add {B}.",
+      "previousChinese": "\n黑龙之门须横置进战场。\n{3}{B}，{T}：取出一张非地牌。只能起动一次。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Gate to Manorborn",
+      "checks": [
+        "missing-mana-and-lines"
+      ],
+      "localEnglish": "Gate to Manorborn enters tapped.\n{3}{G}, {T}: Seek a nonland card. Activate only once.\n{T}: Add {G}.",
+      "previousChinese": "\n庄诞街区之门须横置进战场。\n{3}{G}，{T}：取出一张非地牌。只能起动一次。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Gate to Seatower",
+      "checks": [
+        "missing-mana-and-lines"
+      ],
+      "localEnglish": "Gate to Seatower enters tapped.\n{3}{U}, {T}: Seek a nonland card. Activate only once.\n{T}: Add {U}.",
+      "previousChinese": "\n海塔之门须横置进战场。\n{3}{U}，{T}：取出一张非地牌。只能起动一次。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Gate to Tumbledown",
+      "checks": [
+        "missing-mana-and-lines"
+      ],
+      "localEnglish": "Gate to Tumbledown enters tapped.\n{3}{R}, {T}: Seek a nonland card. Activate only once.\n{T}: Add {R}.",
+      "previousChinese": "\n滚下街区之门须横置进战场。\n{3}{R}，{T}：取出一张非地牌。只能起动一次。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Gate to the Citadel",
+      "checks": [
+        "missing-mana-and-lines"
+      ],
+      "localEnglish": "Gate to the Citadel enters tapped.\n{3}{W}, {T}: Seek a nonland card. Activate only once.\n{T}: Add {W}.",
+      "previousChinese": "\n堡垒之门须横置进战场。\n{3}{W}，{T}：取出一张非地牌。只能起动一次。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Hearthhull, the Worldseed",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 8+.)\nSTATION 2+\n{1}, {T}, Sacrifice a land: Draw two cards. You may play an additional land this turn.\nSTATION 8+\nFlying, vigilance, haste\nWhenever you sacrifice a land, each opponent loses 2 life.",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到8+后它便是神器生物。)\n2+ VERT {1}，{T}，牺牲一个地：抓两张牌。本回合中，你可以额外使用一个地。\n8+ VERT 飞行，警戒，敏捷\n每当你牺牲一个地时，每位对手各失去2点生命。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Inspirit, Flagship Vessel",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 8+.)\nSTATION 1+\nAt the beginning of combat on your turn, put your choice of a +1/+1 counter or two charge counters on up to one other target artifact.\nSTATION 8+\nFlying\nOther artifacts you control have hexproof and indestructible.",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到8+后它便是神器生物。)\n1+ VERT 在你回合的战斗开始时，在至多一个目标神器上依你选择放置一个+1/+1指示物或两个充电指示物。\n8+ VERT 飞行\n由你操控的其他神器具有辟邪与不灭异能。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Jaws, Relentless Predator",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Trample, haste\\nWhenever Jaws deals combat damage to a player, create that many Blood tokens.\\nWhenever a noncreature artifact is sacrificed or destroyed, Jaws deals 1 damage to each opponent.",
+      "previousChinese": "践踏，敏捷\\n每当大白鲨对任一牌手造成战斗伤害时，派出等量的血滴衍生物。 (它们是具有「{1}，{T}，弃一张牌，牺牲此衍生物：抓一张牌。」的神器。)\\n每当一个非生物的神器被牺牲或消灭时，大白鲨向每位对手各造成1点伤害。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Leech Medic",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "When Leech Medic enters the battlefield, create a Leeches token card and put it into your hand.",
+      "previousChinese": "当血蛭医士进战场时，派出一张血蛭疗法衍生牌并将其置于你手上。 (血蛭疗法是来自家园扩展包的{1}{W}{W}法术，其文本为「目标牌手失去所有中毒指示物。血蛭疗法对该牌手造成等量的伤害。」)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Lumen-Class Frigate",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 12+.)\nSTATION 2+\nOther creatures you control get +1/+1.\nSTATION 12+\nFlying, lifelink",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到12+后它便是神器生物。)\n2+ VERT 由你操控的其他生物得+1/+1。\n12+ VERT 飞行，系命",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Luxior, Giada's Gift",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Equipped creature gets +1/+1 for each counter on it.\\nEquipped permanent isn't a planeswalker and is a creature in addition to its other types. (Loyalty abilities can still be activated.)\\nEquip planeswalker 1\\nEquip 3",
+      "previousChinese": "佩带此武具的生物上每有一个指示物，便得+1/+1。\\n佩带此武具的永久物不是鹏洛客，且额外具有生物此类别。 (它的忠诚异能仍能起动。)\\n佩带鹏洛客{1}\\n佩带{3}",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Phyrexian Chimney Imp",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Flying\\nWhen Phyrexian Chimney Imp dies, target opponent puts two cards from their hand on top of their library in any order.",
+      "previousChinese": "({B/P}可用{B}或2点生命来支付。)\\n飞行\\n当非瑞克西亚烟囱小恶魔死去时，目标对手将两张牌从其手上以任意顺序置于其牌库顶。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Red Herring",
+      "checks": [
+        "fewer-rule-lines",
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Haste\nRed Herring attacks each combat if able.\n{2}, Sacrifice Red Herring: Draw a card.",
+      "previousChinese": "{1}{U}：从你手上将红鲱鱼与战场上一个由你操控的永久物或一个由你操控的咒语交换。如果该永久物或咒语是咒语或异能的目标，则将该目标改为红鲱鱼。",
+      "result": "corrected-obsolete-test-design",
+      "source": "https://mtgch.com/api/v1/card/mkm/142/"
+    },
+    {
+      "name": "Rocco, Street Chef",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "At the beginning of your end step, each player exiles the top card of their library. Until your next end step, each player may play the card they exiled this way.\\nWhenever a player plays a land from exile or casts a spell from exile, you put a +1/+1 counter on target creature and create a Food token.",
+      "previousChinese": "在你的结束步骤开始时，每位牌手各放逐其牌库顶牌。直到你的下一个结束步骤，每位牌手各可以使用其以此法放逐的牌。\\n每当任一牌手从放逐区使用地或从放逐区施放咒语时，你在目标生物上放置一个+1/+1指示物并派出一个食品衍生物。 (它是具有「{2}，{T}，牺牲此衍生物：你获得3点生命」的神器。)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Sarinth Greatwurm",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Trample\\nWhenever a land enters, create a tapped Powerstone token.",
+      "previousChinese": "践踏\\n每当一个地进场时，派出一个已横置的魔力石衍生物。 (它是具有「{T}：加{C}。此法术力不能用来施放非神器咒语」的神器。)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Savor",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Target creature gets -2/-2 until end of turn. Create a Food Token.",
+      "previousChinese": "目标生物得-2/-2直到回合结束。派出一个食品衍生物。 (它是具有「{2}，{T}，牺牲此衍生物：你获得3点生命」的神器。)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Synthesis Pod",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "{1}{U/P}, {T}, Exile a spell you control: Target opponent reveals cards from the top of their library until they reveal a card with mana value equal to 1 plus the exiled spell's mana value. Exile that card, then that player shuffles. You may cast that exiled card without paying its mana cost.",
+      "previousChinese": "({U/P}可用{U}或2点生命来支付。)\\n{1}{U/P}，{T}，放逐一个由你操控的咒语：目标对手从其牌库顶开始展示牌，直到展示出一张法术力值为所放逐咒语之法术力值加1的牌。放逐该牌，然后该牌手洗牌。你可以施放所放逐的牌，且不需支付其法术力费用。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Synthesizer Labship",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 9+.)\nSTATION 2+\nAt the beginning of combat on your turn, up to one other target artifact you control becomes an artifact creature with base power and toughness 2/2 and gains flying until end of turn.\nSTATION 9+\nFlying, vigilance",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到9+后它便是神器生物。)\n2+ VERT 在你回合的战斗开始时，直到回合结束，至多另一个目标由你操控的神器成为基础力量与防御力为2/2的神器生物且获得飞行异能。\n9+ VERT 飞行，警戒",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Teach by Example",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "When you cast your next instant or sorcery spell this turn, copy that spell. You may choose new targets for the copy.",
+      "previousChinese": "({U/R}可用{U}或{R}来支付。)\\n本回合中，当你下一次施放瞬间或法术咒语时，复制该咒语。你可以为该复制品选择新的目标。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "The Belligerent and Useless Island",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "The Belligerent and Useless Island enters the battlefield tapped.\\nWhenever The Belligerent and Useless Island deals combat damage to a player or battle, draw a card then discard a card.\\nCrew 2",
+      "previousChinese": "({T}：加{U}。)\\n好战者号与没用的海岛须横置进战场。\\n当好战者号与没用的海岛对任一牌手或战役造成战斗伤害时，抓一张牌，然后弃一张牌。\\n搭载2",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Tippy-Toe, Terrific Partner",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "If you would create one or more tokens, instead create those tokens plus an additional Food token.\\nAt the beginning of your end step, if you gained life this turn, draw a card.",
+      "previousChinese": "如果你将派出一个或数个衍生物，则改为派出该些衍生物加上一个额外的食品衍生物。 (它是具有「{2}，{T}，牺牲此衍生物：你获得3点生命」的神器。)\\n在你的结束步骤开始时，若你本回合中获得过生命，则抓一张牌。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Uthros Research Craft",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "Station (Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It's an artifact creature at 12+.)\nSTATION 3+\nWhenever you cast an artifact spell, draw a card. Put a charge counter on this Spacecraft.\nSTATION 12+\nFlying\nThis Spacecraft gets +1/+0 for each artifact you control.",
+      "previousChinese": "蓄势 (横置另一个由你操控的生物：依其力量在此太空船上放置等量的充电指示物。蓄势的时机视同法术。达到12+后它便是神器生物。)\n3+ VERT 每当你施放神器咒语时，抓一张牌。在此太空船上放置一个充电指示物。\n12+ VERT 飞行\n你每操控一个神器，此太空船便得+1/+0。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Welcome the Darkness",
+      "checks": [
+        "fewer-rule-lines"
+      ],
+      "localEnglish": "X can't be 0.\nDraw X cards. Create an X/X black Demon creature token with flying.\nYour life total becomes X.\nYou can't gain life for the rest of the game.",
+      "previousChinese": "X不能为0。\n抓X张牌。派出一个X/X黑色，具飞行异能的恶魔衍生生物。你的总生命成为X。你在本盘游戏接下来的时段不能获得生命。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Wilt-Leaf Liege",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "Other green creatures you control get +1/+1.\\nOther white creatures you control get +1/+1.\\nIf a spell or ability an opponent controls causes you to discard Wilt-Leaf Liege, put it onto the battlefield instead of putting it into your graveyard.",
+      "previousChinese": "({G/W}可用{G}或{W}来支付。) \\n由你操控的其他绿色生物得+1/+1。\\n由你操控的其他白色生物得+1/+1。\\n如果某个由对手操控的咒语或异能使你弃掉此牌，则改为将它放进战场，而非置入你的坟墓场。",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    },
+    {
+      "name": "Zask, Skittering Swarmlord",
+      "checks": [
+        "extra-mana-symbols"
+      ],
+      "localEnglish": "You may play lands and cast Insect spells from your graveyard.\\nWhenever another Insect you control dies, put it on the bottom of its owner's library, then mill two cards. (Put the top two cards of your library into your graveyard.)\\n{1}{B/G}: Target Insect gets +1/+0 and gains deathtouch until end of turn.",
+      "previousChinese": "你可以从你的坟墓场中使用地和施放昆虫咒语。\\n每当另一个由你操控的昆虫死去时，将它置于其拥有者的牌库底，然后磨两张牌。 (将你牌库顶的两张牌置入你的坟墓场。)\\n{1}{B/G}：直到回合结束，目标昆虫得+1/+0且获得死触异能。 ({B/G}可用{B}或{G}来支付。)",
+      "result": "reviewed: reminder, built-in mana ability, or differing line-break/table layout; no missing effect established"
+    }
+  ]
+}

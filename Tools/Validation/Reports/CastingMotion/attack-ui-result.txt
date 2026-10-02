@@ -1,0 +1,1 @@
+PASS: actual Forge snapshot replay; per-creature drag to player/planeswalker/own battle; arrow mesh and unchanged card position; exact legal pair callback; click alternative; recall; three distinct assignment lines; illegal/stale/empty/duplicate/opponent input rejected; no attack sidebar.

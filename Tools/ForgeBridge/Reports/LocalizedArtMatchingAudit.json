@@ -1,0 +1,22 @@
+{
+  "localPrintings": 100068,
+  "ambiguousLocalKeysExcluded": 27,
+  "japaneseSourceRecords": 545288,
+  "sources": {
+    "zh-CN": {
+      "sourceFaces": 56221,
+      "plannedFaces": 56221,
+      "availableButUnmatched": [],
+      "plannedButMissingFiles": [],
+      "ambiguousSourceKeysExcluded": []
+    },
+    "ja-JP": {
+      "sourceFaces": 54248,
+      "plannedFaces": 54248,
+      "availableButUnmatched": [],
+      "plannedButMissingFiles": [],
+      "ambiguousSourceKeysExcluded": []
+    }
+  },
+  "scope": "Cached Academy Ruins set metadata and Scryfall all_cards snapshot; registered local printings and related tokens. Official Japanese Alchemy gallery imports have a separate report. Does not establish absence of art on other websites or newer source updates."
+}

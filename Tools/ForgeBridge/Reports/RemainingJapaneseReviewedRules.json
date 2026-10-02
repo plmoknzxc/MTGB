@@ -1,0 +1,210 @@
+{
+  "complete": true,
+  "entries": [
+    {
+      "key": "SOC/45",
+      "name": "Vandal's Edit",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "盗人による編集",
+      "printedType": "インスタント",
+      "printedRules": "カード２枚を引く。各プレイヤーはそれぞれ２点のライフを失う。",
+      "source": "https://scryfall.com/card/soc/45/ja/%E8%90%BD%E6%9B%B8%E3%81%8D%E3%81%AE%E8%96%84%E6%9A%AE%E9%AD%94%E9%81%93%E5%A3%AB-(defacing-duskmage-vandals-edit)?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/0/6/061ea6c4-8bf7-41c0-b4de-cc1e78a5378c.jpg?1782759827",
+      "imagePath": "CardImages\\ja-JP\\SOC\\45.jpg",
+      "imageSha256": "0a316f88bbb8bd1424bb54ab2ddacaba532b7d575f683559dd9b12817202493a",
+      "englishRules": "Draw two cards. Each player loses 2 life.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "SOC/48",
+      "name": "Maestro's Gift",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "巨匠の贈り物",
+      "printedType": "ソーサリー",
+      "printedRules": "あなたがコントロールしているクリーチャー１体を対象とする。それのコピーであるトークン１体を生成する。ターン終了時まで、そのトークンは速攻を得る。",
+      "source": "https://scryfall.com/card/soc/48/ja/%E8%A6%8B%E4%BA%8B%E3%81%AA%E3%82%8B%E5%A4%A9%E6%8F%8F%E5%B8%AB-(inspired-skypainter-maestros-gift)?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/6/e/6ead6ff5-ffe1-42e3-ba69-b1f6e6b75916.jpg?1782759816",
+      "imagePath": "CardImages\\ja-JP\\SOC\\48.jpg",
+      "imageSha256": "ceaaa1e98610769ed3d70465ec7ba871c0758fa46945063fab10a50d6b3e9d37",
+      "englishRules": "Create a token that's a copy of target creature you control. That token gains haste until end of turn.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "SOC/49",
+      "name": "Restore Relic",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "秘宝の修復",
+      "printedType": "ソーサリー",
+      "printedRules": "あなたの墓地にありアーティファクトやクリーチャーであるカード１枚を対象とする。それを追放する。それのコピーであるトークン１つを生成する。",
+      "source": "https://scryfall.com/card/soc/49/ja/%E3%83%AD%E3%82%A2%E3%83%9B%E3%83%BC%E3%83%AB%E3%83%89%E3%81%AE%E6%96%87%E6%9B%B8%E7%AE%A1%E7%90%86%E4%BA%BA-(lorehold-archivist-restore-relic)?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/e/d/ed7bba05-d4d7-465b-b18f-9c8e2997e5c2.jpg?1782759810",
+      "imagePath": "CardImages\\ja-JP\\SOC\\49.jpg",
+      "imageSha256": "a3627a2d76546cbf598543d9c20a370e96a0a4f38358ad43dc0784908f48b711",
+      "englishRules": "Exile target artifact or creature card from your graveyard. Create a token that's a copy of it.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "SOC/50",
+      "name": "Run the Play",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "作戦通り",
+      "printedType": "ソーサリー",
+      "printedRules": "クリーチャー最大Ｘ体を対象とする。それらの上にそれぞれ＋１/＋１カウンター１個を置く。ターン終了時まで、それらのクリーチャーは飛行を得る。カード１枚を引く。",
+      "source": "https://scryfall.com/card/soc/50/ja/%E4%B8%80%E8%B6%B3%E9%A3%9B%E3%81%B3%E3%81%AE%E5%8F%B8%E4%BB%A4%E5%A1%94-(striding-shotcaller-run-the-play)?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/a/5/a5002a89-1dc9-44ef-b961-1553568ef41b.jpg?1782759808",
+      "imagePath": "CardImages\\ja-JP\\SOC\\50.jpg",
+      "imageSha256": "642beeae84b287a234c97e7999faab3c3c224c178cdb25684595734dff58adfe",
+      "englishRules": "Put a +1/+1 counter on each of up to X target creatures. Those creatures gain flying until end of turn. Draw a card.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "PSDG/2",
+      "name": "Ashuza's Breath",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "アシュザーのブレス",
+      "printedType": "ソーサリー",
+      "printedRules": "すべてのクリーチャーについて、それぞれ、０から２までの間の数を１つ、無作為に選ぶ。アシュザーのブレスは、そのクリーチャーに選ばれた数に等しいダメージを与える。",
+      "source": "https://scryfall.com/card/psdg/2/ja/ashuzas-breath?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/c/d/cd69fa01-6bdd-4b9a-bf3a-48a453e35ccc.jpg?1783945327",
+      "imagePath": "CardImages\\ja-JP\\PSDG\\2.jpg",
+      "imageSha256": "2a013e83fb3ce5b6ad25c9d558e329e81e8759246abc6ee9688d4a79604f43c9",
+      "englishRules": "For each creature, choose a number from 0 to 2 at random. Ashuza's Breath deals that much damage to that creature.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "PSDG/3",
+      "name": "Camato Scout",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "カマローの斥候",
+      "printedType": "クリーチャー — マーフォーク",
+      "printedRules": "カマローの斥候が場に出るに際し、基本地形タイプを１つ無作為に選ぶ。\nカマローの斥候は選ばれたタイプの渡りを持つ。（防御側プレイヤーが選ばれたタイプの土地をコントロールしている限り、このクリーチャーはブロックされない。）",
+      "source": "https://scryfall.com/card/psdg/3/ja/camato-scout?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/9/8/982362dc-cc6c-4aea-9029-ea04151e758f.jpg?1783945325",
+      "imagePath": "CardImages\\ja-JP\\PSDG\\3.jpg",
+      "imageSha256": "34d3aef6078a08b21958a02fccdc508c978b64e9358f0037a86bfcb5e1ac6ff6",
+      "englishRules": "As Camato Scout enters, choose a basic land type at random. Camato Scout has landwalk of the chosen type.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "PSDG/4",
+      "name": "Hapato's Might",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "ハパトゥの力",
+      "printedType": "インスタント",
+      "printedRules": "対象の、１体のクリーチャーはターン終了時まで＋Ｘ/＋０の修正を受ける。Ｘは０から６までの間から無作為に選ばれた数である。",
+      "source": "https://scryfall.com/card/psdg/4/ja/hapatos-might?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/b/4/b48bec20-0f41-4581-bd13-ebc0f5eb1010.jpg?1783945325",
+      "imagePath": "CardImages\\ja-JP\\PSDG\\4.jpg",
+      "imageSha256": "52dcaf86f71a0dcf8a2dfea34790ebe19e56f50d443f5380f572a19f1800bab1",
+      "englishRules": "Target creature gets +X/+0 until end of turn, where X is a number from 0 to 6 chosen at random.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "PSDG/5",
+      "name": "Lydari Druid",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "レイダルのドルイド",
+      "printedType": "クリーチャー — ドルイド",
+      "printedRules": "レイダルのドルイドが場に出たとき、すべての土地について、それぞれ基本地形を１種類、無作為に選ぶ。それらの土地は選ばれた基本地形になる。（この効果はターン終了時に終わらない。）",
+      "source": "https://scryfall.com/card/psdg/5/ja/lydari-druid?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/4/b/4b43a570-4337-43c3-adb2-bc99ed866705.jpg?1783945325",
+      "imagePath": "CardImages\\ja-JP\\PSDG\\5.jpg",
+      "imageSha256": "21dc1bf427c2828e060849cce9025b75b50349e73cd3dce990f42bd8c3f64064",
+      "englishRules": "When Lydari Druid enters, for each land on the battlefield, choose a basic land type at random. Those lands become the land types chosen this way. (This effect lasts indefinitely.)",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "PSDG/6",
+      "name": "Lydari Elephant",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "レイダルの象",
+      "printedType": "クリーチャー — 象",
+      "printedRules": "レイダルの象が場に出るに際し、３から７までの間の数を２つ、無作為に選ぶ。\nレイダルの象のパワーは１番目に選ばれた数に等しく、レイダルの象のタフネスは２番目に選ばれた数に等しい。",
+      "source": "https://scryfall.com/card/psdg/6/ja/lydari-elephant?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/f/c/fc34ce52-f917-4e97-a372-f9d18b8ea1fc.jpg?1783945324",
+      "imagePath": "CardImages\\ja-JP\\PSDG\\6.jpg",
+      "imageSha256": "f616eaf28a0ab390d10bdcecdc38239602e092ba68fe765a819ef15a5c158f8d",
+      "englishRules": "As Lydari Elephant enters, choose two numbers from 3 to 7 at random. Lydari Elephant's power is equal to the first number chosen and its toughness equal to the second number chosen.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "PSDG/7",
+      "name": "Murgish Cemetery",
+      "status": "published-Japanese-image-rules-imported",
+      "printedName": "マーギッシュの霊園",
+      "printedType": "エンチャント",
+      "printedRules": "{3}{B}, あなたの手札からカードを一枚捨てる：Ｘ/Ｘの黒のゾンビ・クリーチャー・トークンを１個場に出す。Ｘは２から６までの間から無作為に選ばれた数である。",
+      "source": "https://scryfall.com/card/psdg/7/ja/murgish-cemetery?utm_source=api",
+      "sourceImage": "https://cards.scryfall.io/normal/front/0/f/0fa2d46e-a750-495f-8f7a-4303322a374f.jpg?1783945324",
+      "imagePath": "CardImages\\ja-JP\\PSDG\\7.jpg",
+      "imageSha256": "bdfb2be9852a8588f813fd77041159b3b686ec534e368b44b598a703f629eeb6",
+      "englishRules": "{3}{B}, Discard a card: Create an X/X black Zombie creature token, where X is a number from 2 to 6 chosen at random.",
+      "validation": "Exact Japanese printing and English face identity, costs and stats checked; manually read image text and compared every condition, amount, target, timing, destination and token characteristic. Historical wording retained."
+    },
+    {
+      "key": "SOC/46",
+      "name": "Turn Stones",
+      "status": "official-Japanese-release-notes-rules-imported",
+      "source": "https://mtg-jp.com/img_sys/common/JP_MTGSOS_ReleaseNotes_20260224.pdf",
+      "sourceSha256": "34f97f5647bbad2bd90574a678869c4460eb0ecdb177c49a69a094a62fa52eb3",
+      "sourcePage": 88,
+      "printedRules": "対戦相手１人につき１体の「このトークンが死亡したとき、１点のライフを得る。」を持つ黒緑の 1/1 の邪魔者・クリーチャー・トークンを生成する。",
+      "englishRules": "For each opponent, you create a 1/1 black and green Pest creature token with \"When this token dies, you gain 1 life.\"",
+      "validation": "Publisher Japanese release notes specify black and green, matching English release notes and current Forge token script bg_1_1_pest_lifegain. Incorrect black-only image text is not reused."
+    },
+    {
+      "key": "WHO/131",
+      "name": "Gallifrey Falls // No More",
+      "status": "verified-existing-face-rule-reused",
+      "source": "ja-JP.gatherer-prints.txt",
+      "printedRules": "ギャリフレイの陥落は各クリーチャーにそれぞれ４点のダメージを与える。このターン、これによりダメージを受けたクリーチャーが死亡するなら、代わりにそれを追放する。\n融合（あなたはこのカードの半分か両方合わせたものをあなたの手札から唱えてもよい。）",
+      "validation": "Whole-card main rule equals first face exactly; reuse verified official first-face rule. Second face remains separate, no combined duplicate rules."
+    },
+    {
+      "key": "WHO/682",
+      "name": "Coward // Killer",
+      "status": "verified-existing-face-rule-reused",
+      "source": "ja-JP.gatherer-prints.txt",
+      "printedRules": "クリーチャー１体を対象とする。このターン、それではブロックできず、ターン終了時まで、それは他のタイプに加えて臆病者になる。\nタイムトラベルを行う。",
+      "validation": "Whole-card main rule equals first face exactly; reuse verified official first-face rule. Second face remains separate, no combined duplicate rules."
+    },
+    {
+      "key": "HBG/A-85",
+      "name": "A-Tyr's Blesing",
+      "status": "verified-existing-face-rule-reused",
+      "source": "ja-JP.supplement.txt: Tyr's Blessing / MTGJSON published Japanese foreign text",
+      "printedRules": "クリーチャー１体を対象とする。ターン終了時まで、それは破壊不能を得る。（その後、これを追放する。後で追放領域からこのクリーチャーを唱えてもよい。）",
+      "validation": "Local spelling Blesing versus Blessing; same Hippogriff Adventure identity and identical English effect. Rebalanced mana cost remains supplied by canonical engine data; reuse only unchanged published rule/name/type."
+    }
+  ],
+  "versionReviews": [
+    {
+      "key": "PSDG/1",
+      "name": "Arden Angel",
+      "status": "confirmed-paper-release-mechanical-change",
+      "reason": "Japanese Dreamcast image chooses 1–4 randomly. Publisher explicitly announces a change for the paper release; SLD/1344 printed card rolls a four-sided die. Current Forge uses RollDice Sides 4 and matches the paper text. Do not display old random-selection text as current rule.",
+      "officialChangeConfirmed": true
+    },
+    {
+      "key": "MB2/145",
+      "name": "Velukan Dragon",
+      "status": "confirmed-paper-release-mechanical-change",
+      "reason": "Japanese Dreamcast image chooses 0–5 randomly. Publisher identifies its first paper release in Mystery Booster 2; MB2/145 printed card rolls a six-sided die then subtracts one. Current Forge uses RollDice and Result Minus 1. Difference confirmed by old/new printed cards; not a local translation error.",
+      "officialChangeConfirmed": true
+    },
+    {
+      "key": "PSDG/8",
+      "name": "Saji's Torrent",
+      "status": "historical-Japanese-versus-modern-data-discrepancy-cause-unconfirmed",
+      "reason": "Japanese image explicitly says target X creatures. Current database text omits targets; current Forge chooses a random number during resolution, then ChooseCard and TapAll, with no ValidTgts. Difference confirmed; no publisher errata or original executable behavior was verified, so do not label it an official change.",
+      "officialChangeConfirmed": false
+    },
+    {
+      "key": "PSDG/9",
+      "name": "Tornellan Protector",
+      "status": "historical-Japanese-versus-modern-data-discrepancy-cause-unconfirmed",
+      "reason": "Japanese image specifies a target creature dealing the next damage to a target player. Current English text and Forge target one creature or player as recipient, preventing a separately randomized 1–3 each damage event for the turn. Difference confirmed; no publisher errata or original executable behavior was verified. The old wording may be erroneous but its cause is unconfirmed.",
+      "officialChangeConfirmed": false
+    }
+  ]
+}

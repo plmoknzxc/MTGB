@@ -1,0 +1,1 @@
+PASS: Shivan Reef direct click; multiple source-linked choices; selected colorless, tapped and mana +1

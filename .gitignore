@@ -12,8 +12,8 @@
 # Generated Unity data
 Assets/Unity.VisualScripting.Generated/
 Assets/Unity.VisualScripting.Generated.meta
-Assets/StreamingAssets/
-Assets/StreamingAssets.meta
+# StreamingAssets contains required translations, search indexes and formats.
+# Keep it in version control; generated Forge runtime stays outside Assets.
 Assets/TutorialInfo/
 Assets/TutorialInfo.meta
 Assets/Readme.asset
@@ -28,8 +28,16 @@ Assets/Readme.asset.meta
 .claude/
 .codex/
 .tools/
+ForgeRuntime/
+# Local card image packs and their download manifests; keep only setup notes.
+/CardImages/**
+!/CardImages/README.txt
+__pycache__/
 .trae/
 *.csproj
+!Tools/RulesCoverage/RulesCoverage.csproj
+Tools/RulesCoverage/bin/
+Tools/RulesCoverage/obj/
 *.sln
 *.user
 *.suo
@@ -52,3 +60,8 @@ desktop.ini
 *.mtgbdb-journal
 *.mtgbdb-shm
 *.mtgbdb-wal
+
+# Local replay recordings and optional video encoder binaries
+/Replays/*.mtgbr
+/Replays/Videos/
+/VideoTools/*.exe

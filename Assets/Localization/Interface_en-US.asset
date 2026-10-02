@@ -1,0 +1,1695 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Interface_en-US
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-US
+  m_SharedData: {fileID: 11400000, guid: 075f812ff1dbccb46af305c57819d314, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 3203846144
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983488
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983489
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983490
+    m_Localized: Text size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983491
+    m_Localized: Text preview
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983492
+    m_Localized: Small
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983493
+    m_Localized: Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983494
+    m_Localized: Large
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983495
+    m_Localized: Done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983496
+    m_Localized: Missing translations use the original text. Printed artwork follows
+      the chosen version.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983497
+    m_Localized: Magic Duel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983498
+    m_Localized: Build your deck. Begin your next duel.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983499
+    m_Localized: Multiplayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983500
+    m_Localized: Deck builder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983501
+    m_Localized: Deck builder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983502
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3249983503
+    m_Localized: Rename
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177792
+    m_Localized: New
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177793
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177794
+    m_Localized: Reload
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177795
+    m_Localized: Search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177796
+    m_Localized: Filters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177797
+    m_Localized: Search names / rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177798
+    m_Localized: Name, set, number or rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177799
+    m_Localized: Find cards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177800
+    m_Localized: All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177801
+    m_Localized: Official
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177802
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177803
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177804
+    m_Localized: Apply
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177805
+    m_Localized: Discard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177806
+    m_Localized: Unsaved deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177807
+    m_Localized: Select a card
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177808
+    m_Localized: Mana cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177809
+    m_Localized: Rules text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177810
+    m_Localized: Flavor text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177811
+    m_Localized: Artwork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177812
+    m_Localized: Choose artwork. Preferences apply on this device.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177813
+    m_Localized: Previous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177814
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177815
+    m_Localized: Clear preference
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177816
+    m_Localized: Use as preferred
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177817
+    m_Localized: Use this artwork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177818
+    m_Localized: Download and use
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177819
+    m_Localized: Preferred
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177820
+    m_Localized: Downloaded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177821
+    m_Localized: Not downloaded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177822
+    m_Localized: Default artwork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177823
+    m_Localized: "Loading artworks\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177824
+    m_Localized: "Preparing cards\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177825
+    m_Localized: Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177826
+    m_Localized: Standard quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177827
+    m_Localized: High quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177828
+    m_Localized: 'Filter: All'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177829
+    m_Localized: 'Filter: Official'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177830
+    m_Localized: 'Filter: DIY'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177831
+    m_Localized: All content
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177832
+    m_Localized: Official cards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177833
+    m_Localized: DIY cards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177834
+    m_Localized: Show results
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177835
+    m_Localized: 'Filter: All content'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177836
+    m_Localized: 'Filter: Official cards'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177837
+    m_Localized: 'Filter: DIY cards'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177838
+    m_Localized: Main deck  {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177839
+    m_Localized: Sideboard  {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177840
+    m_Localized: Cards {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177841
+    m_Localized: Page {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177842
+    m_Localized: "{0} / {1} \xB7 {2} versions"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177843
+    m_Localized: Power / Toughness    {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177844
+    m_Localized: Loyalty    {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177845
+    m_Localized: Defense    {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177846
+    m_Localized: "Cards ready \xB7 {0} versions"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177847
+    m_Localized: 'Preferred: Default artwork'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177848
+    m_Localized: 'Preferred: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177849
+    m_Localized: "Selected: {0} \xB7 Downloaded"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177850
+    m_Localized: "Selected: {0} \xB7 Download below to use"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177851
+    m_Localized: '{0}
+
+      Preferred'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177852
+    m_Localized: '{0}
+
+      Downloaded'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177853
+    m_Localized: '{0}
+
+      Not downloaded'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177854
+    m_Localized: "Downloading {0}\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177855
+    m_Localized: "Downloading {0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177856
+    m_Localized: "Using {0} \xB7 Clear preference to restore default"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177857
+    m_Localized: 'Loading failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177858
+    m_Localized: Created an empty deck.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177859
+    m_Localized: 'Loaded deck: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177860
+    m_Localized: 'Saved deck: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177861
+    m_Localized: Deck "{0}" has unsaved changes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177862
+    m_Localized: Loaded {0} cards and {1} decks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177863
+    m_Localized: Main deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177864
+    m_Localized: Sideboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177865
+    m_Localized: Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177866
+    m_Localized: Deck name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177867
+    m_Localized: Drag canceled.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177868
+    m_Localized: Selected {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177869
+    m_Localized: '{0} is already at the copy limit.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177870
+    m_Localized: Removed {1} {0} from main deck.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177871
+    m_Localized: Removed {1} {0} from sideboard.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177872
+    m_Localized: 'Download failed. Retry: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177873
+    m_Localized: "Reading Forge catalog\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177874
+    m_Localized: Meet at the table
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177875
+    m_Localized: Set up your duel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177876
+    m_Localized: Your next victory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177877
+    m_Localized: "Connect \xB7 Join a room \xB7 Get ready"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177878
+    m_Localized: 01   /   Connection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177879
+    m_Localized: 02   /   Match rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177880
+    m_Localized: Room   /   Waiting for opponent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177881
+    m_Localized: Preparation   /   Choose a deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177882
+    m_Localized: Between games   /   Sideboarding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177883
+    m_Localized: Client profile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177884
+    m_Localized: Player name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177885
+    m_Localized: Host address
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177886
+    m_Localized: Room ID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177887
+    m_Localized: Host LAN game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177888
+    m_Localized: Join host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177889
+    m_Localized: Next step
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177890
+    m_Localized: Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177891
+    m_Localized: Play / draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177892
+    m_Localized: Random each game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177893
+    m_Localized: Room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177894
+    m_Localized: Players
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177895
+    m_Localized: Waiting for game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177896
+    m_Localized: Waiting for match
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177897
+    m_Localized: Waiting for players.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177898
+    m_Localized: "Waiting for players\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177899
+    m_Localized: No deck selected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177900
+    m_Localized: Choose a deck and get ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177901
+    m_Localized: Submit deck / Ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177902
+    m_Localized: Cancel ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177903
+    m_Localized: Ready for a new match
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177904
+    m_Localized: Start match
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177905
+    m_Localized: Waiting for both players
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177906
+    m_Localized: Waiting for host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177907
+    m_Localized: Allowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177908
+    m_Localized: Disabled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177909
+    m_Localized: "\u25CF Offline"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177910
+    m_Localized: "\u25CF Hosting"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177911
+    m_Localized: "\u25CF In room"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177912
+    m_Localized: "\u25CF Connecting"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177913
+    m_Localized: "\u25CF Leaving room"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177914
+    m_Localized: Sideboarding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177915
+    m_Localized: When the match starts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177916
+    m_Localized: "Main deck \xB7 Drag right to sideboard"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3254177917
+    m_Localized: "Sideboard \xB7 Drag left to main deck"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712424669184
+    m_Localized: Actions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806528
+    m_Localized: Card details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806529
+    m_Localized: Waiting for game state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806530
+    m_Localized: Waiting for opponent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806531
+    m_Localized: "Waiting for opponent\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806532
+    m_Localized: Your action
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806533
+    m_Localized: Choose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806534
+    m_Localized: Choose cards to put on the bottom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806535
+    m_Localized: Keep hand or mulligan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806536
+    m_Localized: "Pay mana \xB7 Click lands for mana"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806537
+    m_Localized: Choose a highlighted card or player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806538
+    m_Localized: Choose attackers and defenders
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806539
+    m_Localized: Choose blockers and their targets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806540
+    m_Localized: Choose cards, then confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806541
+    m_Localized: You have priority
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806542
+    m_Localized: Choose effect / Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806543
+    m_Localized: Confirm / Pass
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806544
+    m_Localized: Pass until end of turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806545
+    m_Localized: Keep hand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806546
+    m_Localized: Mulligan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806547
+    m_Localized: Play land
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806548
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806549
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806550
+    m_Localized: Untap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806551
+    m_Localized: Upkeep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806552
+    m_Localized: Draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806553
+    m_Localized: Precombat main
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806554
+    m_Localized: Postcombat main
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806555
+    m_Localized: Beginning of combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806556
+    m_Localized: Declare attackers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806557
+    m_Localized: Declare blockers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806558
+    m_Localized: Combat damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806559
+    m_Localized: End of combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806560
+    m_Localized: End step
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806561
+    m_Localized: Cleanup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806562
+    m_Localized: Opening hand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806563
+    m_Localized: Face down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806564
+    m_Localized: Face-down card
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806565
+    m_Localized: Attacking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806566
+    m_Localized: Blocking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806567
+    m_Localized: Tapped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806568
+    m_Localized: Damage {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806569
+    m_Localized: Concede the game?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806570
+    m_Localized: Continue game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806571
+    m_Localized: Concede
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806572
+    m_Localized: "Stack \xB7 Resolves top to bottom"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806573
+    m_Localized: Your graveyard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806574
+    m_Localized: Opponent's graveyard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806575
+    m_Localized: Hand {0}    Library {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806576
+    m_Localized: 'Mana pool
+
+      {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806577
+    m_Localized: "{0}/{1} \xB7 Damage {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806578
+    m_Localized: "Next  \u203A"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712470806579
+    m_Localized: "\u2039  Previous"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 761521352658944
+    m_Localized: More
+    m_Metadata:
+      m_Items: []
+  - m_Id: 761521415573504
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 761521415573505
+    m_Localized: Delete deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 761521415573506
+    m_Localized: Deck actions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 761521415573507
+    m_Localized: Reload card and deck files
+    m_Metadata:
+      m_Items: []
+  - m_Id: 763284633866240
+    m_Localized: "Delete \u201C{0}\u201D?\nUnsaved changes to this deck will also
+      be lost."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868962664448
+    m_Localized: Save as
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858752
+    m_Localized: Import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858753
+    m_Localized: Export
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858754
+    m_Localized: Paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858755
+    m_Localized: Copy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858756
+    m_Localized: Save deck as
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858757
+    m_Localized: Import deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858758
+    m_Localized: Export deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858759
+    m_Localized: Enter a deck name.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 765868966858760
+    m_Localized: Paste MO / MTGA / MTGB text to create a new deck automatically.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559829127168
+    m_Localized: Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264512
+    m_Localized: "Ban list \xB7 Date"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264513
+    m_Localized: Changes apply immediately. N/A removes bans and restrictions, but
+      still checks the format's card pool.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264514
+    m_Localized: Current rules (no archived date)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264515
+    m_Localized: N/A (no bans or restrictions)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264516
+    m_Localized: Standard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264517
+    m_Localized: Pioneer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264518
+    m_Localized: Modern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264519
+    m_Localized: Premodern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264520
+    m_Localized: Legacy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264521
+    m_Localized: Vintage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264522
+    m_Localized: Pauper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264523
+    m_Localized: Commander
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264524
+    m_Localized: Official ban list
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264525
+    m_Localized: Duel Commander
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264526
+    m_Localized: Brawl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264527
+    m_Localized: Historic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264528
+    m_Localized: Timeless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264529
+    m_Localized: Disabled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 900559875264530
+    m_Localized: Restricted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 901428901498880
+    m_Localized: Card info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 901428909887488
+    m_Localized: Artwork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 905455131348992
+    m_Localized: "Choose variant\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 925393443278848
+    m_Localized: 'MTGB .mdk: Preserves sets, collector numbers, sections, format,
+      and ban-list date.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 925393476833280
+    m_Localized: 'MO text: Preserves quantities and main/sideboard; does not preserve
+      printings, format, or ban-list date.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 925393476833281
+    m_Localized: 'MTGA text: Preserves sets and collector numbers; does not preserve
+      format or ban-list date.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637618343936
+    m_Localized: Replays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732544
+    m_Localized: Replay folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732545
+    m_Localized: Open replay file
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732546
+    m_Localized: Replay details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732547
+    m_Localized: Select a replay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732548
+    m_Localized: Play replay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732549
+    m_Localized: Export video
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732550
+    m_Localized: No saved replays yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732551
+    m_Localized: "Loading replay\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732552
+    m_Localized: Cannot open replay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732553
+    m_Localized: Automatically save all replays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732554
+    m_Localized: Save this replay?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732555
+    m_Localized: Discard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732556
+    m_Localized: Save replay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732557
+    m_Localized: Back to replays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732558
+    m_Localized: Pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732559
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732560
+    m_Localized: Previous step
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732561
+    m_Localized: Switch viewpoint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732562
+    m_Localized: Exporting video
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732563
+    m_Localized: Click Back to cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732564
+    m_Localized: Export canceled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637626732565
+    m_Localized: Game {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1072637635121152
+    m_Localized: 'Winner: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1074590993797120
+    m_Localized: Refresh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1074590997991424
+    m_Localized: Draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612967092224
+    m_Localized: Connect, choose a deck, and get ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286528
+    m_Localized: Connection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286529
+    m_Localized: Create or join a room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286530
+    m_Localized: Host settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286531
+    m_Localized: Match rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286532
+    m_Localized: Match length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286533
+    m_Localized: Starting life
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286534
+    m_Localized: "BO1 \xB7 One game"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286535
+    m_Localized: "BO3 \xB7 Best of three"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286536
+    m_Localized: After connecting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286537
+    m_Localized: Choose a deck, then wait for both players to be ready.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286538
+    m_Localized: Use 127.0.0.1 on this PC; on another PC, enter the host's LAN IP.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286539
+    m_Localized: Allow custom cards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286540
+    m_Localized: Allow cards marked as custom in the data editor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286541
+    m_Localized: "Main deck: 60+ \xB7 Sideboard: up to 15\nUp to 4 copies per nonbasic
+      card \xB7 Random starting player"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286542
+    m_Localized: Host a room, or enter the host's LAN address to join.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286543
+    m_Localized: Ready and start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286544
+    m_Localized: Choose your deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286545
+    m_Localized: 'The host starts after both players submit decks and get ready.
+
+      In
+      BO3, sideboard between games.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286546
+    m_Localized: Cancel ready before changing decks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286547
+    m_Localized: Waiting for a player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286548
+    m_Localized: "Empty \xB7 Waiting for connection"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286549
+    m_Localized: "BO{0} \xB7 {1} life \xB7 Random starting player\n{2} \xB7 Custom
+      cards: {3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286550
+    m_Localized: Allowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286551
+    m_Localized: Unsupported room format.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1076612971286552
+    m_Localized: Card {0} is not legal in the room format {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1077995577462784
+    m_Localized: Card {0} is not legal in this room's format.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1078968618242048
+    m_Localized: Open replay folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1078968626630656
+    m_Localized: Browse other locations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083999912382464
+    m_Localized: 'Duration: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750299848704
+    m_Localized: All conditions apply; leave blank for any
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431616
+    m_Localized: Any keyword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431617
+    m_Localized: Types and subtypes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431618
+    m_Localized: Colors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431619
+    m_Localized: Color identity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431620
+    m_Localized: Color matching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431621
+    m_Localized: Identity matching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431622
+    m_Localized: Any selected color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431623
+    m_Localized: All selected colors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431624
+    m_Localized: Exactly these colors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431625
+    m_Localized: Within these colors (incl. colorless)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431626
+    m_Localized: Mana value (e.g. <=3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431627
+    m_Localized: Mana symbols (e.g. {U}{U})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431628
+    m_Localized: Power (e.g. >=2)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431629
+    m_Localized: Toughness (e.g. >=2)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431630
+    m_Localized: Loyalty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431631
+    m_Localized: Rarity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431632
+    m_Localized: Any
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431633
+    m_Localized: Common
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431634
+    m_Localized: Uncommon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431635
+    m_Localized: Rare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431636
+    m_Localized: Mythic rare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431637
+    m_Localized: Special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431638
+    m_Localized: Bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431639
+    m_Localized: Set code or English name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431640
+    m_Localized: Artist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431641
+    m_Localized: Released from (YYYY-MM-DD)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431642
+    m_Localized: Released until (YYYY-MM-DD)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431643
+    m_Localized: Format (local current rules)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431644
+    m_Localized: Legality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431645
+    m_Localized: Legal (including restricted)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431646
+    m_Localized: Banned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431647
+    m_Localized: Restricted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431648
+    m_Localized: Not legal in format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431649
+    m_Localized: Card layout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431650
+    m_Localized: Single-faced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431651
+    m_Localized: Transforming double-faced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431652
+    m_Localized: Modal double-faced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431653
+    m_Localized: Split
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431654
+    m_Localized: Flip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431655
+    m_Localized: Meld
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431656
+    m_Localized: Saga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431657
+    m_Localized: Class
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431658
+    m_Localized: Card source
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431659
+    m_Localized: Sort by
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431660
+    m_Localized: Default order
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431661
+    m_Localized: 'Mana value: low to high'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431662
+    m_Localized: Newest first
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431663
+    m_Localized: Printings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431664
+    m_Localized: All printings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431665
+    m_Localized: One printing per card
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431666
+    m_Localized: "Loading search data\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431667
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431668
+    m_Localized: Printings without metadata are excluded from color, rarity and release
+      filters.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431669
+    m_Localized: Could not load search data. Close and retry.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431670
+    m_Localized: Invalid date range
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431671
+    m_Localized: Invalid number; use e.g. >=3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431672
+    m_Localized: Use YYYY-MM-DD for dates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431673
+    m_Localized: Invalid mana symbols; use e.g. {2}{U}{U}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431674
+    m_Localized: Commander
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1099750312431675
+    m_Localized: Duel Commander
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101949465710592
+    m_Localized: Card name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101949469904896
+    m_Localized: Rules text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101949469904897
+    m_Localized: Adventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101949469904898
+    m_Localized: Normal layout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152066043904
+    m_Localized: Insert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238208
+    m_Localized: Insert mana symbol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238209
+    m_Localized: Insert type
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238210
+    m_Localized: Colored mana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238211
+    m_Localized: Generic mana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238212
+    m_Localized: Variable mana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238213
+    m_Localized: Colorless / snow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238214
+    m_Localized: Hybrid mana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238215
+    m_Localized: Two-brid hybrid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238216
+    m_Localized: Phyrexian mana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238217
+    m_Localized: Hybrid Phyrexian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238218
+    m_Localized: Colorless hybrid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238219
+    m_Localized: Card types
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238220
+    m_Localized: Supertypes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238221
+    m_Localized: Creature types
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238222
+    m_Localized: Land types
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238223
+    m_Localized: Planeswalker types
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238224
+    m_Localized: Other subtypes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238225
+    m_Localized: Search options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238226
+    m_Localized: No matching options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238227
+    m_Localized: Artifact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238228
+    m_Localized: Battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238229
+    m_Localized: Creature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238230
+    m_Localized: Enchantment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238231
+    m_Localized: Instant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238232
+    m_Localized: Kindred
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238233
+    m_Localized: Land
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238234
+    m_Localized: Planeswalker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238235
+    m_Localized: Sorcery
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238236
+    m_Localized: Basic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238237
+    m_Localized: Legendary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238238
+    m_Localized: Ongoing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238239
+    m_Localized: Snow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238240
+    m_Localized: World
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238241
+    m_Localized: Human
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238242
+    m_Localized: Elf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238243
+    m_Localized: Goblin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238244
+    m_Localized: Dragon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238245
+    m_Localized: Zombie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238246
+    m_Localized: Vampire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238247
+    m_Localized: Angel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238248
+    m_Localized: Wizard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238249
+    m_Localized: Warrior
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238250
+    m_Localized: Soldier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238251
+    m_Localized: Island
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238252
+    m_Localized: Plains
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238253
+    m_Localized: Swamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238254
+    m_Localized: Mountain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106152070238255
+    m_Localized: Forest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3487776263032832
+    m_Localized: Legality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3487776313364480
+    m_Localized: Legal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3487776313364481
+    m_Localized: Games
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3487776313364482
+    m_Localized: Paper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3488963162984448
+    m_Localized: Printings without platform or legality data are excluded from search.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

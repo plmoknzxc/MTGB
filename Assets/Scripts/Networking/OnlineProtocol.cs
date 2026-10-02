@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 public static class OnlineProtocol
 {
-    public const int Version = 8;
-    public const string MessageName = "mtgb.protocol.v8";
+    public const int Version = 17;
+    public const string MessageName = "mtgb.protocol.v15";
 
     public const string Hello = "hello";
     public const string Welcome = "welcome";
     public const string Lobby = "lobby";
     public const string SubmitDeck = "submit-deck";
+    public const string SetSpectator = "set-spectator";
     public const string SetReady = "set-ready";
     public const string RequestStartMatch = "request-start-match";
+    public const string ChoosePlayDraw = "choose-play-draw";
     public const string StartMatch = "start-match";
     public const string SceneReady = "scene-ready";
     public const string SubmitAction = "submit-action";
@@ -23,6 +25,7 @@ public static class OnlineProtocol
     public const string SyncConfirmed = "sync-confirmed";
     public const string Concede = "concede";
     public const string MatchEnded = "match-ended";
+    public const string ReplayChunk = "replay-chunk";
     public const string Error = "error";
     public const string ReconnectRejected = "reconnect-rejected";
     public const string Heartbeat = "heartbeat";
@@ -40,6 +43,7 @@ public sealed class OnlineEnvelope
 [Serializable]
 public sealed class OnlineHelloMessage
 {
+    public string roomAction;
     public string displayName;
     public string reconnectToken;
     public string roomId;
@@ -72,6 +76,7 @@ public sealed class OnlineLobbyPlayer
 [Serializable]
 public sealed class OnlineLobbyState
 {
+    public int playDrawChooserSeat;
     public string roomId;
     public int hostSeat;
     public OnlineRoomConfig config;
@@ -92,6 +97,12 @@ public sealed class OnlineReadyMessage
 }
 
 [Serializable]
+public sealed class OnlinePlayDrawMessage
+{
+    public int firstPlayerSeat;
+}
+
+[Serializable]
 public sealed class OnlineStartMatchMessage
 {
     public string matchId;
@@ -109,6 +120,7 @@ public sealed class OnlineSceneReadyMessage
 [Serializable]
 public sealed class OnlineActionMessage
 {
+    public string matchId;
     public long requestId;
     public GameAction action;
 }
@@ -152,6 +164,9 @@ public sealed class OnlineErrorMessage
 [Serializable]
 public sealed class OnlineMatchEndedMessage
 {
+    public OnlinePlayerViewState finalView;
+    public DeckDefinition ownDeck;
+    public bool aborted;
     public string matchId;
     public int winnerSeat;
     public string reason;

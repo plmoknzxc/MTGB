@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-02",
+  "locales": ["zh-CN", "ja-JP", "en-US"],
+  "representativeOnly": true,
+  "checks": {
+    "japaneseDoubleFaceRulesSeparated": true,
+    "japaneseFirstAndLaterFrameFontSizesMatch": true,
+    "japaneseDoubleFaceAutoSizing": false,
+    "japaneseFableLinks": ["Treasure", "Goblin Shaman"],
+    "japaneseFableLocalImages": 5,
+    "japaneseFableMissingImages": 0,
+    "wrappedKanjiLanderLink": true,
+    "ventureModernDungeons": 3,
+    "ventureCommanderOverviewDungeons": 4,
+    "ventureCommanderKeywordDungeons": 3,
+    "initiativeDungeons": 1,
+    "ringHelpers": 1,
+    "unrelatedCardHelpers": 0,
+    "dungeonCycle": "2/4",
+    "steelSeraphKeywords": ["Flying", "Vigilance", "Lifelink", "Prototype"],
+    "longKeywordScrollPresent": true,
+    "planeswalkerTrailingLoyaltyRemoved": true,
+    "finalConsoleErrorEntries": 0
+  },
+  "restored": {"language": "zh-CN", "textScale": 1.3, "playMode": false},
+  "screenshots": [
+    ".tools/presentation-audit/chinese-double-face-verified.png",
+    ".tools/presentation-audit/japanese-double-face-verified.png",
+    ".tools/presentation-audit/japanese-token-popup.png",
+    ".tools/presentation-audit/japanese-dungeon-cycle.png",
+    ".tools/presentation-audit/japanese-keyword-scroll.png"
+  ],
+  "limitations": [
+    "Not every printing, translation meaning, game effect or screen size was tested.",
+    "The sampled Japanese token and dungeon art fell back to existing local English art.",
+    "Flavor text remains original-language text.",
+    "One temporary test-code CanvasGroup null check failed; corrected test execution passed."
+  ]
+}

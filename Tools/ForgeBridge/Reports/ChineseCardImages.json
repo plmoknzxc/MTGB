@@ -1,0 +1,179 @@
+{
+  "localPrintings": 100068,
+  "sets": 862,
+  "availableChineseFaces": 56221,
+  "stats": {
+    "existing": 56212,
+    "downloaded": 9
+  },
+  "metadataFailures": [],
+  "unavailableSets": [
+    "DS0",
+    "PRES"
+  ],
+  "excluded": [
+    {
+      "key": "PLST/SLX-18",
+      "reason": "name mismatch",
+      "source": "Greymond, Avacyn's Stalwart"
+    },
+    {
+      "key": "PLST/SLX-4",
+      "reason": "name mismatch",
+      "source": "Elmar, Ulvenwald Informant"
+    },
+    {
+      "key": "PUNK/PLA031",
+      "reason": "name mismatch",
+      "source": "No Way Out"
+    },
+    {
+      "key": "SLX/24",
+      "reason": "name mismatch",
+      "source": "Rashel, Fist of Torm"
+    },
+    {
+      "key": "SLX/25",
+      "reason": "name mismatch",
+      "source": "Mathise, Surge Channeler"
+    },
+    {
+      "key": "SLX/26",
+      "reason": "name mismatch",
+      "source": "Evin, Waterdeep Opportunist"
+    },
+    {
+      "key": "SLX/27",
+      "reason": "name mismatch",
+      "source": "Jurin, Leading the Charge"
+    },
+    {
+      "key": "SLX/29",
+      "reason": "name mismatch",
+      "source": "Casal, Lurkwood Pathfinder"
+    },
+    {
+      "key": "SLX/30",
+      "reason": "name mismatch",
+      "source": "Bohn, Beguiling Balladeer"
+    },
+    {
+      "key": "SLX/18",
+      "reason": "name mismatch",
+      "source": "Greymond, Avacyn's Stalwart"
+    },
+    {
+      "key": "SLX/19",
+      "reason": "name mismatch",
+      "source": "Gisa's Favorite Shovel"
+    },
+    {
+      "key": "SLX/20",
+      "reason": "name mismatch",
+      "source": "Enkira, Hostile Scavenger"
+    },
+    {
+      "key": "SLX/21",
+      "reason": "name mismatch",
+      "source": "Gregor, Shrewd Magistrate"
+    },
+    {
+      "key": "SLX/22",
+      "reason": "name mismatch",
+      "source": "Hansk, Slayer Zealot"
+    },
+    {
+      "key": "SLX/23",
+      "reason": "name mismatch",
+      "source": "Malik, Grim Manipulator"
+    },
+    {
+      "key": "SLX/11",
+      "reason": "name mismatch",
+      "source": "Vikya, Scorching Stalwart"
+    },
+    {
+      "key": "SLX/12",
+      "reason": "name mismatch",
+      "source": "Aisha of Sparks and Smoke"
+    },
+    {
+      "key": "SLX/13",
+      "reason": "name mismatch",
+      "source": "The Howling Abomination"
+    },
+    {
+      "key": "SLX/14",
+      "reason": "name mismatch",
+      "source": "Immard, the Stormcleaver"
+    },
+    {
+      "key": "SLX/15",
+      "reason": "name mismatch",
+      "source": "Maarika, Brutal Gladiator"
+    },
+    {
+      "key": "SLX/16",
+      "reason": "name mismatch",
+      "source": "Tadeas, Juniper Ascendant"
+    },
+    {
+      "key": "SLX/17",
+      "reason": "name mismatch",
+      "source": "Zethi, Arcane Blademaster"
+    },
+    {
+      "key": "SLX/2",
+      "reason": "name mismatch",
+      "source": "Bjorna, Nightfall Alchemist"
+    },
+    {
+      "key": "SLX/3",
+      "reason": "name mismatch",
+      "source": "Cecily, Haunted Mage"
+    },
+    {
+      "key": "SLX/4",
+      "reason": "name mismatch",
+      "source": "Elmar, Ulvenwald Informant"
+    },
+    {
+      "key": "SLX/5",
+      "reason": "name mismatch",
+      "source": "Hargilde, Kindly Runechanter"
+    },
+    {
+      "key": "SLX/6",
+      "reason": "name mismatch",
+      "source": "Othelm, Sigardian Outcast"
+    },
+    {
+      "key": "SLX/7",
+      "reason": "name mismatch",
+      "source": "Sophina, Spearsage Deserter"
+    },
+    {
+      "key": "SLX/8",
+      "reason": "name mismatch",
+      "source": "Wernog, Rider's Chaplain"
+    },
+    {
+      "key": "SLX/9",
+      "reason": "name mismatch",
+      "source": "Havengul Laboratory"
+    },
+    {
+      "key": "UNK/UU11",
+      "reason": "name mismatch",
+      "source": "Where We're Going..."
+    },
+    {
+      "key": "UNK/UR05",
+      "reason": "name mismatch",
+      "source": "Joven and Chandler"
+    }
+  ],
+  "failures": [],
+  "source": "https://mtgch.com",
+  "destination": "CardImages\\zh-CN"
+}

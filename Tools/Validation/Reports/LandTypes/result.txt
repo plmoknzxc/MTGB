@@ -1,0 +1,8 @@
+PASS blood; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS blue; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS omen; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS dryad; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS blood-blue; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS blue-blood; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS blood-omen; engine types/mana/abilities, controller scope, supertypes, removal restoration
+PASS omen-blood; engine types/mana/abilities, controller scope, supertypes, removal restoration

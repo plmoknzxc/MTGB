@@ -1,15 +1,19 @@
-Put complete card images in a set-code folder:
+Forge / Unity card images
 
-CardImages/<SET CODE>/<COLLECTOR NUMBER>.png
+Layout: CardImages/<UPPERCASE SET>/<COLLECTOR NUMBER>.jpg
+Second face: CardImages/<UPPERCASE SET>/<COLLECTOR NUMBER>_2.jpg
+Unity also supports PNG and JPEG. Missing images use a text card fallback.
 
-Examples:
-CardImages/WOE/45.png
-CardImages/MKM/223.jpg
+Official images come from Scryfall's default-cards bulk dataset, using exact
+printing keys and matching card names. Normal images are generally 488 x 680.
+Existing local images are preserved. No Unity texture import is required.
+For standalone games place CardImages beside the executable.
 
-Supported extensions: .png, .jpg, .jpeg
+Resume/import: python Tools/ForgeBridge/Import-CardImages.py
+Dependencies: requests, Pillow. Requires ForgeRuntime/catalog.jsonl.
+Source URLs, hashes, download results and unmatched entries: .tools/card-images/
+Downloaded JPG files are excluded from Git and can be recreated.
 
-Set the same set_code and collector_number in the card database. If no matching
-image exists, the game uses its generated card template as a fallback.
-
-Lua scripts use the same set-code and collector-number convention under
-CardScripts/<SET CODE>/m<COLLECTOR NUMBER>.lua.
+Image source: https://scryfall.com/
+Card artwork and game content belong to their respective rights holders.
+The former CardPacks/.mtgbpack and Lua instructions no longer apply here.

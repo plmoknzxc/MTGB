@@ -1,0 +1,1 @@
+PASS abilities: Grist opens three loyalty options directly; cancellation preserves loyalty; reopening and +1 activation enters stack

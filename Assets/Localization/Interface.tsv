@@ -1,0 +1,428 @@
+游戏设置	Settings	設定
+设置	Settings	設定
+语言	Language	言語
+文字大小	Text size	文字サイズ
+文字预览	Text preview	文字プレビュー
+小	Small	小
+标准	Normal	標準
+大	Large	大
+完成	Done	完了
+缺少译文时显示原文；卡图文字由所选版本决定。	Missing translations use the original text. Printed artwork follows the chosen version.	翻訳がない場合は原文を表示します。カード画像の文字は選択した版に従います。
+万智对决	Magic Duel	マジック・デュエル
+构筑你的牌组，开启下一场对决	Build your deck. Begin your next duel.	デッキを構築し、次の対戦へ。
+联机对战	Multiplayer	オンライン対戦
+卡组编辑	Deck builder	デッキ編集
+牌组编辑	Deck builder	デッキ編集
+返回	Back	戻る
+重命名	Rename	名前変更
+新建	New	新規
+保存	Save	保存
+重载	Reload	再読込
+搜索	Search	検索
+高级搜索	Filters	詳細検索
+搜索卡名 / 规则文字	Search names / rules	カード名・ルールを検索
+卡名、系列、编号或规则文字	Name, set, number or rules	名前・セット・番号・ルール
+搜索卡牌	Find cards	カード検索
+全部	All	すべて
+官方	Official	公式
+取消	Cancel	キャンセル
+关闭	Close	閉じる
+应用	Apply	適用
+放弃	Discard	破棄
+牌组尚未保存	Unsaved deck	未保存のデッキ
+请选择卡牌	Select a card	カードを選択
+法术力费用	Mana cost	マナ・コスト
+规则文本	Rules text	ルール文章
+风味文字	Flavor text	フレイバー・テキスト
+异画 · 下载	Artwork / download	別イラスト・ダウンロード
+选择异画 · 偏好仅影响本机显示	Choose artwork. Preferences apply on this device.	別イラストを選択。この端末の表示に適用します。
+上一页	Previous	前へ
+下一页	Next	次へ
+取消偏好 · 恢复默认	Clear preference	既定の画像に戻す
+设为偏好	Use as preferred	優先画像に設定
+使用此版本 · 设为偏好	Use this artwork	この画像を使用
+下载并设为偏好	Download and use	ダウンロードして使用
+当前偏好	Preferred	優先画像
+已下载	Downloaded	取得済み
+未下载	Not downloaded	未取得
+默认卡图	Default artwork	既定の画像
+正在读取异画列表…	Loading artworks…	別イラストを読み込み中…
+正在准备卡牌…	Preparing cards…	カードを準備中…
+重试加载	Retry	再試行
+标准画质	Standard quality	標準画質
+高清画质	High quality	高画質
+当前筛选：全部	Filter: All	絞り込み：すべて
+当前筛选：官方	Filter: Official	絞り込み：公式
+当前筛选：DIY	Filter: DIY	絞り込み：DIY
+全部内容	All content	すべて
+官方卡牌	Official cards	公式カード
+DIY 卡牌	DIY cards	DIY カード
+查看结果	Show results	結果を表示
+当前筛选：全部内容	Filter: All content	絞り込み：すべて
+当前筛选：官方卡牌	Filter: Official cards	絞り込み：公式カード
+当前筛选：DIY 卡牌	Filter: DIY cards	絞り込み：DIY カード
+主牌  {0}	Main deck  {0}	メイン  {0}
+备牌  {0}	Sideboard  {0}	サイド  {0}
+卡牌 {0} / {1}	Cards {0} / {1}	カード {0} / {1}
+第 {0} / {1} 页	Page {0} / {1}	{0} / {1} ページ
+{0} / {1} 页 · {2} 个版本	{0} / {1} · {2} versions	{0} / {1} · {2} バージョン
+力量 / 防御力    {0} / {1}	Power / Toughness    {0} / {1}	パワー / タフネス    {0} / {1}
+忠诚值    {0}	Loyalty    {0}	忠誠度    {0}
+布防值    {0}	Defense    {0}	守備値    {0}
+卡牌已就绪 · {0} 个版本	Cards ready · {0} versions	読み込み完了 · {0} バージョン
+当前偏好：默认卡图	Preferred: Default artwork	優先画像：既定の画像
+当前偏好：{0}	Preferred: {0}	優先画像：{0}
+已选：{0} · 已下载	Selected: {0} · Downloaded	選択：{0} · 取得済み
+已选：{0} · 点击下方按钮下载并使用	Selected: {0} · Download below to use	選択：{0} · 下のボタンで取得して使用
+{0}\n当前偏好	{0}\nPreferred	{0}\n優先画像
+{0}\n已下载	{0}\nDownloaded	{0}\n取得済み
+{0}\n未下载	{0}\nNot downloaded	{0}\n未取得
+正在下载 {0}…	Downloading {0}…	{0} をダウンロード中…
+正在下载 {0} · {1}	Downloading {0} · {1}	{0} をダウンロード中 · {1}
+正在使用：{0} · 可取消偏好恢复默认	Using {0} · Clear preference to restore default	使用中：{0} · 優先設定を解除すると既定に戻ります
+加载失败：{0}	Loading failed: {0}	読み込み失敗：{0}
+Created an empty deck.	Created an empty deck.	空のデッキを作成しました。
+Loaded deck: {0}	Loaded deck: {0}	デッキを読み込みました：{0}
+Saved deck: {0}	Saved deck: {0}	デッキを保存しました：{0}
+Deck "{0}" has unsaved changes.	Deck "{0}" has unsaved changes.	デッキ「{0}」に未保存の変更があります。
+Created an empty deck.	已创建空牌组。	Created an empty deck.	空のデッキを作成しました。
+Loaded deck: {0}	已加载牌组：{0}	Loaded deck: {0}	デッキを読み込みました：{0}
+Saved deck: {0}	已保存牌组：{0}	Saved deck: {0}	デッキを保存しました：{0}
+Deck "{0}" has unsaved changes.	牌组“{0}”尚未保存。	Deck "{0}" has unsaved changes.	デッキ「{0}」に未保存の変更があります。
+Loaded {0} cards and {1} decks.	已加载 {0} 张卡牌和 {1} 副牌组。	Loaded {0} cards and {1} decks.	カード {0} 枚とデッキ {1} 個を読み込みました。
+Main Deck	主牌	Main deck	メインデッキ
+Sideboard	备牌	Sideboard	サイドボード
+Collection	卡池	Collection	カード一覧
+Deck name	牌组名称	Deck name	デッキ名
+Drag canceled.	已取消拖动。	Drag canceled.	ドラッグをキャンセルしました。
+Selected {0}.	已选择 {0}。	Selected {0}.	{0} を選択しました。
+{0} is already at the copy limit.	{0} 已达到数量上限。	{0} is already at the copy limit.	{0} は枚数上限に達しています。
+{0} -{1} from main deck.	已从主牌移除 {1} 张 {0}。	Removed {1} {0} from main deck.	メインデッキから {0} を {1} 枚取り除きました。
+{0} -{1} from sideboard.	已从备牌移除 {1} 张 {0}。	Removed {1} {0} from sideboard.	サイドボードから {0} を {1} 枚取り除きました。
+下载失败，可重试：{0}	Download failed. Retry: {0}	ダウンロード失敗。再試行できます：{0}
+正在读取 Forge 卡牌目录…	Reading Forge catalog…	Forge カード一覧を読み込み中…
+相聚牌桌	Meet at the table	テーブルに集まろう
+设定这一场对决	Set up your duel	対戦を設定
+你的下一场胜利	Your next victory	次の勝利へ
+选择连接方式 · 加入房间 · 准备对局	Connect · Join a room · Get ready	接続・入室・対戦準備
+01   /   连接	01   /   Connection	01   /   接続
+02   /   对局规则	02   /   Match rules	02   /   対戦ルール
+房间   /   等待对手	Room   /   Waiting for opponent	ルーム   /   対戦相手を待っています
+出战准备   /   选择牌组	Preparation   /   Choose a deck	対戦準備   /   デッキ選択
+局间调整   /   换备	Between games   /   Sideboarding	ゲーム間   /   サイドボード
+客户端配置	Client profile	プロファイル
+玩家名称	Player name	プレイヤー名
+主机地址	Host address	ホストアドレス
+房间号	Room ID	ルーム番号
+创建局域网主机	Host LAN game	LAN ホストを作成
+加入已有主机	Join host	ホストに参加
+下一步	Next step	次のステップ
+赛制	Format	フォーマット
+先后手	Play / draw	先攻・後攻
+每局随机决定	Random each game	ゲームごとにランダム
+房间	Room	ルーム
+房间席位	Players	参加者
+等待本局开始	Waiting for game	ゲーム開始待ち
+等待比赛开始	Waiting for match	対戦開始待ち
+等待玩家加入。	Waiting for players.	参加者を待っています。
+等待玩家加入…	Waiting for players…	参加者を待っています…
+尚未选择牌组	No deck selected	デッキ未選択
+选择牌组并准备	Choose a deck and get ready	デッキを選んで準備
+提交牌组并准备	Submit deck / Ready	デッキを送信して準備完了
+取消准备	Cancel ready	準備を取り消す
+准备开始新比赛	Ready for a new match	新しい対戦の準備完了
+开始比赛	Start match	対戦開始
+等待双方准备	Waiting for both players	両プレイヤーの準備待ち
+等待房主开始	Waiting for host	ホストの開始待ち
+已允许	Enabled	許可
+已禁用	Disabled	無効
+当前赛制	Format	フォーマット
+赛制规则 · 日期	Ban list · Date	禁止・制限リスト・日付
+更改立即生效。N/A 只取消禁限，仍检查该赛制的卡池。	Changes apply immediately. N/A removes bans and restrictions, but still checks the format's card pool.	変更はすぐに反映されます。N/A は禁止・制限のみを解除し、使用可能なカードは引き続き確認します。
+现行规则（无历史日期）	Current rules (no archived date)	現行ルール（過去の日付なし）
+N/A（无禁限）	N/A (no bans or restrictions)	N/A（禁止・制限なし）
+标准赛	Standard	スタンダード
+先驱	Pioneer	パイオニア
+摩登	Modern	モダン
+前摩登	Premodern	プレモダン
+薪传	Legacy	レガシー
+特选	Vintage	ヴィンテージ
+纯铁	Pauper	パウパー
+指挥官	Commander	統率者戦
+官禁	Official ban list	公式禁止リスト
+法禁	Duel Commander	デュエル・コマンダー
+争锋	Brawl	ブロール
+史迹	Historic	ヒストリック
+永恒	Timeless	タイムレス
+禁用	Banned	禁止
+限1	Restricted	制限1
+卡牌信息	Card info	カード情報
+异画·下载	Artwork	別イラスト
+MTGB .mdk：保留系列、编号、分区、赛制和禁表日期。	MTGB .mdk: Preserves sets, collector numbers, sections, format, and ban-list date.	MTGB .mdk：セット、コレクター番号、区分、フォーマット、禁止・制限リストの日付を保持します。
+MO 纯文本：保留数量与主备牌；不保留版本、赛制或禁表日期。	MO text: Preserves quantities and main/sideboard; does not preserve printings, format, or ban-list date.	MO テキスト：枚数とメイン・サイドボードを保持します。カードの版、フォーマット、禁止・制限リストの日付は保持しません。
+MTGA 文本：保留系列与编号；不保留赛制或禁表日期。	MTGA text: Preserves sets and collector numbers; does not preserve format or ban-list date.	MTGA テキスト：セットとコレクター番号を保持します。フォーマットと禁止・制限リストの日付は保持しません。
+● 未连接	● Disconnected	● 未接続
+● 主机在线	● Hosting	● ホスト接続中
+● 已加入房间	● Joined room	● 入室済み
+● 正在连接	● Connecting	● 接続中
+● 正在退出房间	● Leaving room	● 退室中
+局间换备	Sideboarding	サイドボーディング
+比赛开始后	When the match starts	対戦開始後
+主牌 · 拖到右侧移入备牌	Main deck · Drag right to sideboard	メイン · 右へドラッグしてサイドへ
+备牌 · 拖到左侧移回主牌	Sideboard · Drag left to main deck	サイド · 左へドラッグしてメインへ
+当前操作	Actions	現在の操作
+卡牌详情	Card details	カード詳細
+等待对局状态	Waiting for game state	対戦状態を待っています
+等待对手操作	Waiting for opponent	対戦相手の操作待ち
+等待对手操作…	Waiting for opponent…	対戦相手の操作待ち…
+轮到你行动	Your action	あなたの行動
+请选择	Choose	選択してください
+选择放回牌库底的牌	Choose cards to put on the bottom	ライブラリーの一番下に置くカードを選択
+保留起手或再调度	Keep hand or mulligan	キープまたはマリガン
+支付法术力 · 点击地牌产费	Pay mana · Click lands for mana	マナを支払う・土地をクリックしてマナを出す
+选择高亮的卡牌或玩家	Choose a highlighted card or player	強調されたカードかプレイヤーを選択
+选择攻击生物与防御者	Choose attackers and defenders	攻撃クリーチャーと防御先を選択
+选择阻挡生物及其目标	Choose blockers and their targets	ブロックするクリーチャーと対象を選択
+选择卡牌，然后确认	Choose cards, then confirm	カードを選択して確定
+你的优先权	You have priority	あなたに優先権があります
+选择效果 / 确认	Choose effect / Confirm	効果を選択・確定
+确认 / 让过	Confirm / Pass	確定・パス
+让过至回合结束	Pass until end of turn	ターン終了までパス
+保留起手	Keep hand	キープ
+再调度	Mulligan	マリガン
+放置地牌	Play land	土地をプレイ
+是	Yes	はい
+否	No	いいえ
+重置	Untap	アンタップ
+维持	Upkeep	アップキープ
+抓牌	Draw	ドロー
+战斗前主阶段	Precombat main	戦闘前メイン
+战斗后主阶段	Postcombat main	戦闘後メイン
+战斗开始	Beginning of combat	戦闘開始
+宣告攻击者	Declare attackers	攻撃クリーチャー指定
+宣告阻挡者	Declare blockers	ブロック・クリーチャー指定
+战斗伤害	Combat damage	戦闘ダメージ
+战斗结束	End of combat	戦闘終了
+结束步骤	End step	終了ステップ
+清除步骤	Cleanup	クリンナップ
+起手选择	Opening hand	初手の選択
+面朝下	Face down	裏向き
+面朝下的牌	Face-down card	裏向きのカード
+攻击中	Attacking	攻撃中
+阻挡中	Blocking	ブロック中
+已横置	Tapped	タップ状態
+伤害 {0}	Damage {0}	ダメージ {0}
+确认认输？	Concede the game?	投了しますか？
+继续对局	Continue game	対戦を続ける
+认输	Concede	投了
+堆叠 · 从上到下结算	Stack · Resolves top to bottom	スタック・上から順に解決
+你的坟墓场	Your graveyard	あなたの墓地
+对手的坟墓场	Opponent's graveyard	対戦相手の墓地
+手牌 {0}    牌库 {1}	Hand {0}    Library {1}	手札 {0}    ライブラリー {1}
+法术力池\n{0}	Mana pool\n{0}	マナ・プール\n{0}
+{0}/{1} · 伤害 {2}	{0}/{1} · Damage {2}	{0}/{1} · ダメージ {2}
+下一页  ›	Next  ›	次へ  ›
+‹  上一页	‹  Previous	‹  前へ
+异画 · 下载	Artwork	別イラスト
+另存	Save as	別名保存
+导入	Import	インポート
+导出	Export	エクスポート
+更多	More	その他
+删除	Delete	削除
+删除卡组	Delete deck	デッキを削除
+卡组操作	Deck actions	デッキ操作
+重新读取卡牌和卡组文件	Reload card and deck files	カードとデッキのファイルを再読込
+确定删除「{0}」？\n此卡组未保存的修改也会丢失。	Delete “{0}”?\nUnsaved changes to this deck will also be lost.	「{0}」を削除しますか？\n未保存の変更も失われます。
+粘贴	Paste	貼り付け
+复制	Copy	コピー
+另存卡组	Save deck as	デッキを別名保存
+导入卡组	Import deck	デッキをインポート
+导出卡组	Export deck	デッキをエクスポート
+请输入卡组名。	Enter a deck name.	デッキ名を入力してください。
+粘贴后自动识别 MO / MTGA / MTGB，直接创建新卡组。	Paste MO / MTGA / MTGB text to create a new deck automatically.	MO / MTGA / MTGB のテキストを貼り付けると新しいデッキを自動作成します。
+观看录像	Replays	リプレイ
+录像文件夹	Replay folder	リプレイフォルダー
+打开录像文件	Open replay file	リプレイを開く
+录像详情	Replay details	リプレイ詳細
+选择一场对局	Select a replay	リプレイを選択
+播放录像	Play replay	再生
+导出视频	Export video	動画を書き出す
+还没有保存的录像	No saved replays yet	保存されたリプレイはありません
+正在读取录像…	Loading replay…	リプレイを読み込み中…
+无法打开录像	Cannot open replay	リプレイを開けません
+自动保存所有录像	Automatically save all replays	すべてのリプレイを自動保存
+保存对局录像？	Save this replay?	リプレイを保存しますか？
+不保存	Discard	保存しない
+保存录像	Save replay	リプレイを保存
+返回录像	Back to replays	リプレイ一覧へ
+暂停	Pause	一時停止
+播放	Play	再生
+上一步	Previous step	前のステップ
+下一步	Next step	次のステップ
+切换视角	Switch viewpoint	視点を切り替え
+正在导出视频	Exporting video	動画を書き出し中
+点击返回取消	Click Back to cancel	戻るボタンでキャンセル
+已取消导出	Export canceled	書き出しをキャンセルしました
+第 {0} 局	Game {0}	第 {0} ゲーム
+胜者：{0}	Winner: {0}	勝者：{0}
+刷新	Refresh	更新
+平局	Draw	引き分け
+连接房间，选择牌组，准备对局	Connect, choose a deck, and get ready	ルームに接続し、デッキを選んで対戦準備
+连接	Connection	接続
+创建或加入房间	Create or join a room	ルームの作成・参加
+房主设置	Host settings	ホスト設定
+对局规则	Match rules	対戦ルール
+比赛局数	Match length	マッチ形式
+初始生命	Starting life	初期ライフ
+BO1 · 一局胜负	BO1 · One game	BO1 · 1本勝負
+BO3 · 三局两胜	BO3 · Best of three	BO3 · 2本先取
+连接之后	After connecting	接続後
+选择出战牌组，等待双方准备后开始比赛。	Choose a deck, then wait for both players to be ready.	デッキを選び、両プレイヤーの準備が完了したら対戦を開始します。
+同一台电脑测试可使用 127.0.0.1；其他电脑请输入建主者的局域网 IP。	Use 127.0.0.1 on this PC; on another PC, enter the host's LAN IP.	同じPCでは127.0.0.1、別のPCではホストのLAN IPアドレスを入力します。
+允许 DIY 卡牌	Allow custom cards	カスタムカードを許可
+开启后，允许使用在数据编辑器中标记为 DIY 的卡牌。	Allow cards marked as custom in the data editor.	DIYとして登録したカスタムカードを使用できます
+已允许	Allowed	許可
+已禁用	Disabled	無効
+主牌至少 60 张 · 备牌最多 15 张\n非基本牌合计最多 4 张 · 每局随机决定先后手	Main deck: 60+ · Sideboard: up to 15\nUp to 4 copies per nonbasic card · Random starting player	メイン60枚以上・サイド15枚以下\n基本土地以外は合計4枚まで・先手は毎ゲームランダム
+创建主机，或输入局域网主机地址加入房间。	Host a room, or enter the host's LAN address to join.	ルームを作成するか、ホストのLANアドレスを入力して参加します。
+● 未连接	● Offline	● 未接続
+● 正在退出房间	● Leaving room	● 退出中
+● 主机在线	● Hosting	● ホスト接続中
+● 已加入房间	● In room	● 入室済み
+● 正在连接	● Connecting	● 接続中
+准备与开局	Ready and start	準備と開始
+选择出战牌组	Choose your deck	使用デッキを選択
+双方提交牌组并准备后，由房主开始比赛。\nBO3 每局结束后可调整备牌。	The host starts after both players submit decks and get ready.\nIn BO3, sideboard between games.	両プレイヤーがデッキを提出して準備した後、ホストが開始します。\nBO3では各ゲームの間にサイドボードを変更できます。
+需要更换牌组时，请先取消准备。	Cancel ready before changing decks.	デッキを変更する前に準備完了を解除してください。
+等待玩家加入	Waiting for a player	プレイヤーを待っています
+空位 · 等待连接	Empty · Waiting for connection	空席・接続待ち
+BO{0} · {1} 点生命 · 每局随机先后手\n{2} · DIY {3}	BO{0} · {1} life · Random starting player\n{2} · Custom cards: {3}	BO{0}・ライフ{1}・先手はランダム\n{2}・カスタムカード：{3}
+允许	Allowed	許可
+禁用	Disabled	無効
+不支持的房间赛制。	Unsupported room format.	このルームのフォーマットはサポートされていません。
+卡牌 {0} 不符合房间赛制 {1}。	Card {0} is not legal in the room format {1}.	カード {0} はルームのフォーマット {1} では使用できません。
+卡牌 {0} 不符合房间赛制。	Card {0} is not legal in this room's format.	カード {0} はこのルームのフォーマットでは使用できません。
+打开录像目录	Open replay folder	保存先を開く
+从其他位置选择	Browse other locations	別の場所から選択
+时长：{0}	Duration: {0}	対局時間：{0}
+
+条件同时生效；留空表示不限	All conditions apply; leave blank for any	すべての条件で絞り込み・空欄は指定なし
+任意关键词	Any keyword	キーワード
+类别与副类别	Types and subtypes	タイプ・サブタイプ
+颜色	Colors	色
+颜色标识	Color identity	固有色
+颜色匹配	Color matching	色の条件
+颜色标识匹配	Identity matching	固有色の条件
+包含任意所选颜色	Any selected color	選択した色のいずれかを含む
+包含全部所选颜色	All selected colors	選択した色をすべて含む
+恰好这些颜色	Exactly these colors	選択した色と完全一致
+仅使用所选颜色（含无色）	Within these colors (incl. colorless)	選択した色のみ（無色も含む）
+法术力值（例如 <=3）	Mana value (e.g. <=3)	マナ総量（例：<=3）
+费用符号（例如 {U}{U}）	Mana symbols (e.g. {U}{U})	マナ・シンボル（例：{U}{U}）
+力量（例如 >=2）	Power (e.g. >=2)	パワー（例：>=2）
+防御力（例如 >=2）	Toughness (e.g. >=2)	タフネス（例：>=2）
+忠诚度	Loyalty	忠誠度
+稀有度	Rarity	レアリティ
+不限	Any	指定なし
+普通	Common	コモン
+非普通	Uncommon	アンコモン
+稀有	Rare	レア
+秘稀	Mythic rare	神話レア
+特殊	Special	スペシャル
+奖励	Bonus	ボーナス
+系列代码或英文名称	Set code or English name	セット略号・英語名
+画师	Artist	アーティスト
+发行起日（YYYY-MM-DD）	Released from (YYYY-MM-DD)	発売日・開始（YYYY-MM-DD）
+发行止日（YYYY-MM-DD）	Released until (YYYY-MM-DD)	発売日・終了（YYYY-MM-DD）
+赛制（本地现行禁限表）	Format (local current rules)	フォーマット（ローカル現行規定）
+赛制状态	Legality	使用可否
+合法（含限一）	Legal (including restricted)	使用可能（制限カードを含む）
+禁止	Banned	禁止
+限一	Restricted	制限
+赛制外	Not legal in format	フォーマット対象外
+卡牌版式	Card layout	カードの形式
+单面	Single-faced	片面
+转化双面	Transforming double-faced	変身する両面カード
+模式双面	Modal double-faced	モードを持つ両面カード
+连体	Split	分割
+倒转	Flip	反転
+融合	Meld	合体
+传纪	Saga	英雄譚
+职业	Class	クラス
+卡牌来源	Card source	カードの種類
+排序	Sort by	並び順
+默认顺序	Default order	標準
+法术力值升序	Mana value: low to high	マナ総量の昇順
+发行日期降序	Newest first	発売日の降順
+重印版本	Printings	再録版
+显示全部版本	All printings	すべての版を表示
+每张卡只显示一个版本	One printing per card	各カードにつき1つの版
+正在读取筛选资料…	Loading search data…	検索データを読み込み中…
+重置条件	重置	Reset	リセット
+未收录筛选资料的版本不参与颜色、稀有度及发行资料筛选	Printings without metadata are excluded from color, rarity and release filters.	色・レアリティ・発売情報が未収録の版は、その条件の検索対象外です。
+筛选资料读取失败，请关闭后重试	Could not load search data. Close and retry.	検索データを読み込めません。閉じて再試行してください。
+日期范围无效	Invalid date range	日付の範囲が正しくありません
+数值格式无效，例如 >=3	Invalid number; use e.g. >=3	数値の形式が正しくありません（例：>=3）
+日期格式应为 YYYY-MM-DD	Use YYYY-MM-DD for dates	日付は YYYY-MM-DD で入力してください
+费用格式无效，例如 {2}{U}{U}	Invalid mana symbols; use e.g. {2}{U}{U}	マナの形式が正しくありません（例：{2}{U}{U}）
+指挥官·官禁	Commander	統率者
+指挥官·法禁	Duel Commander	デュエル・コマンダー
+卡名	Card name	カード名
+规则文字	Rules text	ルール文章
+历险	Adventure	出来事
+普通版式	Normal layout	通常のレイアウト
+
+插入	Insert	挿入
+插入法术力符号	Insert mana symbol	マナ・シンボルを挿入
+插入类别	Insert type	タイプを挿入
+五色法术力	Colored mana	色マナ
+通用费用	Generic mana	不特定マナ
+变量费用	Variable mana	可変マナ
+无色与雪	Colorless / snow	無色・氷雪
+双色混血	Hybrid mana	混成マナ
+二费混血	Two-brid hybrid	単色混成マナ
+非瑞克西亚	Phyrexian mana	ファイレクシア・マナ
+混血非瑞	Hybrid Phyrexian	混成ファイレクシア
+无色混血	Colorless hybrid	無色混成マナ
+卡牌类别	Card types	カード・タイプ
+超类别	Supertypes	特殊タイプ
+生物副类别	Creature types	クリーチャー・タイプ
+地副类别	Land types	土地タイプ
+鹏洛客副类别	Planeswalker types	プレインズウォーカー
+其他副类别	Other subtypes	その他のサブタイプ
+搜索选项	Search options	項目を検索
+没有匹配的选项	No matching options	該当する項目がありません
+神器	Artifact	アーティファクト
+战役	Battle	バトル
+生物	Creature	クリーチャー
+结界	Enchantment	エンチャント
+瞬间	Instant	インスタント
+亲缘	Kindred	同族
+地	Land	土地
+鹏洛客	Planeswalker	プレインズウォーカー
+法术	Sorcery	ソーサリー
+基本	Basic	基本
+传奇	Legendary	伝説の
+持续	Ongoing	持続
+雪境	Snow	氷雪
+世界	World	ワールド
+人类	Human	人間
+妖精	Elf	エルフ
+鬼怪	Goblin	ゴブリン
+龙	Dragon	ドラゴン
+灵俑	Zombie	ゾンビ
+吸血鬼	Vampire	吸血鬼
+天使	Angel	天使
+法术师	Wizard	ウィザード
+战士	Warrior	戦士
+士兵	Soldier	兵士
+海岛	Island	島
+平原	Plains	平地
+沼泽	Swamp	沼
+山脉	Mountain	山
+树林	Forest	森
+合法性	Legality	適法性
+合法	Legal	使用可能
+平台	Games	プラットフォーム
+纸质	Paper	紙のカード
+未收录平台或合法性资料的版本不参与搜索	Printings without platform or legality data are excluded from search.	プラットフォームまたは適法性の情報が未収録の版は検索対象外です。

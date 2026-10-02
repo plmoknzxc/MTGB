@@ -16,9 +16,42 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
     private MainMenuCardTileZone zone;
     private Outline outline;
     private bool suppressNextClick;
+    private GameObject quantityControls;
+    private Text quantityText;
+    private Button decreaseButton;
+    private Button increaseButton;
+    private GameObject countBadge;
+    private Text countBadgeText;
 
     public CardDefinition Card => card;
     public MainMenuCardTileZone Zone => zone;
+    public bool QuantityControlsVisible => quantityControls != null && quantityControls.activeSelf;
+
+    public void ConfigureQuantityControls(GameObject controls, Text count, Button decrease, Button increase, GameObject badge)
+    {
+        quantityControls = controls;
+        quantityText = count;
+        decreaseButton = decrease;
+        increaseButton = increase;
+        countBadge = badge;
+        countBadgeText = badge == null ? null : badge.GetComponentInChildren<Text>();
+        SetQuantityControls(false, 0, false);
+    }
+
+    public void SetCount(int count)
+    {
+        if (countBadgeText != null) countBadgeText.text = "x" + count;
+    }
+
+    public void SetQuantityControls(bool visible, int count, bool canIncrease)
+    {
+        if (quantityControls == null) return;
+        quantityText.text = "x" + count;
+        decreaseButton.interactable = count > 0;
+        increaseButton.interactable = canIncrease;
+        quantityControls.SetActive(visible);
+        if (countBadge != null) countBadge.SetActive(!visible);
+    }
 
     public void Configure(MainMenuController owner, CardDefinition cardDefinition, MainMenuCardTileZone tileZone)
     {
@@ -35,8 +68,8 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
         if (outline == null) return;
 
         outline.effectColor = highlighted
-            ? new Color(1f, 0.72f, 0.20f, 0.95f)
-            : new Color(0f, 0f, 0f, 0.65f);
+            ? MenuVisualTheme.Accent
+            : MenuVisualTheme.Line;
         outline.effectDistance = highlighted ? new Vector2(3f, 3f) : new Vector2(1.5f, -1.5f);
     }
 
@@ -64,10 +97,7 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            controller?.OnCardTileClicked(this);
-        }
+        // Right-click no longer changes deck quantities.
     }
 
     public void OnBeginDrag(PointerEventData eventData)

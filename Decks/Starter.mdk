@@ -1,15 +1,18 @@
 #name Starter
+#format standard
+#banlist current
 #main
-24 MTGB/1
-2 MTGB/2
-2 MTGB/3
-2 MTGB/4
-2 MTGB/5
-4 SOS/65
-4 MTGB/7
-4 MTGB/6
-4 MTGB/8
-4 MTGB/10
-4 MTGB/9
-4 MTGB/11
+24 10E/376
+4 2ED/162
+4 10E/224
+4 10E/232
+4 10E/209
+4 7ED/226
+4 10E/212
+4 6ED/213
+4 7ED/192
+4 CON/60
 !side
+7 10E/376
+4 2ED/157
+4 2ED/159

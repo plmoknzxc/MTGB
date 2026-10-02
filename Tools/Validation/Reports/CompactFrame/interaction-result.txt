@@ -1,0 +1,1 @@
+PASS: rectangular plates in own bottom-left/opponent top-right; persistent life font size; own end-phase/opponent pass in one button; no end-turn shortcut/sidebar priority actions; land and creature ability menus above source; menu raycast and submission; persistent card identity; land grouping/undo; unstretched artwork; hover/drag/duplicate prevention; 20-card layout.

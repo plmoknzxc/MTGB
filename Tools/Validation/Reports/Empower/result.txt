@@ -1,0 +1,2 @@
+PASS: creation at loyalty 2; repeated empower increases same token to 4; -1 surveil and -3 draw; multiple-token selection changes only chosen token (2/3 -> 2/5); zero loyalty removes token and pending surveil still resolves.
+Engine: pinned Forge runtime, scripted input through bridge. UI: real snapshots rendered and clicked separately, not a full network session.

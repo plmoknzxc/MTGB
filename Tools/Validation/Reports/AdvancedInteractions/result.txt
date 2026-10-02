@@ -1,0 +1,4 @@
+PASS damage: two blockers, lethal constraints, reset, trample remainder and actual deaths/life
+PASS storm: two prior spells, separate copied objects, retarget and 3 damage
+PASS ninjutsu: legal unblocked return cost, ability stack, tapped attacking entry and combat damage
+PASS battle: defeat trigger, transformed casting and correct back-face battlefield state

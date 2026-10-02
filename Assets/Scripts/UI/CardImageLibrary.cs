@@ -38,9 +38,84 @@ public static class CardImageLibrary
     public static bool TryLoadFullCard(CardDefinition card, int faceIndex, out Sprite sprite)
     {
         sprite = null;
-        if (!TryFindImagePath(card, faceIndex, out string path)) return false;
-        sprite = LoadSprite(path);
+        string preferred = CardArtPreferences.Get(card);
+        // Search every local printing in the requested language before allowing
+        // an English scan, including a previously selected alternate artwork.
+        bool localized=GamePreferences.Language=="zh-CN" || GamePreferences.Language=="ja-JP";
+        if(localized && card!=null && !card.customContent)
+        {
+            if(string.IsNullOrEmpty(preferred) && TryLoadLocalized(card,faceIndex,out sprite))return true;
+            var versions=CardArtVersions.GetVersions(card);
+            if(!string.IsNullOrEmpty(preferred))
+                foreach(var version in versions)
+                    if(version.PrintingKey==preferred && TryLoadLocalized(version,faceIndex,out sprite))return true;
+            if(TryLoadLocalized(card,faceIndex,out sprite))return true;
+            foreach(var version in versions)
+                if(version.PrintingKey!=card.PrintingKey && TryLoadLocalized(version,faceIndex,out sprite))return true;
+        }
+        if (!string.IsNullOrEmpty(preferred))
+            foreach (var version in CardArtVersions.GetVersions(card))
+                if (version.PrintingKey == preferred && TryLoadExact(version, faceIndex, out sprite)) return true;
+        if (CardArtImportService.TryGetPath(card, faceIndex, out string customPath)) sprite = LoadSprite(customPath);
+        if (sprite != null) return true;
+        if (TryFindImagePath(card, faceIndex, out string path, false)) sprite = LoadSprite(path);
+        if (sprite != null) return true;
+        foreach (var version in CardArtVersions.GetVersions(card))
+        {
+            if (version.PrintingKey == card.PrintingKey || !TryFindImagePath(version, faceIndex, out path, false)) continue;
+            sprite = LoadSprite(path);
+            if (sprite != null) return true;
+        }
+        return false;
+    }
+
+    private static bool TryLoadLocalized(CardDefinition card,int faceIndex,out Sprite sprite)
+    {
+        sprite=null;
+        if(!PrintingKeyUtility.TryGetPrinting(card,out string setCode,out string collectorNumber))return false;
+        foreach(string root in EnumerateRoots())
+            foreach(string extension in Extensions)
+            {
+                string path=PrintingKeyUtility.BuildImagePath(Path.Combine(root,GamePreferences.Language),setCode,collectorNumber,faceIndex,extension);
+                if(!File.Exists(path))continue;
+                sprite=LoadSprite(path);
+                if(sprite!=null)return true;
+            }
+        return false;
+    }
+
+    public static bool TryLoadExact(CardDefinition card, int faceIndex, out Sprite sprite)
+    {
+        sprite = null;
+        if (TryFindImagePath(card, faceIndex, out string path)) sprite = LoadSprite(path);
         return sprite != null;
+    }
+
+    // Token metadata has a printing key but is not part of the playable card catalog.
+    // Use the same local roots and decoder, without alternate-printing or online fallback.
+    public static bool TryLoadPrintingKey(string key, out Sprite sprite)
+        => TryLoadPrintingKey(key,0,out sprite);
+
+    public static bool TryLoadPrintingKey(string key, int faceIndex, out Sprite sprite)
+        => TryLoadPrintingKey(key,faceIndex,null,out sprite);
+
+    public static bool TryLoadPrintingKey(string key, int faceIndex, string language, out Sprite sprite)
+    {
+        sprite = null;
+        var parts = (key ?? string.Empty).Split('/');
+        if (faceIndex<0 || faceIndex>1 || parts.Length != 2 || !PrintingKeyUtility.IsSafePathSegment(parts[0])
+            || !PrintingKeyUtility.IsSafePathSegment(parts[1])
+            || !string.IsNullOrEmpty(language) && !PrintingKeyUtility.IsSafePathSegment(language)) return false;
+        foreach (string root in string.IsNullOrEmpty(language) ? EnumerateLanguageRoots() : EnumerateRoots())
+            foreach (string extension in Extensions)
+            {
+                string artRoot=string.IsNullOrEmpty(language)?root:Path.Combine(root,language);
+                string path = PrintingKeyUtility.BuildImagePath(artRoot, parts[0], parts[1], faceIndex,extension);
+                if (!File.Exists(path)) continue;
+                sprite = LoadSprite(path);
+                if (sprite != null) return true;
+            }
+        return false;
     }
 
     public static bool TryLoadFeature(
@@ -141,18 +216,20 @@ public static class CardImageLibrary
         try
         {
             byte[] bytes = File.ReadAllBytes(fullPath);
-            var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false)
+            var texture = new Texture2D(2, 2, TextureFormat.RGBA32, true)
             {
                 name = $"CardImage_{info.Directory?.Name}_{Path.GetFileNameWithoutExtension(info.Name)}",
-                filterMode = FilterMode.Bilinear,
+                filterMode = FilterMode.Trilinear,
                 wrapMode = TextureWrapMode.Clamp
             };
-            if (!texture.LoadImage(bytes, true))
+            if (!texture.LoadImage(bytes, false))
             {
                 UnityEngine.Object.Destroy(texture);
                 WarnFailed(fullPath, "unsupported or invalid image data");
                 return null;
             }
+            // Filter from downsampled levels when full-resolution card scans appear as small tiles.
+            texture.Apply(updateMipmaps: true, makeNoLongerReadable: true);
 
             Sprite loaded = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
             loaded.name = texture.name;
@@ -180,7 +257,8 @@ public static class CardImageLibrary
         }
     }
 
-    private static bool TryFindImagePath(CardDefinition card, int faceIndex, out string path)
+    // Exact printing only: download status must never mistake a fallback for an installed version.
+    public static bool TryFindImagePath(CardDefinition card, int faceIndex, out string path, bool includeCustom = true)
     {
         path = string.Empty;
         if (faceIndex < 0
@@ -189,7 +267,9 @@ public static class CardImageLibrary
             return false;
         }
 
-        foreach (string root in EnumerateRoots())
+        if (includeCustom && CardArtImportService.TryGetPath(card, faceIndex, out path)) return true;
+
+        foreach (string root in EnumerateLanguageRoots())
         {
             for (int i = 0; i < Extensions.Length; i++)
             {
@@ -206,6 +286,16 @@ public static class CardImageLibrary
         }
 
         return false;
+    }
+
+    // Installed localized scans share the exact printing/face key. Fall back only
+    // to other local scans when no image exists in the selected language.
+    private static IEnumerable<string> EnumerateLanguageRoots()
+    {
+        string language = GamePreferences.Language;
+        if (language == "zh-CN" || language == "ja-JP")
+            foreach (string root in EnumerateRoots()) yield return Path.Combine(root, language);
+        foreach (string root in EnumerateRoots()) yield return root;
     }
 
     private static IEnumerable<string> EnumerateRoots()

@@ -1,0 +1,12 @@
+{
+  "repaired": 1,
+  "entries": [
+    {
+      "name": "Kazandu Tuskcaller",
+      "source": "https://scryfall.com/card/roe/191/ja/%E3%82%AB%E3%82%B6%E3%83%B3%E3%83%89%E3%82%A5%E3%81%AE%E7%89%99%E5%91%BC%E3%81%B3-(kazandu-tuskcaller)?utm_source=api",
+      "printingID": "6ffbe4e5-42ee-4aae-91a5-0c61784086bc",
+      "previousRules": "Ｌｖアップ{1}{G} ({1}{G}：この上にＬｖカウンターを１個置く。Ｌｖアップはソーサリーとしてのみ行う。)",
+      "sha256": "5a65dabde299fd8d37ff12ba1b7e641dfd25b5820e4e595b72c8c236fbc3b080"
+    }
+  ]
+}

@@ -1,0 +1,3890 @@
+{
+  "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+  "rulesDate": "2026-09-25",
+  "entries": [
+    {
+      "en": "Abandon",
+      "zh": "放弃阴谋",
+      "ja": "破棄する",
+      "enHelp": "Put an ongoing scheme face down on the bottom of its scheme deck.",
+      "zhHelp": "将持续阴谋牌面朝下放到阴谋牌库底。",
+      "jaHelp": "アーチエネミー戦のゲーム中のオモテ向きの持続 計略・カードだけが、破棄されうる。rule 314〔計略〕、rule 904〔アーチエネミー戦〕参照。\n計略を破棄するとは、それを裏向きにしてオーナーの計略デッキの一番下に置くことである。",
+      "aliases": [
+        "放弃阴谋",
+        "破棄する",
+        "撤废",
+        "破棄"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Absorb",
+      "enHelp": "If a source would deal damage to this creature, prevent N of that damage.",
+      "zh": "吸收",
+      "zhHelp": "每个来源将对此生物造成伤害时，防止其中等同于吸收数值的伤害。",
+      "ja": "吸収",
+      "jaHelp": "吸収は常在型能力である。「吸収 N／Absorb N」は「発生源1つがこのクリーチャーにダメージを与えるなら、そのダメージをN点軽減する。」を意味する。\n吸収 能力は、1つの発生源から1回に受けるダメージごとにそれぞれN点軽減する。複数の発生源からのダメージや複数回に分けて受けるダメージについては、それぞれ適用されることになる。",
+      "aliases": [
+        "吸収",
+        "吸收",
+        "抵受"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Activate",
+      "zh": "启动",
+      "ja": "起動する",
+      "enHelp": "Choose an activated ability, make its choices and pay its costs. Nonmana abilities use the stack.",
+      "zhHelp": "选择一个启动式异能，作出必要选择并支付费用；非法术力异能会进入堆叠。",
+      "jaHelp": "能力を起動するとは、やがて解決されてその効果が発生するよう、能力をスタックに積み、コストを支払うことである。特に示されていない限り、そのオブジェクトのコントローラー(コントローラーがいない場合にはオーナー)だけがそのオブジェクトの起動型能力を起動できる。プレイヤーは優先権を持つときに能力を起動できる。rule 602〔起動型能力の起動〕参照。",
+      "aliases": [
+        "起動する",
+        "启动",
+        "起動"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Adapt",
+      "zh": "演化",
+      "ja": "順応を行う",
+      "enHelp": "If this creature has no +1/+1 counters, put the stated number on it.",
+      "zhHelp": "若此生物没有+1/+1指示物，在它上面放置所述数量的+1/+1指示物。",
+      "jaHelp": "「順応Nを行う／Adapt N」とは、「このパーマネントの上に＋1/＋1カウンターがないなら、これの上に＋1/＋1カウンターN個を置く。」を意味する。",
+      "aliases": [
+        "順応を行う",
+        "演化",
+        "順応"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Adventure",
+      "zh": "历险",
+      "ja": "出来事",
+      "enHelp": "Cast either the main spell or the Adventure. As the Adventure resolves, exile the card; you may later cast its main spell from exile.",
+      "zhHelp": "施放时选择生物等本体或历险咒语；历险结算时放逐此牌，之后可以从放逐区施放本体。",
+      "jaHelp": "カード本体か出来事の呪文として唱える。出来事が解決したらこのカードを追放し、その後は追放領域から本体として唱えられる。",
+      "aliases": [
+        "出来事",
+        "冒険",
+        "历险"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Affinity",
+      "enHelp": "Each permanent you control of the stated kind reduces this spell's cost by {1}.",
+      "zh": "共鸣",
+      "zhHelp": "你每操控一个符合所述条件的永久物，此咒语便减少{1}施放费用。",
+      "ja": "親和",
+      "jaHelp": "親和は、親和を持つ呪文がスタックにある間に機能する常在型能力である。「親和([文章])／Affinity for [文章]」は、「この呪文を唱えるためのコストは、あなたがコントロールしている[文章]1つにつき{1}少なくなる。」を意味する。",
+      "aliases": [
+        "共鸣",
+        "親和"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Afflict",
+      "enHelp": "Whenever this creature becomes blocked, defending player loses N life.",
+      "zh": "折磨",
+      "zhHelp": "每当此生物成为被阻挡的生物时，防御牌手失去等同于磨难数值的生命。",
+      "ja": "加虐",
+      "jaHelp": "加虐は誘発型能力である。「加虐N／Afflict N」は「このクリーチャーがブロックされた状態になるたび、防御プレイヤーはN点のライフを失う。」を意味する。\nクリーチャー1体が複数の加虐を持つなら、それらはそれぞれ個別に誘発する。",
+      "aliases": [
+        "加虐",
+        "折磨"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Afterlife",
+      "enHelp": "When this creature dies, create N 1/1 white and black Spirit creature token(s) with flying.",
+      "zh": "往生",
+      "zhHelp": "此生物死去时，派出所述数量具飞行的1/1白黑双色精怪衍生生物。",
+      "ja": "死後",
+      "jaHelp": "死後は誘発型能力である。「死後N／Afterlife N」は、「このパーマネントが戦場から墓地に置かれたとき、飛行を持つ白黒の1/1のスピリット・クリーチャー・トークンN体を生成する。」を意味する。",
+      "aliases": [
+        "往生",
+        "死後"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Aftermath",
+      "enHelp": "Cast this spell only from your graveyard. Then exile it.",
+      "zh": "余响",
+      "zhHelp": "这一半只能从坟墓场施放，之后将它放逐。",
+      "ja": "余波",
+      "jaHelp": "余波はいくつかの分割カード(rule 709〔分割カード〕参照)に見られる能力で、3つの常在型能力を表す。「余波／Aftermath」は、「あなたはあなたの 墓地にあるこの分割カードのこの半分を唱えてもよい。」と「墓地以外の領域にあるこの分割カードのこの半分を唱えることはできない。」と「この呪文が墓地から唱えられていたなら、これがスタックを離れるならいつでも、これを他の領域に置く代わりにこれを追放する。」を意味する。",
+      "aliases": [
+        "余响",
+        "余波"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Airbend",
+      "zh": "截气",
+      "ja": "気の技",
+      "enHelp": "Exile the object; its owner may later cast that card from exile for {2} rather than its mana cost, following normal timing rules.",
+      "zhHelp": "放逐指定对象；其拥有者之后可支付{2}而非法术力费用，从放逐区施放该牌，仍须遵守通常时机。",
+      "jaHelp": "プレイヤーに１つ以上のパーマネントや呪文に対して気の技／airbend を行わせる呪文や能力が存在する。その場合、そのプレイヤーはそれらのオブジェクトを追放する。これによって追放されたカードはそれぞれ、そのカードが追放領域にあるかぎり、そのオーナーはマナ・コストではなく{2}を支払って唱えてもよい。",
+      "aliases": [
+        "気の技",
+        "御气",
+        "截气"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Amass",
+      "zh": "囤兵",
+      "ja": "動員を行う",
+      "enHelp": "Choose an Army you control, creating a 0/0 black Army first if needed. Put the stated number of +1/+1 counters on it and add the stated creature type. Legacy text without a creature type uses Zombies.",
+      "zhHelp": "选择一个己方军队，在其上放置所述数量的+1/+1指示物，并使它额外具有指定生物类别。若没有军队，先派出一个0/0黑色军队衍生生物；旧牌未注明类别时按囤兵灵俑处理。",
+      "jaHelp": "「[サブタイプ]動員Nを行う／amass [subtype] N」とは、「あなたが軍団・クリーチャーをコントロールしていないなら、黒の0/0の[サブタイプ]・軍団・クリーチャー・トークン1体を生成する。あなたがコントロールしている軍団・クリーチャー1体を選ぶ。そのクリーチャーの上に＋1/＋1カウンターN個を置く。それが[サブタイプ]でないなら、それは他のタイプに加えて[サブタイプ]になる。」を意味する。",
+      "aliases": [
+        "amassed",
+        "amasses",
+        "動員を行う",
+        "動員",
+        "囤兵"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Amass Orcs",
+      "zh": "囤兵半兽人",
+      "ja": "オーク動員",
+      "enHelp": "To amass Orcs N, create a 0/0 black Orc Army token if you don't control an Army creature. Then choose an Army you control, put N +1/+1 counters on it, and make it an Orc in addition to its other types.",
+      "zhHelp": "先检查你是否操控军队生物；若没有，派出一个0/0黑色半兽人／军队衍生生物。然后选择一个己方军队，在其上放置所述数量的+1/+1指示物；若它还不是半兽人，它额外具有半兽人类别。",
+      "jaHelp": "軍団をコントロールしていないなら、黒の０/０のオーク・軍団・クリーチャー・トークン１体を生成する。その後、自分の軍団１体に指定数の＋１/＋１カウンターを置き、それを他のタイプに加えてオークにする。",
+      "aliases": [
+        "オーク動員",
+        "囤兵半兽人"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Amass Zombies",
+      "zh": "囤兵灵俑",
+      "ja": "ゾンビ動員",
+      "enHelp": "To amass Zombies N, create a 0/0 black Zombie Army token if you don't control an Army creature. Then choose an Army you control, put N +1/+1 counters on it, and make it a Zombie in addition to its other types.",
+      "zhHelp": "先检查你是否操控军队生物；若没有，派出一个0/0黑色灵俑／军队衍生生物。然后选择一个己方军队，在其上放置所述数量的+1/+1指示物；若它还不是灵俑，它额外具有灵俑类别。",
+      "jaHelp": "軍団をコントロールしていないなら、黒の０/０のゾンビ・軍団・クリーチャー・トークン１体を生成する。その後、自分の軍団１体に指定数の＋１/＋１カウンターを置き、それを他のタイプに加えてゾンビにする。",
+      "aliases": [
+        "ゾンビ動員",
+        "囤兵灵俑"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Amplify",
+      "enHelp": "As this creature enters, reveal any number of creature cards from your hand sharing a creature type with it. Each revealed card adds N +1/+1 counters, where N is the amplify value.",
+      "zh": "增强",
+      "zhHelp": "此生物进战场时，可从手上展示与它共有生物类别的牌；每展示一张，便让它额外带有所述数量的+1/+1指示物。",
+      "ja": "増幅",
+      "jaHelp": "増幅は常在型能力である。「増幅 N／Amplify N」は、「このオブジェクトが戦場に出るに際し、あなたの 手札にありこのオブジェクトと同じクリーチャー・タイプを持つカードを望む枚数公開する。このパーマネントは、これにより公開されたカード1枚につきN個の+1/+1カウンターが置かれた状態で戦場に出る。このカード自身や、このカードと同時に戦場に出るカードを公開することはできない。」という意味である。",
+      "aliases": [
+        "増幅",
+        "增强",
+        "增生"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Annihilator",
+      "enHelp": "Whenever this creature attacks, defending player sacrifices N permanent(s).",
+      "zh": "歼灭",
+      "zhHelp": "每当此生物攻击时，防御牌手牺牲所述数量的永久物。",
+      "ja": "滅殺",
+      "jaHelp": "滅殺は誘発型能力である。「滅殺 N／Annihilator N」 は「このクリーチャーが攻撃するたび、防御プレイヤーはパーマネントN個を生け贄に捧げる。」を意味する。",
+      "aliases": [
+        "歼灭",
+        "滅殺"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Ascend",
+      "enHelp": "If you control ten or more permanents, you get the city's blessing for the rest of the game.",
+      "zh": "登殿",
+      "zhHelp": "满足操控至少十个永久物的条件时，获得黄金城祝福，持续到本盘游戏结束。",
+      "ja": "昇殿",
+      "jaHelp": "インスタントやソーサリーである呪文の昇殿は呪文能力を表す。それは「あなたが10個以上のパーマネントをコントロールしていて都市の承認を持っていないなら、このゲームの残りの期間、あなたは都市の承認を得る。」を意味する。",
+      "aliases": [
+        "昇殿",
+        "登殿"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Assemble",
+      "zh": "组装",
+      "ja": "組み立てる",
+      "enHelp": "Put the top card of your Contraption deck onto the battlefield under a sprocket you choose.",
+      "zhHelp": "将机巧牌库顶牌放进战场，置于所选的齿轮下。",
+      "jaHelp": "「組み立てる／Assemble」とは、『Unstable』セットに存在するキーワード処理で、からくりを戦場に出すことである。銀枠 カード以外では、1枚(《蒸気打ちの親分》)だけがからくりを組み立てることを参照している。『Unstable』セットのカードやメカニズムはこのルールには含まれていない。詳細は『Unstable』FAQ 参照。",
+      "aliases": [
+        "組み立てる",
+        "组装"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Assist",
+      "enHelp": "Another player may help pay the generic mana in this spell's cost.",
+      "zh": "助力",
+      "zhHelp": "施放时可以让另一位牌手帮助支付此咒语费用中的通用法术力部分。",
+      "ja": "助力",
+      "jaHelp": "この呪文を唱える際、他のプレイヤー１人が不特定マナの部分の一部または全部を支払える。残りのコストはあなたが支払う。",
+      "aliases": [
+        "助力"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Attach",
+      "zh": "贴附",
+      "ja": "つける",
+      "enHelp": "Attach an Aura, Equipment or Fortification to a legal object.",
+      "zhHelp": "将灵气、武具或工事贴附到符合条件的对象上。",
+      "jaHelp": "オーラや装備品、城砦をオブジェクトやプレイヤーにつけるとは、それを現在ある場所から取り、そのオブジェクトやプレイヤーの上に置くということを意味する。何かが戦場にあるパーマネントにつく場合、物理的にそのパーマネントに触れるように置くのが通例である。オーラ、装備品、城砦は、それぞれ、エンチャント、装備、城砦化できないオブジェクトやプレイヤーにつけることはできない。",
+      "aliases": [
+        "つける",
+        "贴附"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Aura swap",
+      "enHelp": "the printed cost: You may exchange this Aura with an Aura card in your hand.",
+      "zh": "灵气转换",
+      "zhHelp": "支付费用，可以将此灵气与手上一张灵气牌交换。",
+      "ja": "オーラ交換",
+      "jaHelp": "オーラ交換は、いくつかのオーラが持つ起動型能力である。「オーラ交換 [コスト]／Aura swap [cost]」は「[コスト]:あなたはこのパーマネントを、あなたの 手札にあるオーラ・カード1枚と交換してもよい。」を意味する。",
+      "aliases": [
+        "オーラ交換",
+        "灵气交换",
+        "灵气转换"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Awaken",
+      "enHelp": "If you cast this spell for the printed cost, also put N +1/+1 counter(s) on target land you control and it becomes a 0/0 Elemental creature with haste. It's still a land.",
+      "zh": "醒转",
+      "zhHelp": "以醒转费用施放时，还在目标己方地上放置所述数量的+1/+1指示物，并使它成为具敏捷的0/0元素生物；它仍是地。",
+      "ja": "覚醒",
+      "jaHelp": "覚醒コストで唱えたなら、自分の土地１つに指定数の＋１/＋１カウンターを置く。それは土地でもある、速攻を持つ０/０のエレメンタル・クリーチャーになる。",
+      "aliases": [
+        "覚醒",
+        "醒转"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Backup",
+      "enHelp": "When this creature enters, put N +1/+1 counter(s) on target creature. If that's another creature, it gains the following ability until end of turn.",
+      "zh": "后援",
+      "zhHelp": "进战场时，在目标生物上放置所述数量的+1/+1指示物。若是另一个生物，它还获得牌面列在后援之后的异能直到回合结束。",
+      "ja": "賛助",
+      "jaHelp": "賛助は誘発型能力である。「賛助N／Backup N」は、「このクリーチャーが戦場に出たとき、クリーチャー1体を対象とする。それの上に＋1/＋1カウンターN個を置く。それがこれでないクリーチャーなら、ターン終了時まで、それはこれの下に記されていて賛助でないこのクリーチャーのすべての能力も得る。」を意味する。賛助を持つカードは、その賛助 能力の後に記されている1つ以上の能力を持つ。(賛助を持つカードの中には、賛助の前に記された能力を持つものもある。)",
+      "aliases": [
+        "后援",
+        "賛助"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Banding",
+      "enHelp": "Any creatures with banding, and up to one without, can attack in a band. Bands are blocked as a group. If any creatures with banding you control are blocking or being blocked by a creature, you divide that creature's combat damage, not its controller, among any of the creatures it's being blocked by or is blocking.",
+      "zh": "结合",
+      "zhHelp": "具结合的生物和至多一个不具结合的生物可组成攻击团队。团队一同被阻挡；涉及己方结合生物时，由你决定相应敌方生物的战斗伤害分配。",
+      "ja": "バンド",
+      "jaHelp": "攻撃時には、バンドを持つ任意の数のクリーチャーと、持たない最大１体を１つのバンドにできる。１体がブロックされると全体がブロックされる。戦闘ダメージの割り振りには、バンド側のコントローラーが割り振りを決める特別なルールがある。",
+      "aliases": [
+        "バンド",
+        "结合"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Bands with other",
+      "enHelp": "Creatures meeting the stated banding conditions can attack together in a band and use the special banding damage-assignment rules.",
+      "zh": "与其他结合",
+      "zhHelp": "可与符合所述类别且具有相应结合条件的生物组成攻击团队，并按特殊结合规则分配战斗伤害。",
+      "ja": "他の〜とのバンド",
+      "jaHelp": "指定されたタイプと条件を満たすクリーチャーと攻撃時のバンドを組める。バンドには、ブロックと戦闘ダメージの割り振りに特別なルールが適用される。",
+      "aliases": [
+        "他の〜とのバンド",
+        "与其他结合"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Bargain",
+      "enHelp": "You may sacrifice an artifact, enchantment, or token as you cast this spell.",
+      "zh": "加码",
+      "zhHelp": "施放时可以额外牺牲一个神器、结界或衍生物，以获得牌面所述的协商效果。",
+      "ja": "協約",
+      "jaHelp": "協約は、協約を持つ呪文がスタック上にある間に機能する常在型能力である。「協約／Bargain」とは、「この呪文を唱えるための追加コストとして、アーティファクトやエンチャントやトークンである1つを生け贄に捧げてもよい。」を意味する。呪文の協約 コストの支払いは、rule 601.2b および rule 601.2f-h の追加コストの支払いのルールに従う。",
+      "aliases": [
+        "加码",
+        "協約"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Battle cry",
+      "enHelp": "Whenever this creature attacks, each other attacking creature gets +1/+0 until end of turn.",
+      "zh": "战嚎",
+      "zhHelp": "每当此生物攻击时，其他每个攻击生物各得+1/+0直到回合结束。",
+      "ja": "喊声",
+      "jaHelp": "喊声は誘発型能力である。「喊声／Battle Cry」は「このクリーチャーが攻撃するたび、ターン終了時まで、これでないすべての攻撃クリーチャーは＋1/＋0の修整を受ける。」を意味する。",
+      "aliases": [
+        "喊声",
+        "战嚎"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Beam me up",
+      "enHelp": "You may cast this card from your graveyard for the printed cost if you also return a creature you control to its owner's hand. Then exile this spell.",
+      "zh": "传送我",
+      "zhHelp": "可以支付所述费用并将一个己方生物移回手上，从坟墓场施放此牌；之后将此咒语放逐。",
+      "ja": "Beam me up",
+      "jaHelp": "指定されたコストを支払い、自分のクリーチャー１体を手札に戻すことで、墓地からこのカードを唱えられる。その後、この呪文は追放される。",
+      "aliases": [
+        "Beam me up",
+        "传送我"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Behold",
+      "zh": "Behold",
+      "ja": "後見を受ける",
+      "enHelp": "Choose a matching permanent you control or reveal a matching card from your hand.",
+      "zhHelp": "选择一个你操控的符合条件的永久物，或从手上展示一张符合条件的牌。",
+      "jaHelp": "「[性質]の後見を受ける／Behold a [quality]」は、「あなたの手札から[性質]であるカード1枚を公開するか、戦場にありあなたがコントロールしている[性質]であるパーマネント1つを選ぶ。」を意味する。",
+      "aliases": [
+        "Behold",
+        "後見を受ける",
+        "後見を受け",
+        "请援"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Bestow",
+      "enHelp": "If you cast this card for its bestow cost, it's an Aura spell with enchant creature. It becomes a creature again if it's not attached to a creature.",
+      "zh": "神授",
+      "zhHelp": "以神授费用施放时，它是结附生物的灵气咒语；不再结附生物时恢复为生物。",
+      "ja": "授与",
+      "jaHelp": "授与は、それを持つカードをプレイできるあらゆる領域にある間に働く常在型能力を表す。「授与[コスト]／Bestow [cost]」は、「あなたがこの呪文を唱えるに際し、あなたはこれを授与された状態で唱えることを選んでもよい。そうしたなら、あなたはこれのマナ・コストではなく[コスト]を支払う。」を意味する。授与 能力を使って呪文を唱えることは、rule 601.2b および rule 601.2f-h の代替コストの支払いに関するルールに従う。",
+      "aliases": [
+        "授与",
+        "神授"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Blight",
+      "zh": "衰萎",
+      "ja": "Blight",
+      "enHelp": "Put the stated number of -1/-1 counters on a creature you control.",
+      "zhHelp": "在一个由你操控的生物上放置所述数量的-1/-1指示物。",
+      "jaHelp": "あなたがコントロールするクリーチャー１体に、指定数の－１/－１カウンターを置く。",
+      "aliases": [
+        "Blight",
+        "枯朽",
+        "枯萎",
+        "衰萎"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Blitz",
+      "enHelp": "If you cast this spell for its blitz cost, it gains haste and \"When this creature dies, draw a card.\" Sacrifice it at the beginning of the next end step.",
+      "zh": "急袭",
+      "zhHelp": "以急袭费用施放时获得敏捷及死去时抓一张牌的异能，并在下一个结束步骤开始时牺牲。",
+      "ja": "奇襲",
+      "jaHelp": "奇襲コストで唱えると速攻を持ち、死亡したときカード１枚を引く。次の終了ステップの開始時に生け贄に捧げる。",
+      "aliases": [
+        "奇襲",
+        "急袭"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Bloodthirst",
+      "enHelp": "If an opponent was dealt damage this turn, this creature enters with N +1/+1 counter(s) on it.",
+      "zh": "嗜血",
+      "zhHelp": "若本回合有对手受过伤害，此生物进战场时带有所述数量的+1/+1指示物。",
+      "ja": "狂喜",
+      "jaHelp": "狂喜は常在型能力である。「狂喜 N／Bloodthirst N」は「このターンに対戦相手がダメージを受けていたなら、このパーマネントは+1/+1カウンターN個が置かれた状態で戦場に出る。」を意味する。",
+      "aliases": [
+        "嗜血",
+        "狂喜"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Boast",
+      "zh": "炫威",
+      "ja": "誇示",
+      "enHelp": "Activate only after this creature has attacked this turn and only once each turn.",
+      "zhHelp": "只能在此生物本回合攻击过之后启动，且每回合只能启动一次。",
+      "jaHelp": "誇示 は、その後に続く起動型能力に追加のルールを加えるキーワードである。「誇示 ― [コスト]：[効果]／Boast - [コスト]:[効果]」は、「[コスト]：[効果]。このクリーチャーがこのターンに攻撃していたときにしか起動できず、ターンに1度しか起動できない。」を意味する。",
+      "aliases": [
+        "炫威",
+        "誇示"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Bolster",
+      "zh": "振励",
+      "ja": "鼓舞を行う",
+      "enHelp": "Choose a creature you control with the least toughness and put the stated number of +1/+1 counters on it.",
+      "zhHelp": "选择一个你操控且防御力最低的生物，在其上放所述数量的+1/+1指示物；相同时由你选择。",
+      "jaHelp": "「鼓舞Nを行う／Bolster N」とは、「あなたがコントロールしているクリーチャーの中で最も小さいタフネスを持つクリーチャー1体、あるいは2体以上あるならそのうちの1体を選び、それの上に＋1/＋1カウンターN個を置く。」を意味する。",
+      "aliases": [
+        "鼓舞を行う",
+        "振励",
+        "鼓舞"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Bushido",
+      "enHelp": "Whenever this creature blocks or becomes blocked, it gets +N/+N until end of turn.",
+      "zh": "武士道",
+      "zhHelp": "每当此生物阻挡或成为被阻挡的生物时，得+N/+N直到回合结束；N是武士道数值。",
+      "ja": "武士道",
+      "jaHelp": "武士道は誘発型能力である。「武士道 N／Bushido N」は「このクリーチャーがブロックするかブロックされた状態になるたび、ターン終了時まで、これは+N/+Nの修整を受ける。」を意味する。rule 509〔ブロック・クリーチャー指定ステップ〕参照。",
+      "aliases": [
+        "武士道"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Buyback",
+      "enHelp": "You may pay the additional printed cost as you cast this spell. If you do, put it into your hand instead of your graveyard as it resolves.",
+      "zh": "购回",
+      "zhHelp": "施放时可以支付额外费用。若如此作，此咒语结算时移回手上，而非置入坟墓场。",
+      "ja": "バイバック",
+      "jaHelp": "唱える際に追加コストを支払える。支払ったなら、解決時にこのカードを墓地に置く代わりに手札に戻す。",
+      "aliases": [
+        "バイバック",
+        "购回"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cascade",
+      "enHelp": "When you cast this spell, exile cards from the top of your library until you exile a nonland card whose mana value is less than this spell's mana value. You may cast that spell without paying its mana cost if its mana value is less than this spell's mana value. Then put all cards exiled this way that weren't cast on the bottom of your library in a random order.",
+      "zh": "倾曳",
+      "zhHelp": "施放时，从牌库顶放逐牌，直到找到法术力值较小的非地牌；可免费施放它，但实际施放的咒语法术力值也必须较小。其余牌随机置于牌库底。",
+      "ja": "続唱",
+      "jaHelp": "唱えたとき、これよりマナ総量が小さい土地でないカードが出るまでライブラリーの一番上から追放する。そのカードを無料で唱えてもよい。残りを無作為の順番でライブラリーの一番下に置く。",
+      "aliases": [
+        "倾曳",
+        "続唱"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cast",
+      "zh": "施放",
+      "ja": "唱える",
+      "enHelp": "Put a spell on the stack, make choices such as modes and targets, and pay its costs.",
+      "zhHelp": "将咒语放入堆叠，选择模式、目标等，并支付费用；之后等待结算。",
+      "jaHelp": "呪文を唱えるとは、やがて解決されてその効果が発生するよう、それを現在ある領域(通常は手札)から取り、スタックに積み、コストを支払うことである。プレイヤーは優先権を持つときに呪文を唱えることができる。rule 601〔呪文を唱えること〕参照。",
+      "aliases": [
+        "唱える",
+        "施放"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Casualty",
+      "enHelp": "As you cast this spell, you may sacrifice a creature with power N or greater. When you do, copy this spell.",
+      "zh": "催命",
+      "zhHelp": "施放时可以额外牺牲一个力量至少为所述数值的生物。如此作时复制此咒语，并可为复制品选择新目标。",
+      "ja": "犠牲",
+      "jaHelp": "唱える際に、指定値以上のパワーを持つクリーチャー１体を生け贄に捧げられる。そうしたなら、この呪文をコピーし、そのコピーの新しい対象を選んでもよい。",
+      "aliases": [
+        "催命",
+        "犠牲"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Champion",
+      "enHelp": "When this enters, sacrifice it unless you exile another permanent you control of the specified kind. When this leaves, return that exiled card to the battlefield.",
+      "zh": "夺冠",
+      "zhHelp": "进战场时，除非放逐另一个符合条件的己方永久物，否则牺牲它；离开战场时将该放逐牌移回战场。",
+      "ja": "覇権",
+      "jaHelp": "覇権は2つの誘発型能力からなる。「覇権([オブジェクト])／Champion an [object]」は、「このパーマネントが戦場に出たとき、あなたがコントロールしていてこれでない[オブジェクト]1つを追放しないかぎり、これを生け贄に捧げる。」と「このパーマネントが戦場を離れたとき、これによって追放されているカードをオーナーのコントロール下で戦場に戻す。」を意味する。",
+      "aliases": [
+        "夺冠",
+        "覇権"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Changeling",
+      "enHelp": "This card is every creature type.",
+      "zh": "化形",
+      "zhHelp": "此牌在所有区域中都是所有生物类别。",
+      "ja": "多相",
+      "jaHelp": "多相は特性定義能力である。「多相／Changeling」は、「このオブジェクトはすべてのクリーチャー・タイプである。」を意味する。この能力はゲームの外部も含むあらゆる場所で機能する。rule 604.3 参照。",
+      "aliases": [
+        "化形",
+        "多相"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Choose a Background",
+      "enHelp": "You can have a Background as a second commander.",
+      "zh": "选择身世",
+      "zhHelp": "可额外以一个传奇身世结界作为第二位指挥官。",
+      "ja": "背景選択",
+      "jaHelp": "伝説の背景・エンチャント１枚を、追加の統率者として使える。",
+      "aliases": [
+        "背景選択",
+        "选择身世"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cipher",
+      "enHelp": "Then you may exile this spell card encoded on a creature you control. Whenever that creature deals combat damage to a player, its controller may cast a copy of the encoded card without paying its mana cost.",
+      "zh": "暗码",
+      "zhHelp": "结算时可将此咒语牌放逐并赋码在己方生物上；该生物对牌手造成战斗伤害时，其操控者可免费施放赋码牌的复制品。",
+      "ja": "暗号",
+      "jaHelp": "解決時に、自分のクリーチャー１体に暗号化してこのカードを追放できる。そのクリーチャーがプレイヤーに戦闘ダメージを与えるたび、暗号化したカードのコピーを無料で唱えられる。",
+      "aliases": [
+        "暗号",
+        "暗码"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Clash",
+      "zh": "比点",
+      "ja": "激突を行う",
+      "enHelp": "Each player reveals their top card; the higher mana value wins. Each may then put their card on top or bottom.",
+      "zhHelp": "各自展示牌库顶牌，法术力值较高者赢；然后各自可将展示牌放在顶端或底端。",
+      "jaHelp": "激突を行うとは、プレイヤーが自分のライブラリーの一番上のカードを公開し、その後、そのプレイヤーはそのカードをライブラリーの一番下に置くかそのまま残すかする、ということである。",
+      "aliases": [
+        "激突を行う",
+        "比点",
+        "激突"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cleave",
+      "zh": "贯通",
+      "ja": "切除",
+      "enHelp": "Cast for the cleave cost to omit the words printed inside square brackets.",
+      "zhHelp": "可以支付切除费用施放；如此作时忽略牌文方括号内的文字。",
+      "jaHelp": "切除は、切除を持つ呪文がスタックにある間に作用する常在型能力2つを表すキーワードである。「切除［コスト]／Cleave [cost]」は、「あなたはこの呪文を、マナ・コストではなく[コスト]を支払うことで唱えてもよい。」と「この呪文の切除 コストが支払われていたなら、呪文のルール文中の角カッコ部分のすべての文章を取り除くことでこれの文章を変更する。」を意味する。呪文を切除 コストで唱えることは、rule 601.2bと601.2f-hの代替コストの支払いのルールに従う。",
+      "aliases": [
+        "切除",
+        "贯通"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cloak",
+      "zh": "隐匿",
+      "ja": "偽装する",
+      "enHelp": "Put the card face down as a 2/2 creature with ward {2}. A creature card may be turned face up for its mana cost.",
+      "zhHelp": "将牌面朝下放进战场，作为具守护{2}的2/2生物；若是生物牌，可支付其法术力费用翻回正面。",
+      "jaHelp": "カードを裏向きで戦場に出す。それは護法{2}を持つ２/２クリーチャーになる。クリーチャー・カードなら、マナ・コストを支払って表向きにできる。",
+      "aliases": [
+        "偽装する",
+        "偽装",
+        "匿伏",
+        "隐匿"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Collect Evidence",
+      "zh": "搜证",
+      "ja": "証拠収集を行う",
+      "enHelp": "Exile cards from your graveyard whose combined mana value is at least the stated number.",
+      "zhHelp": "从你的坟墓场放逐任意数量的牌，使其法术力值总和至少达到搜证数值。",
+      "jaHelp": "「証拠収集Nを行う／collect evidence N」は、「あなたの墓地から望む枚数のカードを、それらのマナ総量の合計がN以上になるように追放する。」を意味する。",
+      "aliases": [
+        "証拠収集を行う",
+        "証拠収集",
+        "搜证"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Companion",
+      "enHelp": "If your starting deck meets the restriction, reveal this companion from outside the game. Once per game, pay {3} at sorcery speed to put it into your hand.",
+      "zh": "行侣",
+      "zhHelp": "起始套牌符合限制时可展示这张游戏外的行侣。每盘一次，在法术时机支付{3}将它置入手上。",
+      "ja": "相棒",
+      "jaHelp": "デッキが指定された条件を満たすなら、ゲームの外部のこのカードを相棒にできる。ゲーム中１回、ソーサリーのタイミングで{3}を支払って手札に加えられる。",
+      "aliases": [
+        "相棒",
+        "行侣"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Compleated",
+      "enHelp": "This planeswalker enters with two fewer loyalty counters for each Phyrexian mana symbol life was paid for.",
+      "zh": "完化",
+      "zhHelp": "为此鹏洛客费用中的每个非瑞克西亚法术力符号支付生命时，它进战场便少带两个忠诚指示物。",
+      "ja": "完成化",
+      "jaHelp": "完成化は、一部のプレインズウォーカー・カードが持つ常在型能力である。完成化は、「このパーマネントが1つ以上の忠誠カウンターが置かれた状態で戦場に出て、これを唱えたプレイヤーがファイレクシア・マナ・シンボルで示されたこれのコストの一部を支払うためにライフを支払うことを選んだなら、代わりにこれはそのマナ・シンボル1つにつき2つ少ない忠誠カウンターが置かれた状態で戦場に出る。」を意味する。",
+      "aliases": [
+        "完成化",
+        "完化"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Connive",
+      "zh": "筹谋",
+      "ja": "謀議",
+      "enHelp": "Draw then discard a card; put a +1/+1 counter on the conniving creature if you discarded a nonland card. Connive N draws and discards N, with a counter per nonland discarded.",
+      "zhHelp": "抓一张牌，然后弃一张牌；若弃的是非地牌，在筹谋的生物上放一个+1/+1指示物。筹谋N依次抓N张、弃N张，按弃掉的非地牌数量放指示物。",
+      "jaHelp": "パーマネントに謀議させる呪文や能力が存在する。その場合、そのパーマネントのコントローラーはカード1枚を引き、その後、カード1枚を捨てる。これにより土地でないカードが捨てられたなら、そのプレイヤーはその謀議したパーマネントの上に＋1/＋1カウンター1個を置く。",
+      "aliases": [
+        "connived",
+        "connives",
+        "筹谋",
+        "謀議"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Conspire",
+      "enHelp": "As an additional cost to cast this spell, you may tap two untapped creatures you control that each share a color with it. If you do, copy it.",
+      "zh": "协力",
+      "zhHelp": "施放时可以额外横置两个未横置且各与咒语共有颜色的己方生物；如此作时复制咒语，并可另选目标。",
+      "ja": "共謀",
+      "jaHelp": "唱える際に、これと共通の色を持つ自分のアンタップ状態のクリーチャー２体をタップできる。そうしたなら、この呪文をコピーし、そのコピーの新しい対象を選んでもよい。",
+      "aliases": [
+        "共謀",
+        "协力"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Convert",
+      "zh": "转换",
+      "ja": "トランスフォーム",
+      "enHelp": "Turn a converting double-faced card to its other face; this is the alternate wording used for transforming.",
+      "zhHelp": "将可转换的双面牌翻到另一面；这是与转化对应的牌面用语。",
+      "jaHelp": "パーマネントをトランスフォームさせるとは、もう一方の面がオモテになるように回転させることである。これは rule 701.27a-f、rule 712.9-10、rule 712.18 に従う。これらのルールは、パーマネントを変身させることに適用されるのと同様にパーマネントをトランスフォームさせることに適用される。",
+      "aliases": [
+        "トランスフォーム",
+        "转换"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Convoke",
+      "enHelp": "While paying for this spell, each creature you tap can pay for {1} or one mana of that creature's color.",
+      "zh": "召集",
+      "zhHelp": "支付此咒语费用时，可横置己方生物；每个生物可支付{1}或一点该生物颜色的法术力。",
+      "ja": "召集",
+      "jaHelp": "召集は、召集を持つ呪文がスタック上にあるときに機能する常在型能力である。「召集／Convoke」は、「この呪文の総コストに含まれる色 マナ1点ごとに、あなたはそのマナを支払うのではなくあなたがコントロールしているアンタップ状態のその色のクリーチャー1体をタップしてもよい。この呪文の総コストに含まれる不特定マナ1点ごとに、あなたはそのマナを支払うのではなくあなたがコントロールしているアンタップ状態のクリーチャー1体をタップしてもよい。」を意味する。",
+      "aliases": [
+        "召集"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Counter",
+      "zh": "反击",
+      "ja": "打ち消す",
+      "enHelp": "Remove a spell or ability from the stack without resolving it.",
+      "zhHelp": "使目标咒语或异能离开堆叠而不结算。",
+      "jaHelp": "呪文や能力を打ち消すということは、それを取り消し、スタックから取り除くということである。打ち消された呪文や能力は解決されず、効果は一切発生しない。打ち消された呪文はオーナーの墓地に置かれる。",
+      "aliases": [
+        "打ち消す",
+        "反击"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Craft",
+      "enHelp": "At sorcery speed, pay the craft cost and exile this permanent and the required materials to return this card transformed.",
+      "zh": "化炼",
+      "zhHelp": "在法术时机支付费用，并放逐此永久物及所需素材，使此牌以转化后的状态移回战场。",
+      "ja": "作製",
+      "jaHelp": "作製は起動型能力である。「[素材]で作製 [コスト]／Craft with [materials] [cost]」と記載され、[素材]は1つ以上のオブジェクトである。これは、「[コスト], このパーマネントを追放する, あなたがコントロールしているパーマネントやあなたの 墓地にあるカードである[素材]を追放する：このカードをオーナーのコントロール下で変身させた状態で戦場に戻す。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "作製",
+        "化炼"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Create",
+      "zh": "派出",
+      "ja": "生成する",
+      "enHelp": "Put tokens with the stated characteristics onto the battlefield.",
+      "zhHelp": "将指定特征的衍生物放进战场。",
+      "jaHelp": "特定の特性を持つトークンを1つ、あるいは複数生成させる場合、指定された特性を持つトークンを指定された数だけ戦場に出す。\n生成されるトークンに置換効果が適用される場合、その効果は、そのトークンの特性を修整する継続的効果よりも前に適用される。戦場に出るトークンに置換効果が適用される場合、その効果はそのトークンの特性を修整する継続的効果の後で適用される。",
+      "aliases": [
+        "生成する",
+        "派出",
+        "生成"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Crew",
+      "enHelp": "Tap any number of creatures you control with total power N or more: This Vehicle becomes an artifact creature until end of turn.",
+      "zh": "搭载",
+      "zhHelp": "横置任意数量己方生物，力量总和至少达到搭载数值：此载具成为神器生物直到回合结束。",
+      "ja": "搭乗",
+      "jaHelp": "搭乗は機体・カードにある起動型能力である。「搭乗N／Crew N」は、「あなたがコントロールしていてこれでないアンタップ状態の望む数のクリーチャーをパワーの合計がN以上になるように選んでタップする：ターン終了時まで、このパーマネントはアーティファクト・クリーチャー になる。」を意味する。",
+      "aliases": [
+        "搭乗",
+        "搭载"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cumulative upkeep",
+      "enHelp": "At the beginning of your upkeep, put an age counter on this permanent, then sacrifice it unless you pay its upkeep cost for each age counter on it.",
+      "zh": "累积维持",
+      "zhHelp": "维持开始时放一个岁月指示物，然后为每个岁月指示物各支付一次维持费用，否则牺牲此永久物。",
+      "ja": "累加アップキープ",
+      "jaHelp": "自分のアップキープの開始時に経年カウンター１個を置く。その数だけ指定コストを支払わないなら、これを生け贄に捧げる。",
+      "aliases": [
+        "累加アップキープ",
+        "累积维持"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Cycling",
+      "zh": "循环",
+      "ja": "サイクリング",
+      "enHelp": "Pay the cycling cost and discard this card to draw a card.",
+      "zhHelp": "支付循环费用并弃掉此牌，以抓一张牌。",
+      "jaHelp": "サイクリング・コストを支払いこのカードを捨てると、カード１枚を引く。",
+      "aliases": [
+        "サイクリング"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Dash",
+      "enHelp": "You may cast this spell for its dash cost. If you do, it gains haste, and it's returned from the battlefield to its owner's hand at the beginning of the next end step.",
+      "zh": "掩袭",
+      "zhHelp": "可支付掩袭费用施放。如此作时获得敏捷，并在下一个结束步骤开始时从战场移回手上。",
+      "ja": "疾駆",
+      "jaHelp": "疾駆コストで唱えると速攻を持ち、次の終了ステップの開始時にオーナーの手札に戻る。",
+      "aliases": [
+        "掩袭",
+        "疾駆"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Daybound",
+      "enHelp": "If a player casts no spells during their own turn, it becomes night next turn.",
+      "zh": "昼形",
+      "zhHelp": "进入昼夜循环后，此面对应白昼。若轮到的牌手在自己的回合没有施放咒语，下回合变为黑夜。",
+      "ja": "日暮",
+      "jaHelp": "昼の間はこの面を使い、夜になったら夜明の面に変身する。アクティブ・プレイヤーが自分のターンに呪文を唱えなかったなら、次のターンは夜になる。",
+      "aliases": [
+        "日暮",
+        "昼形"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Deathtouch",
+      "zh": "死触",
+      "ja": "接死",
+      "enHelp": "Any amount of damage it deals to a creature is lethal damage.",
+      "zhHelp": "对生物造成的任意数量伤害都视为致命伤害。",
+      "jaHelp": "クリーチャーに与えるダメージは、１点でも致死ダメージとなる。",
+      "aliases": [
+        "接死"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Decayed",
+      "enHelp": "This creature can't block. When it attacks, sacrifice it at end of combat.",
+      "zh": "败朽",
+      "zhHelp": "此生物不能阻挡；每当它攻击时，在该次战斗结束时牺牲它。",
+      "ja": "腐乱",
+      "jaHelp": "腐乱は、常在型能力1つと誘発型能力1つを表す。「腐乱／Decayed」は、「このクリーチャーではブロックできない。」と「このクリーチャーが攻撃したとき、戦闘終了時に、これを生け贄に捧げる。」を意味する。",
+      "aliases": [
+        "腐乱",
+        "败朽"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Defender",
+      "zh": "守军",
+      "ja": "防衛",
+      "enHelp": "This creature can't attack.",
+      "zhHelp": "此生物不能攻击。",
+      "jaHelp": "このクリーチャーは攻撃できない。",
+      "aliases": [
+        "防衛"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Delve",
+      "enHelp": "While paying for this spell, each card you exile from your graveyard can pay for {1} of its generic mana cost.",
+      "zh": "掘穴",
+      "zhHelp": "支付咒语费用时，每放逐一张自己坟墓场的牌，可支付费用中的{1}。",
+      "ja": "探査",
+      "jaHelp": "探査は、探査を持つ呪文がスタック上にあるときに機能する常在型能力である。「探査／Delve」は「この呪文の総コストに含まれる不特定マナ1点ごとに、あなたはそのマナを支払うのではなくあなたの 墓地にあるカード1枚を追放してもよい。」を意味する。",
+      "aliases": [
+        "掘穴",
+        "探査"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Demonstrate",
+      "enHelp": "When you cast this spell, you may copy it. If you do, choose an opponent to also copy it. Players may choose new targets for their copies.",
+      "zh": "示范",
+      "zhHelp": "施放时可以复制此咒语；若如此作，还要选择一位对手复制它。各自可为复制品选择新目标。",
+      "ja": "実演",
+      "jaHelp": "実演は、誘発型能力である。「実演／Demonstrate」とは、「あなたがこの呪文を唱えたとき、あなたはこれをコピーしてよく、あなたはそのコピーの新しい対象を選んでもよい。あなたがこの呪文をコピーしたなら、対戦相手1人を選ぶ。そのプレイヤーはこの呪文をコピーし、そのコピーの新しい対象を選んでもよい。」を意味する。",
+      "aliases": [
+        "実演",
+        "示范"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Destroy",
+      "zh": "消灭",
+      "ja": "破壊する",
+      "enHelp": "Move a permanent from the battlefield to its owner's graveyard, subject to indestructible or regeneration.",
+      "zhHelp": "将永久物从战场置入拥有者坟墓场；不灭与重生可以影响此动作。",
+      "jaHelp": "パーマネントを破壊するとは、それを戦場からオーナーの墓地に置くことである。\nパーマネントが破壊されるのは、「破壊する」と書かれている効果によるか、致死ダメージ(rule 704.5g 参照)または接死持ちの発生源からのダメージ(rule 704.5h)による状況起因処理によるかのいずれかだけである。それ以外の方法でオーナーの墓地に置かれたパーマネントは、「破壊」されたわけではない。",
+      "aliases": [
+        "破壊する",
+        "消灭",
+        "破壊"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Detain",
+      "zh": "拘留",
+      "ja": "留置する",
+      "enHelp": "Until your next turn, the permanent cannot attack or block and its activated abilities cannot be activated.",
+      "zhHelp": "直到你的下个回合，该永久物不能攻击、不能阻挡，且不能启动其启动式异能。",
+      "jaHelp": "ある種の呪文や能力はパーマネントを留置できる。次のその呪文や能力のコントローラーのターンまで、そのパーマネントでは攻撃したりブロックしたりできず、またそのパーマネントの起動型能力も起動できない。",
+      "aliases": [
+        "留置する",
+        "拘留",
+        "留置"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Dethrone",
+      "enHelp": "Whenever this creature attacks the player with the most life or tied for the most life, put a +1/+1 counter on it.",
+      "zh": "义勇",
+      "zhHelp": "攻击生命最多或并列最多的牌手时，在此生物上放一个+1/+1指示物。",
+      "ja": "廃位",
+      "jaHelp": "廃位は、誘発型能力である。「廃位／Dethrone」とは、「このクリーチャーが最多あるいは最多と同点のライフを持つプレイヤーを攻撃するたび、これの上に＋1/＋1カウンター1個を置く。」を意味する。",
+      "aliases": [
+        "义勇",
+        "廃位"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Devoid",
+      "enHelp": "This card has no color.",
+      "zh": "虚色",
+      "zhHelp": "此牌没有颜色，包括在战场以外的区域。",
+      "ja": "欠色",
+      "jaHelp": "欠色は特性定義能力である。「欠色／Devoid」は、「このオブジェクトは無色である。」を意味する。この能力は、ゲームの外部も含めすべての領域で作用する。rule 604.3参照。",
+      "aliases": [
+        "欠色",
+        "虚色"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Devour",
+      "enHelp": "As this enters, you may sacrifice qualifying permanents. Each one gives it a number of +1/+1 counters equal to its devour value.",
+      "zh": "吞噬",
+      "zhHelp": "进战场时可牺牲符合条件的永久物；每牺牲一个，便依吞噬数值让它带有相应数量的+1/+1指示物。",
+      "ja": "貪食",
+      "jaHelp": "貪食は常在型能力である。「貪食 N／Devour N」とは「このオブジェクトが戦場に出るに際し、あなたは望む数のクリーチャーを生け贄に捧げてもよい。このパーマネントは、これにより生け贄に捧げられたクリーチャー1体につきN個の＋1/＋1カウンターが置かれた状態で戦場に出る。」を意味する。",
+      "aliases": [
+        "吞噬",
+        "貪食"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Discard",
+      "zh": "弃牌",
+      "ja": "捨てる",
+      "enHelp": "Move the specified cards from a hand to their owner's graveyard.",
+      "zhHelp": "将手上指定的牌置入其拥有者坟墓场。",
+      "jaHelp": "カードを捨てるとは、それをオーナーの手札からそのプレイヤーの墓地に置くことである。\n通常、プレイヤーにカードを捨てさせる効果は、その影響を受けるプレイヤーに捨てるカードを選ばせる。一部の効果は、無作為に捨てることを要求したり、あるいは他のプレイヤーに選ばせることを要求することもある。",
+      "aliases": [
+        "捨てる",
+        "弃牌"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Discover",
+      "zh": "倾探",
+      "ja": "発見を行う",
+      "enHelp": "Exile cards until you find a nonland within the stated mana value. Cast it free if the spell also fits that limit, or put it into your hand; put the rest randomly on the bottom.",
+      "zhHelp": "从牌库顶放逐牌，直到出现法术力值不超过指定数值的非地牌。可免费施放符合上限的该咒语，或置入手上；其余牌随机置于牌库底。",
+      "jaHelp": "「発見Nを行う／Discover N」は、「マナ総量がN以下であり土地でないカード1枚が追放されるまで、あなたの ライブラリーの一番上から1枚ずつ追放していく。結果の呪文のマナ総量がN以下であるなら、そのカードをマナ・コストを支払うことなく唱えてもよい。それを唱えないなら、そのカードをあなたの 手札に加える。残りの追放されたカードを、あなたの ライブラリーの一番下に無作為の順番で置く。」を意味する。",
+      "aliases": [
+        "発見を行う",
+        "倾探",
+        "発見"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Disguise",
+      "enHelp": "You may cast this card face down for {3} as a 2/2 creature with ward {2}. Turn it face up any time for its disguise cost.",
+      "zh": "伪装",
+      "zhHelp": "可支付{3}将此牌面朝下施放为具守护{2}的2/2生物。可在有优先权时支付伪装费用将它翻回正面。",
+      "ja": "変装",
+      "jaHelp": "変装は、その能力を持つカードをプレイできるすべての領域で機能する常在型能力であり、その効果は、そのカードが裏向きであるならいつでも機能する。「変装 [コスト]／Disguise [cost]」は、「あなたはこのカードを、本来のマナ・コストではなく{3}を支払うことで、裏向きで2/2の、護法{2}を持ち名前やサブタイプやマナ・コストを持たないクリーチャーとして唱えられる。」を意味する。(708〔裏向きの呪文やパーマネント〕参照。)",
+      "aliases": [
+        "伪装",
+        "変装"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Disturb",
+      "enHelp": "You may cast this card from your graveyard transformed for its disturb cost.",
+      "zh": "惊扰",
+      "zhHelp": "可以支付惊扰费用，从坟墓场施放此牌的背面。",
+      "ja": "降霊",
+      "jaHelp": "降霊は一部の両面カードの第1面に存在する能力である(rule 712〔両面カード〕参照)。「降霊［コスト］／Disturb [cost]」は、「あなたはあなたの 墓地にあるこのカードを、マナ・コストではなく降霊 コストを支払うことで変身させた状態で唱えてもよい。」を意味する。rule 712.8c 参照。",
+      "aliases": [
+        "惊扰",
+        "降霊"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Doctor's companion",
+      "enHelp": "You can have two commanders if the other is the Doctor.",
+      "zh": "博士伙伴",
+      "zhHelp": "若另一位指挥官是符合规则的时间领主／博士，可拥有两位指挥官。",
+      "ja": "ドクターのコンパニオン",
+      "jaHelp": "もう一方の統率者が、能力の条件を満たすタイムロード・ドクターであるなら、統率者を２枚使える。",
+      "aliases": [
+        "ドクターのコンパニオン",
+        "博士伙伴"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Double",
+      "zh": "加倍",
+      "ja": "2倍にする",
+      "enHelp": "Increase the specified value or quantity to twice its previous amount.",
+      "zhHelp": "将指定数值或数量增加到原先的两倍。",
+      "jaHelp": "クリーチャーのパワーやタフネスを2倍にすることは、継続的効果を生成する。この効果はクリーチャーのパワーやタフネスを修整するものであって、それらの特性を特定の値にするものではない。rule 613.4c 参照。",
+      "aliases": [
+        "2倍にする",
+        "2倍に",
+        "加倍"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Double agenda",
+      "enHelp": "Start the game with this conspiracy face down in the command zone and secretly choose two different card names. You may turn this conspiracy face up any time and reveal those names.",
+      "zh": "双重秘案",
+      "zhHelp": "游戏开始时将此诡局面朝下置于统帅区，秘密选择两个不同牌名；可随时翻开并展示选择。",
+      "ja": "秘策２つ",
+      "jaHelp": "ゲーム開始時に策略を裏向きで統率領域に置き、異なる２つのカード名を秘密裏に選ぶ。いつでも表向きにして、その名前を公開できる。",
+      "aliases": [
+        "双重密谋",
+        "双重秘案",
+        "秘策２つ",
+        "両策"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Double strike",
+      "zh": "连击",
+      "ja": "二段攻撃",
+      "enHelp": "Deals combat damage in both the first-strike and regular combat damage steps.",
+      "zhHelp": "在先攻和正常两个战斗伤害步骤都造成伤害。",
+      "jaHelp": "先制攻撃と通常の両方の戦闘ダメージ・ステップでダメージを与える。",
+      "aliases": [
+        "二段攻撃"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Double team",
+      "enHelp": "When this creature attacks, if it's not a token, conjure a duplicate of it into your hand. Then both cards perpetually lose double team.",
+      "zh": "双打",
+      "zhHelp": "非衍生物的此生物攻击时，在手上创生其复制品；两张牌永久失去双打。",
+      "ja": "Double team",
+      "jaHelp": "トークンでないこのクリーチャーが攻撃したとき、手札にその複製を創出する。両方のカードは永久にこの能力を失う。",
+      "aliases": [
+        "Double team",
+        "二体掛り",
+        "双重组队",
+        "双打"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Dredge",
+      "enHelp": "If you would draw a card, instead you may put exactly N card(s) from the top of your library into your graveyard. If you do, return this card from your graveyard to your hand. Otherwise, draw a card.",
+      "zh": "发掘",
+      "zhHelp": "将要抓一张牌时，可改为从牌库顶磨去所述数量的牌，并将此牌从坟墓场移回手上；牌库数量不足时不能如此替代。",
+      "ja": "発掘",
+      "jaHelp": "発掘は、発掘を持つカードがプレイヤーの墓地にある間にのみ機能する常在型能力である。「発掘 N／Dredge N」は「あなたの ライブラリーにN枚以上のカードがあるかぎり、あなたがカードを引くなら、代わりに あなたは『カードN枚を切削し、あなたの 墓地にあるこのカードをあなたの 手札に戻す。』を選んでもよい。」を意味する。",
+      "aliases": [
+        "发掘",
+        "発掘"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Earthbend",
+      "zh": "运土",
+      "ja": "土の技",
+      "enHelp": "Animate a land you control as a 0/0 with haste in addition to its other types and put the stated +1/+1 counters on it. When it dies or is exiled, return it tapped under your control.",
+      "zhHelp": "使目标己方地额外成为具敏捷的0/0生物，并放所述数量的+1/+1指示物；当它死去或被放逐时，在你的操控下将它横置移回战场。",
+      "jaHelp": "「土の技 N／Earthbend N」とは、「あなたがコントロールしている土地１つを対象とする。それは他のタイプに加えて速攻を持つ0/0の土地・クリーチャーになる。それの上に+1/+1カウンターN個を置く。それが死亡したか追放領域に置かれたとき、それをタップ状態であなたのコントロール下で戦場に戻す。」を意味する。",
+      "aliases": [
+        "土の技",
+        "御土",
+        "运土"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Echo",
+      "enHelp": "At the beginning of your upkeep, if this permanent came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.",
+      "zh": "返响",
+      "zhHelp": "维持开始时，若自上次维持开始之后才获得此永久物的操控权，则支付返响费用，否则牺牲它。",
+      "ja": "エコー",
+      "jaHelp": "エコーは誘発型能力である。「エコー [コスト]／echo [cost]」と書かれていた場合、それは「あなたのアップキープの開始時に、このパーマネントが直前のあなたのアップキープの開始時よりも後にあなたの コントロール下になっていた場合、[コスト]を支払わない限りこれを生け贄に捧げる。」を意味する。",
+      "aliases": [
+        "エコー",
+        "返响"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Embalm",
+      "enHelp": "the printed cost, Exile this card from your graveyard: Create a token that's a copy of this card, except it's white, it has no mana cost, and it's a Zombie in addition to its other types. Embalm only as a sorcery.",
+      "zh": "遗存",
+      "zhHelp": "法术时机支付费用并从坟墓场放逐此牌，派出它的复制品，但为白色、没有法术力费用，且额外是灵俑。",
+      "ja": "不朽",
+      "jaHelp": "不朽は、不朽を持つカードが墓地にある間に作用する起動型能力である。「不朽[コスト]／Embalm [cost]」は、「[コスト], あなたの 墓地にあるこのカードを追放する：白であり、マナ・コストを持たず、他のタイプに加えてゾンビであることを除き、このカードのコピーであるトークン1体を生成する。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "不朽",
+        "遗存"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Emerge",
+      "enHelp": "Sacrifice a qualifying permanent and pay the emerge cost, reducing its generic mana by the sacrificed permanent's mana value.",
+      "zh": "化生",
+      "zhHelp": "可牺牲一个生物并支付化生费用施放；指定类别的化生则牺牲符合该类别的永久物。总费用中的通用法术力减少所牺牲永久物的法术力值，不减少有色法术力。",
+      "ja": "現出",
+      "jaHelp": "現出コストを支払い、クリーチャー１体を生け贄に捧げて唱えられる。そのクリーチャーのマナ総量だけ、不特定マナの部分が減る。",
+      "aliases": [
+        "化生",
+        "現出"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Empower Jace",
+      "zh": "聚能杰斯",
+      "ja": "Empower Jace",
+      "enHelp": "Create a blue Jace planeswalker token with zero loyalty, −1: surveil 1 and −3: draw a card if needed. Add the stated loyalty counters to one Jace planeswalker token you control.",
+      "zhHelp": "若未操控杰斯鹏洛客衍生物，先派出一个蓝色、初始忠诚为0、具有-1刺探1及-3抓一张牌的杰斯；选择一个己方杰斯鹏洛客衍生物，放上所述数量的忠诚指示物。",
+      "jaHelp": "ジェイス・プレインズウォーカー・トークンをコントロールしていないなら、初期忠誠度０で「－１：諜報１を行う」「－３：カード１枚を引く」を持つ青のジェイス１体を生成する。自分のジェイス・プレインズウォーカー・トークン１体に、指定数の忠誠カウンターを置く。",
+      "aliases": [
+        "Empower Jace",
+        "聚能杰斯"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Enchant",
+      "enHelp": "Specifies what this Aura can legally target and remain attached to.",
+      "zh": "结附",
+      "zhHelp": "指定此灵气能够合法结附的对象类型；施放灵气时须选择符合条件的目标。",
+      "ja": "エンチャント",
+      "jaHelp": "エンチャントは、「エンチャント([オブジェクトまたはプレイヤー])／Enchant [object or player]」と書かれる常在型能力である。エンチャント 能力は、オーラ・呪文が対象に取れるものと、オーラがエンチャントできるものを制限する。",
+      "aliases": [
+        "エンチャント",
+        "结附"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Encore",
+      "enHelp": "the printed cost, Exile this card from your graveyard: For each opponent, create a token copy that attacks that opponent this turn if able. They gain haste. Sacrifice them at the beginning of the next end step. Activate only as a sorcery.",
+      "zh": "返场",
+      "zhHelp": "法术时机支付费用并从坟墓场放逐此牌，为每位对手各派出一个具敏捷的复制品，能攻击时须攻击对应对手；在下个结束步骤牺牲。",
+      "ja": "再演",
+      "jaHelp": "再演は、再演を持つカードが墓地にある間に機能する起動型能力である。「再演[コスト]／Encore [コスト]」は、「[コスト], あなたの 墓地にあるこのカードを追放する：各対戦相手につきそれぞれ、このカードのコピーであり、このターン可能ならそのプレイヤーを攻撃するトークン1体を生成する。それらのトークンは速攻を得る。次の終了ステップの開始時に、それらを生け贄に捧げる。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "再演",
+        "返场"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Endure",
+      "zh": "坚忍",
+      "ja": "闘魂を行う",
+      "enHelp": "Choose between that many +1/+1 counters on this creature or a white Spirit token with that power and toughness.",
+      "zhHelp": "选择在此生物上放所述数量的+1/+1指示物，或派出一个力量／防御力均为该数值的白色精怪衍生生物。",
+      "jaHelp": "ある種の能力によってパーマネントが闘魂Nを行うことがある。その場合、そのパーマネントのコントローラーは、そのパーマネントの上に+1/+1カウンターN個を置かない限り、白のN/Nのスピリット・クリーチャー・トークン1体を生成する。",
+      "aliases": [
+        "闘魂を行う",
+        "坚忍"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Enlist",
+      "enHelp": "As this creature attacks, you may tap a nonattacking creature you control without summoning sickness. When you do, add its power to this creature’s until end of turn.",
+      "zh": "征列",
+      "zhHelp": "攻击时可横置一个没有召唤失调且未攻击的其他己方生物，将其力量加到此生物力量上直到回合结束。",
+      "ja": "後援",
+      "jaHelp": "後援は、常在型能力1つと誘発型能力1つを表す。「後援／Enlist」は、「このクリーチャーが攻撃するに際し、あなたがコントロールしていて攻撃することを選んでおらず、速攻を持っているかこのターンの開始時から継続してあなたの コントロール下にあるクリーチャー最大1体をタップしてもよい。そうしたとき、ターン終了時まで、このクリーチャーは＋X/＋0の修整を受ける。Xはそのタップされたクリーチャーのパワーに等しい。」を意味する。",
+      "aliases": [
+        "征列",
+        "後援"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Entwine",
+      "enHelp": "Choose both if you pay the entwine cost.",
+      "zh": "打包",
+      "zhHelp": "施放时支付额外打包费用，便可选择全部模式，而非通常允许的模式数量。",
+      "ja": "双呪",
+      "jaHelp": "双呪は呪文がスタックにある間に機能する、モードを持つ(rule 700.2 参照)呪文の常在型能力である。「双呪 [コスト]／Entwine [cost]」は、「あなたは、この呪文のモードを指示されている数だけ選ぶ代わりに、すべてのモードを選んでもよい。そうしたなら、あなたは追加で[コスト]を支払う。」を意味する。双呪 能力の使用に際しては、rule 601.2b、および rule 601.2f-h の、モードの選択と追加コストの支払いのルールに従う。",
+      "aliases": [
+        "双呪",
+        "打包"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Epic",
+      "enHelp": "For the rest of the game, you can't cast spells. At the beginning of each of your upkeeps for the rest of the game, copy this spell except for its epic ability. If the spell has any targets, you may choose new targets for the copy.",
+      "zh": "历传",
+      "zhHelp": "结算后本盘不能再施放咒语；此后每个维持开始时复制该咒语，但不复制历传异能。",
+      "ja": "歴伝",
+      "jaHelp": "歴伝は2つの呪文能力を表し、そのうち1つは遅延誘発型能力を作る。「歴伝／Epic」は、「残りのゲームの間、あなたは呪文を唱えられない。」と「残りのゲームの間のあなたの各アップキープの開始時に、この呪文を歴伝 能力を除いてコピーする。その呪文が対象を取るなら、あなたはそのコピーの新しい対象を選んでもよい。」を意味する。rule 707.10 参照。",
+      "aliases": [
+        "历传",
+        "歴伝"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Equip",
+      "enHelp": "Pay the equip cost at sorcery speed to attach this Equipment to a qualifying target creature you control.",
+      "zh": "佩带",
+      "zhHelp": "在法术时机支付佩带费用，将此武具贴附于符合条件的目标己方生物。",
+      "ja": "装備",
+      "jaHelp": "ソーサリーを唱えられるときに装備コストを支払い、あなたがコントロールする適正なクリーチャー１体を対象として、この装備品をそれにつける。",
+      "aliases": [
+        "佩带",
+        "装備"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Escalate",
+      "enHelp": "Pay this cost for each mode chosen beyond the first.",
+      "zh": "增效",
+      "zhHelp": "选择超过一个模式时，每多选一个模式就额外支付一次增效费用。",
+      "ja": "増呪",
+      "jaHelp": "増呪は、モードを持つ呪文(rule 700.2参照)の常在型能力であり、増呪を持つ呪文がスタック上にある間に機能する。「増呪[コスト]／Escalate [cost]」は「あなたは、あなたがこの呪文を唱えるに際し選ぶ2つ目以降のモード1つにつき、追加で[コスト]を支払う。」を意味する。呪文の増呪 コストを支払うことは、rule 601.2b、rule 601.2f-h の追加コストの支払いのルールに従う。",
+      "aliases": [
+        "増呪",
+        "增效"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Escape",
+      "enHelp": "You may cast this card from your graveyard for its escape cost.",
+      "zh": "逸脱",
+      "zhHelp": "可以支付逸脱费用从坟墓场施放此牌；费用通常包括放逐坟墓场中的其他牌。",
+      "ja": "脱出",
+      "jaHelp": "脱出は、脱出を持つカードが墓地にある間に機能する常在型能力である。「脱出[コスト]／Escape [cost]」は、「あなたは、あなたの 墓地にあるこのカードを、マナ・コストを支払うのではなく[コスト]を支払うことで唱えてもよい。」を意味する。呪文を、それの脱出 能力を使って唱えることは、rule 601.2bとrule 601.2f～rule 601.2hの代替コストのルールに従う。",
+      "aliases": [
+        "脱出",
+        "逸脱"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Eternalize",
+      "enHelp": "the printed cost, Exile this card from your graveyard: Create a token that's a copy of this card, except it's black, it's 4/4, it has no mana cost, and it's a Zombie in addition to its other types. Eternalize only as a sorcery.",
+      "zh": "永生",
+      "zhHelp": "法术时机支付费用并从坟墓场放逐此牌，派出它的复制品，但为黑色4/4、没有法术力费用，且额外是灵俑。",
+      "ja": "永遠",
+      "jaHelp": "永遠は、永遠を持つカードが墓地にある間に作用する起動型能力である。「永遠[コスト]／Eternalize [cost]」とは、「[コスト], あなたの 墓地にあるこのカードを追放する：黒であり、4/4であり、マナ・コストを持たず、他のタイプに加えてゾンビであることを除き、このカードのコピーであるトークン1体を生成する。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "永生",
+        "永遠"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Evoke",
+      "zh": "呼魂",
+      "ja": "想起",
+      "enHelp": "You may cast this spell for its evoke cost. If you do, sacrifice it when it enters the battlefield.",
+      "zhHelp": "你可以支付呼魂费用来施放此咒语。若如此作，当它进入战场时将它牺牲。",
+      "jaHelp": "想起コストでこの呪文を唱えてもよい。そうしたなら、これが戦場に出たとき、これを生け贄に捧げる。",
+      "aliases": [
+        "想起"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Evolve",
+      "enHelp": "Whenever a creature you control enters, if that creature has greater power or toughness than this creature, put a +1/+1 counter on this creature.",
+      "zh": "进化",
+      "zhHelp": "其他己方生物进战场时，若其力量或防御力比此生物大，在此生物上放一个+1/+1指示物；结算时再检查条件。",
+      "ja": "進化",
+      "jaHelp": "進化は誘発型能力である。「進化／Evolve」は、「クリーチャー1体があなたの コントロール下で戦場に出るたび、そのクリーチャーのパワーがこのクリーチャーよりも大きいか、そのクリーチャーのタフネスがこのクリーチャーよりも大きいか、またはその両方に該当する場合、このクリーチャーの上に＋1/＋1カウンター1個を置く。」を意味する。",
+      "aliases": [
+        "进化",
+        "進化"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Exalted",
+      "enHelp": "Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.",
+      "zh": "颂威",
+      "zhHelp": "每当一个己方生物单独攻击时，该生物得+1/+1直到回合结束。",
+      "ja": "賛美",
+      "jaHelp": "賛美は誘発型能力である。「賛美／Exalted」は「あなたがコントロールしているクリーチャー1体が単独で攻撃するたび、ターン終了時まで、そのクリーチャーは＋1/＋1の修整を受ける。」を意味する。",
+      "aliases": [
+        "賛美",
+        "颂威"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Exchange",
+      "zh": "交换",
+      "ja": "交換する",
+      "enHelp": "Exchange both specified objects or values simultaneously; if the whole exchange is impossible, it does not happen.",
+      "zhHelp": "同时交换所指定的对象或数值；无法完整完成交换时，不进行交换。",
+      "jaHelp": "呪文や能力は解決中に、プレイヤーに何か(たとえばライフの総量や2つのパーマネントのコントロールなど)を交換させることがある。その種の呪文や能力が解決されるときに交換の全体が不可能な場合、交換の一部だけが起こるということはない。",
+      "aliases": [
+        "交換する",
+        "交换",
+        "交換"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Exert",
+      "zh": "耗竭",
+      "ja": "督励する",
+      "enHelp": "Choose not to untap this permanent during your next untap step for the listed exert effect.",
+      "zhHelp": "选择使此永久物在你的下一个重置步骤中不重置，以获得牌面所述的耗竭效果。",
+      "jaHelp": "パーマネントを督励するとは、「それは、あなたの次のアンタップ・ステップにアンタップしない」を選ぶことである。\nタップされていないパーマネントや、あるターンにすでに督励されているパーマネントも督励できる。あなたが、あなたの次のアンタップ・ステップ になる前にパーマネント1つを複数回督励したなら、それがアンタップしないという各効果はすべて同一のアンタップ・ステップ中に消滅する。",
+      "aliases": [
+        "督励する",
+        "督励",
+        "耗竭"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Exhaust",
+      "zh": "竭绝",
+      "ja": "消尽",
+      "enHelp": "This activated ability can be activated only once for this object.",
+      "zhHelp": "此启动式异能只能启动一次；永久物离场后再进场视为新的物件。",
+      "jaHelp": "消尽は、その後に続く起動型能力に追加のルールを加えるキーワードである。「消尽 - [コスト]:[効果]／EXhaust — [Cost]: [Effect]」は、「[コスト]:[効果]。この能力は1回しか起動できない。」を意味する。",
+      "aliases": [
+        "消尽",
+        "竭力",
+        "竭绝"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Exile",
+      "zh": "放逐",
+      "ja": "追放する",
+      "enHelp": "Move the object to exile, normally face up.",
+      "zhHelp": "将指定对象移至放逐区，通常为面朝上。",
+      "jaHelp": "オブジェクトを追放するとは、それを現在ある領域から追放 領域に動かすということである。rule 406〔追放〕参照。",
+      "aliases": [
+        "追放する",
+        "放逐",
+        "追放"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Exploit",
+      "enHelp": "When this creature enters, you may sacrifice a creature.",
+      "zh": "榨取",
+      "zhHelp": "此生物进战场时，可以牺牲一个生物，包括它自己。",
+      "ja": "濫用",
+      "jaHelp": "濫用は、誘発型能力である。「濫用／Exploit」とは、「このクリーチャーが戦場に出たとき、あなたはクリーチャー1体を生け贄に捧げてもよい。」を意味する。\n濫用 能力のコントローラーがその能力の解決時にクリーチャー1体を生け贄に捧げたとき、濫用を持つクリーチャーは「クリーチャー1体を濫用／Exploit a creature」する。",
+      "aliases": [
+        "榨取",
+        "濫用"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Explore",
+      "zh": "勘察",
+      "ja": "探検を行う",
+      "enHelp": "Reveal your top card. Put a land into your hand; otherwise give the exploring creature a +1/+1 counter and you may put the card into your graveyard.",
+      "zhHelp": "展示牌库顶牌；若是地，置入手上。否则在勘察生物上放一个+1/+1指示物，然后可将展示牌置入坟墓场。",
+      "jaHelp": "パーマネントに探検を行わせる呪文や能力が存在する。その場合、そのパーマネントのコントローラーは自分のライブラリーの一番上にあるカードを公開する。これにより土地・カードが公開されたなら、そのプレイヤーはそのカードを自分の手札に加える。そうでないなら、そのプレイヤーは探検を行なっているパーマネントの上に＋1/＋1カウンター1個を置き、「公開したカードを自分の墓地に置く。」を選んでもよい。",
+      "aliases": [
+        "explored",
+        "explores",
+        "探検を行う",
+        "勘察",
+        "勘查",
+        "探検"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Extort",
+      "enHelp": "Whenever you cast a spell, you may pay {W/B}. If you do, each opponent loses 1 life and you gain that much life.",
+      "zh": "敲诈",
+      "zhHelp": "施放咒语时，可支付{W/B}；如此作则每位对手失去1点生命，你获得等同于总失去数量的生命。",
+      "ja": "強請",
+      "jaHelp": "強請は誘発型能力である。「強請／Extort」とは、「あなたが呪文1つを唱えるたび、あなたは{W/B}を支払ってもよい。そうしたなら、各対戦相手はそれぞれ1点のライフを失い、あなたはこれにより失われたライフに等しい点数のライフを得る。」を意味する。",
+      "aliases": [
+        "強請",
+        "敲诈"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fabricate",
+      "enHelp": "When this creature enters, put N +1/+1 counter(s) on it, or create N 1/1 colorless Servo artifact creature token(s).",
+      "zh": "装配",
+      "zhHelp": "进战场时，选择在此生物上放所述数量的+1/+1指示物，或派出等量1/1无色自动机衍生神器生物。",
+      "ja": "製造",
+      "jaHelp": "製造は誘発型能力である。「製造N／Fabricate N」は、「このパーマネントが戦場に出たとき、あなたはこれの上に＋1/＋1カウンターN個を置いてもよい。そうしないなら、無色の1/1の霊気装置・アーティファクト・クリーチャー・トークンN体を生成する。」を意味する。",
+      "aliases": [
+        "装配",
+        "製造"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Face a Villainous Choice",
+      "zh": "面临恶棍抉择",
+      "ja": "最悪の二択を行う",
+      "enHelp": "The specified player chooses one of the two listed options and carries it out.",
+      "zhHelp": "由指定牌手从列出的两个选项中选择一个，并按指示执行。",
+      "jaHelp": "「[プレイヤー]は「[選択肢A]」か「[選択肢B]」かの最悪の二択を行う／[A player] faces a villainous choice — [option A], or [option B]」は、「[プレイヤー]は「[選択肢A]」か「[選択肢B]」かを選び、その後、その選んだ選択肢のすべての処理を行う。」を意味する。",
+      "aliases": [
+        "最悪の二択を行う",
+        "面临恶棍抉择",
+        "面临邪恶抉择"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fading",
+      "enHelp": "This permanent enters with N fade counter(s) on it. At the beginning of your upkeep, remove a fade counter from it. If you can't, sacrifice it.",
+      "zh": "消退",
+      "zhHelp": "进战场时带有所述数量的消退指示物；维持开始时移去一个，无法移去时牺牲它。",
+      "ja": "消散",
+      "jaHelp": "消散は2つの能力を表すキーワードである。「消散 N／Fading N」は、「このパーマネントは、消散／FadeカウンターN個が置かれた状態で戦場に出る。」「あなたのアップキープの開始時に、このパーマネントの上から消散 カウンター1個を取り除く。そうできないなら、このパーマネントを生け贄に捧げる。」を意味する。",
+      "aliases": [
+        "消散",
+        "消退"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fateseal",
+      "zh": "恶卜",
+      "ja": "消術を行う",
+      "enHelp": "Look at the stated number of cards atop an opponent's library; put any on the bottom and the rest on top in any order.",
+      "zhHelp": "检视对手牌库顶所述数量的牌，将任意数量置于其牌库底，其余以任意顺序放回顶端。",
+      "jaHelp": "「消術Nを行う／fateseal N」とは、プレイヤーが対戦相手のライブラリーの一番上からN枚のカードを見、その後それらのうち望む枚数のカードを対戦相手のライブラリーの一番下に望む順番で、残りを対戦相手のライブラリーの一番上に望む順番で、それぞれ置くことである。",
+      "aliases": [
+        "消術を行う",
+        "恶卜",
+        "消術",
+        "论命"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fear",
+      "enHelp": "This creature can't be blocked except by artifact creatures and/or black creatures.",
+      "zh": "恐惧",
+      "zhHelp": "只能被神器生物和／或黑色生物阻挡。",
+      "ja": "畏怖",
+      "jaHelp": "畏怖は回避能力である。\n畏怖を持つクリーチャーは、黒でもアーティファクトでもないクリーチャーにはブロックされない。(rule 509〔ブロック・クリーチャー指定ステップ〕参照。)",
+      "aliases": [
+        "恐惧",
+        "畏怖"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fight",
+      "zh": "互斗",
+      "ja": "格闘を行う",
+      "enHelp": "Each of the two creatures simultaneously deals damage equal to its power to the other. This is not combat damage.",
+      "zhHelp": "两个生物同时对彼此造成等同于各自力量的伤害；这不是战斗伤害。",
+      "jaHelp": "呪文や能力により、あるクリーチャーが別のクリーチャーに格闘を行うよう指示がある場合や、クリーチャー2体がお互いに格闘を行うよう指示がある場合がある。それらのクリーチャーは、それぞれもう一方に、自身のパワーに等しい点数のダメージを与える。",
+      "aliases": [
+        "格闘を行う",
+        "互斗",
+        "格闘"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Firebending",
+      "enHelp": "Whenever this creature attacks, add red mana equal to its firebending value. That mana lasts until the end of combat.",
+      "zh": "振火",
+      "zhHelp": "攻击时产生等同于振火数值的红色法术力；这些法术力直到战斗结束才消失。",
+      "ja": "702.189. 火の技",
+      "jaHelp": "火の技は誘発型能力である。「火の技 N／Firebending N」は「このクリーチャーが攻撃するたび、{R}をN点加える。戦闘終了時まで、ステップやフェイズの終了に際してあなたはこのマナを失わない。」を意味する。",
+      "aliases": [
+        "702.189. 火の技",
+        "火の技",
+        "御火",
+        "振火"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "First strike",
+      "zh": "先攻",
+      "ja": "先制攻撃",
+      "enHelp": "Deals combat damage before creatures without first strike or double strike.",
+      "zhHelp": "在不具先攻或连击的生物之前造成战斗伤害。",
+      "jaHelp": "先制攻撃や二段攻撃を持たないクリーチャーより先に戦闘ダメージを与える。",
+      "aliases": [
+        "先制攻撃"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Flanking",
+      "enHelp": "Whenever this creature becomes blocked by a creature without flanking, the blocking creature gets -1/-1 until end of turn.",
+      "zh": "侧面攻击",
+      "zhHelp": "每被一个不具侧面攻击的生物阻挡，该阻挡生物便得-1/-1直到回合结束。",
+      "ja": "側面攻撃",
+      "jaHelp": "側面攻撃は、ブロック・クリーチャー指定ステップ中に誘発する誘発型能力である。rule 509〔ブロック・クリーチャー指定ステップ〕参照。側面攻撃は、「このクリーチャーが側面攻撃を持たないクリーチャー1体にブロックされた状態になるたび、ターン終了時まで、そのブロック・クリーチャーは-1/-1の修整を受ける。」を意味する。",
+      "aliases": [
+        "侧面攻击",
+        "側面攻撃"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Flash",
+      "zh": "闪现",
+      "ja": "瞬速",
+      "enHelp": "May be cast any time you could cast an instant.",
+      "zhHelp": "可以在你能施放瞬间的时机施放。",
+      "jaHelp": "インスタントを唱えられるときならいつでも唱えられる。",
+      "aliases": [
+        "瞬速"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Flashback",
+      "enHelp": "You may cast this card from your graveyard for its flashback cost. Then exile it.",
+      "zh": "返照",
+      "zhHelp": "可以支付返照费用从坟墓场施放；此咒语将离开堆叠时改为放逐。",
+      "ja": "フラッシュバック",
+      "jaHelp": "フラッシュバック・コストを支払って墓地から唱えられる。これにより唱えた呪文は、スタックを離れる際に追放される。",
+      "aliases": [
+        "フラッシュバック",
+        "返照"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Flying",
+      "zh": "飞行",
+      "ja": "飛行",
+      "enHelp": "Can be blocked only by creatures with flying or reach.",
+      "zhHelp": "只能被具飞行或延势的生物阻挡。",
+      "jaHelp": "飛行か到達を持つクリーチャーにしかブロックされない。",
+      "aliases": [
+        "飛行"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "For Mirrodin",
+      "enHelp": "When this Equipment enters, create a 2/2 red Rebel creature token, then attach this to it.",
+      "zh": "秘罗万岁",
+      "zhHelp": "此武具进战场时，派出一个2/2红色反抗军衍生生物，并将此武具贴附于它。",
+      "ja": "ミラディンのために！",
+      "jaHelp": "ミラディンのために！は、誘発型能力である。「ミラディンのために！／For Mirrodin!」は、「この装備品が戦場に出たとき、赤の2/2のレベル・クリーチャー・トークン1体を生成し、その後、この装備品をそれにつける。」を意味する。",
+      "aliases": [
+        "For Mirrodin!",
+        "ミラディンのために！",
+        "秘罗万岁！",
+        "秘罗万岁"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Forage",
+      "zh": "觅食",
+      "ja": "給餌する",
+      "enHelp": "Exile three cards from your graveyard or sacrifice a Food.",
+      "zhHelp": "从你的坟墓场放逐三张牌，或牺牲一个食品。",
+      "jaHelp": "「給餌する／Forage」 は、「あなたの墓地からカード3枚を追放するか食物1つを生贄に捧げる。」を意味する。",
+      "aliases": [
+        "給餌する",
+        "給餌",
+        "觅粮",
+        "觅食"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Forecast",
+      "zh": "预报",
+      "ja": "予見",
+      "enHelp": "Activate from your hand by revealing this card, only during your upkeep and once per turn.",
+      "zhHelp": "只能在你的维持步骤、从手上展示此牌来启动，且每回合一次。",
+      "jaHelp": "自分のアップキープ中に、手札からこのカードを公開して能力を起動できる。各ターンに１回のみ起動できる。",
+      "aliases": [
+        "予見",
+        "预报"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Foretell",
+      "enHelp": "During your turn, you may pay {2} and exile this card from your hand face down. Cast it on a later turn for its foretell cost.",
+      "zh": "预示",
+      "zhHelp": "自己回合有优先权时，可支付{2}将手上此牌面朝下放逐；之后的回合可支付预示费用施放。",
+      "ja": "予顕",
+      "jaHelp": "自分のターン中に{2}を支払い、手札から裏向きで追放できる。その後のターンに、予顕コストを支払って追放領域から唱えられる。",
+      "aliases": [
+        "予顕",
+        "预示"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fortify",
+      "enHelp": "the printed cost: Attach to target land you control. Fortify only as a sorcery.",
+      "zh": "构工",
+      "zhHelp": "法术时机支付构工费用，将此工事贴附于目标己方地。",
+      "ja": "城砦化",
+      "jaHelp": "城砦化は城砦・カードが持つ起動型能力である。「城砦化 [コスト]／Fortify [cost]」は「[コスト]:あなたがコントロールしている土地1つを対象とする。それにこの城砦をつける。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "城砦化",
+        "构工"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Freerunning",
+      "enHelp": "You may cast this spell for its freerunning cost if you dealt combat damage to a player this turn with an Assassin or commander.",
+      "zh": "自由奔跑",
+      "zhHelp": "若本回合你的杀手或指挥官对牌手造成过战斗伤害，可支付自由奔跑费用施放此咒语。",
+      "ja": "フリーランニング",
+      "jaHelp": "このターンに暗殺者か統率者がプレイヤーに戦闘ダメージを与えていたなら、フリーランニング・コストで唱えられる。",
+      "aliases": [
+        "フリーランニング",
+        "自由奔跑",
+        "疾行"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Frenzy",
+      "enHelp": "Whenever this creature attacks and isn't blocked, it gets +N/+0 until end of turn.",
+      "zh": "狂热",
+      "zhHelp": "攻击且未被阻挡时，此生物得+N/+0直到回合结束，N为狂热数值。",
+      "ja": "激情",
+      "jaHelp": "激情は誘発型能力である。「激情 N／Frenzy N」は「このクリーチャーが攻撃してブロックされないたび、ターン終了時まで、これは+N/+0の修整を受ける。」を意味する。",
+      "aliases": [
+        "激情",
+        "狂热"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Fuse",
+      "enHelp": "You may cast one or both halves of this card from your hand.",
+      "zh": "融咒",
+      "zhHelp": "从手上施放此连体牌时，可以施放其中一半，或同时施放两半。",
+      "ja": "融合",
+      "jaHelp": "融合は分割カードの一部に存在する常在型能力であり(rule 709〔分割カード〕参照)、融合を持つカードがプレイヤーの手札にある間に働く。プレイヤーが融合を持つ分割カードを自分の手札から唱える場合、そのプレイヤーはその分割カードの一方の半分を選ぶのではなく両方の半分を唱えることを選んでもよい。この選択は、その融合を持つ分割カードをスタックに積む前に行う。この結果の呪文は、融合した分割呪文と呼ばれる。",
+      "aliases": [
+        "融合",
+        "融咒"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Gift",
+      "enHelp": "You may promise an opponent the listed gift as you cast this spell. Its card type determines when the gift is delivered; the card describes your additional benefit.",
+      "zh": "礼赠",
+      "zhHelp": "施放时可承诺给一位对手所述礼物。兑现礼物的时机取决于咒语类别，并获得牌面所述的额外效果。",
+      "ja": "贈呈",
+      "jaHelp": "唱える際に対戦相手１人に指定された贈呈を約束できる。約束したなら相手が贈呈を受け取り、カードに記された追加効果を得る。贈呈の内容とタイミングはカードと贈呈の種類に従う。",
+      "aliases": [
+        "礼赠",
+        "贈呈",
+        "馈赠"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Goad",
+      "zh": "煽惑",
+      "ja": "使嗾",
+      "enHelp": "Until your next turn, the creature must attack each combat if able and must attack a player other than you if able.",
+      "zhHelp": "直到你的下个回合，该生物每次战斗若能攻击就须攻击，且若能攻击你以外的牌手就须如此作。",
+      "jaHelp": "次のあなたのターンまで、そのクリーチャーは可能なら攻撃し、可能ならあなた以外のプレイヤーを攻撃しなければならない。",
+      "aliases": [
+        "使嗾する",
+        "使嗾",
+        "煽惑"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Graft",
+      "enHelp": "This permanent enters with N +1/+1 counter(s) on it. Whenever another creature enters, you may move a +1/+1 counter from this permanent onto it.",
+      "zh": "接殖",
+      "zhHelp": "进战场时带有所述数量的+1/+1指示物；其他生物进战场时，可将一个指示物从此前者移到后者。",
+      "ja": "移植",
+      "jaHelp": "移植は、常在型能力と誘発型能力の両方を意味する。「移植N／Graft N」は「このパーマネントは、＋1/＋1カウンターN個が置かれた状態で戦場に出る。」と「これでないクリーチャー1体が戦場に出るたび、このパーマネントの上に＋1/＋1カウンターがある場合、あなたはこのパーマネントの上の＋1/＋1カウンター1個をそのクリーチャーの上に移動してもよい。」を意味する。",
+      "aliases": [
+        "接殖",
+        "移植"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Gravestorm",
+      "enHelp": "When you cast this spell, copy it for each permanent that was put into a graveyard from the battlefield this turn. If the spell has any targets, you may choose new targets for any of the copies.",
+      "zh": "坟场风暴",
+      "zhHelp": "施放时，为本回合每个从战场置入坟墓场的永久物复制此咒语一次；可为复制品另选目标。",
+      "ja": "墓地ストーム",
+      "jaHelp": "墓地ストームは、スタック上で機能する誘発型能力である。「墓地ストーム／Gravestorm」は「あなたがこの呪文を唱えたとき、これを、このターンの間に 戦場から墓地に置かれたパーマネント1つにつき1回コピーする。この呪文が対象を取るなら、あなたは任意のコピーの新しい対象を選んでもよい。」を意味する。",
+      "aliases": [
+        "墓地ストーム",
+        "坟场风暴"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Harmonize",
+      "enHelp": "You may cast this card from your graveyard for its harmonize cost. You may tap a creature you control to reduce that cost by {X}, where X is its power. Then exile this spell.",
+      "zh": "谐颂",
+      "zhHelp": "可支付谐颂费用从坟墓场施放；可横置一个己方生物，使通用法术力费用减少其力量；此咒语之后被放逐。",
+      "ja": "調和",
+      "jaHelp": "調和コストで墓地から唱えられる。追加で自分のクリーチャー１体をタップすると、そのパワーだけ不特定マナの部分が減る。これにより唱えた呪文はスタックを離れる際に追放される。",
+      "aliases": [
+        "調和",
+        "调和",
+        "谐颂"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Harness",
+      "zh": "Harness",
+      "ja": "装着する",
+      "enHelp": "Mark the permanent as harnessed until it leaves the battlefield, enabling abilities that refer to that designation.",
+      "zhHelp": "使此永久物成为已驾驭，持续到它离开战场；该标记用于牌面其他异能。",
+      "jaHelp": "「[このパーマネントを]装着する／Harness [this permanent]」とは、「このパーマネントが装着されていないなら、それを装着済にする。」を意味する。",
+      "aliases": [
+        "Harness",
+        "装着する",
+        "掌控",
+        "装着"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Haste",
+      "zh": "敏捷",
+      "ja": "速攻",
+      "enHelp": "Can attack and use tap abilities as soon as it comes under your control.",
+      "zhHelp": "在刚受你操控时就能攻击或启动费用中有横置符号的异能。",
+      "jaHelp": "あなたのコントロール下になったターンでも攻撃やタップ能力の起動ができる。",
+      "aliases": [
+        "速攻"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Haunt",
+      "enHelp": "Exile this card from the graveyard haunting a target creature when its haunt ability resolves. Its other ability triggers when the haunted creature dies.",
+      "zh": "缠身",
+      "zhHelp": "此牌因其缠身异能从坟墓场被放逐，缠身于目标生物；该生物死去时触发牌面所述效果。",
+      "ja": "憑依",
+      "jaHelp": "憑依は誘発型能力である。パーマネントの持つ「憑依／Haunt」は「このパーマネントが戦場から墓地に置かれたとき、クリーチャー1体を対象とする。このカードを、そのクリーチャーに憑依した状態で追放する。」を意味する。インスタントやソーサリーである呪文の持つ「憑依／Haunt」は「この呪文が解決中に墓地に置かれたとき、クリーチャー1体を対象とする。このカードを、そのクリーチャーに憑依した状態で追放する。」を意味する。",
+      "aliases": [
+        "憑依",
+        "缠身"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Heal",
+      "zh": "治疗",
+      "ja": "Heal",
+      "enHelp": "Remove the specified marked damage from a permanent; this is not gaining life.",
+      "zhHelp": "移去指定永久物上已标记的相应伤害；这不是恢复生命。",
+      "jaHelp": "指定されたパーマネントに記録されているダメージを、指定量取り除く。ライフを得る処理ではない。",
+      "aliases": [
+        "Heal",
+        "治疗"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Hexproof",
+      "zh": "辟邪",
+      "ja": "呪禁",
+      "enHelp": "Can't be the target of spells or abilities your opponents control.",
+      "zhHelp": "不能成为对手操控的咒语或异能的目标。",
+      "jaHelp": "対戦相手がコントロールする呪文や能力の対象にならない。",
+      "aliases": [
+        "呪禁"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Hidden agenda",
+      "enHelp": "Start the game with this conspiracy face down in the command zone and secretly choose a card name. You may turn this conspiracy face up any time and reveal that name.",
+      "zh": "秘案",
+      "zhHelp": "游戏开始时将此诡局面朝下置于统帅区，并秘密选择牌名；可随时翻开并展示选择。",
+      "ja": "秘策",
+      "jaHelp": "秘策は、秘策を持つ策略・カードが統率領域に置かれる際に働く常在型能力である。「秘策／Hidden Agenda」とは、「あなたがこの策略・カードを統率領域に置くに際し、これを裏向きにし、秘密裏に名前1つを選ぶ。」を意味する。",
+      "aliases": [
+        "秘案",
+        "秘策"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Hideaway",
+      "enHelp": "When this permanent enters, look at the top N card(s) of your library, exile one face down, then put the rest on the bottom of your library.",
+      "zh": "掩蔽",
+      "zhHelp": "进战场时检视牌库顶所述数量的牌，面朝下放逐其中一张，其余随机置于牌库底。",
+      "ja": "秘匿",
+      "jaHelp": "秘匿は、誘発型能力である。「秘匿N／Hideaway N」は、「このパーマネントが戦場に出たとき、あなたの ライブラリーの一番上にあるカードN枚を見る。そのうち1枚を裏向きに追放し、残りをあなたの ライブラリーの一番下に無作為の順番で置く。その追放されたカードは『このカードを追放したパーマネントをコントロールしているプレイヤーは、追放 領域にあるこのカードを見てもよい。』を得る。」を意味する。",
+      "aliases": [
+        "掩蔽",
+        "秘匿"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Horsemanship",
+      "enHelp": "This creature can't be blocked except by creatures with horsemanship.",
+      "zh": "马术",
+      "zhHelp": "只能被具马术的生物阻挡。",
+      "ja": "馬術",
+      "jaHelp": "馬術は回避能力である。\n馬術を持つクリーチャーは、馬術を持たないクリーチャーによってブロックされない。馬術を持つクリーチャーは、馬術を持つクリーチャーも持たないクリーチャーもブロックできる。(rule 509〔ブロック・クリーチャー指定ステップ〕参照。)",
+      "aliases": [
+        "馬術",
+        "马术"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Impending",
+      "enHelp": "If you cast this spell for its impending cost, it enters with N time counter(s) and isn't a creature until the last is removed. At the beginning of your end step, remove a time counter from it.",
+      "zh": "隐现",
+      "zhHelp": "可以支付隐现费用施放，使它带有相应时间指示物；以此方式施放且仍有指示物时不是生物，每个己方结束步骤移去一个。",
+      "ja": "兆候",
+      "jaHelp": "兆候コストで唱えると、指定数の時間カウンターを置いて戦場に出る。時間カウンターがある間はクリーチャーではない。自分の終了ステップの開始時に時間カウンター１個を取り除く。",
+      "aliases": [
+        "兆临",
+        "兆候",
+        "隐现"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Improvise",
+      "enHelp": "Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.",
+      "zh": "拼造",
+      "zhHelp": "支付此咒语费用时，可以横置未横置的己方神器，每个支付费用中的{1}。",
+      "ja": "即席",
+      "jaHelp": "即席は、即席を持つ呪文がスタック上にある間に作用する常在型能力である。「即席／Improvise」は「この呪文の総コストに含まれる不特定マナ1点につき、あなたはそのマナを支払うのではなく、あなたがコントロールしているアンタップ状態のアーティファクト1つをタップしてもよい。」を意味する。",
+      "aliases": [
+        "即席",
+        "拼造"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Increment",
+      "enHelp": "Whenever you cast a spell, if the amount of mana you spent is greater than this creature’s power or toughness, put a +1/+1 counter on this creature.",
+      "zh": "递增",
+      "zhHelp": "每当你施放咒语时，若为其花费的法术力大于此生物的力量或防御力，在此生物上放一个+1/+1指示物。",
+      "ja": "増分",
+      "jaHelp": "増分は誘発型能力である。「増分」は「あなたが呪文を唱えるたび、このパーマネントがクリーチャーでありかつその呪文を唱えるために支払われたマナの点数がこのクリーチャーのパワーやタフネスの値よりも大きい場合、このクリーチャーに+1/+1カウンター1個を置く。」を意味する。",
+      "aliases": [
+        "Increment",
+        "増分",
+        "递增"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Incubate",
+      "zh": "抚育",
+      "ja": "培養",
+      "enHelp": "Create an Incubator artifact token with the stated number of +1/+1 counters. Pay {2} to transform it into a 0/0 Phyrexian artifact creature.",
+      "zhHelp": "派出一个带所述数量+1/+1指示物的抚育器衍生神器；支付{2}可转化为0/0非瑞人神器生物。",
+      "jaHelp": "「培養N／Incubate N」するとは、＋1/＋1カウンターN個が置かれた状態で培養器・トークン1つを生成する、ということである。rule 111.10i 参照。",
+      "aliases": [
+        "培養",
+        "抚育"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Indestructible",
+      "zh": "不灭",
+      "ja": "破壊不能",
+      "enHelp": "Can't be destroyed by damage or effects that say ‘destroy’.",
+      "zhHelp": "不会因伤害或注明“消灭”的效应而被消灭。",
+      "jaHelp": "ダメージや「破壊する」効果によって破壊されない。",
+      "aliases": [
+        "不会毁坏",
+        "破壊不能"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Infect",
+      "enHelp": "This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.",
+      "zh": "侵染",
+      "zhHelp": "对生物造成的伤害改为相应数量的-1/-1指示物；对牌手的伤害改为中毒指示物。",
+      "ja": "感染",
+      "jaHelp": "クリーチャーへのダメージは－１/－１カウンターとして、プレイヤーへのダメージは毒カウンターとして与える。",
+      "aliases": [
+        "侵染",
+        "感染"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Infinity",
+      "zh": "∞",
+      "ja": "∞（インフィニティ）",
+      "enHelp": "While this permanent is harnessed, it has the ability printed after ∞.",
+      "zhHelp": "此永久物为已驾驭时，获得∞之后列出的异能。",
+      "jaHelp": "∞（無限大を表す数学記号）は、インフィニティ・カードが持つキーワード能力である。\"∞\" の後に能力文が続き、これらが組み合わさって常在型能力を示す。\n「∞ - [能力]」は、「このパーマネントが装着済であるかぎり、これは[能力]を持つ。」を意味する。 rule 701.64 〔装着する〕参照。",
+      "aliases": [
+        "∞（インフィニティ）",
+        "∞"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Ingest",
+      "enHelp": "Whenever this creature deals combat damage to a player, that player exiles the top card of their library.",
+      "zh": "摄食",
+      "zhHelp": "每当此生物对牌手造成战斗伤害时，该牌手放逐其牌库顶牌。",
+      "ja": "嚥下",
+      "jaHelp": "嚥下は誘発型能力である。「嚥下／Ingest」は、「このクリーチャーがプレイヤー1人に戦闘ダメージを与えるたび、そのプレイヤーは自分のライブラリーの一番上にあるカード1枚を追放する。」を意味する。",
+      "aliases": [
+        "嚥下",
+        "摄食"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Intimidate",
+      "enHelp": "This creature can't be blocked except by artifact creatures and/or creatures that share a color with it.",
+      "zh": "威吓",
+      "zhHelp": "只能被神器生物或与它共有颜色的生物阻挡。",
+      "ja": "威嚇",
+      "jaHelp": "威嚇は回避能力である。\n威嚇を持つクリーチャーは、アーティファクト・クリーチャーと、そのクリーチャーと色を共有するクリーチャーにしかブロックされない。(rule 509〔ブロック・クリーチャー指定ステップ〕参照。)",
+      "aliases": [
+        "威吓",
+        "威嚇"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Investigate",
+      "zh": "探查",
+      "ja": "調査を行う",
+      "enHelp": "Create a Clue artifact token with “{2}, Sacrifice this artifact: Draw a card.”",
+      "zhHelp": "派出一个线索衍生神器；它具有“{2}，牺牲此神器：抓一张牌。”",
+      "jaHelp": "「調査を行う／Investigate」は、「手掛かり・トークン1つを生成する。」を意味する。rule 111.10f 参照。",
+      "aliases": [
+        "調査を行う",
+        "探查",
+        "調査"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Job select",
+      "enHelp": "When this Equipment enters, create a 1/1 colorless Hero creature token, then attach this to it.",
+      "zh": "职业选择",
+      "zhHelp": "进战场时派出一个1/1无色英雄衍生生物，并将此武具贴附于它。",
+      "ja": "ジョブ選択",
+      "jaHelp": "ジョブ選択は誘発型能力である。「ジョブ選択／Job Select」は「この装備品が戦場に出たとき、無色の1/1の英雄・クリーチャー・トークン1体を生成し、その後、これをそれにつける。」を意味する。",
+      "aliases": [
+        "ジョブ選択",
+        "职业选择"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Jump-start",
+      "enHelp": "You may cast this card from your graveyard by discarding a card in addition to paying its other costs. Then exile this card.",
+      "zh": "再起",
+      "zhHelp": "可从坟墓场施放此牌，须额外弃一张牌；之后放逐此咒语。",
+      "ja": "再活",
+      "jaHelp": "指定された通常のコストに加えてカード１枚を捨てることで、墓地から唱えられる。これにより唱えた呪文は、スタックを離れる際に追放される。",
+      "aliases": [
+        "再活",
+        "再起"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Kicker",
+      "zh": "增幅",
+      "ja": "キッカー",
+      "enHelp": "You may pay the additional kicker cost as you cast this spell for its listed bonus.",
+      "zhHelp": "施放此咒语时可以额外支付增幅费用，以获得牌面所述的效果。",
+      "jaHelp": "この呪文を唱える際に追加のキッカー・コストを支払うと、記載された効果を得る。",
+      "aliases": [
+        "キッカー"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Landwalk",
+      "enHelp": "This creature cannot be blocked if the defending player controls a land of the specified kind.",
+      "zh": "地行者",
+      "zhHelp": "若防御牌手操控符合所述类别的地，此生物不能被阻挡。",
+      "ja": "土地渡り",
+      "jaHelp": "土地渡りは、オブジェクトのルール・テキストに「[タイプ]渡り／[type]walk」と書かれる能力の総称である。通常は、[タイプ]部分は土地タイプであるが、土地というカード・タイプと、いずれかの土地タイプ、特殊タイプ、あるいはそれらの組み合わせでありうる。",
+      "aliases": [
+        "Snow-covered landwalk",
+        "Nonbasic landwalk",
+        "Snow landwalk",
+        "Mountainwalk",
+        "Desertwalk",
+        "Forestwalk",
+        "Islandwalk",
+        "Plainswalk",
+        "選ばれたタイプの渡り",
+        "Swampwalk",
+        "非基本地行者",
+        "雪境地行者",
+        "土地渡り",
+        "山脉行者",
+        "平原行者",
+        "平地渡り",
+        "树林行者",
+        "沙漠行者",
+        "沼泽行者",
+        "海岛行者",
+        "砂漠渡り",
+        "地行者",
+        "山渡り",
+        "島渡り",
+        "森渡り",
+        "沼渡り"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Learn",
+      "zh": "温习",
+      "ja": "履修を行う",
+      "enHelp": "You may take a Lesson from outside the game into your hand, or discard a card then draw one, or do neither.",
+      "zhHelp": "可从游戏外将一张课程牌置入手上，或弃一张牌再抓一张牌，也可以两者都不做。",
+      "jaHelp": "「履修を行う／Learn」とは、「あなたはカード1枚を捨ててもよい。そうしたなら、カード1枚を引く。あなたがカードを捨てなかったなら、あなたは『あなたがオーナーでありゲームの外部にある講義・カード1枚を公開し、あなたの 手札に加える。』を選んでもよい。」を意味する。",
+      "aliases": [
+        "履修を行う",
+        "温习"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Level up",
+      "enHelp": "the printed cost: Put a level counter on this. Level up only as a sorcery.",
+      "zh": "升级",
+      "zhHelp": "法术时机支付升级费用，在此生物上放一个等级指示物；等级决定其力量、防御力及异能。",
+      "ja": "Lvアップ",
+      "jaHelp": "Lvアップは起動型能力である。「Lvアップ [コスト]／Level up [cost]」は「[コスト]：このパーマネントの上にLvカウンター1個を置く。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "Lvアップ",
+        "Ｌｖアップ",
+        "升级"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Lifelink",
+      "zh": "系命",
+      "ja": "絆魂",
+      "enHelp": "Damage it deals also causes its controller to gain that much life.",
+      "zhHelp": "它造成伤害时，其操控者同时获得等量生命。",
+      "jaHelp": "これがダメージを与えると、そのコントローラーは同じ点数のライフを得る。",
+      "aliases": [
+        "絆魂",
+        "魂絆"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Living metal",
+      "enHelp": "During your turn, this Vehicle is also a creature.",
+      "zh": "金属生命体",
+      "zhHelp": "在你的回合中，此载具也是生物。",
+      "ja": "金属生命体",
+      "jaHelp": "金属生命体は、一部の機体に見られるキーワード能力である。「金属生命体／Living Metal」は、「あなたのターンの間、このパーマネントは他のタイプに加えてアーティファクト・クリーチャーである。」を意味する。",
+      "aliases": [
+        "金属生命体",
+        "活金属"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Living Weapon",
+      "enHelp": "When this Equipment enters, create a 0/0 black Phyrexian Germ creature token, then attach this to it.",
+      "zh": "活化武器",
+      "zhHelp": "进战场时派出一个0/0黑色非瑞人／病菌衍生生物，并将此武具贴附于它。",
+      "ja": "生体武器",
+      "jaHelp": "生体武器は誘発型能力である。「生体武器／Living Weapon」は「この装備品が戦場に出たとき、黒の0/0のファイレクシアン・細菌・クリーチャー・トークン1体を生成し、その後、これをそれにつける。」を意味する。",
+      "aliases": [
+        "活化武器",
+        "生体武器"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Madness",
+      "enHelp": "If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.",
+      "zh": "疯魔",
+      "zhHelp": "弃掉此牌时改为放逐它；随后可支付疯魔费用施放，否则将它置入坟墓场。",
+      "ja": "マッドネス",
+      "jaHelp": "このカードを捨てる際、墓地に置く代わりに追放する。その後マッドネス・コストで唱えられる。唱えないなら墓地に置く。",
+      "aliases": [
+        "マッドネス",
+        "疯魔"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Manifest",
+      "zh": "显化",
+      "ja": "予示する",
+      "enHelp": "Put the card face down as a nameless, colorless 2/2 creature without abilities. If it is a creature card, you may pay its mana cost to turn it face up.",
+      "zhHelp": "将牌面朝下放进战场，作为无名、无色、无异能的2/2生物；若是生物牌，可支付其法术力费用翻回正面。",
+      "jaHelp": "「[カードを]予示する／Manifest [a card]」場合、それを裏向きにする。それは、文章や名前やサブタイプやマナ・コストを持たない、2/2のクリーチャー・カード になる。そのカードを裏向きで戦場に出す。そのパーマネントは、裏向きであり続ける限り予示されたパーマネントである。特性を定義するこの効果は、そのカードが裏向きである間機能し、それがオモテ向き になった時点で終了する。",
+      "aliases": [
+        "予示する",
+        "予示",
+        "显化"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Manifest Dread",
+      "zh": "显化惧象",
+      "ja": "戦慄予示する",
+      "enHelp": "Look at your top two cards, manifest one and put the other into your graveyard.",
+      "zhHelp": "检视牌库顶两张牌，显化其中一张，将另一张置入坟墓场。",
+      "jaHelp": "「戦慄予示する／Manifest Dread」は、「あなたのライブラリーの一番上にあるカードを2枚を見る。うち1枚を予示し、その後あなが見ていて予示しなかったカードをあなたの墓地に置く。」を意味する。 rule 701.40〔予示する〕参照。",
+      "aliases": [
+        "戦慄予示する",
+        "戦慄予示",
+        "显化惧象"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Max Speed",
+      "zh": "速度极限",
+      "ja": "最高速度",
+      "enHelp": "The listed max-speed ability functions when your speed is 4.",
+      "zhHelp": "当你的速度为4时，牌面对应的速度极限异能生效。",
+      "jaHelp": "最高速度能力は、常在型能力である。 “最高速度 - [能力]／MaX speed — [Ability]” は、「あなたの速度が４であるかぎり、このオブジェクトは[能力]を持つ」を意味する。rule 702.179 〔エンジン始動！〕参照。",
+      "aliases": [
+        "最高速度",
+        "速度极限",
+        "极速"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Mayhem",
+      "enHelp": "If you discarded this card this turn, you may cast it from your graveyard for its mayhem cost, following normal timing. Mayhem without a cost allows you to play the card from your graveyard that turn.",
+      "zh": "疯乱",
+      "zhHelp": "若本回合弃过此牌，可以从坟墓场以所述费用施放，仍遵守通常时机；没有列出费用的Mayhem允许本回合从坟墓场使用此牌。",
+      "ja": "大混乱",
+      "jaHelp": "大混乱は、大混乱を持つカードがプレイヤーの墓地にある間に機能する常在型能力を示す。\n「大混乱 [コスト]／Mayhem [cost]」は、「あなたがこのターンにこのカードを捨てていたかぎり、あなたはこれをマナ・コストではなく[コスト]を支払うことで墓地から唱えてもよい。」を意味する。大混乱能力を使って呪文を唱えることは、rule 601.2b、rule 601.2f-h の代替コストを支払うことに関するルールに従う。",
+      "aliases": [
+        "Mayhem",
+        "大混乱",
+        "疯乱"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Megamorph",
+      "enHelp": "You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its megamorph cost and put a +1/+1 counter on it.",
+      "zh": "威力变身",
+      "zhHelp": "可支付{3}面朝下施放为2/2生物；支付威力变身费用翻回正面时，还放一个+1/+1指示物。",
+      "ja": "大変異",
+      "jaHelp": "{3}で裏向きの２/２クリーチャーとして唱えられる。大変異コストを支払って表向きにするとき、＋１/＋１カウンター１個を置く。",
+      "aliases": [
+        "威力变身",
+        "大変異"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Meld",
+      "zh": "融合",
+      "ja": "合体する",
+      "enHelp": "Exile the specified pair and return them combined as one permanent with their melded back face.",
+      "zhHelp": "将指定的一对牌放逐，再以背面组合为同一个永久物放回战场。",
+      "jaHelp": "「合体する／Meld」とは、合体する組のうち1枚のカードの能力中に記載されるキーワード処理である。合体する組のカード2枚を合体させるとは、それら2枚を、第2面をオモテにして組み合わせた状態で戦場に出すことである。それらがなるパーマネントは、2枚のカードによって表される単一のオブジェクトである。rule 712〔両面カード〕参照。",
+      "aliases": [
+        "合体する",
+        "合体",
+        "融合"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Melee",
+      "enHelp": "Whenever this creature attacks, it gets +1/+1 until end of turn for each opponent you attacked this combat.",
+      "zh": "乱斗",
+      "zhHelp": "攻击时，为你本次战斗攻击的每位不同对手，此生物各得+1/+1直到回合结束。",
+      "ja": "会戦",
+      "jaHelp": "会戦は誘発型能力である。「会戦／Melee」は、「このクリーチャーが攻撃するたび、ターン終了時まで、これはこの戦闘であなたがクリーチャーで攻撃した対戦相手1人につき＋1/＋1の修整を受ける。」を意味する。",
+      "aliases": [
+        "乱斗",
+        "会戦"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Menace",
+      "zh": "威慑",
+      "ja": "威迫",
+      "enHelp": "Can't be blocked except by two or more creatures.",
+      "zhHelp": "只能被两个或更多生物阻挡。",
+      "jaHelp": "２体以上のクリーチャーにしかブロックされない。",
+      "aliases": [
+        "威迫"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Mentor",
+      "enHelp": "Whenever this creature attacks, put a +1/+1 counter on target attacking creature with lesser power.",
+      "zh": "训导",
+      "zhHelp": "攻击时，在目标力量小于此生物的攻击生物上放一个+1/+1指示物。",
+      "ja": "教導",
+      "jaHelp": "教導は誘発型能力である。「教導／Mentor」は、「このクリーチャーが攻撃するたび、パワーがこのクリーチャーよりも小さい攻撃クリーチャー1体を対象とする。それの上に＋1/＋1カウンター1個を置く。」を意味する。",
+      "aliases": [
+        "教導",
+        "训导"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Mill",
+      "zh": "磨牌",
+      "ja": "切削する",
+      "enHelp": "Put the stated number of cards from the top of the library into the graveyard.",
+      "zhHelp": "将所述数量的牌从牌库顶置入坟墓场。",
+      "jaHelp": "プレイヤーが何枚かのカードを切削するとは、そのプレイヤーが自分のライブラリーからその枚数のカードを自分の墓地に置くことである。\nプレイヤーは、自分のライブラリーにあるより多い枚数のカードを切削することはできない。それが選択であるなら、そうすることを選択することはできない。それが指示であるなら、可能な限りの枚数を切削する。同様に、自分のライブラリーにあるより多い枚数のカードを切削することを含むコストを支払うことはできない。",
+      "aliases": [
+        "切削する",
+        "切削",
+        "磨去",
+        "磨牌"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Miracle",
+      "enHelp": "You may cast this card for its miracle cost when you draw it if it's the first card you drew this turn.",
+      "zh": "奇迹",
+      "zhHelp": "若是本回合抓到的第一张牌，可以在抓到时展示，并通过奇迹触发以奇迹费用施放。",
+      "ja": "奇跡",
+      "jaHelp": "奇跡は誘発型能力に関連する常在型能力である(rule 603.11 参照)。「奇跡 [コスト]／Miracle [cost]」は、「あなたがこのカードを引くに際し、これがこのターンに初めて引いたカードなら、これを手札から公開してもよい。これによりこのカードを公開したとき、あなたはマナ・コストではなく［コスト］を支払ってこれを唱えてもよい。」を意味する。",
+      "aliases": [
+        "奇跡",
+        "奇迹"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Mobilize",
+      "enHelp": "When this creature attacks, create N tapped and attacking 1/1 red Warrior creature token(s). Sacrifice them at the beginning of the next end step.",
+      "zh": "动员",
+      "zhHelp": "攻击时派出所述数量已横置且正进行攻击的1/1红色战士衍生生物；下一个结束步骤牺牲它们。",
+      "ja": "応召",
+      "jaHelp": "応召は誘発型能力である。「応召 N」は「このクリーチャーが攻撃するたび、赤の1/1の戦士・クリーチャー・トークンN体をタップ状態かつ攻撃している状態で生成する。次の終了ステップの開始時に、それらを生け贄に捧げる。」を意味する。",
+      "aliases": [
+        "动员",
+        "応召"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Modular",
+      "enHelp": "This creature enters with N +1/+1 counter(s) on it. When it dies, you may put its +1/+1 counters on target artifact creature.",
+      "zh": "套件",
+      "zhHelp": "进战场时带有所述数量的+1/+1指示物；死去时可将其+1/+1指示物放到目标神器生物上。",
+      "ja": "接合",
+      "jaHelp": "接合というキーワードは、常在型能力と誘発型能力の2つの能力を表す。「接合 N／Modular N」とは、「このパーマネントは、N個の+1/+1カウンターを置かれた状態で戦場に出る。」と、「このパーマネントが戦場から墓地に置かれたとき、アーティファクト・クリーチャー1体を対象とする。あなたはそれに、このパーマネントに置かれていた+1/+1カウンター1個につき1個の+1/+1カウンターを置いてもよい。」を意味する。",
+      "aliases": [
+        "套件",
+        "接合"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Monstrosity",
+      "zh": "蛮化",
+      "ja": "怪物化を行う",
+      "enHelp": "If it is not monstrous, put the stated number of +1/+1 counters on it and it becomes monstrous.",
+      "zhHelp": "若尚未蛮化，在此生物上放所述数量的+1/+1指示物，并使它成为已蛮化。",
+      "jaHelp": "「怪物化Nを行う／Monstrosity N」とは、「このパーマネントが怪物的でないなら、これの上に＋1/＋1カウンターN個を置き、これは怪物的 になる。」を意味する。",
+      "aliases": [
+        "怪物化を行う",
+        "怪物化",
+        "蛮化"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "More Than Meets the Eye",
+      "enHelp": "You may cast this card converted for the printed cost.",
+      "zh": "远超所见",
+      "zhHelp": "可以支付此费用，以转换后的另一面施放此牌。",
+      "ja": "見た目以上のもの",
+      "jaHelp": "見た目以上のもの・コストで唱えると、もう一方の面で唱えられる。",
+      "aliases": [
+        "見た目以上のもの",
+        "超乎所见",
+        "远超所见"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Morph",
+      "enHelp": "You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.",
+      "zh": "变身",
+      "zhHelp": "可支付{3}面朝下施放为2/2生物；有优先权时可以支付变身费用将其翻回正面，此动作不使用堆叠。",
+      "ja": "変異",
+      "jaHelp": "{3}で、名前・能力・クリーチャー・タイプ・マナ・コストを持たない裏向きの２/２クリーチャーとして唱えられる。優先権があるとき、変異コストを支払って表向きにできる。この処理はスタックを使わない。",
+      "aliases": [
+        "变身",
+        "変異"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Multikicker",
+      "enHelp": "You may pay the additional printed cost any number of times as you cast this spell.",
+      "zh": "多重增幅",
+      "zhHelp": "施放时可支付任意次数的额外增幅费用，并按支付次数执行牌面效果。",
+      "ja": "多重キッカー",
+      "jaHelp": "唱える際に、指定された追加コストを望む回数支払える。支払った回数に応じてカードの効果が変わる。",
+      "aliases": [
+        "多重キッカー",
+        "多重增幅"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Mutate",
+      "enHelp": "If you cast this spell for its mutate cost, put it over or under target non-Human creature you own. They mutate into the creature on top plus all abilities from under it.",
+      "zh": "合变",
+      "zhHelp": "以合变费用施放时，指定一个由你拥有的非人类生物为目标；结算时合并到其上方或下方，采用最上方特征及所有组成牌的异能。",
+      "ja": "変容",
+      "jaHelp": "自分がオーナーである人間でないクリーチャーを対象として、変容コストで唱えられる。その上か下に重ね、１体のクリーチャーになる。一番上の特性と、重なったすべてのカードの能力を持つ。",
+      "aliases": [
+        "合变",
+        "変容"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Myriad",
+      "enHelp": "Whenever this creature attacks, for each opponent other than defending player, you may create a token that's a copy of this creature that's tapped and attacking that player or a planeswalker they control. Exile the tokens at end of combat.",
+      "zh": "繁影",
+      "zhHelp": "攻击时可为其他每位对手派出一个复制品，已横置且攻击该对手或其鹏洛客；战斗结束时放逐复制品。",
+      "ja": "無尽",
+      "jaHelp": "無尽は誘発型能力であり、また遅延誘発型能力を作ることもある。「無尽／Myriad」は、「このクリーチャーが攻撃するたび、このクリーチャーのコピーであるトークンを、防御プレイヤー以外の対戦相手1人につき1体、タップ状態かつそのプレイヤーまたはそのプレイヤーがコントロールしているプレインズウォーカーを攻撃している状態で生成してもよい。これによりあなたが1体以上のトークンを生成したなら、戦闘終了時に、それらのトークンを追放する。」を意味する。",
+      "aliases": [
+        "無尽",
+        "繁影"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Nightbound",
+      "enHelp": "If a player casts at least two spells during their own turn, it becomes day next turn.",
+      "zh": "夜形",
+      "zhHelp": "此面对应黑夜。若轮到的牌手在自己的回合施放过至少两个咒语，下回合变为白昼。",
+      "ja": "夜明",
+      "jaHelp": "夜の間はこの面を使い、昼になったら日暮の面に変身する。アクティブ・プレイヤーが自分のターンに２つ以上の呪文を唱えたなら、次のターンは昼になる。",
+      "aliases": [
+        "夜形",
+        "夜明"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Ninjutsu",
+      "enHelp": "Pay the cost and return an unblocked attacker you control to hand to put this card from your hand onto the battlefield tapped and attacking the same opponent, planeswalker or battle. Commander ninjutsu can also be used from the command zone.",
+      "zh": "忍术",
+      "zhHelp": "支付费用并将一个未被阻挡的己方攻击生物移回手上，将手上此牌放进战场，已横置且攻击相同对象；指挥官忍术也可从统帅区启动。",
+      "ja": "忍術",
+      "jaHelp": "忍術は、忍術 能力を持つカードがプレイヤーの手札にあるときにのみ機能する起動型能力である。「忍術 [コスト]／Ninjutsu [cost]」は、「[コスト], あなたの 手札にあるこのカードを公開する, あなたがコントロールしていてブロックされていない攻撃クリーチャー1体をオーナーの手札に戻す:このカードをあなたの 手札からタップ状態かつ攻撃している状態で戦場に出す。」を意味する。",
+      "aliases": [
+        "Commander ninjutsu",
+        "指挥官忍术",
+        "上忍術",
+        "忍术",
+        "忍術"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Offering",
+      "enHelp": "Sacrifice a permanent of the required kind to cast this spell at instant timing, reducing its cost by that permanent's mana cost, including colored components.",
+      "zh": "献祭",
+      "zhHelp": "可在瞬间时机，牺牲符合类别的永久物并支付两者的法术力费用差来施放；减费需考虑有色部分。",
+      "ja": "献身",
+      "jaHelp": "指定されたタイプのパーマネント１つを生け贄に捧げるなら、瞬速を持つかのように唱えられる。そのパーマネントのマナ・コストに応じて唱えるコストが減る。",
+      "aliases": [
+        "献祭",
+        "献身"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Offspring",
+      "enHelp": "You may pay the additional printed cost as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.",
+      "zh": "繁生",
+      "zhHelp": "施放时可额外支付繁生费用；如此作时，该生物进战场后派出一个1/1复制品。",
+      "ja": "新生",
+      "jaHelp": "新生は2つの能力を表すキーワードである。「新生 [コスト]」は、「あなたはこの呪文を追加の[コスト]を支払って唱えてもよい。」と、「このパーマネントが戦場に出たとき、これの新生コストが支払われていたなら、1/1であることを除きこれのコピーであるトークン1体を生成する。」を意味する。",
+      "aliases": [
+        "新生",
+        "繁生"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Omen",
+      "zh": "预兆",
+      "ja": "前兆",
+      "enHelp": "You may cast the Omen half; as it resolves, shuffle this card into its owner's library instead of putting it into the graveyard.",
+      "zhHelp": "可选择以预兆部分施放；预兆结算时，按该机制将此牌洗回拥有者牌库，而非进入坟墓场。",
+      "jaHelp": "前兆の部分を呪文として唱えられる。解決時には、このカードを墓地に置く代わりにオーナーのライブラリーに加えて切り直す。",
+      "aliases": [
+        "前兆",
+        "预兆"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Open an Attraction",
+      "zh": "开启游乐设施",
+      "ja": "アトラクションを開く",
+      "enHelp": "Turn over the top card of your Attraction deck and put it onto the battlefield.",
+      "zhHelp": "将游乐设施牌库顶牌翻开并放进战场。",
+      "jaHelp": "プレイヤーは自分がアトラクション・デッキを使っているゲームのプレイ中にしかアトラクションを開くことはできない(rule 717〔アトラクション・カード〕参照)。",
+      "aliases": [
+        "アトラクションを開く",
+        "开启游乐设施",
+        "打开一个景点",
+        "打开景点"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Outlast",
+      "enHelp": "the printed cost, {T}: Put a +1/+1 counter on this creature. Outlast only as a sorcery.",
+      "zh": "延生",
+      "zhHelp": "法术时机支付费用并横置此生物，在它上面放一个+1/+1指示物。",
+      "ja": "長久",
+      "jaHelp": "長久は起動型能力である。「長久[コスト]／Outlast [cost]」は、「[コスト], {T}：このクリーチャーの上に＋1/＋1カウンター1個を置く。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "延生",
+        "長久"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Overload",
+      "enHelp": "You may cast this spell for its overload cost. If you do, change its text by replacing all instances of \"target\" with \"each.\"",
+      "zh": "超载",
+      "zhHelp": "以超载费用施放时，将牌文中相应的“目标”改为“每个”，作用于所有符合条件的对象。",
+      "ja": "超過",
+      "jaHelp": "超過コストで唱えると、ルール文章中の「対象」を取る部分が「各」に変わる。この呪文は対象を取らなくなる。",
+      "aliases": [
+        "超载",
+        "超過"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Paradigm",
+      "enHelp": "The first time a spell you control with this name resolves this game, it sets up a free copy at the beginning of each later precombat main phase. Exile this spell.",
+      "zh": "定式",
+      "zhHelp": "本盘首次结算你操控的同名咒语后，此后每个战斗前行动阶段开始时可免费施放其复制品；原咒语会被放逐。",
+      "ja": "範例",
+      "jaHelp": "範例は2つの呪文能力を示す。うち1つは遅延誘発型能力を作成する。「範例」は「あなたがコントロールしていてこの呪文の名前である呪文が解決されるのがこのゲームで初めてであるなら、このゲームの残りの間、あなたの戦闘前メイン・フェイズの開始時に、追放領域にあるこのオブジェクトのコピーを１つ生成する。あなたはそのコピーをそれのマナ・コストを支払うこと無く唱えてもよい。」と「この呪文を追放する。」を意味する。 rule 707.10 参照。",
+      "aliases": [
+        "Paradigm",
+        "定式",
+        "範例"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Partner",
+      "enHelp": "You can have two commanders if both have partner.",
+      "zh": "拍档",
+      "zhHelp": "可使用两位符合拍档条件的指挥官；两者的颜色标识共同决定套牌限制。",
+      "ja": "共闘",
+      "jaHelp": "共闘を持つ２枚を、一緒に統率者として使える。",
+      "aliases": [
+        "共闘",
+        "拍档"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Partner with",
+      "enHelp": "When this enters, target player may search for the named partner, put it into their hand, then shuffle. The specified pair may be your two commanders.",
+      "zh": "与……拍档",
+      "zhHelp": "进战场时可让目标牌手从牌库找指定拍档置入手上；指定的一对可共同担任指挥官。",
+      "ja": "〜との共闘",
+      "jaHelp": "戦場に出たとき、対象のプレイヤーは指定された相方をライブラリーから探して手札に加えられる。指定された２枚を一緒に統率者として使える。",
+      "aliases": [
+        "〜との共闘",
+        "与……拍档"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Persist",
+      "enHelp": "When this creature dies, if it had no -1/-1 counters on it, return it to the battlefield under its owner's control with a -1/-1 counter on it.",
+      "zh": "留存",
+      "zhHelp": "死去时若没有-1/-1指示物，将它移回战场并带有一个-1/-1指示物。",
+      "ja": "頑強",
+      "jaHelp": "頑強は誘発型能力である。「頑強／Persist」は、「このパーマネントが戦場から墓地に置かれたとき、これの上に-1/-1カウンターが置かれていなかった場合、これをオーナーのコントロール下で-1/-1カウンターが1個置かれた状態で戦場に戻す。」を意味する。",
+      "aliases": [
+        "留存",
+        "頑強"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Phasing",
+      "enHelp": "This phases in or out before you untap during each of your untap steps. While it's phased out, it's treated as though it doesn't exist.",
+      "zh": "时间跳跃",
+      "zhHelp": "重置步骤重置之前交替跃离、跃回。跃离期间视为不存在，但不视为离开或进入战场。",
+      "ja": "フェイジング",
+      "jaHelp": "フェイジングは、アンタップ・ステップのルールを変更する常在型能力である。各プレイヤーのアンタップ・ステップ の間に、アクティブ・プレイヤーがパーマネントをアンタップする前に、そのプレイヤーがコントロールしていてフェイジングを持ったパーマネントでフェイズ・イン状態にあるものは「フェイズ・アウト／phase out」する。同時に、そのプレイヤーのコントロール下でフェイズ・アウトしていたフェイズ・アウト状態のパーマネントは「フェイズ・イン／phase in」する。",
+      "aliases": [
+        "フェイジング",
+        "时间跳跃"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Planeswalk",
+      "zh": "时空旅行",
+      "ja": "プレインズウォークする",
+      "enHelp": "Follow Planechase rules to leave the current plane or phenomenon and reveal the next planar card.",
+      "zhHelp": "按竞逐时空规则离开当前时空或异象并翻开下一个时空牌。",
+      "jaHelp": "プレインチェイス戦 の間にのみ、プレイヤーはプレインズウォークしうる。次元 コントローラーだけがプレインズウォークする。rule 901〔プレインチェイス戦〕参照。",
+      "aliases": [
+        "プレインズウォークする",
+        "プレインズウォーク",
+        "时空换入",
+        "时空换出",
+        "时空换境",
+        "时空换离",
+        "时空旅行"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Play",
+      "zh": "使用",
+      "ja": "プレイする",
+      "enHelp": "Play a land or cast a spell as appropriate, respecting timing and other limits.",
+      "zhHelp": "按牌的类别使用地或施放咒语，仍须遵守时机和次数限制。",
+      "jaHelp": "土地をプレイするとは、その土地を元あった領域(通常はそのプレイヤーの手札)から戦場に出すことである。プレイヤーは自分のメイン・フェイズの間、優先権を持っていてスタックが空であれば、そのターンにまだ土地をプレイしていなかった場合に限り、土地をプレイすることができる。土地をプレイすることは特別な処理(rule 116 参照)であり、スタックを用いない。ただ単に起こるだけである。呪文や能力の結果として土地を戦場に出すことは、土地をプレイすることとは異なる。rule 305〔土地〕参照。",
+      "aliases": [
+        "プレイする",
+        "プレイ",
+        "使用"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Plot",
+      "enHelp": "You may pay the printed cost and exile this card from your hand. Cast it as a sorcery on a later turn without paying its mana cost. Plot only as a sorcery.",
+      "zh": "设谋",
+      "zhHelp": "法术时机支付费用，将手上此牌放逐；在之后回合的法术时机，可以免费施放它。",
+      "ja": "計画",
+      "jaHelp": "計画は、計画を持つカードがプレイヤーの手札にある間に機能するキーワード能力である。「計画 - [コスト]」は、「あなたのメインフェイズ中でスタックが空であり、あなたが優先権を持つときならいつでも、あなたはこのカードを手札から追放し[コスト]を支払ってもよい。それは計画された状態のカードになる。」を意味する。",
+      "aliases": [
+        "計画",
+        "计谋",
+        "设谋"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Poisonous",
+      "enHelp": "Whenever this creature deals combat damage to a player, that player gets N poison counter(s).",
+      "zh": "有毒",
+      "zhHelp": "对牌手造成战斗伤害时，该牌手获得等同于有毒数值的中毒指示物。",
+      "ja": "有毒",
+      "jaHelp": "有毒は誘発型能力である。「有毒 N／Poisonous N」は「このクリーチャーがプレイヤー1人に戦闘ダメージを与えるたび、そのプレイヤーは毒カウンターN個を得る。」を意味する。(毒カウンターに関しては、rule 104.3d 参照。)",
+      "aliases": [
+        "剧毒",
+        "有毒"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Populate",
+      "zh": "殖民",
+      "ja": "居住する",
+      "enHelp": "Create a copy of a creature token you control.",
+      "zhHelp": "选择一个由你操控的衍生生物，派出一个它的复制品。",
+      "jaHelp": "居住するとは、そのプレイヤーがコントロールしているクリーチャー・トークン1個を選び、そのクリーチャー・トークンのコピーであるトークンを生成することである。\n居住するときにクリーチャー・トークンをコントロールしていなかった場合、トークンを生成することはできない。",
+      "aliases": [
+        "居住を行う",
+        "居住する",
+        "居住",
+        "殖民"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Power-up",
+      "zh": "超能",
+      "ja": "Power-up",
+      "enHelp": "Activate only once. If this permanent entered this turn, reduce the activation cost by its mana cost.",
+      "zhHelp": "此异能只能启动一次；若该永久物本回合进战场，启动费用减少其法术力费用所对应的部分。",
+      "jaHelp": "この能力は１回しか起動できない。このパーマネントがこのターンに戦場に出たなら、カードに示されたマナ・コストに応じて起動コストが減る。",
+      "aliases": [
+        "Power-up",
+        "パワーアップ",
+        "超能"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Prepared",
+      "zh": "备法",
+      "ja": "準備済",
+      "enHelp": "While this creature is prepared, you may cast its attached spell; doing so makes it no longer prepared.",
+      "zhHelp": "此生物已备法时，可以施放其附带的咒语；施放会使它不再处于已备法状态。",
+      "jaHelp": "このクリーチャーが準備済なら、付属する呪文を唱えられる。それを唱えると、このクリーチャーは準備済ではなくなる。",
+      "aliases": [
+        "準備済",
+        "备法"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Proliferate",
+      "zh": "增殖",
+      "ja": "増殖を行う",
+      "enHelp": "Choose any permanents and/or players with counters, then give each one another counter of every kind already there.",
+      "zhHelp": "选择任意数量已有指示物的永久物和／或牌手，为每个各增加一个其上已有的每一种指示物。",
+      "jaHelp": "増殖を行うとは、カウンターの置かれているパーマネントやカウンターを持つプレイヤーを望む数選び、その後それぞれ、その持っているカウンターを各種類ごとに追加で1個ずつ与えることである。",
+      "aliases": [
+        "増殖を行う",
+        "増殖",
+        "增殖"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Protection",
+      "zh": "保护",
+      "ja": "プロテクション",
+      "enHelp": "The stated quality can't damage, enchant, equip, block, or target this permanent.",
+      "zhHelp": "具有指定特征的来源不能伤害、结附、装备、阻挡或指定此永久物为目标。",
+      "jaHelp": "指定された性質を持つものからダメージを受けず、エンチャント、装備、ブロック、対象にもされない。",
+      "aliases": [
+        "プロテクション"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Prototype",
+      "enHelp": "You may cast this spell with different mana cost, color, and size. It keeps its abilities and types.",
+      "zh": "试作",
+      "zhHelp": "可以使用牌面较小的一组法术力费用、颜色、力量及防御力施放，保留其异能和类别。",
+      "ja": "試作",
+      "jaHelp": "試作は、2組目の特性としてパワー、タフネス、マナ・コストを持つ試作カードに見られる常在型能力である。試作を持つ呪文を唱えるプレイヤーは、そのカードを「試作型／prototyped」状態で唱えることを選ぶことができる。そうしたなら、代替の特性であるパワー、タフネス、マナ・コストが使われる。rule 718〔試作カード〕参照。",
+      "aliases": [
+        "原型",
+        "試作",
+        "试作"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Provoke",
+      "enHelp": "Whenever this creature attacks, you may have target creature defending player controls untap and block it if able.",
+      "zh": "挑拨",
+      "zhHelp": "攻击时可重置目标防御牌手的生物，并令其本次战斗能够阻挡时必须阻挡此生物。",
+      "ja": "挑発",
+      "jaHelp": "挑発は誘発型能力である。挑発は「このクリーチャーが攻撃に参加するたび、防御プレイヤーがコントロールしているクリーチャー1体を対象とする。あなたは『この戦闘の間、それは可能ならこのクリーチャーをブロックする。』を選んでもよい。そうしたなら、そのクリーチャーをアンタップする。」を意味する。",
+      "aliases": [
+        "挑拨",
+        "挑発"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Prowess",
+      "zh": "灵技",
+      "ja": "果敢",
+      "enHelp": "Whenever you cast a noncreature spell, this creature gets +1/+1 until end of turn.",
+      "zhHelp": "每当你施放非生物咒语时，此生物得+1/+1直到回合结束。",
+      "jaHelp": "あなたがクリーチャーでない呪文を唱えるたび、ターン終了時まで+1/+1の修整を受ける。",
+      "aliases": [
+        "果敢"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Prowl",
+      "enHelp": "You may pay the printed cost rather than pay this spell's mana cost if a player was dealt combat damage this turn by a source that, at the time it dealt that damage, was under your control and had any of this spell's creature types.",
+      "zh": "伺机",
+      "zhHelp": "若本回合由你操控、且与此咒语共有生物类别的来源对牌手造成过战斗伤害，可以支付伺机费用施放。",
+      "ja": "徘徊",
+      "jaHelp": "このターンに、これと共通のクリーチャー・タイプを持つ自分のクリーチャーがプレイヤーに戦闘ダメージを与えていたなら、徘徊コストで唱えられる。",
+      "aliases": [
+        "伺机",
+        "徘徊"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Rampage",
+      "enHelp": "Whenever this creature becomes blocked, it gets +N/+N until end of turn for each creature blocking it beyond the first.",
+      "zh": "狂暴",
+      "zhHelp": "被两个或更多生物阻挡时，为第一个以外的每个阻挡者，各得等同狂暴数值的力量和防御力加成直到回合结束。",
+      "ja": "ランページ",
+      "jaHelp": "ランページは誘発型能力である。「ランページ N／Rampage N」は、「このクリーチャーがブロックされた状態になるたび、ターン終了時まで、このクリーチャーをブロックしている2体目以降のクリーチャー1体につき+N/+Nの修整を受ける。」を意味する。(rule 509〔ブロック・クリーチャー指定ステップ〕参照。)",
+      "aliases": [
+        "ランページ",
+        "狂暴"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Ravenous",
+      "enHelp": "This creature enters with X +1/+1 counters on it. If X is 5 or more, draw a card when it enters.",
+      "zh": "贪食",
+      "zhHelp": "进战场时带有X个+1/+1指示物；若X至少为5，进战场时抓一张牌。",
+      "ja": "貪欲",
+      "jaHelp": "貪欲はマナ・コストに{X}を持つクリーチャー・カードの一部に見られるキーワードである。貪欲は、置換効果と誘発型能力の両方を意味する。「貪欲／Ravenous」は、「このパーマネントは＋1/＋1カウンター X個が置かれた状態で戦場に出る。」と「このパーマネントが戦場に出たとき、Xが5以上である場合、カード1枚を引く。」を意味する。rule 107.3m 参照。",
+      "aliases": [
+        "貪欲",
+        "贪食"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Reach",
+      "zh": "延势",
+      "ja": "到達",
+      "enHelp": "Can block creatures with flying.",
+      "zhHelp": "可以阻挡具飞行的生物。",
+      "jaHelp": "飛行を持つクリーチャーをブロックできる。",
+      "aliases": [
+        "到達"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Read ahead",
+      "enHelp": "Choose this Saga's starting chapter as it enters. During that turn, skipped chapters do not trigger.",
+      "zh": "跳读",
+      "zhHelp": "此传纪进战场时选择起始章节，从该章开始；入场当回合不触发跳过的其他章节。",
+      "ja": "先読",
+      "jaHelp": "先読は、一部の英雄譚・カードが持つキーワードである。「先読／Read Ahead」は、「この英雄譚の章能力は、その能力の章シンボルに記された数とちょうど同数の伝承カウンターが置かれていないかぎり、これが戦場に出たターンには誘発しない。」を意味する。rule 714〔英雄譚・カード〕参照。",
+      "aliases": [
+        "先読",
+        "跳读"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Rebound",
+      "enHelp": "If you cast this spell from your hand, exile it as it resolves. At the beginning of your next upkeep, you may cast this card from exile without paying its mana cost.",
+      "zh": "弹回",
+      "zhHelp": "若从手上施放，结算时改为放逐；下次维持开始时可从放逐区免费施放。",
+      "ja": "反復",
+      "jaHelp": "反復は、インスタントやソーサリーが持つ。これはその呪文がスタック上にある間に機能する、遅延誘発型能力を作成する常在型能力を表す。「反復／Rebound」は「この呪文があなたの 手札から唱えられていたなら、解決に際してこれをあなたの 墓地に置く代わりに、これを追放し、あなたの次のアップキープの開始時に、あなたは追放 領域にあるこのカードをマナ・コストを支払うことなく唱えてもよい。」を意味する。",
+      "aliases": [
+        "反復",
+        "弹回"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Reconfigure",
+      "enHelp": "the printed cost: Attach to target creature you control; or unattach from a creature. Reconfigure only as a sorcery. While attached, this isn't a creature.",
+      "zh": "重配",
+      "zhHelp": "法术时机支付费用，将此武具贴附于己方生物或卸装；贴附期间它不是生物。",
+      "ja": "換装",
+      "jaHelp": "換装は、起動型能力2つを意味する。「換装[コスト]／Reconfigure [cost]」は、「[コスト]：あなたがコントロールしていてこれでないクリーチャー1体を対象とする。これをそれにつける。起動はソーサリーとしてのみ行う。」と「[コスト]：このパーマネントをはずす。起動はソーサリーとしてのみ行い、このパーマネントがクリーチャーについていなければ起動できない。」を意味する。",
+      "aliases": [
+        "換装",
+        "重配"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Recover",
+      "enHelp": "When a creature is put into your graveyard from the battlefield, you may pay the printed cost. If you do, return this card from your graveyard to your hand. Otherwise, exile this card.",
+      "zh": "复还",
+      "zhHelp": "生物从战场进入你的坟墓场时，可支付复还费用将坟墓场中的此牌移回手上；不支付则放逐此牌。",
+      "ja": "復活",
+      "jaHelp": "復活は、復活を持つカードが墓地にある間にのみ機能する誘発型能力である。「復活 [コスト]／Recover [cost]」とは「クリーチャー1体が戦場からあなたの 墓地に置かれたとき、あなたは[コスト]を支払ってもよい。そうしたなら、あなたの 墓地にあるこのカードをあなたの 手札に戻す。そうしないなら、このカードを追放する。」を意味する。",
+      "aliases": [
+        "复还",
+        "復活"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Recruit",
+      "zh": "招募",
+      "ja": "徴募を行う",
+      "enHelp": "Draw then discard a card. If you discarded a nonland card, create a 1/1 white Human Soldier token.",
+      "zhHelp": "抓一张牌再弃一张牌；若弃的是非地牌，派出一个1/1白色人类／士兵衍生生物。",
+      "jaHelp": "「徴募を行う／Recruit」とは「カード１枚を引く。その後、カード１枚を捨てる。土地でないカードを捨てたなら、白の1/1の人間・兵士・クリーチャー・トークン１体を生成する。」を意味する。",
+      "aliases": [
+        "徴募を行う",
+        "募兵",
+        "招募"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Reflect",
+      "enHelp": "As this enters, each opponent may pay the printed cost. When they do, they create a token copy of this except it lacks this ability.",
+      "zh": "映像",
+      "zhHelp": "此永久物进战场时，各对手可支付所述费用；支付的牌手派出它的复制品，但不带此异能。",
+      "ja": "Reflect",
+      "jaHelp": "これが戦場に出る際、各対戦相手は指定コストを支払える。支払ったプレイヤーは、この能力を持たないこれのコピー・トークンを生成する。",
+      "aliases": [
+        "Reflect",
+        "映像"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Regenerate",
+      "zh": "重生",
+      "ja": "再生する",
+      "enHelp": "Replace the next destruction this turn by tapping it, removing marked damage, and removing it from combat. This does not stop sacrifice or zero toughness.",
+      "zhHelp": "建立一次替代效应：本回合下一次将被消灭时，改为横置、移去所有伤害并移出战斗；不能替代牺牲或防御力为0。",
+      "jaHelp": "呪文や能力の効果がパーマネントを再生する場合、そのパーマネントが次にそのターン破壊されることを防ぐ置換効果が作られる。この場合、「[パーマネント]を再生する／Regenerate [permanent]」とは、「このターン、次に[パーマネント]が破壊されるなら、その代わりに負っているすべてのダメージを取り除き、そのコントローラーはそれをタップし、攻撃クリーチャーまたはブロック・クリーチャーならば戦闘から取り除く」を意味する。",
+      "aliases": [
+        "再生する",
+        "再生",
+        "重生"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Reinforce",
+      "enHelp": "the printed cost, Discard this card: Put N +1/+1 counter(s) on target creature.",
+      "zh": "补强",
+      "zhHelp": "支付费用并弃掉此牌，在目标生物上放所述数量的+1/+1指示物。",
+      "ja": "補強",
+      "jaHelp": "補強は、補強 能力を持つカードがプレイヤーの手札にあるときにのみ機能する起動型能力である。「補強 N ―[コスト]／Reinforce N-[cost]」とは「[コスト], このカードを捨てる:クリーチャー1体を対象とする。それの上に+1/+1カウンターN個を置く。」を意味する。",
+      "aliases": [
+        "补强",
+        "補強"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Renown",
+      "enHelp": "When this creature deals combat damage to a player, if it isn't renowned, put N +1/+1 counter(s) on it and it becomes renowned.",
+      "zh": "铭勇",
+      "zhHelp": "对牌手造成战斗伤害时，若尚未铭勇，则放上所述数量的+1/+1指示物并成为已铭勇。",
+      "ja": "高名",
+      "jaHelp": "高名は誘発型能力である。「高名N／Renown N」は、「このクリーチャーがプレイヤー1人に戦闘ダメージを与えたとき、これが高名でない場合、これの上に＋1/＋1カウンターN個を置き、これは高名 になる。」を意味する。",
+      "aliases": [
+        "铭勇",
+        "高名"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Replicate",
+      "enHelp": "As an additional cost to cast this spell, you may pay the printed cost any number of times. If you do, copy it that many times. You may choose new targets for the copies.",
+      "zh": "覆诵",
+      "zhHelp": "施放时可重复支付覆诵费用；每支付一次，复制此咒语一次，并可另选目标。",
+      "ja": "複製",
+      "jaHelp": "唱える際に複製コストを望む回数支払える。支払った回数だけこの呪文をコピーし、各コピーの新しい対象を選んでもよい。",
+      "aliases": [
+        "複製",
+        "覆诵"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Retrace",
+      "enHelp": "You may cast this card from your graveyard by discarding a land card in addition to paying its other costs.",
+      "zh": "追溯",
+      "zhHelp": "可以从坟墓场施放此牌，须额外弃一张地牌。",
+      "ja": "回顧",
+      "jaHelp": "回顧はそれを持つカードがいずれかのプレイヤーの墓地にある状態で機能する常在型能力である。 「回顧／Retrace」は、「あなたはこのカードを、これを唱えるための追加コストとして土地・カード1枚を捨てることで、あなたの 墓地から唱えてもよい。」を意味する。 回顧 能力を使って呪文を唱えることは、rule 601.2b と rule 601.2f-h の追加コストの支払いのルールに従う。",
+      "aliases": [
+        "回顧",
+        "追溯"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Reveal",
+      "zh": "展示",
+      "ja": "公開する",
+      "enHelp": "Show the specified card to all players without changing its zone.",
+      "zhHelp": "让所有牌手看见指定牌，而不因此改变其所在区域。",
+      "jaHelp": "カードを公開するとは、そのカードをしばらくの間すべてのプレイヤーに見せるということである。効果によってカードが公開される場合、その効果のそのカードに関係する部分がすべて終わるまで公開され続ける。呪文を唱えるコストや能力を起動するコストとしてカードが公開されたり、非公開領域から誘発型能力が起動される(rule 602.2a 参照)事によって公開される場合、そのカードはその呪文や能力が宣言されてからスタックを離れるまでの間公開され続ける。カードを公開することによって誘発型能力が誘発する場合、その誘発型能力がスタックを離れるまでそのカードは公開されたままになる。その能力が次にプレイヤーが優先権を得る時にスタックに置かれない場合、そのカードの公開は終わる。",
+      "aliases": [
+        "公開する",
+        "公開",
+        "展示"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Riot",
+      "enHelp": "This creature enters with your choice of a +1/+1 counter or haste.",
+      "zh": "起事",
+      "zhHelp": "进战场时选择带有一个+1/+1指示物或获得敏捷。",
+      "ja": "暴動",
+      "jaHelp": "暴動は常在型能力である。「暴動／Riot」は、「あなたは『このパーマネントは追加で＋1/＋1カウンター1個が置かれた状態で戦場に出る。』を選んでもよい。そうしないなら、これは速攻を得る。」を意味する。",
+      "aliases": [
+        "暴動",
+        "起事"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Ripple",
+      "enHelp": "When you cast this spell, you may reveal the top N card(s) of your library. You may cast any of those cards with the same name as this spell without paying their mana costs. Put the rest on the bottom of your library in any order.",
+      "zh": "涟动",
+      "zhHelp": "施放时可展示牌库顶所述数量的牌，免费施放其中任意同名牌，其余以任意顺序置于牌库底。",
+      "ja": "波及",
+      "jaHelp": "唱えたとき、ライブラリーの一番上から指定数のカードを公開できる。同名のカードを無料で唱えられ、残りを望む順番で一番下に置く。",
+      "aliases": [
+        "波及",
+        "涟动"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Roll to Visit Your Attractions",
+      "zh": "掷骰造访游乐设施",
+      "ja": "アトラクションを観覧するためサイコロを振る",
+      "enHelp": "Roll a six-sided die and trigger visit abilities of your Attractions with that number lit.",
+      "zhHelp": "掷一个六面骰，触发点亮相应数字的己方游乐设施的造访异能。",
+      "jaHelp": "アトラクションを観覧するためサイコロを振るとは、1個の6面体サイコロを振ることである。その後、その出目と同じ数字が点灯している1つ以上のアトラクションをコントロールしているなら、それらのアトラクションはそれぞれ「観覧」され、その観覧 能力が誘発する。rule 717〔アトラクション・カード〕、rule 702.159〔観覧〕参照。",
+      "aliases": [
+        "アトラクションを観覧するためサイコロを振る",
+        "掷骰造访游乐设施",
+        "掷骰造访景点"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Sacrifice",
+      "zh": "牺牲",
+      "ja": "生け贄に捧げる",
+      "enHelp": "Move a permanent you control to its owner's graveyard. This is not destruction.",
+      "zhHelp": "将自己操控的永久物置入拥有者坟墓场；这不是消灭，不受不灭或重生保护。",
+      "jaHelp": "パーマネントを「生け贄に捧げる／sacrifice」とは、そのコントローラーがそれを戦場から直接オーナーの墓地に置くことである。パーマネントでないものや、自分のコントロールしていないパーマネントを生け贄に捧げることはできない。パーマネントを生け贄に捧げることは破壊ではないので、再生その他の破壊を置換する効果はこの行動に影響を及ぼさない。",
+      "aliases": [
+        "生け贄に捧げる",
+        "牺牲"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Saddle",
+      "enHelp": "Tap any number of other creatures you control with total power N or more: This Mount becomes saddled until end of turn. Saddle only as a sorcery.",
+      "zh": "乘驾",
+      "zhHelp": "法术时机横置其他己方生物，力量总和至少为乘驾数值，使此坐骑成为已乘驾直到回合结束。",
+      "ja": "騎乗",
+      "jaHelp": "騎乗は起動型能力である。「騎乗N／Saddle N」は、「あなたがコントロールしていてこれでないアンタップ状態の望む数のクリーチャーをパワーの合計がN以上になるように選んでタップする：ターン終了時まで、このパーマネントは騎乗された状態になる。起動はソーサリーとして行う。」を意味する。",
+      "aliases": [
+        "乘驾",
+        "备鞍",
+        "騎乗"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Scavenge",
+      "enHelp": "the printed cost, Exile this card from your graveyard: Put a number of +1/+1 counters equal to this card's power on target creature. Scavenge only as a sorcery.",
+      "zh": "食腐",
+      "zhHelp": "法术时机支付费用并从坟墓场放逐此牌，在目标生物上放等同于此牌力量的+1/+1指示物。",
+      "ja": "活用",
+      "jaHelp": "活用は、活用を持つカードが墓地にある間のみ作用する起動型能力である。「活用[コスト]／Scavenge [cost]」は、「[コスト], あなたの 墓地にあるこのカードを追放する：クリーチャー1体を対象とする。それの上にこのカードのパワーに等しい数の＋1/＋1カウンターを置く。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "活用",
+        "食腐"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Scry",
+      "zh": "占卜",
+      "ja": "占術",
+      "enHelp": "Look at that many cards from the top of your library; put any on the bottom and the rest on top in any order.",
+      "zhHelp": "检视牌库顶指定数量的牌，将任意数量置于牌库底，其余以任意顺序放回牌库顶。",
+      "jaHelp": "指定された枚数のライブラリーの一番上を見て、好きな枚数を一番下に、残りを好きな順番で一番上に置く。",
+      "aliases": [
+        "scried",
+        "scries",
+        "占術を行う",
+        "占術"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Search",
+      "zh": "搜寻",
+      "ja": "探す",
+      "enHelp": "Look through the stated zone and choose cards satisfying the instructions.",
+      "zhHelp": "检视指定区域并按条件选择牌；完成后按指示处理。",
+      "jaHelp": "カードをある領域から探すとは、その領域にあるすべてのカードを見て(非公開領域であっても)、条件に合うカードを見つけるということを意味する。\n特定のカード・タイプ、色などの何らかの条件を満たすカードを非公開領域から探す必要がある場合、存在してもそのすべてを見つける必要はない。",
+      "aliases": [
+        "探す",
+        "搜寻"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Set in Motion",
+      "zh": "实施",
+      "ja": "実行中にする",
+      "enHelp": "Turn a scheme face up in the command zone and trigger its set-in-motion ability.",
+      "zhHelp": "按魔王赛制规则将阴谋牌面朝上放到统帅区，并触发其实施效果。",
+      "jaHelp": "アーチエネミー戦のゲーム中の計略・カードだけが、実行中にされうる。魔王だけが計略略・カードを実行中にすることができる。rule 314〔計略〕、rule 904〔アーチエネミー戦〕参照。",
+      "aliases": [
+        "実行中にする",
+        "发动此邪计",
+        "发动邪计",
+        "実行中に",
+        "实施"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Shadow",
+      "enHelp": "This creature can block or be blocked by only creatures with shadow.",
+      "zh": "次元幽影",
+      "zhHelp": "只能阻挡具次元幽影的生物，也只能被具次元幽影的生物阻挡。",
+      "ja": "シャドー",
+      "jaHelp": "シャドーは回避能力である。\nシャドーを持つクリーチャーはシャドーを持たないクリーチャーにブロックされず、シャドーを持たないクリーチャーはシャドーを持つクリーチャーにブロックされない。rule 509〔ブロック・クリーチャー指定ステップ〕参照。",
+      "aliases": [
+        "シャドー",
+        "次元幽影"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Shroud",
+      "enHelp": "This can't be the target of spells or abilities.",
+      "zh": "帷幕",
+      "zhHelp": "不能成为任何咒语或异能的目标，包括由你操控的。",
+      "ja": "被覆",
+      "jaHelp": "被覆は常在型能力である。被覆は、「このパーマネントまたはプレイヤーは呪文や能力の対象 にならない。」を意味する。\n同一のパーマネントまたはプレイヤーに複数の被覆があっても効果は変わらない。",
+      "aliases": [
+        "帷幕",
+        "被覆"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Shuffle",
+      "zh": "洗牌",
+      "ja": "切り直す",
+      "enHelp": "Randomize the library so no player knows the order.",
+      "zhHelp": "将牌库随机排列，使任何牌手都不知道其顺序。",
+      "jaHelp": "ライブラリーや裏向きのカードの束を切り直すとは、その中でカードを、どのプレイヤーにも順番が分からなくなるように無作為化することである。\nプレイヤーにライブラリーからカードを探させ、切り直させてからその探したカードの一部または全部を別の領域かそのライブラリーの特定の場所に置く効果が存在する。その場合、それらの見つかったカードは、その時点でそのライブラリーに残っているとしても、その切り直しには含まれない。また、それらのカードを除いたライブラリーのすべてのカードは切り直される。ライブラリーを切り直したときに誘発する能力は誘発する。その見つけたカードが特定の場所に置かれるまでの間は、ライブラリーの一番上のカードを公開したり見たりさせる能力によってライブラリーの一番上のカードを見ることはできない。",
+      "aliases": [
+        "切り直す",
+        "洗牌"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Skulk",
+      "zh": "潜匿",
+      "ja": "潜伏",
+      "enHelp": "Can't be blocked by creatures with greater power.",
+      "zhHelp": "不能被力量比它大的生物阻挡。",
+      "jaHelp": "これより大きいパワーを持つクリーチャーにはブロックされない。",
+      "aliases": [
+        "潜伏"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Sneak",
+      "enHelp": "You may cast this spell for the printed cost if you also return an unblocked attacker you control to hand during the declare blockers step.",
+      "zh": "奇袭",
+      "zhHelp": "宣告阻挡者步骤中，可支付奇袭费用并将一个未被阻挡的己方攻击生物移回手上来施放此咒语。",
+      "ja": "隠密",
+      "jaHelp": "ブロック・クリーチャー指定ステップに隠密コストを支払い、自分のブロックされていない攻撃クリーチャー１体を手札に戻すことで、この呪文を唱えられる。",
+      "aliases": [
+        "奇袭",
+        "潜袭",
+        "隠密"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Solved",
+      "zh": "侦结",
+      "ja": "解明完了",
+      "enHelp": "The listed ability functions while this Case is solved; the Case specifies how it becomes solved.",
+      "zhHelp": "此案件已侦破时，牌面对应的异能生效；侦破条件及检查时机由案件牌说明。",
+      "jaHelp": "解明完了は事件カードに書かれているキーワード能力である。詳細は 719 〔事件カード〕参照。「解明完了」の語の後に、能力を示すテキストが続けて記載される。それらの能力は常在型能力や誘発型能力や起動型能力である。",
+      "aliases": [
+        "解明完了",
+        "侦结"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Soulbond",
+      "enHelp": "You may pair this creature with another unpaired creature when either enters. They remain paired for as long as you control both of them.",
+      "zh": "魂系",
+      "zhHelp": "此生物或另一个己方生物进战场时，可让两个未配对的生物配对；只要两者仍是你操控的生物，配对便持续。",
+      "ja": "結魂",
+      "jaHelp": "これか他のクリーチャーが自分のコントロール下で戦場に出たとき、組になっていない２体を組にできる。両方が自分のクリーチャーである間、その組はカードに記された能力を持つ。",
+      "aliases": [
+        "結魂",
+        "魂系"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Soulshift",
+      "enHelp": "When this creature dies, you may return target Spirit card with mana value N or less from your graveyard to your hand.",
+      "zh": "转生",
+      "zhHelp": "死去时，可将目标法术力值不超过转生数值的精怪牌从你的坟墓场移回手上。",
+      "ja": "転生",
+      "jaHelp": "転生は誘発型能力である。「転生 N／Soulshift N」は、「このパーマネントが戦場から墓地に置かれたとき、あなたの 墓地にありマナ総量がN以下であるスピリット・カード1枚を対象とする。あなたはそれをあなたの 手札に戻してもよい。」を意味する。",
+      "aliases": [
+        "転生",
+        "转生"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Space sculptor",
+      "enHelp": "this card divides the battlefield into alpha, beta, and gamma sectors. If a creature isn't assigned to a sector, its controller assigns it to one. Opponents assign first.",
+      "zh": "太空塑师",
+      "zhHelp": "将战场分为三个区域；尚未被分区的生物由操控者分配区域，对手先分配。",
+      "ja": "宇宙を刻む者",
+      "jaHelp": "クリーチャーをアルファ・ベータ・ガンマの各セクターに分ける。セクターを持たないクリーチャーが戦場に出たときにもセクターを選ぶ。カードの他の能力が各セクターを参照する。",
+      "aliases": [
+        "宇宙を刻む者",
+        "太空塑形师",
+        "太空塑师"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Specialize",
+      "enHelp": "the printed cost, Choose a color, discard a card of that color or associated basic land type: This card perpetually specializes into that color. Activate only as a sorcery.",
+      "zh": "精进",
+      "zhHelp": "法术时机支付费用并弃掉符合颜色或基本地类别的牌，使此牌永久精进为对应颜色的版本。",
+      "ja": "特化",
+      "jaHelp": "ソーサリーを唱えられるときにコストを支払い、指定された色や基本土地タイプに合うカードを捨てる。対応する色の版に永久に変化する。",
+      "aliases": [
+        "専門化",
+        "特化",
+        "精进"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Spectacle",
+      "enHelp": "You may cast this spell for its spectacle cost rather than its mana cost if an opponent lost life this turn.",
+      "zh": "揭幕",
+      "zhHelp": "若本回合有对手失去过生命，可以支付揭幕费用施放此咒语。",
+      "ja": "絢爛",
+      "jaHelp": "絢爛はスタック上で機能する常在型能力である。「絢爛[コスト]／Spectacle [cost]」は、「このターンに対戦相手がライフを失っていたなら、あなたはこの呪文のマナ・コストを支払うのではなく、[コスト]を支払ってもよい。」を意味する。絢爛 コストで呪文を唱えることは、rule 601.2bと601.2f～hの代替コストの支払いのルールに従う。",
+      "aliases": [
+        "揭幕",
+        "絢爛"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Splice",
+      "enHelp": "While casting a spell of the stated kind, reveal this card from your hand and pay its splice cost to add its rules text to that spell. This card stays in your hand.",
+      "zh": "通联",
+      "zhHelp": "施放符合类别的咒语时，可展示手上此牌并支付通联费用，将其规则文字加入该咒语；此牌留在手上。",
+      "ja": "連繋",
+      "jaHelp": "指定されたタイプの呪文を唱える際に、手札からこのカードを公開して連繋コストを支払える。このカードのルール文章をその呪文に追加し、このカードは手札に残る。",
+      "aliases": [
+        "通联",
+        "連繋"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Split second",
+      "enHelp": "As long as this spell is on the stack, players can't cast other spells or activate abilities that aren't mana abilities.",
+      "zh": "转瞬",
+      "zhHelp": "此咒语在堆叠上时，牌手不能施放其他咒语或启动非法术力异能；不阻止触发异能及特殊动作。",
+      "ja": "刹那",
+      "jaHelp": "刹那は、刹那を持つ呪文がスタック上にある間にのみ機能する常在型能力である。「刹那／Split Second」は「この呪文がスタックにあるかぎり、プレイヤーは他の呪文を唱えられず、マナ能力でない能力を起動できない。」を意味する。",
+      "aliases": [
+        "刹那",
+        "转瞬"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Spree",
+      "enHelp": "Choose one or more additional costs.",
+      "zh": "追欢",
+      "zhHelp": "施放时选择一个或多个模式，并为每个所选模式支付其额外费用；每个模式最多选一次。",
+      "ja": "放題",
+      "jaHelp": "放題はモードを持つ呪文 (700.2 参照) がスタックにある間に適用される常在型能力である。「放題／Spree」は、「１つ以上のモードを選ぶ。この呪文を唱えるための追加コストとして、各モードで示されているそれぞれのコストを支払う。」を意味する。",
+      "aliases": [
+        "放題",
+        "追欢"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Squad",
+      "enHelp": "As an additional cost to cast this spell, you may pay the printed cost any number of times. When this creature enters, create that many tokens that are copies of it.",
+      "zh": "小队",
+      "zhHelp": "施放时可额外支付任意次数的班列费用；进战场时派出等量此生物的复制品。",
+      "ja": "分隊",
+      "jaHelp": "唱える際に分隊コストを望む回数支払える。これが戦場に出たとき、支払った回数だけこれのコピー・トークンを生成する。",
+      "aliases": [
+        "分隊",
+        "小队"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Start your engines",
+      "enHelp": "If you have no speed, it starts at 1. It increases once on each of your turns when an opponent loses life. Max speed is 4.",
+      "zh": "发动引擎！",
+      "zhHelp": "若尚无速度，速度成为1；此后你每回合首次令对手失去生命时速度加1，最高为4。",
+      "ja": "エンジン始動！",
+      "jaHelp": "エンジン始動！は常在型能力である。プレイヤーがエンジン始動！を持つパーマネントをコントロールして、かつ、そのプレイヤーが速度を持たないなら、そのプレイヤーの速度は1になる。これは状況起因処理である。 rule 704 参照。",
+      "aliases": [
+        "Start your engines!",
+        "エンジン始動！",
+        "エンジン始動",
+        "启动引擎！",
+        "发动引擎",
+        "启动引擎"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Starting intensity",
+      "enHelp": "Track the printed starting intensity. Other abilities explain how it changes and what it affects.",
+      "zh": "起始强度",
+      "zhHelp": "以牌面指定数值记录起始强度；强度的后续变化及用途由该牌的其他异能说明。",
+      "ja": "Starting intensity",
+      "jaHelp": "カードに記された初期の強度を記録する。強度の変化や、その値による効果はカードの他の能力に従う。",
+      "aliases": [
+        "Starting intensity",
+        "起始强度",
+        "強度"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Station",
+      "enHelp": "Tap another creature you control: Put charge counters equal to its power on this Spacecraft. Station only as a sorcery. It’s an artifact creature at N+.",
+      "zh": "蓄势",
+      "zhHelp": "法术时机横置另一个己方生物，在此太空船上放等同其力量的充电指示物；达到牌面门槛后获得对应特征。",
+      "ja": "配備",
+      "jaHelp": "配備は起動型能力である。「配備」は「あなたがコントロールしていてこれでないアンタップ状態のクリーチャー1体をタップする:タップしたクリーチャーのパワーに等しい個数の蓄積カウンターをこのパーマネントの上に置く。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "蓄势",
+        "进驻",
+        "配備",
+        "驻舱"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Storied",
+      "enHelp": "If you control three or more artifacts, legendaries, and/or Sagas, you have an enduring story for the rest of the game.",
+      "zh": "立传",
+      "zhHelp": "一旦满足操控至少三个神器、传奇和／或传纪的条件，本盘游戏便具有相应的故事状态；重复符合条件的同一永久物只计一次。",
+      "ja": "物語り",
+      "jaHelp": "物語りは常在型能力である。「物語り」は「あなたがアーティファクトや英雄譚や伝説であるパーマネントを３つ以上コントロールしていてかつあなたが高額不朽の物語を持たないなら、あなたはこのゲームの残りの間、不朽の物語を持つ。」を意味する。",
+      "aliases": [
+        "Storied",
+        "物語り",
+        "立传"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Storm",
+      "enHelp": "When you cast this spell, copy it for each other spell that was cast before it this turn. You may choose new targets for the copies.",
+      "zh": "风暴",
+      "zhHelp": "施放时，为本回合在它之前施放的每个咒语复制一次，包括对手的咒语；可为复制品选择新目标。",
+      "ja": "ストーム",
+      "jaHelp": "この呪文を唱えたとき、このターンにそれより前に唱えられた呪文１つにつき１回コピーする。各コピーの新しい対象を選んでもよい。",
+      "aliases": [
+        "ストーム",
+        "风暴"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Strive",
+      "enHelp": "this card costs the printed cost more to cast for each target beyond the first.",
+      "zh": "积力",
+      "zhHelp": "施放时，第一个目标以外每多选一个目标，就多支付一次积力费用。",
+      "ja": "奮励",
+      "jaHelp": "唱える際に、２つ目以降の対象１つにつき、指定された追加コストを支払う。",
+      "aliases": [
+        "奮励",
+        "积力"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Sunburst",
+      "enHelp": "This enters with either a +1/+1 or charge counter on it for each color of mana spent to cast it based on whether it's a creature.",
+      "zh": "辉映",
+      "zhHelp": "进战场时，为施放它花费的每一种颜色各带一个指示物；生物为+1/+1，非生物为充电指示物。",
+      "ja": "烈日",
+      "jaHelp": "烈日は、オブジェクトが戦場に出る際に機能する常在型能力である。「烈日／Sunburst」は、「このオブジェクトがこれに影響を及ぼすタイプ変更効果を考慮しなければクリーチャーとして戦場に出るなら、これは、これを唱えるために使われたマナの色1色につき1個の+1/+1カウンターが置かれた状態で戦場に出る。そうでなければ、これは、これを唱えるために使われたマナの色1色につき1個の蓄積カウンターが置かれた状態で戦場に出る。」を意味する。",
+      "aliases": [
+        "烈日",
+        "辉映"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Support",
+      "zh": "支援",
+      "ja": "支援を行う",
+      "enHelp": "Put a +1/+1 counter on each of up to the stated number of target creatures. A permanent's own support ability cannot target itself.",
+      "zhHelp": "在至多所述数量的目标生物上各放一个+1/+1指示物；永久物自身的支援不能选择自己。",
+      "jaHelp": "パーマネントの「支援Nを行う／support N」は「これでないクリーチャー最大N体を対象とする。それらの上に＋1/＋1カウンターをそれぞれ1個置く。」を意味する。インスタント・呪文かソーサリー・呪文の「支援Nを行う」は「クリーチャー最大N体を対象とする。それらの上に＋1/＋1カウンターをそれぞれ1個置く。」を意味する。",
+      "aliases": [
+        "支援を行う",
+        "支援"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Surge",
+      "enHelp": "You may cast this spell for its surge cost if you or a teammate has cast another spell this turn.",
+      "zh": "潮涌",
+      "zhHelp": "若本回合你或队友已施放过其他咒语，可支付怒潮费用施放。",
+      "ja": "怒濤",
+      "jaHelp": "怒濤は、怒濤を持つ呪文がスタック上にある間に作用する常在型能力である。「怒濤[コスト]／Surge[cost]」は「あなたやあなたの チームメイトのうち1人がこのターンにこれでない呪文を唱えていたなら、あなたはこの呪文を唱えるに際し、マナ・コストを支払うのではなく[コスト]を支払ってもよい。」を意味する。怒濤 コストで呪文を唱えることは、rule 601.2bとrule 601.2f～rule 601.2hの代替コストの支払いのルールに従う。",
+      "aliases": [
+        "怒濤",
+        "潮涌"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Surveil",
+      "zh": "刺探",
+      "ja": "諜報",
+      "enHelp": "Look at that many cards from the top of your library. Put any into your graveyard and the rest on top in any order.",
+      "zhHelp": "检视牌库顶指定数量的牌。将其中任意数量置入坟墓场，其余以任意顺序放回牌库顶。",
+      "jaHelp": "指定された枚数のライブラリーの一番上を見て、好きな枚数を墓地に、残りを好きな順番で一番上に置く。",
+      "aliases": [
+        "surveilled",
+        "surveils",
+        "諜報を行う",
+        "諜報"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Suspect",
+      "zh": "疑犯",
+      "ja": "容疑をかける",
+      "enHelp": "The creature becomes suspected, giving it menace and preventing it from blocking until it leaves or an effect removes that designation.",
+      "zhHelp": "使该生物成为疑犯；成为疑犯期间它具有威慑且不能阻挡，直到离开战场或效应让它不再是疑犯。",
+      "jaHelp": "ある種の呪文や能力によって、プレイヤーはクリーチャーに容疑をかける。そのクリーチャーは戦から離れるか、能力によってそれの容疑が晴れるまで容疑をかけられたクリーチャーとなる。",
+      "aliases": [
+        "容疑をかける",
+        "容疑をかけ",
+        "怀疑",
+        "疑凶",
+        "疑惧",
+        "疑犯"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Suspend",
+      "enHelp": "If you could begin to cast this card by putting it onto the stack from your hand, you may pay the printed cost and exile it with N time counter(s) on it. At the beginning of your upkeep, remove a time counter. When the last is removed, play it without paying its mana cost. If you cast a creature spell this way, it gains haste until you lose control of the spell or the permanent it becomes.",
+      "zh": "延缓",
+      "zhHelp": "符合施放条件时，可支付延缓费用将手上此牌放逐，并放置所述数量的计时指示物；此特殊动作不使用堆叠。你的维持开始时移去一个计时指示物，移去最后一个时可不支付法术力费用使用此牌；不使用则留在放逐区。以此施放的生物获得敏捷，直到你失去该咒语或其成为的永久物的操控权。",
+      "ja": "待機",
+      "jaHelp": "手札から待機コストを支払い、指定数の時間カウンターを置いて追放できる。自分のアップキープごとに１個取り除く。最後の１個を取り除いたとき、無料でプレイしてもよい。これにより唱えたクリーチャーは速攻を持つ。",
+      "aliases": [
+        "延缓",
+        "待機"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Tap and Untap",
+      "zh": "横置与重置",
+      "ja": "タップする、アンタップする",
+      "enHelp": "Tap a permanent or return it to its untapped state.",
+      "zhHelp": "横置将永久物转为已横置，重置使其恢复为未横置。",
+      "jaHelp": "パーマネントをタップするとは、カードを横向きに倒すことである。アンタップ状態のパーマネントだけをタップできる。\nパーマネントをアンタップするとは、カードを縦向きに戻すことである。タップ状態のパーマネントだけをアンタップできる。",
+      "aliases": [
+        "タップする、アンタップする",
+        "タップする、アンタップ",
+        "横置与重置"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "Teamwork",
+      "enHelp": "As an additional cost to cast this spell, you may tap any number of creatures you control with total power N or more.",
+      "zh": "联合",
+      "zhHelp": "施放时可以额外横置任意数量己方生物，力量总和至少达到协作数值，以获得牌面所述效果。",
+      "ja": "Teamwork",
+      "jaHelp": "唱える際に、パワーの合計が指定値以上になるよう、自分のクリーチャーを追加でタップできる。カードに記された追加の効果を得る。",
+      "aliases": [
+        "Teamwork",
+        "チームワーク",
+        "联合"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "The Initiative",
+      "zh": "先制",
+      "ja": "イニシアチブ",
+      "enHelp": "When you take the initiative and at the beginning of your upkeep while you have it, venture into Undercity. A player whose creatures deal combat damage to its holder takes the initiative.",
+      "zhHelp": "掌握先制时及在握有先制的己方维持开始时，深入地底城。生物对握有先制的牌手造成战斗伤害时，该生物的操控者掌握先制。",
+      "jaHelp": "イニシアチブを得たときと、それを持つ自分のアップキープの開始時に地下街探索をする。それを持つプレイヤーにクリーチャーが戦闘ダメージを与えると、そのクリーチャーのコントローラーがイニシアチブを得る。",
+      "aliases": [
+        "イニシアチブ",
+        "掌握先制",
+        "握有先制",
+        "先制"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "The Ring Tempts You",
+      "zh": "魔戒引诱你",
+      "ja": "指輪があなたを誘惑する",
+      "enHelp": "Gain or advance your Ring emblem and choose a creature you control as Ring-bearer, even after the emblem reaches its fourth ability.",
+      "zhHelp": "获得或推进魔戒徽记的异能，并选择一个己方生物成为持戒人；第四级后仍会重新选择持戒人。",
+      "jaHelp": "指輪の紋章を持っていなければ得る。その紋章は次の能力を得て、自分のクリーチャー１体を指輪所持者に選ぶ。指輪は４段階まで強くなり、指輪所持者が変わっても得た能力を保持する。",
+      "aliases": [
+        "指輪があなたを誘惑する",
+        "指輪があなたを誘惑",
+        "魔戒引诱你",
+        "魔戒诱惑你"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Tiered",
+      "enHelp": "Choose one additional cost.",
+      "zh": "分级",
+      "zhHelp": "施放时从列出的额外费用中选择一项，决定该咒语的对应效果。",
+      "ja": "段階",
+      "jaHelp": "段階はモードを持つ呪文 (rule 700.2 参照) がスタックにある間に適用される常在型能力である。「段階／Tiered」は、「以下から１つを選ぶ。この呪文を唱えるための追加コストとして、そのモードで示されているコストを支払う。」を意味する。",
+      "aliases": [
+        "分级",
+        "分阶",
+        "段階"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Time Travel",
+      "zh": "时间旅行",
+      "ja": "タイムトラベルを行う",
+      "enHelp": "For each permanent you control and exiled card you own with time counters, you may add or remove one time counter.",
+      "zhHelp": "为每个你操控且带时间指示物的永久物、以及你拥有且带时间指示物的已放逐牌，可各增加或移去一个时间指示物。",
+      "jaHelp": "「タイムトラベルを行う／Time travel」は、「自分がコントロールしていて時間カウンターが置かれているパーマネントや自分がオーナーであり追放 領域にあり時間カウンターが置かれている待機状態のカードを望む数だけ選び、それらの各オブジェクトにつきそれぞれ、その上に時間カウンター1個を置くかその上から時間カウンター1個を取り除く。」を意味する。rule 702.62〔待機〕参照。",
+      "aliases": [
+        "タイムトラベルを行う",
+        "タイムトラベル",
+        "时间旅行"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Toxic",
+      "enHelp": "Players dealt combat damage by this creature also get N poison counter(s).",
+      "zh": "下毒",
+      "zhHelp": "此生物对牌手造成战斗伤害时，该牌手同时获得等同于下毒数值的中毒指示物。",
+      "ja": "毒性",
+      "jaHelp": "このクリーチャーがプレイヤーに戦闘ダメージを与えたとき、そのプレイヤーは毒性の値に等しい数の毒カウンターを得る。通常の戦闘ダメージも与える。",
+      "aliases": [
+        "下毒",
+        "毒性"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Training",
+      "enHelp": "Whenever this creature attacks with another creature with greater power, put a +1/+1 counter on this creature.",
+      "zh": "见习",
+      "zhHelp": "与力量较大的生物一同攻击时，在此生物上放一个+1/+1指示物。",
+      "ja": "訓練",
+      "jaHelp": "訓練は、誘発型能力である。「訓練／Training」は、「このクリーチャーと、これよりも大きいパワーを持ちこれでない1体以上のクリーチャーが攻撃するたび、このクリーチャーの上に＋1/＋1カウンター1個を置く。」を意味する。",
+      "aliases": [
+        "见习",
+        "訓練"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Trample",
+      "zh": "践踏",
+      "ja": "トランプル",
+      "enHelp": "Excess combat damage can be assigned to the player, planeswalker, or battle it attacks.",
+      "zhHelp": "分配足够伤害给阻挡者后，超出的战斗伤害可分配给受攻击者。",
+      "jaHelp": "ブロック・クリーチャーに十分なダメージを割り振った後、余剰分を攻撃先に割り振れる。",
+      "aliases": [
+        "トランプル"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Transfigure",
+      "enHelp": "the printed cost, Sacrifice this creature: Search your library for a creature card with the same mana value as this creature and put that card onto the battlefield, then shuffle. Transfigure only as a sorcery.",
+      "zh": "易形",
+      "zhHelp": "法术时机支付费用并牺牲此生物，从牌库找一张法术力值相同的生物牌放进战场，然后洗牌。",
+      "ja": "変形",
+      "jaHelp": "変形は起動型能力である。「変形 [コスト]／Transfigure [cost]」は「[コスト], このパーマネントを生け贄に捧げる:あなたの ライブラリーからこのパーマネントと同じマナ総量を持つクリーチャー・カード1枚を探し、戦場に出す。その後、ライブラリーを切り直す。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "変形",
+        "易形"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Transform",
+      "zh": "转化",
+      "ja": "変身する",
+      "enHelp": "Turn a transforming double-faced card to its other face. This is not leaving or entering the battlefield.",
+      "zhHelp": "将转化式双面牌翻到另一面；它没有离开战场，不会因此重新进战场。",
+      "jaHelp": "パーマネントを変身させる場合、それを裏返し、もう一方の面が見えるようにする。両面トークンや両面カードで表わされるパーマネントのみが変身できる(rule 712〔両面カード〕参照)。",
+      "aliases": [
+        "変身する",
+        "変身",
+        "转化"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Transmute",
+      "enHelp": "the printed cost, Discard this card: Search your library for a card with the same mana value as this card, reveal it, and put it into your hand, then shuffle. Transmute only as a sorcery.",
+      "zh": "易质",
+      "zhHelp": "法术时机支付费用并弃掉此牌，从牌库找一张法术力值相同的牌，展示并置入手上，然后洗牌。",
+      "ja": "変成",
+      "jaHelp": "変成は、変成 能力を持つカードがプレイヤーの手札にある間にのみ機能する起動型能力である。「変成 [コスト]／Transmute [cost]」は「[コスト], このカードを捨てる：あなたの ライブラリーから、その捨てたカードとマナ総量が等しいカード1枚を探し、公開し、あなたの 手札に加える。その後ライブラリーを切り直す。起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "変成",
+        "易质"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Tribute",
+      "enHelp": "As this creature enters, an opponent of your choice may put N +1/+1 counter(s) on it.",
+      "zh": "致敬",
+      "zhHelp": "进战场时，由你选择的一位对手可让此生物带有所述数量的+1/+1指示物；是否支付贡赋会影响其他效果。",
+      "ja": "貢納",
+      "jaHelp": "貢納は、貢納を持つクリーチャーが戦場に出る際に作用する常在型能力である。「貢納N／Tribute N」は、「このクリーチャーが戦場に出るに際し、対戦相手1人を選ぶ。そのプレイヤーは、これが＋1/＋1カウンターが追加でN個置かれた状態で戦場に出ることを選んでもよい。」を意味する。",
+      "aliases": [
+        "致敬",
+        "貢納"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Triple",
+      "zh": "增至三倍",
+      "ja": "3倍にするする",
+      "enHelp": "Increase the specified value or quantity to three times its previous amount.",
+      "zhHelp": "将指定数值或数量增加到原先的三倍。",
+      "jaHelp": "クリーチャーのパワーやタフネスを3倍にするすることは、継続的効果を生成する。この効果はクリーチャーのパワーやタフネスを修整するものであって、それらの特性を特定の値にするものではない。rule 613.4c 参照。",
+      "aliases": [
+        "3倍にするする",
+        "3倍にする",
+        "增至三倍"
+      ],
+      "autoDisplay": false
+    },
+    {
+      "en": "TypeCycling",
+      "enHelp": "Pay the cost and discard this card to search your library for a card of the specified type, reveal it, put it into your hand, then shuffle. This does not draw a card.",
+      "zh": "类别循环",
+      "zhHelp": "支付费用并弃掉此牌，从牌库搜寻符合指定类别的牌，展示并置入手上，然后洗牌；不是抓一张牌。",
+      "ja": "タイプ・サイクリング",
+      "jaHelp": "コストを支払い、このカードを捨てる。指定されたタイプのカードをライブラリーから探し、公開して手札に加え、その後ライブラリーを切り直す。",
+      "aliases": [
+        "Basic landcycling",
+        "Halflingcycling",
+        "Mountaincycling",
+        "Forestcycling",
+        "Islandcycling",
+        "Plainscycling",
+        "Slivercycling",
+        "Wizardcycling",
+        "Swampcycling",
+        "Landcycling",
+        "タイプ・サイクリング",
+        "基本土地サイクリング",
+        "土地サイクリング",
+        "平地サイクリング",
+        "山サイクリング",
+        "島サイクリング",
+        "森サイクリング",
+        "沼サイクリング",
+        "半身人循环",
+        "基本地循环",
+        "法术师循环",
+        "裂片妖循环",
+        "山脉循环",
+        "平原循环",
+        "树林循环",
+        "沼泽循环",
+        "海岛循环",
+        "类别循环",
+        "类型循环",
+        "地循环"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Umbra armor",
+      "enHelp": "If enchanted permanent would be destroyed, instead remove all damage marked on it and destroy this Aura.",
+      "zh": "本影甲",
+      "zhHelp": "所结附的永久物将被消灭时，改为移去其所有伤害，并消灭此灵气。",
+      "ja": "陰影鎧",
+      "jaHelp": "陰影鎧は、一部のオーラが持つ常在型能力である。「陰影鎧／Umbra Armor」は「エンチャントしているパーマネントが破壊されるなら、代わりにそれが負っているすべてのダメージを取り除いてこのオーラを破壊する。」を意味する。",
+      "aliases": [
+        "Totem armor",
+        "暗影护甲",
+        "图腾甲",
+        "族霊鎧",
+        "替身甲",
+        "本影甲",
+        "陰影鎧"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Undaunted",
+      "enHelp": "This spell costs {1} less to cast for each opponent.",
+      "zh": "不屈",
+      "zhHelp": "每有一位对手，此咒语便减少{1}施放费用。",
+      "ja": "不抜",
+      "jaHelp": "不抜は、不抜を持つ呪文がスタックにある間に機能する常在型能力である。「不抜／undaunted」は、「この呪文を唱えるためのコストは対戦相手1人につき{1}少なくなる。」を意味する。",
+      "aliases": [
+        "不屈",
+        "不抜"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Undying",
+      "enHelp": "When this creature dies, if it had no +1/+1 counters on it, return it to the battlefield under its owner's control with a +1/+1 counter on it.",
+      "zh": "不息",
+      "zhHelp": "死去时若没有+1/+1指示物，将它移回战场并带有一个+1/+1指示物。",
+      "ja": "不死",
+      "jaHelp": "不死は誘発型能力である。「不死／Undying」は、「このパーマネントが戦場から墓地に置かれたとき、これの上に+1/+1カウンターがない場合、これを+1/+1カウンター1個が置かれた状態でオーナーのコントロール下で戦場に戻す。」を意味する。",
+      "aliases": [
+        "不息",
+        "不死"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Unearth",
+      "enHelp": "the printed cost: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.",
+      "zh": "破坟",
+      "zhHelp": "法术时机支付费用，将坟墓场中的此牌移回战场并获得敏捷；下个结束步骤或将离开战场时放逐。",
+      "ja": "蘇生",
+      "jaHelp": "蘇生は、蘇生を持つカードが墓地にある間に機能する起動型能力である。「蘇生 [コスト]／Unearth [cost]」は「[コスト]：あなたの 墓地にあるこのカードを戦場に戻す。これは速攻を得る。次の終了ステップの開始時に、これを追放する。これが戦場を離れるなら、これを戦場以外の領域に置く代わりに 追放する。この能力は、起動はソーサリーとしてのみ行う。」を意味する。",
+      "aliases": [
+        "破坟",
+        "蘇生"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Unleash",
+      "enHelp": "You may have this creature enter with a +1/+1 counter on it. It can't block as long as it has a +1/+1 counter on it.",
+      "zh": "脱缰",
+      "zhHelp": "可让此生物带一个+1/+1指示物进战场；只要上面有+1/+1指示物，就不能阻挡。",
+      "ja": "解鎖",
+      "jaHelp": "解鎖は2つの常在型能力を表すキーワードである。「解鎖／Unleash」は、「あなたはこのパーマネントを＋1/＋1カウンターが追加で1個置かれた状態で戦場に出してもよい。」と「このパーマネントの上に＋1/＋1カウンターが置かれているかぎり、これではブロックできない。」を意味する。",
+      "aliases": [
+        "脱缰",
+        "解鎖"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Vanishing",
+      "enHelp": "This permanent enters with N time counter(s) on it. At the beginning of your upkeep, remove a time counter from it. When the last is removed, sacrifice it.",
+      "zh": "消逝",
+      "zhHelp": "进战场时带时间指示物；维持开始时移去一个，移去最后一个时牺牲它。",
+      "ja": "消失",
+      "jaHelp": "消失は3つの能力を表すキーワードである。「消失 N／Vanishing N」とは「このパーマネントは、時間カウンターN個が置かれた状態で戦場に出る。」と「あなたのアップキープの開始時に、このパーマネントの上に時間カウンターがある場合、これの上から時間カウンター1個を取り除く。」と「このパーマネントの上から最後の時間カウンターが取り除かれたとき、これを生け贄に捧げる。」を意味する。",
+      "aliases": [
+        "消失",
+        "消逝"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Venture into the Dungeon",
+      "zh": "深入地城",
+      "ja": "ダンジョン探索",
+      "enHelp": "If you are not in a dungeon, enter one of the three original dungeons. Otherwise advance to the next room. Ordinary venture cannot start Undercity, but can advance through an existing Undercity.",
+      "zhHelp": "若尚未身处地城，从三座原版地城中选择一座进入；否则沿箭头进入现有地城的下个房间。普通深入地城不能选择进入地底城，但可以推进已经进入的地底城。",
+      "jaHelp": "ダンジョンにいないなら１つを選んで最初の部屋に入る。すでにダンジョンにいるなら、矢印に沿って次の部屋に進む。入った部屋の能力が誘発する。",
+      "aliases": [
+        "ダンジョン探索",
+        "深入地下城",
+        "深入地城"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Venture into Undercity",
+      "zh": "深入地底城",
+      "ja": "地下街探索",
+      "enHelp": "If you are not in a dungeon, enter Undercity. Otherwise advance through your existing dungeon, even if it is not Undercity.",
+      "zhHelp": "若尚未身处地城，进入地底城；否则进入现有地城的下个房间，即使它不是地底城。",
+      "jaHelp": "現在ダンジョンにいないなら地下街に入る。すでにダンジョンにいるなら、そのダンジョンが地下街でなくても次の部屋へ進む。",
+      "aliases": [
+        "Venture into the Undercity",
+        "地下街探索をする",
+        "地下街探索",
+        "深入地底城"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Vigilance",
+      "zh": "警戒",
+      "ja": "警戒",
+      "enHelp": "Attacking doesn't cause this creature to tap.",
+      "zhHelp": "此生物攻击时不需横置。",
+      "jaHelp": "攻撃してもタップしない。",
+      "aliases": [
+        "警戒"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Visit",
+      "zh": "造访",
+      "ja": "観覧",
+      "enHelp": "When a visit roll matches this Attraction's lit numbers, its visit ability triggers.",
+      "zhHelp": "掷骰造访游乐设施时，若结果对应此设施点亮的数字，执行其造访效果。",
+      "jaHelp": "観覧はアトラクション・カードに見られるキーワード能力である(rule 717 参照)。「観覧 ― ［効果］／Visit ― [Effect]」は、「あなたが観覧するためにサイコロを振るたび、その出目がこのアトラクションで点灯している数字と等しい場合、［効果］。」を意味する。rule 701.52〔アトラクションを観覧するためサイコロを振る〕参照。",
+      "aliases": [
+        "観覧",
+        "造访"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Vote",
+      "zh": "投票",
+      "ja": "投票する",
+      "enHelp": "Make the listed public choices in turn order, then apply the result of the vote.",
+      "zhHelp": "按牌面顺序作出公开选择，再根据投票结果执行效果。",
+      "jaHelp": "呪文や能力の中には、その呪文または能力の効果の結果を決定するために記載される複数の選択肢の中から1つに投票するよう指示するものがある。「投票する／Vote」には、特定のプレイヤーから始まりターン順に各プレイヤーがそれらの選択肢の中から1つを選択する。",
+      "aliases": [
+        "投票する",
+        "投票"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Ward",
+      "zh": "守护",
+      "ja": "護法",
+      "enHelp": "When an opponent targets it with a spell or ability, counter that spell or ability unless its controller pays the ward cost.",
+      "zhHelp": "当它成为对手操控的咒语或异能的目标时，除非其操控者支付守护费用，否则反击该咒语或异能。",
+      "jaHelp": "対戦相手の呪文や能力の対象になるたび、護法コストが支払われないかぎりそれを打ち消す。",
+      "aliases": [
+        "語法",
+        "護法"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Warp",
+      "enHelp": "You may cast this card from your hand for its warp cost. Exile this creature at the beginning of the next end step, then you may cast it from exile on a later turn.",
+      "zh": "跃迁",
+      "zhHelp": "可从手上以跃迁费用施放；下个结束步骤放逐此生物，之后回合可以从放逐区施放。",
+      "ja": "ワープ",
+      "jaHelp": "ワープ・コストで唱えると、次の終了ステップの開始時に追放する。その後のターンに、通常のコストで追放領域から唱えられる。",
+      "aliases": [
+        "ワープ",
+        "跃迁"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Waterbend",
+      "zh": "截水",
+      "ja": "水の技",
+      "enHelp": "When paying the stated waterbend cost, each untapped artifact or creature you tap can pay {1} of that cost. This cannot pay generic mana in other components of the spell or ability's total cost.",
+      "zhHelp": "支付所述费用时，每横置一个未横置的己方神器或生物，可代为支付截水费用中的{1}；不能如此支付该咒语或异能其他部分的通用法术力费用。",
+      "jaHelp": "「水の技 [コスト] を行う／Waterbend [cost]」とは、「[コスト]を支払う。このコストに含まれる不特定マナ1点につき、あなたはそのマナを支払うのではなく、あなたがコントロールしていてアンタップ状態であるアーティファクトやクリーチャー1体をタップしてもよい。」を意味する。",
+      "aliases": [
+        "水の技",
+        "御水",
+        "截水"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Web-slinging",
+      "enHelp": "You may cast this spell for the printed cost if you also return a tapped creature you control to its owner’s hand.",
+      "zh": "蛛丝甩荡",
+      "zhHelp": "可支付所述费用并额外将一个已横置的己方生物移回拥有者手上来施放此咒语。",
+      "ja": "ウェブスリング",
+      "jaHelp": "自分のタップ状態のクリーチャー１体を手札に戻すことで、指定された代替コストで唱えられる。",
+      "aliases": [
+        "ウェブスリング",
+        "蛛丝甩荡",
+        "蛛丝荡跃"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Wither",
+      "enHelp": "This deals damage to creatures in the form of -1/-1 counters.",
+      "zh": "干枯",
+      "zhHelp": "对生物造成的伤害以相应数量的-1/-1指示物形式造成。",
+      "ja": "萎縮",
+      "jaHelp": "萎縮は常在型能力である。「萎縮／Wither」を持った発生源からクリーチャーが受けたダメージを、そのクリーチャーは負わない。そうではなく、その発生源のコントローラーは、そのダメージの点数に等しい数の－1/－1カウンターをそのクリーチャーの上に置く。",
+      "aliases": [
+        "干枯",
+        "萎縮"
+      ],
+      "autoDisplay": true
+    }
+  ]
+}

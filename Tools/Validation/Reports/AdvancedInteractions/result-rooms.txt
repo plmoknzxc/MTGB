@@ -1,0 +1,1 @@
+PASS rooms: separate door names/state, real unlock cost and both doors remain unlocked

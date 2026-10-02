@@ -1,0 +1,1 @@
+PASS: round AUTO/OFF/ON cycle; payment mode buttons removed.

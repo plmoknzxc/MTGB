@@ -2,10 +2,34 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class OnlineSideboardCardTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public sealed class OnlineSideboardCardTile : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private OnlineLobbyPanel owner;
     private Outline outline;
+    private bool suppressNextClick;
+    private GameObject quantityControls, countBadge;
+    private Button decreaseButton, increaseButton;
+
+    public void ConfigureQuantityControls(GameObject controls, GameObject badge, Button decrease, Button increase)
+    {
+        quantityControls = controls; countBadge = badge;
+        decreaseButton = decrease; increaseButton = increase;
+    }
+
+    public void SetQuantityControls(bool visible, bool canIncrease)
+    {
+        if (quantityControls == null) return;
+        quantityControls.SetActive(visible);
+        countBadge.SetActive(!visible);
+        decreaseButton.interactable = visible && Entry.count > 0;
+        increaseButton.interactable = visible && canIncrease;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (suppressNextClick) { suppressNextClick = false; return; }
+        if (eventData.button == PointerEventData.InputButton.Left) owner?.SelectSideboardQuantity(this);
+    }
 
     public DeckEntry Entry { get; private set; }
     public CardDefinition Card { get; private set; }
@@ -39,7 +63,10 @@ public sealed class OnlineSideboardCardTile : MonoBehaviour, IBeginDragHandler, 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            suppressNextClick = true;
             owner?.BeginSideboardCardDrag(this, eventData);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)

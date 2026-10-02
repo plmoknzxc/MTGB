@@ -1,0 +1,535 @@
+{
+  "records": 78,
+  "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+  "sourceSHA256": "c672ebbd651fda099ccfa249a25d7d3a91dfdf894ff340f1d4ef66d482659851",
+  "entries": [
+    {
+      "name": "Zoanthrope",
+      "japanese": "ゾアンスロープ",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Arco-Flagellant",
+      "japanese": "特級贖罪者",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Sister Repentia",
+      "japanese": "シスター・リペンティア",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Hexmark Destroyer",
+      "japanese": "ヘックスマーク・デストロイヤー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Magnus the Red",
+      "japanese": "赤きマグヌス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Acolyte Hybrid",
+      "japanese": "アコライト・ハイブリッド",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Aspiring Champion",
+      "japanese": "アスパイアリング・チャンピオン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Mandate of Abaddon",
+      "japanese": "アバドンの執行",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Imotekh the Stormlord",
+      "japanese": "嵐の王、イモーテク",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Celestine, the Living Saint",
+      "japanese": "生ける聖人、セレスティン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Inquisitor Eisenhorn",
+      "japanese": "異端審問官アイゼンホーン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Inquisitorial Rosette",
+      "japanese": "異端審問官の勲章",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Illuminor Szeras",
+      "japanese": "イルミノール・スゼラス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Lucius the Eternal",
+      "japanese": "永劫なるルシウス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "The Golden Throne",
+      "japanese": "黄金の玉座",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Old One Eye",
+      "japanese": "オールド・ワン・アイ",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Canoptek Scarab Swarm",
+      "japanese": "カノプテック・スカラベ・スウォーム",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Canoptek Wraith",
+      "japanese": "カノプテック・レイス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Their Number Is Legion",
+      "japanese": "彼らの数は兵団に値する",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Khârn the Betrayer",
+      "japanese": "裏切者、カーン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Callidus Assassin",
+      "japanese": "キャリダス・アサシン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "And They Shall Know No Fear",
+      "japanese": "恐怖を知らざる者に",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Let the Galaxy Burn",
+      "japanese": "銀河を焔羅のままに",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Be'lakor, the Dark Master",
+      "japanese": "暗闇の君主、ベ＝ラコール",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Cryptek",
+      "japanese": "クリプテック",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Chaos Defiler",
+      "japanese": "ケイオス・ディファイラー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Chaos Mutation",
+      "japanese": "ケイオスの変異",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Convergence of Dominion",
+      "japanese": "結集せし支配碑",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Ghyrson Starn, Kelermorph",
+      "japanese": "ケラーモーフ、ギルソン・スターン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Commissar Severina Raine",
+      "japanese": "コミッサー・セヴェリナ・レイン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Ghost Ark",
+      "japanese": "ゴーストアーク",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Cybernetica Datasmith",
+      "japanese": "サイバネティカ・データスミス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Sister Hospitaller",
+      "japanese": "シスター・ホスピタラー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Epistolary Librarian",
+      "japanese": "書記官位階のライブラリアン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Seeker of Slaanesh",
+      "japanese": "シーカー・オヴ・スラーネッシュ",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Defenders of Humanity",
+      "japanese": "人類の防衛者",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Space Marine Scout",
+      "japanese": "スペースマリーン・スカウト",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Sloppity Bilepiper",
+      "japanese": "スロッピティ・バイルパイパー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Triumph of Saint Katherine",
+      "japanese": "聖カトリーヌの凱旋",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Biotransference",
+      "japanese": "生体転移",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Zephyrim",
+      "japanese": "ゼフィリム",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Mortarion, Daemon Primarch",
+      "japanese": "総魔長、モータリオン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Termagant Swarm",
+      "japanese": "ターマガント・スウォーム",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "The First Tyrannic War",
+      "japanese": "第一次ティラン戦役",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Dark Apostle",
+      "japanese": "ダークアポスル",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Blood for the Blood God!",
+      "japanese": "血の神に血を捧げよ！",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Tzaangor Shaman",
+      "japanese": "ツァーンゴール・シャーマン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Tyranid Prime",
+      "japanese": "ティラニッド・プライム",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Technomancer",
+      "japanese": "テクノマンサー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "The War in Heaven",
+      "japanese": "天界の戦争",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Toxicrene",
+      "japanese": "トキシクレイン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Trygon Prime",
+      "japanese": "トライゴン・プライム",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Drach'Nyen",
+      "japanese": "ドラクニィエン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Knight Rampager",
+      "japanese": "ナイト・ランペイジャー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "The Flesh Is Weak",
+      "japanese": "肉体は脆い",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Neyam Shai Murad",
+      "japanese": "ネイヤム・シャイ・ムラド",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Nexos",
+      "japanese": "ネクソス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Noise Marine",
+      "japanese": "ノイズマリーン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Hierophant Bio-Titan",
+      "japanese": "バイオタイタンの司祭",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Biophagus",
+      "japanese": "バイオファガス",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Shadow in the Warp",
+      "japanese": "歪みを侵食する影",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Out of the Tombs",
+      "japanese": "墳墓からの脱出",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Blight Grenade",
+      "japanese": "ブライトグレネード",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Broodlord",
+      "japanese": "ブルードロード",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Plague Drone",
+      "japanese": "プレーグ・ドローン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Herald of Slaanesh",
+      "japanese": "ヘラルド・オヴ・スラーネッシュ",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Helbrute",
+      "japanese": "ヘルブルート",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Anrakyr the Traveller",
+      "japanese": "放浪者、アンラキール",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Hormagaunt Horde",
+      "japanese": "ホーマゴーントの大群",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "The Ruinous Powers",
+      "japanese": "禍つ神々",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Mutalith Vortex Beast",
+      "japanese": "ミュータリス・ヴォーテックスビースト",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Trazyn the Infinite",
+      "japanese": "無限なるトラザイン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Magus Lucea Kane",
+      "japanese": "メイガス、ルチア・ケイン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Mawloc",
+      "japanese": "モウロック",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Resurrection Orb",
+      "japanese": "リザレクション・オーブ",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Reaver Titan",
+      "japanese": "リーヴァー・タイタン",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Lokhust Heavy Destroyer",
+      "japanese": "ローカスト・ヘヴィ・デストロイヤー",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    },
+    {
+      "name": "Vexilus Praetor",
+      "japanese": "ヴェクシルス・プラエトール",
+      "source": "https://media.wizards.com/2022/downloads/40K_Release_Notes/JP_40K%20Commander%20Release%20Notes_20220912.pdf",
+      "validation": "Exact existing Japanese name, 40K catalog membership, mana cost and creature stats"
+    }
+  ],
+  "skipped": [
+    {
+      "name": "Heralds of Tzeentch",
+      "reason": "Official PDF card block omits type line; retained existing text"
+    },
+    {
+      "name": "Genestealer Patriarch",
+      "reason": "PDF stats differ from current catalog; requires manual version review"
+    }
+  ],
+  "officialNameEvidence": [
+    {
+      "name": "Marneus Calgar",
+      "japanese": "マルネウス・カルガー",
+      "multiverseID": 582573,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582573/"
+    },
+    {
+      "name": "Imotekh the Stormlord",
+      "japanese": "嵐の王、イモーテク",
+      "multiverseID": 582567,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582567/"
+    },
+    {
+      "name": "Abaddon the Despoiler",
+      "japanese": "強奪者、アバドン",
+      "multiverseID": 582569,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582569/"
+    },
+    {
+      "name": "Inquisitor Greyfax",
+      "japanese": "異端審問官、グレイファクス",
+      "multiverseID": 582571,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582571/"
+    },
+    {
+      "name": "Szarekh, the Silent King",
+      "japanese": "沈黙の王、スザーレク",
+      "multiverseID": 582568,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582568/"
+    },
+    {
+      "name": "Magus Lucea Kane",
+      "japanese": "メイガス、ルチア・ケイン",
+      "multiverseID": 582572,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582572/"
+    },
+    {
+      "name": "The Swarmlord",
+      "japanese": "スウォームロード",
+      "multiverseID": 582574,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582574/"
+    },
+    {
+      "name": "Be'lakor, the Dark Master",
+      "japanese": "暗闇の君主、ベ＝ラコール",
+      "multiverseID": 582570,
+      "source": "https://mtg-jp.com/products/card-gallery/0000237/582570/"
+    }
+  ]
+}

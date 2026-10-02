@@ -1,0 +1,1 @@
+PASS: Mountain direct click; no dialog, tapped and red mana +1

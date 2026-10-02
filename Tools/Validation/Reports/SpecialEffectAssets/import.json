@@ -1,0 +1,155 @@
+[
+  {
+    "name": "City's Blessing",
+    "key": "TBLC/40",
+    "face": 0,
+    "path": "TBLC/40.jpg",
+    "url": "https://cards.scryfall.io/normal/front/3/0/30758c2e-fc01-4037-838c-bdabe8a4e5a3.jpg?1783909749",
+    "source": "https://scryfall.com/card/tblc/40/citys-blessing?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Day",
+    "key": "TMID/19",
+    "face": 0,
+    "path": "TMID/19.jpg",
+    "url": "https://cards.scryfall.io/normal/front/9/c/9c0f7843-4cbb-4d0f-8887-ec823a9238da.jpg?1783925225",
+    "source": "https://scryfall.com/card/tmid/19/day-night?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Dungeon of the Mad Mage",
+    "key": "TAFR/20",
+    "face": 0,
+    "path": "TAFR/20.jpg",
+    "url": "https://cards.scryfall.io/normal/front/6/f/6f509dbe-6ec7-4438-ab36-e20be46c9922.jpg?1789711206",
+    "source": "https://scryfall.com/card/tafr/20/dungeon-of-the-mad-mage?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Energy Reserve",
+    "key": "TDRC/17",
+    "face": 0,
+    "path": "TDRC/17.jpg",
+    "url": "https://cards.scryfall.io/normal/front/6/a/6a2c1fa5-deed-48ba-afe4-6c8ea8d9135e.jpg?1783907668",
+    "source": "https://scryfall.com/card/tdrc/17/energy-reserve?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Experience",
+    "key": "TC15/0",
+    "face": 0,
+    "path": "TC15/0.jpg",
+    "url": "https://cards.scryfall.io/normal/front/7/3/73805b39-7624-4fbd-bcc0-4241e733a97f.jpg?1783938022",
+    "source": "https://scryfall.com/card/tc15/0/experience?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Lost Mine of Phandelver",
+    "key": "TAFR/21",
+    "face": 0,
+    "path": "TAFR/21.jpg",
+    "url": "https://cards.scryfall.io/normal/front/5/9/59b11ff8-f118-4978-87dd-509dc0c8c932.jpg?1783926340",
+    "source": "https://scryfall.com/card/tafr/21/lost-mine-of-phandelver?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Max Speed",
+    "key": "TDFT/14",
+    "face": 1,
+    "path": "TDFT/14_2.jpg",
+    "url": "https://cards.scryfall.io/normal/back/8/2/82613de6-ed37-48c1-8d2f-d91a3f496794.jpg?1783907681",
+    "source": "https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Night",
+    "key": "TMID/19",
+    "face": 1,
+    "path": "TMID/19_2.jpg",
+    "url": "https://cards.scryfall.io/normal/back/9/c/9c0f7843-4cbb-4d0f-8887-ec823a9238da.jpg?1783925225",
+    "source": "https://scryfall.com/card/tmid/19/day-night?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Poison Counter",
+    "key": "TBLC/41",
+    "face": 0,
+    "path": "TBLC/41.jpg",
+    "url": "https://cards.scryfall.io/normal/front/7/a/7afb0ba4-9a1b-4cd5-8d0f-2f697c6d3ab1.jpg?1783909749",
+    "source": "https://scryfall.com/card/tblc/41/poison-counter?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Radiation",
+    "key": "TPIP/22",
+    "face": 0,
+    "path": "TPIP/22.jpg",
+    "url": "https://cards.scryfall.io/normal/front/0/8/0886657d-afb0-4f1f-9af7-960724793077.jpg?1783912038",
+    "source": "https://scryfall.com/card/tpip/22/radiation?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Start Your Engines!",
+    "key": "TDFT/14",
+    "face": 0,
+    "path": "TDFT/14.jpg",
+    "url": "https://cards.scryfall.io/normal/front/8/2/82613de6-ed37-48c1-8d2f-d91a3f496794.jpg?1783907681",
+    "source": "https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "The Initiative",
+    "key": "TCLB/20",
+    "face": 1,
+    "path": "TCLB/20_2.jpg",
+    "url": "https://cards.scryfall.io/normal/back/2/c/2c65185b-6cf0-451d-985e-56aa45d9a57d.jpg?1788840929",
+    "source": "https://scryfall.com/card/tclb/20/undercity-the-initiative?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "The Monarch",
+    "key": "TAFC/13",
+    "face": 0,
+    "path": "TAFC/13.jpg",
+    "url": "https://cards.scryfall.io/normal/front/9/6/965970a4-50ca-4b8b-9589-b48713f27fc1.jpg?1783926348",
+    "source": "https://scryfall.com/card/tafc/13/the-monarch?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "The Ring",
+    "key": "TLTR/H13",
+    "face": 0,
+    "path": "TLTR/H13.jpg",
+    "url": "https://cards.scryfall.io/normal/front/7/2/7215460e-8c06-47d0-94e5-d1832d0218af.jpg?1783916050",
+    "source": "https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "The Ring Tempts You",
+    "key": "TLTR/H13",
+    "face": 1,
+    "path": "TLTR/H13_2.jpg",
+    "url": "https://cards.scryfall.io/normal/back/7/2/7215460e-8c06-47d0-94e5-d1832d0218af.jpg?1783916050",
+    "source": "https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Tomb of Annihilation",
+    "key": "TAFR/22",
+    "face": 0,
+    "path": "TAFR/22.jpg",
+    "url": "https://cards.scryfall.io/normal/front/7/0/70b284bd-7a8f-4b60-8238-f746bdc5b236.jpg?1783926339",
+    "source": "https://scryfall.com/card/tafr/22/tomb-of-annihilation?utm_source=api",
+    "status": "existing"
+  },
+  {
+    "name": "Undercity",
+    "key": "TCLB/20",
+    "face": 0,
+    "path": "TCLB/20.jpg",
+    "url": "https://cards.scryfall.io/normal/front/2/c/2c65185b-6cf0-451d-985e-56aa45d9a57d.jpg?1788840929",
+    "source": "https://scryfall.com/card/tclb/20/undercity-the-initiative?utm_source=api",
+    "status": "existing"
+  }
+]

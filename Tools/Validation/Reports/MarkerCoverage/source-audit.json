@@ -1,0 +1,189 @@
+{
+  "scope": "public Command effect objects and delayed-trigger storage; not all Magic card rules",
+  "schemas": {
+    "trigger/TriggerHandler.java": [
+      "activeTriggers",
+      "delayedTriggers",
+      "playerDefinedDelayedTriggers",
+      "thisTurnDelayedTriggers",
+      "waitingTriggers"
+    ],
+    "phase/Phase.java": [
+      "at",
+      "registerMap",
+      "until",
+      "untilEndMap",
+      "untilMap"
+    ],
+    "phase/PhaseHandler.java": [
+      "extraPhases",
+      "extraTurns"
+    ]
+  },
+  "registrationCallers": [
+    {
+      "path": "ability\\effects\\AnimateEffect.java",
+      "line": 211,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\ChangeZoneAllEffect.java",
+      "line": 203,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\ChangeZoneEffect.java",
+      "line": 698,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\ChangeZoneEffect.java",
+      "line": 862,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\ChangeZoneEffect.java",
+      "line": 1528,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\CountersPutEffect.java",
+      "line": 691,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\DelayedTriggerEffect.java",
+      "line": 86,
+      "method": "registerPlayerDefinedDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\DelayedTriggerEffect.java",
+      "line": 88,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\DelayedTriggerEffect.java",
+      "line": 90,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\DelayedTriggerEffect.java",
+      "line": 92,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\DelayedTriggerEffect.java",
+      "line": 94,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\EarthbendEffect.java",
+      "line": 88,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\EffectEffect.java",
+      "line": 315,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\ImmediateTriggerEffect.java",
+      "line": 90,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\PermanentEffect.java",
+      "line": 43,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\PermanentEffect.java",
+      "line": 48,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\PermanentEffect.java",
+      "line": 52,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\PumpAllEffect.java",
+      "line": 99,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\PumpEffect.java",
+      "line": 486,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\effects\\TokenEffectBase.java",
+      "line": 223,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\SpellAbilityEffect.java",
+      "line": 405,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\SpellAbilityEffect.java",
+      "line": 495,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "ability\\SpellAbilityEffect.java",
+      "line": 898,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "cost\\CostPartWithTrigger.java",
+      "line": 44,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "phase\\PhaseHandler.java",
+      "line": 210,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "phase\\PhaseHandler.java",
+      "line": 882,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "spellability\\AbilityManaPart.java",
+      "line": 339,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "trigger\\TriggerHandler.java",
+      "line": 58,
+      "method": "registerDelayedTrigger"
+    },
+    {
+      "path": "trigger\\TriggerHandler.java",
+      "line": 66,
+      "method": "registerThisTurnDelayedTrigger"
+    },
+    {
+      "path": "trigger\\TriggerHandler.java",
+      "line": 86,
+      "method": "registerPlayerDefinedDelayedTrigger"
+    }
+  ],
+  "unreviewed": [],
+  "gamePieceTypes": [
+    "ATTRACTION",
+    "AVATAR",
+    "CARD",
+    "CONTRAPTION",
+    "COPIED_SPELL",
+    "DUNGEON",
+    "EFFECT",
+    "PLANAR",
+    "SCHEME",
+    "TOKEN"
+  ],
+  "status": "PASS"
+}

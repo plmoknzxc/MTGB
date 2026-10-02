@@ -1,0 +1,39 @@
+{
+  "entries": [
+    {
+      "kind": "POISON",
+      "x": 320,
+      "y": 80,
+      "width": 40,
+      "height": 40
+    },
+    {
+      "kind": "ENERGY",
+      "x": 320,
+      "y": 120,
+      "width": 40,
+      "height": 40
+    },
+    {
+      "kind": "EXPERIENCE",
+      "x": 280,
+      "y": 120,
+      "width": 40,
+      "height": 30
+    },
+    {
+      "kind": "RAD",
+      "x": 360,
+      "y": 120,
+      "width": 40,
+      "height": 40
+    },
+    {
+      "kind": "TICKET",
+      "x": 360,
+      "y": 80,
+      "width": 40,
+      "height": 40
+    }
+  ]
+}

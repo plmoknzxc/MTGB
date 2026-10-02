@@ -1,0 +1,28 @@
+{
+  "alchemyJapaneseFields": {
+    "cards": 565,
+    "missingFields": []
+  },
+  "chineseFaces": 56221,
+  "japaneseFaces": 54398,
+  "runtimeChecks": {
+    "chineseExactPrinting": true,
+    "japaneseExactPrinting": true,
+    "sameVisibleTileSwitchedWithLocale": true,
+    "otherJapanesePrintingBeforeEnglishFallback": true,
+    "chineseFrontAndBack": true,
+    "chineseToken": true,
+    "englishFallbackWhenJapaneseAbsent": true,
+    "unityConsoleErrors": 0
+  },
+  "screenshots": [
+    ".tools/arena-localization/final-chinese-art.png",
+    ".tools/arena-localization/final-japanese-art.png"
+  ],
+  "matchingReaudit": {
+    "newChineseFaces": 9,
+    "newJapaneseFaces": 2,
+    "newFilesFullyDecoded": 11,
+    "report": "Tools/ForgeBridge/Reports/LocalizedArtMatchingAudit.json"
+  }
+}

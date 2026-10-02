@@ -1,0 +1,1 @@
+PASS: real Starter deck; UI buttons for mulligan, land, Bolt, player target, mana, priority; duplicate clicks rejected; 20 -> 17. Invalid target candidate checked=True

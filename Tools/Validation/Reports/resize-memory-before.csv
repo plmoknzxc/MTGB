@@ -1,0 +1,10 @@
+stage,nativeMB,managedMB,cardTextures,cardTextureMB,fontAtlases
+idle0,612,1912,114,265,1
+idle8s,620,1958,119,276,1
+page1,637,1968,137,318,1
+page2,655,1977,155,360,1
+page3,658,1870,173,402,1
+page4,676,1872,191,444,1
+page5,693,1875,208,483,1
+page6,709,1878,225,523,1
+returnOriginal,711,1884,225,523,1

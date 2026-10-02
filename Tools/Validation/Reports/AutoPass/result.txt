@@ -1,0 +1,10 @@
+PASS none: no response reported for Unity AUTO policy
+PASS tapped: no response reported for Unity AUTO policy
+PASS restricted-land: no response reported for Unity AUTO policy
+PASS unaffordable-ability: no response reported for Unity AUTO policy
+PASS land: no response reported for Unity AUTO policy
+PASS mana-creature: no response reported for Unity AUTO policy
+PASS instant: legal response reported
+PASS spell-with-mana: legal response reported
+PASS activated: legal response reported
+PASS flashback: legal response reported

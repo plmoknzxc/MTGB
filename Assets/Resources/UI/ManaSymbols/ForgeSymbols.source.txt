@@ -1,0 +1,1 @@
+Unmodified sprite_manaicons.png from Forge revision 746455d75515daabec62971e0544cf19c66356b3, forge-gui/res/skins/default. Coordinates from forge-gui/src/main/java/forge/localinstance/skin/FSkinProp.java.

@@ -9,11 +9,17 @@ using UnityEngine;
 public static class DedicatedServerBuildMenu
 {
     private const string DefaultOutput = "Builds/Server/MTGBServer.exe";
+    private static bool building;
 
     [MenuItem("MTGB/Networking/Build Dedicated Server")]
     public static void BuildFromMenu()
     {
-        Build(DefaultOutput);
+        if (building) return;
+        building = true;
+        EditorApplication.delayCall += () => {
+            try { Build(DefaultOutput); }
+            finally { building = false; }
+        };
     }
 
     public static void BuildFromCommandLine()
@@ -26,11 +32,7 @@ public static class DedicatedServerBuildMenu
     {
         string fullOutput = Path.GetFullPath(output);
         Directory.CreateDirectory(Path.GetDirectoryName(fullOutput) ?? "Builds/Server");
-        string[] scenes = EditorBuildSettings.scenes
-            .Where(scene => scene.enabled)
-            .Select(scene => scene.path)
-            .ToArray();
-        if (scenes.Length == 0) throw new InvalidOperationException("No enabled scenes in Build Settings.");
+        string[] scenes = { "Assets/Scenes/Main.unity" };
 
         var options = new BuildPlayerOptions
         {
@@ -45,6 +47,7 @@ public static class DedicatedServerBuildMenu
         {
             throw new InvalidOperationException($"Dedicated server build failed: {report.summary.result}");
         }
+        ForgeBuildMenu.CopyRuntimeTo(Path.GetDirectoryName(fullOutput));
         Debug.Log($"MTGB dedicated server built: {fullOutput}\nRun: MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777");
     }
 

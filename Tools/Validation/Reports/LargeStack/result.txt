@@ -1,0 +1,1 @@
+PASS: 240px full card image; single-card viewport fit; conditional scrollbar; three entries layered with top in front; unchanged stack preserves scroll; hover details; target preview avoids overlap; empty stack hidden.

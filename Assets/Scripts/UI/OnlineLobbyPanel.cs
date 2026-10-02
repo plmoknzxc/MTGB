@@ -6,14 +6,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [DisallowMultipleComponent]
-public sealed class OnlineLobbyPanel : MonoBehaviour
+public sealed partial class OnlineLobbyPanel : MonoBehaviour
 {
-    private static readonly Color PageColor = ObsidianArenaTheme.Void;
-    private static readonly Color PanelColor = ObsidianArenaTheme.Surface;
-    private static readonly Color FieldColor = ObsidianArenaTheme.Field;
+    private static readonly Color PageColor = new Color(.065f,.065f,.08f);
+    private static readonly Color PanelColor = new Color(.13f,.14f,.17f);
+    private static readonly Color FieldColor = new Color(.085f,.095f,.12f);
     private static readonly Color TextColor = ObsidianArenaTheme.Text;
     private static readonly Color MutedTextColor = ObsidianArenaTheme.MutedText;
-    private static readonly Color AccentColor = ObsidianArenaTheme.BlueDeep;
+    private static readonly Color AccentColor = new Color(.74f,.59f,.36f);
     private static readonly Color OpponentColor = ObsidianArenaTheme.RedDeep;
 
     private MainMenuController owner;
@@ -24,7 +24,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     private InputField profileInput;
     private InputField roomInput;
     private InputField lifeInput;
-    private InputField allowedSetsInput;
+    private Dropdown cardFormatDropdown;
     private Dropdown formatDropdown;
     private Dropdown deckDropdown;
     private RectTransform mainDeckContent;
@@ -36,7 +36,8 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     private Text connectionBadgeText;
     private Text connectionStatusText;
     private Text statusText;
-    private Text seatsText;
+    private readonly Text[] seatNames = new Text[2];
+    private readonly Text[] seatStates = new Text[2];
     private Text deckText;
     private Text roomTitleText;
     private Text roomRulesText;
@@ -87,7 +88,9 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         panel.gameObject.SetActive(true);
         panel.transform.SetAsLastSibling();
         panel.Subscribe();
+        panel.creatingRoom=false;
         panel.Refresh();
+        panel.RefreshBrowser();
         panel.PlayEnterTransition();
         return panel;
     }
@@ -180,7 +183,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         panel.lifeInput = AddInput(roomCard.transform, "LifeInput", "20", new Vector2(-205f, 216f),
             new Vector2(120f, 46f), font, "20");
         panel.lifeInput.contentType = InputField.ContentType.IntegerNumber;
-        AddText(roomCard.transform, "FormatLabel", "赛制", new Vector2(-60f, 216f),
+        AddText(roomCard.transform, "FormatLabel", "比赛局数", new Vector2(-60f, 216f),
             new Vector2(90f, 34f), 17, font, TextAnchor.MiddleLeft, MutedTextColor);
         panel.formatDropdown = AddDropdown(roomCard.transform, "FormatDropdown", new Vector2(120f, 216f),
             new Vector2(260f, 46f), font, new List<string> { "BO1 · 一局胜负", "BO3 · 三局两胜" });
@@ -189,9 +192,9 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         AddText(roomCard.transform, "FirstPlayerValue", "每局随机决定", new Vector2(190f, 216f),
             new Vector2(340f, 40f), 20, font, TextAnchor.MiddleLeft, TextColor).gameObject.SetActive(false);
 
-        AddFieldLabel(roomCard.transform, "SetsLabel", "允许系列", new Vector2(-360f, 148f), font);
-        panel.allowedSetsInput = AddInput(roomCard.transform, "SetsInput", string.Empty,
-            new Vector2(90f, 148f), new Vector2(620f, 46f), font, "留空表示允许全部；多个代码用逗号分隔");
+        AddFieldLabel(roomCard.transform, "SetsLabel", "赛制", new Vector2(-360f, 148f), font);
+        panel.cardFormatDropdown = AddDropdown(roomCard.transform, "CardFormatDropdown",
+            new Vector2(90f, 148f), new Vector2(620f, 46f), font, new List<string>());
 
         panel.customContentToggle = AddToggle(roomCard.transform, "CustomToggle", "允许 DIY 卡牌",
             "开启后，允许使用在数据编辑器中标记为 DIY 的卡牌。", new Vector2(0f, 63f),
@@ -231,8 +234,18 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             new Vector2(620f, 38f), 20, font, TextAnchor.MiddleLeft, TextColor);
         Image playersPanel = AddPanel(roomSummary.transform, "PlayersPanel", new Vector2(0f, -38f),
             new Vector2(650f, 132f), ObsidianArenaTheme.Field);
-        panel.seatsText = AddText(playersPanel.transform, "Seats", "玩家 1　空位\n玩家 2　空位",
-            Vector2.zero, new Vector2(590f, 100f), 22, font, TextAnchor.MiddleLeft, TextColor);
+        for (int i = 0; i < 2; i++)
+        {
+            Image seat = AddPanel(playersPanel.transform, "Seat" + (i + 1),
+                new Vector2(0f, i == 0 ? 55f : -55f), new Vector2(648f, 96f), FieldColor);
+            AddText(seat.transform, "SeatNumber", "0" + (i + 1), new Vector2(-276f, 0f),
+                new Vector2(48f, 48f), 26, font, TextAnchor.MiddleCenter, MutedTextColor);
+            panel.seatNames[i] = AddText(seat.transform, "PlayerName", "等待玩家加入",
+                new Vector2(18f, 19f), new Vector2(500f, 34f), 22, font, TextAnchor.MiddleLeft, TextColor);
+            panel.seatNames[i].supportRichText = false;
+            panel.seatStates[i] = AddText(seat.transform, "PlayerState", "空位",
+                new Vector2(18f, -20f), new Vector2(500f, 28f), 16, font, TextAnchor.MiddleLeft, MutedTextColor);
+        }
         Image roomStatusPanel = AddPanel(roomSummary.transform, "StatusPanel", new Vector2(0f, -190f),
             new Vector2(650f, 92f), ObsidianArenaTheme.Field);
         panel.statusText = AddText(roomStatusPanel.transform, "Status", "等待玩家加入。", Vector2.zero,
@@ -323,7 +336,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             new Vector2(800f, -314f), new Vector2(260f, 54f), font, OpponentColor);
 
         panel.readyButton.interactable = false;
-        panel.hostButton.onClick.AddListener(panel.Host);
+        panel.hostButton.onClick.AddListener(panel.CreateSelectedRoom);
         panel.connectButton.onClick.AddListener(panel.Connect);
         panel.readyButton.onClick.AddListener(panel.ToggleReady);
         panel.startMatchButton.onClick.AddListener(panel.StartMatch);
@@ -334,11 +347,16 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         panel.resetSideboardButton.onClick.AddListener(panel.ResetSideboardChanges);
         panel.profileInput.onEndEdit.AddListener(panel.LoadProfile);
         panel.customContentToggle.onValueChanged.AddListener(panel.OnCustomContentChanged);
-        backButton.onClick.AddListener(panel.Close);
+        backButton.onClick.AddListener(panel.BrowserBack);
         SetPageVisible(panel.connectionPageGroup, true);
         SetPageVisible(panel.roomPageGroup, false);
         SetPageVisible(panel.sideboardPageGroup, false);
         panel.UpdateCustomContentLabel();
+        MenuVisualTheme.ApplyLobby(root.transform);
+        panel.BuildRoomBrowser(font);
+        panel.BuildSpectatorControls();
+        panel.BuildPlayDrawControls();
+        panel.RefreshLanguage();
         return panel;
     }
 
@@ -346,6 +364,8 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
 
     private void Subscribe()
     {
+        GamePreferences.Changed -= RefreshLanguage;
+        GamePreferences.Changed += RefreshLanguage;
         OnlineMatchService service = OnlineMatchService.EnsureInstance();
         service.StatusChanged -= OnStatus;
         service.StatusChanged += OnStatus;
@@ -357,6 +377,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
 
     private void Unsubscribe()
     {
+        GamePreferences.Changed -= RefreshLanguage;
         if (OnlineMatchService.Instance == null) return;
         OnlineMatchService.Instance.StatusChanged -= OnStatus;
         OnlineMatchService.Instance.LobbyChanged -= OnLobby;
@@ -399,6 +420,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     {
         OnlineMatchService service = OnlineMatchService.Instance;
         if (service != null && service.IsOnline && !service.IsInMatch) service.Disconnect();
+        creatingRoom=false;
         ready = false;
         sideboardBaselineDeck = null;
         sideboardGameNumber = -1;
@@ -503,6 +525,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         if (selectedDeck == null || series == null || !series.betweenGames || ready || entry == null) return;
         List<DeckEntry> source = toSideboard ? selectedDeck.cards : selectedDeck.sideboard;
         List<DeckEntry> destination = toSideboard ? selectedDeck.sideboard : selectedDeck.cards;
+        entry = source.Find(item => SamePrinting(item, entry));
         if (entry == null || entry.count <= 0) return;
         DeckEntry destinationEntry = destination.Find(item => SamePrinting(item, entry));
         if (destinationEntry == null)
@@ -541,10 +564,11 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             startingLife = int.TryParse(lifeInput.text, out int life) ? life : 20,
             firstPlayerSeat = 0,
             bestOf = formatDropdown != null && formatDropdown.value == 1 ? 3 : 1,
+            formatId = DeckFormatLegality.OnlineKeys[cardFormatDropdown.value],
             minimumMainDeckSize = 60,
             maximumSideboardSize = 15,
             allowCustomContent = customContentToggle != null && customContentToggle.isOn,
-            allowedSetCodes = ParseSetCodes(allowedSetsInput.text)
+            allowedSetCodes = new List<string>()
         };
     }
 
@@ -593,6 +617,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
 
     private void OnStatus(string value)
     {
+        if(browserStatus!=null)browserStatus.text=value;
         if (connectionStatusText != null) connectionStatusText.text = value;
         if (statusText != null) statusText.text = value;
         Refresh();
@@ -633,14 +658,14 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         bool host = service != null && service.IsHost;
         OnlineLobbyState lobby = service?.LobbyState;
         OnlineSeriesState series = lobby?.series;
-        bool betweenGames = joinedRoom && series != null && series.betweenGames && !series.finished;
+        bool betweenGames = joinedRoom && !service.IsSpectator && series != null && series.betweenGames && !series.finished;
         bool roomHost = joinedRoom && lobby != null && lobby.hostSeat == service.LocalSeat;
         bool allPlayersReady = lobby?.players != null
-            && lobby.players.Count == 2
-            && lobby.players.TrueForAll(player =>
-                player != null && player.connected && player.hasDeck && player.ready);
+            && lobby.players.Exists(p=>p.seat==1) && lobby.players.Exists(p=>p.seat==2)
+            && lobby.players.TrueForAll(player => player.seat>2 || (player.connected && player.hasDeck && player.ready));
 
-        SetPageVisible(connectionPageGroup, !joinedRoom);
+        SetPageVisible(connectionPageGroup, !joinedRoom && creatingRoom);
+        SetPageVisible(browserPageGroup, !joinedRoom && !creatingRoom);
         SetPageVisible(roomPageGroup, joinedRoom && !betweenGames);
         SetPageVisible(sideboardPageGroup, betweenGames);
 
@@ -653,7 +678,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         if (hostButton != null)
         {
             hostButton.interactable = canStartConnection;
-            SetButtonLabel(hostButton, "创建局域网主机");
+            SetButtonLabel(hostButton, serverRoom ? "在服务器建立" : "建立局域网房间");
         }
         if (connectButton != null)
         {
@@ -662,7 +687,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         }
         if (readyButton != null)
         {
-            readyButton.interactable = joinedRoom && selectedDeck != null && !betweenGames;
+            readyButton.interactable = joinedRoom && !service.IsSpectator && selectedDeck != null && !betweenGames;
             string readyLabel = "提交牌组并准备";
             if (series != null && series.finished) readyLabel = "准备开始新比赛";
             if (ready) readyLabel = "取消准备";
@@ -699,21 +724,20 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         UpdateCustomContentLabel();
         RefreshRoomSummary(lobby);
         RefreshSideboardControls(series);
+        RefreshSpectatorControls(service);
+        RefreshMatchPreparation(service, betweenGames);
 
-        if (seatsText == null) return;
-        if (lobby == null || lobby.players == null || lobby.players.Count == 0)
-        {
-            seatsText.text = "等待玩家加入…";
-            return;
-        }
-        var occupiedSeats = new List<string>();
         for (int seat = 1; seat <= 2; seat++)
         {
-            OnlineLobbyPlayer player = lobby.players.Find(item => item != null && item.seat == seat && item.connected);
-            if (player != null) occupiedSeats.Add(FormatSeat(lobby, seat));
+            OnlineLobbyPlayer player = lobby?.players?.Find(item => item != null && item.seat == seat && item.connected);
+            seatNames[seat - 1].text = player == null ? "等待玩家加入" : player.displayName;
+            string role = lobby != null && lobby.hostSeat == seat ? "房主" : "玩家";
+            if (player != null && service.LocalSeat == seat) role += " · 你";
+            seatStates[seat - 1].text = player == null ? "空位 · 等待连接" :
+                role + "   /   " + (player.ready ? "已准备" : player.hasDeck ? "牌组已提交 · 未准备" : "正在选择牌组");
+            seatStates[seat - 1].color = player != null && player.ready
+                ? new Color(.42f, .8f, .7f) : MenuVisualTheme.Muted;
         }
-        if (occupiedSeats.Count < 2) occupiedSeats.Add("等待另一名玩家加入…");
-        seatsText.text = string.Join("\n", occupiedSeats);
     }
 
     private void SetConnectionFieldsInteractable(bool interactable)
@@ -729,7 +753,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     {
         if (lifeInput != null) lifeInput.interactable = interactable;
         if (formatDropdown != null) formatDropdown.interactable = interactable;
-        if (allowedSetsInput != null) allowedSetsInput.interactable = interactable;
+        if (cardFormatDropdown != null) cardFormatDropdown.interactable = interactable;
         if (customContentToggle != null) customContentToggle.interactable = interactable;
     }
 
@@ -791,10 +815,9 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             if (config == null) roomRulesText.text = string.Empty;
             else
             {
-                string sets = config.allowedSetCodes == null || config.allowedSetCodes.Count == 0
-                    ? "全部系列"
-                    : string.Join(" / ", config.allowedSetCodes);
-                roomRulesText.text = $"BO{config.bestOf} · {config.startingLife} 点生命 · 每局随机先后手\n{sets} · DIY {(config.allowCustomContent ? "允许" : "禁用")}";
+                string format = GamePreferences.T(DeckFormatLegality.FormatName(config.formatId));
+                roomRulesText.text = string.Format(GamePreferences.T("BO{0} · {1} 点生命\n{2} · DIY {3}"),
+                    config.bestOf, config.startingLife, format, GamePreferences.T(config.allowCustomContent ? "允许" : "禁用"));
             }
         }
 
@@ -805,13 +828,12 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             seriesText.text = "等待比赛开始";
             return;
         }
-        string score = $"P1 {series.player1Wins} : {series.player2Wins} P2";
         if (series.finished)
-            seriesText.text = $"比赛结束 · 玩家 {series.winnerSeat} 获胜 · {score}";
+            seriesText.text = "比赛结束";
         else if (series.betweenGames)
-            seriesText.text = $"第 {series.gameNumber} 局换备阶段 · {score}";
+            seriesText.text = $"第 {series.gameNumber} 局换备阶段";
         else
-            seriesText.text = $"第 {series.gameNumber} 局 · {score}";
+            seriesText.text = $"第 {series.gameNumber} 局";
     }
 
     private void RefreshSideboardControls(OnlineSeriesState series)
@@ -821,6 +843,8 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         {
             sideboardGameNumber = series.gameNumber;
             sideboardBaselineDeck = CloneDeck(selectedDeck);
+            sideboardGridSignature = null;
+            resetSideboardScroll = true;
         }
         else if (!betweenGames)
         {
@@ -829,7 +853,8 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         }
 
         if (deckDropdown != null) deckDropdown.interactable = !ready && !betweenGames;
-        RefreshSideboardCardGrids();
+        if (betweenGames && OnlineMatchService.Instance?.IsSpectator != true) RefreshSideboardCardGrids();
+        RefreshSideboardQuantityControls();
         if (resetSideboardButton != null)
             resetSideboardButton.interactable = betweenGames && !ready && sideboardBaselineDeck != null;
         if (sideboardStatusText != null)
@@ -842,18 +867,29 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         if (sideboardSeriesText != null)
         {
             sideboardSeriesText.text = betweenGames
-                ? $"第 {series.gameNumber} 局 · P1 {series.player1Wins} : {series.player2Wins} P2"
+                ? $"第 {series.gameNumber} 局"
                 : string.Empty;
         }
     }
 
     private void RefreshSideboardCardGrids()
     {
+        string signature = JsonUtility.ToJson(selectedDeck);
+        if (signature == sideboardGridSignature) return;
+        sideboardGridSignature = signature;
         ClearGrid(mainDeckContent);
         ClearGrid(sideboardContent);
         IReadOnlyList<CardDefinition> cardDatabase = CardDatabaseRepository.LoadAll();
         PopulateSideboardGrid(mainDeckContent, selectedDeck?.cards, false, cardDatabase, "主牌为空");
         PopulateSideboardGrid(sideboardContent, selectedDeck?.sideboard, true, cardDatabase, "备牌为空");
+        foreach (var content in new[] { mainDeckContent, sideboardContent })
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+            var scroll = content.GetComponentInParent<ScrollRect>();
+            scroll.StopMovement();
+            if (resetSideboardScroll) content.anchoredPosition = Vector2.zero;
+        }
+        resetSideboardScroll = false;
     }
 
     private void PopulateSideboardGrid(
@@ -924,7 +960,9 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         AddText(countBadge.transform, "Count", $"×{entry.count}", Vector2.zero,
             new Vector2(34f, 26f), 15, font, TextAnchor.MiddleCenter, Color.white);
 
-        tileObject.GetComponent<OnlineSideboardCardTile>().Configure(this, entry, card, sprite, isSideboard);
+        var tile = tileObject.GetComponent<OnlineSideboardCardTile>();
+        tile.Configure(this, entry, card, sprite, isSideboard);
+        BuildSideboardQuantityControls(tile, countBadge.gameObject, rect.sizeDelta);
     }
 
     private static void ClearGrid(RectTransform parent)
@@ -943,9 +981,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
     {
         if (config == null) return;
         lifeInput?.SetTextWithoutNotify(config.startingLife.ToString());
-        allowedSetsInput?.SetTextWithoutNotify(config.allowedSetCodes == null
-            ? string.Empty
-            : string.Join(",", config.allowedSetCodes));
+        cardFormatDropdown?.SetValueWithoutNotify(Mathf.Max(0, Array.IndexOf(DeckFormatLegality.OnlineKeys, config.formatId ?? "none")));
         customContentToggle?.SetIsOnWithoutNotify(config.allowCustomContent);
         formatDropdown?.SetValueWithoutNotify(config.bestOf == 3 ? 1 : 0);
     }
@@ -957,6 +993,27 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         customContentStateText.color = customContentToggle.isOn
             ? ObsidianArenaTheme.Blue
             : MutedTextColor;
+    }
+
+    private void RefreshLanguage()
+    {
+        SetLocalizedOptions(formatDropdown, new[] { "BO1 · 一局胜负", "BO3 · 三局两胜" });
+        var names = new string[DeckFormatLegality.OnlineKeys.Length];
+        for (int i = 0; i < names.Length; i++) names[i] = DeckFormatLegality.FormatName(DeckFormatLegality.OnlineKeys[i]);
+        SetLocalizedOptions(cardFormatDropdown, names);
+        Refresh();
+    }
+    private static void SetLocalizedOptions(Dropdown dropdown, string[] names)
+    {
+        if (dropdown == null) return;
+        int selected = dropdown.value;
+        dropdown.Hide(); dropdown.ClearOptions();
+        var options = new List<string>();
+        foreach (string name in names) options.Add(GamePreferences.T(name));
+        dropdown.AddOptions(options); dropdown.SetValueWithoutNotify(selected); dropdown.RefreshShownValue();
+        dropdown.captionText.verticalOverflow = VerticalWrapMode.Overflow;
+        dropdown.captionText.resizeTextForBestFit = true;
+        dropdown.captionText.resizeTextMinSize = 14; dropdown.captionText.resizeTextMaxSize = 23;
     }
 
     private void PlayEnterTransition()
@@ -1008,15 +1065,6 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
             yield return null;
         }
         CompleteClose();
-    }
-
-    private static string FormatSeat(OnlineLobbyState lobby, int seat)
-    {
-        OnlineLobbyPlayer player = lobby.players.Find(item => item != null && item.seat == seat);
-        if (player == null || !player.connected) return $"玩家 {seat}　空位";
-        string state = player.ready ? "已准备" : player.hasDeck ? "牌组已提交" : "等待牌组";
-        string host = lobby.hostSeat == seat ? "（房主）" : string.Empty;
-        return $"玩家 {seat}{host}　{player.displayName}　{state}";
     }
 
     private static bool SameDeckName(DeckDefinition left, DeckDefinition right)
@@ -1217,7 +1265,7 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         contentRect.anchoredPosition = Vector2.zero;
         contentRect.sizeDelta = new Vector2(0f, size.y);
 
-        GameObject item = new GameObject("Item", typeof(RectTransform), typeof(Toggle));
+        GameObject item = new GameObject("Item", typeof(RectTransform), typeof(Image), typeof(Toggle));
         item.transform.SetParent(content.transform, false);
         RectTransform itemRect = item.GetComponent<RectTransform>();
         itemRect.anchorMin = new Vector2(0f, 0.5f);
@@ -1225,14 +1273,23 @@ public sealed class OnlineLobbyPanel : MonoBehaviour
         itemRect.sizeDelta = new Vector2(0f, size.y);
         Text itemText = AddText(item.transform, "Item Label", "Option", Vector2.zero,
             new Vector2(size.x - 24f, size.y), 17, font, TextAnchor.MiddleLeft, TextColor);
+        itemText.rectTransform.anchorMin = Vector2.zero;
+        itemText.rectTransform.anchorMax = Vector2.one;
+        itemText.rectTransform.offsetMin = new Vector2(40f, 2f);
+        itemText.rectTransform.offsetMax = new Vector2(-12f, -2f);
+        Text selectedMark = AddText(item.transform, "Checkmark", "✓", Vector2.zero,
+            new Vector2(24f, 30f), 18, font, TextAnchor.MiddleCenter, TextColor);
+        selectedMark.rectTransform.anchorMin = selectedMark.rectTransform.anchorMax = new Vector2(0f, .5f);
+        selectedMark.rectTransform.anchoredPosition = new Vector2(20f, 0f);
         Toggle itemToggle = item.GetComponent<Toggle>();
-        itemToggle.targetGraphic = itemText;
-        itemToggle.graphic = itemText;
+        itemToggle.targetGraphic = item.GetComponent<Image>();
+        itemToggle.graphic = selectedMark;
 
         ScrollRect scroll = template.GetComponent<ScrollRect>();
         scroll.content = contentRect;
         scroll.viewport = viewport.GetComponent<RectTransform>();
         scroll.horizontal = false;
+        scroll.scrollSensitivity = 30;
 
         Dropdown dropdown = root.GetComponent<Dropdown>();
         dropdown.targetGraphic = background;

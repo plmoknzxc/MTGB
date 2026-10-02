@@ -1,0 +1,545 @@
+{
+  "Affinity": [
+    "親和"
+  ],
+  "Afflict": [
+    "加虐"
+  ],
+  "Afterlife": [
+    "死後"
+  ],
+  "Aftermath": [
+    "余波"
+  ],
+  "Amplify": [
+    "増幅"
+  ],
+  "Annihilator": [
+    "滅殺"
+  ],
+  "Ascend": [
+    "昇殿"
+  ],
+  "Assist": [
+    "助力"
+  ],
+  "Awaken": [
+    "覚醒"
+  ],
+  "Banding": [
+    "バンド"
+  ],
+  "Bargain": [
+    "協約"
+  ],
+  "Battle cry": [
+    "喊声"
+  ],
+  "Bestow": [
+    "授与"
+  ],
+  "Blitz": [
+    "奇襲"
+  ],
+  "Bloodthirst": [
+    "狂喜"
+  ],
+  "Boast": [
+    "誇示"
+  ],
+  "Bolster": [
+    "鼓舞"
+  ],
+  "Bushido": [
+    "武士道"
+  ],
+  "Buyback": [
+    "バイバック"
+  ],
+  "Cascade": [
+    "続唱"
+  ],
+  "Casualty": [
+    "犠牲"
+  ],
+  "Champion": [
+    "覇権"
+  ],
+  "Changeling": [
+    "多相"
+  ],
+  "Cipher": [
+    "暗号"
+  ],
+  "Cleave": [
+    "切除"
+  ],
+  "Companion": [
+    "相棒"
+  ],
+  "Conspire": [
+    "共謀"
+  ],
+  "Convoke": [
+    "召集"
+  ],
+  "Crew": [
+    "搭乗"
+  ],
+  "Cumulative upkeep": [
+    "累加アップキープ"
+  ],
+  "Cycling": [
+    "サイクリング"
+  ],
+  "Dash": [
+    "疾駆"
+  ],
+  "Daybound": [
+    "日暮"
+  ],
+  "Deathtouch": [
+    "接死"
+  ],
+  "Defender": [
+    "防衛"
+  ],
+  "Delve": [
+    "探査"
+  ],
+  "Demonstrate": [
+    "実演"
+  ],
+  "Dethrone": [
+    "廃位"
+  ],
+  "Devoid": [
+    "欠色"
+  ],
+  "Devour": [
+    "貪食"
+  ],
+  "Disguise": [
+    "変装"
+  ],
+  "Disturb": [
+    "降霊"
+  ],
+  "Double strike": [
+    "二段攻撃"
+  ],
+  "Dredge": [
+    "発掘"
+  ],
+  "Echo": [
+    "エコー"
+  ],
+  "Embalm": [
+    "不朽"
+  ],
+  "Emerge": [
+    "現出"
+  ],
+  "Enchant": [
+    "エンチャント"
+  ],
+  "Encore": [
+    "再演"
+  ],
+  "Enlist": [
+    "後援"
+  ],
+  "Entwine": [
+    "双呪"
+  ],
+  "Epic": [
+    "歴伝"
+  ],
+  "Equip": [
+    "装備"
+  ],
+  "Escalate": [
+    "増呪"
+  ],
+  "Escape": [
+    "脱出"
+  ],
+  "Eternalize": [
+    "永遠"
+  ],
+  "Evoke": [
+    "想起"
+  ],
+  "Evolve": [
+    "進化"
+  ],
+  "Exalted": [
+    "賛美"
+  ],
+  "Exploit": [
+    "濫用"
+  ],
+  "Extort": [
+    "強請"
+  ],
+  "Fabricate": [
+    "製造"
+  ],
+  "Fading": [
+    "消散"
+  ],
+  "Fear": [
+    "畏怖"
+  ],
+  "First strike": [
+    "先制攻撃"
+  ],
+  "Flanking": [
+    "側面攻撃"
+  ],
+  "Flash": [
+    "瞬速"
+  ],
+  "Flashback": [
+    "フラッシュバック"
+  ],
+  "Flying": [
+    "飛行"
+  ],
+  "Forecast": [
+    "予見"
+  ],
+  "Foretell": [
+    "予顕"
+  ],
+  "Fuse": [
+    "融合"
+  ],
+  "Graft": [
+    "移植"
+  ],
+  "Haste": [
+    "速攻"
+  ],
+  "Haunt": [
+    "憑依"
+  ],
+  "Hexproof": [
+    "呪禁"
+  ],
+  "Hidden agenda": [
+    "秘策"
+  ],
+  "Hideaway": [
+    "秘匿"
+  ],
+  "Horsemanship": [
+    "馬術"
+  ],
+  "Impending": [
+    "兆候"
+  ],
+  "Improvise": [
+    "即席"
+  ],
+  "Indestructible": [
+    "破壊不能"
+  ],
+  "Infect": [
+    "感染"
+  ],
+  "Ingest": [
+    "嚥下"
+  ],
+  "Intimidate": [
+    "威嚇"
+  ],
+  "Investigate": [
+    "調査を行う"
+  ],
+  "Jump-start": [
+    "再活"
+  ],
+  "Kicker": [
+    "キッカー"
+  ],
+  "Learn": [
+    "履修を行う"
+  ],
+  "Lifelink": [
+    "絆魂"
+  ],
+  "Living Weapon": [
+    "生体武器"
+  ],
+  "Madness": [
+    "マッドネス"
+  ],
+  "Max Speed": [
+    "最高速度"
+  ],
+  "Megamorph": [
+    "大変異"
+  ],
+  "Melee": [
+    "会戦"
+  ],
+  "Menace": [
+    "威迫"
+  ],
+  "Mentor": [
+    "教導"
+  ],
+  "Miracle": [
+    "奇跡"
+  ],
+  "Modular": [
+    "接合"
+  ],
+  "Morph": [
+    "変異"
+  ],
+  "Multikicker": [
+    "多重キッカー"
+  ],
+  "Mutate": [
+    "変容"
+  ],
+  "Myriad": [
+    "無尽"
+  ],
+  "Nightbound": [
+    "夜明"
+  ],
+  "Ninjutsu": [
+    "忍術"
+  ],
+  "Offspring": [
+    "新生"
+  ],
+  "Outlast": [
+    "長久"
+  ],
+  "Overload": [
+    "超過"
+  ],
+  "Partner": [
+    "共闘"
+  ],
+  "Persist": [
+    "頑強"
+  ],
+  "Phasing": [
+    "フェイジング"
+  ],
+  "Plot": [
+    "計画"
+  ],
+  "Populate": [
+    "居住を行う"
+  ],
+  "Proliferate": [
+    "増殖を行う"
+  ],
+  "Protection": [
+    "プロテクション"
+  ],
+  "Provoke": [
+    "挑発"
+  ],
+  "Prowess": [
+    "果敢"
+  ],
+  "Prowl": [
+    "徘徊"
+  ],
+  "Rampage": [
+    "ランページ"
+  ],
+  "Reach": [
+    "到達"
+  ],
+  "Read ahead": [
+    "先読"
+  ],
+  "Rebound": [
+    "反復"
+  ],
+  "Reconfigure": [
+    "換装"
+  ],
+  "Recover": [
+    "復活"
+  ],
+  "Reinforce": [
+    "補強"
+  ],
+  "Renown": [
+    "高名"
+  ],
+  "Replicate": [
+    "複製"
+  ],
+  "Retrace": [
+    "回顧"
+  ],
+  "Riot": [
+    "暴動"
+  ],
+  "Ripple": [
+    "波及"
+  ],
+  "Saddle": [
+    "騎乗"
+  ],
+  "Scavenge": [
+    "活用"
+  ],
+  "Scry": [
+    "占術"
+  ],
+  "Shadow": [
+    "シャドー"
+  ],
+  "Shroud": [
+    "被覆"
+  ],
+  "Skulk": [
+    "潜伏"
+  ],
+  "Sneak": [
+    "隠密"
+  ],
+  "Solved": [
+    "解明完了"
+  ],
+  "Soulbond": [
+    "結魂"
+  ],
+  "Soulshift": [
+    "転生"
+  ],
+  "Spectacle": [
+    "絢爛"
+  ],
+  "Splice": [
+    "連繋"
+  ],
+  "Split second": [
+    "刹那"
+  ],
+  "Spree": [
+    "放題"
+  ],
+  "Start your engines": [
+    "エンジン始動"
+  ],
+  "Storied": [
+    "物語り"
+  ],
+  "Storm": [
+    "ストーム"
+  ],
+  "Strive": [
+    "奮励"
+  ],
+  "Sunburst": [
+    "烈日"
+  ],
+  "Support": [
+    "支援"
+  ],
+  "Surge": [
+    "怒濤"
+  ],
+  "Surveil": [
+    "諜報"
+  ],
+  "Suspend": [
+    "待機"
+  ],
+  "Toxic": [
+    "毒性"
+  ],
+  "Training": [
+    "訓練"
+  ],
+  "Trample": [
+    "トランプル"
+  ],
+  "Transmute": [
+    "変成"
+  ],
+  "Tribute": [
+    "貢納"
+  ],
+  "Umbra armor": [
+    "族霊鎧"
+  ],
+  "Undaunted": [
+    "不抜"
+  ],
+  "Undying": [
+    "不死"
+  ],
+  "Unearth": [
+    "蘇生"
+  ],
+  "Unleash": [
+    "解鎖"
+  ],
+  "Vanishing": [
+    "消失"
+  ],
+  "Vigilance": [
+    "警戒"
+  ],
+  "Ward": [
+    "護法"
+  ],
+  "Wither": [
+    "萎縮"
+  ],
+  "Amass": [
+    "動員"
+  ],
+  "Amass Zombies": [
+    "ゾンビ動員"
+  ],
+  "Amass Orcs": [
+    "オーク動員"
+  ],
+  "Gift": [
+    "贈呈"
+  ],
+  "Mill": [
+    "切削"
+  ],
+  "Regenerate": [
+    "再生"
+  ],
+  "Landwalk": [
+    "土地渡り",
+    "平地渡り",
+    "島渡り",
+    "沼渡り",
+    "山渡り",
+    "森渡り"
+  ],
+  "TypeCycling": [
+    "土地サイクリング",
+    "基本土地サイクリング",
+    "平地サイクリング",
+    "島サイクリング",
+    "沼サイクリング",
+    "山サイクリング",
+    "森サイクリング"
+  ],
+  "The Ring Tempts You": [
+    "魔戒引诱你",
+    "指輪があなたを誘惑する"
+  ],
+  "Meld": [
+    "合体"
+  ]
+}

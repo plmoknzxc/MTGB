@@ -1,0 +1,1 @@
+PASS: real engine snapshots rendered; card images; pagination; button hit testing; duplicate/stale submissions blocked; opponent and idle views dismiss window.

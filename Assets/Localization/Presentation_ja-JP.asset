@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97269afb30aa84742ae3f3342603618a, type: 3}
+  m_Name: Presentation_ja-JP
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.AssetTable
+  m_LocaleId:
+    m_Code: ja-JP
+  m_SharedData: {fileID: 11400000, guid: 1c63ebd56e092e64cb06d6eda4f7049d, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 9461747712
+    m_Localized: c52814aa17e4cba4e87ea1b30aef2d8c
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9713405952
+    m_Localized: 6d46708eb9f84044cacb5068fb8a3280
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

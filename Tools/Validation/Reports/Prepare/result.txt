@@ -1,0 +1,1 @@
+PASS: Emeritus of Woe enters prepared; own spell ID/action; opponent cannot cast; cancel preserves preparation; two mana; separate Demonic Tutor spell; search adds card; source stays; preparation consumed.

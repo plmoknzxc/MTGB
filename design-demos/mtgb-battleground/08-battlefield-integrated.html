@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>MTGB · 战场一体环境版 V2 · 全真实卡图 + MTGA 式堆叠列 + 右下角回合/时间</title>
+<!--
+  V2 迭代记录（回应反馈）：
+  1. 全部战场卡改用真实卡图（全部用地/海岛），验证大小观感不受生成模板干扰。
+  2. 透视比例收敛：perspective 1700 / rotateX 19°，远排≈近排的 0.86（此前 0.67 偏夸张，
+     首版 1.0 又太平；0.85 左右为当前取向，Unity 里对应俯角约 30-35°）。
+  3. 对手手牌与战场间隙收紧：远端桌沿上移至 y160。
+  4. 堆叠信息移到战场右侧竖列（MTGA 同款位置：右侧叠放、点击查看；多时压缩+滚动。
+     Unity 实现 = ScrollRect 拖动滚动 + 点击/悬停联动左栏放大）。
+  5. 相位菱形删除：六角徽章已直接显示当前阶段。
+  6. 回合信息 + 决策计时缩小并入右下角操作簇（位于「跳过战斗」左侧）。
+  7. 牌库/坟场/放逐分两家：MTGA 式——对手三区在其右上（身份牌下方），
+     己方三区并入右下角簇（点击区域 = 打开浏览详情视图，不占用名字牌空间）。
+  8. 左栏检视面板 = MTGA 式放大查看，本版保留不动（记录在案）。
+  · 换肤：环境层 .env 独立，#skin=ember 演示整层更换。
+-->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#05070B;color:#EDF2F8;
+  font-family:Bahnschrift,"Microsoft YaHei UI",sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ============ 环境层（唯一可整体替换的战场背景） ============ */
+.env{position:absolute;inset:0;z-index:0}
+.env .floor{position:absolute;left:0;right:0;top:202px;bottom:206px;
+  background:
+    radial-gradient(1500px 520px at 50% 106%, rgba(66,133,244,.11), transparent 62%),
+    radial-gradient(1100px 360px at 50% -6%, rgba(220,60,90,.06), transparent 60%),
+    radial-gradient(2400px 800px at 50% 54%, rgba(151,170,199,.05), transparent 70%),
+    linear-gradient(180deg,#0B0F17 0%,#0C111A 24%,#111725 55%,#131A29 74%,#0F1522 92%,#0D1220 100%)}
+.env .floor:after{content:"";position:absolute;inset:0;opacity:.05;
+  background:repeating-linear-gradient(178deg,rgba(255,255,255,.05) 0 2px,transparent 2px 7px)}
+.env .vig{position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(3,5,8,.55) 0%,transparent 9% 91%,rgba(3,5,8,.55) 100%)}
+/* 近端桌沿（玩家侧，蓝方微光） */
+.env .edge{position:absolute;left:0;right:0;top:878px;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(137,149,169,.30) 10% 90%,transparent)}
+.env .edge:before,.env .edge:after{content:"";position:absolute;left:0;right:0;height:1px}
+.env .edge:before{top:-3px;background:linear-gradient(90deg,transparent,rgba(66,133,244,.18) 12% 88%,transparent)}
+.env .edge:after{top:5px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.5) 10% 90%,transparent)}
+.env .handzone{position:absolute;left:0;right:0;top:880px;bottom:0;
+  background:linear-gradient(180deg,rgba(4,6,10,.66),rgba(3,5,9,.9))}
+/* 远端桌沿（对手侧，红方微光），对手 UI 区与近端等高对称 */
+.env .faredge{position:absolute;left:0;right:0;top:200px;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(137,149,169,.26) 10% 90%,transparent)}
+.env .faredge:before,.env .faredge:after{content:"";position:absolute;left:0;right:0;height:1px}
+.env .faredge:before{top:4px;background:linear-gradient(90deg,transparent,rgba(220,60,90,.14) 12% 88%,transparent)}
+.env .faredge:after{top:-4px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.5) 10% 90%,transparent)}
+.env .oppzone{position:absolute;left:0;right:0;top:0;height:200px;
+  background:linear-gradient(180deg,rgba(3,5,9,.9),rgba(4,6,10,.6))}
+body.skin-ember .env .floor{
+  background:
+    radial-gradient(1500px 520px at 50% 106%, rgba(255,166,87,.09), transparent 62%),
+    radial-gradient(1100px 360px at 50% -6%, rgba(214,120,60,.05), transparent 60%),
+    radial-gradient(2400px 800px at 50% 54%, rgba(230,190,140,.05), transparent 70%),
+    linear-gradient(180deg,#070505 0%,#0C0808 24%,#150F0D 55%,#1D1512 74%,#191210 92%,#0E0A08 100%)}
+body.skin-ember .env .edge{background:linear-gradient(90deg,transparent,rgba(214,160,90,.34) 10% 90%,transparent)}
+body.skin-ember .env .edge:before{background:linear-gradient(90deg,transparent,rgba(214,160,90,.16) 12% 88%,transparent)}
+
+.micro{font-size:10px;letter-spacing:.22em;color:#8995A9;text-transform:uppercase}
+.micro b{color:#C7D0DC;font-weight:500}
+
+/* ============ 卡牌通用 ============ */
+.card{position:relative;flex:none;border-radius:6px;overflow:hidden;border:1px solid #3A43513d}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+/* 生成模板卡（手牌中无图卡使用） */
+.gen{background:#0D1017;border:1px solid #3A4351;border-radius:7px;overflow:hidden;
+  display:flex;flex-direction:column;position:relative}
+.gen .nm{font-size:9px;color:#DFE6EE;padding:4px 6px 3px;background:#1B212C;border-bottom:1px solid #2C3442;
+  display:flex;justify-content:space-between;gap:4px}
+.gen .nm s{text-decoration:none;color:#8FA0B8;font-size:8px;flex:none}
+.gen .art{flex:1;margin:5px;border:1px solid #333B49;display:flex;align-items:center;justify-content:center}
+.gen .art i{width:26%;height:26%;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.gen .tp{font-size:7px;letter-spacing:.1em;color:#93A0B4;padding:0 6px 4px;border-bottom:1px solid #2C3442}
+.gen .tx{flex:1;padding:4px 6px;display:flex;flex-direction:column;gap:3px}
+.gen .tx i{height:3px;border-radius:2px;background:#2E3644}
+.gen .tx i:nth-child(2){width:78%}.gen .tx i:nth-child(3){width:56%}
+.gen .pt{position:absolute;right:4px;bottom:4px;font-size:9px;color:#EDF2F8;background:#161B24;
+  border:1px solid #303743;padding:0 5px;border-radius:3px}
+.gen.u .nm{background:#15263A}.gen.u .art{background:linear-gradient(150deg,#17304A,#10202F)}
+.gen.u .art i{background:#4B7DB5}
+.gen.w .nm{background:#2A2416}.gen.w .art{background:linear-gradient(150deg,#362D17,#241D0C)}
+.gen.w .art i{background:#B3944F}
+.gen.c .nm{background:#1E2128}.gen.c .art{background:linear-gradient(150deg,#242833,#171A20)}
+.gen.c .art i{background:#6B7889}
+
+/* ============ 战场卡牌层：全部真实卡图 ============ */
+.board{position:absolute;left:330px;right:250px;top:180px;height:680px;z-index:1;
+  transform:perspective(1700px) rotateX(19deg) scale(1);transform-origin:50% 60%}
+.midline{position:absolute;left:30px;right:30px;top:50%;height:2px;
+  background:linear-gradient(90deg,rgba(220,60,90,.42),rgba(196,206,220,.45) 50%,rgba(66,133,244,.42));
+  box-shadow:0 0 14px rgba(151,170,199,.28)}
+.midline:before{content:"";position:absolute;left:50%;top:-4px;width:10px;height:10px;
+  transform:translateX(-50%) rotate(45deg);background:#0B0E14;border:1px solid #6B7889;
+  box-shadow:0 0 10px rgba(151,170,199,.35)}
+.crow{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:7px}
+.crow .ov{margin-left:-16px}
+.crow.r1{top:38px}
+.crow.r2{top:198px}
+.crow.r3{top:378px}
+.crow.r4{top:518px}
+.card.b{width:92px;height:128px}
+.tapwrap{flex:none;display:flex;align-items:center;justify-content:center;width:128px;height:92px}
+.tapwrap .card.b{transform:rotate(90deg)}
+
+/* ============ 堆叠竖列（战场右侧，MTGA 式） ============ */
+.stackcol{position:absolute;right:70px;top:290px;width:172px;display:flex;flex-direction:column;gap:8px;z-index:6}
+.stackcol .cap{font-size:9px;letter-spacing:.2em;color:#5E6A7C;text-align:right}
+.sitem{display:flex;align-items:center;gap:8px;height:44px;padding:0 10px 0 5px;
+  background:rgba(20,24,33,.94);border:1px solid #39414F}
+.sitem:before{content:"";width:22px;height:30px;flex:none;border:1px solid #4A5464;border-radius:3px;
+  background:linear-gradient(150deg,#1B202B,#10141B)}
+.sitem .t1{font-size:11px;color:#EDF2F8;line-height:1.25}
+.sitem .t2{font-size:8px;letter-spacing:.1em;color:#8995A9;margin-top:1px}
+.sitem.now{border-color:#4B91FF;box-shadow:0 0 12px rgba(66,133,244,.22)}
+.sitem.now:after{content:"结算中";margin-left:auto;font-size:8px;letter-spacing:.12em;color:#7AA8FF;
+  border:1px solid rgba(66,133,244,.4);padding:2px 5px;white-space:nowrap}
+.sitem.more{justify-content:center;height:32px;color:#5E6A7C;font-size:9px;letter-spacing:.14em;
+  border-style:dashed;background:rgba(20,24,33,.6)}
+
+/* ============ 小型区域堆（牌库/坟场/放逐，两家各自一组） ============ */
+/* 区域堆：横排三只，位于各自名字框上方/下方（镜像） */
+.minipiles{position:absolute;display:flex;gap:12px;z-index:8}
+.minipiles.opp{right:36px;top:96px}
+.minipiles.you{left:36px;bottom:124px}
+.minipile{position:relative;width:54px;height:74px}
+.minipile .st{position:absolute;inset:0;border-radius:6px;border:1px dashed #3A4351;
+  background:repeating-linear-gradient(135deg,#171C26 0 6px,#12161F 6px 12px);overflow:hidden}
+.minipile .st.filled{border-style:solid;background:linear-gradient(160deg,#1B202B,#10141B)}
+.minipile .st img{width:100%;height:100%;object-fit:cover;filter:brightness(.68)}
+.minipile .n{position:absolute;right:-5px;bottom:-5px;height:20px;min-width:28px;display:flex;align-items:center;
+  justify-content:center;padding:0 5px;font-size:10.5px;color:#EDF2F8;background:#161B24;border:1px solid #39414F}
+.minipile .lb{position:absolute;left:0;top:100%;margin-top:4px;width:100%;text-align:center;
+  font-size:8.5px;letter-spacing:.16em;color:#5E6A7C}
+
+/* ============ 右下角簇：法力在上，回合/时间 + 操作在下 ============ */
+.cornerctl{position:absolute;right:52px;bottom:30px;display:flex;flex-direction:column;align-items:flex-end;
+  gap:12px;z-index:8}
+.ctlrow{display:flex;align-items:center;gap:18px}
+.ctl-div{width:1px;height:56px;background:#232936}
+/* 己方三区：右缘竖排（手牌够不到），点击打开浏览详情 */
+.minipiles.you{left:36px;bottom:124px}
+.manarow{display:flex;align-items:center;gap:6px}
+.mana{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:9.5px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.26)}
+.mana.u{background:#31699C}
+.mana.big{width:21px;height:21px;font-size:11.5px}
+.mana.big.c{background:#4A5464;color:#DDE4EC}
+/* 回合 + 时间（紧凑，徽章直接显示阶段，无相位菱形） */
+.turnchip{display:flex;align-items:center;gap:11px}
+.hexs{position:relative;width:56px;height:50px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);
+  background:linear-gradient(165deg,#1B2A44,#141A24)}
+.hexs:before{content:"";position:absolute;inset:0;clip-path:inherit;
+  background:linear-gradient(165deg,rgba(66,133,244,.5),rgba(66,133,244,.06))}
+.hexs:after{content:"";position:absolute;inset:2px;clip-path:inherit;
+  background:linear-gradient(165deg,#182338,#10151F)}
+.hexs .in{position:relative;z-index:2;text-align:center}
+.hexs .t2{font-size:20px;line-height:1;font-weight:600;color:#EDF2F8}
+.hexs .t3{font-size:7.5px;letter-spacing:.18em;color:#7AA8FF;margin-top:1px}
+.turnchip .tt1{font-size:12.5px;color:#EDF2F8}
+.turnchip .tt2{font-size:8px;letter-spacing:.16em;color:#8995A9;margin-top:3px}
+.timerrow{display:flex;align-items:center;gap:7px}
+.timerrow .ring{position:relative;width:40px;height:40px}
+.timerrow .tt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#EDF2F8;font-variant-numeric:tabular-nums}
+.btnrow{display:flex;align-items:center;gap:14px}
+.smbtn{width:62px;height:62px;border-radius:50%;background:rgba(17,20,27,.92);border:1px solid #2C3442;
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.smbtn .cn{font-size:11px;color:#C7D0DC;letter-spacing:.04em}
+.bigbtn{position:relative;width:78px;height:78px;border-radius:50%;cursor:pointer;
+  background:radial-gradient(circle at 50% 32%,#1F4885,#153059 72%);
+  box-shadow:0 0 0 2px #4285F4,0 0 18px rgba(66,133,244,.32),inset 0 2px 8px rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.bigbtn .cn{font-size:12.5px;letter-spacing:.06em;color:#fff}
+.bigbtn .en{font-size:6.5px;letter-spacing:.18em;color:#A8C8FF}
+.prio{position:absolute;right:52px;bottom:158px;display:flex;align-items:center;gap:7px;height:26px;
+  padding:0 10px;background:rgba(66,133,244,.10);border:1px solid rgba(66,133,244,.4);z-index:8}
+.prio i{width:6px;height:6px;border-radius:50%;background:#4285F4;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(66,133,244,.5)}50%{box-shadow:0 0 0 5px rgba(66,133,244,0)}}
+.prio .t{font-size:10px;color:#CFE0FA;letter-spacing:.08em}
+
+/* ============ 身份牌 ============ */
+.plate{position:absolute;display:flex;align-items:center;gap:12px;height:76px;padding:0 18px 0 10px;
+  background:rgba(15,18,25,.9);border:1px solid #2C3442;z-index:8}
+.plate:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.plate.you:before{background:#4285F4}.plate.opp:before{background:#DC3C5A}
+.hexpl{width:46px;height:46px;flex:none;display:flex;align-items:center;justify-content:center;
+  clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.plate.you .hexpl{background:linear-gradient(160deg,#1A3E75,#12254A)}
+.plate.opp .hexpl{background:linear-gradient(160deg,#5A1F2B,#3A141D)}
+.hexpl i{width:15px;height:15px;background:#DDE4EC;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.plate.you .hexpl i{background:#9FC2FF}.plate.opp .hexpl i{background:#F0798F}
+.plate .who .nm{font-size:15px;color:#EDF2F8}
+.plate .who .sub{margin-top:3px;font-size:8.5px;letter-spacing:.2em;color:#8995A9}
+.plate .lp{text-align:right;margin-left:8px}
+.plate .lp .n{font-size:30px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+.plate .lp .c{font-size:8px;letter-spacing:.3em;color:#8995A9}
+.plate.you .lp .n{color:#BFD6FF}.plate.opp .lp .n{color:#FFB3C0}
+
+/* ============ 其他 HUD ============ */
+.gearbox{position:absolute;left:36px;top:32px;display:flex;gap:10px;z-index:8}
+.cbtn{width:44px;height:44px;border-radius:50%;background:rgba(17,20,27,.9);border:1px solid #2C3442;
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cbtn svg{width:19px;height:19px;stroke:#8995A9;fill:none;stroke-width:1.6}
+.ophand{position:absolute;left:50%;top:44px;transform:translateX(-50%);display:flex;z-index:6}
+.ophand .bk{width:78px;height:110px;margin-left:-18px;border-radius:6px;overflow:hidden;
+  border:1px solid rgba(220,60,90,.3);position:relative;transform:rotate(var(--r));transform-origin:50% 130%}
+.ophand .bk:first-child{margin-left:0}
+.ophand .bk img{width:100%;height:100%;object-fit:cover;filter:brightness(.45) saturate(.55)}
+.ophand .cnt{position:absolute;right:-7px;bottom:-7px;width:24px;height:24px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;color:#EDF2F8;background:#161B24;border:1px solid #39414F;border-radius:50%}
+.inspect{position:absolute;left:36px;top:180px;width:258px;z-index:9;
+  background:rgba(15,18,25,.94);border:1px solid #2C3442}
+.inspect .hd{position:relative;display:flex;align-items:center;justify-content:space-between;
+  padding:9px 13px;border-bottom:1px solid #232936}
+.inspect .hd:before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:#4285F4}
+.inspect img{display:block;width:100%;height:338px;object-fit:cover}
+.inspect .bd{padding:11px 13px 13px}
+.inspect .nm{font-size:16px;color:#EDF2F8}
+.inspect .cost{margin-top:7px;display:flex;gap:5px}
+.inspect .tp{margin-top:7px;font-size:10px;letter-spacing:.1em;color:#8995A9}
+.inspect .rule{margin-top:9px;padding-top:9px;border-top:1px solid #232936;
+  font-size:12px;line-height:1.6;color:#C7D0DC}
+.inspect .ft{margin-top:10px;font-size:8px;letter-spacing:.2em;color:#4A5464}
+.hand{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);display:flex;z-index:10}
+.hcard{width:124px;height:173px;margin-left:-30px;transform:rotate(var(--r)) translateY(var(--y));
+  transform-origin:50% 100%;border-radius:7px;transition:.18s;position:relative}
+.hcard:first-child{margin-left:0}
+.hcard img{width:100%;height:100%;object-fit:cover;border-radius:7px;box-shadow:0 7px 20px rgba(0,0,0,.55)}
+.hcard.hover{z-index:20;transform:rotate(0deg) translateY(-38px) scale(1.14)}
+.hcard.hover img{outline:2px solid rgba(66,133,244,.85);outline-offset:2px;
+  box-shadow:0 16px 40px rgba(66,133,244,.26)}
+.corner{position:absolute;bottom:6px;left:36px;font-size:8px;letter-spacing:.24em;color:#39414F;z-index:8}
+.corner.r{left:auto;right:52px}
+</style>
+</head>
+<body>
+<script>document.body.className=(location.hash||'').includes('skin=ember')?'skin-ember':''</script>
+<main class="stage" style="position:relative;width:100%;height:100%;isolation:isolate">
+
+  <!-- 环境层：可整体更换的战场背景（上下双桌沿，左右开放） -->
+  <div class="env">
+    <div class="floor"></div>
+    <div class="vig"></div>
+    <div class="faredge"></div>
+    <div class="oppzone"></div>
+    <div class="edge"></div>
+    <div class="handzone"></div>
+  </div>
+
+  <!-- 战场：全部真实卡图（海岛），演示真实比例 -->
+  <div class="board">
+    <div class="midline"></div>
+
+    <div class="crow r1">
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="tapwrap" style="margin-left:-4px"><div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div></div>
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+    </div>
+
+    <div class="crow r2">
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="tapwrap" style="margin-left:-4px"><div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+    </div>
+
+    <div class="crow r3">
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="tapwrap ov" style="margin-left:-4px"><div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div></div>
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+    </div>
+
+    <div class="crow r4">
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="tapwrap" style="margin-left:-4px"><div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="tapwrap ov" style="margin-left:-12px"><div class="card b"><img src="assets/card-island.jpg" alt="海岛"></div></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card b ov"><img src="assets/card-island.jpg" alt="海岛"></div>
+    </div>
+  </div>
+
+  <!-- 堆叠竖列（MTGA 式：右侧叠放，点击查看，多时压缩滚动） -->
+  <aside class="stackcol">
+    <div class="cap">堆叠 STACK · 5</div>
+    <div class="sitem now"><div><div class="t1">成形野地 · 异能</div><div class="t2">{1}，{T}，牺牲</div></div></div>
+    <div class="sitem"><div><div class="t1">Quick Study</div><div class="t2">瞬间 · {2}{U}</div></div></div>
+    <div class="sitem"><div><div class="t1">Arena Insight</div><div class="t2">瞬间 · {1}</div></div></div>
+    <div class="sitem more">+2 项 · 滚动查看</div>
+  </aside>
+
+  <!-- 对手三区（横排，位于其名字框下方——己方镜像） -->
+  <div class="minipiles opp">
+    <div class="minipile"><div class="st filled"><img src="assets/card-back.png" alt=""></div><div class="n">51</div><div class="lb">牌库</div></div>
+    <div class="minipile"><div class="st"></div><div class="n">0</div><div class="lb">坟场</div></div>
+    <div class="minipile"><div class="st"></div><div class="n">0</div><div class="lb">放逐</div></div>
+  </div>
+
+  <!-- 左上圆钮 / 对手手牌 / 身份牌 -->
+  <div class="gearbox">
+    <div class="cbtn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg></div>
+    <div class="cbtn"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-7.5-10a4.5 4.5 0 0 1 7.5-3.4A4.5 4.5 0 0 1 19.5 11c0 5.4-7.5 10-7.5 10Z"/></svg></div>
+  </div>
+  <div class="ophand">
+    <div class="bk" style="--r:-12deg"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk" style="--r:-8deg"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk" style="--r:-4deg"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk" style="--r:0deg"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk" style="--r:4deg"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk" style="--r:8deg"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk" style="--r:12deg"><img src="assets/card-back.png" alt=""><span class="cnt">7</span></div>
+  </div>
+  <div class="plate opp" style="right:52px;top:16px">
+    <div class="hexpl"><i></i></div>
+    <div class="who"><div class="nm">Opponent</div><div class="sub">对手 · OPPONENT</div></div>
+    <div class="lp"><div class="n">20</div><div class="c">LIFE</div></div>
+  </div>
+
+  <!-- 左栏检视（MTGA 式放大查看，保留） -->
+  <aside class="inspect">
+    <div class="hd"><span class="micro">检视 <b>INSPECT</b></span><span class="micro">SOS·065</span></div>
+    <img src="assets/card-quickstudy.jpg" alt="Quick Study">
+    <div class="bd">
+      <div class="nm">Quick Study</div>
+      <div class="cost"><span class="mana big c">2</span><span class="mana big u">U</span></div>
+      <div class="tp">瞬间 · INSTANT</div>
+      <div class="rule">抽两张牌。</div>
+      <div class="ft">HOVER · 悬停任意牌查看</div>
+    </div>
+  </aside>
+
+  <!-- 优先权（右下簇上方） -->
+  <div class="prio"><i></i><span class="t">你拥有优先权</span></div>
+
+  <!-- 己方三区（横排，位于名字框上方——与对手镜像） -->
+  <div class="minipiles you">
+    <div class="minipile"><div class="st filled"><img src="assets/card-back.png" alt=""></div><div class="n">52</div><div class="lb">牌库</div></div>
+    <div class="minipile"><div class="st"></div><div class="n">0</div><div class="lb">坟场</div></div>
+    <div class="minipile"><div class="st"></div><div class="n">0</div><div class="lb">放逐</div></div>
+  </div>
+
+  <!-- 右下角簇：法力在上排；回合/时间 + 操作在下排 -->
+  <div class="cornerctl">
+    <div class="manarow"><span class="cap">可用法力</span>
+      <span class="mana u">U</span><span class="mana u">U</span><span class="mana u">U</span>
+    </div>
+    <div class="ctlrow">
+      <div class="turnchip">
+        <div class="hexs"><div class="in"><div class="t2">4</div><div class="t3">TURN</div></div></div>
+        <div><div class="tt1">第一主要阶段</div><div class="tt2">回合 4 · ROUND 4</div></div>
+      </div>
+      <div class="timerrow">
+        <div class="ring">
+          <svg width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="17" fill="none" stroke="#232A37" stroke-width="3.5"/>
+            <circle cx="20" cy="20" r="17" fill="none" stroke="#4285F4" stroke-width="3.5"
+              stroke-dasharray="106.8" stroke-dashoffset="49" stroke-linecap="round"/>
+          </svg>
+          <div class="tt">0:47</div>
+        </div>
+        <div><div class="tt1" style="font-size:11px">决策剩余时间</div><div class="tt2">DECISION TIMER</div></div>
+      </div>
+      <div class="ctl-div"></div>
+      <div class="btnrow">
+        <div class="smbtn"><span class="cn">跳过战斗</span></div>
+        <div class="bigbtn"><span class="cn">结束回合</span><span class="en">FINISH</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 玩家身份牌（桌沿之下） -->
+  <div class="plate you" style="left:36px;bottom:20px">
+    <div class="hexpl"><i></i></div>
+    <div class="who"><div class="nm">Sapphire Schnee</div><div class="sub">你 · YOU</div></div>
+    <div class="lp"><div class="n">20</div><div class="c">LIFE</div></div>
+  </div>
+
+  <!-- 手牌（桌沿之下） -->
+  <div class="hand">
+    <div class="hcard gen w" style="--r:-9deg;--y:0px"><div class="nm">Plain <s></s></div><div class="art"><i></i></div><div class="tp">基本地 — 平原</div><div class="tx"><i></i><i></i></div></div>
+    <div class="hcard gen w" style="--r:-5.4deg;--y:2px"><div class="nm">Pious Warrior <s>{1}{W}</s></div><div class="art"><i></i></div><div class="tp">生物 — 士兵</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2/2</div></div>
+    <div class="hcard" style="--r:-1.8deg;--y:0px"><img src="assets/card-wilds.jpg" alt="成形野地"></div>
+    <div class="hcard hover" style="--r:0deg;--y:0px"><img src="assets/card-quickstudy.jpg" alt="Quick Study"></div>
+    <div class="hcard gen u" style="--r:5.4deg;--y:2px"><div class="nm">Rune Adept <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — 法术师</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2/2</div></div>
+    <div class="hcard gen c" style="--r:9deg;--y:0px"><div class="nm">Arena Insight <s>{1}</s></div><div class="art"><i></i></div><div class="tp">瞬间 — INSTANT</div><div class="tx"><i></i><i></i><i></i></div></div>
+  </div>
+
+  <div class="corner">MTGB // BATTLEFIELD INTEGRATED V2 · 一体环境 · 全真实卡图</div>
+  <div class="corner r">曜石竞技场 V6</div>
+</main>
+</body>
+</html>

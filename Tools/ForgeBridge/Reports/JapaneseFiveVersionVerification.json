@@ -1,0 +1,139 @@
+{
+  "complete": true,
+  "entries": [
+    {
+      "key": "SOC/46",
+      "name": "Turn Stones",
+      "conclusion": "official-Japanese-release-notes-resolve-image-discrepancy",
+      "officialChangeConfirmed": false,
+      "reason": "Japanese image says black only; publisher Japanese release notes page 88 and English notes page 69 say black and green. Forge makes bg_1_1_pest_lifegain. This is a Japanese printed-image/text discrepancy, not an English rule change.",
+      "currentEnglishRules": "For each opponent, you create a 1/1 black and green Pest creature token with \"When this token dies, you gain 1 life.\"",
+      "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+      "forgeScriptPath": "forge-gui/res/cardsfolder/e/eccentric_pestfinder_turn_stones.txt",
+      "forgeScriptSha256": "2bb46de68f32591287dc0027507bdd9fc76f83afe38ef5f3347de6b3b7d6ce03",
+      "forgeScript": "Name:Eccentric Pestfinder\nManaCost:2 B G\nTypes:Creature Troll Druid\nPT:5/5\nK:Trample\nT:Mode$ Phase | Phase$ End of Turn | CheckSVar$ X | Execute$ TrigPrepare | TriggerZones$ Battlefield | TriggerDescription$ At the beginning of each end step, if you gained life this turn, this creature becomes prepared. (While it's prepared, you may cast a copy of its spell. Doing so unprepares it.)\nSVar:TrigPrepare:DB$ AlterAttribute | Attributes$ Prepared\nSVar:X:Count$LifeYouGainedThisTurn\nAlternateMode:Prepare\nOracle:Trample\\nAt the beginning of each end step, if you gained life this turn, this creature becomes prepared. (While it's prepared, you may cast a copy of its spell. Doing so unprepares it.)\n\nALTERNATE\n\nName:Turn Stones\nManaCost:B G\nTypes:Sorcery\nA:SP$ Token | TokenAmount$ X | TokenScript$ bg_1_1_pest_lifegain | SpellDescription$ For each opponent, you create a 1/1 black and green Pest creature token with \"When this token dies, you gain 1 life.\"\nSVar:X:PlayerCountOpponents$Amount\nDeckHas:Ability$Token\nOracle:For each opponent, you create a 1/1 black and green Pest creature token with \"When this token dies, you gain 1 life.\"\n",
+      "oldJapaneseImage": "CardImages\\ja-JP\\SOC\\46.jpg",
+      "oldJapaneseImageSha256": "5383170822db8682bfd516a9c9acdf220f4f64326a3cbdc461ad9e6bb318b50a",
+      "officialSources": [
+        "https://mtg-jp.com/img_sys/common/JP_MTGSOS_ReleaseNotes_20260224.pdf",
+        "https://media.wizards.com/2026/downloads/SOS_Release_Notes_FwhcBWdFIE/EN_MTGSOS_ReleaseNotes_20260410.pdf"
+      ],
+      "officialJapaneseResolutionConfirmed": true,
+      "publishedJapaneseRules": "対戦相手１人につき１体の「このトークンが死亡したとき、１点のライフを得る。」を持つ黒緑の 1/1 の邪魔者・クリーチャー・トークンを生成する。",
+      "officialSourceSha256": "34f97f5647bbad2bd90574a678869c4460eb0ecdb177c49a69a094a62fa52eb3"
+    },
+    {
+      "key": "PSDG/1",
+      "name": "Arden Angel",
+      "conclusion": "confirmed-paper-release-mechanical-change",
+      "officialChangeConfirmed": true,
+      "reason": "Japanese Dreamcast image chooses 1–4 randomly. Publisher explicitly announces a change for the paper release; SLD/1344 printed card rolls a four-sided die. Current Forge uses RollDice Sides 4 and matches the paper text. Do not display old random-selection text as current rule.",
+      "currentEnglishRules": "Flying\\nAt the beginning of your upkeep, if Arden Angel is in your graveyard, roll a four-sided die. If the result is 1, return Arden Angel from your graveyard to the battlefield.",
+      "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+      "forgeScriptPath": "forge-gui/res/cardsfolder/a/arden_angel.txt",
+      "forgeScriptSha256": "1a3bd7bebae388047b5ff228d1f8c64c67606e9c50dc19f5fde9b3d8143cad97",
+      "forgeScript": "Name:Arden Angel\nManaCost:4 W W\nTypes:Creature Angel\nPT:4/4\nK:Flying\nT:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Graveyard | IsPresent$ Card.StrictlySelf | PresentZone$ Graveyard | Execute$ TrigRoll | TriggerDescription$ At the beginning of your upkeep, if CARDNAME is in your graveyard, roll a four-sided die. If the result is 1, return CARDNAME from your graveyard to the battlefield.\nSVar:TrigRoll:DB$ RollDice | Sides$ 4 | ResultSubAbilities$ 1:DBChangeZone\nSVar:DBChangeZone:DB$ ChangeZone | Defined$ Self | Origin$ Graveyard | Destination$ Battlefield\nOracle:Flying\\nAt the beginning of your upkeep, if Arden Angel is in your graveyard, roll a four-sided die. If the result is 1, return Arden Angel from your graveyard to the battlefield.\n",
+      "oldJapaneseImage": "CardImages\\ja-JP\\PSDG\\1.jpg",
+      "oldJapaneseImageSha256": "b8e11318343c58c39a7809477fa13b0d7cb5bea6df020ee0b1c22901a8c7304c",
+      "officialSources": [
+        "https://magic.wizards.com/en/news/announcements/secret-lairs-next-commander-deck-takes-flight"
+      ],
+      "paperEnglishImage": "CardImages\\SLD\\1344.jpg",
+      "paperEnglishImageSha256": "89c75b3b18cd6e96767a691d7440cd7febdbed022630da1cf2fed053eadf61ea"
+    },
+    {
+      "key": "MB2/145",
+      "name": "Velukan Dragon",
+      "conclusion": "confirmed-paper-release-mechanical-change",
+      "officialChangeConfirmed": true,
+      "reason": "Japanese Dreamcast image chooses 0–5 randomly. Publisher identifies its first paper release in Mystery Booster 2; MB2/145 printed card rolls a six-sided die then subtracts one. Current Forge uses RollDice and Result Minus 1. Difference confirmed by old/new printed cards; not a local translation error.",
+      "currentEnglishRules": "Flying\\nWhenever Velukan Dragon attacks or blocks, roll a six-sided die. Velukan Dragon gets +X/+0 until end of turn, where X is the result minus 1.",
+      "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+      "forgeScriptPath": "forge-gui/res/cardsfolder/v/velukan_dragon.txt",
+      "forgeScriptSha256": "29b8ff0d802d833c1e48797d1f6e403504ab04d57df413387f7996b1e376663a",
+      "forgeScript": "Name:Velukan Dragon\nManaCost:5 R R\nTypes:Creature Dragon\nPT:5/5\nK:Flying\nT:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigRoll | TriggerDescription$ Whenever CARDNAME attacks or blocks, roll a six-sided die. CARDNAME gets +X/+0 until end of turn, where X is the result minus 1.\nT:Mode$ Blocks | ValidCard$ Card.Self | Execute$ TrigRoll | Secondary$ True | TriggerDescription$ Whenever CARDNAME attacks or blocks, roll a six-sided die. CARDNAME gets +X/+0 until end of turn, where X is the result minus 1.\nSVar:TrigRoll:DB$ RollDice | ResultSVar$ Result | SubAbility$ DBPump\nSVar:DBPump:DB$ Pump | Defined$ Self | NumAtt$ +X\nSVar:X:SVar$Result/Minus.1\nOracle:Flying\\nWhenever Velukan Dragon attacks or blocks, roll a six-sided die. Velukan Dragon gets +X/+0 until end of turn, where X is the result minus 1.\n",
+      "oldJapaneseImage": "CardImages\\ja-JP\\PSDG\\10.jpg",
+      "oldJapaneseImageSha256": "0fd29d9778c917d96e4141c96c51ba0ea93a1b4c02448a199372bb910c311e20",
+      "officialSources": [
+        "https://magic.wizards.com/en/news/feature/whats-inside-mystery-booster-2"
+      ],
+      "paperEnglishImage": "CardImages\\MB2\\145.jpg",
+      "paperEnglishImageSha256": "5f4c44cec7d9ff4c9d7d369c5c8923058bdbd20fdc5b49ea85b8409dc7f4153d"
+    },
+    {
+      "key": "PSDG/8",
+      "name": "Saji's Torrent",
+      "conclusion": "historical-Japanese-versus-modern-data-discrepancy-cause-unconfirmed",
+      "officialChangeConfirmed": false,
+      "reason": "Japanese image explicitly says target X creatures. Current database text omits targets; current Forge chooses a random number during resolution, then ChooseCard and TapAll, with no ValidTgts. Difference confirmed; no publisher errata or original executable behavior was verified, so do not label it an official change.",
+      "currentEnglishRules": "Tap X creatures, where X is a number from 0 to 5 chosen at random.",
+      "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+      "forgeScriptPath": "forge-gui/res/cardsfolder/s/sajis_torrent.txt",
+      "forgeScriptSha256": "a6c49d9a5e0efe36770430f4f9bb1882274a4691bc4b89365f015029c36f6173",
+      "forgeScript": "Name:Saji's Torrent\nManaCost:1 U\nTypes:Instant\nA:SP$ ChooseNumber | Min$ 0 | Max$ 5 | Defined$ You | Random$ True | SubAbility$ DBChoose | StackDescription$ SpellDescription | SpellDescription$ Tap X creatures, where X is a number from 0 to 5 chosen at random.\nSVar:DBChoose:DB$ ChooseCard | Amount$ X | Choices$ Creature | SubAbility$ DBTapAll | StackDescription$ None\nSVar:DBTapAll:DB$ TapAll | ValidCards$ Creature.ChosenCard | StackDescription$ None\nSVar:X:Count$ChosenNumber\nOracle:Tap X creatures, where X is a number from 0 to 5 chosen at random.\n",
+      "oldJapaneseImage": "CardImages\\ja-JP\\PSDG\\8.jpg",
+      "oldJapaneseImageSha256": "15f23774e44d7ba4577a895fcb12e95e57d0dc1160e0fdc5d972f943c877082f",
+      "officialSources": []
+    },
+    {
+      "key": "PSDG/9",
+      "name": "Tornellan Protector",
+      "conclusion": "historical-Japanese-versus-modern-data-discrepancy-cause-unconfirmed",
+      "officialChangeConfirmed": false,
+      "reason": "Japanese image specifies a target creature dealing the next damage to a target player. Current English text and Forge target one creature or player as recipient, preventing a separately randomized 1–3 each damage event for the turn. Difference confirmed; no publisher errata or original executable behavior was verified. The old wording may be erroneous but its cause is unconfirmed.",
+      "currentEnglishRules": "{T}: Until end of turn, each time damage is dealt to target creature or player, prevent X of that damage, where X is a number from 1 to 3 chosen at random each time.",
+      "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+      "forgeScriptPath": "forge-gui/res/cardsfolder/t/tornellan_protector.txt",
+      "forgeScriptSha256": "455d59b3667cf4f013035c144032973fea86039c7e44b7d42d776a7e9bef0d3a",
+      "forgeScript": "Name:Tornellan Protector\nManaCost:2 W\nTypes:Creature Cleric\nPT:1/2\nA:AB$ Effect | Cost$ T | ValidTgts$ Creature,Player | TgtPrompt$ Select target creature or player | RememberObjects$ Targeted | ReplacementEffects$ Protect | SpellDescription$ Until end of turn, each time damage is dealt to target creature or player, prevent X of that damage, where X is a number from 1 to 3 chosen at random each time.\nSVar:Protect:Event$ DamageDone | ActiveZones$ Battlefield | ValidTarget$ Creature.IsRemembered,Player.IsRemembered | ReplaceWith$ DBReplace | PreventionEffect$ True | Description$ Until end of turn, each time damage is dealt to target creature or player, prevent X of that damage, where X is a number from 1 to 3 chosen at random each time.\nSVar:DBReplace:DB$ ReplaceDamage | Amount$ X\nSVar:X:Count$Random.1.3\nOracle:{T}: Until end of turn, each time damage is dealt to target creature or player, prevent X of that damage, where X is a number from 1 to 3 chosen at random each time.\n",
+      "oldJapaneseImage": "CardImages\\ja-JP\\PSDG\\9.jpg",
+      "oldJapaneseImageSha256": "e379109e9eede133043276d345463347d06b29979bcd84fd457033f959e1d9b9",
+      "officialSources": []
+    }
+  ],
+  "sourceAccess": [
+    {
+      "label": "sos-ja-release-notes",
+      "url": "https://mtg-jp.com/img_sys/common/JP_MTGSOS_ReleaseNotes_20260224.pdf",
+      "finalUrl": "https://mtg-jp.com/img_sys/common/JP_MTGSOS_ReleaseNotes_20260224.pdf",
+      "sha256": "34f97f5647bbad2bd90574a678869c4460eb0ecdb177c49a69a094a62fa52eb3"
+    },
+    {
+      "label": "arden-official",
+      "url": "https://magic.wizards.com/en/news/announcements/secret-lairs-next-commander-deck-takes-flight",
+      "finalUrl": "https://magic.wizards.com/en/news/announcements/secret-lairs-next-commander-deck-takes-flight",
+      "sha256": "5636ac6be24d6b1883dd7e54ec1280372a4c7928b6717f2a4d5807f490247080"
+    },
+    {
+      "label": "velukan-official",
+      "url": "https://magic.wizards.com/en/news/feature/whats-inside-mystery-booster-2",
+      "finalUrl": "https://magic.wizards.com/en/news/feature/whats-inside-mystery-booster-2",
+      "sha256": "5fce567c85acf912ceea64e9a5dffa1247192dec9e5c5ca12d232fb32c3ffc34"
+    },
+    {
+      "label": "gatherer-arden",
+      "url": "https://gatherer.wizards.com/SLD/en-us/1344/arden-angel",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "label": "gatherer-velukan",
+      "url": "https://gatherer.wizards.com/MB2/en-us/145/velukan-dragon",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "label": "gatherer-saji",
+      "url": "https://gatherer.wizards.com/PSDG/en-us/8/sajis-torrent",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "label": "gatherer-tornellan",
+      "url": "https://gatherer.wizards.com/PSDG/en-us/9/tornellan-protector",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "limitations": [
+    "Gatherer guessed en-us representative URLs returned 404. That is not proof of absence of a card or translation.",
+    "No publisher errata was verified for Saji's Torrent or Tornellan Protector. No original Dreamcast executable behavior or full battlefield interactions were tested.",
+    "Current English rules and Forge scripts are consistent; this comparison is not exhaustive game-behavior validation."
+  ]
+}

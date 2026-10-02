@@ -1,0 +1,2 @@
+PASS graveyards: same-name cards in both graveyards, distinct owners and IDs, opponent card exiled, own copy retained
+PASS evidence: Forge mana-value tally, zero-value land, under-threshold gate, deselection, cancellation without exile, exact threshold and real exile/animation

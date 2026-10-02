@@ -1,0 +1,1 @@
+PASS: real-origin continuous cast; unscaled movement; duplicate submission blocked; stable targeting snapshots; invalid/stale targets blocked; acknowledged cancel returns to hand; fast direct stack landing; stable stack identity and scroll; transient cleanup; exactly three explicit submissions. UI snapshot test, not a rules simulation.

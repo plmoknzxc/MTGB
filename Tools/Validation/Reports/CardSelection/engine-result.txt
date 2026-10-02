@@ -1,0 +1,18 @@
+PASS surveil: Curate resolved; Surveil
+PASS library: Demonic Tutor resolved; InputSelectEntitiesFromList
+PASS hand: Mind Rot resolved; InputSelectCardsFromList
+PASS graveyard: Regrowth resolved; InputSelectTargets
+PASS exile: Pull from Eternity resolved; InputSelectTargets
+PASS multi: Cultivate resolved; InputSelectEntitiesFromList, RevealCards
+PASS order: Ponder resolved; OrderCards
+PASS reveal: Duress resolved; InputSelectCardsFromList, RevealCards
+PASS library-dialog: Demonic Tutor resolved; RevealCards, SelectCards
+PASS multi-dialog: Cultivate resolved; RevealCards, SelectCards
+PASS gift-dialog: Gifts Ungiven resolved; RevealCards, SelectCards
+PASS explore-land: Merfolk Branchwalker resolved; RevealCards
+PASS explore-grave: Merfolk Branchwalker resolved; RevealCards
+PASS explore-keep: Merfolk Branchwalker resolved; RevealCards
+PASS look: Impulse resolved; InputSelectEntitiesFromList, OrderCards
+PASS fetch: Misty Rainforest resolved; InputSelectEntitiesFromList
+PASS fetch-tarn: Scalding Tarn resolved; InputSelectEntitiesFromList
+PASS fetch-foothills: Wooded Foothills resolved; InputSelectEntitiesFromList

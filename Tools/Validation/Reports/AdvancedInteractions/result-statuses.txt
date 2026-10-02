@@ -1,0 +1,1 @@
+PASS statuses: engine counters, stun, current combat keywords and modified 4/5 stats

@@ -1,0 +1,1 @@
+PASS: rendered gear; shared language/text-size settings; modal blocks undo; concede confirmation/cancel/duplicate guard; exact Forge Undo only; no payment-cancel/end-turn; Z keyboard path, Ctrl+Z ignored, held-key duplicate blocked; non-match settings omit concede.

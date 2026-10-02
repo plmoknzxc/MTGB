@@ -1,0 +1,1 @@
+PASS: inactive parent, uGUI/TMP SetBaseSize before Awake, source preserved on activation, repeat sizing without accumulated scale.

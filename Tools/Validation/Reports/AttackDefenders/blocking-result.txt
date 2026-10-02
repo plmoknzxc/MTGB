@@ -1,0 +1,1 @@
+PASS: official 60-card fixture; both players cast Raging Goblin; UI attack, block, remove block, reassign block; combat kills both creatures, both graveyards verified; life remains 20/20.

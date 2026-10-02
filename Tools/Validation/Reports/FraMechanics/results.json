@@ -1,0 +1,74 @@
+[
+  {
+    "case": "heartwood",
+    "card": "Hungering Puppetbeast",
+    "status": "PASS",
+    "steps": 24
+  },
+  {
+    "case": "prepare",
+    "card": "Heartwood Crafter",
+    "status": "PASS",
+    "steps": 28
+  },
+  {
+    "case": "surveil",
+    "card": "Semester Foreseer",
+    "status": "PASS",
+    "steps": 28
+  },
+  {
+    "case": "threshold",
+    "card": "Theorix Metamage",
+    "status": "PASS",
+    "steps": 20
+  },
+  {
+    "case": "flashback",
+    "card": "Recursive Recruitment",
+    "status": "PASS",
+    "steps": 20
+  },
+  {
+    "case": "cycling",
+    "card": "Vinelasher Adept",
+    "status": "PASS",
+    "steps": 28
+  },
+  {
+    "case": "modal",
+    "card": "Craftwork Crusher",
+    "status": "PASS",
+    "steps": 28
+  },
+  {
+    "case": "grave-empower",
+    "card": "Campus Crier",
+    "status": "PASS",
+    "steps": 22
+  },
+  {
+    "case": "counter",
+    "card": "Graft Surgeon",
+    "status": "PASS",
+    "steps": 20
+  },
+  {
+    "case": "behold-none",
+    "card": "Theorist's Sanctum",
+    "status": "PASS",
+    "steps": 14
+  },
+  {
+    "case": "behold-hand",
+    "card": "Theorist's Sanctum",
+    "status": "PASS",
+    "steps": 20
+  },
+  {
+    "case": "behold-board",
+    "card": "Theorist's Sanctum",
+    "status": "PASS",
+    "steps": 20
+  }
+]

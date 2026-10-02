@@ -1,0 +1,3 @@
+PASS spells: max stack 3; genuine target, payment, resolution; illegal/stale rejected
+PASS triggers: max stack 3; genuine target, payment, resolution; illegal/stale rejected; explicit trigger order and reset
+PASS triggers-reverse: max stack 3; genuine target, payment, resolution; illegal/stale rejected; explicit trigger order and reset

@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Lost Mine of Phandelver",
+    "path": "CardImages\\zh-CN\\TAFR\\21.png",
+    "size": [
+      265,
+      370
+    ],
+    "sha256": "e32d500fefb255a5affa84c712c6d6e30774c89e1ff58f8fd0bfdc1d80f2dfa1",
+    "source": "https://magic.wizards.com/zh-Hans/news/feature/adventures-forgotten-realms-mechanics-2021-07-02",
+    "imageSource": "https://media.wizards.com/2021/afr/cs_4MqeT8nWd9.png"
+  },
+  {
+    "name": "Tomb of Annihilation",
+    "path": "CardImages\\zh-CN\\TAFR\\22.png",
+    "size": [
+      265,
+      370
+    ],
+    "sha256": "b3c38777bcc9049a08b566f921e369f3ca62b1a268789baf6466cf600b1a457e",
+    "source": "https://magic.wizards.com/zh-Hans/news/feature/adventures-forgotten-realms-mechanics-2021-07-02",
+    "imageSource": "https://media.wizards.com/2021/afr/cs_fZkwUeSE1i.png"
+  },
+  {
+    "name": "Dungeon of the Mad Mage",
+    "path": "CardImages\\zh-CN\\TAFR\\20.png",
+    "size": [
+      265,
+      370
+    ],
+    "sha256": "9b586b9e3efd8e42958b3cc3235c4631f35dcf5241a98b7c6467636de7fba501",
+    "source": "https://magic.wizards.com/zh-Hans/news/feature/adventures-forgotten-realms-mechanics-2021-07-02",
+    "imageSource": "https://media.wizards.com/2021/afr/cs_yu0OoWrZHr.png"
+  },
+  {
+    "name": "Undercity",
+    "path": "CardImages\\zh-CN\\TCLB\\20.png",
+    "size": [
+      265,
+      370
+    ],
+    "sha256": "e1e992b8f1bbf56c2062fe309804756497ab7b2ee585a8c937f341cab40c3218",
+    "source": "https://magic.wizards.com/zh-Hans/news/feature/commander-legends-battle-for-baldurs-gate-mechanics",
+    "imageSource": "https://media.wizards.com/2022/clb/cs_6swTVEGnrF.png"
+  },
+  {
+    "name": "The Ring",
+    "path": "CardImages\\zh-CN\\TLTR\\H13.png",
+    "size": [
+      744,
+      1039
+    ],
+    "sha256": "df562f9fdf3c81a121535ec0790d68e745bbb87843bb5f4fee47e991b59eecdf",
+    "source": "https://magic.wizards.com/zh-Hans/news/feature/the-lord-of-the-rings-tales-of-middle-earth-mechanics",
+    "imageSource": "https://media.wizards.com/2023/ltr/cs_fdaec7ef3c.png"
+  },
+  {
+    "name": "The Ring Tempts You",
+    "path": "CardImages\\zh-CN\\TLTR\\H13_2.png",
+    "size": [
+      744,
+      1039
+    ],
+    "sha256": "ad0d02bc74472e896f50434f0ab16168451dcfbbd5dc48482217e7f42ff24512",
+    "source": "https://magic.wizards.com/zh-Hans/news/feature/the-lord-of-the-rings-tales-of-middle-earth-mechanics",
+    "imageSource": "https://media.wizards.com/2023/ltr/cs_e308b5dc9a.png"
+  }
+]

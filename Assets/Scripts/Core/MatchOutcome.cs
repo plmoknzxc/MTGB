@@ -8,7 +8,8 @@ public enum MatchEndReason
     EmptyLibrary = 2,
     SimultaneousLoss = 3,
     Concession = 4,
-    PoisonCounters = 5
+    PoisonCounters = 5,
+    CardEffect = 6
 }
 
 [Serializable]

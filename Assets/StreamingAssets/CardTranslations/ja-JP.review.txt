@@ -1,0 +1,44 @@
+Academy at Tolaria West|トレイリア西部のアカデミー||
+Agyrem|アギレム||
+Bant|バント||
+Cliffside Market|絶壁の市場||
+Dakmor Lancer|ダクムーアの槍騎兵||
+Delete|消却|ソーサリー|消却はアーティファクトでない各クリーチャーと各プレイヤーにそれぞれＸ点のダメージを与える。
+Diabolic Vision|悪魔の幻視||
+Eloren Wilds|エローレン荒原||
+Eumidian Hatchery|ユーミディアンの孵（ふ）化（か）場（じょう）||
+Feeding Grounds|餌場||
+Fields of Summer|夏の平原||
+Gallifrey Stands|ギャリフレイは生き続ける|伝説のエンチャント|ギャリフレイは生き続けるが戦場に出たとき、あなたの墓地にあるすべてのドクター・カードをあなたの手札に戻す。\nあなたのアップキープの開始時に、あなたはあなたの手札にあるドクター・クリーチャー・カード１枚を戦場に出してもよい。その後、あなたが13体以上のドクターをコントロールしているなら、あなたはゲームに勝利する。
+Goldmeadow|ゴールドメドウ||
+Grixis|グリクシス||
+Immersturm|イマースターム||
+Interplanar Tunnel|次元間トンネル||
+Izzet Steam Maze|イゼットの蒸気迷路||
+Lethe Lake|忘却湖||
+Llanowar|ラノワール||
+Minamo|水面院||
+Morphic Tide|変異の潮流||
+Moxite Refinery|モーキサイト精（せい）製（せい）所（じょ）||
+Murasa|ムラーサ||
+Naar Isle|ナー島||
+Naya|ナヤ||
+Otaria|オタリア||
+Planetary Annihilation|惑（わく）星（せい）殲（せん）滅（めつ）||
+Pools of Becoming|生達の池||
+Pride of Lions|ライオンの群れ||
+Raven's Run|レイヴンの地||
+Sanctum of Serra|セラの聖所||
+Scouring Swarm|洗（あら）い流（なが）す大（たい）群（ぐん）||
+Sea of Sand|砂の海||
+Shiv|シヴ||
+Skybreen|スカイブリーン||
+Tazeem|タジーム||
+The Dark Barony|暗き男爵領||
+The Eon Fog|永劫の霧||
+The Fourth Sphere|第四球層||
+The Hippodrome|ヒッポドローム||
+The Maelstrom|大渦||
+Time Distortion|時間のひずみ||
+Trained Orgg|訓練されたオーグ||
+Velis Vel|ヴェリズ・ヴェル||

@@ -1,0 +1,110 @@
+[
+  {
+    "height": 720,
+    "freeCommitMB": 6962.0,
+    "width": 1180,
+    "step": 0,
+    "privateMB": 6722.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 7011.0,
+    "width": 1580,
+    "step": 1,
+    "privateMB": 6761.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6927.0,
+    "width": 1180,
+    "step": 2,
+    "privateMB": 6771.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 720,
+    "freeCommitMB": 6953.0,
+    "width": 1580,
+    "step": 3,
+    "privateMB": 6771.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6949.0,
+    "width": 1180,
+    "step": 4,
+    "privateMB": 6777.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6957.0,
+    "width": 1580,
+    "step": 5,
+    "privateMB": 6786.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 720,
+    "freeCommitMB": 6924.0,
+    "width": 1180,
+    "step": 6,
+    "privateMB": 6796.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6989.0,
+    "width": 1580,
+    "step": 7,
+    "privateMB": 6795.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6953.0,
+    "width": 1180,
+    "step": 8,
+    "privateMB": 6813.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 720,
+    "freeCommitMB": 6957.0,
+    "width": 1580,
+    "step": 9,
+    "privateMB": 6809.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6886.0,
+    "width": 1180,
+    "step": 10,
+    "privateMB": 6810.0,
+    "status": "alive",
+    "moved": true
+  },
+  {
+    "height": 920,
+    "freeCommitMB": 6901.0,
+    "width": 1580,
+    "step": 11,
+    "privateMB": 6826.0,
+    "status": "alive",
+    "moved": true
+  }
+]

@@ -1,0 +1,292 @@
+{
+  "source": "Current local Forge catalog and Assets/StreamingAssets/CardTranslations/zh-CN.txt; reviewed mechanic spellings, no card data mutation.",
+  "entries": [
+    {
+      "mechanic": "Airbend",
+      "card": "Aang, Airbending Master",
+      "chineseName": "截气宗师安昂",
+      "english": "When Aang enters, airbend another target creature. (Exile it. While it's exiled, its owner may cast it for {2} rather than its mana cost.)\nWhenever one or more creatures you control leave the battlefield without dying, you get an experience counter.\nAt the beginning of your upkeep, create a 1/1 white Ally creature token for each experience counter you have.",
+      "chinese": "当安昂进场时，对另一个目标生物截气。 (将它放逐。于其被放逐期间，其拥有者可以施放之，但须支付{2}，而不支付其法术力费用。)\n每当一个或数个由你操控的生物离开战场而未死去时，你得到一个经验指示物。\n在你的维持开始时，你每有一个经验指示物，便派出一个1/1白色伙伴衍生生物。"
+    },
+    {
+      "mechanic": "Earthbend",
+      "card": "Earth Rumble",
+      "chineseName": "震土大赛",
+      "english": "Earthbend 2. When you do, up to one target creature you control fights target creature an opponent controls. (To earthbend 2, target land you control becomes a 0/0 creature with haste that's still a land. Put two +1/+1 counters on it. When it dies or is exiled, return it to the battlefield tapped. Creatures that fight each deal damage equal to their power to the other.)",
+      "chinese": "运土2。当你如此作时，至多一个目标由你操控的生物与目标由对手操控的生物互斗。 (运土2的流程，是目标由你操控的地成为0/0，具敏捷异能的生物，且仍然是地。在其上放置两个+1/+1指示物。当它死去或被放逐时，将它横置移回战场。互斗的生物各向对方造成等同于本身力量的伤害。)"
+    },
+    {
+      "mechanic": "Waterbend",
+      "card": "Foggy Swamp Vinebender",
+      "chineseName": "雾沼润蔓师",
+      "english": "This creature can't be blocked by creatures with power 2 or less.\nWaterbend {5}: Put a +1/+1 counter on this creature. Activate only during your turn. (While paying a waterbend cost, you can tap your artifacts and creatures to help. Each one pays for {1}.)",
+      "chinese": "此生物不能被力量等于或小于2的生物阻挡。\n截水{5}：在此生物上放置一个+1/+1指示物。只能于你的回合中起动。 (你能横置你的神器和生物来协助支付截水费用；于支付时每横置一个此类永久物，就能为其支付{1}。)"
+    },
+    {
+      "mechanic": "Firebending",
+      "card": "Iroh, Grand Lotus",
+      "chineseName": "白莲长老艾洛",
+      "english": "Firebending 2\nDuring your turn, each non-Lesson instant and sorcery card in your graveyard has flashback. The flashback cost is equal to that card's mana cost. (You may cast a card from your graveyard for its flashback cost. Then exile it.)\nDuring your turn, each Lesson card in your graveyard has flashback {1}.",
+      "chinese": "振火2\n于你的回合中，你坟墓场中的每张非课程瞬间和法术牌均具有返照异能。其返照费用等同于该牌的法术力费用。 (你可以从你坟墓场中施放牌，并支付其返照费用，然后将它放逐。)\n于你的回合中，你坟墓场中的每张课程牌均具有返照{1}。"
+    },
+    {
+      "mechanic": "Amplify",
+      "card": "Kilnmouth Dragon",
+      "chineseName": "窑嘴巨龙",
+      "english": "Amplify 3 (As this creature enters, put three +1/+1 counters on it for each Dragon card you reveal in your hand.)\nFlying\n{T}: Kilnmouth Dragon deals damage equal to the number of +1/+1 counters on it to any target.",
+      "chinese": "增强3 (于此生物进场时，你每从手上展示一张龙牌，便在其上放置三个+1/+1指示物。)\n飞行\n{T}：此生物对任意一个目标造成伤害，其数量等同于其上+1/+1指示物的数量。"
+    },
+    {
+      "mechanic": "Aura swap",
+      "card": "Arcanum Wings",
+      "chineseName": "奥妙羽翼",
+      "english": "Enchant creature\nEnchanted creature has flying.\nAura swap {2}{U} ({2}{U}: Exchange this Aura with an Aura card in your hand.)",
+      "chinese": "结附于生物\n所结附的生物具有飞行异能。\n灵气转换{2}{U} ({2}{U}：将此灵气与你手上的一张灵气牌交换。)"
+    },
+    {
+      "mechanic": "Double agenda",
+      "card": "Summoner's Bond",
+      "chineseName": "召唤师羁绊",
+      "english": "Double agenda (Start the game with this conspiracy face down in the command zone and secretly choose two different card names. You may turn this conspiracy face up any time and reveal those names.)\nWhenever you cast a creature spell with one of the chosen names, you may search your library for a creature card with the other chosen name, reveal it, put it into your hand, then shuffle.",
+      "chinese": "双重秘案 (开始游戏时将此诡局牌面朝下地置于统帅区，并私下决定两个不同的牌名。你随时可以将此诡局翻回正面并公布这些名称。)\n每当你施放具这两者之间任一名称的生物咒语时，你可以从你的牌库中搜寻一张具这两者之间另一名称的生物牌，展示该牌，将它置于你手上，然后洗牌。"
+    },
+    {
+      "mechanic": "Double team",
+      "card": "Champions of Tyr",
+      "chineseName": "提尔的斗士",
+      "english": "Flying\nDouble team\nWhen Champions of Tyr enters, you get a boon with \"When you cast your next creature spell, that creature enters with your choice of a +1/+1 counter, a flying counter, or a lifelink counter on it.\"",
+      "chinese": "飞行\n双打\n当此生物进场时，你获得具有以下异能的一次性恩泽～「当你施放生物咒语，该生物进战场时上面依你的选择有一个+1/+1指示物，一个飞行指示物，或一个系命指示物。」"
+    },
+    {
+      "mechanic": "Exhaust",
+      "card": "Boommobile",
+      "chineseName": "轰鸣机车",
+      "english": "When this Vehicle enters, add four mana of any one color. Spend this mana only to activate abilities.\nExhaust — {X}{2}{R}: This Vehicle deals X damage to any target. Put a +1/+1 counter on this Vehicle. (Activate each exhaust ability only once.)\nCrew 2",
+      "chinese": "当此载具进场时，加四点任意颜色的单色法术力。此法术力只能用来起动异能。\n竭绝～{X}{2}{R}：此载具对任意一个目标造成X点伤害。在此载具上放置一个+1/+1指示物。 (每个竭绝异能只能起动一次。)\n搭载2"
+    },
+    {
+      "mechanic": "Freerunning",
+      "card": "Eagle Vision",
+      "chineseName": "鹰眼视觉",
+      "english": "Freerunning {1}{U} (You may cast this spell for its freerunning cost if you dealt combat damage to a player this turn with an Assassin or commander.)\nDraw three cards.",
+      "chinese": "自由奔跑{1}{U} (如果你本回合中曾以杀手或指挥官对任一牌手造成战斗伤害，则你可以支付此咒语的自由奔跑费用来施放它。)\n抓三张牌。"
+    },
+    {
+      "mechanic": "Gift",
+      "card": "Dewdrop Cure",
+      "chineseName": "露珠疗伤",
+      "english": "Gift a card (You may promise an opponent a gift as you cast this spell. If you do, they draw a card before its other effects.)\nReturn up to two target creature cards each with mana value 2 or less from your graveyard to the battlefield. If the gift was promised, instead return up to three target creature cards each with mana value 2 or less from your graveyard to the battlefield.",
+      "chinese": "礼赠一张牌 (你施放此咒语时可以应诺礼赠一位对手。如果你如此作，则该牌手在此咒语其他效应之前先抓一张牌。)\n将至多两张目标法术力值等于或小于2的生物牌从你的坟墓场移回战场。如果已应诺礼赠，则改为将至多三张目标法术力值等于或小于2的生物牌从你的坟墓场移回战场。"
+    },
+    {
+      "mechanic": "Harmonize",
+      "card": "Wild Ride",
+      "chineseName": "乘势突袭",
+      "english": "Target creature gets +3/+0 and gains haste until end of turn.\nHarmonize {4}{R} (You may cast this card from your graveyard for its harmonize cost. You may tap a creature you control to reduce that cost by {X}, where X is its power. Then exile this spell.)",
+      "chinese": "直到回合结束，目标生物得+3/+0且获得敏捷异能。\n谐颂{4}{R} (你可以从你坟墓场中施放此牌，并支付其谐颂费用。你可以横置一个由你操控的生物来将该费用减少{X}，X为该生物的力量。然后放逐此咒语。)"
+    },
+    {
+      "mechanic": "Impending",
+      "card": "Overlord of the Balemurk",
+      "chineseName": "灾沼霸主",
+      "english": "Impending 5—{1}{B} (If you cast this spell for its impending cost, it enters with five time counters and isn't a creature until the last is removed. At the beginning of your end step, remove a time counter from it.)\nWhenever Overlord of the Balemurk enters or attacks, mill four cards, then you may return a non-Avatar creature card or a planeswalker card from your graveyard to your hand.",
+      "chinese": "隐现5～{1}{B} (如果你支付此咒语的隐现费用来施放之，则它进场时上面有五个计时指示物，且直到移去最后一个为止都不是生物。在你的结束步骤开始时，从其上移去一个计时指示物。)\n每当此永久物进场或攻击时，磨四张牌，然后你可以将一张非圣者生物牌或鹏洛客牌从你的坟墓场移回你手上。"
+    },
+    {
+      "mechanic": "Increment",
+      "card": "Ambitious Augmenter",
+      "chineseName": "雄心增现师",
+      "english": "Increment (Whenever you cast a spell, if the amount of mana you spent is greater than this creature's power or toughness, put a +1/+1 counter on this creature.)\nWhen this creature dies, if it had one or more counters on it, create a 0/0 green and blue Fractal creature token, then put this creature's counters on that token.",
+      "chinese": "递增 (每当你施放咒语时，若你支付的法术力数量大于此生物的力量或防御力，则在此生物上放置一个+1/+1指示物。)\n当此生物死去时，若其上有一个或数个指示物，则派出一个0/0，绿蓝双色的分灵衍生生物，然后将此生物的指示物放置于该衍生物上。"
+    },
+    {
+      "mechanic": "Living metal",
+      "card": "Prowl, Pursuit Vehicle",
+      "chineseName": "啸笛追击警车",
+      "english": "Living metal (During your turn, this Vehicle is also a creature.)\nWhenever another creature or Vehicle you control enters, put a +1/+1 counter on Prowl. If this is the second time this ability has resolved this turn, convert Prowl.",
+      "chinese": "金属生命体 (于你的回合中，此载具也是生物。)\n每当另一个由你操控的生物或载具进场时，在警车上放置一个+1/+1指示物。如果这是此异能在本回合第二次的结算，则转换警车。"
+    },
+    {
+      "mechanic": "Max Speed",
+      "card": "Risen Necroregent",
+      "chineseName": "复生死冥王",
+      "english": "Start your engines! (If you have no speed, it starts at 1. It increases once on each of your turns when an opponent loses life. Max speed is 4.)\nMax speed — At the beginning of your end step, create a 2/2 black Zombie creature token.",
+      "chinese": "发动引擎！ (如果你没有速度，则从1开始。于你的每个回合中，当有对手失去生命时，此数值便会增加，但每回合限一次。速度极限为4。)\n速度极限～在你的结束步骤开始时，派出一个2/2黑色灵俑衍生生物。"
+    },
+    {
+      "mechanic": "Mayhem",
+      "card": "Chameleon, Master of Disguise",
+      "chineseName": "伪装大师变色龙",
+      "english": "You may have Chameleon enter as a copy of a creature you control, except his name is Chameleon, Master of Disguise.\nMayhem {2}{U} (You may cast this card from your graveyard for {2}{U} if you discarded it this turn. Timing rules still apply.)",
+      "chinese": "你可以使变色龙当成任一由你操控的生物之复制品来进入战场，但他的名称仍是伪装大师变色龙。\n疯乱{2}{U} (如果你弃掉此牌，在同一回合中你可以支付{2}{U}来从你坟墓场施放它，但仍须遵守施放时机规则。)"
+    },
+    {
+      "mechanic": "More Than Meets the Eye",
+      "card": "Prowl, Stoic Strategist",
+      "chineseName": "坚忍策士警车",
+      "english": "More Than Meets the Eye {2}{W} (You may cast this card converted for {2}{W}.)\nWhenever Prowl attacks, exile up to one other target tapped creature or Vehicle. For as long as that card remains exiled, its owner may play it.\nWhenever a player plays a card exiled with Prowl, you draw a card and convert Prowl.",
+      "chinese": "远超所见{2}{W} (你可以施放已转换的此牌，并支付{2}{W}。)\n每当警车攻击时，放逐至多另一个目标已横置的生物或载具。于该牌持续放逐的时段内，其拥有者可以使用之。\n每当任一牌手使用以警车放逐的牌时，你抓一张牌并转换警车。"
+    },
+    {
+      "mechanic": "Offspring",
+      "card": "Starscape Cleric",
+      "chineseName": "星景僧侣",
+      "english": "Offspring {2}{B} (You may pay an additional {2}{B} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\nFlying\nThis creature can't block.\nWhenever you gain life, each opponent loses 1 life.",
+      "chinese": "繁生{2}{B} (你施放此咒语时可以额外支付{2}{B}。如果你如此作，则当此生物进场时，派出一个为其复制品的1/1衍生物。)\n飞行\n此生物不能进行阻挡。\n每当你获得生命时，每位对手各失去1点生命。"
+    },
+    {
+      "mechanic": "Paradigm",
+      "card": "Improvisation Capstone",
+      "chineseName": "创兴总课",
+      "english": "Exile cards from the top of your library until you exile cards with total mana value 4 or greater. You may cast any number of spells from among them without paying their mana costs.\nParadigm (Then exile this spell. After you first resolve a spell with this name, you may cast a copy of it from exile without paying its mana cost at the beginning of each of your first main phases.)",
+      "chinese": "从你牌库顶开始放逐牌，直到所放逐之牌的法术力值总和为4或更多为止。你可以从其中施放任意数量的咒语，且不需支付其法术力费用。\n定式 (然后放逐此咒语。自你首度结算具此名称的咒语起，在你之后的每个第一个行动阶段开始时，你都可以从放逐区施放一个其复制品，且不需支付其法术力费用。)"
+    },
+    {
+      "mechanic": "Plot",
+      "card": "Lock and Load",
+      "chineseName": "装填上膛",
+      "english": "Draw a card, then draw a card for each other instant and sorcery spell you've cast this turn.\nPlot {3}{U} (You may pay {3}{U} and exile this card from your hand. Cast it as a sorcery on a later turn without paying its mana cost. Plot only as a sorcery.)",
+      "chinese": "抓一张牌，然后你本回合中每施放过一个其他瞬间或法术咒语，便抓一张牌。\n设谋{3}{U} (你可以支付{3}{U}并从你手上放逐此牌。过了该回合后，便可于法术时机施放之，且不需支付其法术力费用。只能于法术时机设谋。)"
+    },
+    {
+      "mechanic": "Power-up",
+      "card": "Gamma Grotesque",
+      "chineseName": "伽马怪诞",
+      "english": "Vigilance (Attacking doesn't cause this creature to tap.)\nPower-up — {4}{G}{G}: Put three +1/+1 counters on this creature. Then draw a card for each creature you control with a counter on it. (Activate each power-up ability only once. Reduce the cost by its mana cost if it entered this turn.)",
+      "chinese": "警戒 (此生物攻击时不需横置。)\n超能～{4}{G}{G}：在此生物上放置三个+1/+1指示物。然后你每操控一个其上有指示物的生物，便抓一张牌。 (每个超能异能只能起动一次。如果其为本回合进场，则此费用会扣除其法术力费用。)"
+    },
+    {
+      "mechanic": "Prototype",
+      "card": "Goring Warplow",
+      "chineseName": "猛抵战犁",
+      "english": "Prototype {1}{B} — 1/1 (You may cast this spell with different mana cost, color, and size. It keeps its abilities and types.)\nDeathtouch",
+      "chinese": "试作{1}{B}～1/1 (你施放此咒语时可选不同法术力费用、颜色和攻防的版本，其异能与类别不变。)\n死触"
+    },
+    {
+      "mechanic": "Reflect",
+      "card": "Mirrored Lotus",
+      "chineseName": "镜像莲花",
+      "english": "Reflect {0} (As this enters, each opponent may pay {0}. When they do, they create a token copy of this except it lacks this ability.)\n{T}, Exile Mirrored Lotus: Add three mana of any one color.",
+      "chinese": "映像{0} (于它进场时，每位对手可以支付{0}。当其如此作时，该牌手派出一个此牌的衍生复制品，但它不具此异能。)\n{T}，放逐镜像莲花：加三点任意颜色的单色法术力。"
+    },
+    {
+      "mechanic": "Saddle",
+      "card": "Dracosaur Auxiliary",
+      "chineseName": "驰援骇威龙",
+      "english": "Flying, haste\nWhenever this creature attacks while saddled, it deals 2 damage to any target.\nSaddle 3 (Tap any number of other creatures you control with total power 3 or more: This Mount becomes saddled until end of turn. Saddle only as a sorcery.)",
+      "chinese": "飞行，敏捷\n每当此生物于已乘驾时攻击，它对任意一个目标造成2点伤害。\n乘驾3 (横置任意数量由你操控且力量总和等于或大于3的其他生物：此坐骑成为已乘驾直到回合结束。只能于法术时机乘驾。)"
+    },
+    {
+      "mechanic": "Sneak",
+      "card": "Elektra, Daughter of the Hand",
+      "chineseName": "手合会之女艾丽卡",
+      "english": "Sneak {1}{B}{B} (You may cast this spell for {1}{B}{B} if you also return an unblocked attacker you control to hand during the declare blockers step. She enters tapped and attacking.)\nWhen Elektra enters, destroy target creature an opponent controls with power 3 or less.",
+      "chinese": "奇袭{1}{B}{B} (你可以于宣告阻挡者步骤中支付{1}{B}{B}来施放此咒语，但须额外将一个由你操控且未受阻挡的攻击生物回手。她以已横置且正进行攻击之状态进场。)\n当艾丽卡进场时，消灭目标由对手操控且力量等于或小于3的生物。"
+    },
+    {
+      "mechanic": "Space sculptor",
+      "card": "Space Beleren",
+      "chineseName": "太空贝连",
+      "english": "Space sculptor (Space Beleren divides the battlefield into alpha, beta, and gamma sectors. If a creature isn't assigned to a sector, its controller assigns it to one. Opponents assign first.)\n[+1]: Creatures in each sector can be blocked this turn only by creatures in the same sector.\n[-1]: Put a +1/+1 counter on each creature in the sector of your choice.\n[-5]: Destroy all creatures in the sector of your choice.",
+      "chinese": "太空塑师 (太空贝连将战场划分为阿尔法、贝塔和伽马星区。如果某个生物未分配至任一星区，则其操控者为其分配。由对手先分配。)\n+1：本回合中，每个星区中的生物只能被同一星区中的生物阻挡。\n-1：选择一个星区。在该星区中的每个生物上各放置一个+1/+1指示物。\n-5：选择一个星区。消灭该星区中的所有生物。"
+    },
+    {
+      "mechanic": "Specialize",
+      "card": "Klement, Novice Acolyte",
+      "chineseName": "新手侍僧克莱门特",
+      "english": "Specialize {2}\nWhen Klement, Novice Acolyte enters, creature cards in your hand perpetually get +1/+1.",
+      "chinese": "精进{2}\n当新手侍僧克莱门特进场时，你手上的生物牌永久得+1/+1。"
+    },
+    {
+      "mechanic": "Station",
+      "card": "Candela, Aegis of Adagia",
+      "chineseName": "阿达吉亚之盾坎德拉号",
+      "english": "Flash\nWhen Candela enters, return up to one target creature you control to its owner's hand. It perpetually gets +1/+1.\nSTATION 8+\nFlying\nWhenever Candela deals combat damage to a player, you may put a creature card with mana value 3 or less from your hand onto the battlefield.",
+      "chinese": "闪现\n当坎德拉号进场时，将至多一个目标由你操控的生物移回其拥有者手上。它永久得+1/+1。\n蓄势\n8+ VERT 飞行\n每当坎德拉号对任一牌手造成战斗伤害时，你可以将一张法术力值等于或小于3的生物牌从你手上放进战场。"
+    },
+    {
+      "mechanic": "Storied",
+      "card": "Óin the Brave",
+      "chineseName": "勇猛无比的欧因",
+      "english": "Storied (If you control three or more artifacts, legendaries, and/or Sagas, you have an enduring story for the rest of the game.)\nAs long as you have an enduring story, Óin gets +1/+0 and has haste.\n{1}, {T}, Discard a card: Draw a card.",
+      "chinese": "立传 (如果你操控三个或更多神器，传奇和／或传纪，则于这盘游戏接下来的时段中，你具有历世书传。)\n只要你具有历世书传，欧因便得+1/+0且具有敏捷异能。\n{1}，{T}，弃一张牌：抓一张牌。"
+    },
+    {
+      "mechanic": "Teamwork",
+      "card": "Heroic Teamwork",
+      "chineseName": "英雄协作",
+      "english": "Teamwork 3 (As an additional cost to cast this spell, you may tap any number of creatures you control with total power 3 or more.)\nOne or two target creatures each get +2/+1 until end of turn. If this spell was cast using teamwork, draw a card.",
+      "chinese": "联合3 (你可以横置任意数量由你操控且力量总和等于或大于3的生物，以作为施放此咒语的额外费用。)\n一个或两个目标生物各得+2/+1直到回合结束。如果此咒语经联合施放，则抓一张牌。"
+    },
+    {
+      "mechanic": "Tiered",
+      "card": "Cloud's Limit Break",
+      "chineseName": "克劳德的极限招式",
+      "english": "Tiered (Choose one additional cost.)\n• Cross-Slash — {0} — Destroy target tapped creature.\n• Blade Beam — {1} — Destroy any number of target tapped creatures with different controllers.\n• Omnislash — {3}{W} — Destroy all tapped creatures.",
+      "chinese": "分级 (选择一项额外费用。)\n•凶斩～{0}～消灭目标已横置的生物。\n•凌空破～{1}～消灭任意数量目标已横置且操控者各不相同的生物。\n•超究武神霸斩～{3}{W}～消灭所有已横置的生物。"
+    },
+    {
+      "mechanic": "Umbra armor",
+      "card": "Hyena Umbra",
+      "chineseName": "鬣狗本影",
+      "english": "Enchant creature\nEnchanted creature gets +1/+1 and has first strike.\nUmbra armor (If enchanted creature would be destroyed, instead remove all damage from it and destroy this Aura.)",
+      "chinese": "结附于生物\n所结附的生物得+1/+1且具有先攻异能。\n本影甲 (如果所结附的生物将被消灭，则改为移除它受到的所有伤害，并消灭此灵气。)"
+    },
+    {
+      "mechanic": "Web-slinging",
+      "card": "Amazing Spider-Girl",
+      "chineseName": "超凡蜘蛛女孩",
+      "english": "Web-slinging {2}{W} (You may cast this spell for {2}{W} if you also return a tapped creature you control to its owner's hand.)\nFlying, vigilance",
+      "chinese": "蛛丝甩荡{2}{W} (如果你额外将一个由你操控且已横置的生物移回其拥有者手上，则可以支付{2}{W}来施放此咒语。)\n飞行，警戒"
+    },
+    {
+      "mechanic": "Blight",
+      "card": "Blighted Nightmare",
+      "chineseName": "枯败梦魇",
+      "english": "When this enchantment enters, creature cards in your graveyard perpetually get +1/+1.\nBlight X, Return this enchantment to its owner's hand: Return target creature card with mana value X or less from your graveyard to the battlefield. X can't be greater than the greatest toughness among creatures you control. Activate only as a sorcery.",
+      "chinese": "当此结界进场时，你坟墓场中的生物牌永久得+1/+1。\n衰萎X，将此结界移回其拥有者手上：将目标法术力值等于或小于X的生物牌从你的坟墓场移回战场。X不能大于由你操控之生物中的最大防御力。只能于法术时机起动。"
+    },
+    {
+      "mechanic": "Start your engines",
+      "card": "Risen Necroregent",
+      "chineseName": "复生死冥王",
+      "english": "Start your engines! (If you have no speed, it starts at 1. It increases once on each of your turns when an opponent loses life. Max speed is 4.)\nMax speed — At the beginning of your end step, create a 2/2 black Zombie creature token.",
+      "chinese": "发动引擎！ (如果你没有速度，则从1开始。于你的每个回合中，当有对手失去生命时，此数值便会增加，但每回合限一次。速度极限为4。)\n速度极限～在你的结束步骤开始时，派出一个2/2黑色灵俑衍生生物。"
+    },
+    {
+      "mechanic": "The Ring Tempts You",
+      "card": "Nazgûl",
+      "chineseName": "那兹古尔",
+      "english": "Deathtouch\nWhen Nazgûl enters, the Ring tempts you.\nWhenever the Ring tempts you, put a +1/+1 counter on each Wraith you control.\nA deck can have up to nine cards named Nazgûl.",
+      "chinese": "死触\n当此生物进场时，魔戒引诱你。\n每当魔戒引诱你时，在每个由你操控的鬼魂上各放置一个+1/+1指示物。\n名称为那兹古尔的牌，在套牌中的数量能有至多九张。"
+    },
+    {
+      "mechanic": "Emerge",
+      "card": "Elder Deep-Fiend",
+      "chineseName": "古渊魔蛸",
+      "english": "Flash\nEmerge {5}{U}{U} (You may cast this spell by sacrificing a creature and paying the emerge cost reduced by that creature's mana value.)\nWhen you cast this spell, tap up to four target permanents.",
+      "chinese": "闪现\n化生{5}{U}{U} (你可以牺牲一个生物并支付化生费用来施放此咒语，此时总费用会扣除该生物之法术力值。)\n当你施放此咒语时，横置至多四个目标永久物。"
+    },
+    {
+      "mechanic": "Infect",
+      "card": "Glistener Elf",
+      "chineseName": "油亮妖精",
+      "english": "Infect (This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)",
+      "chinese": "侵染 (此生物会以-1/-1指示物的方式对生物造成伤害，并以中毒指示物的方式对牌手造成伤害。)"
+    },
+    {
+      "mechanic": "Suspend",
+      "card": "Ancestral Vision",
+      "chineseName": "先人的预视",
+      "english": "Suspend 4—{U} (Rather than cast this card from your hand, pay {U} and exile it with four time counters on it. At the beginning of your upkeep, remove a time counter. When the last is removed, you may cast it without paying its mana cost.)\nTarget player draws three cards.",
+      "chinese": "延缓4～{U} (支付{U}并将此牌放逐且其上有四个计时指示物，而非从你手上施放之。在你的维持开始时，从其上移去一个计时指示物。当移去最后一个时，你可以施放它且不需支付其法术力费用。)\n目标牌手抓三张牌。"
+    },
+    {
+      "mechanic": "Beam me up",
+      "card": "Open Communications",
+      "chineseName": "开启通讯",
+      "english": "Draw a card.\nBeam me up {2}{U} (You may cast this card from your graveyard for {2}{U} if you also return a creature you control to its owner's hand. Then exile this spell.)",
+      "chinese": "抓一张牌。\n传送我{2}{U} (如果你同时将一个由你操控的生物移回其拥有者手上，则你可以支付{2}{U}来从你的坟墓场施放此牌。然后放逐此咒语。)"
+    }
+  ]
+}

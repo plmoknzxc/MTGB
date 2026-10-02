@@ -1,0 +1,3 @@
+PASS mana
+PASS evoke
+PASS trigger-auto

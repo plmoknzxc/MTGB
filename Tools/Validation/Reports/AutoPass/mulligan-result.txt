@@ -1,0 +1,1 @@
+PASS: both seats redraw seven, click Keep before bottom selection, select and confirm one card through scene raycasts; opening hands 6/6.

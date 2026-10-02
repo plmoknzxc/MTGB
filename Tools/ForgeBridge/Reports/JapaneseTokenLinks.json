@@ -1,0 +1,944 @@
+{
+  "checkedFaces": 3729,
+  "matchedReferences": 3848,
+  "candidates": 93,
+  "reasons": {
+    "copy mechanic link, no token name": 6,
+    "investigate mechanic link": 8,
+    "emblem, not a token-name link": 18,
+    "copy of source card; uses mechanic link": 53,
+    "reference belongs to another face or type description": 8
+  },
+  "missing": [
+    {
+      "card": "Uldaros Theorix",
+      "face": "Uldaros Theorix",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "FRA/358",
+      "rules": "飛行ウルダロス・セオリクスが戦場に出たとき、あなたがこれを唱えていた場合、各カード・タイプにつきそれぞれ、あなたの墓地にあり土地でないカード最大１枚を対象とする。それらを追放する。それらのカードをコピーする。あなたは、それらのコピーの中からマナ総量が合計６以下になるよう選んだ望む数の呪文を、マナ・コストを支払うことなく唱えてもよい。 （これにより唱えられたすべてのパーマネント・呪文はトークンになる。）",
+      "english": "Flying\\nWhen Uldaros Theorix enters, if you cast him, exile up to one target nonland card of each card type from your graveyard. Copy those cards. You may cast any number of spells with total mana value 6 or less from among the copies without paying their mana costs. (Permanent spells cast this way become tokens.)",
+      "reason": "copy mechanic link, no token name"
+    },
+    {
+      "card": "The Rani",
+      "face": "The Rani",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "WHO/149",
+      "rules": "ラニが戦場に出るか攻撃するたび、これでないクリーチャー１体を対象とする。「ラニの印」という名前を持つ赤のオーラ・エンチャント・トークン１つをそれについた状態で生成する。そのトークンはエンチャント（クリーチャー）と「エンチャントしているクリーチャーは＋２/＋２の修整を受け、使嗾される。」を持つ。使嗾されているクリーチャー１体が対戦相手１人に戦闘ダメージを与えるたび、調査を行う。",
+      "english": "Whenever The Rani enters or attacks, create a red Aura enchantment token named Mark of the Rani attached to another target creature. That token has enchant creature and \"Enchanted creature gets +2/+2 and is goaded.\"\\nWhenever a goaded creature deals combat damage to one of your opponents, investigate.",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Mu Yanling, Sky Dancer",
+      "face": "Mu Yanling, Sky Dancer",
+      "token": "Mu Yanling, Sky Dancer Emblem",
+      "alias": "Mu Yanling, Sky Dancer Emblem",
+      "key": "M20/68",
+      "rules": "[+2]：クリーチャー最大１体を対象とする。あなたの次のターンまで、それは-2/-0の修整を受け飛行を失う。\n[-3]：飛行を持つ青の4/4のエレメンタル・鳥クリーチャー・トークンを１体生成する。\n[-8]：あなたは「あなたがコントロールしている島は『{T}：カードを１枚引く。』を持つ。」を持つ紋章を得る。　忠誠度：2",
+      "english": "[+2]: Until your next turn, up to one target creature gets -2/-0 and loses flying.\\n[-3]: Create a 4/4 blue Elemental Bird creature token with flying.\\n[-8]: You get an emblem with \"Islands you control have '{T}: Draw a card.'\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Lonis, Cryptozoologist",
+      "face": "Lonis, Cryptozoologist",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "PLST/MH2-204",
+      "rules": "これでもトークンでもないクリーチャー１体があなたのコントロール下で戦場に出るたび、調査を行う。\n{T},手掛かりＸ個を生け贄に捧げる：対戦相手１人を対象とする。そのプレイヤーは自分のライブラリーの一番上からカードＸ枚を公開する。あなたはその中から、マナ総量がＸ以下で土地でないパーマネント・カード１枚をあなたのコントロール下で戦場に出してもよい。そのプレイヤーは残りを自分のライブラリーの一番下に無作為の順番で置く。",
+      "english": "Whenever another nontoken creature you control enters, investigate.\\n{T}, Sacrifice X Clues: Target opponent reveals the top X cards of their library. You may put a nonland permanent card with mana value X or less from among them onto the battlefield under your control. That player puts the rest on the bottom of their library in a random order.",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Resilient Khenra",
+      "face": "Resilient Khenra",
+      "token": "Resilient Khenra",
+      "alias": "Resilient Khenra",
+      "key": "HOU/131",
+      "rules": "立て直しのケンラが戦場に出たとき、クリーチャー１体を対象とする。あなたは「ターン終了時まで、それは+X/+Xの修整を受ける。Ｘは、立て直しのケンラのパワーに等しい。」を選んでもよい。永遠{4}{G}{G} ({4}{G}{G},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・ジャッカル・ウィザードであることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "When Resilient Khenra enters, you may have target creature get +X/+X until end of turn, where X is Resilient Khenra's power.\\nEternalize {4}{G}{G} ({4}{G}{G}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Jackal Wizard with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Steampath Charger",
+      "face": "Steampath Charger",
+      "token": "Steampath Charger",
+      "alias": "Steampath Charger",
+      "key": "BLB/153",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーが死亡したとき、プレイヤー１人を対象とする。これはそのプレイヤーに１点のダメージを与える。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhen this creature dies, it deals 1 damage to target player.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Timeless Dragon",
+      "face": "Timeless Dragon",
+      "token": "Timeless Dragon",
+      "alias": "Timeless Dragon",
+      "key": "MH2/445",
+      "rules": "飛行平地サイクリング{2} ({2},このカードを捨てる：あなたのライブラリーから平地カード１枚を探し、公開し、あなたの手札に加える。その後、ライブラリーを切り直す。)\n永遠{2}{W}{W} ({2}{W}{W},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たず黒の4/4のゾンビ・ドラゴンであることを除き、これのコピーであるトークン１体を生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "Flying\\nPlainscycling {2} ({2}, Discard this card: Search your library for a Plains card, reveal it, put it into your hand, then shuffle.)\\nEternalize {2}{W}{W} ({2}{W}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Dragon with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Sacred Cat",
+      "face": "Sacred Cat",
+      "token": "Sacred Cat",
+      "alias": "Sacred Cat",
+      "key": "AKH/27",
+      "rules": "絆魂不朽{W} ({W},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・猫であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Lifelink\\nEmbalm {W} ({W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Cat with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Arco-Flagellant",
+      "face": "Arco-Flagellant",
+      "token": "Arco-Flagellant",
+      "alias": "Arco-Flagellant",
+      "key": "40K/29",
+      "rules": "分隊{2}（この呪文を唱えるための追加コストとして、あなたは望む回数の{2}を支払ってもよい。このクリーチャーが戦場に出たとき、その回数に等しい数の、これのコピーであるトークンを生成する。）\n特級贖罪者ではブロックできない。エンデュラント — ３点のライフを支払う：ターン終了時まで、特級贖罪者は破壊不能を得る。",
+      "english": "Squad {2} (As an additional cost to cast this spell, you may pay {2} any number of times. When this creature enters, create that many tokens that are copies of it.)\\nArco-Flagellant can't block.\\nEndurant — Pay 3 life: Arco-Flagellant gains indestructible until end of turn.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Kaito Shizuki",
+      "face": "Kaito Shizuki",
+      "token": "Kaito Shizuki Emblem",
+      "alias": "Kaito Shizuki Emblem",
+      "key": "PRM/98093",
+      "rules": "あなたの終了ステップの開始時に、このターンに漆月魁渡が戦場に出た場合、これはフェイズ・アウトする。\n[+1]：カード１枚を引く。その後、このターンにあなたが攻撃していないかぎりカード１枚を捨てる。\n[-2]：「このクリーチャーはブロックされない。」を持つ青の1/1の忍者クリーチャー・トークン１体を生成する。\n[-7]：あなたは「あなたがコントロールしているクリーチャー１体がプレイヤー１人に戦闘ダメージを与えるたび、あなたのライブラリーから青や黒であるクリーチャー・カード１枚を探し、戦場に出す。その後、ライブラリーを切り直す。」を持つ紋章を得る。　忠誠度：3",
+      "english": "At the beginning of your end step, if Kaito Shizuki entered this turn, he phases out.\\n[+1]: Draw a card. Then discard a card unless you attacked this turn.\\n[-2]: Create a 1/1 blue Ninja creature token with \"This creature can't be blocked.\"\\n[-7]: You get an emblem with \"Whenever a creature you control deals combat damage to a player, search your library for a blue or black creature card, put it onto the battlefield, then shuffle.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Fable of the Mirror-Breaker",
+      "face": "Fable of the Mirror-Breaker",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "NEO/357",
+      "rules": "(この英雄譚が出た際とあなたのドロー・ステップの後に、伝承カウンター１個を加える。)\nI ― 「このクリーチャーが攻撃するたび、宝物トークン１つを生成する。」を持つ赤の2/2のゴブリン・シャーマン・クリーチャー・トークン１体を生成する。\nII ― あなたは最大２枚のカードを捨ててもよい。そうしたなら、その枚数に等しい枚数のカードを引く。\nIII ― この英雄譚を追放する。その後、これを変身させた状態であなたのコントロール下で戦場に戻す。",
+      "english": "(As this Saga enters and after your draw step, add a lore counter.)\\nI — Create a 2/2 red Goblin Shaman creature token with \"Whenever this token attacks, create a Treasure token.\"\\nII — You may discard up two cards. If you do, draw that many cards.\\nIII — Exile this Saga, then return it to the battlefield transformed under your control.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Fable of the Mirror-Breaker",
+      "face": "Reflection of Kiki-Jiki",
+      "token": "Treasure",
+      "alias": "宝物",
+      "key": "NEO/357",
+      "rules": "{1},{T}：あなたがコントロールしていてこれでも伝説でもないクリーチャー１体を対象とする。速攻を持つことを除きそれのコピーであるトークン１体を生成する。次の終了ステップの開始時に、それを生け贄に捧げる。",
+      "english": "{1}, {T}: Create a token that's a copy of another target nonlegendary creature you control, except it has haste. Sacrifice it at the beginning of the next end step.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Fable of the Mirror-Breaker",
+      "face": "Reflection of Kiki-Jiki",
+      "token": "Goblin Shaman",
+      "alias": "ゴブリン・シャーマン",
+      "key": "NEO/357",
+      "rules": "{1},{T}：あなたがコントロールしていてこれでも伝説でもないクリーチャー１体を対象とする。速攻を持つことを除きそれのコピーであるトークン１体を生成する。次の終了ステップの開始時に、それを生け贄に捧げる。",
+      "english": "{1}, {T}: Create a token that's a copy of another target nonlegendary creature you control, except it has haste. Sacrifice it at the beginning of the next end step.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Heart-Piercer Manticore",
+      "face": "Heart-Piercer Manticore",
+      "token": "Heart-Piercer Manticore",
+      "alias": "Heart-Piercer Manticore",
+      "key": "PIO/140",
+      "rules": "心臓貫きのマンティコアが戦場に出たとき、あなたは他のクリーチャー１体を生け贄に捧げてもよい。そうしたとき、クリーチャー１体かプレインズウォーカー１体かプレイヤー１人を対象とする。心臓貫きのマンティコアはそれに、その生け贄に捧げたクリーチャーのパワーに等しい点数のダメージを与える。不朽{5}{R} ({5}{R},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・マンティコアであることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "When Heart-Piercer Manticore enters, you may sacrifice another creature. When you do, Heart-Piercer Manticore deals damage equal to that creature's power to any target.\\nEmbalm {5}{R} ({5}{R}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Manticore with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Earthshaker Khenra",
+      "face": "Earthshaker Khenra",
+      "token": "Earthshaker Khenra",
+      "alias": "Earthshaker Khenra",
+      "key": "HOU/90",
+      "rules": "速攻地揺すりのケンラが戦場に出たとき、地揺すりのケンラのパワー以下のパワーを持つクリーチャー１体を対象とする。このターン、それではブロックできない。永遠{4}{R}{R} ({4}{R}{R},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・ジャッカル・戦士であることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "Haste\\nWhen Earthshaker Khenra enters, target creature with power less than or equal to Earthshaker Khenra's power can't block this turn.\\nEternalize {4}{R}{R} ({4}{R}{R}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Jackal Warrior with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Bushy Bodyguard",
+      "face": "Bushy Bodyguard",
+      "token": "Bushy Bodyguard",
+      "alias": "Bushy Bodyguard",
+      "key": "BLB/166",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーが戦場に出たとき、給餌してもよい。そうしたなら、これの上に+1/+1カウンター２個を置く。（給餌するとは、あなたの墓地にあるカード３枚を追放するか食物１つを生け贄に捧げることである。）",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhen this creature enters, you may forage. If you do, put two +1/+1 counters on it. (To forage, exile three cards from your graveyard or sacrifice a Food.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Champion of Wits",
+      "face": "Champion of Wits",
+      "token": "Champion of Wits",
+      "alias": "Champion of Wits",
+      "key": "C21/116",
+      "rules": "機知の勇者が戦場に出たとき、あなたはこれのパワーに等しい枚数のカードを引いてもよい。そうしたなら、カード２枚を捨てる。永遠{5}{U}{U} ({5}{U}{U},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・ナーガ・ウィザードであることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "When Champion of Wits enters, you may draw cards equal to its power. If you do, discard two cards.\\nEternalize {5}{U}{U} ({5}{U}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Snake Wizard with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Merchant of Truth",
+      "face": "Merchant of Truth",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "MKC/11",
+      "rules": "飛行あなたがコントロールしていてトークンでないクリーチャー１体が死亡するたび、調査を行う。あなたがコントロールしているすべての手掛かりは賛美を持つ。（あなたがコントロールしているクリーチャー１体が単独で攻撃するたび、ターン終了時まで、そのクリーチャーは、あなたがコントロールしているパーマネントの賛美能力１つにつき＋１/＋１の修整を受ける。）",
+      "english": "Flying\\nWhenever a nontoken creature you control dies, investigate.\\nClues you control have exalted. (Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn for each instance of exalted among permanents you control.)",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Temmet, Vizier of Naktamun",
+      "face": "Temmet, Vizier of Naktamun",
+      "token": "Temmet, Vizier of Naktamun",
+      "alias": "Temmet, Vizier of Naktamun",
+      "key": "AKR/266",
+      "rules": "あなたのターンの戦闘の開始時に、あなたがコントロールするクリーチャー・トークン１体を対象とする。ターン終了時まで、それは+1/+1の修整を受けるとともに、このターン、それはブロックされない。不朽{3}{W}{U} ({3}{W}{U},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・人間・クレリックであることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "At the beginning of combat on your turn, target creature token you control gets +1/+1 until end of turn and can't be blocked this turn.\\nEmbalm {3}{W}{U} ({3}{W}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Human Cleric with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Chandra, Spark Hunter",
+      "face": "Chandra, Spark Hunter",
+      "token": "Chandra, Spark Hunter Emblem",
+      "alias": "Chandra, Spark Hunter Emblem",
+      "key": "DFT/116",
+      "rules": "あなたのターンの戦闘の開始時に、あなたがコントロールしている機体最大１体を対象とする。ターン終了時まで、それはアーティファクト・クリーチャーになり、速攻を得る。\n[+2]：アーティファクト１つを生け贄に捧げるか、カード１枚を捨てるかしてもよい。そうしたなら、カード１枚を引く。\n[0]：搭乗１を持つ無色の3/2の機体・アーティファクト・トークン１体を生成する。\n[-7]：「あなたがコントロールしているアーティファクト１つが戦場に出るたび、１つを対象とする。この紋章はそれに３点のダメージを与える。」の紋章を得る。　忠誠度：4",
+      "english": "At the beginning of combat on your turn, choose up to one target Vehicle you control. Until end of turn, it becomes an artifact creature and gains haste.\\n[+2]: You may sacrifice an artifact or discard a card. If you do, draw a card.\\n[0]: Create a 3/2 colorless Vehicle token with crew 1.\\n[-7]: You get an emblem with \"Whenever an artifact you control enters, this emblem deals 3 damage to any target.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Labyrinth Guardian",
+      "face": "Labyrinth Guardian",
+      "token": "Labyrinth Guardian",
+      "alias": "Labyrinth Guardian",
+      "key": "PLST/AKH-60",
+      "rules": "迷宮の守護者が呪文の対象になったとき、これを生け贄に捧げる。不朽{3}{U} ({3}{U},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・イリュージョン・戦士であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "When Labyrinth Guardian becomes the target of a spell, sacrifice it.\\nEmbalm {3}{U} ({3}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Illusion Warrior with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Fanatic of Rhonas",
+      "face": "Fanatic of Rhonas",
+      "token": "Fanatic of Rhonas",
+      "alias": "Fanatic of Rhonas",
+      "key": "PLST/MH3-152",
+      "rules": "{T}：{G}を加える。獰猛 ― {T}：{G}{G}{G}{G}を加える。あなたがパワーが４以上であるクリーチャーをコントロールしていなければ起動できない。永遠{2}{G}{G} （{2}{G}{G}, あなたの墓地にあるこのカードを追放する：マナ・コストを持たず黒で４/４でゾンビ・蛇・ドルイドであることを除きこれのコピーであるトークン１体を生成する。永遠はソーサリーとしてのみ行う。）",
+      "english": "{T}: Add {G}.\\nFerocious — {T}: Add {G}{G}{G}{G}. Activate only if you control a creature with power 4 or greater.\\nEternalize {2}{G}{G} ({2}{G}{G}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Snake Druid with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Tyvar Kell",
+      "face": "Tyvar Kell",
+      "token": "Tyvar Kell Emblem",
+      "alias": "Tyvar Kell Emblem",
+      "key": "PRM/88328",
+      "rules": "あなたがコントロールしているすべてのエルフは「{T}：{B}を加える。」を持つ。\n[+1]：エルフ最大１体を対象とする。それの上に+1/+1カウンター１個を置く。それをアンタップする。ターン終了時まで、それは接死を得る。\n[0]：緑の1/1のエルフ・戦士クリーチャー・トークン１体を生成する。\n[-6]：あなたは「あなたがエルフ呪文を唱えるたび、ターン終了時まで、それは速攻を得る。あなたはカード２枚を引く。」を持つ紋章を得る。　忠誠度：3",
+      "english": "Elves you control have \"{T}: Add {B}.\"\\n[+1]: Put a +1/+1 counter on up to one target Elf. Untap it. It gains deathtouch until end of turn.\\n[0]: Create a 1/1 green Elf Warrior creature token.\\n[-6]: You get an emblem with \"Whenever you cast an Elf spell, it gains haste until end of turn and you draw two cards.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Agate Instigator",
+      "face": "Agate Instigator",
+      "token": "Agate Instigator",
+      "alias": "Agate Instigator",
+      "key": "BLC/56",
+      "rules": "新生{1}{R}（この呪文を唱えるに際し、追加で{1}{R}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、１/１でそれのコピーであるトークン１体を生成する。）\nあなたがコントロールしていてこれでないクリーチャー１体が戦場に出るたび、このクリーチャーは各対戦相手にそれぞれ１点のダメージを与える。",
+      "english": "Offspring {1}{R} (You may pay an additional {1}{R} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhenever another creature you control enters, this creature deals 1 damage to each opponent.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Kaya the Inexorable",
+      "face": "Kaya the Inexorable",
+      "token": "Kaya the Inexorable Emblem",
+      "alias": "Kaya the Inexorable Emblem",
+      "key": "KHM/218",
+      "rules": "[+1]：トークンでないクリーチャー最大１体を対象とする。それの上に幽体カウンター１個を置く。それは「このクリーチャーが死亡するか追放領域に置かれたとき、これをオーナーの手札に戻し、飛行を持つ白の1/1のスピリット・クリーチャー・トークン１体を生成する。」を得る。\n[-3]：土地でないパーマネント１つを対象とする。それを追放する。\n[-7]：あなたは「あなたのアップキープの開始時に、あなたは、あなたの手札からかあなたの墓地からか追放領域にありあなたがオーナーであるカードの中から、伝説の呪文１つを、そのマナ・コストを支払うことなく唱えてもよい。」を持つ紋章を得る。　忠誠度：5",
+      "english": "[+1]: Put a ghostform counter on up to one target nontoken creature. It gains \"When this creature dies or is put into exile, return it to its owner's hand and create a 1/1 white Spirit creature token with flying.\"\\n[-3]: Exile target nonland permanent.\\n[-7]: You get an emblem with \"At the beginning of your upkeep, you may cast a legendary spell from your hand, from your graveyard, or from among cards you own in exile without paying its mana cost.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Rowan, Scholar of Sparks",
+      "face": "Will, Scholar of Frost",
+      "token": "Rowan, Scholar of Sparks Emblem",
+      "alias": "Rowan, Scholar of Sparks Emblem",
+      "key": "STX/156",
+      "rules": "あなたがインスタントやソーサリーである呪文を唱えるためのコストは{1}少なくなる。\n[+1]：クリーチャー最大１体を対象とする。次のあなたのターンまで、それの基本のパワーとタフネスは0/2になる。\n[-3]：カード２枚を引く。\n[-7]：パーマネント最大５つを対象とする。それらを追放する。それらのコントローラーは、自分がコントロールしていてこれにより追放されたパーマネント１つにつき青赤の4/4のエレメンタル・クリーチャー・トークン１体を生成する。　忠誠度：4",
+      "english": "Instant and sorcery spells you cast cost {1} less to cast.\\n[+1]: Up to one target creature has base power and toughness 0/2 until your next turn.\\n[-3]: Draw two cards.\\n[-7]: Exile up to five target permanents. For each permanent exiled this way, its controller creates a 4/4 blue and red Elemental creature token.",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "The Master, Multiplied",
+      "face": "The Master, Multiplied",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "WHO/1136",
+      "rules": "無尽あなたがコントロールしているクリーチャー・トークンには「レジェンド・ルール」は適用されない。あなたがコントロールしている誘発型能力は、あなたにあなたがコントロールしているクリーチャー・トークンを生け贄に捧げさせたり、追放させたりできない。",
+      "english": "Myriad\\nThe \"legend rule\" doesn't apply to creature tokens you control.\\nTriggered abilities you control can't cause you to sacrifice or exile creature tokens you control.",
+      "reason": "copy mechanic link, no token name"
+    },
+    {
+      "card": "Tamiyo, Inquisitive Student",
+      "face": "Tamiyo, Inquisitive Student",
+      "token": "Tamiyo, Seasoned Scholar Emblem",
+      "alias": "Tamiyo, Seasoned Scholar Emblem",
+      "key": "MH3/443",
+      "rules": "飛行知りたがりの学徒、タミヨウが攻撃するたび、調査を行う。（手掛かり・トークン１つを生成する。それは「{2}, このアーティファクトを生け贄に捧げる：カード１枚を引く。」を持つアーティファクトである。）\nあなたが各ターン内のあなたの３枚目のカードを引いたとき、これを追放する。その後、これをオーナーのコントロール下で変身させた状態で戦場に戻す。",
+      "english": "Flying\\nWhenever Tamiyo, Inquisitive Student attacks, investigate. (Create a Clue token. It's an artifact with \"{2}, Sacrifice this token: Draw a card.\")\\nWhenever you draw your third card in a turn, exile Tamiyo, then return her to the battlefield transformed under her owner's control.",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Invasion of New Phyrexia",
+      "face": "Invasion of New Phyrexia",
+      "token": "Teferi Akosa of Zhalfir Emblem",
+      "alias": "Teferi Akosa of Zhalfir Emblem",
+      "key": "MOM/239",
+      "rules": "（包囲戦１つが戦場に出るに際し、それを守る対戦相手１人を選ぶ。あなたや他のプレイヤーはそれを攻撃できる。それが倒されたとき、それを追放する。その後、それを変身させた状態で唱える。）\n新ファイレクシアへの侵攻が戦場に出たとき、警戒を持つ白青の２/２の騎士・クリーチャー・トークンＸ体を生成する。",
+      "english": "(As a Siege enters, choose an opponent to protect it. You and others can attack it. When it's defeated, exile it, then cast it transformed.)\\nWhen Invasion of New Phyrexia enters, create X 2/2 white and blue Knight creature tokens with vigilance.",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Battle Angels of Tyr",
+      "face": "Battle Angels of Tyr",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "CLB/370",
+      "rules": "飛行、無尽ティアの戦天使がプレイヤー１人に戦闘ダメージを与えるたび、そのプレイヤーが他の各プレイヤーよりも多くの手札を持っていたなら、あなたはカード１枚を引く。その後、そのプレイヤーが他の各プレイヤーよりも多くの土地をコントロールしているなら、あなたは宝物・トークン１つを生成する。その後、そのプレイヤーが他の各プレイヤーよりも多くのライフを持っているなら、あなたは３点のライフを得る。",
+      "english": "Flying, myriad\\nWhenever Battle Angels of Tyr deals combat damage to a player, draw a card if that player has more cards in hand than each other player. Then you create a Treasure token if that player controls more lands than each other player. Then you gain 3 life if that player has more life than each other player.",
+      "reason": "copy mechanic link, no token name"
+    },
+    {
+      "card": "Darkstar Augur",
+      "face": "Darkstar Augur",
+      "token": "Darkstar Augur",
+      "alias": "Darkstar Augur",
+      "key": "BLB/90",
+      "rules": "新生{B}（この呪文を唱えるに際し、追加で{B}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\n飛行あなたのアップキープの開始時に、あなたのライブラリーの一番上にあるカード１枚を公開し、あなたの手札に加える。それのマナ総量に等しい点数のライフを失う。",
+      "english": "Offspring {B} (You may pay an additional {B} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nFlying\\nAt the beginning of your upkeep, reveal the top card of your library and put that card into your hand. You lose life equal to its mana value.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Finch Formation",
+      "face": "Finch Formation",
+      "token": "Finch Formation",
+      "alias": "Finch Formation",
+      "key": "BLB/50",
+      "rules": "新生{3}（この呪文を唱えるに際し、追加で{3}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\n飛行このクリーチャーが戦場に出たとき、あなたがコントロールしているクリーチャー１体を対象とする。ターン終了時まで、それは飛行を得る。",
+      "english": "Offspring {3} (You may pay an additional {3} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nFlying\\nWhen this creature enters, target creature you control gains flying until end of turn.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Adorned Pouncer",
+      "face": "Adorned Pouncer",
+      "token": "Adorned Pouncer",
+      "alias": "Adorned Pouncer",
+      "key": "PRM/64993",
+      "rules": "二段攻撃永遠{3}{W}{W} ({3}{W}{W},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・猫であることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "Double strike\\nEternalize {3}{W}{W} ({3}{W}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Cat with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Oko, Lorwyn Liege",
+      "face": "Oko, Shadowmoor Scion",
+      "token": "Oko, Shadowmoor Scion Emblem",
+      "alias": "Oko, Shadowmoor Scion Emblem",
+      "key": "ECL/61",
+      "rules": "あなたの第１メイン・フェイズの開始時に、{U}を支払ってもよい。そうしたなら、これを変身させる。\n-1：カード３枚を切削する。その中からパーマネント・カード１枚をあなたの手札に加えてもよい。\n-3：緑の３/３の大鹿・クリーチャー・トークン２体を生成する。\n-6：クリーチャー・タイプ１つを選ぶ。「あなたがコントロールしていてその選ばれたタイプであるすべてのクリーチャーは、＋３/＋３の修整を受け警戒と呪禁を持つ。」の紋章を得る。",
+      "english": "At the beginning of your first main phase, you may pay {U}. If you do, transform Oko.\\n[-1]: Mill three cards. You may put a permanent card from among them into your hand.\\n[-3]: Create two 3/3 green Elk creature tokens.\\n[-6]: Choose a creature type. You get an emblem with \"Creatures you control of the chosen type get +3/+3 and have vigilance and hexproof.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Wrenn and Seven",
+      "face": "Wrenn and Seven",
+      "token": "Wrenn and Seven Emblem",
+      "alias": "Wrenn and Seven Emblem",
+      "key": "DSC/207",
+      "rules": "[+1]：あなたのライブラリーの一番上にあるカード４枚を公開する。これにより公開されたすべての土地カードをあなたの手札に加え、残りをあなたの墓地に置く。\n[0]：あなたの手札にある望む枚数の土地カードをタップ状態で戦場に出す。\n[-3]：到達と「このクリーチャーのパワーとタフネスはそれぞれ、あなたがコントロールしている土地の数に等しい。」を持つ緑のツリーフォーク・クリーチャー・トークン１体を生成する。\n[-8]：あなたの墓地にあるすべてのパーマネント・カードをあなたの手札に戻す。あなたは「あなたの手札の上限は無くなる。」を持つ紋章を得る。　忠誠度：5",
+      "english": "[+1]: Reveal the top four cards of your library. Put all land cards revealed this way into your hand and the rest into your graveyard.\\n[0]: Put any number of land cards from your hand onto the battlefield tapped.\\n[-3]: Create a green Treefolk creature token with reach and \"This token's power and toughness are each equal to the number of lands you control.\"\\n[-8]: Return all permanent cards from your graveyard to your hand. You get an emblem with \"You have no maximum hand size.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Tah-Crop Skirmisher",
+      "face": "Tah-Crop Skirmisher",
+      "token": "Tah-Crop Skirmisher",
+      "alias": "Tah-Crop Skirmisher",
+      "key": "PIO/76",
+      "rules": "不朽{3}{U} ({3}{U},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・ナーガ・戦士であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Embalm {3}{U} ({3}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Snake Warrior with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Honored Hydra",
+      "face": "Honored Hydra",
+      "token": "Honored Hydra",
+      "alias": "Honored Hydra",
+      "key": "AKH/172",
+      "rules": "トランプル不朽{3}{G} ({3}{G},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・蛇・ハイドラであることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Trample\\nEmbalm {3}{G} ({3}{G}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Snake Hydra with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Sunscourge Champion",
+      "face": "Sunscourge Champion",
+      "token": "Sunscourge Champion",
+      "alias": "Sunscourge Champion",
+      "key": "AKR/38",
+      "rules": "陽光鞭の勇者が戦場に出たとき、あなたはこれのパワーに等しい点数のライフを得る。永遠{2}{W}{W},カードを１枚捨てる。 ({2}{W}{W},カードを１枚捨てる,あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・人間・ウィザードであることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "When Sunscourge Champion enters, you gain life equal to its power.\\nEternalize—{2}{W}{W}, Discard a card. ({2}{W}{W}, Discard a card, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Human Wizard with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Oketra's Attendant",
+      "face": "Oketra's Attendant",
+      "token": "Oketra's Attendant",
+      "alias": "Oketra's Attendant",
+      "key": "AKR/28",
+      "rules": "飛行サイクリング{2} ({2},このカードを捨てる：カードを１枚引く。)\n不朽{3}{W}{W} ({3}{W}{W},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・鳥・兵士であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Flying\\nCycling {2} ({2}, Discard this card: Draw a card.)\\nEmbalm {3}{W}{W} ({3}{W}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Bird Soldier with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Inspired Skypainter",
+      "face": "Inspired Skypainter",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "SOC/96",
+      "rules": "飛行このクリーチャーが戦場に出たとき、および、あなたがコントロールしている１体以上のクリーチャー・トークンがプレイヤー１人に戦闘ダメージを与えるたび、このクリーチャーは準備済状態になる。（準備済状態である間、あなたはこれの呪文のコピーを唱えてもよい。そうしたら、これを未準備状態にする。）",
+      "english": "Flying\\nWhen this creature enters and whenever one or more creature tokens you control deal combat damage to a player, this creature becomes prepared. (While it's prepared, you may cast a copy of its spell. Doing so unprepares it.)",
+      "reason": "copy mechanic link, no token name"
+    },
+    {
+      "card": "Broodmate Tyrant",
+      "face": "Broodmate Tyrant",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "M3C/123",
+      "rules": "飛行若き群れの暴君が戦場に出たとき、飛行を持つ赤の５/５のドラゴン・クリーチャー・トークン１体を生成する。再演{5}{B}{R}{G}",
+      "english": "Flying\\nWhen Broodmate Tyrant enters, create a 5/5 red Dragon creature token with flying.\\nEncore {5}{B}{R}{G}",
+      "reason": "copy mechanic link, no token name"
+    },
+    {
+      "card": "Tender Wildguide",
+      "face": "Tender Wildguide",
+      "token": "Tender Wildguide",
+      "alias": "Tender Wildguide",
+      "key": "BLB/325",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\n{T}：好きな色１色のマナ１点を加える。\n{T}：このクリーチャーの上に+1/+1カウンター１個を置く。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\n{T}: Add one mana of any color.\\n{T}: Put a +1/+1 counter on this creature.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Jaya, Fiery Negotiator",
+      "face": "Jaya, Fiery Negotiator",
+      "token": "Jaya, Fiery Negotiator Emblem",
+      "alias": "Jaya, Fiery Negotiator Emblem",
+      "key": "DMU/374",
+      "rules": "[+1]：果敢を持つ赤の1/1のモンク・クリーチャー・トークン１体を生成する。\n[-1]：あなたのライブラリーの一番上にあるカード２枚を追放する。そのうち１枚を選ぶ。このターン、あなたはそのカードをプレイしてもよい。\n[-2]：対戦相手がコントロールしているクリーチャー１体を対象とする。このターンにあなたが攻撃するたび、これはそのクリーチャーに攻撃クリーチャーの数に等しい点数のダメージを与える。\n[-8]：あなたは「あなたがインスタントやソーサリーである赤の呪文を唱えるたび、それを２回コピーする。あなたはそれらのコピーの新しい対象を選んでもよい。」を持つ紋章を得る。　忠誠度：4",
+      "english": "[+1]: Create a 1/1 red Monk creature token with prowess.\\n[-1]: Exile the top two cards of your library. Choose one of them. You may play that card this turn.\\n[-2]: Choose target creature an opponent controls. Whenever you attack this turn, Jaya, Fiery Negotiator deals damage equal to the number of attacking creatures to that creature.\\n[-8]: You get an emblem with \"Whenever you cast a red instant or sorcery spell, copy it twice. You may choose new targets for the copies.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Vanguard Suppressor",
+      "face": "Vanguard Suppressor",
+      "token": "Vanguard Suppressor",
+      "alias": "Vanguard Suppressor",
+      "key": "40K/27",
+      "rules": "分隊{2}（この呪文を唱えるための追加コストとして、あなたは望む回数の{2}を支払ってもよい。このクリーチャーが戦場に出たとき、その回数に等しい数の、これのコピーであるトークンを生成する。）\n飛行制圧射撃 — ヴァンガード・サプレッサーがプレイヤー１人に戦闘ダメージを与えるたび、カード１枚を引く。",
+      "english": "Squad {2} (As an additional cost to cast this spell, you may pay {2} any number of times. When this creature enters, create that many tokens that are copies of it.)\\nFlying\\nSuppressing Fire — Whenever Vanguard Suppressor deals combat damage to a player, draw a card.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Timeless Witness",
+      "face": "Timeless Witness",
+      "token": "Timeless Witness",
+      "alias": "Timeless Witness",
+      "key": "J21/654",
+      "rules": "永久の証人が戦場に出たとき、あなたの墓地からカード１枚を対象とする。それをあなたの手札に戻す。永遠{5}{G}{G} ({5}{G}{G},あなたの墓地からこのカードを追放する：マナ・コストを持たず黒で4/4でゾンビ・人間・シャーマンであることを除き、これのコピーであるトークン１体を生成する。永遠はそソーサリーとしてのみ行う。)",
+      "english": "When Timeless Witness enters, return target card from your graveyard to your hand.\\nEternalize {5}{G}{G} ({5}{G}{G}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Human Shaman with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Splash Lasher",
+      "face": "Splash Lasher",
+      "token": "Splash Lasher",
+      "alias": "Splash Lasher",
+      "key": "BLB/73",
+      "rules": "新生{1}{U}（この呪文を唱えるに際し、追加で{1}{U}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーが戦場に出たとき、クリーチャー最大１体を対象とする。それをタップし、それの上に麻痺カウンター１個を置く。（麻痺カウンターが置かれているパーマネントがアンタップ状態になるなら、代わりにそれの上から麻痺カウンター１個を取り除く。）",
+      "english": "Offspring {1}{U} (You may pay an additional {1}{U} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhen this creature enters, tap up to one target creature and put a stun counter on it. (If a permanent with a stun counter would become untapped, remove one from it instead.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Prosperous Bandit",
+      "face": "Prosperous Bandit",
+      "token": "Prosperous Bandit",
+      "alias": "Prosperous Bandit",
+      "key": "BLC/59",
+      "rules": "新生{1}（この呪文を唱えるに際し、追加で{1}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、１/１でそれのコピーであるトークン１体を生成する。）\n先制攻撃このクリーチャーがプレイヤー１人に戦闘ダメージを与えるたび、その点数に等しい数の宝物・トークンをタップ状態で生成する。",
+      "english": "Offspring {1} (You may pay an additional {1} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nFirst strike\\nWhenever this creature deals combat damage to a player, create that many tapped Treasure tokens.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Garruk, Cursed Huntsman",
+      "face": "Garruk, Cursed Huntsman",
+      "token": "Garruk, Cursed Huntsman Emblem",
+      "alias": "Garruk, Cursed Huntsman Emblem",
+      "key": "BLC/99",
+      "rules": "[0]：「このクリーチャーが死亡したとき、あなたがコントロールしている各ガラクの上に忠誠カウンターをそれぞれ１個置く。」を持つ黒であり緑である2/2の狼クリーチャー・トークンを２体生成する。\n[-3]：クリーチャー１体を対象とし、それを破壊する。カードを１枚引く。\n[-6]：あなたは「あなたがコントロールしているクリーチャーは+3/+3の修整を受けトランプルを持つ。」を持つ紋章を得る。　忠誠度：5",
+      "english": "[0]: Create two 2/2 black and green Wolf creature tokens with \"When this token dies, put a loyalty counter on each Garruk you control.\"\\n[-3]: Destroy target creature. Draw a card.\\n[-6]: You get an emblem with \"Creatures you control get +3/+3 and have trample.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Aven Wind Guide",
+      "face": "Aven Wind Guide",
+      "token": "Aven Wind Guide",
+      "alias": "Aven Wind Guide",
+      "key": "AKH/195",
+      "rules": "飛行、警戒あなたがコントロールするクリーチャー・トークンは飛行と警戒を持つ。不朽{4}{W}{U} ({4}{W}{U},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・天使であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Flying, vigilance\\nCreature tokens you control have flying and vigilance.\\nEmbalm {4}{W}{U} ({4}{W}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Bird Warrior with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Angel of Sanctions",
+      "face": "Angel of Sanctions",
+      "token": "Angel of Sanctions",
+      "alias": "Angel of Sanctions",
+      "key": "AKR/1",
+      "rules": "飛行賞罰の天使が戦場に出たとき、対戦相手がコントロールする土地でないパーマネント１つを対象とする。あなたはそれを賞罰の天使が戦場を離れるまで追放してもよい。不朽{5}{W} ({5}{W},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・天使であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Flying\\nWhen Angel of Sanctions enters, you may exile target nonland permanent an opponent controls until Angel of Sanctions leaves the battlefield.\\nEmbalm {5}{W} ({5}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Angel with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Sophia, Dogged Detective",
+      "face": "Sophia, Dogged Detective",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "MKC/319",
+      "rules": "嗅ぎ回る探偵、ソフィアが戦場に出たとき、「タイニー」という名前でトランプルを持つ緑の２/２の伝説の犬・探偵・クリーチャー・トークン１体を生成する。\n{1}, アーティファクト・トークン１つを生け贄に捧げる：あなたがコントロールしている各犬の上にそれぞれ＋１/＋１カウンター１個を置く。あなたがコントロールしている犬１体がプレイヤー１人に戦闘ダメージを与えるたび、食物・トークン１つを生成し、その後調査を行う。",
+      "english": "When Sophia, Dogged Detective enters, create Tiny, a legendary 2/2 green Dog Detective creature token with trample.\\n{1}, Sacrifice an artifact token: Put a +1/+1 counter on each Dog you control.\\nWhenever a Dog you control deals combat damage to a player, create a Food token, then investigate.",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Thornplate Intimidator",
+      "face": "Thornplate Intimidator",
+      "token": "Thornplate Intimidator",
+      "alias": "Thornplate Intimidator",
+      "key": "BLB/117",
+      "rules": "新生{3}（この呪文を唱えるに際し、追加で{3}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーが戦場に出たとき、対戦相手１人を対象とする。そのプレイヤーは自分が選んだ、土地でないパーマネント１つを生け贄に捧げるかカード１枚を捨てないかぎり３点のライフを失う。",
+      "english": "Offspring {3} (You may pay an additional {3} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhen this creature enters, target opponent loses 3 life unless they sacrifice a nonland permanent or discard a card.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Poppet Stitcher",
+      "face": "Poppet Factory",
+      "token": "Zombie",
+      "alias": "ゾンビ",
+      "key": "MID/339",
+      "rules": "あなたがコントロールしているすべてのクリーチャー・トークンはすべての能力を失い基本のパワーとタフネスが3/3になる。あなたのアップキープの開始時に、あなたは戯れ児工場を変身させてもよい。",
+      "english": "Creature tokens you control lose all abilities and have base power and toughness 3/3.\\nAt the beginning of your upkeep, you may transform Poppet Factory.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Anointer Priest",
+      "face": "Anointer Priest",
+      "token": "Anointer Priest",
+      "alias": "Anointer Priest",
+      "key": "PLST/AKH-3",
+      "rules": "クリーチャー・トークンが１体あなたのコントロール下で戦場に出るたび、あなたは１点のライフを得る。不朽{3}{W} ({3}{W},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・人間・クレリックであることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Whenever a creature token you control enters, you gain 1 life.\\nEmbalm {3}{W} ({3}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Human Cleric with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Warren Warleader",
+      "face": "Warren Warleader",
+      "token": "Warren Warleader",
+      "alias": "Warren Warleader",
+      "key": "BLB/300",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nあなたが攻撃するたび、以下から１つを選ぶ。\n• 白の1/1の兎・クリーチャー・トークン１体をタップ状態かつ攻撃している状態で生成する。\n• ターン終了時まで、あなたがコントロールしているすべての攻撃クリーチャーは+1/+1の修整を受ける。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhenever you attack, choose one —\\n• Create a 1/1 white Rabbit creature token that's tapped and attacking.\\n• Attacking creatures you control get +1/+1 until end of turn.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Space Marine Devastator",
+      "face": "Space Marine Devastator",
+      "token": "Space Marine Devastator",
+      "alias": "Space Marine Devastator",
+      "key": "40K/14",
+      "rules": "分隊{2}（この呪文を唱えるための追加コストとして、あなたは望む回数の{2}を支払ってもよい。このクリーチャーが戦場に出たとき、その回数に等しい数の、これのコピーであるトークンを生成する。）\nグラヴキャノン — スペースマリーン・デヴァステイターが戦場に出たとき、アーティファクトやエンチャントのうち最大１つを対象とする。それを破壊する。",
+      "english": "Squad {2} (As an additional cost to cast this spell, you may pay {2} any number of times. When this creature enters, create that many tokens that are copies of it.)\\nGrav-cannon — When Space Marine Devastator enters, destroy up to one target artifact or enchantment.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Saheeli, Filigree Master",
+      "face": "Saheeli, Filigree Master",
+      "token": "Saheeli, Filigree Master Emblem",
+      "alias": "Saheeli, Filigree Master Emblem",
+      "key": "BRO/294",
+      "rules": "+1：占術１を行う。あなたはあなたがコントロールしているアンタップ状態のアーティファクト１つをタップしてもよい。そうしたなら、カード１枚を引く。\n-2：飛行を持つ無色の１/１の飛行機械・アーティファクト・クリーチャー・トークン２体を生成する。ターン終了時まで、それらは速攻を得る。\n−4：あなたは「あなたがコントロールしているすべてのアーティファクト・クリーチャーは＋１/＋１の修整を受ける。」と「あなたがアーティファクト・呪文を唱えるためのコストは{1}少なくなる。」を持つ紋章を得る。",
+      "english": "[+1]: Scry 1. You may tap an untapped artifact you control. If you do, draw a card.\\n[-2]: Create two 1/1 colorless Thopter artifact creature tokens with flying. They gain haste until end of turn.\\n[-4]: You get an emblem with \"Artifact creatures you control get +1/+1\" and \"Artifact spells you cast cost {1} less to cast.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Intrepid Rabbit",
+      "face": "Intrepid Rabbit",
+      "token": "Intrepid Rabbit",
+      "alias": "Intrepid Rabbit",
+      "key": "BLB/17",
+      "rules": "新生{1}（この呪文を唱えるに際し、追加で{1}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーが戦場に出たとき、あなたがコントロールしているクリーチャー１体を対象とする。ターン終了時まで、それは+1/+1の修整を受ける。",
+      "english": "Offspring {1} (You may pay an additional {1} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhen this creature enters, target creature you control gets +1/+1 until end of turn.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Tivit, Seller of Secrets",
+      "face": "Tivit, Seller of Secrets",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "NCC/109",
+      "rules": "飛行、語法{3}\n動議 ― 秘密売り、ティヴィットが戦場に出るかプレイヤーに戦闘ダメージを与えるたび、あなたから始めて各プレイヤーは「証拠」か「賄賂」のいずれかに投票する。「証拠」１票につき１回の調査を行う。「賄賂」１票につき１つの宝物トークンを生成する。投票中、あなたは追加で１回投票してもよい。 (その票は別の選択でも同じ選択でも投票してよい。)",
+      "english": "Flying, ward {3}\\nCouncil's dilemma — Whenever Tivit enters or deals combat damage to a player, starting with you, each player votes for evidence or bribery. For each evidence vote, investigate. For each bribery vote, create a Treasure token.\\nWhile voting, you may vote an additional time. (The votes can be for different choices or for the same choice.)",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Starscape Cleric",
+      "face": "Starscape Cleric",
+      "token": "Starscape Cleric",
+      "alias": "Starscape Cleric",
+      "key": "BLB/116",
+      "rules": "新生{2}{B}（この呪文を唱えるに際し、追加で{2}{B}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\n飛行このクリーチャーではブロックできない。あなたがライフを得るたび、各対戦相手はそれぞれ１点のライフを失う。",
+      "english": "Offspring {2}{B} (You may pay an additional {2}{B} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nFlying\\nThis creature can't block.\\nWhenever you gain life, each opponent loses 1 life.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Thundertrap Trainer",
+      "face": "Thundertrap Trainer",
+      "token": "Thundertrap Trainer",
+      "alias": "Thundertrap Trainer",
+      "key": "BLB/307",
+      "rules": "新生{4}（この呪文を唱えるに際し、追加で{4}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーが戦場に出たとき、あなたのライブラリーの一番上にあるカード４枚を見る。「その中からクリーチャーでも土地でもないカード１枚を公開し、あなたの手札に加える。」を選んでもよい。残りをあなたのライブラリーの一番下に無作為の順番で置く。",
+      "english": "Offspring {4} (You may pay an additional {4} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhen this creature enters, look at the top four cards of your library. You may reveal a noncreature, nonland card from among them and put it into your hand. Put the rest on the bottom of your library in a random order.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Devouring Sugarmaw",
+      "face": "Devouring Sugarmaw",
+      "token": "Human",
+      "alias": "人間",
+      "key": "WOE/224",
+      "rules": "威迫、トランプルあなたのアップキープの開始時に、アーティファクトやエンチャントやトークンのうち１つを生け贄に捧げてもよい。そうしないなら、貪る甘味大口をタップする。",
+      "english": "Menace, trample\\nAt the beginning of your upkeep, you may sacrifice an artifact, enchantment, or token. If you don't, tap Devouring Sugarmaw.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Devouring Sugarmaw",
+      "face": "Devouring Sugarmaw",
+      "token": "Food",
+      "alias": "食物",
+      "key": "WOE/224",
+      "rules": "威迫、トランプルあなたのアップキープの開始時に、アーティファクトやエンチャントやトークンのうち１つを生け贄に捧げてもよい。そうしないなら、貪る甘味大口をタップする。",
+      "english": "Menace, trample\\nAt the beginning of your upkeep, you may sacrifice an artifact, enchantment, or token. If you don't, tap Devouring Sugarmaw.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Adrix and Nev, Twincasters",
+      "face": "Adrix and Nev, Twincasters",
+      "token": "Copy",
+      "alias": "コピー",
+      "key": "SPG/156",
+      "rules": "護法{2}（このクリーチャーが対戦相手がコントロールしている呪文や能力の対象になるたび、そのプレイヤーが{2}を支払わないかぎり、その呪文や能力を打ち消す。）\nあなたのコントロール下でトークン１つ以上が生成されるなら、代わりにその２倍の数のトークンを生成する。",
+      "english": "Ward {2} (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player pays {2}.)\\nIf one or more tokens would be created under your control, twice that many of those tokens are created instead.",
+      "reason": "copy mechanic link, no token name"
+    },
+    {
+      "card": "Dreamstealer",
+      "face": "Dreamstealer",
+      "token": "Dreamstealer",
+      "alias": "Dreamstealer",
+      "key": "HOU/63",
+      "rules": "威迫夢盗人がプレイヤー１人に戦闘ダメージを与えるたび、そのプレイヤーはその点数に等しい枚数のカードを捨てる。永遠{4}{B}{B} ({4}{B}{B},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・人間・ウィザードであることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "Menace\\nWhenever Dreamstealer deals combat damage to a player, that player discards that many cards.\\nEternalize {4}{B}{B} ({4}{B}{B}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Human Wizard with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Garruk, Unleashed",
+      "face": "Garruk, Unleashed",
+      "token": "Garruk, Unleashed Emblem",
+      "alias": "Garruk, Unleashed Emblem",
+      "key": "PRM/85944",
+      "rules": "[+1]：クリーチャー最大１体を対象とする。ターン終了時まで、それは+3/+3の修整を受けトランプルを得る。\n[-2]：緑の3/3のビースト・クリーチャー・トークンを１体生成する。その後、対戦相手１人があなたより多くのクリーチャーをコントロールしているなら、解き放たれた者、ガラクの上に忠誠カウンターを１個置く。\n[-7]：あなたは「あなたの終了ステップの開始時に、あなたは『あなたのライブラリーからクリーチャー・カード１枚を探し、戦場に出し、その後ライブラリーを切り直す。』を選んでもよい。」を持つ紋章を得る。　忠誠度：4",
+      "english": "[+1]: Up to one target creature gets +3/+3 and gains trample until end of turn.\\n[-2]: Create a 3/3 green Beast creature token. Then if an opponent controls more creatures than you, put a loyalty counter on Garruk, Unleashed.\\n[-7]: You get an emblem with \"At the beginning of your end step, you may search your library for a creature card, put it onto the battlefield, then shuffle.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Kaito, Cunning Infiltrator",
+      "face": "Kaito, Cunning Infiltrator",
+      "token": "Kaito, Cunning Infiltrator Emblem",
+      "alias": "Kaito, Cunning Infiltrator Emblem",
+      "key": "FDN/44",
+      "rules": "あなたがコントロールしているクリーチャー１体がプレイヤー１人に戦闘ダメージを与えるたび、これの上に忠誠カウンター１個を置く。\n[+1]：あなたがコントロールしているクリーチャー最大１体を対象とする。このターン、それはブロックされない。カード１枚を引き、その後、カード１枚を捨てる。\n[-2]：青の2/1の忍者・クリーチャー・トークン１体を生成する。\n[-9]：「プレイヤーが呪文１つを唱えるたび、あなたは青の2/1の忍者・クリーチャー・トークン１体を生成する。」の紋章を得る。　忠誠度：3",
+      "english": "Whenever a creature you control deals combat damage to a player, put a loyalty counter on Kaito.\\n[+1]: Up to one target creature you control can't be blocked this turn. Draw a card, then discard a card.\\n[-2]: Create a 2/1 blue Ninja creature token.\\n[-9]: You get an emblem with \"Whenever a player casts a spell, you create a 2/1 blue Ninja creature token.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Manifold Mouse",
+      "face": "Manifold Mouse",
+      "token": "Manifold Mouse",
+      "alias": "Manifold Mouse",
+      "key": "SLP/47",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nあなたのターンの戦闘の開始時に、あなたがコントロールしているハツカネズミ１体を対象とする。ターン終了時まで、それは二段攻撃やトランプルのうちあなたが選んだ１つを得る。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nAt the beginning of combat on your turn, target Mouse you control gains your choice of double strike or trample until end of turn.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Aven Initiate",
+      "face": "Aven Initiate",
+      "token": "Aven Initiate",
+      "alias": "Aven Initiate",
+      "key": "AKH/43",
+      "rules": "飛行不朽{6}{U} ({6}{U},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・鳥・戦士であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Flying\\nEmbalm {6}{U} ({6}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Bird Warrior with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Trueheart Duelist",
+      "face": "Trueheart Duelist",
+      "token": "Trueheart Duelist",
+      "alias": "Trueheart Duelist",
+      "key": "AKH/35",
+      "rules": "各戦闘で、信念の決闘者は追加で１体のクリーチャーをブロックできる。不朽{2}{W} ({2}{W},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・人間・戦士であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Trueheart Duelist can block an additional creature each combat.\\nEmbalm {2}{W} ({2}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Human Warrior with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Declaration in Stone",
+      "face": "Declaration in Stone",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "NCC/196",
+      "rules": "クリーチャー１体を対象とする。それと、それのコントローラーがコントロールするそれと同じ名前を持つ他のクリーチャーをすべて追放する。そのプレイヤーは、これにより追放されたトークンでないクリーチャー１体につき１回調査を行う。",
+      "english": "Exile target creature and all other creatures its controller controls with the same name as that creature. That player investigates for each nontoken creature exiled this way.",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Steadfast Sentinel",
+      "face": "Steadfast Sentinel",
+      "token": "Steadfast Sentinel",
+      "alias": "Steadfast Sentinel",
+      "key": "HOU/24",
+      "rules": "警戒永遠{4}{W}{W} ({4}{W}{W},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・人間・クレリックであることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "Vigilance\\nEternalize {4}{W}{W} ({4}{W}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Human Cleric with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Steelburr Champion",
+      "face": "Steelburr Champion",
+      "token": "Steelburr Champion",
+      "alias": "Steelburr Champion",
+      "key": "BLC/12",
+      "rules": "新生{1}{W}（この呪文を唱えるに際し、追加で{1}{W}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、１/１でこれのコピーであるトークン１体を生成する。警戒対戦相手がクリーチャーでない呪文１つを唱えるたび、このクリーチャーの上に＋１/＋１カウンター１個を置く。",
+      "english": "Offspring {1}{W} (You may pay an additional {1}{W} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nVigilance\\nWhenever an opponent casts a noncreature spell, put a +1/+1 counter on this creature.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Pawpatch Recruit",
+      "face": "Pawpatch Recruit",
+      "token": "Pawpatch Recruit",
+      "alias": "Pawpatch Recruit",
+      "key": "BLB/187",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nトランプルあなたがコントロールしているクリーチャー１体が、対戦相手がコントロールしている呪文や能力の対象となるたび、あなたがコントロールしていてそのクリーチャーでないクリーチャー１体を対象とする。それの上に+1/+1カウンター１個を置く。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nTrample\\nWhenever a creature you control becomes the target of a spell or ability an opponent controls, put a +1/+1 counter on target creature you control other than that creature.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Iridescent Vinelasher",
+      "face": "Iridescent Vinelasher",
+      "token": "Iridescent Vinelasher",
+      "alias": "Iridescent Vinelasher",
+      "key": "BLB/359",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\n上陸 — あなたがコントロールしている土地１つが戦場に出るたび、対戦相手１人を対象とする。このクリーチャーはそのプレイヤーに１点のダメージを与える。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nLandfall — Whenever a land you control enters, this creature deals 1 damage to target opponent.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Osgood, Operation Double",
+      "face": "Osgood, Operation Double",
+      "token": "Osgood, Operation Double",
+      "alias": "Osgood, Operation Double",
+      "key": "WHO/958",
+      "rules": "あなたがこの呪文を唱えたとき、伝説でないことを除き、これのコピーであるトークン１つを生成する。\n{T}：{C}を加える。このマナは、アーティファクト・呪文を唱えるためか、アーティファクトの能力を起動するためにしか支払えない。パラドックス ― あなたがあなたの手札以外から呪文１つを唱えるたび、調査を行う。（手掛かり・トークン１つを生成する。それは、「{2}, このアーティファクトを生け贄に捧げる：カード１枚を引く。」を持つアーティファクトである。）",
+      "english": "When you cast this spell, create a token that's a copy of it, except it isn't legendary.\\n{T}: Add {C}. Spend this mana only to cast an artifact spell or activate an ability of an artifact.\\nParadox — Whenever you cast a spell from anywhere other than your hand, investigate. (Create a Clue token. It's an artifact with \"{2}, Sacrifice this token: Draw a card.\")",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Unwavering Initiate",
+      "face": "Unwavering Initiate",
+      "token": "Unwavering Initiate",
+      "alias": "Unwavering Initiate",
+      "key": "AKH/36",
+      "rules": "警戒不朽{4}{W} ({4}{W},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・人間・戦士であることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Vigilance\\nEmbalm {4}{W} ({4}{W}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Human Warrior with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Ral, Crackling Wit",
+      "face": "Ral, Crackling Wit",
+      "token": "Ral, Crackling Wit Emblem",
+      "alias": "Ral, Crackling Wit Emblem",
+      "key": "BLB/341",
+      "rules": "あなたがクリーチャーでない呪文１つを唱えるたび、轟く機知、ラルの上に忠誠カウンター１個を置く。\n＋１：果敢を持つ青赤の１/１のカワウソ・クリーチャー・トークン１体を生成する。\n－３：カード３枚を引く。その後、カード２枚を捨てる。\n－10：カード３枚を引く。「インスタントやソーサリーでありあなたが唱えるすべての呪文はストームを持つ。」を持つ紋章を得る。（あなたがインスタントやソーサリーである呪文１つを唱えるたび、それを、このターンにそれより前に唱えられた呪文１つにつき１回コピーする。）",
+      "english": "Whenever you cast a noncreature spell, put a loyalty counter on Ral, Crackling Wit.\\n[+1]: Create a 1/1 blue and red Otter creature token with prowess.\\n[-3]: Draw three cards, then discard two cards.\\n[-10]: Draw three cards. You get an emblem with \"Instant and sorcery spells you cast have storm.\" (Whenever you cast an instant or sorcery spell, copy it for each spell cast before it this turn.)",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Ultramarines Honour Guard",
+      "face": "Ultramarines Honour Guard",
+      "token": "Ultramarines Honour Guard",
+      "alias": "Ultramarines Honour Guard",
+      "key": "40K/18",
+      "rules": "分隊{2}（この呪文を唱えるための追加コストとして、あなたは望む回数の{2}を支払ってもよい。このクリーチャーが戦場に出たとき、その回数に等しい数の、これのコピーであるトークンを生成する。）\nあなたがコントロールしていてこれでないすべてのクリーチャーは＋１/＋１の修整を受ける。",
+      "english": "Squad {2} (As an additional cost to cast this spell, you may pay {2} any number of times. When this creature enters, create that many tokens that are copies of it.)\\nOther creatures you control get +1/+1.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Ajani Resolute",
+      "face": "Ajani Resolute",
+      "token": "Ajani Resolute Emblem",
+      "alias": "Ajani Resolute Emblem",
+      "key": "FRA/291",
+      "rules": "あなたがライフを得るたび、これの上に忠誠カウンター１個を置く。\n0：１点のライフを得る。\n-4：「アジャニの群れ仲間」という名前で「あなたがライフを得るたび、このトークンの上に＋１/＋１カウンター１個を置く。」を持つ白の２/２の猫・兵士・クリーチャー・トークン１体を生成する。\n-10：「あなたがコントロールしているすべてのクリーチャーは＋２/＋２の修整を受ける。」の紋章を得る。",
+      "english": "Whenever you gain life, put a loyalty counter on Ajani.\\n[0]: You gain 1 life.\\n[-4]: Create a 2/2 white Cat Soldier creature token named Ajani's Pridemate with \"Whenever you gain life, put a +1/+1 counter on this token.\"\\n[-10]: You get an emblem with \"Creatures you control get +2/+2.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Flowerfoot Swordmaster",
+      "face": "Flowerfoot Swordmaster",
+      "token": "Flowerfoot Swordmaster",
+      "alias": "Flowerfoot Swordmaster",
+      "key": "BLB/14",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\n雄姿 — このクリーチャーが各ターン内で初めてあなたがコントロールしている呪文や能力の対象になるたび、ターン終了時まで、あなたがコントロールしているすべてのハツカネズミは+1/+0の修整を受ける。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nValiant — Whenever this creature becomes the target of a spell or ability you control for the first time each turn, Mice you control get +1/+0 until end of turn.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Basri Ket",
+      "face": "Basri Ket",
+      "token": "Basri Ket Emblem",
+      "alias": "Basri Ket Emblem",
+      "key": "M21/7",
+      "rules": "[+1]：クリーチャー最大１体を対象とし、それの上に+1/+1カウンターを１個置く。ターン終了時まで、それは破壊不能を得る。\n[-2]：このターン、トークンでないクリーチャーが１体以上攻撃するたび、その数に等しい数の白の1/1の兵士クリーチャー・トークンをタップ状態かつ攻撃している状態で生成する。\n[-6]：あなたは「あなたのターンの戦闘の開始時に、白の1/1の兵士クリーチャー・トークンを１体生成し、その後あなたがコントロールしている各クリーチャーの上に+1/+1カウンターをそれぞれ１個置く。」を持つ紋章を得る。　忠誠度：3",
+      "english": "[+1]: Put a +1/+1 counter on up to one target creature. It gains indestructible until end of turn.\\n[-2]: Whenever one or more nontoken creatures attack this turn, create that many 1/1 white Soldier creature tokens that are tapped and attacking.\\n[-6]: You get an emblem with \"At the beginning of combat on your turn, create a 1/1 white Soldier creature token, then put a +1/+1 counter on each creature you control.\"",
+      "reason": "emblem, not a token-name link"
+    },
+    {
+      "card": "Glyph Keeper",
+      "face": "Glyph Keeper",
+      "token": "Glyph Keeper",
+      "alias": "Glyph Keeper",
+      "key": "AKH/55",
+      "rules": "飛行象形の守り手が各ターン最初に呪文や能力の対象になるたび、その呪文や能力を打ち消す。不朽{5}{U}{U} ({5}{U}{U},あなたの墓地からこのカードを追放する：マナ・コストと不朽を持たない白のゾンビ・スフィンクスであることを除き、これのコピーであるトークンを１体生成する。不朽はソーサリーとしてのみ行う。)",
+      "english": "Flying\\nWhenever Glyph Keeper becomes the target of a spell or ability for the first time each turn, counter that spell or ability.\\nEmbalm {5}{U}{U} ({5}{U}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a white Zombie Sphinx with no mana cost. Embalm only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Rust-Shield Rampager",
+      "face": "Rust-Shield Rampager",
+      "token": "Rust-Shield Rampager",
+      "alias": "Rust-Shield Rampager",
+      "key": "BLB/190",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nこのクリーチャーはパワーが２以下であるクリーチャーにはブロックされない。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nThis creature can't be blocked by creatures with power 2 or less.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Foreboding Steamboat",
+      "face": "Foreboding Steamboat",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "MKC/28",
+      "rules": "凶兆の蒸気船が戦場に出たとき、各プレイヤーはそれぞれ自分がコントロールしていてトークンでも機体でもないクリーチャー２体を選ぶ。凶兆の蒸気船が戦場を離れるまで、それらを追放する。凶兆の蒸気船が攻撃するたび、これにより追放されているカード１枚をオーナーの墓地に置く。そうしたなら、調査を行う。搭乗２",
+      "english": "When Foreboding Steamboat enters, each player chooses two nontoken, non-Vehicle creatures they control. Exile them until Foreboding Steamboat leaves the battlefield.\\nWhenever Foreboding Steamboat attacks, put a card exiled with it into its owner's graveyard. If you do, investigate.\\nCrew 2",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Sicarian Infiltrator",
+      "face": "Sicarian Infiltrator",
+      "token": "Sicarian Infiltrator",
+      "alias": "Sicarian Infiltrator",
+      "key": "40K/25",
+      "rules": "瞬速分隊{2}（この呪文を唱えるための追加コストとして、あなたは望む回数の{2}を支払ってもよい。このクリーチャーが戦場に出たとき、その回数に等しい数の、これのコピーであるトークンを生成する。）\n万機神の祈祷 — シカリアン・インフィルトレイターが戦場に出たとき、カード１枚を引く。",
+      "english": "Flash\\nSquad {2} (As an additional cost to cast this spell, you may pay {2} any number of times. When this creature enters, create that many tokens that are copies of it.)\\nBenediction of the Omnissiah — When Sicarian Infiltrator enters, draw a card.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Indulge // Excess",
+      "face": "Indulge",
+      "token": "Treasure",
+      "alias": "宝物",
+      "key": "NCC/46",
+      "rules": "このターン、あなたがコントロールしているクリーチャー１体が攻撃するたび、緑白の1/1の市民クリーチャー・トークン１体をタップ状態かつ攻撃している状態で生成する。",
+      "english": "Whenever a creature you control attacks this turn, create a 1/1 green and white Citizen creature token that's tapped and attacking.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Indulge // Excess",
+      "face": "Excess",
+      "token": "Citizen",
+      "alias": "市民",
+      "key": "NCC/46",
+      "rules": "余波 (この呪文はあなたの墓地からしか唱えられない。その後、これを追放する。)\nあなたがコントロールしていてこのターンにプレイヤーに戦闘ダメージを与えたクリーチャー１体につき１つの宝物トークンを生成する。",
+      "english": "Aftermath (Cast this spell only from your graveyard. Then exile it.)\\nCreate a Treasure token for each creature you controlled that dealt combat damage to a player this turn.",
+      "reason": "reference belongs to another face or type description"
+    },
+    {
+      "card": "Proven Combatant",
+      "face": "Proven Combatant",
+      "token": "Proven Combatant",
+      "alias": "Proven Combatant",
+      "key": "HOU/42",
+      "rules": "永遠{4}{U}{U} ({4}{U}{U},あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・人間・戦士であることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "Eternalize {4}{U}{U} ({4}{U}{U}, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Human Warrior with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Coruscation Mage",
+      "face": "Coruscation Mage",
+      "token": "Coruscation Mage",
+      "alias": "Coruscation Mage",
+      "key": "BLB/131",
+      "rules": "新生{2}（この呪文を唱えるに際し、追加で{2}を支払ってもよい。そうしたなら、このクリーチャーが戦場に出たとき、1/1でこれのコピーであるトークン１体を生成する。）\nあなたがクリーチャーでない呪文１つを唱えるたび、このクリーチャーは各対戦相手にそれぞれ１点のダメージを与える。",
+      "english": "Offspring {2} (You may pay an additional {2} as you cast this spell. If you do, when this creature enters, create a 1/1 token copy of it.)\\nWhenever you cast a noncreature spell, this creature deals 1 damage to each opponent.",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Fugitive of the Judoon",
+      "face": "Fugitive of the Judoon",
+      "token": "Clue",
+      "alias": "手掛かり",
+      "key": "WHO/103",
+      "rules": "（この英雄譚が出た際とあなたのドロー・ステップの後に、伝承カウンター１個を加える。IIIの後に、生け贄に捧げる。）\nI — 護法{2}を持つ白の１/１の人間・クリーチャー・トークン１体と、白の４/４のエイリアン・サイ・クリーチャー・トークン１体を生成する。\nII — 調査を行う。\nIII — あなたは「あなたがコントロールしている人間１体と、あなたがコントロールしているアーティファクト１つを追放する。」を選んでもよい。そうしたなら、あなたのライブラリーからドクター・カード１枚を探し、戦場に出す。その後、ライブラリーを切り直す。",
+      "english": "(As this Saga enters and after your draw step, add a lore counter. Sacrifice after III.)\\nI — Create a 1/1 white Human creature token with ward {2} and a 4/4 white Alien Rhino creature token.\\nII — Investigate.\\nIII — You may exile a Human you control and an artifact you control. If you do, search your library for a Doctor card, put it onto the battlefield, then shuffle.",
+      "reason": "investigate mechanic link"
+    },
+    {
+      "card": "Sinuous Striker",
+      "face": "Sinuous Striker",
+      "token": "Sinuous Striker",
+      "alias": "Sinuous Striker",
+      "key": "HOU/45",
+      "rules": "{U}：ターン終了時まで、しなやかな打撃者は+1/-1の修整を受ける。永遠 ― {3}{U}{U},カード１枚を捨てる。 ({3}{U}{U},カード１枚を捨てる,あなたの墓地からこのカードを追放する：マナ・コストと永遠を持たない黒の4/4のゾンビ・ナーガ・戦士であることを除き、これのコピーであるトークンを１体生成する。永遠はソーサリーとしてのみ行う。)",
+      "english": "{U}: Sinuous Striker gets +1/-1 until end of turn.\\nEternalize—{3}{U}{U}, Discard a card. ({3}{U}{U}, Discard a card, Exile this card from your graveyard: Create a token that's a copy of it, except it's a 4/4 black Zombie Snake Warrior with no mana cost. Eternalize only as a sorcery.)",
+      "reason": "copy of source card; uses mechanic link"
+    },
+    {
+      "card": "Zephyrim",
+      "face": "Zephyrim",
+      "token": "Zephyrim",
+      "alias": "Zephyrim",
+      "key": "40K/20",
+      "rules": "分隊{2}（この呪文を唱えるための追加コストとして、あなたは望む回数の{2}を支払ってもよい。このクリーチャーが戦場に出たとき、その回数に等しい数の、これのコピーであるトークンを生成する。）\n飛行、警戒奇跡{1}{W}（あなたがこのターンに最初に引いたカードとしてこのカードを引き、すぐに公開したとき、あなたはこれを奇跡コストで唱えてもよい。）",
+      "english": "Squad {2} (As an additional cost to cast this spell, you may pay {2} any number of times. When this creature enters, create that many tokens that are copies of it.)\\nFlying, vigilance\\nMiracle {1}{W} (You may cast this card for its miracle cost when you draw it if it's the first card you drew this turn.)",
+      "reason": "copy of source card; uses mechanic link"
+    }
+  ]
+}

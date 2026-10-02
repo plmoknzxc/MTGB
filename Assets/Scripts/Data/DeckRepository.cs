@@ -17,6 +17,8 @@ public static class DeckRepository
     }
 
     public static string DeckRoot => Path.Combine(PrintingKeyUtility.ApplicationRoot, FolderName);
+    private static string EmptyMarker => Path.Combine(DeckRoot, ".mtgb-empty");
+    public static bool WasExplicitlyEmptied => File.Exists(EmptyMarker);
 
     public static IReadOnlyList<DeckDefinition> LoadAll()
     {
@@ -47,6 +49,8 @@ public static class DeckRepository
 
             if (deck == null) return null;
             if (string.IsNullOrWhiteSpace(deck.name)) deck.name = Path.GetFileNameWithoutExtension(path);
+            if (string.IsNullOrWhiteSpace(deck.format)) deck.format = "standard";
+            if (string.IsNullOrWhiteSpace(deck.banlist)) deck.banlist = "current";
             if (deck.commanders == null) deck.commanders = new List<DeckEntry>();
             if (deck.cards == null) deck.cards = new List<DeckEntry>();
             if (deck.sideboard == null) deck.sideboard = new List<DeckEntry>();
@@ -72,15 +76,85 @@ public static class DeckRepository
         return path;
     }
 
+    // Saving an existing deck with a new name replaces its file instead of creating a copy.
+    public static string SaveReplacing(string originalName, DeckDefinition deck)
+    {
+        if (deck == null) throw new ArgumentNullException(nameof(deck));
+        EnsureFolder();
+        string source = FindUniqueDeckPath(originalName);
+        if (source == null) throw new FileNotFoundException("找不到原卡组文件，请先重载。", originalName);
+        string basis = MakeSafeFileName(string.IsNullOrWhiteSpace(deck.name) ? "New Deck" : deck.name).TrimEnd('.', ' ');
+        if (string.IsNullOrEmpty(basis)) basis = "Deck";
+        string destination = null;
+        string savedName = null;
+        for (int i = 0; i < 10000; i++)
+        {
+            string candidateName = basis + (i == 0 ? "" : " (" + i + ")");
+            string candidatePath = Path.Combine(DeckRoot, candidateName + Extension);
+            if (!string.Equals(source, candidatePath, StringComparison.OrdinalIgnoreCase) && File.Exists(candidatePath)) continue;
+            destination = candidatePath;
+            savedName = candidateName;
+            break;
+        }
+        if (destination == null) throw new IOException("同名卡组过多，请换一个名称。");
+        deck.name = savedName;
+        Normalize(deck);
+        string content = SerializeLineDeck(deck);
+        if (string.Equals(source, destination, StringComparison.OrdinalIgnoreCase))
+        {
+            File.WriteAllText(source, content);
+            return source;
+        }
+        string temporary = Path.Combine(DeckRoot, ".mtgb-rename-" + Guid.NewGuid().ToString("N") + ".tmp");
+        try
+        {
+            File.WriteAllText(temporary, content);
+            File.Move(temporary, destination);
+            try { File.Delete(source); }
+            catch
+            {
+                if (File.Exists(source)) File.Delete(destination);
+                throw;
+            }
+            return destination;
+        }
+        finally { if (File.Exists(temporary)) File.Delete(temporary); }
+    }
+
+    private static string FindUniqueDeckPath(string deckName)
+    {
+        if (string.IsNullOrWhiteSpace(deckName)) return null;
+        string match = null;
+        foreach (string path in EnumerateDeckFiles())
+        {
+            DeckDefinition existing = Load(path);
+            if (existing == null || !string.Equals(existing.name, deckName, StringComparison.OrdinalIgnoreCase)) continue;
+            if (match != null) throw new IOException("存在同名卡组文件，无法确定要修改哪一份。");
+            match = path;
+        }
+        return match;
+    }
+
+    public static bool DeleteByName(string deckName)
+    {
+        EnsureFolder();
+        string match = FindUniqueDeckPath(deckName);
+        if (match == null) return false;
+        File.Delete(match);
+        if (EnumerateDeckFiles().Length == 0) File.WriteAllText(EmptyMarker, string.Empty);
+        return true;
+    }
+
     public static DeckDefinition CreateDefaultDeck(IReadOnlyList<CardDefinition> cards)
     {
         var deck = new DeckDefinition { name = "Starter" };
-        AddKnownOrFirst(deck, cards, "MTGB", "1", 40);
-        AddKnownOrFirst(deck, cards, "MTGB", "8", 4);
-        AddKnownOrFirst(deck, cards, "MTGB", "10", 4);
-        AddKnownOrFirst(deck, cards, "MTGB", "9", 4);
-        AddKnownOrFirst(deck, cards, "MTGB", "11", 4);
-        AddKnownOrFirst(deck, cards, "SOS", "65", 4);
+        AddKnown(deck, cards, "10E", "376", 36);
+        AddKnown(deck, cards, "2ED", "162", 4);
+        AddKnown(deck, cards, "10E", "224", 4);
+        AddKnown(deck, cards, "10E", "232", 4);
+        AddKnown(deck, cards, "10E", "209", 4);
+        AddKnown(deck, cards, "7ED", "226", 4);
+        AddKnown(deck, cards, "10E", "212", 4);
         Normalize(deck);
         return deck;
     }
@@ -94,8 +168,6 @@ public static class DeckRepository
             warning = "No deck selected.";
             return runtimeDeck;
         }
-
-        EnforceCopyLimits(deck, cards);
 
         var missing = new List<string>();
         for (int i = 0; i < deck.cards.Count; i++)
@@ -171,7 +243,7 @@ public static class DeckRepository
     {
         if (deck == null || card == null) return 0;
         if (IsUnlimitedCopies(card)) return int.MaxValue;
-        return Mathf.Max(0, DefaultCopyLimit - CountCopies(deck, card));
+        return Mathf.Max(0, card.forgeDeckLimit - CountCopies(deck, card));
     }
 
     public static bool EnforceCopyLimits(DeckDefinition deck, IReadOnlyList<CardDefinition> cards)
@@ -220,14 +292,14 @@ public static class DeckRepository
                 if (string.Equals(card.setCode, setCode, StringComparison.OrdinalIgnoreCase)
                     && string.Equals(card.CollectorNumber, collectorNumber, StringComparison.OrdinalIgnoreCase))
                 {
-                    return card;
+                    return card.forgeAmbiguous ? null : card;
                 }
             }
             return null; // An explicit printing must never fall back to another card's local ID.
         }
 
         if (!string.IsNullOrWhiteSpace(setCode) || !string.IsNullOrWhiteSpace(collectorNumber)) return null;
-        return entry.cardId == 0 ? null : FindById(cards, entry.cardId);
+        return null; // Legacy local IDs cannot identify a Forge printing.
     }
 
     private static bool LooksLikeJson(string content)
@@ -262,6 +334,16 @@ public static class DeckRepository
                 deck.name = line.Substring(6).Trim();
                 continue;
             }
+            if (line.StartsWith("#format ", StringComparison.OrdinalIgnoreCase))
+            {
+                deck.format = line.Substring(8).Trim().ToLowerInvariant();
+                continue;
+            }
+            if (line.StartsWith("#banlist ", StringComparison.OrdinalIgnoreCase))
+            {
+                deck.banlist = line.Substring(9).Trim();
+                continue;
+            }
 
             if (line.StartsWith("//", StringComparison.Ordinal)) continue;
             if (line.StartsWith("#", StringComparison.Ordinal) || line.StartsWith("!", StringComparison.Ordinal))
@@ -292,11 +374,13 @@ public static class DeckRepository
         return deck;
     }
 
-    private static string SerializeLineDeck(DeckDefinition deck)
+    public static string SerializeLineDeck(DeckDefinition deck)
     {
         var lines = new List<string>
         {
-            "#name " + (string.IsNullOrWhiteSpace(deck.name) ? "New Deck" : deck.name.Trim())
+            "#name " + (string.IsNullOrWhiteSpace(deck.name) ? "New Deck" : deck.name.Trim()),
+            "#format " + (string.IsNullOrWhiteSpace(deck.format) ? "standard" : deck.format.Trim()),
+            "#banlist " + (string.IsNullOrWhiteSpace(deck.banlist) ? "current" : deck.banlist.Trim())
         };
 
         if (deck.commanders != null && deck.commanders.Count > 0)
@@ -310,6 +394,25 @@ public static class DeckRepository
         lines.Add("!side");
         AppendDeckLines(lines, deck.sideboard);
         return string.Join(Environment.NewLine, lines) + Environment.NewLine;
+    }
+
+    // Import and Save As must never overwrite the original, including sanitized-name collisions.
+    public static string SaveNew(DeckDefinition deck)
+    {
+        if(deck==null)throw new ArgumentNullException(nameof(deck));
+        EnsureFolder();
+        string basis=MakeSafeFileName(string.IsNullOrWhiteSpace(deck.name)?"Imported Deck":deck.name).TrimEnd('.', ' ');
+        if(string.IsNullOrEmpty(basis))basis="Deck";
+        for(int i=0;i<10000;i++)
+        {
+            string name=basis+(i==0?"":" ("+i+")"), path=Path.Combine(DeckRoot,name+Extension);
+            if(File.Exists(path))continue;
+            using(var stream=new FileStream(path,FileMode.CreateNew,FileAccess.Write))
+            using(var writer=new StreamWriter(stream,new System.Text.UTF8Encoding(false)))
+            { deck.name=name;writer.Write(SerializeLineDeck(deck)); }
+            return path;
+        }
+        throw new IOException("同名卡组过多，请换一个名称。");
     }
 
     private static void AppendDeckLines(List<string> lines, List<DeckEntry> entries)
@@ -432,7 +535,7 @@ public static class DeckRepository
                 continue;
             }
 
-            int max = card != null && IsUnlimitedCopies(card) ? int.MaxValue : DefaultCopyLimit;
+            int max = card == null ? DefaultCopyLimit : IsUnlimitedCopies(card) ? int.MaxValue : card.forgeDeckLimit;
             used.TryGetValue(key, out int current);
             int allowed = max == int.MaxValue ? entry.count : Mathf.Max(0, max - current);
             if (allowed <= 0)
@@ -457,7 +560,7 @@ public static class DeckRepository
 
     private static bool IsUnlimitedCopies(CardDefinition card)
     {
-        return card != null && card.HasType(CardType.Land) && card.HasSupertype(CardSupertype.Basic);
+        return card != null && card.forgeDeckLimit < 0;
     }
 
     private static int CountCopies(DeckDefinition deck, CardDefinition card)
@@ -480,11 +583,10 @@ public static class DeckRepository
         return count;
     }
 
-    private static void AddKnownOrFirst(DeckDefinition deck, IReadOnlyList<CardDefinition> cards, string setCode, string collector, int count)
+    private static void AddKnown(DeckDefinition deck, IReadOnlyList<CardDefinition> cards, string setCode, string collector, int count)
     {
         CardDefinition card = ResolveCard(new DeckEntry { setCode = setCode, collectorNumber = collector }, cards);
-        if (card == null && cards != null && cards.Count > 0) card = cards[Mathf.Min(deck.cards.Count, cards.Count - 1)];
-        if (card == null) return;
+        if (card == null) throw new InvalidDataException("Starter printing is unavailable: " + setCode + "/" + collector);
 
         AddCard(deck, card, count, false);
     }
@@ -536,7 +638,7 @@ public static class DeckRepository
         if (entry == null || card == null) return false;
         if (!string.IsNullOrWhiteSpace(entry.PrintingKey))
             return string.Equals(entry.PrintingKey, card.PrintingKey, StringComparison.OrdinalIgnoreCase);
-        return entry.cardId != 0 && ReferenceEquals(CardDatabaseRepository.FindById(entry.cardId), card);
+        return false;
     }
 
     private static bool EntryMatchesEntry(DeckEntry entry, DeckEntry match)

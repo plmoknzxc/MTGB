@@ -1,0 +1,10 @@
+{
+  "name": "Skyknight Vanguard",
+  "key": "M20/218",
+  "previous": "飞行\n每当此生物攻击时，派出一个1/1白色战士衍生生物，其为横置且正进行攻击。",
+  "replacement": "飞行\n每当此生物攻击时，派出一个1/1白色士兵衍生生物，其为横置且正进行攻击。",
+  "kind": "project presentation erratum of the printed Chinese creature type",
+  "printedImage": "CardImages/zh-CN/M20/218.jpg",
+  "oracle": "https://scryfall.com/card/m20/218/skyknight-vanguard",
+  "ruleEvidence": "Current English creates Soldier; the Chinese printed image says Warrior. Engine rules unchanged."
+}

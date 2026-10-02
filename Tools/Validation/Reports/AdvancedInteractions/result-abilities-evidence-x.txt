@@ -1,0 +1,3 @@
+PASS abilities: Grist opens three loyalty options directly; cancellation preserves loyalty; reopening and +1 activation enters stack
+PASS evidence: Forge mana-value tally, zero-value land, under-threshold gate, deselection, cancellation without exile, exact threshold and real exile/animation
+PASS X: numeric choice X=2, four mana paid, Walking Ballista enters as 2/2

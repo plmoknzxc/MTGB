@@ -1,0 +1,1 @@
+PASS: persistent identity; same-state land stacks; tapped states split; individual expansion; hover; cancelled/valid drag; duplicate prevention; 20-card adaptive layout without pagination.

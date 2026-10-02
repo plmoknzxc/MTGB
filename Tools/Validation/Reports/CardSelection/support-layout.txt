@@ -1,0 +1,1 @@
+PASS: both seats' artifacts, enchantments, planeswalkers, battles on side; animated land in creature row; own side cards raycast correctly.

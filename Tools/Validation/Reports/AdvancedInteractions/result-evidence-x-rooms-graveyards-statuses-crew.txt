@@ -1,0 +1,6 @@
+PASS evidence: Forge mana-value tally, zero-value land, under-threshold gate, deselection, cancellation without exile, exact threshold and real exile/animation
+PASS X: numeric choice X=2, four mana paid, Walking Ballista enters as 2/2
+PASS rooms: separate door names/state, real unlock cost and both doors remain unlocked
+PASS graveyards: same-name cards in both graveyards, distinct owners and IDs, opponent card exiled, own copy retained
+PASS statuses: engine counters, stun, current combat keywords and modified 4/5 stats
+PASS crew: choose crew ability, select and tap creature cost, vehicle becomes creature on resolution

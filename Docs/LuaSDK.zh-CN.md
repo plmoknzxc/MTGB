@@ -1,5 +1,7 @@
 # MTGB Lua API 与数据编辑器接入规范
 
+> 历史迁移参考（2026-09-15）：MTGB 已切换 Forge，旧规则执行代码、Lua DLL 和绑定已退出。本文保留旧 DIY 的格式说明，不再作为新功能的 SDK 或模板开发目标。Data Editor 的 Forge 迁移另行实施；参见 [Forge 迁移计划](ForgeMigration.zh-CN.md)。
+
 本文档对应：
 
 - MTGB 数据库 Schema：`8`
@@ -15,6 +17,75 @@
 - `Assets/Scripts/Scripting/CardScriptApi.cs`
 - `Assets/Scripts/CardDefinition.cs`
 - `Assets/Scripts/Core/GameEventRuntime.cs`
+
+## 原始卡文生成（2026-09-14）
+
+Data Editor 的“效果描述”页点击 **从卡文生成**，直接使用基本信息中有序规则条目组成的卡文。无需另写 DSL。保存时重新读取卡文并编译；未知句子会列出行号并阻止保存，不忽略未实现的异能。支持中英文的部分完整句式，属于离线确定性解析，不是任意自然语言或完整 Oracle 卡池解释器。
+
+原有完整句式保持原始 Lua 输出兼容。新增 `ComposableCardRules` 将卡文解析成能力、费用、目标、效果序列和有限结算条件，再交给确定性后端生成 Lua。支持顺序组合抓牌、弃牌、获得/失去生命、伤害、消灭、放逐、回手、横置/重置、回合内强化、临时关键词和正负指示物；能力时机包含咒语结算、自身进场/死亡/攻击、无目标启动异能。弃牌通过异步续接执行后续效果，空手牌直接继续。固定数量上限 1000。
+
+部分中英文句式可生成相同效果，但并非双语任意句式等价解析。英文 `If you control a creature/artifact/enchantment, ...` 目前支持咒语或启动异能结算时检查，条件内仅支持单个同步效果。介入式 if、条件内多效果/异步选择、多目标组、目标为“任意目标”（含旅法师/战役）、模式、多面、副特征及大量机制仍会明确拒绝。原始卡文不是 Forge 脚本；目前没有追平 Forge 全机制。
+
+可组合示例：`Draw two cards, then discard a card. You gain 3 life.`；`When Probe enters, draw a card. You gain 2 life.`；`Put two +1/+1 counters on target creature. Draw a card.`。牌名只核对自身指代，不按卡名或系列查表。新增输出带 `composable-1` 标记，保留格式 2；运行端和编辑器须同步更新。
+
+扩展表复用 `card_script_descriptions`，`format_version = 2` 表示原始卡文，`source` 必须与正面规则文本完全一致。格式 1 继续表示高级 DSL，基础数据库 schema 仍为 8。生成脚本由 `CardRulesTextCompiler` 编译，编辑器与运行端逐字同步。加载时重编译并比对卡文和 Lua，旧客户端会拒绝不认识的格式；生成卡的目标完全由脚本声明，不能把进场触发目标当作施放目标。
+
+抓牌后弃牌使用异步选择，期间没有优先权；读取效果操控者的手牌，不依赖来源当前操控者。普通 `GetZoneCard` 不允许读取手牌或牌库，需要使用带来源权限检查的 `GetMatchingZoneCards`。
+
+雪境费用 `{S}` 消耗由雪境来源产生的法术力；雪境是来源属性，不是新颜色。该属性随法术力池序列化、确定性状态、支付与阶段清空处理。联机协议为 v11，双方均须更新。
+
+## 效果描述编译（高级 DSL）
+
+Data Editor 的“效果描述”页可启用描述模式、插入模板、检查/生成、保存卡牌或导出 Lua。描述采用固定语法，不解释自然语言卡文，也不兼容直接粘贴 Forge 脚本。基本信息中的规则条目仍是展示卡文，需要作者与效果描述核对。
+
+```text
+版本:1
+[施放结算]
+目标:任意生物或玩家
+伤害:目标,3
+```
+
+源描述和生成 Lua 在同一数据库事务中保存到可选扩展表 `card_script_descriptions(card_key, format_version, source, generated_lua)`。数据库基础 schema 保持 8，描述格式独立版本为 1；旧手写 Lua 库无需改动。**描述卡必须使用本次更新后的游戏端与编辑器**，旧客户端不识别此扩展。运行端重新编译并比对生成结果，不一致或版本不支持时拒绝该库。
+
+扩展包中，生成和手写 Lua 一律读取 `script_path` 指向的 `scripts/*.lua` 文件。生成文件必须与来源编译结果及数据库校验快照一致；缺失或被修改会拒绝加载，不回退执行数据库中的 Lua。取消描述模式并保存后可以手写当前文件；再启用生成会另建文件保留手写成果。旧散装数据库保留原有嵌入式读取，导出扩展包时补齐独立文件。显式“导出 Lua”用于另存一份，不改变模式。联机内容清单已包含实际执行的 Lua；当前雪境法术力与结算状态使用联机协议 v11。
+
+语法与范围：
+
+| 描述 | 含义 |
+|---|---|
+| `版本:1` | 第一条非注释行；`#` 开头为注释 |
+| `[施放结算]` | 瞬间/法术结算，只能有一个段落 |
+| `[进场]`、`[死亡]`、`[攻击]` | 此牌对应的触发；死亡/攻击要求生物；目标在入堆叠前选择 |
+| `[启动]` | 必填 `名称` 和 `费用`，可填 `时机:法术时机` 或 `瞬间时机` |
+| `[静态]` | 固有关键词与产费能力 |
+| `目标:任意生物,0,2` | 至多两个目标；省略数量即恰好一个；最多 32 个 |
+| `目标:任意永久物,1,1,神器或结界` | 第四参数可为神器、结界、神器或结界，宣告与结算均使用类别筛选 |
+| `抓牌:你,2` | 玩家参数支持你、对手、已声明的玩家目标 |
+| `弃牌:你,1` | 选择完成后继续后续效果；数量不足时弃掉所有手牌 |
+| `条件效果:你控制生物;抓牌:你,1` | 结算时检查己方生物；也支持你控制神器、你控制结界；内部仅支持同步效果 |
+| `获得生命:你,3`、`失去生命:对手,2` | 玩家生命变化 |
+| `伤害:目标,3` | 对每个目标分别造成指定伤害；也支持你、对手、自身 |
+| `消灭:目标`、`放逐:目标`、`回手:目标` | 永久物区域操作；也支持自身 |
+| `横置:目标`、`重置:自身` | 横置/重置永久物 |
+| `强化:目标,3,3` | 生物 +3/+3 直到回合结束；负数允许 |
+| `赋予关键词:目标,践踏` | 直到回合结束 |
+| `指示物:自身,+1/+1,1` | 增减指定名称的指示物 |
+| `衍生物:SET,编号,你,2` | 创建已安装的指定卡牌的衍生物；不会自动安装被引用卡 |
+| `可选:是` | 在结算时选择是否执行整段，不免除费用；后续效果只在选择执行后进行 |
+| `附加费用:Discard:1` | 必须支付的额外施放费用，使用第 7 节费用格式 |
+| `X:0,20` | 施放时声明 X，效果数值可填 X；实际费用取卡牌费用中的 `{X}` |
+| `关键词:飞行,警戒` | 静态段；支持飞行、敏捷、警戒、践踏、死触、系命、延势、守军、先攻、连击、辟邪、不灭 |
+| `产费:{G}` | 静态段；注册横置产费能力 |
+
+目标范围包括任意/对手/己方生物、任意/对手/己方永久物、任意/对手玩家、任意/对手生物或玩家。永久物效果不能配玩家目标，玩家效果不能配生物目标。多个效果按书写顺序执行；多个进场/攻击/启动段落是不同异能；死亡效果合并在一个段落中。
+
+v1 支持单面单特征卡，最多 32 段、每段 64 条、描述 64 KiB、输出 Lua 256 KiB。数值范围 0–1000，强化与指示物可使用 -1000–1000。未知段落、字段、费用、关键词、错误参数或不支持的组合会给出行号并阻止保存，不生成空效果兜底。
+
+尚不支持多面/副特征、通用条件分支、通用持续/替代效应描述，以及启动异能的宣告目标。这些卡继续使用手写 Lua。**描述检查通过、Lua 可加载与实际行为正确是三个不同的验收结果。**
+
+`Game.GetEffectController(source)` 在堆叠结算及其异步选择回调中返回该咒语/异能的操控者；其他时机返回来源的当前操控者。与永久物当前操控者、拥有者分别处理。`Game.GetEffectSource(source)` 在来源离场成为新物件时返回 nil，防止旧异能修改重进战场的同一张牌；在其他时机返回来源。生成代码使用这两个 API 处理“你”和“自身”。选项选择同样使用效果操控者。
+
+编译器源码在游戏与编辑器中保持逐字同步，由 `Tools/Validation/Check-AuthoringSdk.ps1` 检查。编辑器验证入口为 `--validate-descriptions <输出目录>`；游戏专项入口 `DescriptionRulesValidationMenu.ValidateFromCommandLine` 读取项目根目录的 `description-database-path.txt`（内容是前述临时测试数据库路径），结果写到根目录 `description-rules-result.txt`。请在独立批处理验证项目中运行，不占用交互编辑器主线程。
 
 ## 1. 文件路径与卡牌标识
 
@@ -370,8 +441,11 @@ Game.LoseLife(playerId: integer, amount: integer): void
 Game.LoseLifeForOwner(source: Card, amount: integer): void
 Game.GetOwner(card: Card): integer
 Game.GetController(card: Card): integer
+Game.GetEffectController(card: Card): integer
+Game.GetEffectSource(card: Card): Card?
 Game.ChangeController(card: Card, playerId: integer): boolean
 Game.GetOpponent(playerId: integer): integer
+Game.WinGame(playerId: integer): boolean
 ```
 
 ### 6.2 防止、替代和重生
@@ -413,6 +487,10 @@ Game.GetTargetPlayerAt(source: Card, index: integer): integer
 Game.AddTargetCard(source: Card, target: Card): boolean
 Game.AddTargetPlayer(source: Card, playerId: integer): boolean
 Game.ClearTargets(source: Card): void
+Game.RegisterTriggerTargets(card: Card, hook: string, prompt: string,
+  mode: Game.TargetMode, minimum: integer, maximum: integer,
+  filterHook: string = ""): boolean
+Game.CounterTargetStackObject(source: Card): boolean
 ```
 
 ### 6.4 施放声明、模式、X 与目标组
@@ -517,6 +595,9 @@ Game.Mill(playerId: integer, count: integer): integer
 Game.Discard(card: Card): boolean
 Game.ReturnToHand(card: Card): boolean
 Game.CounterSpell(card: Card): boolean
+Game.CounterTargetStackObject(source: Card): boolean
+Game.WinGame(playerId: integer): boolean
+Game.ChangeCardFace(card: Card, faceIndex: integer): boolean
 Game.CastWithoutPayingMana(card: Card, featureIndex: integer): boolean
 ```
 
@@ -584,6 +665,7 @@ Game.IsRoomUnlocked(card: Card, faceIndex: integer,
 Game.Prepare(card: Card, featureIndex: integer): boolean
 Game.StopPreparing(card: Card): boolean
 Game.SolveCase(card: Card): boolean
+Game.ChangeCardFace(card: Card, faceIndex: integer): boolean
 ```
 
 历险、Omen、备法、房间、分割牌、职业和案件不使用独立脚本。脚本应通过当前 `FeatureRole`、`FeatureIndex`、`FeatureFace` 和数据库特征结构分派行为。
@@ -900,7 +982,7 @@ return Card
 
 - 单个 Lua 源文件最大 `256 KiB`。
 - 单次 Hook 指令预算为 `200,000`，每 `1,000` 条检查一次。
-- 不允许嵌套执行 Lua Hook。
+- 允许同步嵌套 Lua Hook，最多 32 层；共享外层指令预算，每次回调至少计入 1,000 条指令。
 - 单个脚本实例保留对象图估算上限为 `4 MiB`。
 - 单个实例最多保留 `4,096` 个 table、`32,768` 个 table 项。
 - 超限脚本会被隔离并停止继续执行。
@@ -939,3 +1021,27 @@ MTGB-DataEditor 的 Lua 功能至少应完成：
 数据库结构为 schema 8，Lua API 保持 2。cardID/ID 是库内整数编号，不保证不同数据库之间唯一。跨库定位卡牌使用系列代号与收藏编号；对局目标使用物件身份。
 
 Lua 发起的事件可以同步调用自定义 Lua 替代条件和处理 Hook；嵌套调用使用独立 VM 栈并共享外层执行预算，最多 32 层。每次回调至少计入 1000 指令预算，不能通过拆成短回调绕过 200000 指令总额。调用结束恢复外层事件上下文。
+
+## 复杂规则接口（2026-09-12，API 2 增量）
+
+```text
+Game.RegisterTriggerTargets(card: Card, hook: string, prompt: string,
+    mode: Game.TargetMode, minimum: integer, maximum: integer,
+    filterHook: string = ""): boolean
+```
+
+在 `OnInit` 中为触发 Hook（包括 `OnChapter1` 等章节）声明一组互不重复的目标，数量范围为 0–32。引擎在异能进入堆叠前让操控者选择目标；达不到最少数量时移除该异能。结算时重新检查物件身份与目标合法性：原有目标全部失效则整个异能不结算，部分仍合法则只保留合法目标。零目标的可选声明正常结算。伤害等效果通过既有 `Game.DealDamageToTarget`、目标读取 API 执行，不能再次在结算 Hook 中选择目标。
+
+`Game.CounterTargetStackObject(source)` 反击 `source` 已选择的第一个堆叠对象，可以是咒语、触发式或启动式异能；使用堆叠对象身份，不会把章节来源永久物当作被反击的咒语。施放声明使用既有堆叠目标接口选择该对象。
+
+`Game.WinGame(playerId)` 供脚本在自行检查胜利条件后结束当前双人对局，结果原因为 `CardEffect`；无效玩家或已结束对局返回 false。该接口不自动推导牌面条件，也不实现多人、团队、不能获胜/不能输等比赛变体。
+
+`Game.ChangeCardFace(card, faceIndex)` 切换战场上已有的卡面，重新计算特征并保留物件身份。它不表示施放背面，不提供任意双面牌规则文字的自动解释。离开战场进入手牌、墓地或放逐区时恢复正面。
+
+房间两扇门均有解锁入口，解锁本身为特殊动作，其 Hook 作为触发处理。职业升级支付费用后进入堆叠，结算时才改变等级；被反击或来源离场重进不会升级。案件仅在操控者的结束步骤触发 `OnCaseCheck`，脚本负责检查解明条件后调用 `Game.SolveCase`。备法副本可以取消施放后再次施放，确认施放才消耗准备状态。
+
+回归入口为 Unity 菜单 `MTGB/Validate Complex Rules`，并已纳入 `MTGB/Validate Project`。这是权威规则命令及视图往返验证，真实网络和新版战场鼠标交互另行验收。
+
+## 扩展包中的 Lua
+
+`.mtgbpack` 为 ZIP，使用 `manifest.json`、`cards.mtgbdb`、`scripts/`、`images/`。包内手写脚本路径相对包根，例如 `scripts/m65.lua`；无需系列子目录。自动生成 Lua 同样保存在 `scripts/`，数据库扩展表保留生成来源和校验快照，运行时执行文件。包内加载只使用该包资源，不能通过路径访问包外文件。Lua API 和效果行为不随打包变化。

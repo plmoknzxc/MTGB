@@ -1,0 +1,11 @@
+{
+  "availableJapaneseFaces": 54248,
+  "stats": {
+    "existing": 54246,
+    "downloaded": 2
+  },
+  "excluded": [],
+  "failures": [],
+  "source": "https://api.scryfall.com/bulk-data/all_cards",
+  "destination": "CardImages\\ja-JP"
+}

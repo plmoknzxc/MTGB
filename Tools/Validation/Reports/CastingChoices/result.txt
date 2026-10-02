@@ -1,0 +1,5 @@
+PASS Adventure: Stomp face, two damage, exile, creature cast from exile and enters battlefield
+PASS MDFC front: distinct spell preview, green payment, graveyard target returned to hand
+PASS MDFC back: separate face preview, cancel/reopen, land play and tapped back-face battlefield
+PASS Spree: cancel, toggle, reset, all three modes, four mana, both destructions and +1/+1
+PASS Omen: Exude Toxin face, X=4, non-Dragon dies, card shuffled into library

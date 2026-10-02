@@ -7,6 +7,7 @@ public sealed class OnlineRoomConfig
     public int startingLife = 20;
     public int firstPlayerSeat;
     public int bestOf = 1;
+    public string formatId = "none";
     public int minimumMainDeckSize = 60;
     public int maximumSideboardSize = 15;
     public bool allowCustomContent;
@@ -22,6 +23,7 @@ public sealed class OnlineSeriesState
     public int player2Wins;
     public int draws;
     public int winnerSeat;
+    public int nextChooserSeat;
     public bool betweenGames;
     public bool finished;
 
@@ -35,6 +37,7 @@ public sealed class OnlineSeriesState
         player2Wins = 0;
         draws = 0;
         winnerSeat = 0;
+        nextChooserSeat = 0;
         betweenGames = false;
         finished = false;
     }
@@ -47,6 +50,7 @@ public sealed class OnlineSeriesState
     public void RecordGameResult(int gameWinnerSeat)
     {
         if (finished) return;
+        if (gameWinnerSeat == 1 || gameWinnerSeat == 2) nextChooserSeat = 3 - gameWinnerSeat;
         if (gameWinnerSeat == 1) player1Wins++;
         else if (gameWinnerSeat == 2) player2Wins++;
         else draws++;
@@ -66,6 +70,7 @@ public sealed class OnlineSeriesState
 
 public sealed class OnlineRoomMember
 {
+    public bool IsSpectator => seat > 2;
     public int seat;
     public ulong clientId;
     public string displayName;
@@ -83,6 +88,7 @@ public sealed class OnlineRoomMember
 
 public sealed class OnlineRoomState : IDisposable
 {
+    public int playDrawChooserSeat;
     public string roomId;
     public int hostSeat;
     public OnlineRoomConfig config = new OnlineRoomConfig();

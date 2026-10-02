@@ -1,0 +1,5 @@
+PASS trigger
+PASS trigger-auto
+PASS mana
+PASS evoke
+PASS evoke-menu

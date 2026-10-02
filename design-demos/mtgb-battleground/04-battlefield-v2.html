@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>MTGB · 战场 UI 改造预览 · 曜石竞技场 V2</title>
+<!--
+  假设与说明（Junior pass）：
+  · 沿用已选方向「曜石竞技场」：#070A0F 底 / #11141B 面板 / #EDF2F8 正文 / #8995A9 次级
+    玩家蓝 #4285F4 / 对手红 #DC3C5A。大面积蓝红只用于阵营语义与主操作。
+  · 场景内容取自真实对局：Sapphire Schnee(蓝) vs Opponent(红)，第 4 回合第一主要阶段，
+    玩家拥有优先权；堆叠上有「成形野地」启动式异能；手牌悬停 Quick Study 触发左侧检视面板。
+  · 真实卡图仅 3 张（海岛 / 成形野地 / Quick Study），其余卡按游戏现状使用生成模板样式渲染，
+    蓝色扁平矩形 placeholder 一律替换为带色面包围的结构化模板卡。
+  · 所有图标为诚实占位（几何线条），正式生产再替换统一图标集。
+-->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#070A0F;color:#EDF2F8;
+  font-family:Bahnschrift,"Microsoft YaHei UI",sans-serif;-webkit-font-smoothing:antialiased}
+.stage{position:relative;width:100%;height:100%;isolation:isolate}
+/* 氛围：左下玩家蓝 / 右上对手红，极克制 */
+.stage:before{content:"";position:absolute;inset:0;z-index:-3;
+  background:
+    radial-gradient(1100px 700px at 8% 96%, rgba(66,133,244,.13), transparent 62%),
+    radial-gradient(1100px 700px at 94% 4%, rgba(220,60,90,.12), transparent 62%),
+    linear-gradient(180deg,#080B11 0%,#070A0F 52%,#080B11 100%)}
+.stage:after{content:"";position:absolute;inset:0;z-index:-2;opacity:.5;
+  background-image:linear-gradient(rgba(137,149,169,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(137,149,169,.045) 1px,transparent 1px);
+  background-size:96px 96px}
+
+/* ---------- 通用组件语言：细线框 + 切角 ---------- */
+.chamfer{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.micro{font-size:11px;letter-spacing:.22em;color:#8995A9;text-transform:uppercase}
+.micro b{color:#C7D0DC;font-weight:500}
+
+/* ---------- 顶栏 ---------- */
+.topbar{position:absolute;left:76px;right:76px;top:0;height:54px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid #1D222C;z-index:6}
+.brand{font-size:14px;letter-spacing:.3em;color:#AEB8C5}
+.topright{display:flex;gap:14px;align-items:center}
+.ghostchip{height:32px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:12px;
+  letter-spacing:.14em;color:#8995A9;border:1px solid #262D3A;background:rgba(17,20,27,.6)}
+.ghostchip:hover{color:#C7D0DC;border-color:#3A4150}
+
+/* ---------- 玩家身份面板 ---------- */
+.identity{position:absolute;width:330px;height:96px;display:flex;align-items:center;gap:14px;
+  padding:0 18px;background:rgba(17,20,27,.85);border:1px solid #262D3A;z-index:6}
+.identity:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px}
+.identity.blue:before{background:#4285F4}.identity.red:before{background:#DC3C5A}
+.avatar{width:44px;height:44px;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;
+  border:1px solid;flex:none;margin:0 6px}
+.avatar i{width:16px;height:16px;display:block;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.identity.blue .avatar{border-color:rgba(66,133,244,.7);background:rgba(66,133,244,.14)}
+.identity.blue .avatar i{background:#7AA8FF}
+.identity.red .avatar{border-color:rgba(220,60,90,.7);background:rgba(220,60,90,.14)}
+.identity.red .avatar i{background:#F0798F}
+.who .name{font-size:18px;letter-spacing:.04em;color:#EDF2F8}
+.who .sub{margin-top:4px;font-size:10px;letter-spacing:.24em;color:#8995A9}
+.life{margin-left:auto;text-align:right}
+.life .num{font-size:40px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+.life .cap{margin-top:4px;font-size:10px;letter-spacing:.3em;color:#8995A9}
+.identity.blue .life .num{color:#9FC2FF}.identity.red .life .num{color:#FF9FB0}
+
+/* ---------- 资源计数条 ---------- */
+.resrow{position:absolute;display:flex;gap:10px;z-index:6}
+.res{height:40px;display:flex;align-items:center;gap:10px;padding:0 14px;
+  background:rgba(17,20,27,.8);border:1px solid #262D3A}
+.res svg{width:15px;height:15px;stroke:#8995A9;fill:none;stroke-width:1.5}
+.res .n{font-size:16px;color:#EDF2F8;font-variant-numeric:tabular-nums;min-width:22px;text-align:right}
+.res .t{font-size:11px;letter-spacing:.14em;color:#8995A9}
+
+/* ---------- 战场分区面板 ---------- */
+.zone{position:absolute;left:340px;width:1180px;display:flex;flex-direction:column;gap:8px;
+  padding:10px 14px;background:rgba(19,23,31,.82);border:1px solid #2C3442}
+.zone .zonelabel{position:absolute;left:14px;top:10px;display:flex;align-items:center;gap:10px;
+  font-size:10px;letter-spacing:.26em;color:#5E6A7C}
+.zone .zonelabel i{width:22px;height:1px;background:#39414F}
+.zone .zonelabel.blue{color:#5D84C4}.zone .zonelabel.red{color:#C46477}
+.row{display:flex;align-items:flex-start;gap:14px;padding-left:120px}
+.row.lands{padding-left:120px;border-top:1px dashed #232A37;padding-top:8px;margin-top:0}
+.rowtag{position:absolute;left:14px;width:104px}
+.rowtag .cn{font-size:12px;letter-spacing:.2em;color:#77839A}
+.rowtag .en{margin-top:4px;font-size:9px;letter-spacing:.22em;color:#4A5464}
+
+/* ---------- 卡牌：真实图 / 生成模板 ---------- */
+.card{position:relative;flex:none;border-radius:7px;overflow:hidden;border:1px solid #30374344}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+.card.real{box-shadow:0 6px 18px rgba(0,0,0,.45)}
+/* 生成模板卡（游戏现状：无图时程序生成。此处为结构化占位，非扁平色块） */
+.gen{background:#0D1017;border:1px solid #38404E;border-radius:7px;overflow:hidden;
+  display:flex;flex-direction:column}
+.gen .nm{font-size:9px;letter-spacing:.02em;color:#DFE6EE;padding:4px 6px 3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;background:#161B24;border-bottom:1px solid #262D3A;
+  display:flex;justify-content:space-between;gap:4px}
+.gen .nm s{text-decoration:none;color:#8FA0B8;font-size:8px;flex:none}
+.gen .art{flex:1;margin:5px;border:1px solid #2A303C;display:flex;align-items:center;justify-content:center}
+.gen .art i{width:26%;height:26%;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.gen .tp{font-size:7px;letter-spacing:.14em;color:#93A0B4;padding:0 6px 4px;border-bottom:1px solid #232936}
+.gen .tx{flex:1;padding:4px 6px;display:flex;flex-direction:column;gap:3px}
+.gen .tx i{height:3px;border-radius:2px;background:#262D3A}
+.gen .tx i:nth-child(2){width:78%}.gen .tx i:nth-child(3){width:56%}
+.gen .pt{position:absolute;right:4px;bottom:4px;font-size:9px;color:#EDF2F8;background:#161B24;
+  border:1px solid #303743;padding:1px 5px;border-radius:3px;font-variant-numeric:tabular-nums}
+/* 颜色语义（生成卡美框用色，低饱和） */
+.gen.u .nm{background:#12202F}.gen.u .art{background:linear-gradient(150deg,#10263C,#0C1826)}
+.gen.u .art i{background:#3D6EA6}
+.gen.w .nm{background:#26241B}.gen.w .art{background:linear-gradient(150deg,#2B2818,#1B1A12)}
+.gen.w .art i{background:#A99F63}
+.gen.r .nm{background:#2A1518}.gen.r .art{background:linear-gradient(150deg,#33181C,#201014)}
+.gen.r .art i{background:#B04A55}
+.gen.c .nm{background:#1B1D22}.gen.c .art{background:linear-gradient(150deg,#20232B,#14161B)}
+.gen.c .art i{background:#5E6A7C}
+.gen.l .nm{background:#221E14}.gen.l .art{background:linear-gradient(150deg,#282214,#181509)}
+.gen.l .art i{background:#8F7B45}
+/* 横置：旋转 90°，占位容器保持行高 */
+.tapwrap{flex:none;display:flex;align-items:center;justify-content:center}
+.tapwrap .card,.tapwrap .gen{transform:rotate(90deg)}
+.tapwrap.s96{width:129px;height:92px}.tapwrap.s96>*{width:92px;height:129px}
+.card.s96{width:92px;height:129px}.gen.s96{width:92px;height:129px;position:relative}
+
+/* ---------- 对手手牌（卡背） ---------- */
+.ophand{position:absolute;left:50%;top:60px;transform:translateX(-50%);display:flex;z-index:4}
+.ophand .bk{width:84px;height:118px;margin-left:-18px;border-radius:6px;overflow:hidden;
+  border:1px solid #2A303C;box-shadow:0 4px 12px rgba(0,0,0,.4);position:relative}
+.ophand .bk:first-child{margin-left:0}
+.ophand .bk img{width:100%;height:100%;object-fit:cover;filter:brightness(.82)}
+.ophand .cnt{position:absolute;right:8px;bottom:6px;font-size:11px;color:#C7D0DC;
+  background:rgba(7,10,15,.78);border:1px solid #2A303C;padding:0 6px;border-radius:3px}
+
+/* ---------- 中线 / 部署线 / 堆叠 ---------- */
+.deployline{position:absolute;left:76px;right:76px;top:512px;height:1px;
+  background:linear-gradient(90deg,rgba(220,60,90,.45),rgba(137,149,169,.22) 46%,rgba(66,133,244,.45))}
+.deployline:before{content:"";position:absolute;left:50%;top:-4px;width:9px;height:9px;
+  transform:translateX(-50%) rotate(45deg);background:#070A0F;border:1px solid #4A5464}
+.deployline .cap{position:absolute;left:50%;top:-24px;transform:translateX(-50%);
+  font-size:9px;letter-spacing:.3em;color:#4A5464}
+.stackrow{position:absolute;left:340px;top:524px;display:flex;align-items:center;gap:12px;z-index:5}
+.stackrow .cap{font-size:10px;letter-spacing:.24em;color:#5E6A7C}
+.stackitem{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px 0 8px;
+  background:rgba(20,24,33,.92);border:1px solid #39414F}
+.stackitem:before{content:"";width:30px;height:42px;flex:none;border:1px solid #4A5464;border-radius:4px;
+  background:linear-gradient(150deg,#1B202B,#10141B)}
+.stackitem .t1{font-size:14px;color:#EDF2F8}
+.stackitem .t2{font-size:10px;letter-spacing:.16em;color:#8995A9;margin-top:2px}
+.stackitem .st{margin-left:14px;font-size:10px;letter-spacing:.2em;color:#7AA8FF;
+  border:1px solid rgba(66,133,244,.4);padding:3px 8px}
+
+/* ---------- 手牌 ---------- */
+.hand{position:absolute;left:50%;bottom:-30px;transform:translateX(-50%);display:flex;z-index:10}
+.hcard{width:142px;height:198px;margin-left:-34px;transform:rotate(var(--r)) translateY(var(--y));
+  transform-origin:50% 100%;border-radius:8px;transition:.18s;position:relative}
+.hcard:first-child{margin-left:0}
+.hcard img{width:100%;height:100%;object-fit:cover;border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+.hcard .gen{width:100%;height:100%;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+.hcard.hover{z-index:20;transform:rotate(0deg) translateY(-52px) scale(1.17)}
+.hcard.hover img,.hcard.hover .gen{outline:2px solid rgba(66,133,244,.85);outline-offset:2px;
+  box-shadow:0 18px 44px rgba(66,133,244,.28)}
+
+/* ---------- 检视面板 ---------- */
+.inspect{position:absolute;left:48px;top:224px;width:284px;z-index:12;
+  background:rgba(17,20,27,.94);border:1px solid #2A303C}
+.inspect .hd{position:relative;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
+  border-bottom:1px solid #232936}
+.inspect .hd:before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:#4285F4}
+.inspect img{display:block;width:100%;height:374px;object-fit:cover}
+.inspect .bd{padding:12px 14px 14px}
+.inspect .nm{font-size:17px;color:#EDF2F8}
+.inspect .cost{margin-top:8px;display:flex;gap:5px}
+.mana{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.28)}
+.mana.u{background:#31699C}.mana.c{background:#4A5464;color:#DDE4EC}
+.mana.small{width:18px;height:18px;font-size:10px}
+.inspect .tp{margin-top:8px;font-size:11px;letter-spacing:.1em;color:#8995A9}
+.inspect .rule{margin-top:10px;padding-top:10px;border-top:1px solid #232936;
+  font-size:13px;line-height:1.65;color:#C7D0DC}
+.inspect .ft{margin-top:12px;font-size:9px;letter-spacing:.2em;color:#4A5464}
+
+/* ---------- 右侧：阶段塔 / 法力 / 状态 / 按钮 ---------- */
+.phasetower{position:absolute;right:76px;top:230px;width:236px;background:rgba(17,20,27,.85);
+  border:1px solid #232936;z-index:6}
+.phasetower .hd{position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
+  border-bottom:1px solid #232936}
+.phasetower .hd:before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:#4285F4}
+.phasetower .hd .r{font-size:15px;color:#EDF2F8;letter-spacing:.06em}
+.phasetower .hd .e{font-size:9px;letter-spacing:.22em;color:#5E6A7C}
+.step{display:flex;align-items:center;gap:10px;height:37px;padding:0 14px;position:relative}
+.step .mk{width:7px;height:7px;flex:none;transform:rotate(45deg);border:1px solid #39414F}
+.step .t{font-size:12px;color:#6E7A8D;letter-spacing:.08em}
+.step .e{margin-left:auto;font-size:8px;letter-spacing:.14em;color:#39414F}
+.step.done .mk{background:#39414F;border-color:#39414F}
+.step.done .t{color:#4E5867}
+.step.now{background:rgba(66,133,244,.12)}
+.step.now:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#4285F4}
+.step.now .mk{background:#4285F4;border-color:#4285F4;box-shadow:0 0 8px rgba(66,133,244,.9)}
+.step.now .t{color:#EDF2F8}
+.step.now .e{color:#7AA8FF}
+.manabar{position:absolute;right:76px;top:828px;width:236px;display:flex;align-items:center;gap:8px;
+  padding:0 14px;height:46px;background:rgba(17,20,27,.85);border:1px solid #232936;z-index:6}
+.manabar .cap{font-size:10px;letter-spacing:.18em;color:#8995A9;margin-right:auto}
+.prio{position:absolute;right:76px;top:884px;width:236px;display:flex;align-items:center;gap:10px;
+  padding:0 14px;height:40px;background:rgba(66,133,244,.10);border:1px solid rgba(66,133,244,.45);z-index:6}
+.prio i{width:8px;height:8px;border-radius:50%;background:#4285F4;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(66,133,244,.5)}50%{box-shadow:0 0 0 6px rgba(66,133,244,0)}}
+.prio .t{font-size:12px;color:#CFE0FA;letter-spacing:.08em}
+.prio .e{margin-left:auto;font-size:8px;letter-spacing:.16em;color:#7AA8FF}
+.actions{position:absolute;right:76px;bottom:34px;width:236px;display:flex;flex-direction:column;gap:10px;z-index:6}
+.btn{position:relative;display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;color:#DDE4EC;cursor:pointer}
+.btn .cn{font-size:15px;letter-spacing:.1em}
+.btn .en{font-size:9px;letter-spacing:.18em;color:rgba(221,228,236,.55)}
+.btn.primary{height:58px;background:#1A3E75;border:1px solid #4285F4;color:#fff}
+.btn.primary:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#4B91FF}
+.btn.primary .en{color:#A8C8FF}
+.btn.primary:hover{background:#1F4885}
+.btn.ghost{height:44px;background:rgba(17,20,27,.8);border:1px solid #2A303C;color:#AEB8C5}
+.btn.ghost .en{color:#5E6A7C}
+.btn.ghost:hover{border-color:#3A4150;color:#DDE4EC}
+
+/* 角落署名 */
+.corner{position:absolute;bottom:8px;left:76px;font-size:9px;letter-spacing:.26em;color:#39414F;z-index:6}
+.corner.r{left:auto;right:76px}
+</style>
+</head>
+<body>
+<main class="stage">
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="brand">MTGB // BATTLEGROUND · 本地对战 LOCAL MATCH</div>
+    <div class="topright">
+      <div class="ghostchip">认输 CONCEDE</div>
+      <div class="ghostchip">设置 SYSTEM</div>
+    </div>
+  </header>
+
+  <!-- 对手：手牌 / 身份 / 资源 -->
+  <div class="ophand">
+    <div class="bk"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk"><img src="assets/card-back.png" alt=""></div>
+    <div class="bk"><img src="assets/card-back.png" alt=""><span class="cnt">7</span></div>
+  </div>
+
+  <div class="identity red" style="right:76px;top:64px">
+    <div class="avatar"><i></i></div>
+    <div class="who"><div class="name">Opponent</div><div class="sub">对手 · 红方阵营</div></div>
+    <div class="life"><div class="num">20</div><div class="cap">LIFE</div></div>
+  </div>
+  <div class="resrow" style="right:76px;top:176px">
+    <div class="res"><svg viewBox="0 0 16 16"><path d="M3 2.5h10M3 5.5h10M3 8.5h10M3 11.5h7"/></svg><span class="t">牌库</span><span class="n">51</span></div>
+    <div class="res"><svg viewBox="0 0 16 16"><path d="M4 13.5V7a4 4 0 0 1 8 0v6.5M2.5 13.5h11M6.5 6.5h3"/></svg><span class="t">坟场</span><span class="n">0</span></div>
+    <div class="res"><svg viewBox="0 0 16 16"><path d="M8 1.5 14.5 8 8 14.5 1.5 8Z"/></svg><span class="t">放逐</span><span class="n">0</span></div>
+  </div>
+
+  <!-- 对手战场 -->
+  <section class="zone" style="top:186px">
+    <div class="zonelabel red"><i></i>对手战场 · OPPONENT BATTLEFIELD</div>
+    <div class="rowtag" style="top:24px"><div class="cn">生物</div><div class="en">CREATURES · 3</div></div>
+    <div class="row" style="padding-top:12px">
+      <div class="gen c s96"><div class="nm">Arena Bear <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — BEAR</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div>
+      <div class="gen c s96"><div class="nm">Arena Bear <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — BEAR</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div>
+      <div class="tapwrap s96"><div class="gen c"><div class="nm">Arena Bear <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — BEAR</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div></div>
+    </div>
+    <div class="rowtag" style="bottom:12px"><div class="cn">地</div><div class="en">LANDS · 4</div></div>
+    <div class="row lands">
+      <div class="gen l s96"><div class="nm">Mountain <s></s></div><div class="art"><i></i></div><div class="tp">基本地 — 山脉</div><div class="tx"><i></i><i></i></div></div>
+      <div class="gen l s96"><div class="nm">Mountain <s></s></div><div class="art"><i></i></div><div class="tp">基本地 — 山脉</div><div class="tx"><i></i><i></i></div></div>
+      <div class="gen l s96"><div class="nm">Mountain <s></s></div><div class="art"><i></i></div><div class="tp">基本地 — 山脉</div><div class="tx"><i></i><i></i></div></div>
+      <div class="tapwrap s96"><div class="gen l"><div class="nm">Mountain <s></s></div><div class="art"><i></i></div><div class="tp">基本地 — 山脉</div><div class="tx"><i></i><i></i></div></div></div>
+    </div>
+  </section>
+
+  <!-- 部署线 + 堆叠 -->
+  <div class="deployline"><span class="cap">DEPLOY LINE · 部署线</span></div>
+  <div class="stackrow">
+    <span class="cap">堆叠 STACK</span>
+    <div class="stackitem">
+      <div><div class="t1">成形野地 · 启动式异能</div><div class="t2">{1}，{T}，牺牲成形野地</div></div>
+      <span class="st">结算中 RESOLVING</span>
+    </div>
+  </div>
+
+  <!-- 玩家战场 -->
+  <section class="zone" style="top:586px">
+    <div class="zonelabel blue"><i></i>你的战场 · YOUR BATTLEFIELD</div>
+    <div class="rowtag" style="top:24px"><div class="cn">生物</div><div class="en">CREATURES · 3</div></div>
+    <div class="row" style="padding-top:12px">
+      <div class="gen u s96"><div class="nm">Rune Adept <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — 法术师</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div>
+      <div class="gen c s96"><div class="nm">Arena Bear <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — BEAR</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div>
+      <div class="tapwrap s96"><div class="gen c"><div class="nm">Arena Bear <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — BEAR</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div></div>
+    </div>
+    <div class="rowtag" style="bottom:12px"><div class="cn">地</div><div class="en">LANDS · 4</div></div>
+    <div class="row lands">
+      <div class="card real s96"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card real s96"><img src="assets/card-island.jpg" alt="海岛"></div>
+      <div class="card real s96"><img src="assets/card-wilds.jpg" alt="成形野地"></div>
+      <div class="tapwrap s96"><div class="card real"><img src="assets/card-island.jpg" alt="海岛"></div></div>
+    </div>
+  </section>
+
+  <!-- 检视面板（悬停 Quick Study 触发） -->
+  <aside class="inspect">
+    <div class="hd"><span class="micro">检视 <b>INSPECT</b></span><span class="micro">SOS · 065</span></div>
+    <img src="assets/card-quickstudy.jpg" alt="Quick Study">
+    <div class="bd">
+      <div class="nm">Quick Study</div>
+      <div class="cost"><span class="mana c">2</span><span class="mana u">U</span></div>
+      <div class="tp">瞬间 · INSTANT</div>
+      <div class="rule">抽两张牌。<br><span style="color:#8995A9;font-style:italic">「再熟悉的公式，也可能带来意想不到的结果。」——Ruxa 教授</span></div>
+      <div class="ft">HOVER · 悬停手牌查看</div>
+    </div>
+  </aside>
+
+  <!-- 右侧：阶段塔 -->
+  <aside class="phasetower">
+    <div class="hd"><span class="r">第 4 回合</span><span class="e">ROUND 4 · 你的回合</span></div>
+    <div class="step done"><span class="mk"></span><span class="t">开始阶段</span><span class="e">BEGINNING</span></div>
+    <div class="step done"><span class="mk"></span><span class="t">抽牌</span><span class="e">DRAW</span></div>
+    <div class="step now"><span class="mk"></span><span class="t">第一主要阶段</span><span class="e">MAIN 1</span></div>
+    <div class="step"><span class="mk"></span><span class="t">战斗开始</span><span class="e">COMBAT</span></div>
+    <div class="step"><span class="mk"></span><span class="t">宣告攻击者</span><span class="e">ATTACK</span></div>
+    <div class="step"><span class="mk"></span><span class="t">宣告阻挡者</span><span class="e">BLOCK</span></div>
+    <div class="step"><span class="mk"></span><span class="t">战斗伤害</span><span class="e">DAMAGE</span></div>
+    <div class="step"><span class="mk"></span><span class="t">战斗结束</span><span class="e">END COMBAT</span></div>
+    <div class="step"><span class="mk"></span><span class="t">第二主要阶段</span><span class="e">MAIN 2</span></div>
+    <div class="step"><span class="mk"></span><span class="t">结束阶段</span><span class="e">ENDING</span></div>
+  </aside>
+
+  <!-- 法力 / 优先权 / 操作 -->
+  <div class="manabar"><span class="cap">可用法力 MANA</span>
+    <span class="mana u small">U</span><span class="mana u small">U</span><span class="mana u small">U</span>
+  </div>
+  <div class="prio"><i></i><span class="t">你拥有优先权</span><span class="e">YOUR PRIORITY</span></div>
+  <div class="actions">
+    <div class="btn primary chamfer"><span class="cn">结束回合</span><span class="en">FINISH TURN</span></div>
+    <div class="btn ghost chamfer"><span class="cn">跳过战斗</span><span class="en">SKIP COMBAT</span></div>
+  </div>
+
+  <!-- 玩家身份 / 资源 -->
+  <div class="identity blue" style="left:76px;bottom:34px">
+    <div class="avatar"><i></i></div>
+    <div class="who"><div class="name">Sapphire Schnee</div><div class="sub">你 · 蓝方阵营</div></div>
+    <div class="life"><div class="num">20</div><div class="cap">LIFE</div></div>
+  </div>
+  <div class="resrow" style="left:76px;bottom:142px">
+    <div class="res"><svg viewBox="0 0 16 16"><path d="M3 2.5h10M3 5.5h10M3 8.5h10M3 11.5h7"/></svg><span class="t">牌库</span><span class="n">52</span></div>
+    <div class="res"><svg viewBox="0 0 16 16"><path d="M4 13.5V7a4 4 0 0 1 8 0v6.5M2.5 13.5h11M6.5 6.5h3"/></svg><span class="t">坟场</span><span class="n">0</span></div>
+    <div class="res"><svg viewBox="0 0 16 16"><path d="M8 1.5 14.5 8 8 14.5 1.5 8Z"/></svg><span class="t">放逐</span><span class="n">0</span></div>
+  </div>
+
+  <!-- 手牌（第 4 张 Quick Study 处于悬停态） -->
+  <div class="hand">
+    <div class="hcard gen w" style="--r:-9deg;--y:26px"><div class="nm">Plain <s></s></div><div class="art"><i></i></div><div class="tp">基本地 — 平原</div><div class="tx"><i></i><i></i></div></div>
+    <div class="hcard gen w" style="--r:-5.4deg;--y:8px"><div class="nm">Pious Warrior <s>{1}{W}</s></div><div class="art"><i></i></div><div class="tp">生物 — 士兵</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div>
+    <div class="hcard" style="--r:-1.8deg;--y:0px"><img src="assets/card-wilds.jpg" alt="成形野地"></div>
+    <div class="hcard hover" style="--r:0deg;--y:0px"><img src="assets/card-quickstudy.jpg" alt="Quick Study"></div>
+    <div class="hcard gen u" style="--r:5.4deg;--y:8px"><div class="nm">Rune Adept <s>{2}</s></div><div class="art"><i></i></div><div class="tp">生物 — 法术师</div><div class="tx"><i></i><i></i><i></i></div><div class="pt">2 / 2</div></div>
+    <div class="hcard gen c" style="--r:9deg;--y:26px"><div class="nm">Arena Insight <s>{1}</s></div><div class="art"><i></i></div><div class="tp">瞬间 — INSTANT</div><div class="tx"><i></i><i></i><i></i></div></div>
+  </div>
+
+  <div class="corner">MTGB // BATTLEFIELD REDESIGN · 战场改造预览</div>
+  <div class="corner r">曜石竞技场 V2 · 04</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,166 @@
+{
+  "entries": [
+    {
+      "name": "City's Blessing",
+      "key": "TBLC/40",
+      "face": 0,
+      "source": "https://scryfall.com/card/tblc/40/citys-blessing?utm_source=api"
+    },
+    {
+      "name": "Day",
+      "key": "TMID/19",
+      "face": 0,
+      "source": "https://scryfall.com/card/tmid/19/day-night?utm_source=api"
+    },
+    {
+      "name": "Dungeon of the Mad Mage",
+      "key": "TAFR/20",
+      "face": 0,
+      "source": "https://scryfall.com/card/tafr/20/dungeon-of-the-mad-mage?utm_source=api",
+      "localized": [
+        {
+          "language": "zh-CN",
+          "key": "TAFR/20",
+          "face": 0,
+          "source": "https://magic.wizards.com/zh-Hans/news/feature/adventures-forgotten-realms-mechanics-2021-07-02",
+          "imageSource": "https://media.wizards.com/2021/afr/cs_yu0OoWrZHr.png"
+        }
+      ]
+    },
+    {
+      "name": "Energy Reserve",
+      "key": "TDRC/17",
+      "face": 0,
+      "source": "https://scryfall.com/card/tdrc/17/energy-reserve?utm_source=api"
+    },
+    {
+      "name": "Experience",
+      "key": "TC15/0",
+      "face": 0,
+      "source": "https://scryfall.com/card/tc15/0/experience?utm_source=api"
+    },
+    {
+      "name": "Lost Mine of Phandelver",
+      "key": "TAFR/21",
+      "face": 0,
+      "source": "https://scryfall.com/card/tafr/21/lost-mine-of-phandelver?utm_source=api",
+      "localized": [
+        {
+          "language": "zh-CN",
+          "key": "TAFR/21",
+          "face": 0,
+          "source": "https://magic.wizards.com/zh-Hans/news/feature/adventures-forgotten-realms-mechanics-2021-07-02",
+          "imageSource": "https://media.wizards.com/2021/afr/cs_4MqeT8nWd9.png"
+        }
+      ]
+    },
+    {
+      "name": "Max Speed",
+      "key": "TDFT/14",
+      "face": 1,
+      "source": "https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?utm_source=api"
+    },
+    {
+      "name": "Night",
+      "key": "TMID/19",
+      "face": 1,
+      "source": "https://scryfall.com/card/tmid/19/day-night?utm_source=api"
+    },
+    {
+      "name": "Poison Counter",
+      "key": "TBLC/41",
+      "face": 0,
+      "source": "https://scryfall.com/card/tblc/41/poison-counter?utm_source=api"
+    },
+    {
+      "name": "Radiation",
+      "key": "TPIP/22",
+      "face": 0,
+      "source": "https://scryfall.com/card/tpip/22/radiation?utm_source=api"
+    },
+    {
+      "name": "Start Your Engines!",
+      "key": "TDFT/14",
+      "face": 0,
+      "source": "https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?utm_source=api"
+    },
+    {
+      "name": "The Initiative",
+      "key": "TCLB/20",
+      "face": 1,
+      "source": "https://scryfall.com/card/tclb/20/undercity-the-initiative?utm_source=api"
+    },
+    {
+      "name": "The Monarch",
+      "key": "TAFC/13",
+      "face": 0,
+      "source": "https://scryfall.com/card/tafc/13/the-monarch?utm_source=api"
+    },
+    {
+      "name": "The Ring",
+      "key": "TLTR/H13",
+      "face": 0,
+      "source": "https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?utm_source=api",
+      "localized": [
+        {
+          "language": "zh-CN",
+          "key": "TLTR/H13",
+          "face": 0,
+          "source": "https://magic.wizards.com/zh-Hans/news/feature/the-lord-of-the-rings-tales-of-middle-earth-mechanics",
+          "imageSource": "https://media.wizards.com/2023/ltr/cs_fdaec7ef3c.png"
+        }
+      ]
+    },
+    {
+      "name": "The Ring Tempts You",
+      "key": "TLTR/H13",
+      "face": 1,
+      "source": "https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?utm_source=api",
+      "localized": [
+        {
+          "language": "zh-CN",
+          "key": "TLTR/H13",
+          "face": 1,
+          "source": "https://magic.wizards.com/zh-Hans/news/feature/the-lord-of-the-rings-tales-of-middle-earth-mechanics",
+          "imageSource": "https://media.wizards.com/2023/ltr/cs_e308b5dc9a.png"
+        }
+      ]
+    },
+    {
+      "name": "Tomb of Annihilation",
+      "key": "TAFR/22",
+      "face": 0,
+      "source": "https://scryfall.com/card/tafr/22/tomb-of-annihilation?utm_source=api",
+      "localized": [
+        {
+          "language": "zh-CN",
+          "key": "TAFR/22",
+          "face": 0,
+          "source": "https://magic.wizards.com/zh-Hans/news/feature/adventures-forgotten-realms-mechanics-2021-07-02",
+          "imageSource": "https://media.wizards.com/2021/afr/cs_fZkwUeSE1i.png"
+        }
+      ]
+    },
+    {
+      "name": "Undercity",
+      "key": "TCLB/20",
+      "face": 0,
+      "source": "https://scryfall.com/card/tclb/20/undercity-the-initiative?utm_source=api",
+      "localized": [
+        {
+          "language": "zh-CN",
+          "key": "TCLB/20",
+          "face": 0,
+          "source": "https://magic.wizards.com/zh-Hans/news/feature/commander-legends-battle-for-baldurs-gate-mechanics",
+          "imageSource": "https://media.wizards.com/2022/clb/cs_6swTVEGnrF.png"
+        }
+      ]
+    },
+    {
+      "name": "An Enduring Story",
+      "key": "THOB/14",
+      "face": 0,
+      "source": "https://magicmadhouse.co.uk/magic-the-gathering-the-hobbit-the-hobbit-enduring-story-token"
+    }
+  ]
+}

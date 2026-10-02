@@ -75,6 +75,12 @@ public class CardDefinition
 {
     public string cardName;
     public int cardID;
+    public string forgeSet;
+    public int forgeArtIndex;
+    public bool forgeAmbiguous;
+    public int forgeDeckLimit = 4;
+    public string forgeSplitType;
+    [NonSerialized] public string flavorText;
     // cardID is local to sourceDatabasePath; PrintingKey identifies a definition across libraries.
     [NonSerialized] public string sourceDatabasePath;
     public string oracleID;
@@ -93,7 +99,6 @@ public class CardDefinition
     public int loyalty;
     public int battleDefense;
     public Sprite artwork;
-    public string luaScript;
     public string effectKey;
     public bool customContent;
     public List<CardFeatureDefinition> features = new List<CardFeatureDefinition>();

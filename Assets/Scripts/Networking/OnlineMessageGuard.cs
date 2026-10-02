@@ -108,7 +108,7 @@ public sealed class OnlineMessageGuard
         }
         if (hello.manifest == null)
         {
-            error = "缺少内容版本清单。";
+            error = "缺少联机协议信息。";
             return false;
         }
         if (hello.requestedRoomConfig?.allowedSetCodes != null)

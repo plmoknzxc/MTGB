@@ -1,0 +1,1 @@
+PASS X: numeric choice X=2, four mana paid, Walking Ballista enters as 2/2

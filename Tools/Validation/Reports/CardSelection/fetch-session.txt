@@ -1,0 +1,17 @@
+RUNNING
+InputConfirmMulligan null ok hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Wooded Foothills,Flare of Denial,Generous Ent
+InputConfirmMulligan null ok hand=Subtlety,Stomping Ground,Vibrance,Wooded Foothills,Forest,Generous Ent,Wooded Foothills
+InputPassPriority UPKEEP ok hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Wooded Foothills,Flare of Denial,Generous Ent
+InputPassPriority UPKEEP ok hand=Subtlety,Stomping Ground,Vibrance,Wooded Foothills,Forest,Generous Ent,Wooded Foothills
+InputPassPriority MAIN1 card:21 hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Wooded Foothills,Flare of Denial,Generous Ent
+InputPassPriority MAIN1 card:21 hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Flare of Denial,Generous Ent
+InputConfirm MAIN1 ok hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Flare of Denial,Generous Ent
+InputPassPriority MAIN1 ok hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Flare of Denial,Generous Ent
+InputPassPriority MAIN1 ok hand=Subtlety,Stomping Ground,Vibrance,Wooded Foothills,Forest,Generous Ent,Wooded Foothills
+InputSelectEntitiesFromList MAIN1 card:2 hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Flare of Denial,Generous Ent
+InputSelectEntitiesFromList MAIN1 ok hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Flare of Denial,Generous Ent
+InputPassPriority MAIN1 ok hand=Endurance,Curator of Mysteries,Oliphaunt,Generous Ent,Flare of Denial,Generous Ent
+InputPassPriority MAIN1 ok
+Surveil MAIN1 scry-top:14
+Surveil MAIN1 confirm-scry
+PASS: real deck printings, fetch activation, UTF-8 ineligible previews, picker confirmation and final zones through OnlineMatchSession; 15 responses

@@ -1,0 +1,1 @@
+PASS: Chinese/Japanese/Latin/emoji/quotes/newlines; C#↔Java stdin/stdout/stderr under GBK and Shift-JIS defaults; split UTF-8 writes; Netcode string serialization; replay encode/decode; Unicode file path and contents.

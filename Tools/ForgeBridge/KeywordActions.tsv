@@ -1,0 +1,85 @@
+# English|Chinese aliases|Chinese explanation|English explanation
+Amass|囤兵|选择一个己方军队，在其上放置所述数量的+1/+1指示物，并使它额外具有指定生物类别。若没有军队，先派出一个0/0黑色军队衍生生物；旧牌未注明类别时按囤兵灵俑处理。|Choose an Army you control, creating a 0/0 black Army first if needed. Put the stated number of +1/+1 counters on it and add the stated creature type. Legacy text without a creature type uses Zombies.
+Amass Orcs|囤兵半兽人|先检查你是否操控军队生物；若没有，派出一个0/0黑色半兽人／军队衍生生物。然后选择一个己方军队，在其上放置所述数量的+1/+1指示物；若它还不是半兽人，它额外具有半兽人类别。|To amass Orcs N, create a 0/0 black Orc Army token if you don't control an Army creature. Then choose an Army you control, put N +1/+1 counters on it, and make it an Orc in addition to its other types.
+Amass Zombies|囤兵灵俑|先检查你是否操控军队生物；若没有，派出一个0/0黑色灵俑／军队衍生生物。然后选择一个己方军队，在其上放置所述数量的+1/+1指示物；若它还不是灵俑，它额外具有灵俑类别。|To amass Zombies N, create a 0/0 black Zombie Army token if you don't control an Army creature. Then choose an Army you control, put N +1/+1 counters on it, and make it a Zombie in addition to its other types.
+Adapt|演化|若此生物没有+1/+1指示物，在它上面放置所述数量的+1/+1指示物。|If this creature has no +1/+1 counters, put the stated number on it.
+Investigate|探查|派出一个线索衍生神器；它具有“{2}，牺牲此神器：抓一张牌。”|Create a Clue artifact token with “{2}, Sacrifice this artifact: Draw a card.”
+Collect Evidence|搜证|从你的坟墓场放逐任意数量的牌，使其法术力值总和至少达到搜证数值。|Exile cards from your graveyard whose combined mana value is at least the stated number.
+Connive|筹谋|抓一张牌，然后弃一张牌；若弃的是非地牌，在筹谋的生物上放一个+1/+1指示物。筹谋N依次抓N张、弃N张，按弃掉的非地牌数量放指示物。|Draw then discard a card; put a +1/+1 counter on the conniving creature if you discarded a nonland card. Connive N draws and discards N, with a counter per nonland discarded.
+Proliferate|增殖|选择任意数量已有指示物的永久物和／或牌手，为每个各增加一个其上已有的每一种指示物。|Choose any permanents and/or players with counters, then give each one another counter of every kind already there.
+Populate|殖民|选择一个由你操控的衍生生物，派出一个它的复制品。|Create a copy of a creature token you control.
+Explore|勘察|展示牌库顶牌；若是地，置入手上。否则在勘察生物上放一个+1/+1指示物，然后可将展示牌置入坟墓场。|Reveal your top card. Put a land into your hand; otherwise give the exploring creature a +1/+1 counter and you may put the card into your graveyard.
+Discover|倾探|从牌库顶放逐牌，直到出现法术力值不超过指定数值的非地牌。可免费施放符合上限的该咒语，或置入手上；其余牌随机置于牌库底。|Exile cards until you find a nonland within the stated mana value. Cast it free if the spell also fits that limit, or put it into your hand; put the rest randomly on the bottom.
+Mill|磨牌,磨去|将所述数量的牌从牌库顶置入坟墓场。|Put the stated number of cards from the top of the library into the graveyard.
+Fight|互斗|两个生物同时对彼此造成等同于各自力量的伤害；这不是战斗伤害。|Each of the two creatures simultaneously deals damage equal to its power to the other. This is not combat damage.
+Goad|煽惑|直到你的下个回合，该生物每次战斗若能攻击就须攻击，且若能攻击你以外的牌手就须如此作。|Until your next turn, the creature must attack each combat if able and must attack a player other than you if able.
+Regenerate|重生|建立一次替代效应：本回合下一次将被消灭时，改为横置、移去所有伤害并移出战斗；不能替代牺牲或防御力为0。|Replace the next destruction this turn by tapping it, removing marked damage, and removing it from combat. This does not stop sacrifice or zero toughness.
+Transform|转化|将转化式双面牌翻到另一面；它没有离开战场，不会因此重新进战场。|Turn a transforming double-faced card to its other face. This is not leaving or entering the battlefield.
+Convert|转换|将可转换的双面牌翻到另一面；这是与转化对应的牌面用语。|Turn a converting double-faced card to its other face; this is the alternate wording used for transforming.
+Fateseal|恶卜|检视对手牌库顶所述数量的牌，将任意数量置于其牌库底，其余以任意顺序放回顶端。|Look at the stated number of cards atop an opponent's library; put any on the bottom and the rest on top in any order.
+Clash|比点|各自展示牌库顶牌，法术力值较高者赢；然后各自可将展示牌放在顶端或底端。|Each player reveals their top card; the higher mana value wins. Each may then put their card on top or bottom.
+Detain|拘留|直到你的下个回合，该永久物不能攻击、不能阻挡，且不能启动其启动式异能。|Until your next turn, the permanent cannot attack or block and its activated abilities cannot be activated.
+Monstrosity|蛮化|若尚未蛮化，在此生物上放所述数量的+1/+1指示物，并使它成为已蛮化。|If it is not monstrous, put the stated number of +1/+1 counters on it and it becomes monstrous.
+Bolster|振励|选择一个你操控且防御力最低的生物，在其上放所述数量的+1/+1指示物；相同时由你选择。|Choose a creature you control with the least toughness and put the stated number of +1/+1 counters on it.
+Manifest|显化|将牌面朝下放进战场，作为无名、无色、无异能的2/2生物；若是生物牌，可支付其法术力费用翻回正面。|Put the card face down as a nameless, colorless 2/2 creature without abilities. If it is a creature card, you may pay its mana cost to turn it face up.
+Manifest Dread|显化惧象|检视牌库顶两张牌，显化其中一张，将另一张置入坟墓场。|Look at your top two cards, manifest one and put the other into your graveyard.
+Cloak|隐匿|将牌面朝下放进战场，作为具守护{2}的2/2生物；若是生物牌，可支付其法术力费用翻回正面。|Put the card face down as a 2/2 creature with ward {2}. A creature card may be turned face up for its mana cost.
+Support|支援|在至多所述数量的目标生物上各放一个+1/+1指示物；永久物自身的支援不能选择自己。|Put a +1/+1 counter on each of up to the stated number of target creatures. A permanent's own support ability cannot target itself.
+Meld|融合|将指定的一对牌放逐，再以背面组合为同一个永久物放回战场。|Exile the specified pair and return them combined as one permanent with their melded back face.
+Exert|耗竭|选择使此永久物在你的下一个重置步骤中不重置，以获得牌面所述的耗竭效果。|Choose not to untap this permanent during your next untap step for the listed exert effect.
+Learn|温习|可从游戏外将一张课程牌置入手上，或弃一张牌再抓一张牌，也可以两者都不做。|You may take a Lesson from outside the game into your hand, or discard a card then draw one, or do neither.
+Venture into the Dungeon|深入地城,深入地下城|若尚未身处地城，从三座原版地城中选择一座进入；否则沿箭头进入现有地城的下个房间。普通深入地城不能选择进入地底城，但可以推进已经进入的地底城。|If you are not in a dungeon, enter one of the three original dungeons. Otherwise advance to the next room. Ordinary venture cannot start Undercity, but can advance through an existing Undercity.
+Venture into Undercity|深入地底城,Venture into the Undercity,地下街探索をする|若尚未身处地城，进入地底城；否则进入现有地城的下个房间，即使它不是地底城。|If you are not in a dungeon, enter Undercity. Otherwise advance through your existing dungeon, even if it is not Undercity.
+The Initiative|先制,掌握先制,握有先制,イニシアチブ|掌握先制时及在握有先制的己方维持开始时，深入地底城。生物对握有先制的牌手造成战斗伤害时，该生物的操控者掌握先制。|When you take the initiative and at the beginning of your upkeep while you have it, venture into Undercity. A player whose creatures deal combat damage to its holder takes the initiative.
+Incubate|抚育|派出一个带所述数量+1/+1指示物的抚育器衍生神器；支付{2}可转化为0/0非瑞人神器生物。|Create an Incubator artifact token with the stated number of +1/+1 counters. Pay {2} to transform it into a 0/0 Phyrexian artifact creature.
+The Ring Tempts You|魔戒诱惑你|获得或推进魔戒徽记的异能，并选择一个己方生物成为持戒人；第四级后仍会重新选择持戒人。|Gain or advance your Ring emblem and choose a creature you control as Ring-bearer, even after the emblem reaches its fourth ability.
+Time Travel|时间旅行|为每个你操控且带时间指示物的永久物、以及你拥有且带时间指示物的已放逐牌，可各增加或移去一个时间指示物。|For each permanent you control and exiled card you own with time counters, you may add or remove one time counter.
+Suspect|疑犯,疑惧,疑凶|使该生物成为疑犯；成为疑犯期间它具有威慑且不能阻挡，直到离开战场或效应让它不再是疑犯。|The creature becomes suspected, giving it menace and preventing it from blocking until it leaves or an effect removes that designation.
+Forage|觅食|从你的坟墓场放逐三张牌，或牺牲一个食品。|Exile three cards from your graveyard or sacrifice a Food.
+Endure|坚忍|选择在此生物上放所述数量的+1/+1指示物，或派出一个力量／防御力均为该数值的白色精怪衍生生物。|Choose between that many +1/+1 counters on this creature or a white Spirit token with that power and toughness.
+Airbend|御气|放逐指定对象；其拥有者之后可支付{2}而非法术力费用，从放逐区施放该牌，仍须遵守通常时机。|Exile the object; its owner may later cast that card from exile for {2} rather than its mana cost, following normal timing rules.
+Earthbend|御土|使目标己方地额外成为具敏捷的0/0生物，并放所述数量的+1/+1指示物；当它死去或被放逐时，在你的操控下将它横置移回战场。|Animate a land you control as a 0/0 with haste in addition to its other types and put the stated +1/+1 counters on it. When it dies or is exiled, return it tapped under your control.
+Waterbend|御水|支付所述费用时，每横置一个未横置的己方神器或生物，可代为支付截水费用中的{1}；不能如此支付该咒语或异能其他部分的通用法术力费用。|When paying the stated waterbend cost, each untapped artifact or creature you tap can pay {1} of that cost. This cannot pay generic mana in other components of the spell or ability's total cost.
+Blight|枯萎|在一个由你操控的生物上放置所述数量的-1/-1指示物。|Put the stated number of -1/-1 counters on a creature you control.
+Heal|治疗|移去指定永久物上已标记的相应伤害；这不是恢复生命。|Remove the specified marked damage from a permanent; this is not gaining life.
+Recruit|招募|抓一张牌再弃一张牌；若弃的是非地牌，派出一个1/1白色人类／士兵衍生生物。|Draw then discard a card. If you discarded a nonland card, create a 1/1 white Human Soldier token.
+Empower Jace|Empower Jace|若未操控杰斯鹏洛客衍生物，先派出一个蓝色、初始忠诚为0、具有-1刺探1及-3抓一张牌的杰斯；选择一个己方杰斯鹏洛客衍生物，放上所述数量的忠诚指示物。|Create a blue Jace planeswalker token with zero loyalty, −1: surveil 1 and −3: draw a card if needed. Add the stated loyalty counters to one Jace planeswalker token you control.
+Harness|Harness|使此永久物成为已驾驭，持续到它离开战场；该标记用于牌面其他异能。|Mark the permanent as harnessed until it leaves the battlefield, enabling abilities that refer to that designation.
+Behold|Behold|选择一个你操控的符合条件的永久物，或从手上展示一张符合条件的牌。|Choose a matching permanent you control or reveal a matching card from your hand.
+Boast|炫威|只能在此生物本回合攻击过之后启动，且每回合只能启动一次。|Activate only after this creature has attacked this turn and only once each turn.
+Cleave|贯通|可以支付切除费用施放；如此作时忽略牌文方括号内的文字。|Cast for the cleave cost to omit the words printed inside square brackets.
+Forecast|预报|只能在你的维持步骤、从手上展示此牌来启动，且每回合一次。|Activate from your hand by revealing this card, only during your upkeep and once per turn.
+Visit|造访|掷骰造访游乐设施时，若结果对应此设施点亮的数字，执行其造访效果。|When a visit roll matches this Attraction's lit numbers, its visit ability triggers.
+Solved|侦结|此案件已侦破时，牌面对应的异能生效；侦破条件及检查时机由案件牌说明。|The listed ability functions while this Case is solved; the Case specifies how it becomes solved.
+Exhaust|竭力|此启动式异能只能启动一次；永久物离场后再进场视为新的物件。|This activated ability can be activated only once for this object.
+Max Speed|极速|当你的速度为4时，牌面对应的极速异能生效。|The listed max-speed ability functions when your speed is 4.
+Power-up|Power-up|此异能只能启动一次；若该永久物本回合进战场，启动费用减少其法术力费用所对应的部分。|Activate only once. If this permanent entered this turn, reduce the activation cost by its mana cost.
+Infinity|∞|此永久物为已驾驭时，获得∞之后列出的异能。|While this permanent is harnessed, it has the ability printed after ∞.
+Prepared|备法|此生物已备法时，可以施放其附带的咒语；施放会使它不再处于已备法状态。|While this creature is prepared, you may cast its attached spell; doing so makes it no longer prepared.
+Adventure|历险|施放时选择生物等本体或历险咒语；历险结算时放逐此牌，之后可以从放逐区施放本体。|Cast either the main spell or the Adventure. As the Adventure resolves, exile the card; you may later cast its main spell from exile.
+Omen|预兆|可选择以预兆部分施放；预兆结算时，按该机制将此牌洗回拥有者牌库，而非进入坟墓场。|You may cast the Omen half; as it resolves, shuffle this card into its owner's library instead of putting it into the graveyard.
+Open an Attraction|开启游乐设施|将游乐设施牌库顶牌翻开并放进战场。|Turn over the top card of your Attraction deck and put it onto the battlefield.
+Roll to Visit Your Attractions|掷骰造访游乐设施|掷一个六面骰，触发点亮相应数字的己方游乐设施的造访异能。|Roll a six-sided die and trigger visit abilities of your Attractions with that number lit.
+Face a Villainous Choice|面临恶棍抉择|由指定牌手从列出的两个选项中选择一个，并按指示执行。|The specified player chooses one of the two listed options and carries it out.
+Assemble|组装|将机巧牌库顶牌放进战场，置于所选的齿轮下。|Put the top card of your Contraption deck onto the battlefield under a sprocket you choose.
+Planeswalk|时空旅行|按竞逐时空规则离开当前时空或异象并翻开下一个时空牌。|Follow Planechase rules to leave the current plane or phenomenon and reveal the next planar card.
+Set in Motion|实施|按魔王赛制规则将阴谋牌面朝上放到统帅区，并触发其实施效果。|Turn a scheme face up in the command zone and trigger its set-in-motion ability.
+Abandon|放弃阴谋|将持续阴谋牌面朝下放到阴谋牌库底。|Put an ongoing scheme face down on the bottom of its scheme deck.
+Vote|投票|按牌面顺序作出公开选择，再根据投票结果执行效果。|Make the listed public choices in turn order, then apply the result of the vote.
+Activate|启动|选择一个启动式异能，作出必要选择并支付费用；非法术力异能会进入堆叠。|Choose an activated ability, make its choices and pay its costs. Nonmana abilities use the stack.
+Attach|贴附|将灵气、武具或工事贴附到符合条件的对象上。|Attach an Aura, Equipment or Fortification to a legal object.
+Cast|施放|将咒语放入堆叠，选择模式、目标等，并支付费用；之后等待结算。|Put a spell on the stack, make choices such as modes and targets, and pay its costs.
+Counter|反击|使目标咒语或异能离开堆叠而不结算。|Remove a spell or ability from the stack without resolving it.
+Create|派出|将指定特征的衍生物放进战场。|Put tokens with the stated characteristics onto the battlefield.
+Destroy|消灭|将永久物从战场置入拥有者坟墓场；不灭与重生可以影响此动作。|Move a permanent from the battlefield to its owner's graveyard, subject to indestructible or regeneration.
+Discard|弃牌|将手上指定的牌置入其拥有者坟墓场。|Move the specified cards from a hand to their owner's graveyard.
+Double|加倍|将指定数值或数量增加到原先的两倍。|Increase the specified value or quantity to twice its previous amount.
+Triple|增至三倍|将指定数值或数量增加到原先的三倍。|Increase the specified value or quantity to three times its previous amount.
+Exchange|交换|同时交换所指定的对象或数值；无法完整完成交换时，不进行交换。|Exchange both specified objects or values simultaneously; if the whole exchange is impossible, it does not happen.
+Exile|放逐|将指定对象移至放逐区，通常为面朝上。|Move the object to exile, normally face up.
+Play|使用|按牌的类别使用地或施放咒语，仍须遵守时机和次数限制。|Play a land or cast a spell as appropriate, respecting timing and other limits.
+Reveal|展示|让所有牌手看见指定牌，而不因此改变其所在区域。|Show the specified card to all players without changing its zone.
+Sacrifice|牺牲|将自己操控的永久物置入拥有者坟墓场；这不是消灭，不受不灭或重生保护。|Move a permanent you control to its owner's graveyard. This is not destruction.
+Search|搜寻|检视指定区域并按条件选择牌；完成后按指示处理。|Look through the stated zone and choose cards satisfying the instructions.
+Shuffle|洗牌|将牌库随机排列，使任何牌手都不知道其顺序。|Randomize the library so no player knows the order.
+Tap and Untap|横置与重置|横置将永久物转为已横置，重置使其恢复为未横置。|Tap a permanent or return it to its untapped state.

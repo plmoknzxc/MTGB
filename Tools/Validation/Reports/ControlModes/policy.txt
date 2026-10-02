@@ -1,0 +1,1 @@
+PASS: ON priority/manual mana; AUTO skips unanswerable own/opponent triggers, retains legal responses and own main phase; OFF priority only; no payment retry loop.

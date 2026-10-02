@@ -1,0 +1,4983 @@
+{
+  "entries": [
+    {
+      "en": "Adventure",
+      "zh": "历险",
+      "ja": "出来事",
+      "jaAliases": [
+        "出来事"
+      ]
+    },
+    {
+      "en": "Advisor",
+      "zh": "参谋",
+      "ja": "アドバイザー",
+      "jaAliases": [
+        "アドバイザー"
+      ]
+    },
+    {
+      "en": "Aetherborn",
+      "zh": "乙太种",
+      "ja": "霊基体",
+      "jaAliases": [
+        "霊基体"
+      ]
+    },
+    {
+      "en": "Ajani",
+      "zh": "阿耶尼",
+      "ja": "アジャニ",
+      "jaAliases": [
+        "アジャニ"
+      ]
+    },
+    {
+      "en": "Ajani's Pridemate",
+      "jaAliases": [
+        "アジャニの群れ仲間"
+      ],
+      "ja": "アジャニの群れ仲間"
+    },
+    {
+      "en": "Alara",
+      "zh": "阿拉若",
+      "ja": "アラーラ",
+      "jaAliases": [
+        "アラーラ"
+      ]
+    },
+    {
+      "en": "Alfava Metraxis",
+      "zh": "阿尔法瓦·梅特拉西斯",
+      "ja": "アルファヴァ＝メトラクシス",
+      "jaAliases": [
+        "アルファヴァ＝メトラクシス"
+      ]
+    },
+    {
+      "en": "Alien",
+      "zh": "外星人",
+      "ja": "エイリアン",
+      "jaAliases": [
+        "エイリアン"
+      ]
+    },
+    {
+      "en": "Ally",
+      "zh": "伙伴",
+      "ja": "同盟者",
+      "jaAliases": [
+        "同盟者"
+      ]
+    },
+    {
+      "en": "Aminatou",
+      "zh": "阿米娜图",
+      "ja": "アミナトゥ",
+      "jaAliases": [
+        "アミナトゥ"
+      ]
+    },
+    {
+      "en": "Amonkhet",
+      "zh": "阿芒凯",
+      "ja": "アモンケット",
+      "jaAliases": [
+        "アモンケット"
+      ]
+    },
+    {
+      "en": "Amsterdam",
+      "zh": "阿姆斯特丹"
+    },
+    {
+      "en": "Andorian",
+      "zh": "安多利亚人"
+    },
+    {
+      "en": "Androzani Minor",
+      "zh": "小安德洛赞尼",
+      "ja": "アンドロザーニ＝マイナー",
+      "jaAliases": [
+        "アンドロザーニ＝マイナー"
+      ]
+    },
+    {
+      "en": "Angel",
+      "zh": "天使",
+      "ja": "天使",
+      "jaAliases": [
+        "天使"
+      ]
+    },
+    {
+      "en": "Angelo",
+      "jaAliases": [
+        "アンジェロ"
+      ],
+      "ja": "アンジェロ"
+    },
+    {
+      "en": "Angrath",
+      "zh": "安戈斯",
+      "ja": "アングラス",
+      "jaAliases": [
+        "アングラス"
+      ]
+    },
+    {
+      "en": "Antausia",
+      "zh": "安陶西亚",
+      "ja": "アンタウシア",
+      "jaAliases": [
+        "アンタウシア"
+      ]
+    },
+    {
+      "en": "Antelope",
+      "zh": "羚羊",
+      "ja": "アンテロープ",
+      "jaAliases": [
+        "アンテロープ"
+      ]
+    },
+    {
+      "en": "Apalapucia",
+      "zh": "阿帕拉普西亚"
+    },
+    {
+      "en": "Ape",
+      "zh": "猿猴",
+      "ja": "類人猿",
+      "jaAliases": [
+        "類人猿"
+      ]
+    },
+    {
+      "en": "Arcane",
+      "zh": "古咒",
+      "ja": "秘儀",
+      "jaAliases": [
+        "秘儀"
+      ]
+    },
+    {
+      "en": "Arcavios",
+      "zh": "阿凯维沃",
+      "ja": "アルケヴィオス",
+      "jaAliases": [
+        "アルケヴィオス"
+      ]
+    },
+    {
+      "en": "Archer",
+      "zh": "弓箭手",
+      "ja": "射手",
+      "jaAliases": [
+        "射手"
+      ]
+    },
+    {
+      "en": "Archon",
+      "zh": "统领",
+      "ja": "執政官",
+      "jaAliases": [
+        "執政官"
+      ]
+    },
+    {
+      "en": "Arkhos",
+      "zh": "阿科斯",
+      "ja": "アーコス",
+      "jaAliases": [
+        "アーコス"
+      ]
+    },
+    {
+      "en": "Arlinn",
+      "zh": "雅琳",
+      "ja": "アーリン",
+      "jaAliases": [
+        "アーリン"
+      ]
+    },
+    {
+      "en": "Armadillo",
+      "zh": "犰狳",
+      "ja": "アルマジロ",
+      "jaAliases": [
+        "アルマジロ"
+      ]
+    },
+    {
+      "en": "Armored",
+      "zh": "装甲"
+    },
+    {
+      "en": "Army",
+      "jaAliases": [
+        "軍団"
+      ],
+      "ja": "軍団"
+    },
+    {
+      "en": "Artificer",
+      "zh": "神器师",
+      "ja": "工匠",
+      "jaAliases": [
+        "工匠"
+      ]
+    },
+    {
+      "en": "Arzakon",
+      "zh": "阿扎昆"
+    },
+    {
+      "en": "Ashiok",
+      "zh": "安梭苛",
+      "ja": "アショク",
+      "jaAliases": [
+        "アショク"
+      ]
+    },
+    {
+      "en": "Assassin",
+      "zh": "杀手",
+      "ja": "暗殺者",
+      "jaAliases": [
+        "暗殺者"
+      ]
+    },
+    {
+      "en": "Assembly-Worker",
+      "zh": "组装工人",
+      "ja": "組立作業員",
+      "jaAliases": [
+        "組立作業員"
+      ]
+    },
+    {
+      "en": "Astartes",
+      "zh": "阿斯塔特",
+      "ja": "アスタルテス",
+      "jaAliases": [
+        "アスタルテス"
+      ]
+    },
+    {
+      "en": "Atog",
+      "zh": "阿托格",
+      "ja": "エイトグ",
+      "jaAliases": [
+        "エイトグ"
+      ]
+    },
+    {
+      "en": "Attraction",
+      "zh": "景点"
+    },
+    {
+      "en": "Aura",
+      "zh": "灵气",
+      "ja": "オーラ",
+      "jaAliases": [
+        "オーラ"
+      ]
+    },
+    {
+      "en": "Aurochs",
+      "zh": "原牛",
+      "ja": "オーロクス",
+      "jaAliases": [
+        "オーロクス"
+      ]
+    },
+    {
+      "en": "Avacyn",
+      "jaAliases": [
+        "アヴァシン"
+      ],
+      "ja": "アヴァシン"
+    },
+    {
+      "en": "Avatar",
+      "zh": "圣者",
+      "ja": "アバター",
+      "jaAliases": [
+        "アバター"
+      ]
+    },
+    {
+      "en": "Avishkar",
+      "zh": "阿维什卡",
+      "ja": "カラデシュ",
+      "jaAliases": [
+        "カラデシュ"
+      ]
+    },
+    {
+      "en": "Axe",
+      "jaAliases": [
+        "斧"
+      ],
+      "ja": "斧"
+    },
+    {
+      "en": "Azgol",
+      "zh": "阿兹戈尔",
+      "ja": "アズゴル",
+      "jaAliases": [
+        "アズゴル"
+      ]
+    },
+    {
+      "en": "Azra",
+      "zh": "亚札人",
+      "ja": "アズラ",
+      "jaAliases": [
+        "アズラ"
+      ]
+    },
+    {
+      "en": "B.O.B.",
+      "zh": "B.O.B."
+    },
+    {
+      "en": "Background",
+      "zh": "身世",
+      "ja": "背景",
+      "jaAliases": [
+        "背景"
+      ]
+    },
+    {
+      "en": "Badger",
+      "zh": "獾",
+      "ja": "アナグマ",
+      "jaAliases": [
+        "アナグマ"
+      ]
+    },
+    {
+      "en": "Bahamut",
+      "zh": "巴哈姆特",
+      "ja": "バハムート",
+      "jaAliases": [
+        "バハムート"
+      ]
+    },
+    {
+      "en": "Ballistic Boulder",
+      "jaAliases": [
+        "バリスタの石弾"
+      ],
+      "ja": "バリスタの石弾"
+    },
+    {
+      "en": "Barbarian",
+      "zh": "野蛮人",
+      "ja": "バーバリアン",
+      "jaAliases": [
+        "バーバリアン"
+      ]
+    },
+    {
+      "en": "Bard",
+      "zh": "诗人",
+      "ja": "バード",
+      "jaAliases": [
+        "バード"
+      ]
+    },
+    {
+      "en": "Basilisk",
+      "zh": "蜥怪",
+      "ja": "バジリスク",
+      "jaAliases": [
+        "バジリスク"
+      ]
+    },
+    {
+      "en": "Basri",
+      "zh": "巴席利",
+      "ja": "バスリ",
+      "jaAliases": [
+        "バスリ"
+      ]
+    },
+    {
+      "en": "Bat",
+      "zh": "蝙蝠",
+      "ja": "コウモリ",
+      "jaAliases": [
+        "コウモリ"
+      ]
+    },
+    {
+      "en": "Bear",
+      "zh": "熊",
+      "ja": "熊",
+      "jaAliases": [
+        "熊"
+      ]
+    },
+    {
+      "en": "Beast",
+      "zh": "野兽",
+      "ja": "ビースト",
+      "jaAliases": [
+        "ビースト"
+      ]
+    },
+    {
+      "en": "Beau",
+      "jaAliases": [
+        "ボー"
+      ],
+      "ja": "ボー"
+    },
+    {
+      "en": "Beaver",
+      "zh": "河狸",
+      "ja": "ビーバー",
+      "jaAliases": [
+        "ビーバー"
+      ]
+    },
+    {
+      "en": "Beeble",
+      "zh": "哔宝精",
+      "ja": "ビーブル",
+      "jaAliases": [
+        "ビーブル"
+      ]
+    },
+    {
+      "en": "Beholder",
+      "zh": "眼魔",
+      "ja": "ビホルダー",
+      "jaAliases": [
+        "ビホルダー"
+      ]
+    },
+    {
+      "en": "Belenon",
+      "zh": "贝列侬",
+      "ja": "ベレノン",
+      "jaAliases": [
+        "ベレノン"
+      ]
+    },
+    {
+      "en": "Berserker",
+      "zh": "狂战士",
+      "ja": "狂戦士",
+      "jaAliases": [
+        "狂戦士"
+      ]
+    },
+    {
+      "en": "Bird",
+      "zh": "鸟",
+      "ja": "鳥",
+      "jaAliases": [
+        "鳥"
+      ]
+    },
+    {
+      "en": "Bison",
+      "zh": "野牛",
+      "ja": "バイソン",
+      "jaAliases": [
+        "バイソン"
+      ]
+    },
+    {
+      "en": "Blood",
+      "jaAliases": [
+        "血"
+      ],
+      "ja": "血"
+    },
+    {
+      "en": "Blue Horror",
+      "jaAliases": [
+        "青のホラー"
+      ],
+      "ja": "青のホラー"
+    },
+    {
+      "en": "Boar",
+      "zh": "野猪",
+      "ja": "猪",
+      "jaAliases": [
+        "猪"
+      ]
+    },
+    {
+      "en": "Bobblehead",
+      "zh": "娃娃",
+      "ja": "ボブルヘッド",
+      "jaAliases": [
+        "ボブルヘッド"
+      ]
+    },
+    {
+      "en": "Bolas",
+      "zh": "波拉斯",
+      "ja": "ボーラス",
+      "jaAliases": [
+        "ボーラス"
+      ]
+    },
+    {
+      "en": "Bolas's Meditation Realm",
+      "zh": "波拉斯冥想境"
+    },
+    {
+      "en": "Boo",
+      "jaAliases": [
+        "ブー"
+      ],
+      "ja": "ブー"
+    },
+    {
+      "en": "Book",
+      "zh": "书籍",
+      "ja": "本",
+      "jaAliases": [
+        "本"
+      ]
+    },
+    {
+      "en": "Borg",
+      "zh": "博格"
+    },
+    {
+      "en": "Brainiac",
+      "zh": "癫脑"
+    },
+    {
+      "en": "Bringer",
+      "zh": "信使",
+      "ja": "運び手",
+      "jaAliases": [
+        "運び手"
+      ]
+    },
+    {
+      "en": "Brushwagg",
+      "zh": "丛枝兽",
+      "ja": "ブラッシュワグ",
+      "jaAliases": [
+        "ブラッシュワグ"
+      ]
+    },
+    {
+      "en": "Butterfly",
+      "jaAliases": [
+        "蝶"
+      ],
+      "ja": "蝶"
+    },
+    {
+      "en": "C'tan",
+      "zh": "星神",
+      "ja": "ク＝タン",
+      "jaAliases": [
+        "ク＝タン"
+      ]
+    },
+    {
+      "en": "Cadet",
+      "jaAliases": [
+        "実習生"
+      ],
+      "ja": "実習生"
+    },
+    {
+      "en": "Caitian",
+      "zh": "凯提亚人"
+    },
+    {
+      "en": "Calix",
+      "zh": "凯利斯",
+      "ja": "ケイリクス",
+      "jaAliases": [
+        "ケイリクス"
+      ]
+    },
+    {
+      "en": "Camel",
+      "zh": "骆驼",
+      "ja": "ラクダ",
+      "jaAliases": [
+        "ラクダ"
+      ]
+    },
+    {
+      "en": "Capenna",
+      "zh": "卡佩纳",
+      "ja": "カペナ",
+      "jaAliases": [
+        "カペナ"
+      ]
+    },
+    {
+      "en": "Capybara",
+      "zh": "水豚",
+      "ja": "カピバラ",
+      "jaAliases": [
+        "カピバラ"
+      ]
+    },
+    {
+      "en": "Carnivore",
+      "jaAliases": [
+        "肉食動物"
+      ],
+      "ja": "肉食動物"
+    },
+    {
+      "en": "Carrier",
+      "zh": "病媒",
+      "ja": "キャリアー",
+      "jaAliases": [
+        "キャリアー"
+      ]
+    },
+    {
+      "en": "Cartouche",
+      "zh": "魔符",
+      "ja": "カルトーシュ",
+      "jaAliases": [
+        "カルトーシュ"
+      ]
+    },
+    {
+      "en": "Case",
+      "zh": "案件",
+      "ja": "事件",
+      "jaAliases": [
+        "事件"
+      ]
+    },
+    {
+      "en": "Cat",
+      "zh": "猫",
+      "ja": "猫",
+      "jaAliases": [
+        "猫"
+      ]
+    },
+    {
+      "en": "Cave",
+      "zh": "洞窟",
+      "ja": "洞窟",
+      "jaAliases": [
+        "洞窟"
+      ]
+    },
+    {
+      "en": "Centaur",
+      "zh": "半人马",
+      "ja": "ケンタウルス",
+      "jaAliases": [
+        "ケンタウルス"
+      ]
+    },
+    {
+      "en": "Chandra",
+      "zh": "茜卓",
+      "ja": "チャンドラ",
+      "jaAliases": [
+        "チャンドラ"
+      ]
+    },
+    {
+      "en": "Chef",
+      "zh": "厨师"
+    },
+    {
+      "en": "Cherubael",
+      "jaAliases": [
+        "ケルバエル"
+      ],
+      "ja": "ケルバエル"
+    },
+    {
+      "en": "Chicago",
+      "zh": "芝加哥"
+    },
+    {
+      "en": "Chimera",
+      "zh": "盖美拉",
+      "ja": "キマイラ",
+      "jaAliases": [
+        "キマイラ"
+      ]
+    },
+    {
+      "en": "Chorus",
+      "zh": "齐颂"
+    },
+    {
+      "en": "Citizen",
+      "zh": "市民",
+      "ja": "市民",
+      "jaAliases": [
+        "市民"
+      ]
+    },
+    {
+      "en": "Clamfolk",
+      "zh": "蛤仔",
+      "ja": "クラムフォーク",
+      "jaAliases": [
+        "クラムフォーク"
+      ]
+    },
+    {
+      "en": "Class",
+      "zh": "职业",
+      "ja": "クラス",
+      "jaAliases": [
+        "クラス"
+      ]
+    },
+    {
+      "en": "Cleric",
+      "zh": "僧侣",
+      "ja": "クレリック",
+      "jaAliases": [
+        "クレリック"
+      ]
+    },
+    {
+      "en": "Cloud Sprite",
+      "jaAliases": [
+        "雲のスプライト"
+      ],
+      "ja": "雲のスプライト"
+    },
+    {
+      "en": "Clown",
+      "zh": "小丑",
+      "ja": "道化師",
+      "jaAliases": [
+        "道化師"
+      ]
+    },
+    {
+      "en": "Clue",
+      "zh": "线索",
+      "ja": "手掛かり",
+      "jaAliases": [
+        "手掛かり"
+      ]
+    },
+    {
+      "en": "Cockatrice",
+      "zh": "石化鸡蛇",
+      "ja": "コカトリス",
+      "jaAliases": [
+        "コカトリス"
+      ]
+    },
+    {
+      "en": "Comet",
+      "zh": "慧慧"
+    },
+    {
+      "en": "Construct",
+      "zh": "组构体",
+      "ja": "構築物",
+      "jaAliases": [
+        "構築物"
+      ]
+    },
+    {
+      "en": "Contract",
+      "jaAliases": [
+        "契約"
+      ],
+      "ja": "契約"
+    },
+    {
+      "en": "Contraption",
+      "zh": "机巧"
+    },
+    {
+      "en": "Copy",
+      "jaAliases": [
+        "コピー"
+      ],
+      "ja": "コピー"
+    },
+    {
+      "en": "Cow",
+      "zh": "奶牛",
+      "ja": "雌牛",
+      "jaAliases": [
+        "雌牛"
+      ]
+    },
+    {
+      "en": "Coward",
+      "zh": "懦夫",
+      "ja": "臆病者",
+      "jaAliases": [
+        "臆病者"
+      ]
+    },
+    {
+      "en": "Coyote",
+      "zh": "郊狼",
+      "ja": "コヨーテ",
+      "jaAliases": [
+        "コヨーテ"
+      ]
+    },
+    {
+      "en": "Crab",
+      "zh": "蟹",
+      "ja": "カニ",
+      "jaAliases": [
+        "カニ"
+      ]
+    },
+    {
+      "en": "Cragflame",
+      "jaAliases": [
+        "岩山炎"
+      ],
+      "ja": "岩山炎"
+    },
+    {
+      "en": "Cridhe",
+      "zh": "克莱哲",
+      "ja": "クリーデ",
+      "jaAliases": [
+        "クリーデ"
+      ]
+    },
+    {
+      "en": "Crocodile",
+      "zh": "鳄鱼",
+      "ja": "クロコダイル",
+      "jaAliases": [
+        "クロコダイル"
+      ]
+    },
+    {
+      "en": "Curse",
+      "zh": "诅咒",
+      "ja": "呪い",
+      "jaAliases": [
+        "呪い"
+      ]
+    },
+    {
+      "en": "Cursed",
+      "jaAliases": [
+        "呪われし者"
+      ],
+      "ja": "呪われし者"
+    },
+    {
+      "en": "Custodes",
+      "zh": "禁军",
+      "ja": "近衛団",
+      "jaAliases": [
+        "近衛団"
+      ]
+    },
+    {
+      "en": "Cyberman",
+      "zh": "赛博人",
+      "ja": "サイバーマン",
+      "jaAliases": [
+        "サイバーマン"
+      ]
+    },
+    {
+      "en": "Cyborg",
+      "zh": "赛博格"
+    },
+    {
+      "en": "Cyclops",
+      "zh": "独眼巨人",
+      "ja": "サイクロプス",
+      "jaAliases": [
+        "サイクロプス"
+      ]
+    },
+    {
+      "en": "Dack",
+      "zh": "戴克",
+      "ja": "ダク",
+      "jaAliases": [
+        "ダク"
+      ]
+    },
+    {
+      "en": "Dakkon",
+      "zh": "达肯",
+      "ja": "ダッコン",
+      "jaAliases": [
+        "ダッコン"
+      ]
+    },
+    {
+      "en": "Dalek",
+      "zh": "戴立克",
+      "ja": "ダーレク",
+      "jaAliases": [
+        "ダーレク"
+      ]
+    },
+    {
+      "en": "Daretti",
+      "zh": "达雷迪",
+      "ja": "ダレッティ",
+      "jaAliases": [
+        "ダレッティ"
+      ]
+    },
+    {
+      "en": "Darillium",
+      "zh": "达勒里恩",
+      "ja": "ダリリアム",
+      "jaAliases": [
+        "ダリリアム"
+      ]
+    },
+    {
+      "en": "Darkstar",
+      "jaAliases": [
+        "ダークネイション"
+      ],
+      "ja": "ダークネイション"
+    },
+    {
+      "en": "Dauthi",
+      "zh": "道西",
+      "ja": "ダウスィー",
+      "jaAliases": [
+        "ダウスィー"
+      ]
+    },
+    {
+      "en": "Davriel",
+      "zh": "达夫黎",
+      "ja": "ダブリエル",
+      "jaAliases": [
+        "ダブリエル"
+      ]
+    },
+    {
+      "en": "Deb",
+      "zh": "黛博"
+    },
+    {
+      "en": "Dellian",
+      "zh": "德连",
+      "ja": "デリアン",
+      "jaAliases": [
+        "デリアン"
+      ]
+    },
+    {
+      "en": "Demigod",
+      "zh": "半神",
+      "ja": "亜神",
+      "jaAliases": [
+        "亜神"
+      ]
+    },
+    {
+      "en": "Demon",
+      "zh": "恶魔",
+      "ja": "デーモン",
+      "jaAliases": [
+        "デーモン"
+      ]
+    },
+    {
+      "en": "Desert",
+      "zh": "沙漠",
+      "ja": "砂漠",
+      "jaAliases": [
+        "砂漠"
+      ]
+    },
+    {
+      "en": "Detective",
+      "zh": "侦探",
+      "ja": "探偵",
+      "jaAliases": [
+        "探偵"
+      ]
+    },
+    {
+      "en": "Devil",
+      "zh": "魔鬼",
+      "ja": "デビル",
+      "jaAliases": [
+        "デビル"
+      ]
+    },
+    {
+      "en": "Dihada",
+      "zh": "迪哈达",
+      "ja": "ディハーダ",
+      "jaAliases": [
+        "ディハーダ"
+      ]
+    },
+    {
+      "en": "Dinosaur",
+      "zh": "恐龙",
+      "ja": "恐竜",
+      "jaAliases": [
+        "恐竜"
+      ]
+    },
+    {
+      "en": "Djinn",
+      "zh": "巨灵",
+      "ja": "ジン",
+      "jaAliases": [
+        "ジン"
+      ]
+    },
+    {
+      "en": "Doctor",
+      "zh": "医生",
+      "ja": "ドクター",
+      "jaAliases": [
+        "ドクター"
+      ]
+    },
+    {
+      "en": "Dog",
+      "zh": "狗",
+      "ja": "犬",
+      "jaAliases": [
+        "犬"
+      ]
+    },
+    {
+      "en": "Dominaria",
+      "zh": "多明纳里亚",
+      "ja": "ドミナリア",
+      "jaAliases": [
+        "ドミナリア"
+      ]
+    },
+    {
+      "en": "Domri",
+      "zh": "多密",
+      "ja": "ドムリ",
+      "jaAliases": [
+        "ドムリ"
+      ]
+    },
+    {
+      "en": "Doombot",
+      "jaAliases": [
+        "ドゥームボット"
+      ],
+      "ja": "ドゥームボット"
+    },
+    {
+      "en": "Dovin",
+      "zh": "多温",
+      "ja": "ドビン",
+      "jaAliases": [
+        "ドビン"
+      ]
+    },
+    {
+      "en": "Dragon",
+      "zh": "龙",
+      "ja": "ドラゴン",
+      "jaAliases": [
+        "ドラゴン"
+      ]
+    },
+    {
+      "en": "Drake",
+      "zh": "龙兽",
+      "ja": "ドレイク",
+      "jaAliases": [
+        "ドレイク"
+      ]
+    },
+    {
+      "en": "Dreadnought",
+      "zh": "无畏舰",
+      "ja": "ドレッドノート",
+      "jaAliases": [
+        "ドレッドノート"
+      ]
+    },
+    {
+      "en": "Drix",
+      "zh": "卓兹人",
+      "ja": "ドリックス",
+      "jaAliases": [
+        "ドリックス"
+      ]
+    },
+    {
+      "en": "Drone",
+      "zh": "奴兽",
+      "ja": "ドローン",
+      "jaAliases": [
+        "ドローン"
+      ]
+    },
+    {
+      "en": "Druid",
+      "zh": "德鲁伊",
+      "ja": "ドルイド",
+      "jaAliases": [
+        "ドルイド"
+      ]
+    },
+    {
+      "en": "Dryad",
+      "zh": "树灵",
+      "ja": "ドライアド",
+      "jaAliases": [
+        "ドライアド"
+      ]
+    },
+    {
+      "en": "Duck",
+      "zh": "鸭鸭"
+    },
+    {
+      "en": "Duskmourn",
+      "zh": "暮悲邸"
+    },
+    {
+      "en": "Dwarf",
+      "zh": "矮人",
+      "ja": "ドワーフ",
+      "jaAliases": [
+        "ドワーフ"
+      ]
+    },
+    {
+      "en": "Dyfed",
+      "zh": "迪菲德"
+    },
+    {
+      "en": "Earth",
+      "zh": "地球",
+      "ja": "地球",
+      "jaAliases": [
+        "地球"
+      ]
+    },
+    {
+      "en": "Echidna",
+      "zh": "针鼹"
+    },
+    {
+      "en": "Echoir",
+      "zh": "埃圭尔",
+      "ja": "エコワール",
+      "jaAliases": [
+        "エコワール"
+      ]
+    },
+    {
+      "en": "Efreet",
+      "zh": "魔神",
+      "ja": "イフリート",
+      "jaAliases": [
+        "イフリート"
+      ]
+    },
+    {
+      "en": "Egg",
+      "zh": "蛋",
+      "ja": "卵",
+      "jaAliases": [
+        "卵"
+      ]
+    },
+    {
+      "en": "Elder",
+      "zh": "长老",
+      "ja": "エルダー",
+      "jaAliases": [
+        "エルダー"
+      ]
+    },
+    {
+      "en": "Eldraine",
+      "zh": "艾卓",
+      "ja": "エルドレイン",
+      "jaAliases": [
+        "エルドレイン"
+      ]
+    },
+    {
+      "en": "Eldrazi",
+      "zh": "奥札奇",
+      "ja": "エルドラージ",
+      "jaAliases": [
+        "エルドラージ"
+      ]
+    },
+    {
+      "en": "Elemental",
+      "zh": "元素",
+      "ja": "エレメンタル",
+      "jaAliases": [
+        "エレメンタル"
+      ]
+    },
+    {
+      "en": "Elephant",
+      "zh": "象",
+      "ja": "象",
+      "jaAliases": [
+        "象"
+      ]
+    },
+    {
+      "en": "Elf",
+      "zh": "妖精",
+      "ja": "エルフ",
+      "jaAliases": [
+        "エルフ"
+      ]
+    },
+    {
+      "en": "Elk",
+      "zh": "麋鹿",
+      "ja": "大鹿",
+      "jaAliases": [
+        "大鹿"
+      ]
+    },
+    {
+      "en": "Ellywick",
+      "zh": "艾利薇",
+      "ja": "エリーウィック",
+      "jaAliases": [
+        "エリーウィック"
+      ]
+    },
+    {
+      "en": "Elminster",
+      "zh": "伊尔明斯特",
+      "ja": "エルミンスター",
+      "jaAliases": [
+        "エルミンスター"
+      ]
+    },
+    {
+      "en": "Elspeth",
+      "zh": "艾紫培",
+      "ja": "エルズペス",
+      "jaAliases": [
+        "エルズペス"
+      ]
+    },
+    {
+      "en": "Employee",
+      "zh": "雇员"
+    },
+    {
+      "en": "Equilor",
+      "zh": "埃奎罗",
+      "ja": "エクィロー",
+      "jaAliases": [
+        "エクィロー"
+      ]
+    },
+    {
+      "en": "Equipment",
+      "zh": "武具",
+      "ja": "装備品",
+      "jaAliases": [
+        "装備品"
+      ]
+    },
+    {
+      "en": "Ergamon",
+      "zh": "厄加蒙",
+      "ja": "エルガモン",
+      "jaAliases": [
+        "エルガモン"
+      ]
+    },
+    {
+      "en": "Ersta",
+      "zh": "厄斯塔"
+    },
+    {
+      "en": "Estrid",
+      "zh": "艾丝翠",
+      "ja": "エストリッド",
+      "jaAliases": [
+        "エストリッド"
+      ]
+    },
+    {
+      "en": "Eternal",
+      "zh": "永恒族",
+      "ja": "エターナル",
+      "jaAliases": [
+        "エターナル"
+      ]
+    },
+    {
+      "en": "Etherium Cell",
+      "jaAliases": [
+        "エーテリウム電池"
+      ],
+      "ja": "エーテリウム電池"
+    },
+    {
+      "en": "Everywhere",
+      "jaAliases": [
+        "遍在地"
+      ],
+      "ja": "遍在地"
+    },
+    {
+      "en": "Eye",
+      "zh": "眼",
+      "ja": "眼",
+      "jaAliases": [
+        "眼"
+      ]
+    },
+    {
+      "en": "Fabacin",
+      "zh": "法巴辛",
+      "ja": "ファバシン",
+      "jaAliases": [
+        "ファバシン"
+      ]
+    },
+    {
+      "en": "Faerie",
+      "zh": "仙灵",
+      "ja": "フェアリー",
+      "jaAliases": [
+        "フェアリー"
+      ]
+    },
+    {
+      "en": "Feather",
+      "jaAliases": [
+        "羽根"
+      ],
+      "ja": "羽根"
+    },
+    {
+      "en": "Feroz",
+      "zh": "菲罗兹"
+    },
+    {
+      "en": "Ferret",
+      "zh": "雪貂",
+      "ja": "イタチ",
+      "jaAliases": [
+        "イタチ"
+      ]
+    },
+    {
+      "en": "Fiora",
+      "zh": "翡欧拉",
+      "ja": "フィオーラ",
+      "jaAliases": [
+        "フィオーラ"
+      ]
+    },
+    {
+      "en": "First Mate Ragavan",
+      "jaAliases": [
+        "航海士ラガバン"
+      ],
+      "ja": "航海士ラガバン"
+    },
+    {
+      "en": "Fish",
+      "zh": "鱼",
+      "ja": "魚",
+      "jaAliases": [
+        "魚"
+      ]
+    },
+    {
+      "en": "Flagbearer",
+      "zh": "旗手",
+      "ja": "旗手",
+      "jaAliases": [
+        "旗手"
+      ]
+    },
+    {
+      "en": "Food",
+      "zh": "食品",
+      "ja": "食物",
+      "jaAliases": [
+        "食物"
+      ]
+    },
+    {
+      "en": "Forest",
+      "zh": "树林",
+      "ja": "森",
+      "jaAliases": [
+        "森"
+      ]
+    },
+    {
+      "en": "Fortification",
+      "zh": "工事",
+      "ja": "城砦",
+      "jaAliases": [
+        "城砦"
+      ]
+    },
+    {
+      "en": "Fox",
+      "zh": "狐",
+      "ja": "狐",
+      "jaAliases": [
+        "狐"
+      ]
+    },
+    {
+      "en": "Fractal",
+      "zh": "分灵",
+      "ja": "フラクタル",
+      "jaAliases": [
+        "フラクタル"
+      ]
+    },
+    {
+      "en": "Freyalise",
+      "zh": "妃雅丽兹",
+      "ja": "フレイアリーズ",
+      "jaAliases": [
+        "フレイアリーズ"
+      ]
+    },
+    {
+      "en": "Frog",
+      "zh": "蛙",
+      "ja": "カエル",
+      "jaAliases": [
+        "カエル"
+      ]
+    },
+    {
+      "en": "Fungus",
+      "zh": "真菌",
+      "ja": "ファンガス",
+      "jaAliases": [
+        "ファンガス"
+      ]
+    },
+    {
+      "en": "Galactus",
+      "jaAliases": [
+        "ギャラクタス"
+      ],
+      "ja": "ギャラクタス"
+    },
+    {
+      "en": "Gallifrey",
+      "zh": "迦里弗莱",
+      "ja": "ギャリフレイ",
+      "jaAliases": [
+        "ギャリフレイ"
+      ]
+    },
+    {
+      "en": "Gamer",
+      "zh": "玩家",
+      "ja": "ゲーマー",
+      "jaAliases": [
+        "ゲーマー"
+      ]
+    },
+    {
+      "en": "Gamma",
+      "zh": "伽马人",
+      "ja": "ガンマ",
+      "jaAliases": [
+        "ガンマ"
+      ]
+    },
+    {
+      "en": "Gargantikar",
+      "zh": "庞巨地",
+      "ja": "ガルガンティカール",
+      "jaAliases": [
+        "ガルガンティカール"
+      ]
+    },
+    {
+      "en": "Gargoyle",
+      "zh": "石像鬼",
+      "ja": "ガーゴイル",
+      "jaAliases": [
+        "ガーゴイル"
+      ]
+    },
+    {
+      "en": "Garruk",
+      "zh": "贾路",
+      "ja": "ガラク",
+      "jaAliases": [
+        "ガラク"
+      ]
+    },
+    {
+      "en": "Gate",
+      "zh": "门",
+      "ja": "門",
+      "jaAliases": [
+        "門"
+      ]
+    },
+    {
+      "en": "Germ",
+      "jaAliases": [
+        "細菌"
+      ],
+      "ja": "細菌"
+    },
+    {
+      "en": "Giant",
+      "zh": "巨人",
+      "ja": "巨人",
+      "jaAliases": [
+        "巨人"
+      ]
+    },
+    {
+      "en": "Gideon",
+      "zh": "基定",
+      "ja": "ギデオン",
+      "jaAliases": [
+        "ギデオン"
+      ]
+    },
+    {
+      "en": "Gingerbrute Token",
+      "jaAliases": [
+        "ジンジャーブルート"
+      ],
+      "ja": "ジンジャーブルート"
+    },
+    {
+      "en": "Giraffe",
+      "zh": "长颈鹿",
+      "ja": "キリン",
+      "jaAliases": [
+        "キリン"
+      ]
+    },
+    {
+      "en": "Gith",
+      "zh": "吉斯人",
+      "ja": "ギス",
+      "jaAliases": [
+        "ギス"
+      ]
+    },
+    {
+      "en": "Glimmer",
+      "zh": "烁光体",
+      "ja": "光霊",
+      "jaAliases": [
+        "光霊"
+      ]
+    },
+    {
+      "en": "Gnoll",
+      "zh": "豺狼人",
+      "ja": "ノール",
+      "jaAliases": [
+        "ノール"
+      ]
+    },
+    {
+      "en": "Gnome",
+      "zh": "地侏",
+      "ja": "ノーム",
+      "jaAliases": [
+        "ノーム"
+      ]
+    },
+    {
+      "en": "Goat",
+      "zh": "山羊",
+      "ja": "ヤギ",
+      "jaAliases": [
+        "ヤギ"
+      ]
+    },
+    {
+      "en": "Gobakhan",
+      "zh": "高巴汗",
+      "ja": "ゴバカーン",
+      "jaAliases": [
+        "ゴバカーン"
+      ]
+    },
+    {
+      "en": "Goblin",
+      "zh": "鬼怪",
+      "ja": "ゴブリン",
+      "jaAliases": [
+        "ゴブリン"
+      ]
+    },
+    {
+      "en": "God",
+      "zh": "神",
+      "ja": "神",
+      "jaAliases": [
+        "神"
+      ]
+    },
+    {
+      "en": "Gold",
+      "jaAliases": [
+        "金"
+      ],
+      "ja": "金"
+    },
+    {
+      "en": "Golem",
+      "zh": "魔像",
+      "ja": "ゴーレム",
+      "jaAliases": [
+        "ゴーレム"
+      ]
+    },
+    {
+      "en": "Gorgon",
+      "zh": "蛇发妖",
+      "ja": "ゴルゴン",
+      "jaAliases": [
+        "ゴルゴン"
+      ]
+    },
+    {
+      "en": "Gorn",
+      "zh": "高恩"
+    },
+    {
+      "en": "Graveborn",
+      "jaAliases": [
+        "墓生まれ"
+      ],
+      "ja": "墓生まれ"
+    },
+    {
+      "en": "Greensleeves",
+      "zh": "绿袖"
+    },
+    {
+      "en": "Gremlin",
+      "zh": "怪灵",
+      "ja": "グレムリン",
+      "jaAliases": [
+        "グレムリン"
+      ]
+    },
+    {
+      "en": "Griffin",
+      "zh": "狮鹫",
+      "ja": "グリフィン",
+      "jaAliases": [
+        "グリフィン"
+      ]
+    },
+    {
+      "en": "Grist",
+      "zh": "格蕊斯",
+      "ja": "グリスト",
+      "jaAliases": [
+        "グリスト"
+      ]
+    },
+    {
+      "en": "Guenhwyvar",
+      "jaAliases": [
+        "グエンワイヴァー"
+      ],
+      "ja": "グエンワイヴァー"
+    },
+    {
+      "en": "Guest",
+      "zh": "宾客"
+    },
+    {
+      "en": "Guff",
+      "zh": "古夫",
+      "ja": "ガフ",
+      "jaAliases": [
+        "ガフ"
+      ]
+    },
+    {
+      "en": "Hag",
+      "zh": "巫婆",
+      "ja": "ハッグ",
+      "jaAliases": [
+        "ハッグ"
+      ]
+    },
+    {
+      "en": "Halfling",
+      "zh": "半身人",
+      "ja": "ハーフリング",
+      "jaAliases": [
+        "ハーフリング"
+      ]
+    },
+    {
+      "en": "Hamster",
+      "zh": "仓鼠",
+      "ja": "ハムスター",
+      "jaAliases": [
+        "ハムスター"
+      ]
+    },
+    {
+      "en": "Harpy",
+      "zh": "哈痞",
+      "ja": "ハーピー",
+      "jaAliases": [
+        "ハーピー"
+      ]
+    },
+    {
+      "en": "Heartwood",
+      "jaAliases": [
+        "魂木"
+      ],
+      "ja": "魂木"
+    },
+    {
+      "en": "Hedgehog",
+      "zh": "刺猬"
+    },
+    {
+      "en": "Hell",
+      "zh": "地狱"
+    },
+    {
+      "en": "Hellion",
+      "zh": "地狱兽",
+      "ja": "ヘリオン",
+      "jaAliases": [
+        "ヘリオン"
+      ]
+    },
+    {
+      "en": "Hero",
+      "zh": "英雄",
+      "ja": "英雄",
+      "jaAliases": [
+        "英雄"
+      ]
+    },
+    {
+      "en": "Hippo",
+      "zh": "河马",
+      "ja": "カバ",
+      "jaAliases": [
+        "カバ"
+      ]
+    },
+    {
+      "en": "Hippogriff",
+      "zh": "骏鹰",
+      "ja": "ヒポグリフ",
+      "jaAliases": [
+        "ヒポグリフ"
+      ]
+    },
+    {
+      "en": "Homarid",
+      "zh": "荷马利",
+      "ja": "ホマリッド",
+      "jaAliases": [
+        "ホマリッド"
+      ]
+    },
+    {
+      "en": "Homunculus",
+      "zh": "造妖",
+      "ja": "ホムンクルス",
+      "jaAliases": [
+        "ホムンクルス"
+      ]
+    },
+    {
+      "en": "Hornet",
+      "jaAliases": [
+        "スズメバチ"
+      ],
+      "ja": "スズメバチ"
+    },
+    {
+      "en": "Horror",
+      "zh": "惊惧兽",
+      "ja": "ホラー",
+      "jaAliases": [
+        "ホラー"
+      ]
+    },
+    {
+      "en": "Horse",
+      "zh": "马",
+      "ja": "馬",
+      "jaAliases": [
+        "馬"
+      ]
+    },
+    {
+      "en": "Horsehead Nebula",
+      "zh": "马头星云",
+      "ja": "馬頭星雲",
+      "jaAliases": [
+        "馬頭星雲"
+      ]
+    },
+    {
+      "en": "Huatli",
+      "zh": "华特莉",
+      "ja": "ファートリ",
+      "jaAliases": [
+        "ファートリ"
+      ]
+    },
+    {
+      "en": "Human",
+      "zh": "人类",
+      "ja": "人間",
+      "jaAliases": [
+        "人間"
+      ]
+    },
+    {
+      "en": "Hydra",
+      "zh": "多头龙",
+      "ja": "ハイドラ",
+      "jaAliases": [
+        "ハイドラ"
+      ]
+    },
+    {
+      "en": "Hyena",
+      "zh": "鬣狗",
+      "ja": "ハイエナ",
+      "jaAliases": [
+        "ハイエナ"
+      ]
+    },
+    {
+      "en": "Icingdeath, Frost Tongue",
+      "jaAliases": [
+        "霜の舌、アイシングデス"
+      ],
+      "ja": "霜の舌、アイシングデス"
+    },
+    {
+      "en": "Icy Manalith",
+      "jaAliases": [
+        "氷のマナリス"
+      ],
+      "ja": "氷のマナリス"
+    },
+    {
+      "en": "Ikoria",
+      "zh": "依克黎",
+      "ja": "イコリア",
+      "jaAliases": [
+        "イコリア"
+      ]
+    },
+    {
+      "en": "Illusion",
+      "zh": "虚影",
+      "ja": "イリュージョン",
+      "jaAliases": [
+        "イリュージョン"
+      ]
+    },
+    {
+      "en": "Imp",
+      "zh": "小恶魔",
+      "ja": "インプ",
+      "jaAliases": [
+        "インプ"
+      ]
+    },
+    {
+      "en": "Incarnation",
+      "zh": "化身",
+      "ja": "インカーネーション",
+      "jaAliases": [
+        "インカーネーション"
+      ]
+    },
+    {
+      "en": "Incubator",
+      "jaAliases": [
+        "培養器"
+      ],
+      "ja": "培養器"
+    },
+    {
+      "en": "Infinity",
+      "zh": "无限",
+      "ja": "インフィニティ",
+      "jaAliases": [
+        "インフィニティ"
+      ]
+    },
+    {
+      "en": "Inhuman",
+      "zh": "异人族",
+      "ja": "インヒューマン",
+      "jaAliases": [
+        "インヒューマン"
+      ]
+    },
+    {
+      "en": "Inkling",
+      "zh": "墨灵",
+      "ja": "墨獣",
+      "jaAliases": [
+        "墨獣"
+      ]
+    },
+    {
+      "en": "Innistrad",
+      "zh": "依尼翠",
+      "ja": "イニストラード",
+      "jaAliases": [
+        "イニストラード"
+      ]
+    },
+    {
+      "en": "Inquisitor",
+      "zh": "审判官",
+      "ja": "異端審問官",
+      "jaAliases": [
+        "異端審問官"
+      ]
+    },
+    {
+      "en": "Insect",
+      "zh": "昆虫",
+      "ja": "昆虫",
+      "jaAliases": [
+        "昆虫"
+      ]
+    },
+    {
+      "en": "Inzerva",
+      "zh": "因泽瓦"
+    },
+    {
+      "en": "Iquatana",
+      "zh": "伊夸塔纳",
+      "ja": "イクァターナ",
+      "jaAliases": [
+        "イクァターナ"
+      ]
+    },
+    {
+      "en": "Ir",
+      "zh": "伊尔",
+      "ja": "アー",
+      "jaAliases": [
+        "アー"
+      ]
+    },
+    {
+      "en": "Island",
+      "zh": "海岛",
+      "ja": "島",
+      "jaAliases": [
+        "島"
+      ]
+    },
+    {
+      "en": "Ixalan",
+      "zh": "依夏兰",
+      "ja": "イクサラン",
+      "jaAliases": [
+        "イクサラン"
+      ]
+    },
+    {
+      "en": "Jace",
+      "zh": "杰斯",
+      "ja": "ジェイス",
+      "jaAliases": [
+        "ジェイス"
+      ]
+    },
+    {
+      "en": "Jackal",
+      "zh": "豺狼",
+      "ja": "ジャッカル",
+      "jaAliases": [
+        "ジャッカル"
+      ]
+    },
+    {
+      "en": "Jared",
+      "zh": "贾瑞",
+      "ja": "ジャレッド",
+      "jaAliases": [
+        "ジャレッド"
+      ]
+    },
+    {
+      "en": "Jaya",
+      "zh": "雅亚",
+      "ja": "ヤヤ",
+      "jaAliases": [
+        "ヤヤ"
+      ]
+    },
+    {
+      "en": "Jellyfish",
+      "zh": "水母",
+      "ja": "クラゲ",
+      "jaAliases": [
+        "クラゲ"
+      ]
+    },
+    {
+      "en": "Jeska",
+      "zh": "洁丝卡",
+      "ja": "ジェスカ",
+      "jaAliases": [
+        "ジェスカ"
+      ]
+    },
+    {
+      "en": "Judge",
+      "zh": "裁判"
+    },
+    {
+      "en": "Juggernaut",
+      "zh": "攻城巨车",
+      "ja": "巨大戦車",
+      "jaAliases": [
+        "巨大戦車"
+      ]
+    },
+    {
+      "en": "Junk",
+      "jaAliases": [
+        "ジャンク"
+      ],
+      "ja": "ジャンク"
+    },
+    {
+      "en": "Kaito",
+      "zh": "魁渡",
+      "ja": "魁渡",
+      "jaAliases": [
+        "魁渡"
+      ]
+    },
+    {
+      "en": "Kaldheim",
+      "zh": "凯德海姆",
+      "ja": "カルドハイム",
+      "jaAliases": [
+        "カルドハイム"
+      ]
+    },
+    {
+      "en": "Kamigawa",
+      "zh": "神河",
+      "ja": "神河",
+      "jaAliases": [
+        "神河"
+      ]
+    },
+    {
+      "en": "Kandoka",
+      "zh": "坎多卡",
+      "ja": "カンドカ",
+      "jaAliases": [
+        "カンドカ"
+      ]
+    },
+    {
+      "en": "Kangaroo",
+      "zh": "袋鼠",
+      "ja": "カンガルー",
+      "jaAliases": [
+        "カンガルー"
+      ]
+    },
+    {
+      "en": "Karn",
+      "zh": "卡恩",
+      "ja": "カーン",
+      "jaAliases": [
+        "カーン"
+      ]
+    },
+    {
+      "en": "Karox Bladewing",
+      "jaAliases": [
+        "刃の翼カロックス"
+      ],
+      "ja": "刃の翼カロックス"
+    },
+    {
+      "en": "Karsus",
+      "zh": "卡瑟斯"
+    },
+    {
+      "en": "Kasmina",
+      "zh": "克蜜娜",
+      "ja": "カズミナ",
+      "jaAliases": [
+        "カズミナ"
+      ]
+    },
+    {
+      "en": "Kavu",
+      "zh": "卡甫",
+      "ja": "カヴー",
+      "jaAliases": [
+        "カヴー"
+      ]
+    },
+    {
+      "en": "Kaya",
+      "zh": "卡娅",
+      "ja": "ケイヤ",
+      "jaAliases": [
+        "ケイヤ"
+      ]
+    },
+    {
+      "en": "Keimi",
+      "jaAliases": [
+        "哇魅"
+      ],
+      "ja": "哇魅"
+    },
+    {
+      "en": "Kelpien",
+      "zh": "凯尔宾人"
+    },
+    {
+      "en": "Kephalai",
+      "zh": "喀法莱",
+      "ja": "ケファライ",
+      "jaAliases": [
+        "ケファライ"
+      ]
+    },
+    {
+      "en": "Key",
+      "zh": "钥匙"
+    },
+    {
+      "en": "Killbot",
+      "zh": "杀手机器人"
+    },
+    {
+      "en": "Kinshala",
+      "zh": "金沙拉"
+    },
+    {
+      "en": "Kiora",
+      "zh": "奇奥拉",
+      "ja": "キオーラ",
+      "jaAliases": [
+        "キオーラ"
+      ]
+    },
+    {
+      "en": "Kirin",
+      "zh": "麒麟",
+      "ja": "麒麟",
+      "jaAliases": [
+        "麒麟"
+      ]
+    },
+    {
+      "en": "Kithkin",
+      "zh": "洁英",
+      "ja": "キスキン",
+      "jaAliases": [
+        "キスキン"
+      ]
+    },
+    {
+      "en": "Klingon",
+      "zh": "克林贡人"
+    },
+    {
+      "en": "Knight",
+      "zh": "骑士",
+      "ja": "騎士",
+      "jaAliases": [
+        "騎士"
+      ]
+    },
+    {
+      "en": "Kobold",
+      "zh": "鬼崽",
+      "ja": "コボルド",
+      "jaAliases": [
+        "コボルド"
+      ]
+    },
+    {
+      "en": "Kobolds of Kher Keep",
+      "jaAliases": [
+        "カー砦のコボルド"
+      ],
+      "ja": "カー砦のコボルド"
+    },
+    {
+      "en": "Kolbahan",
+      "zh": "科尔帕罕",
+      "ja": "コルバーン",
+      "jaAliases": [
+        "コルバーン"
+      ]
+    },
+    {
+      "en": "Koma's Coil",
+      "jaAliases": [
+        "コーマの分体"
+      ],
+      "ja": "コーマの分体"
+    },
+    {
+      "en": "Kor",
+      "zh": "寇族",
+      "ja": "コー",
+      "jaAliases": [
+        "コー"
+      ]
+    },
+    {
+      "en": "Koth",
+      "zh": "寇斯",
+      "ja": "コス",
+      "jaAliases": [
+        "コス"
+      ]
+    },
+    {
+      "en": "Kraken",
+      "zh": "巨海兽",
+      "ja": "クラーケン",
+      "jaAliases": [
+        "クラーケン"
+      ]
+    },
+    {
+      "en": "Kree",
+      "zh": "克里人",
+      "ja": "クリー",
+      "jaAliases": [
+        "クリー"
+      ]
+    },
+    {
+      "en": "Kylem",
+      "zh": "凯勒姆",
+      "ja": "ケイレム",
+      "jaAliases": [
+        "ケイレム"
+      ]
+    },
+    {
+      "en": "Kyneth",
+      "zh": "凯奈斯",
+      "ja": "キネス",
+      "jaAliases": [
+        "キネス"
+      ]
+    },
+    {
+      "en": "Lair",
+      "zh": "巢穴",
+      "ja": "棲み家",
+      "jaAliases": [
+        "棲み家"
+      ]
+    },
+    {
+      "en": "Lamia",
+      "zh": "拉弥亚",
+      "ja": "ラミア",
+      "jaAliases": [
+        "ラミア"
+      ]
+    },
+    {
+      "en": "Lammasu",
+      "zh": "拉玛苏",
+      "ja": "ラマスー",
+      "jaAliases": [
+        "ラマスー"
+      ]
+    },
+    {
+      "en": "Land Mine",
+      "jaAliases": [
+        "地雷"
+      ],
+      "ja": "地雷"
+    },
+    {
+      "en": "Lander",
+      "jaAliases": [
+        "着陸船"
+      ],
+      "ja": "着陸船"
+    },
+    {
+      "en": "Lanthanite",
+      "zh": "阑山人"
+    },
+    {
+      "en": "Las Vegas",
+      "zh": "拉斯维加斯"
+    },
+    {
+      "en": "Leech",
+      "zh": "蛭",
+      "ja": "ヒル",
+      "jaAliases": [
+        "ヒル"
+      ]
+    },
+    {
+      "en": "Lemur",
+      "zh": "狐猴",
+      "ja": "キツネザル",
+      "jaAliases": [
+        "キツネザル"
+      ]
+    },
+    {
+      "en": "Lesson",
+      "zh": "课程",
+      "ja": "講義",
+      "jaAliases": [
+        "講義"
+      ]
+    },
+    {
+      "en": "Leviathan",
+      "zh": "海怪",
+      "ja": "リバイアサン",
+      "jaAliases": [
+        "リバイアサン"
+      ]
+    },
+    {
+      "en": "Lhurgoyf",
+      "zh": "拉高耶夫",
+      "ja": "ルアゴイフ",
+      "jaAliases": [
+        "ルアゴイフ"
+      ]
+    },
+    {
+      "en": "Licid",
+      "zh": "立吸怪",
+      "ja": "リシド",
+      "jaAliases": [
+        "リシド"
+      ]
+    },
+    {
+      "en": "Lightning Rager",
+      "jaAliases": [
+        "稲妻の憤怒獣"
+      ],
+      "ja": "稲妻の憤怒獣"
+    },
+    {
+      "en": "Liliana",
+      "zh": "莉莲娜",
+      "ja": "リリアナ",
+      "jaAliases": [
+        "リリアナ"
+      ]
+    },
+    {
+      "en": "Lizard",
+      "zh": "蜥蜴",
+      "jaAliases": [
+        "トカゲ"
+      ],
+      "ja": "トカゲ"
+    },
+    {
+      "en": "Llanowar Elves",
+      "jaAliases": [
+        "ラノワールのエルフ"
+      ],
+      "ja": "ラノワールのエルフ"
+    },
+    {
+      "en": "Lobster",
+      "zh": "龙虾"
+    },
+    {
+      "en": "Locus",
+      "zh": "处所",
+      "ja": "神座",
+      "jaAliases": [
+        "神座"
+      ]
+    },
+    {
+      "en": "Lolth",
+      "zh": "罗丝",
+      "ja": "ロルス",
+      "jaAliases": [
+        "ロルス"
+      ]
+    },
+    {
+      "en": "Lorwyn",
+      "zh": "洛温",
+      "ja": "ローウィン",
+      "jaAliases": [
+        "ローウィン"
+      ]
+    },
+    {
+      "en": "Lotus",
+      "jaAliases": [
+        "睡蓮"
+      ],
+      "ja": "睡蓮"
+    },
+    {
+      "en": "Lukka",
+      "zh": "卢卡",
+      "ja": "ルーカ",
+      "jaAliases": [
+        "ルーカ"
+      ]
+    },
+    {
+      "en": "Luvion",
+      "zh": "卢维恩"
+    },
+    {
+      "en": "MagicCon",
+      "zh": "万智大展"
+    },
+    {
+      "en": "Mammoth",
+      "zh": "长毛象"
+    },
+    {
+      "en": "Manticore",
+      "zh": "翼狮",
+      "ja": "マンティコア",
+      "jaAliases": [
+        "マンティコア"
+      ]
+    },
+    {
+      "en": "Map",
+      "jaAliases": [
+        "地図"
+      ],
+      "ja": "地図"
+    },
+    {
+      "en": "Marit Lage",
+      "jaAliases": [
+        "マリット・レイジ"
+      ],
+      "ja": "マリット・レイジ"
+    },
+    {
+      "en": "Mark of the Rani",
+      "jaAliases": [
+        "ラニの印"
+      ],
+      "ja": "ラニの印"
+    },
+    {
+      "en": "Mars",
+      "zh": "火星",
+      "ja": "火星",
+      "jaAliases": [
+        "火星"
+      ]
+    },
+    {
+      "en": "Mask",
+      "jaAliases": [
+        "仮面"
+      ],
+      "ja": "仮面"
+    },
+    {
+      "en": "Masticore",
+      "zh": "异狮",
+      "ja": "マスティコア",
+      "jaAliases": [
+        "マスティコア"
+      ]
+    },
+    {
+      "en": "Mechtitan",
+      "jaAliases": [
+        "メカ巨神"
+      ],
+      "ja": "メカ巨神"
+    },
+    {
+      "en": "Mercadia",
+      "zh": "玛凯迪亚",
+      "ja": "メルカディア",
+      "jaAliases": [
+        "メルカディア"
+      ]
+    },
+    {
+      "en": "Mercenary",
+      "zh": "佣兵",
+      "ja": "傭兵",
+      "jaAliases": [
+        "傭兵"
+      ]
+    },
+    {
+      "en": "Merfolk",
+      "zh": "人鱼",
+      "ja": "マーフォーク",
+      "jaAliases": [
+        "マーフォーク"
+      ]
+    },
+    {
+      "en": "Merfolk Wizard",
+      "jaAliases": [
+        "マーフォーク"
+      ],
+      "ja": "マーフォーク"
+    },
+    {
+      "en": "Metallic Sliver",
+      "jaAliases": [
+        "メタリック・スリヴァー"
+      ],
+      "ja": "メタリック・スリヴァー"
+    },
+    {
+      "en": "Metathran",
+      "zh": "仿索蓝人",
+      "ja": "メタスラン",
+      "jaAliases": [
+        "メタスラン"
+      ]
+    },
+    {
+      "en": "Meteorite",
+      "jaAliases": [
+        "隕石"
+      ],
+      "ja": "隕石"
+    },
+    {
+      "en": "Mine",
+      "zh": "矿脉",
+      "ja": "鉱山",
+      "jaAliases": [
+        "鉱山"
+      ]
+    },
+    {
+      "en": "Minion",
+      "zh": "奴仆",
+      "ja": "ミニオン",
+      "jaAliases": [
+        "ミニオン"
+      ]
+    },
+    {
+      "en": "Minotaur",
+      "zh": "牛头怪",
+      "ja": "ミノタウルス",
+      "jaAliases": [
+        "ミノタウルス"
+      ]
+    },
+    {
+      "en": "Minsc",
+      "zh": "明斯克",
+      "ja": "ミンスク",
+      "jaAliases": [
+        "ミンスク"
+      ]
+    },
+    {
+      "en": "Mirrodin",
+      "zh": "秘罗地",
+      "ja": "ミラディン",
+      "jaAliases": [
+        "ミラディン"
+      ]
+    },
+    {
+      "en": "Mishra's Warform",
+      "jaAliases": [
+        "ミシュラの戦機"
+      ],
+      "ja": "ミシュラの戦機"
+    },
+    {
+      "en": "Mite",
+      "zh": "虫械",
+      "ja": "ダニ",
+      "jaAliases": [
+        "ダニ"
+      ]
+    },
+    {
+      "en": "Moag",
+      "zh": "墨格",
+      "ja": "モアグ",
+      "jaAliases": [
+        "モアグ"
+      ]
+    },
+    {
+      "en": "Mole",
+      "zh": "鼹鼠",
+      "ja": "モグラ",
+      "jaAliases": [
+        "モグラ"
+      ]
+    },
+    {
+      "en": "Moloid",
+      "jaAliases": [
+        "モロイド"
+      ],
+      "ja": "モロイド"
+    },
+    {
+      "en": "Monger",
+      "zh": "贩商",
+      "ja": "モンガー",
+      "jaAliases": [
+        "モンガー"
+      ]
+    },
+    {
+      "en": "Mongoose",
+      "zh": "猫鼬",
+      "ja": "マングース",
+      "jaAliases": [
+        "マングース"
+      ]
+    },
+    {
+      "en": "Mongseng",
+      "zh": "蒙森",
+      "ja": "モンセン",
+      "jaAliases": [
+        "モンセン"
+      ]
+    },
+    {
+      "en": "Monk",
+      "zh": "修行僧",
+      "ja": "モンク",
+      "jaAliases": [
+        "モンク"
+      ]
+    },
+    {
+      "en": "Monkey",
+      "zh": "猴",
+      "ja": "猿",
+      "jaAliases": [
+        "猿"
+      ]
+    },
+    {
+      "en": "Monopoly",
+      "zh": "大富翁"
+    },
+    {
+      "en": "Monster",
+      "jaAliases": [
+        "怪物"
+      ],
+      "ja": "怪物"
+    },
+    {
+      "en": "Moogle",
+      "zh": "莫古力",
+      "ja": "モーグリ",
+      "jaAliases": [
+        "モーグリ"
+      ]
+    },
+    {
+      "en": "Moon",
+      "zh": "月球",
+      "ja": "月",
+      "jaAliases": [
+        "月"
+      ]
+    },
+    {
+      "en": "Moonfolk",
+      "zh": "月人",
+      "ja": "ムーンフォーク",
+      "jaAliases": [
+        "ムーンフォーク"
+      ]
+    },
+    {
+      "en": "Mordenkainen",
+      "zh": "魔邓肯"
+    },
+    {
+      "en": "Mount",
+      "zh": "坐骑",
+      "ja": "乗騎",
+      "jaAliases": [
+        "乗騎"
+      ]
+    },
+    {
+      "en": "Mountain",
+      "zh": "山脉",
+      "ja": "山",
+      "jaAliases": [
+        "山"
+      ]
+    },
+    {
+      "en": "Mouse",
+      "zh": "家鼠",
+      "ja": "ハツカネズミ",
+      "jaAliases": [
+        "ハツカネズミ"
+      ]
+    },
+    {
+      "en": "Mowu",
+      "jaAliases": [
+        "モーウー"
+      ],
+      "ja": "モーウー"
+    },
+    {
+      "en": "Muraganda",
+      "zh": "莫甘达",
+      "ja": "ムラガンダ",
+      "jaAliases": [
+        "ムラガンダ"
+      ]
+    },
+    {
+      "en": "Mutagen",
+      "jaAliases": [
+        "ミュータンジェン"
+      ],
+      "ja": "ミュータンジェン"
+    },
+    {
+      "en": "Mutant",
+      "zh": "突变体",
+      "ja": "ミュータント",
+      "jaAliases": [
+        "ミュータント"
+      ]
+    },
+    {
+      "en": "Myr",
+      "zh": "秘耳",
+      "ja": "マイア",
+      "jaAliases": [
+        "マイア"
+      ]
+    },
+    {
+      "en": "Mystic",
+      "zh": "秘教徒",
+      "ja": "神秘家",
+      "jaAliases": [
+        "神秘家"
+      ]
+    },
+    {
+      "en": "Nahiri",
+      "zh": "娜希丽",
+      "ja": "ナヒリ",
+      "jaAliases": [
+        "ナヒリ"
+      ]
+    },
+    {
+      "en": "Nalaar Aetherjet",
+      "jaAliases": [
+        "ナラーの霊気ジェット"
+      ],
+      "ja": "ナラーの霊気ジェット"
+    },
+    {
+      "en": "Narset",
+      "zh": "娜尔施",
+      "ja": "ナーセット",
+      "jaAliases": [
+        "ナーセット"
+      ]
+    },
+    {
+      "en": "Nautilus",
+      "zh": "鹦鹉螺",
+      "ja": "オウムガイ",
+      "jaAliases": [
+        "オウムガイ"
+      ]
+    },
+    {
+      "en": "Necron",
+      "zh": "太空死灵",
+      "ja": "ネクロン",
+      "jaAliases": [
+        "ネクロン"
+      ]
+    },
+    {
+      "en": "Necros",
+      "zh": "亡灵星",
+      "ja": "ネクロス",
+      "jaAliases": [
+        "ネクロス"
+      ]
+    },
+    {
+      "en": "Nephilim",
+      "zh": "巨神灵",
+      "ja": "ネフィリム",
+      "jaAliases": [
+        "ネフィリム"
+      ]
+    },
+    {
+      "en": "New Earth",
+      "zh": "新地球",
+      "ja": "新地球",
+      "jaAliases": [
+        "新地球"
+      ]
+    },
+    {
+      "en": "New Phyrexia",
+      "zh": "新非瑞克西亚",
+      "ja": "新ファイレクシア",
+      "jaAliases": [
+        "新ファイレクシア"
+      ]
+    },
+    {
+      "en": "Nightmare",
+      "zh": "梦魇",
+      "ja": "ナイトメア",
+      "jaAliases": [
+        "ナイトメア"
+      ]
+    },
+    {
+      "en": "Nightstalker",
+      "zh": "夜潜魔",
+      "ja": "夜魔",
+      "jaAliases": [
+        "夜魔"
+      ]
+    },
+    {
+      "en": "Niko",
+      "zh": "尼科",
+      "ja": "ニコ",
+      "jaAliases": [
+        "ニコ"
+      ]
+    },
+    {
+      "en": "Ninja",
+      "zh": "忍者",
+      "ja": "忍者",
+      "jaAliases": [
+        "忍者"
+      ]
+    },
+    {
+      "en": "Nissa",
+      "zh": "妮莎",
+      "ja": "ニッサ",
+      "jaAliases": [
+        "ニッサ"
+      ]
+    },
+    {
+      "en": "Nixilis",
+      "zh": "尼希兹",
+      "ja": "ニクシリス",
+      "jaAliases": [
+        "ニクシリス"
+      ]
+    },
+    {
+      "en": "Noble",
+      "zh": "贵族",
+      "ja": "貴族",
+      "jaAliases": [
+        "貴族"
+      ]
+    },
+    {
+      "en": "Noggle",
+      "zh": "诺格",
+      "ja": "ノッグル",
+      "jaAliases": [
+        "ノッグル"
+      ]
+    },
+    {
+      "en": "Nomad",
+      "zh": "游牧人",
+      "ja": "ノーマッド",
+      "jaAliases": [
+        "ノーマッド"
+      ]
+    },
+    {
+      "en": "Nymph",
+      "zh": "宁芙",
+      "ja": "ニンフ",
+      "jaAliases": [
+        "ニンフ"
+      ]
+    },
+    {
+      "en": "Octopus",
+      "zh": "章鱼",
+      "jaAliases": [
+        "タコ"
+      ],
+      "ja": "タコ"
+    },
+    {
+      "en": "Officer",
+      "zh": "官员"
+    },
+    {
+      "en": "Ogre",
+      "zh": "食人魔",
+      "ja": "オーガ",
+      "jaAliases": [
+        "オーガ"
+      ]
+    },
+    {
+      "en": "Oko",
+      "zh": "瓯柯",
+      "ja": "オーコ",
+      "jaAliases": [
+        "オーコ"
+      ]
+    },
+    {
+      "en": "Omen",
+      "zh": "预兆"
+    },
+    {
+      "en": "Omenpath",
+      "zh": "预兆路"
+    },
+    {
+      "en": "Ooze",
+      "zh": "流浆",
+      "ja": "ウーズ",
+      "jaAliases": [
+        "ウーズ"
+      ]
+    },
+    {
+      "en": "Orc",
+      "zh": "半兽人",
+      "ja": "オーク",
+      "jaAliases": [
+        "オーク"
+      ]
+    },
+    {
+      "en": "Orgg",
+      "zh": "欧格",
+      "ja": "オーグ",
+      "jaAliases": [
+        "オーグ"
+      ]
+    },
+    {
+      "en": "Orion",
+      "zh": "猎户座人"
+    },
+    {
+      "en": "Ornithopter",
+      "jaAliases": [
+        "羽ばたき飛行機械"
+      ],
+      "ja": "羽ばたき飛行機械"
+    },
+    {
+      "en": "Otter",
+      "zh": "水獭",
+      "ja": "カワウソ",
+      "jaAliases": [
+        "カワウソ"
+      ]
+    },
+    {
+      "en": "Ouphe",
+      "zh": "奥夫",
+      "ja": "アウフ",
+      "jaAliases": [
+        "アウフ"
+      ]
+    },
+    {
+      "en": "Outside Mutter's Spiral",
+      "zh": "玛特螺旋外部",
+      "ja": "マッターズ＝スパイラル外縁",
+      "jaAliases": [
+        "マッターズ＝スパイラル外縁"
+      ]
+    },
+    {
+      "en": "Ox",
+      "zh": "牛",
+      "ja": "雄牛",
+      "jaAliases": [
+        "雄牛"
+      ]
+    },
+    {
+      "en": "Oyster",
+      "zh": "牡蛎",
+      "ja": "カキ",
+      "jaAliases": [
+        "カキ"
+      ]
+    },
+    {
+      "en": "Pangolin",
+      "zh": "穿山甲",
+      "ja": "センザンコウ",
+      "jaAliases": [
+        "センザンコウ"
+      ]
+    },
+    {
+      "en": "Peasant",
+      "zh": "平民",
+      "ja": "農民",
+      "jaAliases": [
+        "農民"
+      ]
+    },
+    {
+      "en": "Pegasus",
+      "zh": "飞马",
+      "ja": "ペガサス",
+      "jaAliases": [
+        "ペガサス"
+      ]
+    },
+    {
+      "en": "Pentavite",
+      "jaAliases": [
+        "ペンタバイト"
+      ],
+      "ja": "ペンタバイト"
+    },
+    {
+      "en": "Performer",
+      "zh": "演员",
+      "ja": "パフォーマー",
+      "jaAliases": [
+        "パフォーマー"
+      ]
+    },
+    {
+      "en": "Pest",
+      "zh": "害虫",
+      "ja": "邪魔者",
+      "jaAliases": [
+        "邪魔者"
+      ]
+    },
+    {
+      "en": "Phelddagrif",
+      "zh": "紫河马",
+      "ja": "フェルダグリフ",
+      "jaAliases": [
+        "フェルダグリフ"
+      ]
+    },
+    {
+      "en": "Phobos",
+      "jaAliases": [
+        "フォボス"
+      ],
+      "ja": "フォボス"
+    },
+    {
+      "en": "Phoenix",
+      "zh": "凤凰",
+      "ja": "フェニックス",
+      "jaAliases": [
+        "フェニックス"
+      ]
+    },
+    {
+      "en": "Phyrexia",
+      "zh": "非瑞克西亚",
+      "ja": "ファイレクシア",
+      "jaAliases": [
+        "ファイレクシア"
+      ]
+    },
+    {
+      "en": "Phyrexian",
+      "zh": "非瑞人",
+      "ja": "ファイレクシアン",
+      "jaAliases": [
+        "ファイレクシアン"
+      ]
+    },
+    {
+      "en": "Pilot",
+      "zh": "驾手",
+      "ja": "操縦士",
+      "jaAliases": [
+        "操縦士"
+      ]
+    },
+    {
+      "en": "Pirate",
+      "zh": "海盗",
+      "ja": "海賊",
+      "jaAliases": [
+        "海賊"
+      ]
+    },
+    {
+      "en": "Plaguebearer of Nurgle",
+      "jaAliases": [
+        "プレーグベアラー・オヴ・ナーグル"
+      ],
+      "ja": "プレーグベアラー・オヴ・ナーグル"
+    },
+    {
+      "en": "Plains",
+      "zh": "平原",
+      "ja": "平地",
+      "jaAliases": [
+        "平地"
+      ]
+    },
+    {
+      "en": "Plan",
+      "zh": "计划",
+      "ja": "プラン",
+      "jaAliases": [
+        "プラン"
+      ]
+    },
+    {
+      "en": "Planet",
+      "zh": "行星"
+    },
+    {
+      "en": "Plant",
+      "zh": "植物",
+      "ja": "植物",
+      "jaAliases": [
+        "植物"
+      ]
+    },
+    {
+      "en": "Platypus",
+      "zh": "鸭嘴兽",
+      "ja": "カモノハシ",
+      "jaAliases": [
+        "カモノハシ"
+      ]
+    },
+    {
+      "en": "Porcupine",
+      "zh": "豪猪",
+      "ja": "ヤマアラシ",
+      "jaAliases": [
+        "ヤマアラシ"
+      ]
+    },
+    {
+      "en": "Possum",
+      "zh": "负鼠",
+      "ja": "フクロネズミ",
+      "jaAliases": [
+        "フクロネズミ"
+      ]
+    },
+    {
+      "en": "Power-Plant",
+      "zh": "动力炉",
+      "ja": "魔力炉",
+      "jaAliases": [
+        "魔力炉"
+      ]
+    },
+    {
+      "en": "Powerstone",
+      "zh": "魔力石",
+      "jaAliases": [
+        "パワーストーン"
+      ],
+      "ja": "パワーストーン"
+    },
+    {
+      "en": "Praetor",
+      "zh": "魔判官",
+      "ja": "法務官",
+      "jaAliases": [
+        "法務官"
+      ]
+    },
+    {
+      "en": "Primarch",
+      "zh": "原体"
+    },
+    {
+      "en": "Primo, the Indivisible",
+      "jaAliases": [
+        "不可分なるもの、プリモ"
+      ],
+      "ja": "不可分なるもの、プリモ"
+    },
+    {
+      "en": "Processor",
+      "zh": "噬体",
+      "ja": "昇華者",
+      "jaAliases": [
+        "昇華者"
+      ]
+    },
+    {
+      "en": "Pyrulea",
+      "zh": "派鲁利亚"
+    },
+    {
+      "en": "Q",
+      "zh": "Q"
+    },
+    {
+      "en": "Qu",
+      "zh": "食族",
+      "ja": "ク族",
+      "jaAliases": [
+        "ク族"
+      ]
+    },
+    {
+      "en": "Quintorius",
+      "zh": "昆托力",
+      "ja": "クイントリウス",
+      "jaAliases": [
+        "クイントリウス"
+      ]
+    },
+    {
+      "en": "Rabbit",
+      "zh": "兔",
+      "ja": "兎",
+      "jaAliases": [
+        "兎"
+      ]
+    },
+    {
+      "en": "Rabiah",
+      "zh": "拉拜亚",
+      "ja": "ラバイア",
+      "jaAliases": [
+        "ラバイア"
+      ]
+    },
+    {
+      "en": "Raccoon",
+      "zh": "浣熊",
+      "ja": "アライグマ",
+      "jaAliases": [
+        "アライグマ"
+      ]
+    },
+    {
+      "en": "Ral",
+      "zh": "拉尔",
+      "ja": "ラル",
+      "jaAliases": [
+        "ラル"
+      ]
+    },
+    {
+      "en": "Ranger",
+      "zh": "游侠",
+      "ja": "レインジャー",
+      "jaAliases": [
+        "レインジャー"
+      ]
+    },
+    {
+      "en": "Rat",
+      "zh": "老鼠",
+      "ja": "ネズミ",
+      "jaAliases": [
+        "ネズミ"
+      ]
+    },
+    {
+      "en": "Rat Rogue",
+      "jaAliases": [
+        "ネズミ"
+      ],
+      "ja": "ネズミ"
+    },
+    {
+      "en": "Rath",
+      "zh": "瑞斯",
+      "ja": "ラース",
+      "jaAliases": [
+        "ラース"
+      ]
+    },
+    {
+      "en": "Ravnica",
+      "zh": "拉尼卡",
+      "ja": "ラヴニカ",
+      "jaAliases": [
+        "ラヴニカ"
+      ]
+    },
+    {
+      "en": "Rebel",
+      "zh": "反抗军",
+      "ja": "レベル",
+      "jaAliases": [
+        "レベル"
+      ]
+    },
+    {
+      "en": "Redwing",
+      "jaAliases": [
+        "レッドウィング"
+      ],
+      "ja": "レッドウィング"
+    },
+    {
+      "en": "Reflection",
+      "zh": "映影",
+      "ja": "反射",
+      "jaAliases": [
+        "反射"
+      ]
+    },
+    {
+      "en": "Regatha",
+      "zh": "瑞格沙",
+      "ja": "レガーサ",
+      "jaAliases": [
+        "レガーサ"
+      ]
+    },
+    {
+      "en": "Reliquary Dragon",
+      "jaAliases": [
+        "聖遺のドラゴン"
+      ],
+      "ja": "聖遺のドラゴン"
+    },
+    {
+      "en": "Replicated Ring",
+      "jaAliases": [
+        "複製された指輪"
+      ],
+      "ja": "複製された指輪"
+    },
+    {
+      "en": "Rhino",
+      "zh": "犀牛",
+      "ja": "サイ",
+      "jaAliases": [
+        "サイ"
+      ]
+    },
+    {
+      "en": "Rigger",
+      "zh": "整备师",
+      "ja": "装具工",
+      "jaAliases": [
+        "装具工"
+      ]
+    },
+    {
+      "en": "Robot",
+      "zh": "机器人",
+      "ja": "ロボット",
+      "jaAliases": [
+        "ロボット"
+      ]
+    },
+    {
+      "en": "Rock",
+      "jaAliases": [
+        "岩"
+      ],
+      "ja": "岩"
+    },
+    {
+      "en": "Rogue",
+      "zh": "浪客",
+      "ja": "ならず者",
+      "jaAliases": [
+        "ならず者"
+      ]
+    },
+    {
+      "en": "Role",
+      "jaAliases": [
+        "役割"
+      ],
+      "ja": "役割"
+    },
+    {
+      "en": "Room",
+      "zh": "隔间",
+      "ja": "部屋",
+      "jaAliases": [
+        "部屋"
+      ]
+    },
+    {
+      "en": "Rowan",
+      "zh": "萝婉",
+      "ja": "ローアン",
+      "jaAliases": [
+        "ローアン"
+      ]
+    },
+    {
+      "en": "Royal",
+      "jaAliases": [
+        "王族"
+      ],
+      "ja": "王族"
+    },
+    {
+      "en": "Rukh",
+      "jaAliases": [
+        "鳥"
+      ],
+      "ja": "鳥"
+    },
+    {
+      "en": "Rune",
+      "zh": "符文",
+      "ja": "ルーン",
+      "jaAliases": [
+        "ルーン"
+      ]
+    },
+    {
+      "en": "Sable",
+      "zh": "紫貂",
+      "ja": "黒貂",
+      "jaAliases": [
+        "黒貂"
+      ]
+    },
+    {
+      "en": "Saga",
+      "zh": "传纪",
+      "ja": "英雄譚",
+      "jaAliases": [
+        "英雄譚"
+      ]
+    },
+    {
+      "en": "Saheeli",
+      "zh": "莎希莉",
+      "ja": "サヒーリ",
+      "jaAliases": [
+        "サヒーリ"
+      ]
+    },
+    {
+      "en": "Salamander",
+      "zh": "火蜥蜴",
+      "ja": "サラマンダー",
+      "jaAliases": [
+        "サラマンダー"
+      ]
+    },
+    {
+      "en": "Samurai",
+      "zh": "武士",
+      "ja": "侍",
+      "jaAliases": [
+        "侍"
+      ]
+    },
+    {
+      "en": "Samut",
+      "zh": "撒姆特",
+      "ja": "サムト",
+      "jaAliases": [
+        "サムト"
+      ]
+    },
+    {
+      "en": "Sand",
+      "zh": "砂",
+      "ja": "砂漠の民",
+      "jaAliases": [
+        "砂漠の民"
+      ]
+    },
+    {
+      "en": "Saproling",
+      "zh": "腐生物",
+      "ja": "苗木",
+      "jaAliases": [
+        "苗木"
+      ]
+    },
+    {
+      "en": "Sarkhan",
+      "zh": "萨坎",
+      "ja": "サルカン",
+      "jaAliases": [
+        "サルカン"
+      ]
+    },
+    {
+      "en": "Satyr",
+      "zh": "羊蹄人",
+      "ja": "サテュロス",
+      "jaAliases": [
+        "サテュロス"
+      ]
+    },
+    {
+      "en": "Scarecrow",
+      "zh": "稻草人",
+      "ja": "カカシ",
+      "jaAliases": [
+        "カカシ"
+      ]
+    },
+    {
+      "en": "Scientist",
+      "zh": "科学家",
+      "ja": "科学者",
+      "jaAliases": [
+        "科学者"
+      ]
+    },
+    {
+      "en": "Scion",
+      "jaAliases": [
+        "末裔"
+      ],
+      "ja": "末裔"
+    },
+    {
+      "en": "Scion of the Deep",
+      "jaAliases": [
+        "深海の末裔"
+      ],
+      "ja": "深海の末裔"
+    },
+    {
+      "en": "Scorpion",
+      "zh": "蝎子",
+      "ja": "蠍",
+      "jaAliases": [
+        "蠍"
+      ]
+    },
+    {
+      "en": "Scout",
+      "zh": "斥候",
+      "ja": "スカウト",
+      "jaAliases": [
+        "スカウト"
+      ]
+    },
+    {
+      "en": "Scrap",
+      "jaAliases": [
+        "屑鉄"
+      ],
+      "ja": "屑鉄"
+    },
+    {
+      "en": "Sculpture",
+      "jaAliases": [
+        "彫像"
+      ],
+      "ja": "彫像"
+    },
+    {
+      "en": "Seal",
+      "zh": "海豹",
+      "ja": "アザラシ",
+      "jaAliases": [
+        "アザラシ"
+      ]
+    },
+    {
+      "en": "Segovia",
+      "zh": "塞哥维亚",
+      "ja": "セゴビア",
+      "jaAliases": [
+        "セゴビア"
+      ]
+    },
+    {
+      "en": "Serf",
+      "jaAliases": [
+        "農奴"
+      ],
+      "ja": "農奴"
+    },
+    {
+      "en": "Serpent",
+      "zh": "巨蛇",
+      "ja": "海蛇",
+      "jaAliases": [
+        "海蛇"
+      ]
+    },
+    {
+      "en": "Serra",
+      "zh": "撒拉",
+      "ja": "セラ",
+      "jaAliases": [
+        "セラ"
+      ]
+    },
+    {
+      "en": "Serra's Realm",
+      "zh": "撒拉的圣域"
+    },
+    {
+      "en": "Servo",
+      "jaAliases": [
+        "霊気装置"
+      ],
+      "ja": "霊気装置"
+    },
+    {
+      "en": "Settlement",
+      "jaAliases": [
+        "居住地"
+      ],
+      "ja": "居住地"
+    },
+    {
+      "en": "Shade",
+      "zh": "阴魂",
+      "ja": "シェイド",
+      "jaAliases": [
+        "シェイド"
+      ]
+    },
+    {
+      "en": "Shadowmoor",
+      "zh": "暗影荒原",
+      "ja": "シャドウムーア",
+      "jaAliases": [
+        "シャドウムーア"
+      ]
+    },
+    {
+      "en": "Shaman",
+      "zh": "祭师",
+      "ja": "シャーマン",
+      "jaAliases": [
+        "シャーマン"
+      ]
+    },
+    {
+      "en": "Shandalar",
+      "zh": "山德拉",
+      "ja": "シャンダラー",
+      "jaAliases": [
+        "シャンダラー"
+      ]
+    },
+    {
+      "en": "Shapeshifter",
+      "zh": "变形兽",
+      "ja": "多相の戦士",
+      "jaAliases": [
+        "多相の戦士"
+      ]
+    },
+    {
+      "en": "Shard",
+      "jaAliases": [
+        "破片"
+      ],
+      "ja": "破片"
+    },
+    {
+      "en": "Shark",
+      "zh": "鲨鱼",
+      "ja": "サメ",
+      "jaAliases": [
+        "サメ"
+      ]
+    },
+    {
+      "en": "Sheep",
+      "zh": "绵羊",
+      "ja": "羊",
+      "jaAliases": [
+        "羊"
+      ]
+    },
+    {
+      "en": "Shenmeng",
+      "zh": "蜃梦",
+      "ja": "沈夢",
+      "jaAliases": [
+        "沈夢"
+      ]
+    },
+    {
+      "en": "Shi'ar",
+      "zh": "希阿",
+      "ja": "シーア",
+      "jaAliases": [
+        "シーア"
+      ]
+    },
+    {
+      "en": "Shrine",
+      "zh": "祭祠",
+      "ja": "祭殿",
+      "jaAliases": [
+        "祭殿"
+      ]
+    },
+    {
+      "en": "Siege",
+      "zh": "围攻",
+      "ja": "包囲戦",
+      "jaAliases": [
+        "包囲戦"
+      ]
+    },
+    {
+      "en": "Sifa",
+      "zh": "赛法"
+    },
+    {
+      "en": "Siren",
+      "zh": "塞连",
+      "ja": "セイレーン",
+      "jaAliases": [
+        "セイレーン"
+      ]
+    },
+    {
+      "en": "Sivitri",
+      "zh": "希维缇",
+      "ja": "シヴィトリ",
+      "jaAliases": [
+        "シヴィトリ"
+      ]
+    },
+    {
+      "en": "Skaro",
+      "zh": "斯卡罗",
+      "ja": "スカロ",
+      "jaAliases": [
+        "スカロ"
+      ]
+    },
+    {
+      "en": "Skeleton",
+      "zh": "骷髅妖",
+      "ja": "スケルトン",
+      "jaAliases": [
+        "スケルトン"
+      ]
+    },
+    {
+      "en": "Skrull",
+      "zh": "斯克鲁人",
+      "ja": "スクラル",
+      "jaAliases": [
+        "スクラル"
+      ]
+    },
+    {
+      "en": "Skunk",
+      "zh": "臭鼬",
+      "ja": "スカンク",
+      "jaAliases": [
+        "スカンク"
+      ]
+    },
+    {
+      "en": "Slith",
+      "zh": "斯立兹",
+      "ja": "スリス",
+      "jaAliases": [
+        "スリス"
+      ]
+    },
+    {
+      "en": "Sliver",
+      "zh": "裂片妖",
+      "ja": "スリヴァー",
+      "jaAliases": [
+        "スリヴァー"
+      ]
+    },
+    {
+      "en": "Sloth",
+      "zh": "树懒",
+      "ja": "ナマケモノ",
+      "jaAliases": [
+        "ナマケモノ"
+      ]
+    },
+    {
+      "en": "Slug",
+      "zh": "蛞蝓",
+      "ja": "ナメクジ",
+      "jaAliases": [
+        "ナメクジ"
+      ]
+    },
+    {
+      "en": "Smaug",
+      "jaAliases": [
+        "スマウグ"
+      ],
+      "ja": "スマウグ"
+    },
+    {
+      "en": "Smoke Blessing",
+      "jaAliases": [
+        "煙の恵み"
+      ],
+      "ja": "煙の恵み"
+    },
+    {
+      "en": "Snail",
+      "zh": "蜗牛",
+      "ja": "カタツムリ",
+      "jaAliases": [
+        "カタツムリ"
+      ]
+    },
+    {
+      "en": "Snake",
+      "zh": "蛇",
+      "jaAliases": [
+        "ヘビ",
+        "蛇"
+      ],
+      "ja": "ヘビ"
+    },
+    {
+      "en": "Soldier",
+      "zh": "士兵",
+      "ja": "兵士",
+      "jaAliases": [
+        "兵士"
+      ]
+    },
+    {
+      "en": "Soltari",
+      "zh": "索泰利",
+      "ja": "サルタリー",
+      "jaAliases": [
+        "サルタリー"
+      ]
+    },
+    {
+      "en": "Sorcerer",
+      "zh": "术士",
+      "ja": "魔術師",
+      "jaAliases": [
+        "魔術師"
+      ]
+    },
+    {
+      "en": "Sorin",
+      "zh": "索霖",
+      "ja": "ソリン",
+      "jaAliases": [
+        "ソリン"
+      ]
+    },
+    {
+      "en": "Spacecraft",
+      "zh": "太空船",
+      "ja": "宇宙船",
+      "jaAliases": [
+        "宇宙船"
+      ]
+    },
+    {
+      "en": "Spark Elemental",
+      "jaAliases": [
+        "火花の精霊"
+      ],
+      "ja": "火花の精霊"
+    },
+    {
+      "en": "Spawn",
+      "zh": "后裔",
+      "ja": "落とし子",
+      "jaAliases": [
+        "落とし子"
+      ]
+    },
+    {
+      "en": "Specter",
+      "zh": "幽灵",
+      "ja": "スペクター",
+      "jaAliases": [
+        "スペクター"
+      ]
+    },
+    {
+      "en": "Spellshaper",
+      "zh": "塑法师",
+      "ja": "スペルシェイパー",
+      "jaAliases": [
+        "スペルシェイパー"
+      ]
+    },
+    {
+      "en": "Sphere",
+      "zh": "域界",
+      "ja": "球層",
+      "jaAliases": [
+        "球層"
+      ]
+    },
+    {
+      "en": "Sphinx",
+      "zh": "史芬斯",
+      "ja": "スフィンクス",
+      "jaAliases": [
+        "スフィンクス"
+      ]
+    },
+    {
+      "en": "Spider",
+      "zh": "蜘蛛",
+      "ja": "蜘蛛",
+      "jaAliases": [
+        "蜘蛛"
+      ]
+    },
+    {
+      "en": "Spike",
+      "zh": "钉兽",
+      "ja": "スパイク",
+      "jaAliases": [
+        "スパイク"
+      ]
+    },
+    {
+      "en": "Spirit",
+      "zh": "精怪",
+      "ja": "スピリット",
+      "jaAliases": [
+        "スピリット"
+      ]
+    },
+    {
+      "en": "Sponge",
+      "zh": "海绵",
+      "ja": "スポンジ",
+      "jaAliases": [
+        "スポンジ"
+      ]
+    },
+    {
+      "en": "Spy",
+      "zh": "密探",
+      "ja": "スパイ",
+      "jaAliases": [
+        "スパイ"
+      ]
+    },
+    {
+      "en": "Squid",
+      "zh": "乌贼",
+      "ja": "イカ",
+      "jaAliases": [
+        "イカ"
+      ]
+    },
+    {
+      "en": "Squirrel",
+      "zh": "松鼠",
+      "ja": "リス",
+      "jaAliases": [
+        "リス"
+      ]
+    },
+    {
+      "en": "Stangg Twin",
+      "jaAliases": [
+        "スタングの双子"
+      ],
+      "ja": "スタングの双子"
+    },
+    {
+      "en": "Starfish",
+      "zh": "海星",
+      "ja": "ヒトデ",
+      "jaAliases": [
+        "ヒトデ"
+      ]
+    },
+    {
+      "en": "Stone",
+      "ja": "ストーン",
+      "jaAliases": [
+        "ストーン"
+      ]
+    },
+    {
+      "en": "Stone Boulder",
+      "jaAliases": [
+        "大きな岩石"
+      ],
+      "ja": "大きな岩石"
+    },
+    {
+      "en": "Stoneforged Blade",
+      "jaAliases": [
+        "石鍛冶製の剣"
+      ],
+      "ja": "石鍛冶製の剣"
+    },
+    {
+      "en": "Storm Crow",
+      "jaAliases": [
+        "嵐雲のカラス"
+      ],
+      "ja": "嵐雲のカラス"
+    },
+    {
+      "en": "Sturdy Shield",
+      "jaAliases": [
+        "頑丈な盾"
+      ],
+      "ja": "頑丈な盾"
+    },
+    {
+      "en": "Surrakar",
+      "zh": "苏拉卡",
+      "ja": "サラカー",
+      "jaAliases": [
+        "サラカー"
+      ]
+    },
+    {
+      "en": "Survivor",
+      "zh": "求生者",
+      "ja": "生存者",
+      "jaAliases": [
+        "生存者"
+      ]
+    },
+    {
+      "en": "Svega",
+      "zh": "斯维加"
+    },
+    {
+      "en": "Swamp",
+      "zh": "沼泽",
+      "ja": "沼",
+      "jaAliases": [
+        "沼"
+      ]
+    },
+    {
+      "en": "Sword",
+      "jaAliases": [
+        "剣"
+      ],
+      "ja": "剣"
+    },
+    {
+      "en": "Symbiote",
+      "zh": "共生体",
+      "ja": "シンビオート",
+      "jaAliases": [
+        "シンビオート"
+      ]
+    },
+    {
+      "en": "Synth",
+      "zh": "合成人",
+      "ja": "シンス",
+      "jaAliases": [
+        "シンス"
+      ]
+    },
+    {
+      "en": "Szat",
+      "zh": "刹特",
+      "ja": "ザット",
+      "jaAliases": [
+        "ザット"
+      ]
+    },
+    {
+      "en": "Talosian",
+      "zh": "塔罗斯人"
+    },
+    {
+      "en": "Tamiyo",
+      "zh": "多美代",
+      "ja": "タミヨウ",
+      "jaAliases": [
+        "タミヨウ"
+      ]
+    },
+    {
+      "en": "Tamiyo's Notebook",
+      "jaAliases": [
+        "タミヨウのノートブック"
+      ],
+      "ja": "タミヨウのノートブック"
+    },
+    {
+      "en": "Tarkir",
+      "zh": "鞑契",
+      "ja": "タルキール",
+      "jaAliases": [
+        "タルキール"
+      ]
+    },
+    {
+      "en": "Tasha",
+      "zh": "塔莎",
+      "ja": "ターシャ",
+      "jaAliases": [
+        "ターシャ"
+      ]
+    },
+    {
+      "en": "Teferi",
+      "zh": "泰菲力",
+      "ja": "テフェリー",
+      "jaAliases": [
+        "テフェリー"
+      ]
+    },
+    {
+      "en": "Tellarite",
+      "zh": "泰拉人"
+    },
+    {
+      "en": "Tentacle",
+      "jaAliases": [
+        "触手"
+      ],
+      "ja": "触手"
+    },
+    {
+      "en": "Teyo",
+      "zh": "泰佑",
+      "ja": "テヨ",
+      "jaAliases": [
+        "テヨ"
+      ]
+    },
+    {
+      "en": "Tezzeret",
+      "zh": "泰兹瑞",
+      "ja": "テゼレット",
+      "jaAliases": [
+        "テゼレット"
+      ]
+    },
+    {
+      "en": "Thalakos",
+      "zh": "萨拉卡斯",
+      "ja": "サラカス",
+      "jaAliases": [
+        "サラカス"
+      ]
+    },
+    {
+      "en": "The Abyss",
+      "zh": "邃狱",
+      "ja": "深淵",
+      "jaAliases": [
+        "深淵"
+      ]
+    },
+    {
+      "en": "The Blackjack",
+      "jaAliases": [
+        "ブラックジャック号"
+      ],
+      "ja": "ブラックジャック号"
+    },
+    {
+      "en": "The Dalek Asylum",
+      "zh": "戴立克疯人院",
+      "ja": "ダーレク収容所",
+      "jaAliases": [
+        "ダーレク収容所"
+      ]
+    },
+    {
+      "en": "The Hollow Sentinel",
+      "jaAliases": [
+        "虚ろな歩哨"
+      ],
+      "ja": "虚ろな歩哨"
+    },
+    {
+      "en": "The Library",
+      "zh": "图书馆",
+      "ja": "図書館",
+      "jaAliases": [
+        "図書館"
+      ]
+    },
+    {
+      "en": "The Tiger God",
+      "jaAliases": [
+        "タイガーゴッド"
+      ],
+      "ja": "タイガーゴッド"
+    },
+    {
+      "en": "The Void",
+      "jaAliases": [
+        "ヴォイド"
+      ],
+      "ja": "ヴォイド"
+    },
+    {
+      "en": "Theros",
+      "zh": "塞洛斯",
+      "ja": "テーロス",
+      "jaAliases": [
+        "テーロス"
+      ]
+    },
+    {
+      "en": "Tholian",
+      "zh": "索利安"
+    },
+    {
+      "en": "Thomil",
+      "zh": "托米尔"
+    },
+    {
+      "en": "Thopter",
+      "zh": "振翼机",
+      "ja": "飛行機械",
+      "jaAliases": [
+        "飛行機械"
+      ]
+    },
+    {
+      "en": "Thrull",
+      "zh": "索尔兽",
+      "ja": "スラル",
+      "jaAliases": [
+        "スラル"
+      ]
+    },
+    {
+      "en": "Thunder Junction",
+      "zh": "光雷驿"
+    },
+    {
+      "en": "Tibalt",
+      "zh": "提勃",
+      "ja": "ティボルト",
+      "jaAliases": [
+        "ティボルト"
+      ]
+    },
+    {
+      "en": "Tiefling",
+      "zh": "魔人",
+      "ja": "ティーフリング",
+      "jaAliases": [
+        "ティーフリング"
+      ]
+    },
+    {
+      "en": "Time",
+      "zh": "时间星球"
+    },
+    {
+      "en": "Time Lord",
+      "zh": "时间领主",
+      "ja": "タイムロード",
+      "jaAliases": [
+        "タイムロード"
+      ]
+    },
+    {
+      "en": "Tiny",
+      "jaAliases": [
+        "タイニー"
+      ],
+      "ja": "タイニー"
+    },
+    {
+      "en": "Tosk",
+      "zh": "托斯克"
+    },
+    {
+      "en": "Tower",
+      "zh": "塔",
+      "ja": "塔",
+      "jaAliases": [
+        "塔"
+      ]
+    },
+    {
+      "en": "Town",
+      "zh": "市镇",
+      "ja": "街",
+      "jaAliases": [
+        "街"
+      ]
+    },
+    {
+      "en": "Toy",
+      "zh": "玩具",
+      "ja": "玩具",
+      "jaAliases": [
+        "玩具"
+      ]
+    },
+    {
+      "en": "Trap",
+      "zh": "陷阱",
+      "ja": "罠",
+      "jaAliases": [
+        "罠"
+      ]
+    },
+    {
+      "en": "Treasure",
+      "zh": "珍宝",
+      "ja": "宝物",
+      "jaAliases": [
+        "宝物"
+      ]
+    },
+    {
+      "en": "Treefolk",
+      "zh": "树妖",
+      "ja": "ツリーフォーク",
+      "jaAliases": [
+        "ツリーフォーク"
+      ]
+    },
+    {
+      "en": "Trenzalore",
+      "zh": "坦泽罗",
+      "ja": "トレンザロア",
+      "jaAliases": [
+        "トレンザロア"
+      ]
+    },
+    {
+      "en": "Trilobite",
+      "zh": "三叶虫",
+      "ja": "三葉虫",
+      "jaAliases": [
+        "三葉虫"
+      ]
+    },
+    {
+      "en": "Triskelavite",
+      "jaAliases": [
+        "トリスケラバイト"
+      ],
+      "ja": "トリスケラバイト"
+    },
+    {
+      "en": "Troll",
+      "zh": "巨魔",
+      "ja": "トロール",
+      "jaAliases": [
+        "トロール"
+      ]
+    },
+    {
+      "en": "Turtle",
+      "zh": "龟",
+      "ja": "海亀",
+      "jaAliases": [
+        "海亀"
+      ]
+    },
+    {
+      "en": "Tyranid",
+      "zh": "泰伦虫族",
+      "ja": "ティラニッド",
+      "jaAliases": [
+        "ティラニッド"
+      ]
+    },
+    {
+      "en": "Tyvar",
+      "zh": "泰瓦",
+      "ja": "タイヴァー",
+      "jaAliases": [
+        "タイヴァー"
+      ]
+    },
+    {
+      "en": "Ugin",
+      "zh": "乌金",
+      "ja": "ウギン",
+      "jaAliases": [
+        "ウギン"
+      ]
+    },
+    {
+      "en": "Ulgrotha",
+      "zh": "厄格罗沙",
+      "ja": "ウルグローサ",
+      "jaAliases": [
+        "ウルグローサ"
+      ]
+    },
+    {
+      "en": "Unicorn",
+      "zh": "独角兽",
+      "ja": "ユニコーン",
+      "jaAliases": [
+        "ユニコーン"
+      ]
+    },
+    {
+      "en": "Unknown Planet",
+      "zh": "无名星球",
+      "ja": "不詳の惑星",
+      "jaAliases": [
+        "不詳の惑星"
+      ]
+    },
+    {
+      "en": "Urza",
+      "zh": "克撒"
+    },
+    {
+      "en": "Urza's",
+      "zh": "克撒的",
+      "ja": "ウルザの",
+      "jaAliases": [
+        "ウルザの"
+      ]
+    },
+    {
+      "en": "Utrom",
+      "zh": "乌创",
+      "ja": "ユートロム",
+      "jaAliases": [
+        "ユートロム"
+      ]
+    },
+    {
+      "en": "Valla",
+      "zh": "瓦拉",
+      "ja": "ヴァラ",
+      "jaAliases": [
+        "ヴァラ"
+      ]
+    },
+    {
+      "en": "Vampire",
+      "zh": "吸血鬼",
+      "ja": "吸血鬼",
+      "jaAliases": [
+        "吸血鬼"
+      ]
+    },
+    {
+      "en": "Varmint",
+      "zh": "害兽",
+      "ja": "匪獣",
+      "jaAliases": [
+        "匪獣"
+      ]
+    },
+    {
+      "en": "Vecna",
+      "jaAliases": [
+        "ヴェクナ"
+      ],
+      "ja": "ヴェクナ"
+    },
+    {
+      "en": "Vedalken",
+      "zh": "维多肯",
+      "ja": "ヴィダルケン",
+      "jaAliases": [
+        "ヴィダルケン"
+      ]
+    },
+    {
+      "en": "Vehicle",
+      "zh": "载具",
+      "ja": "機体",
+      "jaAliases": [
+        "機体"
+      ]
+    },
+    {
+      "en": "Venser",
+      "zh": "凡瑟",
+      "ja": "ヴェンセール",
+      "jaAliases": [
+        "ヴェンセール"
+      ]
+    },
+    {
+      "en": "Vibranium",
+      "jaAliases": [
+        "ヴィブラニウム"
+      ],
+      "ja": "ヴィブラニウム"
+    },
+    {
+      "en": "Villain",
+      "zh": "反派",
+      "ja": "悪人",
+      "jaAliases": [
+        "悪人"
+      ]
+    },
+    {
+      "en": "Virtuous",
+      "jaAliases": [
+        "聖者"
+      ],
+      "ja": "聖者"
+    },
+    {
+      "en": "Vivien",
+      "zh": "薇薇安",
+      "ja": "ビビアン",
+      "jaAliases": [
+        "ビビアン"
+      ]
+    },
+    {
+      "en": "Voja Fenstalker",
+      "jaAliases": [
+        "ヴォジャ・フェンストーカー"
+      ],
+      "ja": "ヴォジャ・フェンストーカー"
+    },
+    {
+      "en": "Voja, Friend to Elves",
+      "jaAliases": [
+        "エルフの友、ヴォジャ"
+      ],
+      "ja": "エルフの友、ヴォジャ"
+    },
+    {
+      "en": "Volo's Journal",
+      "jaAliases": [
+        "ヴォーロの日誌"
+      ],
+      "ja": "ヴォーロの日誌"
+    },
+    {
+      "en": "Volver",
+      "zh": "进化体",
+      "ja": "ボルバー",
+      "jaAliases": [
+        "ボルバー"
+      ]
+    },
+    {
+      "en": "Vorta",
+      "zh": "沃塔人"
+    },
+    {
+      "en": "Vraska",
+      "zh": "瓦丝卡",
+      "ja": "ヴラスカ",
+      "jaAliases": [
+        "ヴラスカ"
+      ]
+    },
+    {
+      "en": "Vronos",
+      "zh": "伏罗诺斯",
+      "ja": "ヴロノース",
+      "jaAliases": [
+        "ヴロノース"
+      ]
+    },
+    {
+      "en": "Vryn",
+      "zh": "维林",
+      "ja": "ヴリン",
+      "jaAliases": [
+        "ヴリン"
+      ]
+    },
+    {
+      "en": "Vulcan",
+      "zh": "瓦肯人"
+    },
+    {
+      "en": "Wall",
+      "zh": "墙",
+      "ja": "壁",
+      "jaAliases": [
+        "壁"
+      ]
+    },
+    {
+      "en": "Walrus",
+      "zh": "海象",
+      "ja": "セイウチ",
+      "jaAliases": [
+        "セイウチ"
+      ]
+    },
+    {
+      "en": "Warlock",
+      "zh": "邪术师",
+      "ja": "邪術師",
+      "jaAliases": [
+        "邪術師"
+      ]
+    },
+    {
+      "en": "Warrior",
+      "zh": "战士",
+      "ja": "戦士",
+      "jaAliases": [
+        "戦士"
+      ]
+    },
+    {
+      "en": "Wasp",
+      "jaAliases": [
+        "ワスプ"
+      ],
+      "ja": "ワスプ"
+    },
+    {
+      "en": "Wasteland Survival Guide",
+      "jaAliases": [
+        "ウェイストランド・サバイバルガイド"
+      ],
+      "ja": "ウェイストランド・サバイバルガイド"
+    },
+    {
+      "en": "Weasel",
+      "zh": "鼬鼠",
+      "ja": "イタチ",
+      "jaAliases": [
+        "イタチ"
+      ]
+    },
+    {
+      "en": "Weird",
+      "zh": "怪奇",
+      "ja": "奇魔",
+      "jaAliases": [
+        "奇魔"
+      ]
+    },
+    {
+      "en": "Werewolf",
+      "zh": "狼人",
+      "ja": "狼男",
+      "jaAliases": [
+        "狼男"
+      ]
+    },
+    {
+      "en": "Whale",
+      "zh": "鲸鱼",
+      "ja": "鯨",
+      "jaAliases": [
+        "鯨"
+      ]
+    },
+    {
+      "en": "Wicked",
+      "jaAliases": [
+        "ひねくれ者"
+      ],
+      "ja": "ひねくれ者"
+    },
+    {
+      "en": "Wildfire",
+      "zh": "野火",
+      "ja": "ワイルドファイア",
+      "jaAliases": [
+        "ワイルドファイア"
+      ]
+    },
+    {
+      "en": "Will",
+      "zh": "威尔",
+      "ja": "ウィル",
+      "jaAliases": [
+        "ウィル"
+      ]
+    },
+    {
+      "en": "Windgrace",
+      "zh": "风华",
+      "ja": "ウィンドグレイス",
+      "jaAliases": [
+        "ウィンドグレイス"
+      ]
+    },
+    {
+      "en": "Wizard",
+      "zh": "法术师",
+      "ja": "ウィザード",
+      "jaAliases": [
+        "ウィザード"
+      ]
+    },
+    {
+      "en": "Wolf",
+      "zh": "狼",
+      "ja": "狼",
+      "jaAliases": [
+        "狼"
+      ]
+    },
+    {
+      "en": "Wolverine",
+      "zh": "狼獾",
+      "ja": "クズリ",
+      "jaAliases": [
+        "クズリ"
+      ]
+    },
+    {
+      "en": "Wombat",
+      "zh": "袋熊",
+      "ja": "ウォンバット",
+      "jaAliases": [
+        "ウォンバット"
+      ]
+    },
+    {
+      "en": "Worm",
+      "zh": "蠕虫",
+      "ja": "蟲",
+      "jaAliases": [
+        "蟲"
+      ]
+    },
+    {
+      "en": "Worzel",
+      "zh": "沃泽尔"
+    },
+    {
+      "en": "Wraith",
+      "zh": "鬼魂",
+      "ja": "レイス",
+      "jaAliases": [
+        "レイス"
+      ]
+    },
+    {
+      "en": "Wrenn",
+      "zh": "芮恩",
+      "ja": "レン",
+      "jaAliases": [
+        "レン"
+      ]
+    },
+    {
+      "en": "Wurm",
+      "zh": "亚龙",
+      "ja": "ワーム",
+      "jaAliases": [
+        "ワーム"
+      ]
+    },
+    {
+      "en": "Xenagos",
+      "zh": "谢纳戈斯",
+      "ja": "ゼナゴス",
+      "jaAliases": [
+        "ゼナゴス"
+      ]
+    },
+    {
+      "en": "Xerex",
+      "zh": "兹雷兹",
+      "ja": "ゼレックス",
+      "jaAliases": [
+        "ゼレックス"
+      ]
+    },
+    {
+      "en": "Xindi",
+      "zh": "新地"
+    },
+    {
+      "en": "Yanggu",
+      "zh": "旸谷",
+      "ja": "ヤングー",
+      "jaAliases": [
+        "ヤングー"
+      ]
+    },
+    {
+      "en": "Yanling",
+      "zh": "燕灵",
+      "ja": "ヤンリン",
+      "jaAliases": [
+        "ヤンリン"
+      ]
+    },
+    {
+      "en": "Yeti",
+      "zh": "雪怪",
+      "ja": "イエティ",
+      "jaAliases": [
+        "イエティ"
+      ]
+    },
+    {
+      "en": "You",
+      "zh": "你"
+    },
+    {
+      "en": "Young Hero",
+      "jaAliases": [
+        "若き英雄"
+      ],
+      "ja": "若き英雄"
+    },
+    {
+      "en": "Zabu",
+      "jaAliases": [
+        "ザブー"
+      ],
+      "ja": "ザブー"
+    },
+    {
+      "en": "Zariel",
+      "zh": "扎瑞尔",
+      "ja": "ザリエル",
+      "jaAliases": [
+        "ザリエル"
+      ]
+    },
+    {
+      "en": "Zendikar",
+      "zh": "赞迪卡",
+      "ja": "ゼンディカー",
+      "jaAliases": [
+        "ゼンディカー"
+      ]
+    },
+    {
+      "en": "Zhalfir",
+      "zh": "赛费尔",
+      "ja": "ザルファー",
+      "jaAliases": [
+        "ザルファー"
+      ]
+    },
+    {
+      "en": "Zombie",
+      "zh": "灵俑",
+      "ja": "ゾンビ",
+      "jaAliases": [
+        "ゾンビ"
+      ]
+    },
+    {
+      "en": "Zubera",
+      "zh": "无面鬼",
+      "ja": "ずべら",
+      "jaAliases": [
+        "ずべら"
+      ]
+    }
+  ]
+}

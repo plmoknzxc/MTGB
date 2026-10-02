@@ -1,0 +1,18 @@
+[
+  {
+    "localName": "Mind Flayer, the Shadow",
+    "sourceName": "Arvinox, the Mind Flail",
+    "oracleID": "9abecd23-a2d9-43c7-8d01-f8afdc53026e",
+    "evidenceKey": "DSC/130",
+    "validation": "English rules identical after self-name replacement; identical mana cost and 9/9 stats.",
+    "source": "Scryfall all_cards 2026-10-01"
+  },
+  {
+    "localName": "E. Honda, Sumo Champion",
+    "sourceName": "Baldin, Century Herdmaster",
+    "oracleID": "14493624-fdc7-4630-9b1e-f35668651108",
+    "evidenceKey": "TDC/110",
+    "validation": "Identical mana cost and stats. Rules differ only in self-name, omitted Sumo Spirit / Hundred Hand Slap ability words and equivalent During your turn / As long as it's your turn wording; both assign toughness combat damage on your turn and grant up to 100 attackers +0/+hand size.",
+    "source": "Scryfall all_cards 2026-10-01"
+  }
+]

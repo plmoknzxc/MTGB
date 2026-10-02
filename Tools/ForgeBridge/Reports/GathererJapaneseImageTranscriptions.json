@@ -1,0 +1,75 @@
+{
+  "complete": true,
+  "entries": [
+    {
+      "key": "CLB/246",
+      "name": "Owlbear Cub",
+      "source": "https://gatherer.wizards.com/prints/owlbear-cub/ja-jp",
+      "imageUrl": "https://gatherer-static.wizards.com/Cards/medium/026E6803402E71A9C76C6912257C78D9B090EE732A61F249672529F34CED3BA8.png",
+      "path": ".tools\\gatherer-ja\\printed-rule-images\\CLB-246.png",
+      "sha256": "437e36ba9087a8bfe730db7eef2343d3f211beeeb7c3bebd0878c7905db08454",
+      "englishRules": "<i>Mama's Coming</i> - Whenever this creature attacks a player who controls eight or more lands, look at the top eight cards of your library. You may put a creature card from among them onto the battlefield tapped and attacking that player. Put the rest on the bottom of your library in a random order.",
+      "printedName": "アウルベアの仔",
+      "printedType": "クリーチャー — 鳥・熊",
+      "printedRules": "母親来たる — アウルベアの仔が８つ以上の土地をコントロールしているプレイヤー１人を攻撃するたび、あなたのライブラリーの一番上にあるカード８枚を見る。あなたはその中からクリーチャー・カード１枚をタップ状態かつそのプレイヤーを攻撃している状態で戦場に出してもよい。残りをあなたのライブラリーの一番下に無作為の順番で置く。",
+      "review": "Read official Japanese image; independently compared costs, conditions, quantities, targets, timing, token characteristics and destinations with recorded canonical English rules. Mana icons represented by canonical brace notation; physical line wrapping removed.",
+      "localImagePath": "CardImages\\ja-JP\\CLB\\246.png"
+    },
+    {
+      "key": "EOC/12",
+      "name": "Planetary Annihilation",
+      "source": "https://gatherer.wizards.com/prints/planetary-annihilation/ja-jp",
+      "imageUrl": "https://gatherer-static.wizards.com/Cards/medium/01E3A0AAB8C3106B54298B50FD74516268C126D332A3F8132A942280CB9E4995.png",
+      "path": ".tools\\gatherer-ja\\printed-rule-images\\EOC-12.png",
+      "sha256": "4d01ab5eb81d83db6a74c5b2fbdcfe1bdb2fbcc7fb55ae7c03f950122092a9a3",
+      "englishRules": "Each player chooses six lands they control, then sacrifices the rest. Planetary Annihilation deals 6 damage to each creature.",
+      "printedName": "惑星殲滅",
+      "printedType": "ソーサリー",
+      "printedRules": "各プレイヤーはそれぞれ、自分がコントロールしている土地６つを選び、その後、残りを生け贄に捧げる。惑星殲滅は各クリーチャーにそれぞれ６点のダメージを与える。",
+      "review": "Read official Japanese image; independently compared costs, conditions, quantities, targets, timing, token characteristics and destinations with recorded canonical English rules. Mana icons represented by canonical brace notation; physical line wrapping removed.",
+      "localImagePath": "CardImages\\ja-JP\\EOC\\12.png"
+    },
+    {
+      "key": "EOC/16",
+      "name": "Scouring Swarm",
+      "source": "https://gatherer.wizards.com/prints/scouring-swarm/ja-jp",
+      "imageUrl": "https://gatherer-static.wizards.com/Cards/medium/BABE7FF7BEF9FDCF8B424AAFECF90C6261329664F7F361BF6970A4503BFFECDB.png",
+      "path": ".tools\\gatherer-ja\\printed-rule-images\\EOC-16.png",
+      "sha256": "45ff6dbabf57f706a2c0b84865383012bc6a5d9aec54f20d0a80e394ce79f7de",
+      "englishRules": "Flying\nWhenever you sacrifice a land, create a tapped token that's a copy of this creature if seven or more land cards are in your graveyard. Otherwise, create a tapped 1/1 black Insect creature token with flying.",
+      "printedName": "洗い流す大群",
+      "printedType": "クリーチャー — 昆虫",
+      "printedRules": "飛行\nあなたが土地１つを生け贄に捧げるたび、あなたの墓地に７枚以上の土地・カードがあるなら、このクリーチャーのコピーであるトークン１体をタップ状態で生成する。そうでないなら、飛行を持つ黒の１/１の昆虫・クリーチャー・トークン１体をタップ状態で生成する。",
+      "review": "Read official Japanese image; independently compared costs, conditions, quantities, targets, timing, token characteristics and destinations with recorded canonical English rules. Mana icons represented by canonical brace notation; physical line wrapping removed.",
+      "localImagePath": "CardImages\\ja-JP\\EOC\\16.png"
+    },
+    {
+      "key": "EOC/17",
+      "name": "Moxite Refinery",
+      "source": "https://gatherer.wizards.com/prints/moxite-refinery/ja-jp",
+      "imageUrl": "https://gatherer-static.wizards.com/Cards/medium/1903DA505B0A8DEB942840BDC06DF66C02CA3B40C71C58BA3F9BCD93227E4F2C.png",
+      "path": ".tools\\gatherer-ja\\printed-rule-images\\EOC-17.png",
+      "sha256": "5aa69feb36013ed0b25638085b9fb13c17d7df5ac4491f1d3a5cda886062f17b",
+      "englishRules": "{2}, {T}, Remove X counters from an artifact or creature you control: Choose one. Activate only as a sorcery.\n* Put X charge counters on target artifact.\n* Put X +1/+1 counters on target creature.",
+      "printedName": "モーキサイト精製所",
+      "printedType": "アーティファクト",
+      "printedRules": "{2}, {T}, あなたがコントロールしていてアーティファクトやクリーチャーである１つの上からカウンターＸ個を取り除く：以下から１つを選ぶ。起動はソーサリーとしてのみ行う。\n・アーティファクト１つを対象とする。その上に蓄積カウンターＸ個を置く。\n・クリーチャー１体を対象とする。その上に＋１/＋１カウンターＸ個を置く。",
+      "review": "Read official Japanese image; independently compared costs, conditions, quantities, targets, timing, token characteristics and destinations with recorded canonical English rules. Mana icons represented by canonical brace notation; physical line wrapping removed.",
+      "localImagePath": "CardImages\\ja-JP\\EOC\\17.png"
+    },
+    {
+      "key": "EOC/20",
+      "name": "Eumidian Hatchery",
+      "source": "https://gatherer.wizards.com/prints/eumidian-hatchery/ja-jp",
+      "imageUrl": "https://gatherer-static.wizards.com/Cards/medium/E4A837D1B3A09D54D87C96425340D0C8FF761319068087F9A948601EE62EE9E7.png",
+      "path": ".tools\\gatherer-ja\\printed-rule-images\\EOC-20.png",
+      "sha256": "8cd292bb89728ba15f88bd2ebdcda82e43ab333ea80fc2ee4b18dfe2ccb0ac19",
+      "englishRules": "{T}, Pay 1 life: Add {B}. Put a hatchling counter on this land.\nWhen this land is put into a graveyard from the battlefield, for each hatchling counter on it, create a 1/1 black Insect creature token with flying.",
+      "printedName": "ユーミディアンの孵化場",
+      "printedType": "土地",
+      "printedRules": "{T}, １点のライフを支払う：{B}を加える。この土地の上に孵化カウンター１個を置く。\nこの土地が戦場から墓地に置かれたとき、この上にあった孵化カウンター１個につき１体の、飛行を持つ黒の１/１の昆虫・クリーチャー・トークンを生成する。",
+      "review": "Read official Japanese image; independently compared costs, conditions, quantities, targets, timing, token characteristics and destinations with recorded canonical English rules. Mana icons represented by canonical brace notation; physical line wrapping removed.",
+      "localImagePath": "CardImages\\ja-JP\\EOC\\20.png"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+PASS: 3 attackers independently assigned to player/planeswalker/own battle protected by opponent; reassign, same-destination idempotency, recall; invalid/duplicate/stale/wrong-seat rejected; defender creature/friendly planeswalker/self-protected battle excluded; both seats pass; real combat life 20->18, loyalty 5->3, defense 5->3, other counters unchanged.

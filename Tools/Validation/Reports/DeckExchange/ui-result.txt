@@ -1,0 +1,1 @@
+PASS: visible toolbar and hit areas; Save As clone; automatic MTGB paste creates saved deck; errors do not replace deck; export format selection and clipboard; original files unchanged; test decks cleaned.

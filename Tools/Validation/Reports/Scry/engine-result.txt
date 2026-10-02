@@ -1,0 +1,5 @@
+PASS top: both seats passed, scry/reset/confirm, expected draw, spell resolved
+PASS reverse: both seats passed, scry/reset/confirm, expected draw, spell resolved
+PASS split: both seats passed, scry/reset/confirm, expected draw, spell resolved
+PASS bottom: both seats passed, scry/reset/confirm, expected draw, spell resolved
+PASS worker failure: explicit fatal, private details withheld, process exited

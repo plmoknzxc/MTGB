@@ -62,11 +62,6 @@ public static class PrintingKeyUtility
         return Path.Combine(root, setCode, collectorNumber + faceSuffix + extension);
     }
 
-    public static string BuildScriptPath(string root, string setCode, string collectorNumber)
-    {
-        return Path.Combine(root, setCode, "m" + collectorNumber + ".lua");
-    }
-
     public static bool IsPathInsideRoot(string root, string path)
     {
         string fullRoot = Path.GetFullPath(root);

@@ -1,0 +1,1 @@
+PASS: zero-land Shock not offered; target/payment remain manual; caster passes, opponent with no actions auto-passes; real resolution 20 -> 18.

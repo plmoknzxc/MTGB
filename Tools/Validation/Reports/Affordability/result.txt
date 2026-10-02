@@ -1,0 +1,1 @@
+PASS: 2 lands reject Hill Giant proposal; both tap and undo restore zero mana/untapped; 4 lands cast through payment and both priority passes.

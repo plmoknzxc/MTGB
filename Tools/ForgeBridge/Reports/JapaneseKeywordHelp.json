@@ -1,0 +1,27 @@
+{
+  "scope": "Keyword glossary Japanese localization and mechanic/subtype collision checks",
+  "entries": 286,
+  "missingJapaneseHelp": [],
+  "retainedEnglishDisplayNames": [
+    "Beam me up",
+    "Blight",
+    "Double team",
+    "Empower Jace",
+    "Heal",
+    "Power-up",
+    "Reflect",
+    "Starting intensity",
+    "Teamwork"
+  ],
+  "excludedSubtypeMatches": [
+    "装備品 / Equip",
+    "装備している / Equip",
+    "飛行機械 / Flying",
+    "多相の戦士 / Changeling"
+  ],
+  "source": "https://mtg-jp.com/gameplay/rules/docs/0006836/",
+  "limitations": [
+    "This is not an exhaustive contextual audit of every card text.",
+    "English display names are retained for mechanisms without an established Japanese name in the local sources. Their explanations are Japanese."
+  ]
+}

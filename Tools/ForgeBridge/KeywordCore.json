@@ -1,0 +1,209 @@
+[
+  {
+    "en": "Flying",
+    "zh": "飞行",
+    "ja": "飛行",
+    "enHelp": "Can be blocked only by creatures with flying or reach.",
+    "zhHelp": "只能被具飞行或延势的生物阻挡。",
+    "jaHelp": "飛行か到達を持つクリーチャーにしかブロックされない。",
+    "aliases": []
+  },
+  {
+    "en": "Reach",
+    "zh": "延势",
+    "ja": "到達",
+    "enHelp": "Can block creatures with flying.",
+    "zhHelp": "可以阻挡具飞行的生物。",
+    "jaHelp": "飛行を持つクリーチャーをブロックできる。",
+    "aliases": []
+  },
+  {
+    "en": "First strike",
+    "zh": "先攻",
+    "ja": "先制攻撃",
+    "enHelp": "Deals combat damage before creatures without first strike or double strike.",
+    "zhHelp": "在不具先攻或连击的生物之前造成战斗伤害。",
+    "jaHelp": "先制攻撃や二段攻撃を持たないクリーチャーより先に戦闘ダメージを与える。",
+    "aliases": []
+  },
+  {
+    "en": "Double strike",
+    "zh": "连击",
+    "ja": "二段攻撃",
+    "enHelp": "Deals combat damage in both the first-strike and regular combat damage steps.",
+    "zhHelp": "在先攻和正常两个战斗伤害步骤都造成伤害。",
+    "jaHelp": "先制攻撃と通常の両方の戦闘ダメージ・ステップでダメージを与える。",
+    "aliases": []
+  },
+  {
+    "en": "Deathtouch",
+    "zh": "死触",
+    "ja": "接死",
+    "enHelp": "Any amount of damage it deals to a creature is lethal damage.",
+    "zhHelp": "对生物造成的任意数量伤害都视为致命伤害。",
+    "jaHelp": "クリーチャーに与えるダメージは、１点でも致死ダメージとなる。",
+    "aliases": []
+  },
+  {
+    "en": "Lifelink",
+    "zh": "系命",
+    "ja": "絆魂",
+    "enHelp": "Damage it deals also causes its controller to gain that much life.",
+    "zhHelp": "它造成伤害时，其操控者同时获得等量生命。",
+    "jaHelp": "これがダメージを与えると、そのコントローラーは同じ点数のライフを得る。",
+    "aliases": []
+  },
+  {
+    "en": "Vigilance",
+    "zh": "警戒",
+    "ja": "警戒",
+    "enHelp": "Attacking doesn't cause this creature to tap.",
+    "zhHelp": "此生物攻击时不需横置。",
+    "jaHelp": "攻撃してもタップしない。",
+    "aliases": []
+  },
+  {
+    "en": "Trample",
+    "zh": "践踏",
+    "ja": "トランプル",
+    "enHelp": "Excess combat damage can be assigned to the player, planeswalker, or battle it attacks.",
+    "zhHelp": "分配足够伤害给阻挡者后，超出的战斗伤害可分配给受攻击者。",
+    "jaHelp": "ブロック・クリーチャーに十分なダメージを割り振った後、余剰分を攻撃先に割り振れる。",
+    "aliases": []
+  },
+  {
+    "en": "Haste",
+    "zh": "敏捷",
+    "ja": "速攻",
+    "enHelp": "Can attack and use tap abilities as soon as it comes under your control.",
+    "zhHelp": "在刚受你操控时就能攻击或启动费用中有横置符号的异能。",
+    "jaHelp": "あなたのコントロール下になったターンでも攻撃やタップ能力の起動ができる。",
+    "aliases": []
+  },
+  {
+    "en": "Menace",
+    "zh": "威慑",
+    "ja": "威迫",
+    "enHelp": "Can't be blocked except by two or more creatures.",
+    "zhHelp": "只能被两个或更多生物阻挡。",
+    "jaHelp": "２体以上のクリーチャーにしかブロックされない。",
+    "aliases": []
+  },
+  {
+    "en": "Hexproof",
+    "zh": "辟邪",
+    "ja": "呪禁",
+    "enHelp": "Can't be the target of spells or abilities your opponents control.",
+    "zhHelp": "不能成为对手操控的咒语或异能的目标。",
+    "jaHelp": "対戦相手がコントロールする呪文や能力の対象にならない。",
+    "aliases": []
+  },
+  {
+    "en": "Indestructible",
+    "zh": "不灭",
+    "ja": "破壊不能",
+    "enHelp": "Can't be destroyed by damage or effects that say ‘destroy’.",
+    "zhHelp": "不会因伤害或注明“消灭”的效应而被消灭。",
+    "jaHelp": "ダメージや「破壊する」効果によって破壊されない。",
+    "aliases": []
+  },
+  {
+    "en": "Ward",
+    "zh": "守护",
+    "ja": "護法",
+    "enHelp": "When an opponent targets it with a spell or ability, counter that spell or ability unless its controller pays the ward cost.",
+    "zhHelp": "当它成为对手操控的咒语或异能的目标时，除非其操控者支付守护费用，否则反击该咒语或异能。",
+    "jaHelp": "対戦相手の呪文や能力の対象になるたび、護法コストが支払われないかぎりそれを打ち消す。",
+    "aliases": []
+  },
+  {
+    "en": "Flash",
+    "zh": "闪现",
+    "ja": "瞬速",
+    "enHelp": "May be cast any time you could cast an instant.",
+    "zhHelp": "可以在你能施放瞬间的时机施放。",
+    "jaHelp": "インスタントを唱えられるときならいつでも唱えられる。",
+    "aliases": []
+  },
+  {
+    "en": "Defender",
+    "zh": "守军",
+    "ja": "防衛",
+    "enHelp": "This creature can't attack.",
+    "zhHelp": "此生物不能攻击。",
+    "jaHelp": "このクリーチャーは攻撃できない。",
+    "aliases": []
+  },
+  {
+    "en": "Prowess",
+    "zh": "灵技",
+    "ja": "果敢",
+    "enHelp": "Whenever you cast a noncreature spell, this creature gets +1/+1 until end of turn.",
+    "zhHelp": "每当你施放非生物咒语时，此生物得+1/+1直到回合结束。",
+    "jaHelp": "あなたがクリーチャーでない呪文を唱えるたび、ターン終了時まで+1/+1の修整を受ける。",
+    "aliases": []
+  },
+  {
+    "en": "Skulk",
+    "zh": "潜匿",
+    "ja": "潜伏",
+    "enHelp": "Can't be blocked by creatures with greater power.",
+    "zhHelp": "不能被力量比它大的生物阻挡。",
+    "jaHelp": "これより大きいパワーを持つクリーチャーにはブロックされない。",
+    "aliases": []
+  },
+  {
+    "en": "Protection",
+    "zh": "保护",
+    "ja": "プロテクション",
+    "enHelp": "The stated quality can't damage, enchant, equip, block, or target this permanent.",
+    "zhHelp": "具有指定特征的来源不能伤害、结附、装备、阻挡或指定此永久物为目标。",
+    "jaHelp": "指定された性質を持つものからダメージを受けず、エンチャント、装備、ブロック、対象にもされない。",
+    "aliases": []
+  },
+  {
+    "en": "Kicker",
+    "zh": "增幅",
+    "ja": "キッカー",
+    "enHelp": "You may pay the additional kicker cost as you cast this spell for its listed bonus.",
+    "zhHelp": "施放此咒语时可以额外支付增幅费用，以获得牌面所述的效果。",
+    "jaHelp": "この呪文を唱える際に追加のキッカー・コストを支払うと、記載された効果を得る。",
+    "aliases": []
+  },
+  {
+    "en": "Cycling",
+    "zh": "循环",
+    "ja": "サイクリング",
+    "enHelp": "Pay the cycling cost and discard this card to draw a card.",
+    "zhHelp": "支付循环费用并弃掉此牌，以抓一张牌。",
+    "jaHelp": "サイクリング・コストを支払いこのカードを捨てると、カード１枚を引く。",
+    "aliases": []
+  },
+  {
+    "en": "Evoke",
+    "zh": "呼魂",
+    "ja": "想起",
+    "enHelp": "You may cast this spell for its evoke cost. If you do, sacrifice it when it enters the battlefield.",
+    "zhHelp": "你可以支付呼魂费用来施放此咒语。若如此作，当它进入战场时将它牺牲。",
+    "jaHelp": "想起コストでこの呪文を唱えてもよい。そうしたなら、これが戦場に出たとき、これを生け贄に捧げる。",
+    "aliases": []
+  },
+  {
+    "en": "Surveil",
+    "zh": "刺探",
+    "ja": "諜報",
+    "enHelp": "Look at that many cards from the top of your library. Put any into your graveyard and the rest on top in any order.",
+    "zhHelp": "检视牌库顶指定数量的牌。将其中任意数量置入坟墓场，其余以任意顺序放回牌库顶。",
+    "jaHelp": "指定された枚数のライブラリーの一番上を見て、好きな枚数を墓地に、残りを好きな順番で一番上に置く。",
+    "aliases": []
+  },
+  {
+    "en": "Scry",
+    "zh": "占卜",
+    "ja": "占術",
+    "enHelp": "Look at that many cards from the top of your library; put any on the bottom and the rest on top in any order.",
+    "zhHelp": "检视牌库顶指定数量的牌，将任意数量置于牌库底，其余以任意顺序放回牌库顶。",
+    "jaHelp": "指定された枚数のライブラリーの一番上を見て、好きな枚数を一番下に、残りを好きな順番で一番上に置く。",
+    "aliases": []
+  }
+]
