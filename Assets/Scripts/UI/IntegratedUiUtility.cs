@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 定稿战场 UI 的程序化资源与 uGUI 构建助手：圆角矩形/圆形/渐变贴图运行时生成，
-/// Text/Panel/Button 等沿用 ArenaPrototypeSceneFactory 的构建方式（无 prefab，全部代码创建）。
+/// Text/Panel/Button 等 uGUI 控件由代码按需创建。
 /// </summary>
 public static class IntegratedUiUtility
 {
