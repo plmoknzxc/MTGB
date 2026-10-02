@@ -31,16 +31,16 @@ public static class ForgeBattlefieldValidation
             if(state==PlayModeStateChange.ExitingPlayMode) Cleanup();
         };
     }
-    [MenuItem("MTGB/Forge/Validate Battlefield UI")]
+    [MenuItem("MTGB/验证/战场/基本操作")]
     public static void Run()
     { SessionState.SetBool("MTGB.BattlefieldValidation.Mulligan",false); SessionState.SetBool("MTGB.BattlefieldValidation.Blocking",false); SessionState.SetBool("MTGB.BattlefieldValidation.Combat",false); Begin(); }
-    [MenuItem("MTGB/Forge/Validate Battlefield Combat")]
+    [MenuItem("MTGB/验证/战场/攻击与伤害")]
     public static void RunCombat()
     { SessionState.SetBool("MTGB.BattlefieldValidation.Mulligan",false); SessionState.SetBool("MTGB.BattlefieldValidation.Blocking",false); SessionState.SetBool("MTGB.BattlefieldValidation.Combat",true); Begin(); }
-    [MenuItem("MTGB/Forge/Validate Battlefield Blocking")]
+    [MenuItem("MTGB/验证/战场/阻挡")]
     public static void RunBlocking()
     { SessionState.SetBool("MTGB.BattlefieldValidation.Mulligan",false); SessionState.SetBool("MTGB.BattlefieldValidation.Blocking",true); SessionState.SetBool("MTGB.BattlefieldValidation.Combat",true); Begin(); }
-    [MenuItem("MTGB/Forge/Validate Battlefield Mulligan")]
+    [MenuItem("MTGB/验证/战场/起手调度")]
     public static void RunMulligan()
     { SessionState.SetBool("MTGB.BattlefieldValidation.Mulligan",true); SessionState.SetBool("MTGB.BattlefieldValidation.Blocking",false); SessionState.SetBool("MTGB.BattlefieldValidation.Combat",false); Begin(); }
     private static void Begin()

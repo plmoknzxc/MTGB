@@ -18,11 +18,11 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 
 1. 用 Unity 打开项目。
 2. 在项目根目录执行 `pwsh -File Tools/ForgeBridge/Build-Bridge.ps1`，生成便携运行资源。
-3. 在 Unity 执行 `MTGB/Validate Project`，检查卡牌目录、真实对局会话和进程隔离。
-4. 执行 `MTGB/Forge/Build Validation Player`，客户端输出到 `Builds/ForgeValidation`。
+3. 在 Unity 执行 `MTGB/验证/项目整体`，检查卡牌目录、真实对局会话和进程隔离。
+4. 执行 `MTGB/构建/Windows 客户端（开发版）`，客户端输出到 `Builds/ForgeValidation`。
 5. 启动客户端，在组卡界面准备 `.mdk` 牌组，再从大厅创建或加入房间。手动验证可使用 `Decks/Starter.mdk`。
 
-独立服务器通过 `MTGB/Networking/Build Dedicated Server` 构建，启动命令：
+独立服务器通过 `MTGB/构建/Windows 独立服务器` 构建，启动命令：
 
 ```powershell
 Builds/Server/MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777

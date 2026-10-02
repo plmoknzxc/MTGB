@@ -11,7 +11,7 @@ public static class ReplayValidation
     private static int actions;
     public static string Result { get; private set; }
     public static string SamplePath { get; private set; }
-    [MenuItem("MTGB/Validation/Replay recording and files")]
+    [MenuItem("MTGB/验证/回放/录制与文件")]
     public static void Run()
     {
         if (session != null) throw new InvalidOperationException("Already running");

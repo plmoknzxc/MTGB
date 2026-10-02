@@ -15,7 +15,7 @@ public static class ForgeIsolationValidation
     public static bool IsRunning => first != null;
     public static Exception LastError { get; private set; }
 
-    [MenuItem("MTGB/Forge/Validate Process Isolation")]
+    [MenuItem("MTGB/验证/对局/进程隔离")]
     public static void Run()
     {
         if (first != null) throw new InvalidOperationException("Isolation validation is running.");

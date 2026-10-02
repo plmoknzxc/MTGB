@@ -14,11 +14,11 @@
 
 卡图、翻译和静态卡牌说明来自各客户端本地资料，不随入房自动同步。缺少本地资料的公开卡使用服务器提供的名称和状态显示，卡图或详细说明可能缺失；面朝下和隐藏卡仍遵守原有可见性限制。中转服务若只转发网络消息，规则权威仍在实际运行 Forge 的主机。
 
-回归入口：`MTGB/Validation/Online authority`，验证不同内容的握手、协议拒绝、主机启动配置、服务器卡组检查及真实 Forge 会话中的席位隔离和操作校验。
+回归入口：`MTGB/验证/联机/权威与权限`，验证不同内容的握手、协议拒绝、主机启动配置、服务器卡组检查及真实 Forge 会话中的席位隔离和操作校验。
 
 ## 构建与启动服务器
 
-1. 在 Unity 菜单执行 `MTGB/Networking/Build Dedicated Server`。
+1. 在 Unity 菜单执行 `MTGB/构建/Windows 独立服务器`。
 2. 启动：`Builds/Server/MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777`。
 3. 客户端在主界面选择“联机对战”，先在连接页输入服务器 IP、UDP 端口、房间号与建房规则。不存在的房间号会按首位玩家填写的生命、BO1/BO3、允许系列与 DIY 开关创建房间；每局先手由服务器重新随机决定。连接成功后整页切换到独立的房间准备页，可选择本局牌组、查看两名玩家状态并准备。BO3 局间会再切换到独立的全屏换备页，主牌与备牌以卡面网格显示，直接拖到另一侧即可移动一张；房间准备页不会常驻显示换备控件。已有房间号会加入并显示房间现有规则。大厅内断开或返回会退出房间并释放席位。
 
@@ -37,7 +37,7 @@ Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
 项目使用 Multiplayer Play Mode 2.0.2，无需构建正式独立服务器即可同时运行一个服务器和两个客户端：
 
 1. 先保存至少一个可用牌组。
-2. 执行 `MTGB/Networking/Prepare Local 2-Player Session`。该命令会建立互相隔离的 `player-1`、`player-2` 配置，并打开 `Window > Multiplayer > Play Mode Scenarios`。
+2. 执行 `MTGB/联机/准备双客户端本机联调`。该命令会建立互相隔离的 `player-1`、`player-2` 配置，并打开 `Window > Multiplayer > Play Mode Scenarios`。
 3. 选择项目自带的 `Assets/Settings/PlayMode/NewPlayModeScenario.asset`；它已配置 Main Editor、Player 2、Player 3 三个实例。MPPM 2.0.2 下保持 `Stream Logs to Main Editor` 关闭；需要日志时直接查看对应虚拟工程的 `Library/VP/<实例>/Logs/Editor.log`，避免工作线程日志转发触发错误风暴。
 4. 从 Play Mode Scenarios 窗口启动场景。准备命令会让 Main Editor 自动作为独立服务器，带空格的 `Player 2`、`Player 3` 实例名会分别映射到两个客户端配置，但实例名不会再触发自动连接。两个客户端都要进入联机页并主动点击“加入已有主机”，之后各自提交牌组并准备；双方准备完成后由先加入、成为房主的玩家点击开始。
 
@@ -89,9 +89,9 @@ Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
 
 ## 联机验证
 
-`MTGB/Validation/Online authority` 检查握手兼容性、权威端启动配置、牌组校验、席位隔离与输入拒绝。Windows 双客户端回归使用 `Tools/ForgeBridge/Run-NetworkSmoke.py`，具体构建与运行方式见 [ForgeBridge](../Tools/ForgeBridge/README.zh-CN.md)。
+`MTGB/验证/联机/权威与权限` 检查握手兼容性、权威端启动配置、牌组校验、席位隔离与输入拒绝。Windows 双客户端回归使用 `Tools/ForgeBridge/Run-NetworkSmoke.py`，具体构建与运行方式见 [ForgeBridge](../Tools/ForgeBridge/README.zh-CN.md)。
 
-`MTGB/Validate Project` 检查官方目录、牌组保存重载、真实 Forge 会话和进程隔离。规则机制与界面交互通过对应专项验证入口复核。
+`MTGB/验证/项目整体` 检查官方目录、牌组保存重载、真实 Forge 会话和进程隔离。规则机制与界面交互通过对应专项验证入口复核。
 
 ## 安全边界
 

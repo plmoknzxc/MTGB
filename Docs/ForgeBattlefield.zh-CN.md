@@ -26,9 +26,9 @@
 
 在 Unity 打开 IntegratedBattlefield 场景后：
 
-- `MTGB/Forge/Validate Battlefield UI`：实际 Starter 起手，通过 uGUI 按钮下地、施放闪电击、选择玩家、支付费用、让过优先权，检查 20 → 17；检查重复点击只提交一次。
-- `MTGB/Forge/Validate Battlefield Combat`：实际 Starter 起手，施放怒火鬼怪并宣告敏捷攻击，检查战斗伤害 20 → 19。
-- `MTGB/Forge/Validate Battlefield Blocking`：在内存中建立山脉/怒火鬼怪测试牌组，双方正常下地、支付费用及施放生物；检查攻击、阻挡、取消并重新指定阻挡，最终双方生物进入坟墓场且生命保持 20/20。该牌组仅用于交互测试，不验证构筑赛制合法性，不写入玩家牌组文件。
+- `MTGB/验证/战场/基本操作`：实际 Starter 起手，通过 uGUI 按钮下地、施放闪电击、选择玩家、支付费用、让过优先权，检查 20 → 17；检查重复点击只提交一次。
+- `MTGB/验证/战场/攻击与伤害`：实际 Starter 起手，施放怒火鬼怪并宣告敏捷攻击，检查战斗伤害 20 → 19。
+- `MTGB/验证/战场/阻挡`：在内存中建立山脉/怒火鬼怪测试牌组，双方正常下地、支付费用及施放生物；检查攻击、阻挡、取消并重新指定阻挡，最终双方生物进入坟墓场且生命保持 20/20。该牌组仅用于交互测试，不验证构筑赛制合法性，不写入玩家牌组文件。
 
 2026-09-22 在 IntegratedBattlefield Play Mode 的最新实测与范围见 [交互验证记录](BattlefieldValidation-2026-09-22.zh-CN.md)。
 

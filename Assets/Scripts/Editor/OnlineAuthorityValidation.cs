@@ -14,7 +14,7 @@ public static class OnlineAuthorityValidation
     public static bool IsRunning => session != null;
     public static string LastResult { get; private set; }
 
-    [MenuItem("MTGB/Validation/Online authority")]
+    [MenuItem("MTGB/验证/联机/权威与权限")]
     public static void Run()
     {
         if (IsRunning) throw new InvalidOperationException("Authority validation is running.");

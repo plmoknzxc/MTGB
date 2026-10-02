@@ -21,7 +21,7 @@ public sealed class ForgeCatalogStoreBuild : IPreprocessBuildWithReport
     }
     public void OnPreprocessBuild(BuildReport report) { EnsureBuilt(); }
 
-    [MenuItem("MTGB/Forge/Prepare Card Database")]
+    [MenuItem("MTGB/数据/重新生成卡牌数据库")]
     public static void Rebuild() { Prepare(true); }
 
     public static void EnsureBuilt() { Prepare(false); }

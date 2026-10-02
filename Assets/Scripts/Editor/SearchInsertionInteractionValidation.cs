@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public static class SearchInsertionInteractionValidation
 {
     // Run in Play mode. Uses the real input module's press/drag/release routing.
-    [MenuItem("MTGB/Validation/Search Insertion Interaction (Play mode)")]
+    [MenuItem("MTGB/验证/卡牌/搜索插入交互（运行模式）")]
     public static void Run()
     {
         if (!Application.isPlaying) throw new InvalidOperationException("Run this validation in Play mode.");

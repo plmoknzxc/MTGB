@@ -11,7 +11,7 @@
 
 - Unity Localization 1.5.13，SelectedLocale 是唯一语言状态；Interface String Tables，Presentation Font Asset Tables。
 - `Assets/Localization/Interface.tsv`：源文字、英文、日文三列；四列形式为源文字、中文、英文、日文，适合英文源文字。占位参数使用 `{0}` 等。重复源键以最后一条为准。
-- `MTGB/Localization/Rebuild presentation tables` 更新表；更新后需重新执行 Addressables BuildPlayerContent。
+- `MTGB/本地化/重新生成界面翻译表` 更新表；更新后需重新执行 Addressables BuildPlayerContent。
 - GamePreferences 异步载入表、字体及译文。临时 Addressables handle 在跨帧读取期间持有引用，最后释放。
 - PreferenceText 保留原始文字与基准字号，避免来回切换累计放大；不会翻译输入框内容和自定义牌组名。
 - 官方译文复制自当前固定 ForgeRuntime 的 `assets/res/languages/cardnames-zh-CN.txt`、`cardnames-ja-JP.txt`，置于 StreamingAssets/CardTranslations。按英文原名投影名称、类别、规则文字，不写回 CardDefinition。

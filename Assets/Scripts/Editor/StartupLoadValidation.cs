@@ -11,7 +11,7 @@ using UnityEngine;
 // Run in Play Mode, once the menu is ready, to measure full reads rather than warm static caches.
 public static class StartupLoadValidation
 {
-    [MenuItem("MTGB/Validation/Startup loading")]
+    [MenuItem("MTGB/验证/启动加载")]
     public static async void Run()
     {
         if (!Application.isPlaying) { UnityEngine.Debug.LogError("Run startup validation in Play Mode."); return; }

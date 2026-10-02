@@ -9,7 +9,7 @@ using UnityEngine;
 
 public static class ForgeCatalogStoreValidation
 {
-    [MenuItem("MTGB/Validation/Prepared Card Database")]
+    [MenuItem("MTGB/验证/卡牌/预生成数据库")]
     public static async void Run()
     {
         SessionState.SetString("CatalogStore.Validation", "running");

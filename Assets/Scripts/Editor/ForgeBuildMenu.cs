@@ -8,7 +8,7 @@ using UnityEngine;
 public static class ForgeBuildMenu
 {
     private static bool building;
-    [MenuItem("MTGB/Forge/Build Validation Player")]
+    [MenuItem("MTGB/构建/Windows 客户端（开发版）")]
     public static void BuildValidationPlayer()
     {
         if (building) return;

@@ -51,7 +51,7 @@ javac -encoding UTF-8 -cp 'ForgeRuntime/classes;ForgeRuntime/lib/*' -d .tools/at
 python Tools/ForgeBridge/Test-AttackDefenders.py
 ```
 
-Unity 打开 `IntegratedBattlefield`，进入 Play Mode，执行 `AttackDefenderPresentationValidation.Run()`。真实对局回归使用已有菜单 `MTGB/Forge/Validate Battlefield Combat` 和 `MTGB/Forge/Validate Battlefield Blocking`。
+Unity 打开 `IntegratedBattlefield`，进入 Play Mode，执行 `AttackDefenderPresentationValidation.Run()`。真实对局回归使用已有菜单 `MTGB/验证/战场/攻击与伤害` 和 `MTGB/验证/战场/阻挡`。
 
 ## 结论边界
 

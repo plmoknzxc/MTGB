@@ -9,7 +9,7 @@ using UnityEngine.Localization.Settings;
 
 public static class PresentationLocalizationSetup
 {
-    [MenuItem("MTGB/Localization/Rebuild presentation tables")]
+    [MenuItem("MTGB/本地化/重新生成界面翻译表")]
     public static void Build()
     {
         const string root="Assets/Localization";

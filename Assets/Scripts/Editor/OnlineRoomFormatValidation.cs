@@ -7,7 +7,7 @@ using UnityEditor;
 
 public static class OnlineRoomFormatValidation
 {
-    [MenuItem("MTGB/Validation/Room format selection")]
+    [MenuItem("MTGB/验证/联机/房间赛制选择")]
     public static string Run()
     {
         var owner = new GameObject("RoomFormatValidation"); owner.SetActive(false);

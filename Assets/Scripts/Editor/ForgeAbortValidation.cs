@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class ForgeAbortValidation
 {
-    [MenuItem("MTGB/Forge/Validate Aborted Match")]
+    [MenuItem("MTGB/验证/对局/异常终止")]
     public static void Run()
     {
         if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode first.");

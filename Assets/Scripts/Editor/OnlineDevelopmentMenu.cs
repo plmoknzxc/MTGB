@@ -38,7 +38,7 @@ public static class OnlineDevelopmentMenu
         controller.SendMessage("ShowDeckBuilder", SendMessageOptions.RequireReceiver);
     }
 
-    [MenuItem("MTGB/Networking/Prepare Local 2-Player Session")]
+    [MenuItem("MTGB/联机/准备双客户端本机联调")]
     [CliCommand("mtgb_prepare_local_session", "Prepare isolated profiles for a local three-Editor network session")]
     public static void PrepareLocalSession()
     {

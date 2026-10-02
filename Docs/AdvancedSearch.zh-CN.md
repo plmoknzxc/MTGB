@@ -27,4 +27,4 @@ python Tools/ForgeBridge/Export-SearchMetadata.py
 
 ## 验证
 
-Unity 菜单 `MTGB > Validation > Advanced Card Search` 运行组合条件、译名、背面名称、虚色/颜色标识、同面数值、非法输入、重印去重和整库扫描验证。结果位于 `SessionState["AdvancedSearch.Validation"]`。
+Unity 菜单 `MTGB/验证/卡牌/高级搜索` 运行组合条件、译名、背面名称、虚色/颜色标识、同面数值、非法输入、重印去重和整库扫描验证。结果位于 `SessionState["AdvancedSearch.Validation"]`。

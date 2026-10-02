@@ -13,7 +13,7 @@ public static class ForgeMigrationValidation
     public static bool IsRunning => session != null;
     public static Exception LastError { get; private set; }
 
-    [MenuItem("MTGB/Forge/Validate Persistent Session")]
+    [MenuItem("MTGB/验证/对局/持续会话")]
     public static void ValidateSession()
     {
         if (session != null) throw new InvalidOperationException("Session validation is already running.");
@@ -79,7 +79,7 @@ public static class ForgeMigrationValidation
         }
     }
 
-    [MenuItem("MTGB/Forge/Validate Catalog")]
+    [MenuItem("MTGB/验证/卡牌/印刷目录")]
     public static void ValidateCatalog()
     {
         var cards = CardDatabaseRepository.LoadAll(true);

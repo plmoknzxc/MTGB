@@ -6,7 +6,7 @@ using UnityEditor;
 
 public static class AdvancedSearchValidation
 {
-    [MenuItem("MTGB/Validation/Advanced Card Search")]
+    [MenuItem("MTGB/验证/卡牌/高级搜索")]
     public static async void Run()
     {
         SessionState.SetString("AdvancedSearch.Validation", "running");

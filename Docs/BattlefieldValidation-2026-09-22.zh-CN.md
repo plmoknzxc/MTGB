@@ -30,9 +30,9 @@
 
 打开 IntegratedBattlefield 场景，依次运行菜单：
 
-1. `MTGB/Forge/Validate Battlefield UI`
-2. 等待 result.txt 显示 PASS，再运行 `MTGB/Forge/Validate Battlefield Combat`。
-3. 等待 combat-result.txt 显示 PASS，再运行 `MTGB/Forge/Validate Battlefield Blocking`。
+1. `MTGB/验证/战场/基本操作`
+2. 等待 result.txt 显示 PASS，再运行 `MTGB/验证/战场/攻击与伤害`。
+3. 等待 combat-result.txt 显示 PASS，再运行 `MTGB/验证/战场/阻挡`。
 
 运行输出位于 `.tools/forge-migration/battlefield`。本次结果副本保存在 `Tools/Validation/Reports/Battlefield-2026-09-22`，包含结果文本、截图和新增测试的 JSONL 请求/状态轨迹。轨迹用于本地诊断，会先后记录两个席位各自可见的手牌，不是可广播给玩家的日志。
 

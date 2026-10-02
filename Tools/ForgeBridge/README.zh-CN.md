@@ -20,12 +20,12 @@ Java 与资源路径相对于 `ForgeRuntime`；每局使用独立的用户数据
 
 Unity 菜单入口：
 
-- `MTGB/Forge/Validate Catalog`：完整印刷目录、歧义拒绝、已有牌组不改写。
-- `MTGB/Forge/Validate Persistent Session`：保存并重载官方牌组，真实 Java 会话、席位投影、非法输入及进程退出。
-- `MTGB/Forge/Validate Aborted Match`：异常终止不计分、不推进局数、不进入换备；正常 BO3 结束仍进入换备。
-- `MTGB/Validate Project`：依次执行目录、持久会话和双进程故障隔离验证；结果写入 `Temp/project-validation-result.txt`。
-- `MTGB/Forge/Build Validation Player`：构建 `Builds/ForgeValidation/MTGB.exe`，复制运行资源与验证牌组。完成以 Editor.log 中的成功消息为准。
-- `MTGB/Networking/Build Dedicated Server`：构建原生 Windows Server 子目标 `Builds/Server/MTGBServer.exe`，包含相同的便携运行资源。
+- `MTGB/验证/卡牌/印刷目录`：完整印刷目录、歧义拒绝、已有牌组不改写。
+- `MTGB/验证/对局/持续会话`：保存并重载官方牌组，真实 Java 会话、席位投影、非法输入及进程退出。
+- `MTGB/验证/对局/异常终止`：异常终止不计分、不推进局数、不进入换备；正常 BO3 结束仍进入换备。
+- `MTGB/验证/项目整体`：依次执行目录、持久会话和双进程故障隔离验证；结果写入 `Temp/project-validation-result.txt`。
+- `MTGB/构建/Windows 客户端（开发版）`：构建 `Builds/ForgeValidation/MTGB.exe`，复制运行资源与验证牌组。完成以 Editor.log 中的成功消息为准。
+- `MTGB/构建/Windows 独立服务器`：构建原生 Windows Server 子目标 `Builds/Server/MTGBServer.exe`，包含相同的便携运行资源。
 
 ```powershell
 python -X utf8 Tools/ForgeBridge/Run-NetworkSmoke.py --mode dedicated --server-exe Builds/Server/MTGBServer.exe

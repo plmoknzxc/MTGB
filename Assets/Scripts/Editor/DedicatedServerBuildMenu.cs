@@ -11,7 +11,7 @@ public static class DedicatedServerBuildMenu
     private const string DefaultOutput = "Builds/Server/MTGBServer.exe";
     private static bool building;
 
-    [MenuItem("MTGB/Networking/Build Dedicated Server")]
+    [MenuItem("MTGB/构建/Windows 独立服务器")]
     public static void BuildFromMenu()
     {
         if (building) return;
