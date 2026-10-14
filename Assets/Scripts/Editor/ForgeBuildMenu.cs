@@ -35,7 +35,25 @@ public static class ForgeBuildMenu
             throw new InvalidOperationException("Forge release player build failed.");
         // The client hosts the same headless Forge engine as the dedicated server.
         CopyRuntimeTo(root, dedicatedServer: true);
+        CopyClientNotices(root);
         Debug.Log("MTGB release player built: " + root);
+    }
+    private static void CopyClientNotices(string root)
+    {
+        foreach(string name in new[]{"LICENSE","THIRD_PARTY_NOTICES.md"})
+            File.Copy(name,Path.Combine(root,name),true);
+        string target=Path.Combine(root,"Licenses","Fonts");
+        Directory.CreateDirectory(target);
+        const string fonts="Assets/Resources/UI/CardTemplates/Fonts";
+        foreach(string file in Directory.GetFiles(fonts)) {
+            string name=Path.GetFileName(file);
+            if(name.EndsWith("-OFL.txt",StringComparison.Ordinal)||name is "ARPHICPL.TXT" or "README.md" or "open-fonts.json")
+                File.Copy(file,Path.Combine(target,name),true);
+        }
+        File.Copy("Assets/Fonts/Noto-OFL.txt",Path.Combine(target,"Noto-OFL.txt"),true);
+        string forge=Path.Combine(root,"Licenses","Forge");Directory.CreateDirectory(forge);
+        File.Copy("Tools/ForgeBridge/LICENSE",Path.Combine(forge,"LICENSE"),true);
+        File.Copy("Docs/OpenSourceAndDistribution.zh-CN.md",Path.Combine(root,"SOURCE_CODE.md"),true);
     }
     [MenuItem("MTGB/构建/Windows 客户端（开发版）")]
     public static void BuildValidationPlayer()

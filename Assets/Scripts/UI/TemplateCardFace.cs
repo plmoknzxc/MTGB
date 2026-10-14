@@ -22,19 +22,35 @@ public sealed class TemplateCardFace : MonoBehaviour
     static Color Ink=>Color.black;
     static TMP_FontAsset Font(bool heading,bool symbols=false,bool stats=false)
     {
-        if(!heading&&!symbols&&GamePreferences.Language.StartsWith("ja"))return GamePreferences.TmpFont;
-        string locale=symbols||GamePreferences.Language.StartsWith("en")?"EN":GamePreferences.Language.StartsWith("zh")?"CN":"";
+        string locale=symbols||GamePreferences.Language.StartsWith("en")?"EN":GamePreferences.Language.StartsWith("zh")?"CN":GamePreferences.Language.StartsWith("ja")?"JP":"";
         if(locale=="")return GamePreferences.TmpFont;
         string key=stats?"StatsEN":(heading?"Name":"Rules")+locale;
-        if(!fonts.TryGetValue(key,out var font)) {
+        var font=LoadFont(key,locale=="EN"?72:48);
+        if(font==null)return GamePreferences.TmpFont;
+        // The EN symbol/numeral fonts are shared across locales. A cached font
+        // must not retain the previous locale's CJK fallback after switching.
+        font.fallbackFontAssetTable.Clear();
+        if(locale!="EN")AddFallback(font,LoadFont("RulesEN",72));
+        AddFallback(font,LoadFont("GlyphSymbols",48));
+        AddFallback(font,LoadFont("GlyphCJK",48));
+        AddFallback(font,GamePreferences.TmpFont);
+        return font;
+    }
+    static void AddFallback(TMP_FontAsset font,TMP_FontAsset fallback)
+    {
+        if(fallback!=null&&fallback!=font)font.fallbackFontAssetTable.Add(fallback);
+    }
+    static TMP_FontAsset LoadFont(string key,int sampling)
+    {
+        if(!fonts.TryGetValue(key,out var font)||font==null) {
             var native=Resources.Load<Font>("UI/CardTemplates/Fonts/"+key);
-            int sampling=locale=="EN"?72:48;
+            if(native==null)return null;
             font=TMP_FontAsset.CreateFontAsset(native,sampling,sampling/8,UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDFAA,1024,1024,AtlasPopulationMode.Dynamic);
-            // Match the printed stroke at the small sizes used by hand/stack cards.
-            // No outline, shadow, or synthetic bold is added to the printed face.
-            font.material.SetFloat(ShaderUtilities.ID_FaceDilate,key=="RulesCN"?.10f:stats?0:.04f);
+            // Headings/numerals use real bold or semibold font files. Keep the
+            // open fonts' native strokes rather than thickening them twice.
+            font.material.SetFloat(ShaderUtilities.ID_FaceDilate,0);
             font.isMultiAtlasTexturesEnabled=true;font.fallbackFontAssetTable=new List<TMP_FontAsset>();
-            if(GamePreferences.TmpFont!=null)font.fallbackFontAssetTable.Add(GamePreferences.TmpFont);fonts[key]=font;
+            fonts[key]=font;
         }
         return font;
     }
@@ -132,11 +148,11 @@ public sealed class TemplateCardFace : MonoBehaviour
             if(text.name=="AdventureTitle")sizes[text]=japanese?26:28;
             if(text.name=="Rules")sizes[text]=japanese?(adventure?22:28):adventure?(cjk?32:24):cjk?36:32;
             if(text.name=="AdventureRules")sizes[text]=japanese?16:cjk?27:24;
-            // DFHei has tighter native line metrics than the UI's Noto font.
-            // Use printed leading instead of carrying over Noto's negative spacing.
-            if(text.name is "Rules" or "AdventureRules")text.lineSpacing=GamePreferences.Language.StartsWith("zh")?15:japanese?-9:text.name=="Rules"&&adventure?-8:0;
+            // Source Han's generous document leading is tightened slightly for
+            // the fixed card frame; native glyph outlines remain unchanged.
+            if(text.name is "Rules" or "AdventureRules")text.lineSpacing=cjk?-8:-12;
             if(text.name=="Stats"){text.font=Font(true,true,true);text.fontStyle=FontStyles.Normal;}
-            if(text.name is "Title" or "Type")text.fontStyle=FontStyles.Bold;
+            if(text.name is "Title" or "Type")text.fontStyle=FontStyles.Normal;
             if(text.name is "AdventureTitle" or "AdventureType"){text.color=Color.white;text.fontStyle=FontStyles.Normal;}
             else if(text.name is not "Cost" and not "AdventureCost")text.color=Ink;
             if(text.name=="Stats"&&walker)text.color=Color.white;
@@ -148,14 +164,16 @@ public sealed class TemplateCardFace : MonoBehaviour
         if(!small&&(walker||saga))Fits=BindStructuredRules(rules,walker,fourRows,japanese);
         foreach(var text in design.GetComponentsInChildren<TextMeshProUGUI>()) {
             if(!text.gameObject.activeInHierarchy)continue;
-            if(text.name is "Cost" or "AdventureCost" or "Stats")continue;
+            if(text.name is "Cost" or "AdventureCost")continue;
             float minimum=text.name is "Rules" or "AdventureRules"?japanese?16:22:22;
             float size=sizes[text];text.fontSize=size;
             var area=text.rectTransform.rect;
             for(int step=0;step<24;step++){
+                // Populate dynamic glyphs before measuring the first layout.
+                text.ForceMeshUpdate(true,true);
                 var preferred=text.GetPreferredValues(text.text,area.width,10000);
                 bool body=text.textWrappingMode==TextWrappingModes.Normal;
-                bool fits=body?preferred.y<=area.height:preferred.x<=area.width;
+                bool fits=preferred.y<=area.height&&(body||preferred.x<=area.width);
                 if(fits)break;
                 if(size<=minimum){Fits=false;break;}
                 size=Mathf.Max(minimum,size-1);text.fontSize=size;
@@ -184,7 +202,7 @@ public sealed class TemplateCardFace : MonoBehaviour
             labels[labels.Count-1].text=CardSymbolText.Format(text.Substring(start,end-start).Trim());
         }
         if(prefix.Length>0)labels[0].text=CardSymbolText.Format(prefix);
-        foreach(var label in labels){label.transform.SetParent(root,false);label.font=Font(false);label.fontStyle=FontStyles.Normal;label.alignment=TextAlignmentOptions.TopLeft;label.textWrappingMode=TextWrappingModes.Normal;label.overflowMode=TextOverflowModes.Overflow;label.lineSpacing=walker&&fourRows&&GamePreferences.Language.StartsWith("en")?-20:0;}
+        foreach(var label in labels){label.transform.SetParent(root,false);label.font=Font(false);label.fontStyle=FontStyles.Normal;label.alignment=TextAlignmentOptions.TopLeft;label.textWrappingMode=TextWrappingModes.Normal;label.overflowMode=TextOverflowModes.Overflow;label.lineSpacing=GamePreferences.Language.StartsWith("en")?(walker&&fourRows?-20:-8):-16;}
         float top=walker?fourRows?466:522:112,bottom=walker?fourRows?737:728:681,gap=walker?fourRows?4:7:18;
         float size=japanese?25:GamePreferences.Language.StartsWith("zh")?29:28,minimum=japanese?16:22;
         var heights=new float[labels.Count];

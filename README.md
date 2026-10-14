@@ -18,6 +18,7 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 - 修正已有译文的规则／生成费用匹配、食品按实际状态合并、阶段条连续过渡，以及自动模式无合法攻击者时的战阶推进。
 - BO3 换备和局后留房／晚加入观战修正；结算菜单为「继续查看／前往换备」或「继续查看／返回房间」，两个按钮居中。
 - 调整移区通知、卡牌预览和选择界面；继续按实际消费者做增量验证，保留未验证范围。
+- 重绘模板改用思源宋体／黑体、EB Garamond 和小型开源字形回退，核对中文／日文／英文排版；客户端构建随附字体和软件许可说明。
 
 最近的说明：[实局修复与验证边界](Docs/LiveGameplayFixes.2026-10-14.zh-CN.md)、[机制验证进度](Docs/MechanicValidation.zh-CN.md)、[项目文件整理](Docs/WorkspaceMaintenance.2026-10-14.zh-CN.md)。
 
@@ -43,7 +44,7 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 Builds/Server/MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777
 ```
 
-Windows 构建包含 Java 和固定 Forge 资源；当前精简构建的对应源码单独提供。卡图包另行放置在程序旁的 `CardImages`；运行包、构建产物、本地卡图包、受限字体、恢复场景、凭据和个人录像不提交到 Git。首次构建重绘界面请按模板字体目录说明准备有授权的字体。
+Windows 构建包含 Java 和固定 Forge 资源；当前精简构建的对应源码单独提供。卡图包另行放置在程序旁的 `CardImages`；运行包、构建产物、本地卡图包、受限字体、恢复场景、凭据和个人录像不提交到 Git。重绘模板的开源字体与许可已随项目提供，见[字体说明](Assets/Resources/UI/CardTemplates/Fonts/README.md)。
 
 ## 项目资料
 

@@ -1,0 +1,188 @@
+{
+  "files": [
+    {
+      "file": "NameCN.otf",
+      "repository": "adobe-fonts/source-han-serif",
+      "revision": "7889f11bf31170b5d092a083b357c8c8130f89e0",
+      "sourcePath": "SubsetOTF/CN/SourceHanSerifCN-Bold.otf",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-serif/7889f11bf31170b5d092a083b357c8c8130f89e0/SubsetOTF/CN/SourceHanSerifCN-Bold.otf",
+      "sha256": "4ee555ae58b3d22f6a95c2c494f2c36b7cccfc1d2224635f6461a03756f0e3c1",
+      "bytes": 12094680,
+      "family": "Source Han Serif CN",
+      "fullName": "Source Han Serif CN Bold",
+      "fontVersion": "Version 2.003;hotconv 1.1.1;makeotfexe 2.6.0",
+      "copyright": "© 2017-2024 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "NameJP.otf",
+      "repository": "adobe-fonts/source-han-serif",
+      "revision": "7889f11bf31170b5d092a083b357c8c8130f89e0",
+      "sourcePath": "SubsetOTF/JP/SourceHanSerifJP-Bold.otf",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-serif/7889f11bf31170b5d092a083b357c8c8130f89e0/SubsetOTF/JP/SourceHanSerifJP-Bold.otf",
+      "sha256": "13473d3c1cf1fdb0e08d5e5e093cf9fc57d3e59d9d13cf7f6369615bf96397ee",
+      "bytes": 6479516,
+      "family": "Source Han Serif JP",
+      "fullName": "Source Han Serif JP Bold",
+      "fontVersion": "Version 2.003;hotconv 1.1.1;makeotfexe 2.6.0",
+      "copyright": "© 2017-2024 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "RulesCN.otf",
+      "repository": "adobe-fonts/source-han-sans",
+      "revision": "a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2",
+      "sourcePath": "SubsetOTF/CN/SourceHanSansCN-Regular.otf",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2/SubsetOTF/CN/SourceHanSansCN-Regular.otf",
+      "sha256": "e2bc8a2e7f37474b774fff8db758681ece40bb6947a90d571bce9dd60671a8e4",
+      "bytes": 8429224,
+      "family": "Source Han Sans CN",
+      "fullName": "Source Han Sans CN",
+      "fontVersion": "Version 2.005;addfeatures 5.0.0b21",
+      "copyright": "© 2014-2025 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "RulesJP.otf",
+      "repository": "adobe-fonts/source-han-sans",
+      "revision": "a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2",
+      "sourcePath": "SubsetOTF/JP/SourceHanSansJP-Regular.otf",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2/SubsetOTF/JP/SourceHanSansJP-Regular.otf",
+      "sha256": "40d1b760d1135539f6b6e0ee2b9f415de6d97576f7676840b06306c7c190c074",
+      "bytes": 4562224,
+      "family": "Source Han Sans JP",
+      "fullName": "Source Han Sans JP",
+      "fontVersion": "Version 2.005;addfeatures 5.0.0b21",
+      "copyright": "© 2014-2025 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "NameEN.otf",
+      "repository": "octaviopardo/EBGaramond12",
+      "revision": "106a4a6d377987459ae5e68673a4570f13b957fb",
+      "sourcePath": "fonts/otf/EBGaramond-SemiBold.otf",
+      "url": "https://raw.githubusercontent.com/octaviopardo/EBGaramond12/106a4a6d377987459ae5e68673a4570f13b957fb/fonts/otf/EBGaramond-SemiBold.otf",
+      "sha256": "f30a456cfca3351e1f2ef20ec356741d54752c64a1066db34e78afa368d92412",
+      "bytes": 422480,
+      "family": "EB Garamond SemiBold",
+      "fullName": "EB Garamond SemiBold",
+      "fontVersion": "Version 1.002",
+      "copyright": "Copyright 2017 The EB Garamond Project Authors (https://github.com/octaviopardo/EBGaramond12)",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "RulesEN.otf",
+      "repository": "octaviopardo/EBGaramond12",
+      "revision": "106a4a6d377987459ae5e68673a4570f13b957fb",
+      "sourcePath": "fonts/otf/EBGaramond-Regular.otf",
+      "url": "https://raw.githubusercontent.com/octaviopardo/EBGaramond12/106a4a6d377987459ae5e68673a4570f13b957fb/fonts/otf/EBGaramond-Regular.otf",
+      "sha256": "8d618a6bc6e1f4444e1990c39770a62ccbc29394e57afcc58acd530c16489275",
+      "bytes": 316832,
+      "family": "EB Garamond",
+      "fullName": "EB Garamond Regular",
+      "fontVersion": "Version 1.002",
+      "copyright": "Copyright 2017 The EB Garamond Project Authors (https://github.com/octaviopardo/EBGaramond12)",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "StatsEN.otf",
+      "repository": "octaviopardo/EBGaramond12",
+      "revision": "106a4a6d377987459ae5e68673a4570f13b957fb",
+      "sourcePath": "fonts/otf/EBGaramond-Bold.otf",
+      "url": "https://raw.githubusercontent.com/octaviopardo/EBGaramond12/106a4a6d377987459ae5e68673a4570f13b957fb/fonts/otf/EBGaramond-Bold.otf",
+      "sha256": "2832055876314e4932c46809e919a45fd726a53faa6bfae53be9628723bde90f",
+      "bytes": 422148,
+      "family": "EB Garamond",
+      "fullName": "EB Garamond Bold",
+      "fontVersion": "Version 1.002",
+      "copyright": "Copyright 2017 The EB Garamond Project Authors (https://github.com/octaviopardo/EBGaramond12)",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "SourceHanSerif-OFL.txt",
+      "repository": "adobe-fonts/source-han-serif",
+      "revision": "7889f11bf31170b5d092a083b357c8c8130f89e0",
+      "sourcePath": "LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-serif/7889f11bf31170b5d092a083b357c8c8130f89e0/LICENSE.txt",
+      "sha256": "9ff5bb567e1b92c801fc1069e5fbf992ff8efccacb9db94e5959a5b3ba9bb903",
+      "bytes": 4463
+    },
+    {
+      "file": "SourceHanSans-OFL.txt",
+      "repository": "adobe-fonts/source-han-sans",
+      "revision": "a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2",
+      "sourcePath": "LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2/LICENSE.txt",
+      "sha256": "fcac737e761ec63dbfbdce11030a1780161920d80315edba9c8beff1c2bac5a2",
+      "bytes": 4463
+    },
+    {
+      "file": "EBGaramond-OFL.txt",
+      "repository": "octaviopardo/EBGaramond12",
+      "revision": "106a4a6d377987459ae5e68673a4570f13b957fb",
+      "sourcePath": "OFL.txt",
+      "url": "https://raw.githubusercontent.com/octaviopardo/EBGaramond12/106a4a6d377987459ae5e68673a4570f13b957fb/OFL.txt",
+      "sha256": "058611bd968817d532cedeab6acaa055e882d365a88523df00e7917ad7a0f704",
+      "bytes": 4454
+    },
+    {
+      "file": "GlyphCJK.ttf",
+      "sha256": "f6ca146a2d5265f2eb394a15fa921f698dbabfae103333b79f4c143cdd7134fe",
+      "bytes": 17200,
+      "family": "MTGB Card CJK Fallback",
+      "license": "Arphic-Public-License",
+      "copyright": "(c) Copyright 1994-1999, Arphic Technology Co., Ltd.; (c) Copyright 2009-2025, Andrew West.",
+      "derived": true,
+      "source": {
+        "url": "https://babelstone.co.uk/Fonts/Download/BabelStoneHan-16.0.3.zip",
+        "archiveSha256": "6a928e436ee52d1857c32b5e4d5e71f4f0a9d13ccf660fc4f1ff08df930e12dc",
+        "archiveMember": "BabelStoneHan.ttf",
+        "version": "16.0.3"
+      },
+      "sourceFileSha256": "d8bb747b3fdccd84a60bd0aa56bb90937270d0bd15f1101cd8f2a5a3709dd0a3",
+      "unicodeSubset": [
+        177801,
+        178194,
+        32
+      ],
+      "fonttoolsVersion": "4.66.1",
+      "modification": "Subsetted and renamed on 2026-10-14; glyph outlines unchanged."
+    },
+    {
+      "file": "GlyphSymbols.ttf",
+      "sha256": "0d6ed2f67398c2ced17c5b99525baec174894a44c36fc8ee46626aa60709cdb0",
+      "bytes": 2484,
+      "family": "MTGB Card Symbol Fallback",
+      "license": "OFL-1.1",
+      "copyright": "Copyright 2021-2026 LXGW (https://github.com/lxgw/LxgwWenKai), with Reserved Font Name '霞鹜', '霞鶩', '落霞孤鹜', '落霞孤鶩' and 'LXGW'.\nCopyright 2020 The Klee Project Authors (https://github.com/fontworks-fonts/Klee)",
+      "derived": true,
+      "source": {
+        "repository": "lxgw/LxgwWenKai",
+        "revision": "fe1d2e8f6054af168e84de0f46ae43608c4c86f0",
+        "url": "https://raw.githubusercontent.com/lxgw/LxgwWenKai/fe1d2e8f6054af168e84de0f46ae43608c4c86f0/fonts/TTF/LXGWWenKai-Regular.ttf",
+        "sourcePath": "fonts/TTF/LXGWWenKai-Regular.ttf",
+        "sha256": "bf73f995c05f3f7baf7840b9d76d8d9678c8b150a020946a394ca63c67ed1350",
+        "bytes": 25928940
+      },
+      "sourceFileSha256": "bf73f995c05f3f7baf7840b9d76d8d9678c8b150a020946a394ca63c67ed1350",
+      "unicodeSubset": [
+        9744,
+        32
+      ],
+      "fonttoolsVersion": "4.66.1",
+      "modification": "Subsetted and renamed on 2026-10-14; glyph outlines unchanged."
+    },
+    {
+      "file": "ARPHICPL.TXT",
+      "sha256": "ba74a961aaa5fa7e73dc67276df2781ba405da2cb30c52c9d9eee9c200d4d11e",
+      "bytes": 6959,
+      "license": "Arphic-Public-License"
+    },
+    {
+      "file": "LXGWWenKai-OFL.txt",
+      "sha256": "1a25e35da1031c6c3436fde545bb9cb5aca954e9873afe510c834b8b79bd21a0",
+      "bytes": 5171,
+      "license": "OFL-1.1"
+    }
+  ]
+}

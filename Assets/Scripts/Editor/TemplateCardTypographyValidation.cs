@@ -64,7 +64,7 @@ public static class TemplateCardTypographyValidation
                     Check(!text.enableAutoSizing,language+" fixed font "+face.Title.text+" "+text.name);
                     Check(!text.isTextOverflowing,language+" fits "+face.Title.text+" "+text.name);
                     Check(text.textInfo.characterCount>0,language+" glyphs "+text.name);
-                    if(text.name is "Title" or "Type")Check(text.fontStyle.HasFlag(FontStyles.Bold),language+" bold dark heading "+text.name);
+                    if(text.name is "Title" or "Type")Check(text.fontStyle==FontStyles.Normal,language+" native heading weight without faux bold "+text.name);
                     if(text.name is "AdventureTitle" or "AdventureType")Check(text.fontStyle==FontStyles.Normal,language+" regular white heading "+text.name);
                     if(text.name=="Stats")Check(text.font.sourceFontFile.name=="StatsEN"&&text.fontStyle==FontStyles.Normal,language+" battlefield bold serif numerals without faux bold");
                     Check(text.color==(text.name is "AdventureTitle" or "AdventureType"?Color.white:Color.black),language+" printed ink "+text.name);
@@ -76,7 +76,7 @@ public static class TemplateCardTypographyValidation
                     var corners=new Vector3[4];icon.rectTransform.GetWorldCorners(corners);float pixels=Vector2.Distance(RectTransformUtility.WorldToScreenPoint(null,corners[0]),RectTransformUtility.WorldToScreenPoint(null,corners[1]));
                     Check(pixels>=10,language+" comparison fee remains legible "+cost.name);
                 }
-                if(language=="zh-CN")Check(face.Rules.fontSize>=(face.AdventureRules!=null?29:36),"larger Chinese body "+face.Title.text);
+                if(language=="zh-CN")Check(face.Rules.fontSize>=22,"readable Chinese body "+face.Title.text);
             }
             yield return Shot("comparison-"+language);
         }

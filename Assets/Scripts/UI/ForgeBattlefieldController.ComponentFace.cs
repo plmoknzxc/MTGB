@@ -67,10 +67,15 @@ public sealed partial class ForgeBattlefieldController
         TryBattlefieldArt(card,out var art);
         string stats=creature?original?PrintedStats(feature,definition):ModifiedStatsText(card,false):walker?(original||card.zone!="Battlefield"?feature?.loyalty??definition.loyalty:card.loyalty).ToString():null;
         string adventureCost=adventure==null?null:!original&&permitted?card.adventurePreviewManaCost??adventure.manaCost:adventure.manaCost;
-        existing.GetComponent<TemplateCardFace>().Bind(art,title,cost,type,rules,stats,printed,
+        var face=existing.GetComponent<TemplateCardFace>();
+        void BindFrame(string selectedFrame)=>face.Bind(art,title,cost,type,rules,stats,printed,
             adventure==null?null:GamePreferences.FeatureName(adventure),adventureCost,
-            adventure==null?null:GamePreferences.FeatureType(adventure,"Instant — Adventure"),adventure==null?null:GamePreferences.FeatureRules(adventure),frame,compact);
-        if(!existing.GetComponent<TemplateCardFace>().Fits){existing.gameObject.SetActive(false);if(backing!=null)backing.color=backing.sprite!=null?Color.white:Ink;return false;}
+            adventure==null?null:GamePreferences.FeatureType(adventure,"Instant — Adventure"),adventure==null?null:GamePreferences.FeatureRules(adventure),selectedFrame,compact);
+        BindFrame(frame);
+        // Actual translated typography can require more room than the native
+        // text-length estimate. Try the larger rules panel before using a scan.
+        if(walker&&!fourRows&&!face.Fits)BindFrame("Planeswalker4"+color);
+        if(!face.Fits){existing.gameObject.SetActive(false);if(backing!=null)backing.color=backing.sprite!=null?Color.white:Ink;return false;}
         foreach(string legacy in new[]{"PreparedSpellFace","ChosenSpellFace"})parent.Find(legacy)?.gameObject.SetActive(false);
         if(backing!=null&&!compact)backing.color=Color.clear;
         return true;

@@ -14,7 +14,7 @@ Forge 原仓库：<https://github.com/Card-Forge/forge>；固定提交：`4ec5f1
 - `mtgb-forge-source-overlay-20261014.zip`：当前 Java 桥接、实际修改的 Java 源码、补丁定义、构建脚本和来源记录。精确清单在 `ThirdParty/Forge/source-manifest.json`。
 - 自有 Unity 源码在本仓库。原始本机验证日志和大体积输入位于未上传的 `.tools`；公开测试脚本、夹具、报告及文档保留各自的实际验证范围，缺少本机附件不视为新增测试通过。
 
-从干净仓库重建：安装 Unity 6000.3.22f1、Java 17、Maven、Python 3.11+、PowerShell 7，执行 `pwsh -File Tools/ForgeBridge/Build-Bridge.ps1 -BuildUpstream`。该流程取得固定 Forge 源码／Maven 依赖并应用公开补丁。原生 Java 的源码哈希校验允许 Git 的 LF／CRLF 检出转换，任何实际内容修改仍被拒绝；公开上游归档的 45 份 Java 与 9 份原卡脚本分别核对。Unity 卡牌重绘需要自行准备有重分发权利的模板字体，见字体目录说明。
+从干净仓库重建：安装 Unity 6000.3.22f1、Java 17、Maven、Python 3.11+、PowerShell 7，执行 `pwsh -File Tools/ForgeBridge/Build-Bridge.ps1 -BuildUpstream`。该流程取得固定 Forge 源码／Maven 依赖并应用公开补丁。原生 Java 的源码哈希校验允许 Git 的 LF／CRLF 检出转换，任何实际内容修改仍被拒绝；公开上游归档的 45 份 Java 与 9 份原卡脚本分别核对。Unity 卡牌重绘所需的开源模板字体和许可已纳入项目，见[字体目录说明](../Assets/Resources/UI/CardTemplates/Fonts/README.md)。
 
 ## 分发程序时
 
@@ -26,6 +26,6 @@ Temurin JRE 和 Maven／Unity 依赖继续遵循各自的许可证；JRE 原许�
 
 ## 素材边界
 
-Noto CJK 保持 SIL OFL。本地模板里的 DFWeiBeiGB、DFHeiGB 禁止转赠；Beleren、Plantin 等未核实重分发许可，已从公共 Git 排除。公开客户端构建需替换成可重分发字体或取得相应授权。卡图／卡文／符号等第三方权利也不因软件开源而改变。
+Noto CJK 保持 SIL OFL。2026-10-14，项目模板已替换为思源宋体／黑体、EB Garamond，以及经过改名的霞鹜文楷符号子集（OFL）和 BabelStone Han 生僻字子集（原始 Arphic Public License）。来源、版权、原许可、修改说明及哈希记录在[字体目录](../Assets/Resources/UI/CardTemplates/Fonts/README.md)。旧受限／未核实字体只保留在 Assets 外的本地备份。2026-10-14 的开源字体客户端更新包已重新构建并覆盖桌面；更早的安装包仍需升级才会采用这些字体。卡图／卡文／符号等第三方权利也不因软件开源而改变。
 
 依据：[Forge GPL](https://github.com/Card-Forge/forge/blob/4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676/LICENSE)、[GNU GPL v3（对应源码与分发）](https://www.gnu.org/licenses/gpl-3.0.html)、[GNU FAQ（作品组合）](https://www.gnu.org/licenses/gpl-faq.html#MereAggregation)、[GitHub 许可说明](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)。

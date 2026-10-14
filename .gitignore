@@ -20,9 +20,21 @@ Assets/Readme.asset
 Assets/Readme.asset.meta
 Assets/_Recovery/
 Assets/_Recovery.meta
-# Local proprietary card-template fonts; supply separately with redistribution rights.
+# Only the reviewed open font files and their notices are public.
 Assets/Resources/UI/CardTemplates/Fonts/*
 !Assets/Resources/UI/CardTemplates/Fonts/README.md
+!Assets/Resources/UI/CardTemplates/Fonts/NameCN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/NameJP.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/NameEN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/RulesCN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/RulesJP.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/RulesEN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/StatsEN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/*-OFL.txt*
+!Assets/Resources/UI/CardTemplates/Fonts/open-fonts.json*
+!Assets/Resources/UI/CardTemplates/Fonts/GlyphCJK.ttf*
+!Assets/Resources/UI/CardTemplates/Fonts/GlyphSymbols.ttf*
+!Assets/Resources/UI/CardTemplates/Fonts/ARPHICPL.TXT*
 
 # IDE and local tooling
 .vs/
