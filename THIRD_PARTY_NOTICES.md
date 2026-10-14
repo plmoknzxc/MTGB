@@ -17,6 +17,6 @@ Forge is pinned to `4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676`. Original notices 
 
 The complete pinned Forge archive and an MTGB source overlay are published separately because the full archive exceeds GitHub's regular Git file limit. See [source availability and distribution](Docs/OpenSourceAndDistribution.zh-CN.md).
 
-Card-template fonts were replaced in project Assets with the reviewed open fonts on 2026-10-14. Restricted or unverified old fonts are retained only in ignored local backups outside Assets. The 2026-10-14 open-font desktop update uses the replacements; earlier client packages retain their old fonts until updated. Other asset distribution rights remain separate.
+Card-template fonts were replaced in project Assets with the reviewed open fonts on 2026-10-14. The restricted or unverified retired font files, local backup/client payloads containing them, obsolete import artifacts and unreachable Git copies have been removed. Their hashes and family names remain solely as a denylist; Unity import/build validation and repository CI reject reintroduction. Published Git history contained none of the five retired binaries. The current desktop client and open-font update use the reviewed replacements. Other asset distribution rights remain separate.
 
 This is an independent fan/development project and is not an official Forge, Unity or Wizards of the Coast product. An out-of-process Java bridge describes the technical architecture; it does not by itself settle whether a particular combined distribution is a single GPL-covered work.

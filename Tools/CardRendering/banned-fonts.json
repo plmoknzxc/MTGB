@@ -1,0 +1,9 @@
+{
+  "fonts": [
+    { "family": "DFWeiBeiGB", "aliases": ["DFWeiBeiGB", "华康魏碑"], "sha256": "00c2c79be09fbe7eb3298204777f4eff6a71f4d43517a1e60073030156c690af" },
+    { "family": "DFHeiGB", "aliases": ["DFHeiGB", "华康黑体"], "sha256": "b4fffd2460c47f09c12ba7ec07750cc31ef0d5457ce0d440467194e0dd40b995" },
+    { "family": "Beleren", "aliases": ["Beleren"], "sha256": "f3546b8925143423d595ce9fc76ff334fdacd60f29ae8fa77facf0a7e9bd08b4" },
+    { "family": "Plantin", "aliases": ["Plantin", "MPlantin"], "sha256": "fdc202b9f6dda8faabd218bfc63375e4ee2e969d07161de8f7802946c9e272ee" },
+    { "family": "Times New Roman", "aliases": ["Times New Roman", "TimesNewRoman"], "sha256": "54fbe2c70af7c85a97bed0573227e3ccc4b2486012e3ca2a40c6bc77065846f5" }
+  ]
+}

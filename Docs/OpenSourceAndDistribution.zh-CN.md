@@ -26,6 +26,6 @@ Temurin JRE 和 Maven／Unity 依赖继续遵循各自的许可证；JRE 原许�
 
 ## 素材边界
 
-Noto CJK 保持 SIL OFL。2026-10-14，项目模板已替换为思源宋体／黑体、EB Garamond，以及经过改名的霞鹜文楷符号子集（OFL）和 BabelStone Han 生僻字子集（原始 Arphic Public License）。来源、版权、原许可、修改说明及哈希记录在[字体目录](../Assets/Resources/UI/CardTemplates/Fonts/README.md)。旧受限／未核实字体只保留在 Assets 外的本地备份。2026-10-14 的开源字体客户端更新包已重新构建并覆盖桌面；更早的安装包仍需升级才会采用这些字体。卡图／卡文／符号等第三方权利也不因软件开源而改变。
+Noto CJK 保持 SIL OFL。2026-10-14，项目模板已替换为思源宋体／黑体、EB Garamond，以及经过改名的霞鹜文楷符号子集（OFL）和 BabelStone Han 生僻字子集（原始 Arphic Public License）。来源、版权、原许可、修改说明及哈希记录在[字体目录](../Assets/Resources/UI/CardTemplates/Fonts/README.md)。旧受限／未核实字体、本地备份、含旧字体的旧客户端资源、导入缓存及未引用 Git 对象已删除；保留字体名称／哈希禁用清单，并在导入、所有 Unity 构建及 GitHub CI 中阻止重新引入。已发布 Git 历史中未检出这五份旧字体。2026-10-14 的开源字体客户端更新包已重新构建并覆盖桌面。卡图／卡文／符号等第三方权利也不因软件开源而改变。
 
 依据：[Forge GPL](https://github.com/Card-Forge/forge/blob/4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676/LICENSE)、[GNU GPL v3（对应源码与分发）](https://www.gnu.org/licenses/gpl-3.0.html)、[GNU FAQ（作品组合）](https://www.gnu.org/licenses/gpl-faq.html#MereAggregation)、[GitHub 许可说明](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)。
