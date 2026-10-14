@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "scope": "Bounded Recruit/Blight/Intensify consumers; no exhaustive/family-wide or real-network claim.",
+  "graph": {
+    "project": "D-project-MTGB",
+    "generation": "2026-10-05T23:35:28Z",
+    "tier": "Verify",
+    "coverage": "metadata_changed exact source fallback; upstream .tools excluded. Relevant traces/source checked; no exhaustive negative claim."
+  },
+  "runtimeHash": "a3862b7d74deb7a17f0fa133810d2a6e3d032c8156bc568362e1034c07d79073",
+  "sources": [
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/RecruitEffect.java",
+      "sha256": "6aad4db1452ba4a74c7a00d9740829e5630cb9693ee9bf2d1a356dd1b2126de9"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/BlightEffect.java",
+      "sha256": "0ac2185e5580be327b9137a0769da8870b939d8fe658bc88468216979659d3d3"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/IntensifyEffect.java",
+      "sha256": "196e2fb1a4bc275edceaad764fbc7ae05179d1a6cd97a6407949cd68043264d8"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeCharacteristicDetails.java",
+      "sha256": "62debd548b24db959ce85d97df33044da475117bc438cda0ef92f318e2178eb4"
+    },
+    {
+      "path": "Assets/Scripts/Networking/ForgeWire.cs",
+      "sha256": "e54dfa7295b20a52c4a748260b69cf418b6c5a2f975016fa84ef50199680ca0e"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.ModifiedCharacteristics.cs",
+      "sha256": "f7404ec3ce3afd6aa54ce41f62d30cfe3620bb65e393518a1d769403a8f1d8d7"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "d7c297507208d0f7a4199e0403e35ce1c9c045826485616ec5d58a4cdcde7d8f"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "a48ef85a539e33938d5d2b308c3fb1b767dad8ba3a4389fe530ac45e5ca66aa8"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.CardSelection.cs",
+      "sha256": "96b582af02a689af662a96e849d8931b67caee4da4565707ee8d84191a4d4416"
+    },
+    {
+      "path": "Assets/Scripts/Editor/StateBranchPresentationValidation.cs",
+      "sha256": "4cf7783b46786180bc4e8dbbacb943c866242136b70853069b636026da1288c5"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-StateBranches.py",
+      "sha256": "97c736d24771cf47f1066e9294b74b27053deb264ba868ef5e475a42e54c388a"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/state-branches-1006/native/recruit-land/1791243180254204800/result.json",
+      "sha256": "a3a9447b1743543579d521231e7f8f341421bd7f91e317da81ac5c0e7626fcbd"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/recruit-nonland/1791243187253543900/result.json",
+      "sha256": "60995131f4edc3b518bcd6acb28e2138c847162b668713b2552cc0cc36ddacbb"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/recruit-seat-two/1791243194923063100/result.json",
+      "sha256": "8f6c82773887108a8134de6fa72cc7e6d8878739be64ba4270f0c927a415fa10"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/recruit-no-draw/1791243202832374200/result.json",
+      "sha256": "f2b658b03b95b3031822b8bd99b719450a8a06682b987c986b07e8bccb2ca060"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/blight-select/1791243210987928700/result.json",
+      "sha256": "0c21a4b20032255ea0be449528b0b8c2907c4bf07960f830529ee8ee087c8dba"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/blight-forced/1791243218973817600/result.json",
+      "sha256": "8faa0bc2bec2ea8a439ba4d00e7c413d2571e936d18bdd1fcc887f612edb933d"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/blight-death/1791243226659207400/result.json",
+      "sha256": "94cd602d3a0ffcba93540cd0b6bc361625b2a5d58b34e72e4d8cf89b55ba5355"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/blight-ineligible/1791243234578811700/result.json",
+      "sha256": "8a4012cbbb8e33f92f06ebde4f25b9b9ac43f8d7ebd5385f13d434c69ec8d0d3"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/intensity-all/1791243241470913900/result.json",
+      "sha256": "2e2b12d0dd52e3eb424e99d5cb00f6002d9e62012e19d4be2f6af38044ef5646"
+    },
+    {
+      "path": ".tools/state-branches-1006/native/intensity-self/1791243248372687300/result.json",
+      "sha256": "cff1d17c0324d6e9da8ed7a3e700a3af6c086715d6d28d3144ad6786788e8630"
+    }
+  ],
+  "ui": {
+    "path": ".tools/state-branches-1006/ui/20261005T2344421965468Z/result.txt",
+    "sha256": "ba225627ea463ac84bba42e74cfea99438e8f112b054f16f14e672dee1e2bf7c"
+  },
+  "projectionRegression": {
+    "path": ".tools/state-branches-1006/native/projection-regression.json",
+    "sha256": "2afbc78cda02bcf4ec770c40163b2176c622f8d117e1372bbbb0883f5457c161"
+  },
+  "consumers": {
+    "Recruit": [
+      "drawCards",
+      "chooseCardsToDiscardFrom",
+      "InputSelectCardsFromList hand selection",
+      "discard",
+      "makeTokenTable",
+      "native next priority"
+    ],
+    "Blight": [
+      "getTargetPlayers",
+      "canReceiveCounters",
+      "chooseSingleEntityForEffect",
+      "card picker exact identity",
+      "replaceCounterEffect",
+      "native next priority"
+    ],
+    "Intensify": [
+      "AllDefined valid cards or defined/targeted",
+      "Card.addIntensity",
+      "Card.getIntensity(true)",
+      "ForgeCharacteristicDetails.add",
+      "ForgeCardView",
+      "InspectIntegrated/IntensityDetail",
+      "ArenaGroupKey",
+      "OnlineSpectatorView.PublicCard"
+    ]
+  },
+  "remaining": "Recruit/Blight的其他受影响玩家、多玩家/控制及抓牌/弃牌/指示物替代组合；Intensify的复制/起始关键词变化、其他目标及强度数值组合；真实联网和未采样语言/长文本仍按原归属开放",
+  "priorUI": {
+    "interrupted": ".tools/state-branches-1006/ui/20261005T2337172624258Z/status.json",
+    "priorPass": ".tools/state-branches-1006/ui/20261005T2338561966641Z/result.txt",
+    "qualification": "Prior PASS did not assert stable same native ID across consecutive snapshots; new unique run does. Original results untouched."
+  }
+}

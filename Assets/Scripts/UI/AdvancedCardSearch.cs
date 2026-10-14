@@ -26,12 +26,18 @@ public sealed class AdvancedCardSearch
         var mana = Symbols(Mana);
         var costCache = new Dictionary<string, Dictionary<string, int>>(StringComparer.Ordinal);
         var textCache = new Dictionary<string, bool>(StringComparer.Ordinal);
+        int textRevision = GamePreferences.Revision;
         var legalCache = new Dictionary<string, string>(StringComparer.Ordinal);
         var legality = new DeckFormatLegality();
         string format = Format == 0 ? null : DeckFormatLegality.Keys[Format - 1];
         if (format != null) legality.PrepareForValidation(format, cards);
         return card =>
         {
+            if (textRevision != GamePreferences.Revision)
+            {
+                textCache.Clear();
+                textRevision = GamePreferences.Revision;
+            }
             if (!MainMenuController.MatchesCollectionFilter(card, Query, Source)) return false;
             if (card.customContent || !textCache.TryGetValue(card.cardName, out bool textMatch))
             {
@@ -89,7 +95,7 @@ public sealed class AdvancedCardSearch
         foreach (string term in query.Split(new[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries))
         {
             string original = field == 1 ? card.cardName : field == 2 ? card.supertypes + " " + card.cardTypes + " " + card.subtypes : card.description;
-            bool found = Contains(original, term) || GamePreferences.MatchesAnyCardTranslation(card, term, field);
+            bool found = Contains(original, term) || GamePreferences.MatchesCurrentCardTranslation(card, term, field);
             if (!found && card.features != null) found = card.features.Any(f => f != null && Contains(field == 1 ? f.cardName : field == 2 ? f.supertypes + " " + f.cardTypes + " " + f.subtypes : f.description, term));
             if (!found) return false;
         }

@@ -1,0 +1,669 @@
+{
+  "entries": [
+    {
+      "key": "HBG/1",
+      "state": "SpecializeW",
+      "name": "Klement, Life Acolyte",
+      "artKey": "HBG/1w",
+      "source": "https://scryfall.com/card/hbg/1w/klement-life-acolyte?utm_source=api"
+    },
+    {
+      "key": "HBG/1",
+      "state": "SpecializeU",
+      "name": "Klement, Knowledge Acolyte",
+      "artKey": "HBG/1u",
+      "source": "https://scryfall.com/card/hbg/1u/klement-knowledge-acolyte?utm_source=api"
+    },
+    {
+      "key": "HBG/1",
+      "state": "SpecializeB",
+      "name": "Klement, Death Acolyte",
+      "artKey": "HBG/1b",
+      "source": "https://scryfall.com/card/hbg/1b/klement-death-acolyte?utm_source=api"
+    },
+    {
+      "key": "HBG/1",
+      "state": "SpecializeR",
+      "name": "Klement, Tempest Acolyte",
+      "artKey": "HBG/1r",
+      "source": "https://scryfall.com/card/hbg/1r/klement-tempest-acolyte?utm_source=api"
+    },
+    {
+      "key": "HBG/1",
+      "state": "SpecializeG",
+      "name": "Klement, Nature Acolyte",
+      "artKey": "HBG/1g",
+      "source": "https://scryfall.com/card/hbg/1g/klement-nature-acolyte?utm_source=api"
+    },
+    {
+      "key": "HBG/10",
+      "state": "SpecializeW",
+      "name": "Shadowheart, Cleric of Order",
+      "artKey": "HBG/10w",
+      "source": "https://scryfall.com/card/hbg/10w/shadowheart-cleric-of-order?utm_source=api"
+    },
+    {
+      "key": "HBG/10",
+      "state": "SpecializeU",
+      "name": "Shadowheart, Cleric of Trickery",
+      "artKey": "HBG/10u",
+      "source": "https://scryfall.com/card/hbg/10u/shadowheart-cleric-of-trickery?utm_source=api"
+    },
+    {
+      "key": "HBG/10",
+      "state": "SpecializeB",
+      "name": "Shadowheart, Cleric of Graves",
+      "artKey": "HBG/10b",
+      "source": "https://scryfall.com/card/hbg/10b/shadowheart-cleric-of-graves?utm_source=api"
+    },
+    {
+      "key": "HBG/10",
+      "state": "SpecializeR",
+      "name": "Shadowheart, Cleric of War",
+      "artKey": "HBG/10r",
+      "source": "https://scryfall.com/card/hbg/10r/shadowheart-cleric-of-war?utm_source=api"
+    },
+    {
+      "key": "HBG/10",
+      "state": "SpecializeG",
+      "name": "Shadowheart, Cleric of Twilight",
+      "artKey": "HBG/10g",
+      "source": "https://scryfall.com/card/hbg/10g/shadowheart-cleric-of-twilight?utm_source=api"
+    },
+    {
+      "key": "HBG/11",
+      "state": "SpecializeW",
+      "name": "Viconia, Disciple of Rebirth",
+      "artKey": "HBG/11w",
+      "source": "https://scryfall.com/card/hbg/11w/viconia-disciple-of-rebirth?utm_source=api"
+    },
+    {
+      "key": "HBG/11",
+      "state": "SpecializeU",
+      "name": "Viconia, Disciple of Arcana",
+      "artKey": "HBG/11u",
+      "source": "https://scryfall.com/card/hbg/11u/viconia-disciple-of-arcana?utm_source=api"
+    },
+    {
+      "key": "HBG/11",
+      "state": "SpecializeB",
+      "name": "Viconia, Disciple of Blood",
+      "artKey": "HBG/11b",
+      "source": "https://scryfall.com/card/hbg/11b/viconia-disciple-of-blood?utm_source=api"
+    },
+    {
+      "key": "HBG/11",
+      "state": "SpecializeR",
+      "name": "Viconia, Disciple of Violence",
+      "artKey": "HBG/11r",
+      "source": "https://scryfall.com/card/hbg/11r/viconia-disciple-of-violence?utm_source=api"
+    },
+    {
+      "key": "HBG/11",
+      "state": "SpecializeG",
+      "name": "Viconia, Disciple of Strength",
+      "artKey": "HBG/11g",
+      "source": "https://scryfall.com/card/hbg/11g/viconia-disciple-of-strength?utm_source=api"
+    },
+    {
+      "key": "HBG/12",
+      "state": "SpecializeW",
+      "name": "Ambergris, Agent of Law",
+      "artKey": "HBG/12w",
+      "source": "https://scryfall.com/card/hbg/12w/ambergris-agent-of-law?utm_source=api"
+    },
+    {
+      "key": "HBG/12",
+      "state": "SpecializeU",
+      "name": "Ambergris, Agent of Progress",
+      "artKey": "HBG/12u",
+      "source": "https://scryfall.com/card/hbg/12u/ambergris-agent-of-progress?utm_source=api"
+    },
+    {
+      "key": "HBG/12",
+      "state": "SpecializeB",
+      "name": "Ambergris, Agent of Tyranny",
+      "artKey": "HBG/12b",
+      "source": "https://scryfall.com/card/hbg/12b/ambergris-agent-of-tyranny?utm_source=api"
+    },
+    {
+      "key": "HBG/12",
+      "state": "SpecializeR",
+      "name": "Ambergris, Agent of Destruction",
+      "artKey": "HBG/12r",
+      "source": "https://scryfall.com/card/hbg/12r/ambergris-agent-of-destruction?utm_source=api"
+    },
+    {
+      "key": "HBG/12",
+      "state": "SpecializeG",
+      "name": "Ambergris, Agent of Balance",
+      "artKey": "HBG/12g",
+      "source": "https://scryfall.com/card/hbg/12g/ambergris-agent-of-balance?utm_source=api"
+    },
+    {
+      "key": "HBG/13",
+      "state": "SpecializeW",
+      "name": "Gut, Zealous Fanatic",
+      "artKey": "HBG/13w",
+      "source": "https://scryfall.com/card/hbg/13w/gut-zealous-fanatic?utm_source=api"
+    },
+    {
+      "key": "HBG/13",
+      "state": "SpecializeU",
+      "name": "Gut, Devious Fanatic",
+      "artKey": "HBG/13u",
+      "source": "https://scryfall.com/card/hbg/13u/gut-devious-fanatic?utm_source=api"
+    },
+    {
+      "key": "HBG/13",
+      "state": "SpecializeB",
+      "name": "Gut, Brutal Fanatic",
+      "artKey": "HBG/13b",
+      "source": "https://scryfall.com/card/hbg/13b/gut-brutal-fanatic?utm_source=api"
+    },
+    {
+      "key": "HBG/13",
+      "state": "SpecializeR",
+      "name": "Gut, Furious Fanatic",
+      "artKey": "HBG/13r",
+      "source": "https://scryfall.com/card/hbg/13r/gut-furious-fanatic?utm_source=api"
+    },
+    {
+      "key": "HBG/13",
+      "state": "SpecializeG",
+      "name": "Gut, Bestial Fanatic",
+      "artKey": "HBG/13g",
+      "source": "https://scryfall.com/card/hbg/13g/gut-bestial-fanatic?utm_source=api"
+    },
+    {
+      "key": "HBG/14",
+      "state": "SpecializeW",
+      "name": "Karlach, Tiefling Zealot",
+      "artKey": "HBG/14w",
+      "source": "https://scryfall.com/card/hbg/14w/karlach-tiefling-zealot?utm_source=api"
+    },
+    {
+      "key": "HBG/14",
+      "state": "SpecializeU",
+      "name": "Karlach, Tiefling Spellrager",
+      "artKey": "HBG/14u",
+      "source": "https://scryfall.com/card/hbg/14u/karlach-tiefling-spellrager?utm_source=api"
+    },
+    {
+      "key": "HBG/14",
+      "state": "SpecializeB",
+      "name": "Karlach, Tiefling Punisher",
+      "artKey": "HBG/14b",
+      "source": "https://scryfall.com/card/hbg/14b/karlach-tiefling-punisher?utm_source=api"
+    },
+    {
+      "key": "HBG/14",
+      "state": "SpecializeR",
+      "name": "Karlach, Tiefling Berserker",
+      "artKey": "HBG/14r",
+      "source": "https://scryfall.com/card/hbg/14r/karlach-tiefling-berserker?utm_source=api"
+    },
+    {
+      "key": "HBG/14",
+      "state": "SpecializeG",
+      "name": "Karlach, Tiefling Guardian",
+      "artKey": "HBG/14g",
+      "source": "https://scryfall.com/card/hbg/14g/karlach-tiefling-guardian?utm_source=api"
+    },
+    {
+      "key": "HBG/15",
+      "state": "SpecializeW",
+      "name": "Wyll of the Celestial Pact",
+      "artKey": "HBG/15w",
+      "source": "https://scryfall.com/card/hbg/15w/wyll-of-the-celestial-pact?utm_source=api"
+    },
+    {
+      "key": "HBG/15",
+      "state": "SpecializeU",
+      "name": "Wyll of the Elder Pact",
+      "artKey": "HBG/15u",
+      "source": "https://scryfall.com/card/hbg/15u/wyll-of-the-elder-pact?utm_source=api"
+    },
+    {
+      "key": "HBG/15",
+      "state": "SpecializeB",
+      "name": "Wyll of the Fiend Pact",
+      "artKey": "HBG/15b",
+      "source": "https://scryfall.com/card/hbg/15b/wyll-of-the-fiend-pact?utm_source=api"
+    },
+    {
+      "key": "HBG/15",
+      "state": "SpecializeR",
+      "name": "Wyll of the Blade Pact",
+      "artKey": "HBG/15r",
+      "source": "https://scryfall.com/card/hbg/15r/wyll-of-the-blade-pact?utm_source=api"
+    },
+    {
+      "key": "HBG/15",
+      "state": "SpecializeG",
+      "name": "Wyll of the Fey Pact",
+      "artKey": "HBG/15g",
+      "source": "https://scryfall.com/card/hbg/15g/wyll-of-the-fey-pact?utm_source=api"
+    },
+    {
+      "key": "HBG/16",
+      "state": "SpecializeW",
+      "name": "Jaheira, Heroic Harper",
+      "artKey": "HBG/16w",
+      "source": "https://scryfall.com/card/hbg/16w/jaheira-heroic-harper?utm_source=api"
+    },
+    {
+      "key": "HBG/16",
+      "state": "SpecializeU",
+      "name": "Jaheira, Insightful Harper",
+      "artKey": "HBG/16u",
+      "source": "https://scryfall.com/card/hbg/16u/jaheira-insightful-harper?utm_source=api"
+    },
+    {
+      "key": "HBG/16",
+      "state": "SpecializeB",
+      "name": "Jaheira, Ruthless Harper",
+      "artKey": "HBG/16b",
+      "source": "https://scryfall.com/card/hbg/16b/jaheira-ruthless-harper?utm_source=api"
+    },
+    {
+      "key": "HBG/16",
+      "state": "SpecializeR",
+      "name": "Jaheira, Stirring Harper",
+      "artKey": "HBG/16r",
+      "source": "https://scryfall.com/card/hbg/16r/jaheira-stirring-harper?utm_source=api"
+    },
+    {
+      "key": "HBG/16",
+      "state": "SpecializeG",
+      "name": "Jaheira, Merciful Harper",
+      "artKey": "HBG/16g",
+      "source": "https://scryfall.com/card/hbg/16g/jaheira-merciful-harper?utm_source=api"
+    },
+    {
+      "key": "HBG/17",
+      "state": "SpecializeW",
+      "name": "Lukamina, Hawk Form",
+      "artKey": "HBG/17w",
+      "source": "https://scryfall.com/card/hbg/17w/lukamina-hawk-form?utm_source=api"
+    },
+    {
+      "key": "HBG/17",
+      "state": "SpecializeU",
+      "name": "Lukamina, Crocodile Form",
+      "artKey": "HBG/17u",
+      "source": "https://scryfall.com/card/hbg/17u/lukamina-crocodile-form?utm_source=api"
+    },
+    {
+      "key": "HBG/17",
+      "state": "SpecializeB",
+      "name": "Lukamina, Scorpion Form",
+      "artKey": "HBG/17b",
+      "source": "https://scryfall.com/card/hbg/17b/lukamina-scorpion-form?utm_source=api"
+    },
+    {
+      "key": "HBG/17",
+      "state": "SpecializeR",
+      "name": "Lukamina, Wolf Form",
+      "artKey": "HBG/17r",
+      "source": "https://scryfall.com/card/hbg/17r/lukamina-wolf-form?utm_source=api"
+    },
+    {
+      "key": "HBG/17",
+      "state": "SpecializeG",
+      "name": "Lukamina, Bear Form",
+      "artKey": "HBG/17g",
+      "source": "https://scryfall.com/card/hbg/17g/lukamina-bear-form?utm_source=api"
+    },
+    {
+      "key": "HBG/18",
+      "state": "SpecializeW",
+      "name": "Skanos, White Dragon Vassal",
+      "artKey": "HBG/18w",
+      "source": "https://scryfall.com/card/hbg/18w/skanos-white-dragon-vassal?utm_source=api"
+    },
+    {
+      "key": "HBG/18",
+      "state": "SpecializeU",
+      "name": "Skanos, Blue Dragon Vassal",
+      "artKey": "HBG/18u",
+      "source": "https://scryfall.com/card/hbg/18u/skanos-blue-dragon-vassal?utm_source=api"
+    },
+    {
+      "key": "HBG/18",
+      "state": "SpecializeB",
+      "name": "Skanos, Black Dragon Vassal",
+      "artKey": "HBG/18b",
+      "source": "https://scryfall.com/card/hbg/18b/skanos-black-dragon-vassal?utm_source=api"
+    },
+    {
+      "key": "HBG/18",
+      "state": "SpecializeR",
+      "name": "Skanos, Red Dragon Vassal",
+      "artKey": "HBG/18r",
+      "source": "https://scryfall.com/card/hbg/18r/skanos-red-dragon-vassal?utm_source=api"
+    },
+    {
+      "key": "HBG/18",
+      "state": "SpecializeG",
+      "name": "Skanos, Green Dragon Vassal",
+      "artKey": "HBG/18g",
+      "source": "https://scryfall.com/card/hbg/18g/skanos-green-dragon-vassal?utm_source=api"
+    },
+    {
+      "key": "HBG/19",
+      "state": "SpecializeW",
+      "name": "Wilson, Urbane Bear",
+      "artKey": "HBG/19w",
+      "source": "https://scryfall.com/card/hbg/19w/wilson-urbane-bear?utm_source=api"
+    },
+    {
+      "key": "HBG/19",
+      "state": "SpecializeU",
+      "name": "Wilson, Subtle Bear",
+      "artKey": "HBG/19u",
+      "source": "https://scryfall.com/card/hbg/19u/wilson-subtle-bear?utm_source=api"
+    },
+    {
+      "key": "HBG/19",
+      "state": "SpecializeB",
+      "name": "Wilson, Fearsome Bear",
+      "artKey": "HBG/19b",
+      "source": "https://scryfall.com/card/hbg/19b/wilson-fearsome-bear?utm_source=api"
+    },
+    {
+      "key": "HBG/19",
+      "state": "SpecializeR",
+      "name": "Wilson, Ardent Bear",
+      "artKey": "HBG/19r",
+      "source": "https://scryfall.com/card/hbg/19r/wilson-ardent-bear?utm_source=api"
+    },
+    {
+      "key": "HBG/19",
+      "state": "SpecializeG",
+      "name": "Wilson, Majestic Bear",
+      "artKey": "HBG/19g",
+      "source": "https://scryfall.com/card/hbg/19g/wilson-majestic-bear?utm_source=api"
+    },
+    {
+      "key": "HBG/2",
+      "state": "SpecializeW",
+      "name": "Lae'zel, Blessed Warrior",
+      "artKey": "HBG/2w",
+      "source": "https://scryfall.com/card/hbg/2w/laezel-blessed-warrior?utm_source=api"
+    },
+    {
+      "key": "HBG/2",
+      "state": "SpecializeU",
+      "name": "Lae'zel, Illithid Thrall",
+      "artKey": "HBG/2u",
+      "source": "https://scryfall.com/card/hbg/2u/laezel-illithid-thrall?utm_source=api"
+    },
+    {
+      "key": "HBG/2",
+      "state": "SpecializeB",
+      "name": "Lae'zel, Callous Warrior",
+      "artKey": "HBG/2b",
+      "source": "https://scryfall.com/card/hbg/2b/laezel-callous-warrior?utm_source=api"
+    },
+    {
+      "key": "HBG/2",
+      "state": "SpecializeR",
+      "name": "Lae'zel, Wrathful Warrior",
+      "artKey": "HBG/2r",
+      "source": "https://scryfall.com/card/hbg/2r/laezel-wrathful-warrior?utm_source=api"
+    },
+    {
+      "key": "HBG/2",
+      "state": "SpecializeG",
+      "name": "Lae'zel, Primal Warrior",
+      "artKey": "HBG/2g",
+      "source": "https://scryfall.com/card/hbg/2g/laezel-primal-warrior?utm_source=api"
+    },
+    {
+      "key": "HBG/3",
+      "state": "SpecializeW",
+      "name": "Lulu, Helpful Hollyphant",
+      "artKey": "HBG/3w",
+      "source": "https://scryfall.com/card/hbg/3w/lulu-helpful-hollyphant?utm_source=api"
+    },
+    {
+      "key": "HBG/3",
+      "state": "SpecializeU",
+      "name": "Lulu, Curious Hollyphant",
+      "artKey": "HBG/3u",
+      "source": "https://scryfall.com/card/hbg/3u/lulu-curious-hollyphant?utm_source=api"
+    },
+    {
+      "key": "HBG/3",
+      "state": "SpecializeB",
+      "name": "Lulu, Vengeful Hollyphant",
+      "artKey": "HBG/3b",
+      "source": "https://scryfall.com/card/hbg/3b/lulu-vengeful-hollyphant?utm_source=api"
+    },
+    {
+      "key": "HBG/3",
+      "state": "SpecializeR",
+      "name": "Lulu, Inspiring Hollyphant",
+      "artKey": "HBG/3r",
+      "source": "https://scryfall.com/card/hbg/3r/lulu-inspiring-hollyphant?utm_source=api"
+    },
+    {
+      "key": "HBG/3",
+      "state": "SpecializeG",
+      "name": "Lulu, Wild Hollyphant",
+      "artKey": "HBG/3g",
+      "source": "https://scryfall.com/card/hbg/3g/lulu-wild-hollyphant?utm_source=api"
+    },
+    {
+      "key": "HBG/4",
+      "state": "SpecializeW",
+      "name": "Rasaad, Radiant Monk",
+      "artKey": "HBG/4w",
+      "source": "https://scryfall.com/card/hbg/4w/rasaad-radiant-monk?utm_source=api"
+    },
+    {
+      "key": "HBG/4",
+      "state": "SpecializeU",
+      "name": "Rasaad, Dragon Monk",
+      "artKey": "HBG/4u",
+      "source": "https://scryfall.com/card/hbg/4u/rasaad-dragon-monk?utm_source=api"
+    },
+    {
+      "key": "HBG/4",
+      "state": "SpecializeB",
+      "name": "Rasaad, Shadow Monk",
+      "artKey": "HBG/4b",
+      "source": "https://scryfall.com/card/hbg/4b/rasaad-shadow-monk?utm_source=api"
+    },
+    {
+      "key": "HBG/4",
+      "state": "SpecializeR",
+      "name": "Rasaad, Warrior Monk",
+      "artKey": "HBG/4r",
+      "source": "https://scryfall.com/card/hbg/4r/rasaad-warrior-monk?utm_source=api"
+    },
+    {
+      "key": "HBG/4",
+      "state": "SpecializeG",
+      "name": "Rasaad, Sylvan Monk",
+      "artKey": "HBG/4g",
+      "source": "https://scryfall.com/card/hbg/4g/rasaad-sylvan-monk?utm_source=api"
+    },
+    {
+      "key": "HBG/5",
+      "state": "SpecializeW",
+      "name": "Alora, Cheerful Mastermind",
+      "artKey": "HBG/5w",
+      "source": "https://scryfall.com/card/hbg/5w/alora-cheerful-mastermind?utm_source=api"
+    },
+    {
+      "key": "HBG/5",
+      "state": "SpecializeU",
+      "name": "Alora, Cheerful Thief",
+      "artKey": "HBG/5u",
+      "source": "https://scryfall.com/card/hbg/5u/alora-cheerful-thief?utm_source=api"
+    },
+    {
+      "key": "HBG/5",
+      "state": "SpecializeB",
+      "name": "Alora, Cheerful Assassin",
+      "artKey": "HBG/5b",
+      "source": "https://scryfall.com/card/hbg/5b/alora-cheerful-assassin?utm_source=api"
+    },
+    {
+      "key": "HBG/5",
+      "state": "SpecializeR",
+      "name": "Alora, Cheerful Swashbuckler",
+      "artKey": "HBG/5r",
+      "source": "https://scryfall.com/card/hbg/5r/alora-cheerful-swashbuckler?utm_source=api"
+    },
+    {
+      "key": "HBG/5",
+      "state": "SpecializeG",
+      "name": "Alora, Cheerful Scout",
+      "artKey": "HBG/5g",
+      "source": "https://scryfall.com/card/hbg/5g/alora-cheerful-scout?utm_source=api"
+    },
+    {
+      "key": "HBG/6",
+      "state": "SpecializeW",
+      "name": "Gale, Holy Conduit",
+      "artKey": "HBG/6w",
+      "source": "https://scryfall.com/card/hbg/6w/gale-holy-conduit?utm_source=api"
+    },
+    {
+      "key": "HBG/6",
+      "state": "SpecializeU",
+      "name": "Gale, Temporal Conduit",
+      "artKey": "HBG/6u",
+      "source": "https://scryfall.com/card/hbg/6u/gale-temporal-conduit?utm_source=api"
+    },
+    {
+      "key": "HBG/6",
+      "state": "SpecializeB",
+      "name": "Gale, Abyssal Conduit",
+      "artKey": "HBG/6b",
+      "source": "https://scryfall.com/card/hbg/6b/gale-abyssal-conduit?utm_source=api"
+    },
+    {
+      "key": "HBG/6",
+      "state": "SpecializeR",
+      "name": "Gale, Storm Conduit",
+      "artKey": "HBG/6r",
+      "source": "https://scryfall.com/card/hbg/6r/gale-storm-conduit?utm_source=api"
+    },
+    {
+      "key": "HBG/6",
+      "state": "SpecializeG",
+      "name": "Gale, Primeval Conduit",
+      "artKey": "HBG/6g",
+      "source": "https://scryfall.com/card/hbg/6g/gale-primeval-conduit?utm_source=api"
+    },
+    {
+      "key": "HBG/7",
+      "state": "SpecializeW",
+      "name": "Imoen, Honorable Trickster",
+      "artKey": "HBG/7w",
+      "source": "https://scryfall.com/card/hbg/7w/imoen-honorable-trickster?utm_source=api"
+    },
+    {
+      "key": "HBG/7",
+      "state": "SpecializeU",
+      "name": "Imoen, Wily Trickster",
+      "artKey": "HBG/7u",
+      "source": "https://scryfall.com/card/hbg/7u/imoen-wily-trickster?utm_source=api"
+    },
+    {
+      "key": "HBG/7",
+      "state": "SpecializeB",
+      "name": "Imoen, Occult Trickster",
+      "artKey": "HBG/7b",
+      "source": "https://scryfall.com/card/hbg/7b/imoen-occult-trickster?utm_source=api"
+    },
+    {
+      "key": "HBG/7",
+      "state": "SpecializeR",
+      "name": "Imoen, Chaotic Trickster",
+      "artKey": "HBG/7r",
+      "source": "https://scryfall.com/card/hbg/7r/imoen-chaotic-trickster?utm_source=api"
+    },
+    {
+      "key": "HBG/7",
+      "state": "SpecializeG",
+      "name": "Imoen, Wise Trickster",
+      "artKey": "HBG/7g",
+      "source": "https://scryfall.com/card/hbg/7g/imoen-wise-trickster?utm_source=api"
+    },
+    {
+      "key": "HBG/8",
+      "state": "SpecializeW",
+      "name": "Vhal, Scholar of Tactics",
+      "artKey": "HBG/8w",
+      "source": "https://scryfall.com/card/hbg/8w/vhal-scholar-of-tactics?utm_source=api"
+    },
+    {
+      "key": "HBG/8",
+      "state": "SpecializeU",
+      "name": "Vhal, Scholar of Prophecy",
+      "artKey": "HBG/8u",
+      "source": "https://scryfall.com/card/hbg/8u/vhal-scholar-of-prophecy?utm_source=api"
+    },
+    {
+      "key": "HBG/8",
+      "state": "SpecializeB",
+      "name": "Vhal, Scholar of Mortality",
+      "artKey": "HBG/8b",
+      "source": "https://scryfall.com/card/hbg/8b/vhal-scholar-of-mortality?utm_source=api"
+    },
+    {
+      "key": "HBG/8",
+      "state": "SpecializeR",
+      "name": "Vhal, Scholar of Elements",
+      "artKey": "HBG/8r",
+      "source": "https://scryfall.com/card/hbg/8r/vhal-scholar-of-elements?utm_source=api"
+    },
+    {
+      "key": "HBG/8",
+      "state": "SpecializeG",
+      "name": "Vhal, Scholar of Creation",
+      "artKey": "HBG/8g",
+      "source": "https://scryfall.com/card/hbg/8g/vhal-scholar-of-creation?utm_source=api"
+    },
+    {
+      "key": "HBG/9",
+      "state": "SpecializeW",
+      "name": "Sarevok, Divine Usurper",
+      "artKey": "HBG/9w",
+      "source": "https://scryfall.com/card/hbg/9w/sarevok-divine-usurper?utm_source=api"
+    },
+    {
+      "key": "HBG/9",
+      "state": "SpecializeU",
+      "name": "Sarevok, Deceitful Usurper",
+      "artKey": "HBG/9u",
+      "source": "https://scryfall.com/card/hbg/9u/sarevok-deceitful-usurper?utm_source=api"
+    },
+    {
+      "key": "HBG/9",
+      "state": "SpecializeB",
+      "name": "Sarevok, Deadly Usurper",
+      "artKey": "HBG/9b",
+      "source": "https://scryfall.com/card/hbg/9b/sarevok-deadly-usurper?utm_source=api"
+    },
+    {
+      "key": "HBG/9",
+      "state": "SpecializeR",
+      "name": "Sarevok, Ferocious Usurper",
+      "artKey": "HBG/9r",
+      "source": "https://scryfall.com/card/hbg/9r/sarevok-ferocious-usurper?utm_source=api"
+    },
+    {
+      "key": "HBG/9",
+      "state": "SpecializeG",
+      "name": "Sarevok, Mighty Usurper",
+      "artKey": "HBG/9g",
+      "source": "https://scryfall.com/card/hbg/9g/sarevok-mighty-usurper?utm_source=api"
+    }
+  ]
+}

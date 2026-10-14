@@ -86,6 +86,28 @@ public sealed partial class MainMenuController : MonoBehaviour
 
 
     private int loadedDeckIndex = -1;
+    private string deckDirectoryRevision;
+    private float nextDeckScan;
+
+    private void RefreshDeckFiles(bool force=false)
+    {
+        if(!dataReady)return;
+        string revision=DeckRepository.DirectoryRevision();
+        if(!force&&revision==deckDirectoryRevision)return;
+        deckDirectoryRevision=revision;
+        string selectedPath=loadedDeckIndex>=0&&loadedDeckIndex<decks.Count?decks[loadedDeckIndex].sourcePath:currentDeck?.sourcePath;
+        string selectedName=currentDeck?.name;
+        decks.Clear();decks.AddRange(DeckRepository.LoadAll());
+        loadedDeckIndex=decks.FindIndex(d=>!string.IsNullOrEmpty(selectedPath)?string.Equals(d.sourcePath,selectedPath,StringComparison.OrdinalIgnoreCase):string.Equals(d.name,selectedName,StringComparison.OrdinalIgnoreCase));
+        if(!hasUnsavedDeckChanges){
+            if(loadedDeckIndex<0)loadedDeckIndex=decks.Count>0?0:-1;
+            currentDeck=loadedDeckIndex>=0?CloneDeck(decks[loadedDeckIndex]):new DeckDefinition{name="New Deck"};
+            deckNameInput.SetTextWithoutNotify(currentDeck.name);
+            ApplyDeckLegalitySelection();RefreshDeckGrids();RefreshSelectedCardInfo();
+        }
+        RefreshDeckDropdown(currentDeck?.name);UpdateDeleteDeckButton();
+    }
+    private void OnApplicationFocus(bool focused){if(focused){nextDeckScan=0;RefreshDeckFiles();}}
     private Action pendingUnsavedProceed;
     private Action pendingUnsavedCancel;
     private Action pendingDataEntry;
@@ -116,6 +138,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         CreateCardPreviewChrome();
         CreateDeckCollapseControls();
         CreateDeckExchangeToolbar();
+        CreateAuxiliaryDeckEntry();
         RegisterListeners();
         ShowStartScreen();
         loadingStatus = AddText(startScreenGroup.transform, "LoadingStatus", "正在准备卡牌…", 20,
@@ -162,6 +185,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void Update()
     {
+        if(Time.unscaledTime>=nextDeckScan){nextDeckScan=Time.unscaledTime+1;RefreshDeckFiles();}
         DismissQuantityControlsFromPointer();
         if (hoveredTile == null || previewVisible) return;
         if (Time.unscaledTime - hoverStartedAt < (detailsCollapsed ? .55f : HoverPreviewDelay)) return;
@@ -402,6 +426,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void ShowDeckBuilder()
     {
+        RefreshDeckFiles();
         if (AwaitCardData(ShowDeckBuilder)) return;
         SetScreenVisible(startScreenGroup, false);
         SetScreenVisible(deckBuilderGroup, true);
@@ -424,6 +449,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void RefreshLocalizedDetails()
     {
+        RefreshAuxiliaryDeckLocale();
         bool repaintArtwork=artworkLanguage!=GamePreferences.Language;
         artworkLanguage=GamePreferences.Language;
         if(repaintArtwork)detailTokenArtCard=null;
@@ -634,6 +660,8 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     public static bool MatchesCollectionFilter(CardDefinition card, string query, int category)
     {
+        // Locale publication is atomic; do not search the previous text while a new locale loads.
+        if (!GamePreferences.Ready) return false;
         if (card == null || (category == 1 && card.customContent) || (category == 2 && !card.customContent)) return false;
         query = query?.Trim() ?? string.Empty;
         return query.Length == 0 || (card.cardName ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
@@ -641,7 +669,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             || GamePreferences.CardRules(card).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
             || card.PrintingKey.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
             || (card.description ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
-            || GamePreferences.MatchesAnyCardTranslation(card, query);
+            || GamePreferences.MatchesCurrentCardTranslation(card, query);
     }
 
     private void RefreshDeckGrids()
@@ -871,6 +899,7 @@ public sealed partial class MainMenuController : MonoBehaviour
     private void AddSelectedToDeck(bool sideboard)
     {
         if (selectedCard == null || currentDeck == null) return;
+        if (DeckAuxiliary.IsAuxiliary(selectedCard)) { AddSelectedAuxiliary(); return; }
         int requested = GetCountInput();
         int added = DeckRepository.AddCard(currentDeck, selectedCard, requested, sideboard);
         if (added > 0) MarkDeckDirty();
@@ -890,6 +919,13 @@ public sealed partial class MainMenuController : MonoBehaviour
     public void ChangeCardQuantity(MainMenuCardTile tile, int delta)
     {
         if (tile == null || tile.Card == null || currentDeck == null || delta == 0) return;
+        if (tile.Zone == MainMenuCardTileZone.Collection && DeckAuxiliary.IsAuxiliary(tile.Card))
+        {
+            selectedCard = tile.Card;
+            if (delta > 0) AddSelectedAuxiliary();
+            else { if (DeckAuxiliary.Remove(currentDeck, tile.Card)) MarkDeckDirty(); ShowAuxiliaryDeck(DeckAuxiliary.IsAttraction(tile.Card)); }
+            return;
+        }
         bool sideboard = tile.Zone == MainMenuCardTileZone.Sideboard;
         int before = CountCardCopies(tile.Card, sideboard);
         if (delta > 0) DeckRepository.AddCard(currentDeck, tile.Card, 1, sideboard);
@@ -1060,6 +1096,9 @@ public sealed partial class MainMenuController : MonoBehaviour
     private void ApplyDraggedCard(CardDefinition card, MainMenuCardTileZone sourceZone, MainMenuDropZone targetZone)
     {
         if (card == null || currentDeck == null) return;
+        if (sourceZone == MainMenuCardTileZone.Collection && DeckAuxiliary.IsAuxiliary(card)
+            && (targetZone == MainMenuDropZone.MainDeck || targetZone == MainMenuDropZone.Sideboard))
+        { selectedCard = card; AddSelectedAuxiliary(); return; }
 
         int count = GetDragCopyCount(card, sourceZone);
         if (count <= 0)
@@ -1893,11 +1932,14 @@ public sealed partial class MainMenuController : MonoBehaviour
         var clone = new DeckDefinition
         {
             name = source.name,
+            sourcePath = source.sourcePath,
             format = source.format,
             banlist = source.banlist,
             commanders = CloneEntries(source.commanders),
             cards = CloneEntries(source.cards),
-            sideboard = CloneEntries(source.sideboard)
+            sideboard = CloneEntries(source.sideboard),
+            attractions = CloneEntries(source.attractions),
+            contraptions = CloneEntries(source.contraptions)
         };
 
         return clone;

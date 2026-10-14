@@ -229,7 +229,7 @@ public sealed class CardArtPanel : MonoBehaviour
         apply.interactable=!busy && selected!=null;
         bool installed=selected!=null && CardImageLibrary.TryLoadExact(selected,0,out _);
         apply.GetComponentInChildren<Text>().text=installed?"使用此版本 · 设为偏好":"下载并设为偏好";
-        if(!busy) status.text=selected==null?"当前偏好："+(string.IsNullOrEmpty(CardArtPreferences.Get(card))?"默认卡图":CardArtPreferences.Get(card)):
+            if(!busy) status.text=selected==null?"当前偏好："+(string.IsNullOrEmpty(CardArtPreferences.Get(card))?GamePreferences.T("默认卡图"):CardArtPreferences.Get(card)):
             "已选："+selected.PrintingKey+(installed?" · 已下载":" · 点击下方按钮下载并使用");
     }
 

@@ -1,0 +1,2797 @@
+{
+  "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+  "interfaceSha256": "3f5c63fe76b1252574d2455fe5695a4649694902302618af65b8a731758fdb70",
+  "interfaceChanged": false,
+  "methods": [
+    {
+      "name": "isLibgdxPort",
+      "signature": "default boolean isLibgdxPort()",
+      "default": true,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setGameView",
+      "signature": "default void setGameView(GameView gameView, long sequenceNumber)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setGameView",
+      "signature": "void setGameView(GameView gameView)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getGameView",
+      "signature": "GameView getGameView()",
+      "default": false,
+      "returnType": "GameView",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setOriginalGameController",
+      "signature": "void setOriginalGameController(PlayerView view, IGameController gameController)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setGameController",
+      "signature": "void setGameController(PlayerView player, IGameController gameController)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setSpectator",
+      "signature": "void setSpectator(IGameController spectator)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "openView",
+      "signature": "void openView(TrackableCollection<PlayerView> myPlayers)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "afterGameEnd",
+      "signature": "void afterGameEnd()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showCombat",
+      "signature": "void showCombat()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showPromptMessage",
+      "signature": "default void showPromptMessage(PlayerView playerView, String message)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "showPromptMessage",
+      "signature": "void showPromptMessage(PlayerView playerView, String message, CardView card)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateDrawOffer",
+      "signature": "default void updateDrawOffer(DrawOfferMessage.Status update)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateButtons",
+      "signature": "default void updateButtons(final PlayerView owner, final boolean okEnabled, final boolean cancelEnabled, final boolean focusOk)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateButtons",
+      "signature": "void updateButtons(PlayerView owner, String label1, String label2, boolean enable1, boolean enable2, boolean focus1)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "flashIncorrectAction",
+      "signature": "void flashIncorrectAction()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "alertUser",
+      "signature": "void alertUser()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updatePhase",
+      "signature": "default void updatePhase(boolean saveState)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateTurn",
+      "signature": "default void updateTurn(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updatePlayerControl",
+      "signature": "default void updatePlayerControl()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "enableOverlay",
+      "signature": "default void enableOverlay()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "disableOverlay",
+      "signature": "default void disableOverlay()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "finishGame",
+      "signature": "void finishGame()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showManaPool",
+      "signature": "default void showManaPool(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "hideManaPool",
+      "signature": "default void hideManaPool(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateStack",
+      "signature": "default void updateStack()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "notifyStackAddition",
+      "signature": "default void notifyStackAddition(final GameEventSpellAbilityCast event)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "notifyStackRemoval",
+      "signature": "default void notifyStackRemoval(final GameEventSpellRemovedFromStack event)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "handleLandPlayed",
+      "signature": "default void handleLandPlayed(CardView land)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "handleGameEvent",
+      "signature": "void handleGameEvent(GameEvent event)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "handleGameEvents",
+      "signature": "default void handleGameEvents(List<GameEvent> events)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateZones",
+      "signature": "default void updateZones(Iterable<PlayerZoneUpdate> zonesToUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateCard",
+      "signature": "default void updateCard(final CardView card)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateCards",
+      "signature": "default void updateCards(Iterable<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateCardsNetSafe",
+      "signature": "default void updateCardsNetSafe(FCollectionView<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateRevealedCards",
+      "signature": "void updateRevealedCards(TrackableCollection<CardView> collection)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "refreshCardDetails",
+      "signature": "default void refreshCardDetails(Iterable<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "refreshField",
+      "signature": "default void refreshField()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getGamestate",
+      "signature": "GameState getGamestate()",
+      "default": false,
+      "returnType": "GameState",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateManaPool",
+      "signature": "default void updateManaPool(Iterable<PlayerView> manaPoolUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateLives",
+      "signature": "default void updateLives(Iterable<PlayerView> livesUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateShards",
+      "signature": "default void updateShards(Iterable<PlayerView> shardsUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateDependencies",
+      "signature": "default void updateDependencies()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setPanelSelection",
+      "signature": "void setPanelSelection(CardView hostCard)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getAbilityToPlay",
+      "signature": "SpellAbilityView getAbilityToPlay(CardView hostCard, List<SpellAbilityView> abilities, ITriggerEvent triggerEvent)",
+      "default": false,
+      "returnType": "SpellAbilityView",
+      "role": "decision",
+      "route": "能力／施放方式"
+    },
+    {
+      "name": "assignCombatDamage",
+      "signature": "Map<CardView, Integer> assignCombatDamage(CardView attacker, List<CardView> blockers, int damage, GameEntityView defender, boolean overrideOrder, boolean maySkip)",
+      "default": false,
+      "returnType": "Map<CardView, Integer>",
+      "role": "decision",
+      "route": "战斗伤害分配"
+    },
+    {
+      "name": "assignGenericAmount",
+      "signature": "Map<Object, Integer> assignGenericAmount(CardView effectSource, Map<Object, Integer> target, int amount, final boolean atLeastOne, final String amountLabel)",
+      "default": false,
+      "returnType": "Map<Object, Integer>",
+      "role": "decision",
+      "route": "分配数量"
+    },
+    {
+      "name": "message",
+      "signature": "default void message(final String message)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "原生接收玩家专属的有界通知；固定骰子／硬币调用点单独允许公开投影"
+    },
+    {
+      "name": "message",
+      "signature": "void message(String message, String title)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "原生接收玩家专属的有界通知；固定骰子／硬币调用点单独允许公开投影"
+    },
+    {
+      "name": "showErrorDialog",
+      "signature": "default void showErrorDialog(final String message)",
+      "default": true,
+      "returnType": "void",
+      "role": "fatal",
+      "route": "错误终止且通知客户端"
+    },
+    {
+      "name": "showErrorDialog",
+      "signature": "void showErrorDialog(String message, String title)",
+      "default": false,
+      "returnType": "void",
+      "role": "fatal",
+      "route": "错误终止且通知客户端"
+    },
+    {
+      "name": "showConfirmDialog",
+      "signature": "default boolean showConfirmDialog(final String message, final String title)",
+      "default": true,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "转发到已登记的 showConfirmDialog 重载"
+    },
+    {
+      "name": "showConfirmDialog",
+      "signature": "default boolean showConfirmDialog(final String message, final String title, final String yesButtonText, final String noButtonText)",
+      "default": true,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "转发到已登记的 showConfirmDialog 重载"
+    },
+    {
+      "name": "showConfirmDialog",
+      "signature": "boolean showConfirmDialog(String message, String title, String yesButtonText, String noButtonText, boolean defaultYes)",
+      "default": false,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "确认"
+    },
+    {
+      "name": "showOptionDialog",
+      "signature": "int showOptionDialog(String message, String title, FSkinProp icon, List<String> options, int defaultOption)",
+      "default": false,
+      "returnType": "int",
+      "role": "decision",
+      "route": "单选"
+    },
+    {
+      "name": "showInputDialog",
+      "signature": "String showInputDialog(String message, String title, FSkinProp icon, String initialInput, List<String> inputOptions, boolean isNumeric)",
+      "default": false,
+      "returnType": "String",
+      "role": "unsupported",
+      "route": "仅宏编辑直接调用；自由输入未接入，不能误报成所有牌名选择未接入"
+    },
+    {
+      "name": "confirm",
+      "signature": "default boolean confirm(final CardView c, final String question)",
+      "default": true,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "转发到已登记的 confirm 重载"
+    },
+    {
+      "name": "confirm",
+      "signature": "boolean confirm(CardView c, String question, boolean defaultIsYes, List<String> options)",
+      "default": false,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "确认"
+    },
+    {
+      "name": "getChoices",
+      "signature": "default <T> List<T> getChoices(final String message, final int min, final int max, final List<T> choices)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 getChoices 重载"
+    },
+    {
+      "name": "getChoices",
+      "signature": "<T> List<T> getChoices(String message, int min, int max, List<T> choices, List<T> selected, FSerializableFunction<T, String> display)",
+      "default": false,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "多选卡牌或通用选项"
+    },
+    {
+      "name": "getInteger",
+      "signature": "Integer getInteger(String message, int min, int max, boolean sortDesc)",
+      "default": false,
+      "returnType": "Integer",
+      "role": "decision",
+      "route": "有界数字"
+    },
+    {
+      "name": "getInteger",
+      "signature": "Integer getInteger(String message, int min, int max, int cutoff)",
+      "default": false,
+      "returnType": "Integer",
+      "role": "decision",
+      "route": "有界数字"
+    },
+    {
+      "name": "oneOrNone",
+      "signature": "<T> T oneOrNone(String message, List<T> choices)",
+      "default": false,
+      "returnType": "T",
+      "role": "decision",
+      "route": "可选单选"
+    },
+    {
+      "name": "one",
+      "signature": "default <T> T one(final String message, final List<T> choices)",
+      "default": true,
+      "returnType": "T",
+      "role": "decision",
+      "route": "转发到已登记的 one 重载"
+    },
+    {
+      "name": "one",
+      "signature": "<T> T one(String message, List<T> choices, FSerializableFunction<T, String> display)",
+      "default": false,
+      "returnType": "T",
+      "role": "decision",
+      "route": "单选"
+    },
+    {
+      "name": "reveal",
+      "signature": "<T> void reveal(String message, List<T> items)",
+      "default": false,
+      "returnType": "void",
+      "role": "decision",
+      "route": "确认展示"
+    },
+    {
+      "name": "many",
+      "signature": "default <T> List<T> many(final String title, final String topCaption, final int cnt, final List<T> sourceChoices, final CardView c)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 many 重载"
+    },
+    {
+      "name": "many",
+      "signature": "default <T> List<T> many(final String title, final String topCaption, final int min, final int max, final List<T> sourceChoices, final CardView c)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 many 重载"
+    },
+    {
+      "name": "many",
+      "signature": "<T> List<T> many(String title, String topCaption, int min, int max, List<T> sourceChoices, List<T> destChoices, CardView c)",
+      "default": false,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "卡牌多选"
+    },
+    {
+      "name": "order",
+      "signature": "default <T> List<T> order(String title, String top, List<T> sourceChoices, CardView c)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 order 重载"
+    },
+    {
+      "name": "order",
+      "signature": "default <T> List<T> order(String title, String top, int remainingObjectsMin, int remainingObjectsMax, List<T> sourceChoices, List<T> destChoices, CardView referenceCard, boolean sideboardingMode)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 order 重载"
+    },
+    {
+      "name": "order",
+      "signature": "<T> OrderResult<T> order(String title, String top, int remainingObjectsMin, int remainingObjectsMax, List<T> sourceChoices, List<T> destChoices, CardView referenceCard, boolean sideboardingMode, boolean showRememberCheckbox)",
+      "default": false,
+      "returnType": "OrderResult<T>",
+      "role": "decision",
+      "route": "顺序选择；局间备牌分支未接入"
+    },
+    {
+      "name": "insertInList",
+      "signature": "<T> List<T> insertInList(String title, T newItem, List<T> oldItems)",
+      "default": false,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "保留原顺序并插入"
+    },
+    {
+      "name": "sideboard",
+      "signature": "List<PaperCard> sideboard(CardPool sideboard, CardPool main, String message)",
+      "default": false,
+      "returnType": "List<PaperCard>",
+      "role": "unsupported",
+      "route": "原生 Forge 局间换备牌未接入"
+    },
+    {
+      "name": "chooseSingleEntityForEffect",
+      "signature": "GameEntityView chooseSingleEntityForEffect(String title, List<? extends GameEntityView> optionList, DelayedReveal delayedReveal, boolean isOptional)",
+      "default": false,
+      "returnType": "GameEntityView",
+      "role": "decision",
+      "route": "单选实体"
+    },
+    {
+      "name": "chooseEntitiesForEffect",
+      "signature": "List<GameEntityView> chooseEntitiesForEffect(String title, List<? extends GameEntityView> optionList, int min, int max, DelayedReveal delayedReveal)",
+      "default": false,
+      "returnType": "List<GameEntityView>",
+      "role": "decision",
+      "route": "多选实体"
+    },
+    {
+      "name": "manipulateCardList",
+      "signature": "List<CardView> manipulateCardList(String title, final Iterable<CardView> cards, final Iterable<CardView> manipulable, boolean toTop, boolean toBottom, boolean toAnywhere)",
+      "default": false,
+      "returnType": "List<CardView>",
+      "role": "decision",
+      "route": "区域及插入位置"
+    },
+    {
+      "name": "setCard",
+      "signature": "void setCard(CardView card)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setPlayerAvatar",
+      "signature": "void setPlayerAvatar(LobbyPlayer player, IHasIcon ihi)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "openZones",
+      "signature": "default void openZones(PlayerView controller, Collection<ZoneType> zones, Map<PlayerView, Object> players)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setHighlighted",
+      "signature": "void setHighlighted(Iterable<GameEntityView> entities, boolean b)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setSelectables",
+      "signature": "void setSelectables(Iterable<CardView> cards, int min, int max)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "clearSelectables",
+      "signature": "void clearSelectables()",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "isSelecting",
+      "signature": "boolean isSelecting()",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setWeaklySelectable",
+      "signature": "void setWeaklySelectable(final Iterable<CardView> cards)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "clearWeaklySelectable",
+      "signature": "void clearWeaklySelectable()",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "showRevealedCards",
+      "signature": "default void showRevealedCards(Iterable<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "hideRevealedCards",
+      "signature": "default void hideRevealedCards()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "isGamePaused",
+      "signature": "boolean isGamePaused()",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setGamePause",
+      "signature": "void setGamePause(boolean pause)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getGameSpeed",
+      "signature": "PlaybackSpeed getGameSpeed()",
+      "default": false,
+      "returnType": "PlaybackSpeed",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setGameSpeed",
+      "signature": "void setGameSpeed(PlaybackSpeed gameSpeed)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getDayTime",
+      "signature": "String getDayTime()",
+      "default": false,
+      "returnType": "String",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateDayTime",
+      "signature": "void updateDayTime(String daytime)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "awaitNextInput",
+      "signature": "void awaitNextInput()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "cancelAwaitNextInput",
+      "signature": "void cancelAwaitNextInput()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showWaitingTimer",
+      "signature": "void showWaitingTimer(PlayerView forPlayer, String waitingForPlayerName)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateAutoPassPrompt",
+      "signature": "void updateAutoPassPrompt()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setCurrentPlayer",
+      "signature": "void setCurrentPlayer(PlayerView player)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "isUiSetToSkipPhase",
+      "signature": "boolean isUiSetToSkipPhase(PlayerView playerTurn, PhaseType phase)",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "refreshYieldUi",
+      "signature": "default void refreshYieldUi(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "applyYieldUpdate",
+      "signature": "void applyYieldUpdate(YieldUpdate update)",
+      "default": false,
+      "returnType": "void",
+      "role": "unsupported",
+      "route": "原生 Forge yield 同步未接入"
+    },
+    {
+      "name": "applyDelta",
+      "signature": "default void applyDelta(DeltaPacket packet)",
+      "default": true,
+      "returnType": "void",
+      "role": "unsupported",
+      "route": "项目采用自有快照协议；原生 Forge delta 未接入"
+    },
+    {
+      "name": "isNetGame",
+      "signature": "boolean isNetGame()",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setNetGame",
+      "signature": "void setNetGame()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    }
+  ],
+  "callsites": [
+    {
+      "method": "message",
+      "line": 54,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "showInputDialog",
+      "line": 77,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 83,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 91,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 118,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 149,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 160,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/BasicMacroSystem.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 383,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "many",
+      "line": 398,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 439,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "many",
+      "line": 547,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 693,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 829,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 858,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "message",
+      "line": 1453,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 1517,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "confirm",
+      "line": 1532,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+    },
+    {
+      "method": "getAbilityToPlay",
+      "line": 225,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "showErrorDialog",
+      "line": 271,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "sideboard",
+      "line": 276,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "assignCombatDamage",
+      "line": 301,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "assignGenericAmount",
+      "line": 327,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "assignGenericAmount",
+      "line": 356,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 393,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 396,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 455,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setPanelSelection",
+      "line": 483,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 497,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 526,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "chooseSingleEntityForEffect",
+      "line": 613,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "chooseEntitiesForEffect",
+      "line": 653,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 673,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 684,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 691,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setCard",
+      "line": 702,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 706,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 728,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 822,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 829,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setPanelSelection",
+      "line": 865,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 866,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 876,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 887,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 900,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setPanelSelection",
+      "line": 909,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "insertInList",
+      "line": 910,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setPanelSelection",
+      "line": 922,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 923,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 949,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 958,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "showRevealedCards",
+      "line": 960,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "hideRevealedCards",
+      "line": 967,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "reveal",
+      "line": 969,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateRevealedCards",
+      "line": 971,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "manipulateCardList",
+      "line": 979,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 1009,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 1025,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1037,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setCard",
+      "line": 1058,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 1069,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1080,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setCard",
+      "line": 1094,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1135,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1138,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1141,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1144,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1147,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1150,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1154,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1156,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1159,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 1191,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1217,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 1222,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1289,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 1307,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1309,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1406,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setCard",
+      "line": 1414,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 1415,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1432,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1437,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 1442,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 1448,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 1453,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 1458,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 1481,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 1488,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateAutoPassPrompt",
+      "line": 1531,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "clearWeaklySelectable",
+      "line": 1557,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setWeaklySelectable",
+      "line": 1591,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "clearWeaklySelectable",
+      "line": 1602,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "clearWeaklySelectable",
+      "line": 1608,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setWeaklySelectable",
+      "line": 1618,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "clearWeaklySelectable",
+      "line": 1624,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setWeaklySelectable",
+      "line": 1629,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setWeaklySelectable",
+      "line": 1647,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "awaitNextInput",
+      "line": 1709,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 1730,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 1733,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 1787,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1859,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 1869,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 1880,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 1887,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 1889,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1941,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 1943,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 1968,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2007,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2029,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2038,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2048,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2057,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2066,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 2071,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 2082,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 2145,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2219,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2220,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2226,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 2318,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 2322,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "assignGenericAmount",
+      "line": 2475,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 2545,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "reveal",
+      "line": 2563,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 2570,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "reveal",
+      "line": 2581,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "reveal",
+      "line": 2593,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 2604,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 2610,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isNetGame",
+      "line": 2720,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateCards",
+      "line": 2869,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 2882,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 2898,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getGamestate",
+      "line": 2901,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getGamestate",
+      "line": 2902,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "showConfirmDialog",
+      "line": 2921,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "showErrorDialog",
+      "line": 2931,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 2970,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 2985,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3027,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3036,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 3041,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3122,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 3128,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 3145,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3186,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 3228,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 3235,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 3245,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3327,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3346,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 3348,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 3375,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 3385,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3407,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "confirm",
+      "line": 3426,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3456,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3466,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3495,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3505,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3534,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 3541,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3546,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3573,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3579,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3610,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 3628,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "awaitNextInput",
+      "line": 3678,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "cancelAwaitNextInput",
+      "line": 3682,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3712,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3734,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 3747,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getGameView",
+      "line": 3809,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateAutoPassPrompt",
+      "line": 3820,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "showPromptMessage",
+      "line": 3830,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 3831,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "awaitNextInput",
+      "line": 3832,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isUiSetToSkipPhase",
+      "line": 3874,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateAutoPassPrompt",
+      "line": 3896,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 343,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 347,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 351,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "showInputDialog",
+      "line": 355,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 378,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "message",
+      "line": 927,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "one",
+      "line": 253,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 255,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
+    },
+    {
+      "method": "one",
+      "line": 320,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 320,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 90,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 95,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "updateCards",
+      "line": 164,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "flashIncorrectAction",
+      "line": 173,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 292,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 308,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 309,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 321,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 328,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "showCombat",
+      "line": 361,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
+    },
+    {
+      "method": "showPromptMessage",
+      "line": 127,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBase.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 77,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
+    },
+    {
+      "method": "showCombat",
+      "line": 90,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
+    },
+    {
+      "method": "message",
+      "line": 109,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 192,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 196,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 47,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputChooseStartingHand.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 69,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputConfirm.java"
+    },
+    {
+      "method": "confirm",
+      "line": 78,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputConfirm.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 108,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputConfirm.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 74,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputConfirmMulligan.java"
+    },
+    {
+      "method": "confirm",
+      "line": 119,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputConfirmMulligan.java"
+    },
+    {
+      "method": "updateAutoPassPrompt",
+      "line": 62,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLockUI.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 64,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLockUI.java"
+    },
+    {
+      "method": "showPromptMessage",
+      "line": 75,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLockUI.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 65,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLondonMulligan.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 138,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLondonMulligan.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 144,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLondonMulligan.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 155,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "alertUser",
+      "line": 159,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 171,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 174,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "alertUser",
+      "line": 177,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "getGameView",
+      "line": 185,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "applyYieldUpdate",
+      "line": 245,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "applyYieldUpdate",
+      "line": 253,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "showConfirmDialog",
+      "line": 318,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
+    },
+    {
+      "method": "showManaPool",
+      "line": 63,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "hideManaPool",
+      "line": 76,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 83,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "one",
+      "line": 312,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 391,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 393,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 405,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 47,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPlaybackControl.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 49,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPlaybackControl.java"
+    },
+    {
+      "method": "setGamePause",
+      "line": 51,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPlaybackControl.java"
+    },
+    {
+      "method": "setGameSpeed",
+      "line": 80,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPlaybackControl.java"
+    },
+    {
+      "method": "setCurrentPlayer",
+      "line": 65,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputProxy.java"
+    },
+    {
+      "method": "setSelectables",
+      "line": 52,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java"
+    },
+    {
+      "method": "clearSelectables",
+      "line": 154,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 183,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 98,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 127,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 133,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
+    },
+    {
+      "method": "setSelectables",
+      "line": 65,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 70,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "setCard",
+      "line": 76,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 123,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 128,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 130,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 135,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 137,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 384,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 399,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 424,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "setHighlighted",
+      "line": 432,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    },
+    {
+      "method": "clearSelectables",
+      "line": 444,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+    }
+  ],
+  "unknown": [],
+  "removed": [],
+  "missingHandlers": [],
+  "knownGaps": [
+    {
+      "id": "showInputDialog",
+      "reason": "仅宏编辑直接调用；自由输入未接入，不能误报成所有牌名选择未接入"
+    },
+    {
+      "id": "sideboard",
+      "reason": "原生 Forge 局间换备牌未接入"
+    },
+    {
+      "id": "applyDelta",
+      "reason": "项目采用自有快照协议；原生 Forge delta 未接入"
+    },
+    {
+      "id": "applyYieldUpdate",
+      "reason": "原生 Forge yield 同步未接入"
+    },
+    {
+      "id": "player-control",
+      "reason": "已适配并用真实控制咒语验证双方座位整回合及仅战斗控制；嵌套/相互控制、控制者离场与网络重连仍须专项回归。"
+    },
+    {
+      "id": "whole-boundary",
+      "reason": "IGuiBase 48 声明、基础静态辅助调用和继承源文件已加入守卫；运行反射表解析145个PlayerController声明到实现。这是结构分类，不能证明全卡池无阻断，别名/间接调用、其他模式及组合仍未全审计。"
+    }
+  ],
+  "baseContract": {
+    "methods": [
+      {
+        "name": "isRunningOnDesktop",
+        "signature": "boolean isRunningOnDesktop()",
+        "default": false,
+        "returnType": "boolean",
+        "role": "environment",
+        "route": "Desktop true"
+      },
+      {
+        "name": "isLibgdxPort",
+        "signature": "boolean isLibgdxPort()",
+        "default": false,
+        "returnType": "boolean",
+        "role": "environment",
+        "route": "False; native desktop input branches"
+      },
+      {
+        "name": "getCurrentVersion",
+        "signature": "String getCurrentVersion()",
+        "default": false,
+        "returnType": "String",
+        "role": "environment",
+        "route": "Bridge version"
+      },
+      {
+        "name": "invokeInEdtNow",
+        "signature": "void invokeInEdtNow(Runnable runnable)",
+        "default": false,
+        "returnType": "void",
+        "role": "thread",
+        "route": "Synchronous dedicated UI executor"
+      },
+      {
+        "name": "invokeInEdtLater",
+        "signature": "void invokeInEdtLater(Runnable runnable)",
+        "default": false,
+        "returnType": "void",
+        "role": "thread",
+        "route": "Dedicated UI executor; exceptions fatal"
+      },
+      {
+        "name": "invokeInEdtAndWait",
+        "signature": "void invokeInEdtAndWait(Runnable proc)",
+        "default": false,
+        "returnType": "void",
+        "role": "thread",
+        "route": "Synchronous dedicated UI executor"
+      },
+      {
+        "name": "runBackgroundTask",
+        "signature": "void runBackgroundTask(String message, Runnable task)",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "isGuiThread",
+        "signature": "boolean isGuiThread()",
+        "default": false,
+        "returnType": "boolean",
+        "role": "thread",
+        "route": "Exact mtgb-ui thread"
+      },
+      {
+        "name": "getAssetsDir",
+        "signature": "String getAssetsDir()",
+        "default": false,
+        "returnType": "String",
+        "role": "environment",
+        "route": "Pinned runtime assets"
+      },
+      {
+        "name": "getImageFetcher",
+        "signature": "ImageFetcher getImageFetcher()",
+        "default": false,
+        "returnType": "ImageFetcher",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "getSkinIcon",
+        "signature": "ISkinImage getSkinIcon(FSkinProp skinProp)",
+        "default": false,
+        "returnType": "ISkinImage",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "getUnskinnedIcon",
+        "signature": "ISkinImage getUnskinnedIcon(String path)",
+        "default": false,
+        "returnType": "ISkinImage",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "getCardArt",
+        "signature": "default ISkinImage getCardArt(PaperCard card)",
+        "default": true,
+        "returnType": "ISkinImage",
+        "role": "default",
+        "route": "Native default body; forwarded methods keep their contract"
+      },
+      {
+        "name": "getCardArt",
+        "signature": "ISkinImage getCardArt(PaperCard card, boolean backFace)",
+        "default": false,
+        "returnType": "ISkinImage",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "createLayeredImage",
+        "signature": "ISkinImage createLayeredImage(PaperCard card, FSkinProp background, String overlayFilename, float opacity)",
+        "default": false,
+        "returnType": "ISkinImage",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "clearImageCache",
+        "signature": "void clearImageCache()",
+        "default": false,
+        "returnType": "void",
+        "role": "presentation",
+        "route": "Unity owns local images"
+      },
+      {
+        "name": "encodeSymbols",
+        "signature": "String encodeSymbols(String str, boolean formatReminderText)",
+        "default": false,
+        "returnType": "String",
+        "role": "presentation",
+        "route": "Identity; Unity renders text"
+      },
+      {
+        "name": "getAvatarCount",
+        "signature": "int getAvatarCount()",
+        "default": false,
+        "returnType": "int",
+        "role": "environment",
+        "route": "One native avatar; Unity artwork"
+      },
+      {
+        "name": "getSleevesCount",
+        "signature": "int getSleevesCount()",
+        "default": false,
+        "returnType": "int",
+        "role": "environment",
+        "route": "One native sleeve; Unity artwork"
+      },
+      {
+        "name": "getScreenScale",
+        "signature": "float getScreenScale()",
+        "default": false,
+        "returnType": "float",
+        "role": "environment",
+        "route": "Native scale one; Unity preferences"
+      },
+      {
+        "name": "preventSystemSleep",
+        "signature": "void preventSystemSleep(boolean preventSleep)",
+        "default": false,
+        "returnType": "void",
+        "role": "presentation",
+        "route": "No native sleep control"
+      },
+      {
+        "name": "download",
+        "signature": "void download(GuiDownloadService service, Consumer<Boolean> callback)",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "copyToClipboard",
+        "signature": "void copyToClipboard(String text)",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "browseToUrl",
+        "signature": "void browseToUrl(String url) throws IOException, URISyntaxException",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showCardList",
+        "signature": "void showCardList(String title, String message, List<PaperCard> list)",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showBoxedProduct",
+        "signature": "boolean showBoxedProduct(String title, String message, List<PaperCard> list)",
+        "default": false,
+        "returnType": "boolean",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showBugReportDialog",
+        "signature": "void showBugReportDialog(String title, String text, boolean showExitAppBtn)",
+        "default": false,
+        "returnType": "void",
+        "role": "fatal",
+        "route": "Surface exception; no automatic dismissal"
+      },
+      {
+        "name": "showImageDialog",
+        "signature": "void showImageDialog(ISkinImage image, String message, String title)",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showOptionDialog",
+        "signature": "int showOptionDialog(String message, String title, FSkinProp icon, List<String> options, int defaultOption)",
+        "default": false,
+        "returnType": "int",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showInputDialog",
+        "signature": "String showInputDialog(String message, String title, FSkinProp icon, String initialInput, List<String> inputOptions, boolean isNumeric)",
+        "default": false,
+        "returnType": "String",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showFileDialog",
+        "signature": "String showFileDialog(String title, String defaultDir)",
+        "default": false,
+        "returnType": "String",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "getSaveFile",
+        "signature": "File getSaveFile(File defaultFile)",
+        "default": false,
+        "returnType": "File",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "order",
+        "signature": "<T> List<T> order(String title, String top, int remainingObjectsMin, int remainingObjectsMax, List<T> sourceChoices, List<T> destChoices)",
+        "default": false,
+        "returnType": "List<T>",
+        "role": "unsupported",
+        "route": "No actor on global interface; explicit exception. Current Jotun upkeep uses native entity/card input instead."
+      },
+      {
+        "name": "getChoices",
+        "signature": "<T> List<T> getChoices(String message, int min, int max, Collection<T> choices, Collection<T> selected, FSerializableFunction<T, String> display)",
+        "default": false,
+        "returnType": "List<T>",
+        "role": "unsupported",
+        "route": "No actor on global interface; explicit exception. Current Jotun upkeep uses native entity/card input instead."
+      },
+      {
+        "name": "chooseCard",
+        "signature": "PaperCard chooseCard(String title, String message, List<PaperCard> list)",
+        "default": false,
+        "returnType": "PaperCard",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "isSupportedAudioFormat",
+        "signature": "boolean isSupportedAudioFormat(File file)",
+        "default": false,
+        "returnType": "boolean",
+        "role": "environment",
+        "route": "Native audio disabled"
+      },
+      {
+        "name": "createAudioClip",
+        "signature": "IAudioClip createAudioClip(String filename)",
+        "default": false,
+        "returnType": "IAudioClip",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "createAudioMusic",
+        "signature": "IAudioMusic createAudioMusic(String filename)",
+        "default": false,
+        "returnType": "IAudioMusic",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "startAltSoundSystem",
+        "signature": "void startAltSoundSystem(String filename, boolean isSynchronized)",
+        "default": false,
+        "returnType": "void",
+        "role": "presentation",
+        "route": "Unity owns audio"
+      },
+      {
+        "name": "showSpellShop",
+        "signature": "void showSpellShop()",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "showBazaar",
+        "signature": "void showBazaar()",
+        "default": false,
+        "returnType": "void",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "getNewGuiGame",
+        "signature": "IGuiGame getNewGuiGame()",
+        "default": false,
+        "returnType": "IGuiGame",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "hostMatch",
+        "signature": "HostedMatch hostMatch()",
+        "default": false,
+        "returnType": "HostedMatch",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "getUpnpPlatformService",
+        "signature": "UpnpServiceConfiguration getUpnpPlatformService()",
+        "default": false,
+        "returnType": "UpnpServiceConfiguration",
+        "role": "unsupported",
+        "route": "Explicit UnsupportedOperationException; no fabricated choice"
+      },
+      {
+        "name": "hasNetGame",
+        "signature": "boolean hasNetGame()",
+        "default": false,
+        "returnType": "boolean",
+        "role": "environment",
+        "route": "Forge native network host disabled; bridge transport separate"
+      },
+      {
+        "name": "vibrate",
+        "signature": "default void vibrate(int milliseconds, int amplitude)",
+        "default": true,
+        "returnType": "void",
+        "role": "default",
+        "route": "Native default body; forwarded methods keep their contract"
+      },
+      {
+        "name": "vibrateController",
+        "signature": "default void vibrateController(int milliseconds, float amplitude)",
+        "default": true,
+        "returnType": "void",
+        "role": "default",
+        "route": "Native default body; forwarded methods keep their contract"
+      },
+      {
+        "name": "useControllerForHaptics",
+        "signature": "default boolean useControllerForHaptics()",
+        "default": true,
+        "returnType": "boolean",
+        "role": "default",
+        "route": "Native default body; forwarded methods keep their contract"
+      }
+    ],
+    "unknown": [],
+    "removed": [],
+    "missingHandlers": [],
+    "changedSources": [],
+    "sourceGuards": [
+      {
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/interfaces/IGuiBase.java",
+        "sha256": "3ea53cb053cb6a5a9c5f411b11b808f1ecc371983396bc28086f9526d71bc77d",
+        "unchanged": true,
+        "scope": "Every interface signature/default body; classification reviewed"
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlayerController.java",
+        "sha256": "24ab20e0a7a491345b345529e6018b60f5ecef2b95d5c4f4c68726482966936b",
+        "unchanged": true,
+        "scope": "Inherited defaults and abstract declaration guard; resolution table separate"
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java",
+        "sha256": "e05ab45ffea33fae2aa5f52d805dfb4e98e24a0ce9de6a6e9e73eeb0d96e61d3",
+        "unchanged": true,
+        "scope": "Whole-source change guard; not every branch runtime tested"
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java",
+        "sha256": "7bc42c5748f6586b243f92a452059f6e9c0a91d8bf852db64463bee949e2704f",
+        "unchanged": true,
+        "scope": "Legacy static helper call and native cost selection reviewed"
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SGuiChoose.java",
+        "sha256": "1b079880a7a34d9cdff412837b2ce175cf188dd2539bb1c360a811d2119cfd11",
+        "unchanged": true,
+        "scope": "Global helper forwarding/bounds reviewed"
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java",
+        "sha256": "65988ae54fdafe83562b5b70e79404af09a83f642958aacc32ea43ffc53c1311",
+        "unchanged": true,
+        "scope": "Native resolution cost paths and cancellation patch context guard"
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java",
+        "sha256": "b8456dce4d63882be37da6fa4197d8b483932b5ec7d7cf16e0d1f548db029248",
+        "unchanged": true,
+        "scope": "Pinned native payer/manaCost/phyLifeToLose/saPaidFor/effect fields and native life reservation/commit/cancel contract; reflection change guard, not effect proof."
+      },
+      {
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayManaOfCostPayment.java",
+        "sha256": "7c0f90b604bd9051c962a37b4e27fbe99c04f3035514d414374761d34ea2b738",
+        "unchanged": true,
+        "scope": "Pinned native payer/manaCost/phyLifeToLose/saPaidFor/effect fields and native life reservation/commit/cancel contract; reflection change guard, not effect proof."
+      }
+    ],
+    "callsites": [
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getAvatarCount",
+        "line": 50,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getSleevesCount",
+        "line": 51,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getAvatarCount",
+        "line": 55,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getSleevesCount",
+        "line": 56,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getSleevesCount",
+        "line": 63,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showMessageDialog",
+        "line": 126,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showInputDialog",
+        "line": 133,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showInputDialog",
+        "line": 141,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showInputDialog",
+        "line": 166,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showErrorDialog",
+        "line": 178,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showErrorDialog",
+        "line": 182,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showInputDialog",
+        "line": 196,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showErrorDialog",
+        "line": 209,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showErrorDialog",
+        "line": 213,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/GamePlayerUtil.java"
+      },
+      {
+        "helper": "SGuiChoose",
+        "method": "oneOrNone",
+        "line": 844,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getSaveFile",
+        "line": 2919,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "showFileDialog",
+        "line": 2949,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showErrorDialog",
+        "line": 2961,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showErrorDialog",
+        "line": 2964,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showInputDialog",
+        "line": 138,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SGuiChoose.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "getChoices",
+        "line": 161,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SGuiChoose.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "order",
+        "line": 180,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SGuiChoose.java"
+      },
+      {
+        "helper": "SOptionPane",
+        "method": "showOptionDialog",
+        "line": 51,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SOptionPane.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "showOptionDialog",
+        "line": 58,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SOptionPane.java"
+      },
+      {
+        "helper": "GuiBase.getInterface()",
+        "method": "showInputDialog",
+        "line": 71,
+        "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/util/SOptionPane.java"
+      }
+    ],
+    "implicitReturnFallback": false,
+    "knownGaps": [
+      {
+        "id": "legacy-cost-helper",
+        "reason": "HumanCostDecision has a global same-graveyard helper; current Jotun cumulative upkeep resolves through PlaySpellAbility native entity/card input instead. The global helper remains unsupported; do not infer it is reached by this card."
+      },
+      {
+        "id": "base-input",
+        "reason": "Global free text, file, product/order and native lobby/dialog features stay explicitly unsupported; current player/input static calls include cheat/profile/lobby paths outside ordinary bridge matches."
+      },
+      {
+        "id": "inheritance",
+        "reason": "Reflection resolves declared PlayerController signatures to exact inherited/bridge implementations. It does not prove every implementation, cost or rule branch behaves correctly."
+      },
+      {
+        "id": "helper-aliases",
+        "reason": "Bounded player/input/gui-util scan detects direct GuiBase, SGuiChoose and SOptionPane calls only; aliased interfaces, external modules and arbitrary call chains not exhaustively analyzed."
+      }
+    ],
+    "limits": [
+      "Pinned source signatures/hash guards and direct helper calls only; no effect or Unity proof from classification.",
+      "Graph unavailable (Transport closed); exact filesystem source fallback; no current graph coverage claim.",
+      "Runtime fixtures separately establish actual costs, cancellation, age counters and continued priority."
+    ]
+  },
+  "limits": [
+    "Only the pinned IGuiGame boundary and direct getGui() callsites in player/input scopes are audited.",
+    "Default forwarding and snapshot callback classifications were reviewed against source; classification is not runtime proof.",
+    "IGuiBase now has a separate signature/source guard and bounded helper-call audit; inheritance resolution is recorded separately, not card-effect proof.",
+    "Other game modes, indirect/aliased calls and arbitrary mechanism combinations remain outside this audit."
+  ]
+}

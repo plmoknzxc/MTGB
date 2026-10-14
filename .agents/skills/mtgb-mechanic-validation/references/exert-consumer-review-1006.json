@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "runtimeHash": "6d5f8b3a008fff823cd5c8d48fb6d1384f9c9bd26446a9e7d6d49dab38903f77",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T01:35:27Z",
+    "coverage": "Metadata changed exact source fallback; upstream Card/CostExert/Untap .tools excluded and directly read; selectCards and PresentPermanentStatus both-direction traces inspected. Classification of cost literals, not exhaustive whole-family effects."
+  },
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-ExertBranches.py",
+      "sha256": "36e0864f66b30b0e02cb8287b533e852aa665e127ed401110ea5989f19b1af96"
+    },
+    {
+      "path": ".tools/exert-branches-1006/driver-attack-two-final.py",
+      "sha256": "5a9f7ffbb9c2c4204eba587564c2d9c307c10566a25e4f8eeb60097ba16a8c10"
+    },
+    {
+      "path": ".tools/exert-branches-1006/driver-attack-two-snapshot.py",
+      "sha256": "36e0864f66b30b0e02cb8287b533e852aa665e127ed401110ea5989f19b1af96"
+    },
+    {
+      "path": ".tools/exert-branches-1006/driver-attack-two.py",
+      "sha256": "2acdd3f838283ddc9420274ceec25477b571165a3b32b30242ff19342ff752a7"
+    },
+    {
+      "path": ".tools/exert-branches-1006/driver-attempt-1.py",
+      "sha256": "8560155aeff1f056f3756da2bd73723a8a0cf4eab9165c5023ce9750e8dd7f8d"
+    },
+    {
+      "path": ".tools/exert-branches-1006/driver-attempt-2.py",
+      "sha256": "243afc5d519473884adf2c677486056569b3aa57aaed3f2fe2ccb681936f7f2e"
+    },
+    {
+      "path": ".tools/exert-branches-1006/driver-current.py",
+      "sha256": "229230d42e5bea1547b87dd4f9b17c4537c420585362c8c8f343d97a2697a16d"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/ExertBranchFixture.java",
+      "sha256": "1c3f6fad306f49737b96827ecbb04be6c99cb511b69eac0605dcee58009b7754"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "2138c31e9f7b87663441e4323d4a63bfbc7060b759b782807c82e59931492570"
+    },
+    {
+      "path": "Assets/Scripts/Networking/ForgeWire.cs",
+      "sha256": "1b8c5a1dfdff561d60ab20698cc5bf95a8c6ef9c278ddb700d1a932d69eccf2e"
+    },
+    {
+      "path": "Assets/Scripts/Networking/OnlineSpectatorView.cs",
+      "sha256": "3f07a6af33af4e7ededb9cea8f1136ea01266f756570d55e527680ac7ff30f8b"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "cf0e2bf72df9c5957f58c4c2666e184bab5577265d563487562d9e0ff90edce9"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "5fe8e7c649b5aa3170c3a689986f96f66753f43d8c3541911f3b20223636f05f"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.CardSelection.cs",
+      "sha256": "e41a0fd0a9089c6c2916453c74a72de74e6fc15763538373c5586622b0d90067"
+    },
+    {
+      "path": "Assets/Scripts/Editor/ExertBranchPresentationValidation.cs",
+      "sha256": "1d65038dd0bd681e0b5a7360dd99522b44671156a7778027590c9dd41c8fc8d8"
+    },
+    {
+      "path": "Assets/Scripts/Editor/ExertMultiplePresentationValidation.cs",
+      "sha256": "8c22b8699143c46e5ee6dac015837e1aa509e115468e2c27b2274e7d06b69966"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/exert-branches-1006/native/attack-exert/1791250643411221000/result.json",
+      "sha256": "8a7e9a1d362b522280a0db348fd8bb470d4349e4205d619f2e333565f5e7b308"
+    },
+    {
+      "path": ".tools/exert-branches-1006/native/attack-decline/1791250653804359200/result.json",
+      "sha256": "44d98b9c3197e6c322c8e74965e00628af9c3d5b2be43d39b3ce85fa4994fdce"
+    },
+    {
+      "path": ".tools/exert-branches-1006/native/attack-two/1791251137989973900/result.json",
+      "sha256": "97a5a7e9e3fb013fd768251d0fff11fa3638860006be5fcdf5122546041e3432"
+    },
+    {
+      "path": ".tools/exert-branches-1006/native/mana-exert/1791250664058387000/result.json",
+      "sha256": "a6a23b1ee8899d92757e0151c696a2c4f6aef190f19cff4a2279aa84ede7f163"
+    },
+    {
+      "path": ".tools/exert-branches-1006/native/mana-ordinary/1791250674517572200/result.json",
+      "sha256": "c340b514477806e94e07ae08065aa3521411bf60c440035d01338e9b6b5ac2cd"
+    },
+    {
+      "path": ".tools/exert-branches-1006/native/mana-cancel/1791250684819234600/result.json",
+      "sha256": "07d13238e232e1b937606880f97ba568a74820ed17bbfbe0147e8bb633ed67ae"
+    }
+  ],
+  "ui": {
+    "path": ".tools/exert-branches-1006/ui/20261006T0147485127662Z/result.txt",
+    "sha256": "2d8725ed361e4eac0dc058616eb9d929c193da3178382936967aa1405159ffaf"
+  },
+  "multiple": {
+    "path": ".tools/exert-branches-1006/multiple/20261006T0153190970117Z/result.txt",
+    "sha256": "822709d8f2791712160712a70aab6853bbecec15e03daa3eb2a8ab18e60c51e1"
+  },
+  "costClassification": {
+    "path": ".tools/exert-branches-1006/cost-consumers.json",
+    "sha256": "d72f05eba89c055bff813c9d7b6c1d9fe13c69cd15698da6c22358feeadc7557"
+  },
+  "remaining": "R09/R11/R12/R21/R31/R36 and live transport remain open; immutable old producers/FAIL/stale runs retained."
+}

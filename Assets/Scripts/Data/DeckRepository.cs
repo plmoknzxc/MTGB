@@ -20,6 +20,15 @@ public static class DeckRepository
     private static string EmptyMarker => Path.Combine(DeckRoot, ".mtgb-empty");
     public static bool WasExplicitlyEmptied => File.Exists(EmptyMarker);
 
+    public static string DirectoryRevision()
+    {
+        if(!Directory.Exists(DeckRoot))return "";
+        var files=EnumerateDeckFiles();Array.Sort(files,StringComparer.OrdinalIgnoreCase);
+        var revision=new System.Text.StringBuilder();
+        foreach(var path in files){var info=new FileInfo(path);if(info.Exists)revision.Append(info.Name).Append(':').Append(info.Length).Append(':').Append(info.LastWriteTimeUtc.Ticks).Append('|');}
+        return revision.ToString();
+    }
+
     public static IReadOnlyList<DeckDefinition> LoadAll()
     {
         EnsureFolder();
@@ -49,6 +58,9 @@ public static class DeckRepository
 
             if (deck == null) return null;
             if (string.IsNullOrWhiteSpace(deck.name)) deck.name = Path.GetFileNameWithoutExtension(path);
+            string fileName=Path.GetFileNameWithoutExtension(path);
+            if(!string.Equals(fileName,MakeSafeFileName(deck.name),StringComparison.OrdinalIgnoreCase))deck.name=fileName;
+            deck.sourcePath=Path.GetFullPath(path);
             if (string.IsNullOrWhiteSpace(deck.format)) deck.format = "standard";
             if (string.IsNullOrWhiteSpace(deck.banlist)) deck.banlist = "current";
             if (deck.commanders == null) deck.commanders = new List<DeckEntry>();
@@ -285,6 +297,7 @@ public static class DeckRepository
         string collectorNumber = entry.collectorNumber?.Trim();
         if (!string.IsNullOrWhiteSpace(setCode) && !string.IsNullOrWhiteSpace(collectorNumber))
         {
+            if(CardDatabaseRepository.TryResolveSharedPrinting(cards,setCode+"/"+collectorNumber,out var indexed))return indexed;
             for (int i = 0; i < cards.Count; i++)
             {
                 CardDefinition card = cards[i];
@@ -364,6 +377,16 @@ public static class DeckRepository
                     target = deck.sideboard;
                     ignoreSection = false;
                 }
+                else if (line.Equals("#attractions", StringComparison.OrdinalIgnoreCase))
+                {
+                    target = deck.attractions;
+                    ignoreSection = false;
+                }
+                else if (line.Equals("#contraptions", StringComparison.OrdinalIgnoreCase))
+                {
+                    target = deck.contraptions;
+                    ignoreSection = false;
+                }
                 continue;
             }
 
@@ -393,6 +416,16 @@ public static class DeckRepository
         AppendDeckLines(lines, deck.cards);
         lines.Add("!side");
         AppendDeckLines(lines, deck.sideboard);
+        if (deck.attractions != null && deck.attractions.Count > 0)
+        {
+            lines.Add("#attractions");
+            AppendDeckLines(lines, deck.attractions);
+        }
+        if (deck.contraptions != null && deck.contraptions.Count > 0)
+        {
+            lines.Add("#contraptions");
+            AppendDeckLines(lines, deck.contraptions);
+        }
         return string.Join(Environment.NewLine, lines) + Environment.NewLine;
     }
 
@@ -662,6 +695,10 @@ public static class DeckRepository
         NormalizeEntries(GetEntryList(deck, DeckSection.Commander));
         NormalizeEntries(GetEntryList(deck, false));
         NormalizeEntries(GetEntryList(deck, true));
+        if (deck.attractions == null) deck.attractions = new List<DeckEntry>();
+        if (deck.contraptions == null) deck.contraptions = new List<DeckEntry>();
+        NormalizeEntries(deck.attractions);
+        NormalizeEntries(deck.contraptions);
     }
 
     private static void NormalizeEntries(List<DeckEntry> entries)

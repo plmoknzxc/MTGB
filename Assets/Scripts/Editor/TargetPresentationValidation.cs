@@ -35,16 +35,19 @@ public static class TargetPresentationValidation
         var target=GameObject.Find("Card_2").transform;
         Vector2 point=RectTransformUtility.WorldToScreenPoint(null,target.position);
         ui.UpdateTargetingAt(point);Canvas.ForceUpdateCanvases();
+        var arrow=GameObject.Find("TargetArrow").GetComponent<ForgeTargetArrow>();
         yield return new WaitForEndOfFrame();
         ScreenCapture.CaptureScreenshot(folder+"/creature-target.png");
         yield return new WaitForSecondsRealtime(.2f);
         if(ui.TryChooseTargetAt(new Vector2(1,1),811) || ui.TryChooseTargetAt(point,810))throw new Exception("Invalid/stale target accepted");
         if(!ui.TryChooseTargetAt(point,811) || ui.TryChooseTargetAt(point,811))throw new Exception("Creature target submission guard failed");
-        if(GameObject.Find("TargetArrow")!=null)throw new Exception("Arrow remained after submission");
+        yield return new WaitForSecondsRealtime(.25f);
+        if(arrow.gameObject.activeSelf)throw new Exception("Arrow remained visible after submission fade");
         state.request.requestId=812;ui.Present(state,1,true,_=>calls++,null,"取消目标测试");
         var cancel=GameObject.Find("TargetOrigin").transform.Find("CancelTarget").GetComponent<Button>();
         cancel.onClick.Invoke();cancel.onClick.Invoke();
-        if(calls!=3 || GameObject.Find("TargetArrow")!=null)throw new Exception("Cancel did not submit once and hide arrow");
+        yield return new WaitForSecondsRealtime(.25f);
+        if(calls!=3 || arrow.gameObject.activeSelf)throw new Exception("Cancel did not submit once and hide arrow");
         ui.enabled=true;
         File.WriteAllText(folder+"/result.txt","PASS: curved rendered arrow; right-side full preview; creature target; invalid/stale/duplicate guard; cancel cleanup. Synthetic presentation fixture, not a rules test.");
     }

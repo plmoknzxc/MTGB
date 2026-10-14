@@ -14,6 +14,8 @@ pwsh -File Tools/ForgeBridge/Build-Bridge.ps1
 
 首次使用可加 `-BuildUpstream`。脚本固定 Forge 提交、编译桥接程序、导出官方印刷目录，再下载经过 SHA-256 校验的 Eclipse Temurin Windows x64 JRE，复制官方资源。生成目录为项目根目录下的 `ForgeRuntime`。
 
+构建会核对两层界面契约、玩家控制器及费用处理源文件守卫。`NativePatches.json` 保存少量已复核的原生修正：先核对完整源文件 SHA-256 和唯一替换上下文，生成完整修改源码，再编译到运行包 `classes`；上游检出不被改写。当前修正防止同一坟墓场费用取消选牌后继续对空结果排序。运行断言与展示证据见 [费用边界复核](../../Docs/LibraryCostBoundaryAudit-2026-10-04.zh-CN.md)。
+
 `files.json` 登记 Java、桥接类、依赖和资源的逐文件哈希；`runtime.json` 保存清单及目录哈希。普通卡牌目录加载检查目录文件自身的哈希；显式重载和完整验证入口才逐文件验证运行资源，并在进程内缓存结果。入房只比较通信协议，权威端开局检查自己的桥接配置和必要路径。运行期间不要修改正在执行的引擎资源；升级后重启对应程序。
 
 Java 与资源路径相对于 `ForgeRuntime`；每局使用独立的用户数据及缓存目录，退出会话时清理。
@@ -23,9 +25,20 @@ Unity 菜单入口：
 - `MTGB/验证/卡牌/印刷目录`：完整印刷目录、歧义拒绝、已有牌组不改写。
 - `MTGB/验证/对局/持续会话`：保存并重载官方牌组，真实 Java 会话、席位投影、非法输入及进程退出。
 - `MTGB/验证/对局/异常终止`：异常终止不计分、不推进局数、不进入换备；正常 BO3 结束仍进入换备。
-- `MTGB/验证/项目整体`：依次执行目录、持久会话和双进程故障隔离验证；结果写入 `Temp/project-validation-result.txt`。
+- `MTGB/验证/基础运行检查`：依次执行目录、持久会话和双进程故障隔离验证；结果写入 `Temp/project-validation-result.txt`。
+- 机制效果与共用交互回归见 [验证说明](../../Docs/MechanicValidation.zh-CN.md)；`MTGB/验证/机制` 下可生成清单、运行登记场景和批量验证展示。不同机制共用界面仍需各自规则断言。
 - `MTGB/构建/Windows 客户端（开发版）`：构建 `Builds/ForgeValidation/MTGB.exe`，复制运行资源与验证牌组。完成以 Editor.log 中的成功消息为准。
 - `MTGB/构建/Windows 独立服务器`：构建原生 Windows Server 子目标 `Builds/Server/MTGBServer.exe`，包含相同的便携运行资源。
+
+发布客户端可通过 Unity `-executeMethod ForgeBuildMenu.BuildReleaseFromCommandLine -clientOutput <新目录>` 构建 Windows x64 非开发版。发布包复用独立服务器的无界面 Forge 资源集合，保留规则、目录、JRE 与许可证；不携带 Forge 独立界面的冒险模式/皮肤资源和源码。开发构建入口保持原用途。
+
+Windows 客户端默认以 1280×720 普通窗口启动，支持拖动边框缩放；启动时覆盖旧版保存的全屏设置，无界面批处理进程不调整窗口。
+
+```powershell
+python Tools/ForgeBridge/Package-Client.py --player <发布构建目录> --output <新ZIP路径>
+```
+
+仅打包 Unity 运行文件、Forge 运行资源、Starter 牌组和中文优先基础卡图，排除调试符号、验证牌组、报告、源代码、元文件和目录链接。需要附带其他牌组时显式追加 `--deck "Decks/living end.mdk"`（可重复指定），牌组会放入包内 `MTGB/Decks` 并记录文件校验值。卡图筛选规则见 [卡图说明](../../Docs/CardImages.zh-CN.md)；加 `--plan-only` 可先生成卡图清单和体积估算。打包校验与缺项写入 ZIP 内 `package-manifest.json` 及 ZIP 同级 `.manifest.json`，不等于全卡效果或外部联机验证。
 
 ```powershell
 python -X utf8 Tools/ForgeBridge/Run-NetworkSmoke.py --mode dedicated --server-exe Builds/Server/MTGBServer.exe
@@ -53,5 +66,6 @@ IntegratedBattlefield 在联机开局时自动加载，按服务器下发的状�
 - Forge：`https://github.com/Card-Forge/forge`，提交 `4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676`。许可证见运行资源 `assets/LICENSE.txt` 和上游源码；桥接 Java 文件标注 GPL-3.0-or-later。
 - Eclipse Temurin JRE：版本、下载地址和 SHA-256 固定在 `Package-Runtime.py`，包内保留原有许可证文件。
 - 包内 `source/forge-<revision>.zip` 是固定提交的上游源码；`source/bridge` 是对应桥接源码；`origins.json` 记录源档案及 JRE 校验值。`Build-Bridge.ps1`、`Package-Runtime.py` 是 MTGB 仓库布局下的构建脚本，不能直接在包内 `source` 根目录运行。
+- `source/native-patches` 保存实际编译的完整原生修正源码，`NativePatches.json` 保存变更上下文与原始哈希，`origins.json` 记录变更清单与生成源码哈希。单独重建运行包时，也要用 JDK 17 将该目录中的 Java 源码编译到 `classes`，不能只编译桥接而漏掉修正。
 
 包内源码的单独编译方法：安装 JDK 17 和 Maven，解压 Forge 源码到新目录；在源码根目录运行 `mvn -B -pl forge-gui -am package dependency:copy-dependencies -DskipTests -Dcheckstyle.skip=true`。然后在 `ForgeRuntime` 目录用 `javac -encoding UTF-8 -cp "lib/*" -d classes source/bridge/mtgb/bridge/*.java` 编译桥接。修改运行文件后需在完整 MTGB 仓库重新生成目录和哈希清单供分发及显式验证使用；只有通信协议发生不兼容变化时才要求双方同步升级协议。

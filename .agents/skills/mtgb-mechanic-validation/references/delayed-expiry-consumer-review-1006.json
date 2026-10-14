@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/DelayedExpiryConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "bf45d53f735a33a4d756ac5bba595e123046a299a82f3eba0dda5b708aa33121"
+  },
+  "runtimeHash": "fab8031f7b97fdc498631137a3247e8aced754e6f74ae02978f6af6b3b577ae1",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-DelayedExpiry.py",
+      "sha256": "cfd88bd7ecdb090caea5dc0d1941e08ff0313d55d87f3a8ae983ee4f313ccf13"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgePendingDeparture.java",
+      "sha256": "b8692fbfb5d804eecd23fc630724a9a0caf56b8d2cca91a5dd3e7243b68335d9"
+    },
+    {
+      "path": "Assets/Scripts/Editor/DelayedExpiryPresentationValidation.cs",
+      "sha256": "5bf91bda8d2a03fc5adeff786deac80c15f9f719ca4bc7669d47d96e6c9dddd3"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "bce12aad8a896d5941414415d038d0190e58b72bc644eb345949525867a4ddf0"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Emblems.cs",
+      "sha256": "33cbbd587ef012f67ef854b7c8e1af5e40e76ced2f6a95d00e2f8c26a892220e"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "fed15a27d925d6e7f1205294ebc2a777f148a36f2128441c8aae2940f8a40654"
+    },
+    {
+      "path": "Assets/Scripts/UI/TemporaryCopyGlow.cs",
+      "sha256": "ea845360e93f994c01f20417451ecddd450ba9eab93d27171ef7268a5f1753f4"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/delayed-expiry-1006/native/self-exile-counter/1791260375467888000/result.json",
+      "sha256": "8afa6672672826b923a4a3499ab807a6ed2803e8a5f6146332308a80eee60f5e"
+    },
+    {
+      "path": ".tools/delayed-expiry-1006/native/external-source-leave/1791260391280923400/result.json",
+      "sha256": "a650ce2cf4a5a2ca3f62b83257222087e91f4eff5edd3d819d0d4c882aff91c1"
+    },
+    {
+      "path": ".tools/delayed-expiry-1006/native/external-control-change/1791260404845621700/result.json",
+      "sha256": "ef0b3c84e182594a298b4ae270b05b7cf329be72a4c394637961155768141c5a"
+    }
+  ],
+  "incrementalUi": [
+    {
+      "path": ".tools/delayed-expiry-1006/ui/20261006T0428292046029Z/result.txt",
+      "sha256": "c9acda432a823a54bb4ee22092c4a80d198b2c8b377df9bac49511f25bf9b3d4"
+    },
+    {
+      "path": ".tools/delayed-expiry-1006/ui/20261006T0428292046029Z/input-hashes.tsv",
+      "sha256": "cb6f704830762bd8aa84b89114744a4daf4e56fa3876126a8200c1f901f7fde3"
+    },
+    {
+      "path": ".tools/delayed-expiry-1006/ui/20261006T0428292046029Z/producer-hashes.tsv",
+      "sha256": "0947a677e1a8b820939de37e38ca30ee44f148647df32a46ca2b280d524f6f1f"
+    }
+  ],
+  "reuse": {
+    "path": ".tools/delayed-expiry-1006/reuse-method-hash.json",
+    "sha256": "a28c130247fd94348e2eb7c679c29403161aa31d6b92730724445fb4de6239b8"
+  },
+  "remaining": "条件或未知阶段、离场再返回、触发复制及其他跨回合/控制组合；不重复已存档三条到期路径及本批自带放逐反击后再次触发、来源被杀后牺牲、捐赠后一次性安排清除"
+}

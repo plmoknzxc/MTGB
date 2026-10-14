@@ -20,7 +20,7 @@ final class BridgeAllocation {
             lethal[i]=card.getCurrentState().isPlaneswalker()?Integer.parseInt(card.getCurrentState().getLoyalty()):Math.max(0,card.getLethalDamage());
             if(!card.getCurrentState().isPlaneswalker() && source.getCurrentState().hasDeathtouch())lethal[i]=Math.min(lethal[i],1);
         }
-        Map<Object,Integer> raw=run(gui,source,targets,total,null,false,"分配战斗伤害",maySkip,(amounts,index)->{
+        Map<Object,Integer> raw=run(gui,source,targets,total,null,false,"分配战斗伤害","combatDamage",lethal,maySkip,(amounts,index)->{
             if(divide)return true;
             if(index==blockers.size() || !override)
                 for(int i=0;i<Math.min(index,lethal.length);i++)if(amounts[i]<lethal[i])return false;
@@ -32,10 +32,10 @@ final class BridgeAllocation {
         return result;
     }
     static Map<Object,Integer> generic(ForgeBridge.Gui gui,CardView source,Map<Object,Integer> targets,int total,boolean atLeastOne,String label) {
-        return run(gui,source,new ArrayList<>(targets.keySet()),total,targets,atLeastOne,"分配 · "+label,false,(amounts,index)->true);
+        return run(gui,source,new ArrayList<>(targets.keySet()),total,targets,atLeastOne,"分配 · "+label,"genericAmount",null,false,(amounts,index)->true);
     }
     interface Allowed { boolean test(int[] amounts,int index); }
-    static Map<Object,Integer> run(ForgeBridge.Gui gui,CardView source,List<Object> targets,int total,Map<Object,Integer> maximum,boolean atLeastOne,String title,boolean maySkip,Allowed allowed) {
+    static Map<Object,Integer> run(ForgeBridge.Gui gui,CardView source,List<Object> targets,int total,Map<Object,Integer> maximum,boolean atLeastOne,String title,String purpose,int[] lethal,boolean maySkip,Allowed allowed) {
         int[] amounts=new int[targets.size()];if(atLeastOne)Arrays.fill(amounts,1);
         long context=++ForgeBridge.revision;
         while(true) {
@@ -52,16 +52,20 @@ final class BridgeAllocation {
             options.add(new ForgeBridge.Option("reset-amount","重置",()->answer.complete(0)));
             if(maySkip)options.add(new ForgeBridge.Option("skip-amount","稍后分配",()->answer.complete(Integer.MIN_VALUE)));
             ForgeBridge.Pending request=new ForgeBridge.Pending(gui.seat,"AssignAmount",title,options);
-            request.modal=true;request.contextId=context;request.sourceCard=gui.choiceCard(source);request.sourceCardId=source.getId();
+            request.modal=true;request.contextId=context;request.sourceCard=gui.choiceCard(source);request.sourceCardId=source.getId();request.selectionPurpose=purpose;
             request.selectedCount=spent;request.remainingCount=total-spent;request.maxCount=total;
             for(int i=0;i<targets.size();i++) {
                 Object target=targets.get(i);Map<String,Object> item=new LinkedHashMap<>();item.put("id",i);item.put("amount",amounts[i]);
                 item.put("label",target instanceof CardView c?c.getCurrentState().getName():target instanceof PlayerView p?p.getName():String.valueOf(target));
                 item.put("card",gui.choiceCard(target));request.allocations.add(item);
+                if(target instanceof GameEntityView entity){item.put("targetId",entity.getId());item.put("targetKind",target instanceof PlayerView?"player":"card");}
+                if(target instanceof PlayerView player)for(int seat=0;seat<ForgeBridge.game.getPlayers().size();seat++)
+                    if(ForgeBridge.game.getPlayers().get(seat).getView().getId()==player.getId())item.put("playerSeat",seat+1);
+                if(lethal!=null&&i<lethal.length){item.put("hasLethal",true);item.put("lethal",lethal[i]);}
             }
             ForgeBridge.publish(request);
             try {
-                int action=answer.get();
+                int action=ForgeBridge.awaitAnswer(answer);
                 if(action==Integer.MIN_VALUE)return null;
                 if(action==Integer.MAX_VALUE){Map<Object,Integer> result=new LinkedHashMap<>();for(int i=0;i<targets.size();i++)result.put(targets.get(i),amounts[i]);return result;}
                 if(action==0)Arrays.fill(amounts,atLeastOne?1:0);

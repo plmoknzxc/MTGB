@@ -11,6 +11,17 @@ public static class CardDatabaseRepository
     private static readonly List<string> loadWarnings = new List<string>();
     public static IReadOnlyList<string> LoadWarnings => loadWarnings;
     private static bool loaded;
+    private static Dictionary<string,CardDefinition> printingIndex;
+    internal static bool TryResolveSharedPrinting(IReadOnlyList<CardDefinition> source,string key,out CardDefinition card)
+    {
+        card=null;if(!loaded||!ReferenceEquals(source,LoadedCards))return false;
+        if(printingIndex==null){
+            printingIndex=new Dictionary<string,CardDefinition>(StringComparer.OrdinalIgnoreCase);
+            foreach(var item in LoadedCards)if(item!=null){string printing=item.setCode+"/"+item.CollectorNumber;if(!printingIndex.ContainsKey(printing))printingIndex.Add(printing,item);}
+        }
+        printingIndex.TryGetValue(key,out card);if(card?.forgeAmbiguous==true)card=null;
+        return true;
+    }
     public static async Task<IReadOnlyList<CardDefinition>> LoadAllAsync(bool forceReload, CancellationToken cancellation, Action<string> progress)
     {
         if (loaded && !forceReload) return LoadedCards;
@@ -88,6 +99,7 @@ public static class CardDatabaseRepository
 
     public static void Clear()
     {
+        printingIndex=null;
         CardArtVersions.Reset();
         for (int i = 0; i < LoadedCards.Count; i++)
         {

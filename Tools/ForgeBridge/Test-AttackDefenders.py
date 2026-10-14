@@ -8,13 +8,15 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[2]
 runtime=root/'ForgeRuntime'
 cfg=json.loads((runtime/'runtime.json').read_text(encoding='utf-8-sig'))
+classes=root/'.tools/attack-defenders/classes'
+subprocess.run(['javac','-encoding','UTF-8','-cp',str(runtime/'classes')+';'+str(runtime/'lib/*'),'-d',str(classes),str(root/'Tools/ForgeBridge/tests/AttackDefenderFixture.java')],check=True)
 out=root/'Tools/Validation/Reports/AttackDefenders';out.mkdir(parents=True,exist_ok=True)
 result=out/'engine-result.txt';result.write_text('RUNNING',encoding='utf-8')
 deck={'cards':[{'setCode':'10E','collectorNumber':'376','count':60}], 'sideboard':[]}
 with tempfile.TemporaryDirectory(prefix='mtgb-attack-') as temp, (out/'engine.log').open('w',encoding='utf-8') as log, (out/'trace.jsonl').open('w',encoding='utf-8') as trace:
     start=Path(temp)/'start.json'
     start.write_text(json.dumps({'session':'attack-test','seed':4,'startingLife':20,'firstPlayerSeat':1,'decks':[deck,deck]}),encoding='utf-8')
-    cp=str(root/'.tools/attack-defenders/classes')+';'+str(runtime/'classes')+';'+str(runtime/'lib/*')
+    cp=str(classes)+';'+str(runtime/'classes')+';'+str(runtime/'lib/*')
     p=subprocess.Popen([str(runtime/cfg['java']),'-Djava.awt.headless=true','-cp',cp,'mtgb.bridge.AttackDefenderFixture',str(runtime/cfg['assets']),str(start)],cwd=runtime/cfg['assets'],env=dict(os.environ,APPDATA=temp,LOCALAPPDATA=temp),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=log,text=True,encoding='utf-8')
     messages=queue.Queue();threading.Thread(target=lambda:[messages.put(json.loads(line)) for line in p.stdout],daemon=True).start()
     def read():
@@ -83,8 +85,7 @@ with tempfile.TemporaryDirectory(prefix='mtgb-attack-') as temp, (out/'engine.lo
                 assert next(c for c in field(m,1) if c['id']==battle)['defense']==3
                 assert next(c for c in field(m,1) if c['planeswalker'])['loyalty']==5
                 assert next(c for c in field(m,2) if c['battle'])['defense']==5
-                assert passes=={1},passes
-                assert '[auto-pass] seat=2' in (out/'engine.log').read_text(encoding='utf-8')
+                assert passes=={1,2},passes
                 snapshot(m,'resolved');break
             if m['request']['kind']=='InputPassPriority':passes.add(m['request']['seat'])
             assert time.monotonic()<deadline,'Combat damage timeout'

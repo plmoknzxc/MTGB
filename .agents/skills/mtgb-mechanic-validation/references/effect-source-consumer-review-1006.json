@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "runtimeHash": "fab8031f7b97fdc498631137a3247e8aced754e6f74ae02978f6af6b3b577ae1",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T03:38:57Z",
+    "coverage": "metadata_changed/not_tracked exact-source fallback; upstream/.tools excluded bounded direct source"
+  },
+  "audit": {
+    "path": "Docs/EffectSourceConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "42907c4842e09faa8dd348941da60c81d3d613000e2fa6b86bcda5199cf71cec"
+  },
+  "nativeRegression": [
+    {
+      "path": ".tools/effect-source-1006/native/shield-division/1791257605714711900/result.json",
+      "sha256": "a08f16364d2117cfb1e0c37b0fbb48157264a2799b294a82761b34949cd04efa"
+    },
+    {
+      "path": ".tools/effect-source-1006/native/shield-on-damage/1791257613258382100/result.json",
+      "sha256": "fb91ec0ab6ffb005fbca1c422ac19f7bfaa6ef1fb045e47db6febbc093cffea3"
+    }
+  ],
+  "adapter": {
+    "path": ".tools/effect-source-1006/projection/1791257908489642600/result.json",
+    "sha256": "3d0ca7e517db007e859294c90f9da89fee506c0a2d803e62ace9aefd0016b0f6"
+  },
+  "ui": [
+    {
+      "path": ".tools/effect-source-1006/ui/20261006T0337011857208Z/result.txt",
+      "sha256": "8078977317bfa81b09a0d956c1e2256852dc0ba246312cd9527e4e79b4f1c67d"
+    },
+    {
+      "path": ".tools/effect-source-1006/ui/20261006T0337011857208Z/input-hashes.tsv",
+      "sha256": "c004cc47ad321b76e10251e2cdf07871bf9e952d0efabc72fb7300d47626be10"
+    },
+    {
+      "path": ".tools/effect-source-1006/ui/20261006T0337011857208Z/producer-hashes.tsv",
+      "sha256": "6b09b156bd6ca9a3389e56d069f7c352c2d460177ef20bb24e6d1d9b2f818f39"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0341260179305Z/result.txt",
+      "sha256": "989b939aa6903be95b9da0f6243a9403cd7ab9b03f7ada84a7c4338e73775345"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0341260179305Z/input-hashes.tsv",
+      "sha256": "6399037067b0f3ce14a797cfb48e97251672ff43a90d15ca0756933aa1bfca82"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0341260179305Z/producer-hashes.tsv",
+      "sha256": "44f426c80e6331e560464f3724be334d42f01811572cbc378e8b3b1c4b16563b"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "58dc4ee585910cb813a1e948688e75262136235d0cb0c9dd32c25d348947daea"
+    },
+    {
+      "path": "Assets/Scripts/Networking/ForgeWire.cs",
+      "sha256": "3a3beaded873c8a3a4b37ff5be23676960c332289f6fb033e39a25c1d5723903"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.AbilityFace.cs",
+      "sha256": "e3f82148d316ea53cdcb384157ca699e026a79f118f55f733274a6d5c5cdd8f1"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.TokenArt.cs",
+      "sha256": "f32dabcc4cd16a7f9bca3176da9dc384f40f1f2cf1843451a71090c91aa5f980"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "fed15a27d925d6e7f1205294ebc2a777f148a36f2128441c8aae2940f8a40654"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "bce12aad8a896d5941414415d038d0190e58b72bc644eb345949525867a4ddf0"
+    },
+    {
+      "path": "Assets/Scripts/Editor/EffectSourcePresentationValidation.cs",
+      "sha256": "67b6638788d070de61a0350b0f7789a969c12d44ed225601b13e474bafbdb0c4"
+    },
+    {
+      "path": "Assets/Scripts/Editor/AbilityFaceConsumerValidation.cs",
+      "sha256": "6e568b31768ff5f4996cea19b2c98c3dd14a28e50f6864c21a632eb5bce0826a"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-EffectSourceProjection.py",
+      "sha256": "2b79f8c530ee9473662bbd153c89d92663f6aa180019fcd2b0982399f6b4c137"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/EffectSourceProjectionFixture.java",
+      "sha256": "40a8488a96892c33087ccf3c869c4ed7e3b29a615fc1499a4d5f8d4520ebcf5e"
+    }
+  ],
+  "remaining": "R47/R18/R15/R17/R26/R36/A06 retained; new fields guard does not prove all private descriptions/names or multiplayer/network."
+}

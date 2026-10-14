@@ -5,14 +5,24 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasRenderer))]
 public sealed class ForgePlayableGlow : MaskableGraphic
 {
+    // Selected cards have a steady bright inner edge and a warm halo, distinct
+    // from the cyan pulse that only means a card is available to play.
+    public bool selected;
     private void Update()
     {
-        canvasRenderer.SetAlpha(.87f+.13f*Mathf.Sin(Time.unscaledTime*2.1f));
+        canvasRenderer.SetAlpha(selected?.96f+.04f*Mathf.Sin(Time.unscaledTime*2.1f):.87f+.13f*Mathf.Sin(Time.unscaledTime*2.1f));
     }
 
     protected override void OnPopulateMesh(VertexHelper mesh)
     {
         mesh.Clear();
+        if(selected) {
+            Ring(mesh,22,12,0,.18f);
+            Ring(mesh,12,6,.18f,.48f);
+            Ring(mesh,6,2,.48f,1);
+            Ring(mesh,2,-1,1,1);
+            return;
+        }
         Ring(mesh,25,16,0,.09f);
         Ring(mesh,16,9,.09f,.24f);
         Ring(mesh,9,4,.24f,.62f);
@@ -37,8 +47,9 @@ public sealed class ForgePlayableGlow : MaskableGraphic
         int first=mesh.currentVertCount;
         for(int i=0;i<32;i++)
         {
-            mesh.AddVert(Corner(i,outer),new Color(.2f,.8f,1,outerAlpha),Vector2.zero);
-            mesh.AddVert(Corner(i,inner),new Color(.2f,.8f,1,innerAlpha),Vector2.zero);
+            Color tint=selected?new Color(1,.83f,.32f):new Color(.2f,.8f,1);
+            mesh.AddVert(Corner(i,outer),new Color(tint.r,tint.g,tint.b,outerAlpha),Vector2.zero);
+            mesh.AddVert(Corner(i,inner),new Color(tint.r,tint.g,tint.b,innerAlpha),Vector2.zero);
         }
         for(int i=0;i<32;i++)
         {

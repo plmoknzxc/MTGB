@@ -105,12 +105,10 @@ public static class MenuVisualTheme
         }
         Place(start, "StartLogoSlot", -570, 235, 570, 220);
         Place(start, "StartTitle", 0, 28, 570, 180);
-        Place(start, "StartSubtitle", 0, -66, 570, 45);
         Text(start, "StartTitle", "MTGB", 112);
         var title = Find(start, "StartTitle").GetComponent<Text>();
         title.resizeTextForBestFit = false;
         title.horizontalOverflow = HorizontalWrapMode.Overflow;
-        Find(start, "StartSubtitle").gameObject.SetActive(false);
         Place(start, "OnlineMatchButton", -570, -10, 570, 86);
         Place(start, "SettingsButton", -570, -118, 570, 86);
         Place(start, "DeckEditorButton", -570, -226, 570, 86);
@@ -141,10 +139,6 @@ public static class MenuVisualTheme
         var dropdown = Find(deck, "DeckDropdown").GetComponent<Dropdown>();
         Stretch(dropdown.captionText.rectTransform, 10);
         dropdown.captionText.rectTransform.offsetMax = new Vector2(-38, -4);
-        var arrow = dropdown.transform.Find("Arrow") as RectTransform;
-        arrow.anchorMin = arrow.anchorMax = new Vector2(1, .5f);
-        arrow.pivot = new Vector2(.5f, .5f);
-        arrow.anchoredPosition = new Vector2(-18, 0);
         DropdownChevron.Apply(dropdown);
         var template = dropdown.template;
         template.anchorMin = new Vector2(0, 0); template.anchorMax = new Vector2(1, 0);
@@ -357,6 +351,15 @@ public static class MenuVisualTheme
         Text(setup, "RulesHelp", "主牌至少 60 张 · 备牌最多 15 张\n非基本牌合计最多 4 张 · 每局随机决定先后手", 17);
         Place(setup, "ConnectionStatusPanel", 0, -287, 648, 92);
         Place(Find(setup, "ConnectionStatusPanel"), "Status", 0, 0, 604, 68);
+        var ante = Find(setup, "AnteToggle");
+        if (ante != null)
+        {
+            Place(setup, "AnteToggle", 0, -153, 648, 88);
+            Place(ante, "Label", -32, 25, 440, 30);
+            Place(ante, "Description", -5, -25, 494, 48);
+            Place(ante, "State", 249, 17, 110, 30);
+            Place(setup, "Divider", 0, -209, 648, 1);
+        }
 
         Text(room, "Kicker", "房间", 14);
         Place(room, "RoomTitle", 0, 270, 648, 52);

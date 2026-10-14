@@ -155,7 +155,7 @@ public sealed class SearchInsertionMenu : MonoBehaviour
     [Serializable] sealed class TypeLabel { public string en,zh,ja; }
     [Serializable] sealed class TypeLabels { public TypeLabel[] entries; }
     static Dictionary<string,TypeLabel> localizedTypes;
-    static string Label(string value)
+    public static string Label(string value)
     {
         if(localizedTypes==null)
         {

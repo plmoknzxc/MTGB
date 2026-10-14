@@ -10,11 +10,17 @@ public sealed class OnlinePlayerViewState
     public int viewerSeat;
     public long appliedSequence;
     public MatchOutcome outcome;
+    [NonSerialized] internal string receivedWireHash,receivedTypedHash;
     public void SealHash()
     {
-        viewHash = string.Empty;
-        using SHA256 sha = SHA256.Create();
-        byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(this));
-        viewHash = BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", string.Empty);
+        receivedWireHash=receivedTypedHash=null;
+        viewHash=ServerSnapshotJson.HashView(this);
+    }
+    public bool HasValidHash()
+    {
+        string current=ServerSnapshotJson.HashView(this);
+        return receivedWireHash==null?string.Equals(viewHash,current,StringComparison.Ordinal)
+            :string.Equals(viewHash,receivedWireHash,StringComparison.Ordinal)
+                &&string.Equals(current,receivedTypedHash,StringComparison.Ordinal);
     }
 }

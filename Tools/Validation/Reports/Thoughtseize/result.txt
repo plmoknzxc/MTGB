@@ -1,0 +1,1 @@
+PASS thoughtseize: actual cast/target/black payment; reveal to caster only; select exact Negate ID, opponent hand -1 and matching graveyard ID; caster life -2; private hand hidden and priority restored

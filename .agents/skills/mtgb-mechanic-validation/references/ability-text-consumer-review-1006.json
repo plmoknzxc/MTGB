@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "scope": "R47 exact unchanged paragraph/target-suffix and long-effect scroll; other unknown/localization/resource paths open",
+  "audit": {
+    "path": "Docs/AbilityTextConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "2a321ed1b6f723262eaeb9c246fe7c647243c400c338b41da28fe9e1e126e20a"
+  },
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T03:04:18Z",
+    "coverage": "metadata_changed read exact sources; excluded upstream WrappedAbility/SpellAbilityEffect read directly"
+  },
+  "evidence": [
+    {
+      "path": ".tools/ability-text-1006/20261006T0301180171152Z/result.txt",
+      "sha256": "17737de2e5910fd6deb6ca9879371cc58354afa95ab78468fd37b806671f33ca"
+    },
+    {
+      "path": ".tools/ability-text-1006/20261006T0301180171152Z/producer-hashes.tsv",
+      "sha256": "46107a906ebf2939ae5d0ab3fc2a3556a2bd6a660d48545b979340b21a298963"
+    },
+    {
+      "path": ".tools/ability-text-1006/20261006T0301180171152Z/input-hashes.tsv",
+      "sha256": "ecfcb7a37ea289ccac3029908468652a547af41f3edfadda614491a60686dca3"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0306382537047Z/result.txt",
+      "sha256": "8617687e6373ac2bf8edf7d29ff819c613f9ade72b50addf1f5a075e927e6573"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0306382537047Z/producer-hashes.tsv",
+      "sha256": "ee06bfbb31c44785cfefe63767941031cd2087c0b47fed3e08481dd336dec40e"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0306382537047Z/input-hashes.tsv",
+      "sha256": "6399037067b0f3ce14a797cfb48e97251672ff43a90d15ca0756933aa1bfca82"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.AbilityFace.cs",
+      "sha256": "151b20dc3faed718b493b533cea553f4154a2798bbc953ef2ad578614c30aeb1"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Stack.cs",
+      "sha256": "a9d5c3ec8509b85144d7f4e0368244a2a5998af4d58d81a91fed863842e48c5b"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.StackList.cs",
+      "sha256": "da1f6bde5e2739c7fd5b51d3be01812c329e3c53f622fae3c60190ece8d291bf"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Targeting.cs",
+      "sha256": "63f42bbf447ba4c09e72ddabb2d61958560f639704bfabe2d6d704a41b054eb7"
+    },
+    {
+      "path": "Assets/Scripts/Editor/AbilityTextPresentationValidation.cs",
+      "sha256": "4be8ad2bda4b8782182d98fb829bed8e55b72d6f9e952a5d0e665f6cdd44fbb3"
+    },
+    {
+      "path": "Assets/Scripts/Editor/AbilityFaceConsumerValidation.cs",
+      "sha256": "9eee9e43fd803e7eed9ba87f22866080e091d3f00c5de6ebf981fe1373689fe0"
+    }
+  ]
+}

@@ -35,8 +35,54 @@ public static class CardSymbolText
             Add("2/B",166,494); Add("2/G",248,494); Add("2/R",330,494); Add("2/U",412,494); Add("2/W",166,576);
             Add("U/P",330,248); Add("W/P",412,248); Add("R/P",412,166); Add("G/P",330,166); Add("B/P",248,84);
             atlas.UpdateLookupTables();
+            // These families use Forge's existing 199px atlases. Preserve their
+            // native symbols while keeping the same text metrics as mana above.
+            var hybrid = AddFallback("ForgeColorlessHybrid");
+            AddFallbackGlyph(hybrid,"C/W",2,2); AddFallbackGlyph(hybrid,"C/U",219,2);
+            AddFallbackGlyph(hybrid,"C/B",439,2); AddFallbackGlyph(hybrid,"C/R",657,2); AddFallbackGlyph(hybrid,"C/G",878,2);
+            hybrid.UpdateLookupTables();
+            var phyrexian = AddFallback("ForgePhyrexian");
+            AddFallbackGlyph(phyrexian,"W/U/P",2,2); AddFallbackGlyph(phyrexian,"W/B/P",2,221);
+            AddFallbackGlyph(phyrexian,"U/B/P",219,2); AddFallbackGlyph(phyrexian,"U/R/P",219,222);
+            AddFallbackGlyph(phyrexian,"B/R/P",439,2); AddFallbackGlyph(phyrexian,"B/G/P",439,222);
+            AddFallbackGlyph(phyrexian,"R/W/P",657,2); AddFallbackGlyph(phyrexian,"R/G/P",657,221);
+            AddFallbackGlyph(phyrexian,"G/W/P",878,2); AddFallbackGlyph(phyrexian,"G/U/P",876,219);
+            phyrexian.UpdateLookupTables();
+            // Energy belongs to the counter atlas, not the mana-pool colors.
+            // A fallback sprite asset keeps the pinned images without repacking.
+            if(PlayerCounterIcons.TryLoad("ENERGY",out var energy)) {
+                int index=indices.Count;
+                var extra=ScriptableObject.CreateInstance<TMP_SpriteAsset>();
+                JsonUtility.FromJsonOverwrite("{\"m_Version\":\"1.1.0\"}",extra);
+                extra.name="CardCounterSymbols";extra.spriteSheet=energy.texture;
+                extra.material=new Material(atlas.material);extra.material.mainTexture=energy.texture;
+                var rect=energy.rect;
+                var glyph=new TMP_SpriteGlyph(0,new GlyphMetrics(80,80,0,68,86),new GlyphRect((int)rect.x,(int)rect.y,(int)rect.width,(int)rect.height),1,0);
+                extra.spriteGlyphTable.Add(glyph);
+                extra.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(0xE000+index),extra,glyph){name="E",scale=1});
+                extra.UpdateLookupTables();atlas.fallbackSpriteAssets.Add(extra);indices["E"]=index;
+            }
             return atlas;
         }
+    }
+
+    private static TMP_SpriteAsset AddFallback(string resource)
+    {
+        var extra=ScriptableObject.CreateInstance<TMP_SpriteAsset>();
+        JsonUtility.FromJsonOverwrite("{\"m_Version\":\"1.1.0\"}",extra);
+        extra.name=resource; extra.spriteSheet=Resources.Load<Texture2D>("UI/ManaSymbols/"+resource);
+        extra.material=new Material(atlas.material); extra.material.mainTexture=extra.spriteSheet;
+        atlas.fallbackSpriteAssets.Add(extra);
+        return extra;
+    }
+
+    private static void AddFallbackGlyph(TMP_SpriteAsset asset,string token,int x,int y)
+    {
+        int index=indices.Count; indices[token]=index;
+        var glyph=new TMP_SpriteGlyph((uint)asset.spriteGlyphTable.Count,new GlyphMetrics(80,80,0,68,86),
+            new GlyphRect(x,asset.spriteSheet.height-y-199,199,199),1,0);
+        asset.spriteGlyphTable.Add(glyph);
+        asset.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(0xE000+index),asset,glyph){name=token,scale=1});
     }
 
     private static void Add(string token, int x, int y)
@@ -73,6 +119,7 @@ public static class CardSymbolText
         text.richText = false;
         text.raycastTarget = false;
         text.spriteAsset = Atlas;
+        PreferenceText.SetSize(text, size);
         return text;
     }
 }

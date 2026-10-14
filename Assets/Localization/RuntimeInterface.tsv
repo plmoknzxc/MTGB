@@ -1,0 +1,155 @@
+系列一览	Browse sets	セット一覧
+房主	Host	ホスト
+玩家	Player	プレイヤー
+已准备	Ready	準備完了
+牌组已提交 · 未准备	Deck submitted · not ready	デッキ提出済み・準備待ち
+正在选择牌组	Choosing a deck	デッキを選択中
+缺失卡图	Missing card image	カード画像なし
+需确认费用	Payment needs confirmation	支払いの確認が必要
+未解锁	Locked	未開放
+选择要阻挡的攻击生物	Choose an attacker to block	ブロックする攻撃クリーチャーを選ぶ
+取消此生物的阻挡	Remove this creature's block	このクリーチャーのブロックを取り消す
+选择攻击生物 · 点击或拖动	Choose attackers · click or drag	攻撃クリーチャーを選ぶ・クリックかドラッグ
+选择阻挡生物 · 完成后确认	Choose blockers · confirm when done	ブロック・クリーチャーを選び、確認する
+牌背	Card back	カード裏面
+暂无卡牌	No cards	カードなし
+等待你完成选择	Waiting for your choice	あなたの選択を待機中
+准备对局 · 起手选择	Preparing game · opening hand	対戦準備・初手選択
+点击高亮卡牌或头像进行操作\n悬停卡牌查看详情\n拖动手牌到战场也可出牌	Click a highlighted card or avatar to act.\nHover over a card for details.\nYou can also drag a hand card onto the battlefield.	ハイライトされたカードやアバターをクリックして操作。\nカードにカーソルを合わせて詳細を表示。\n手札のカードを戦場にドラッグしてもプレイできます。
+坟墓场  {0}	Graveyard  {0}	墓地  {0}
+堆叠中的咒语 / 异能   {0}	Spells / abilities on stack   {0}	スタック上の呪文／能力   {0}
+确认认输	Confirm concession	投了を確認
+本局已结束	Game finished	ゲーム終了
+可以留在战场查看局面，准备好后再继续	You can review the battlefield, then continue when ready.	戦場を確認し、準備ができたら続行できます。
+继续查看	Keep viewing	引き続き確認
+前往换备	Go to sideboarding	サイドボーディングへ
+返回房间	Return to room	ルームに戻る
+关闭详情	Close details	詳細を閉じる
+撤回 Z	Undo Z	戻す Z
+你有优先权	You have priority	あなたに優先権があります
+观战 · 仅公开信息	Spectating · public information only	観戦・公開情報のみ
+玩家 {0} 回合	Player {0}'s turn	プレイヤー{0}のターン
+选择高亮目标	Choose a highlighted target	ハイライトされた対象を選ぶ
+支付费用	Pay cost	コストを支払う
+取消此生物攻击	Remove this creature's attack	このクリーチャーの攻撃を取り消す
+拖动生物选择攻击对象	Drag a creature to choose its defender	クリーチャーをドラッグして攻撃先を選ぶ
+拖向或点击高亮的攻击对象	Drag to or click a highlighted defender	ハイライトされた攻撃先にドラッグ、またはクリック
+正在施放…	Casting…	唱えています…
+正在提交操作…	Submitting action…	操作を送信中…
+准备	Ready	準備完了
+使用牌组	Use deck	デッキを使用
+刷新完成，选择房间加入。	Refresh complete. Choose a room to join.	更新完了。参加するルームを選択してください。
+前往观战席	Join as spectator	観戦者として参加
+加入玩家席	Join as player	プレイヤーとして参加
+加入	Join	参加
+双方开始后自动进入观战，仅展示公开信息。	Spectating starts when both players begin. Only public information is shown.	両プレイヤーの対戦開始時に自動的に観戦します。公開情報のみ表示されます。
+发现房间，或建立一场新的对局	Find a room or create a new game	ルームを探すか、新しい対戦を作成
+后攻	Draw first	後攻
+在服务器建立	Create on server	サーバーに作成
+在本机建立房间，局域网内的玩家可刷新找到。	Create a room on this computer. LAN players can find it by refreshing.	このコンピューターにルームを作成します。LAN内のプレイヤーは更新してルームを見つけられます。
+完成换备并准备	Finish sideboarding and ready	サイドボーディングを終えて準備完了
+局域网	LAN	LAN
+服务器	Server	サーバー
+建立局域网房间	Create LAN room	LANルームを作成
+建立房间	Create room	ルームを作成
+建立房间 ▾	Create room ▾	ルームを作成 ▾
+房间名称	Room name	ルーム名
+所有系列	All sets	全セット
+已选 {0} 个系列	{0} sets selected	{0}セット選択済み
+没有匹配的系列 · 已选 {0} 项	No matching sets · {0} selected	該当セットなし・{0}件選択済み
+搜索中 · 局域网与服务器	Searching · LAN and server	検索中・LANとサーバー
+搜索代码或名称 · 箭头展开附属系列 · 点击行选择	Search by code or name · expand related sets with arrows · click a row to select	コードや名前で検索・矢印で関連セットを展開・行をクリックして選択
+撤销本次换备	Undo sideboarding	今回のサイドボーディングを取り消す
+无法连接服务器，请检查 IP、端口及服务器状态。	Cannot connect. Check the server address, port and server status.	接続できません。サーバーのアドレス、ポートと稼働状態を確認してください。
+暂无房间	No rooms found	ルームが見つかりません
+服务器 IP / 地址（可选）	Server IP / address (optional)	サーバーIP／アドレス（任意）
+服务器 {0}:{1} 已连接，设置完成后建立房间。	Connected to {0}:{1}. Configure the game, then create a room.	{0}:{1}に接続済み。設定後にルームを作成してください。
+未找到 FFmpeg，请将 ffmpeg.exe 放入 VideoTools 文件夹或加入 PATH。	FFmpeg was not found. Put ffmpeg.exe in VideoTools or add it to PATH.	FFmpegが見つかりません。ffmpeg.exeをVideoToolsフォルダーに入れるか、PATHに追加してください。
+正在搜索房间…	Searching for rooms…	ルームを検索中…
+正在检查服务器连接…	Checking server connection…	サーバー接続を確認中…
+比赛结束	Match finished	マッチ終了
+没有找到房间。可以建立房间，或填写服务器地址后刷新。	No rooms found. Create a room, or enter a server address and refresh.	ルームが見つかりません。ルームを作成するか、サーバーのアドレスを入力して更新してください。
+游戏内名称	In-game name	ゲーム内の名前
+确定	Confirm	確認
+离开房间	Leave room	ルームを退出
+端口	Port	ポート
+第 {0} 局换备阶段	Game {0} · sideboarding	第{0}ゲーム・サイドボーディング
+等待 {0} 选择先后攻	Waiting for {0} to choose play or draw	{0}の先攻／後攻の選択を待機中
+观战	Spectate	観戦
+观战席	Spectators	観戦者
+观战席 · {0} 人   {1}	Spectators · {0}   {1}	観戦者・{0}人   {1}
+观战席 · 暂无人	Spectators · none	観戦者・なし
+观战席不占用玩家名额。\n\n双方开局后自动进入战场。\n你可以查看公开局面，双方手牌和私有选择不会显示。	Spectators do not take player seats.\n\nThe battlefield opens when the game begins.\nYou can view public information; hands and private choices stay hidden.	観戦者はプレイヤー枠を使いません。\n\n対戦開始時に戦場へ移動します。\n公開情報を見ることができますが、手札や非公開の選択は表示されません。
+请先填写服务器地址。	Enter a server address first.	先にサーバーのアドレスを入力してください。
+请先完成当前对局。	Finish the current game first.	先に現在の対戦を終了してください。
+请输入 1–65535 之间的端口。	Enter a port between 1 and 65535.	1から65535までのポートを入力してください。
+请输入房间名称。	Enter a room name.	ルーム名を入力してください。
+返回房间列表	Return to room list	ルーム一覧に戻る
+这一面暂无卡图	No image for this face	この面の画像はありません
+选择先攻或后攻	Choose play or draw	先攻か後攻を選ぶ
+重选	Choose again	選び直す
+联合	Union	和集合
+第 {0} 回合  ·  {1}  /  {2}	Turn {0} · {1} / {2}	第{0}ターン・{1}／{2}
+BO{0} · {1} 点生命\n{2} · DIY {3}	BO{0} · {1} life\n{2} · DIY {3}	BO{0}・ライフ{1}\n{2}・DIY {3}
+{0} 个房间 · 局域网与服务器	{0} rooms · LAN and server	{0}ルーム・LANとサーバー
+{0}\n主牌 {1} · 备牌 {2}	{0}\nMain deck {1} · Sideboard {2}	{0}\nメインデッキ{1}・サイドボード{2}
+{0}　主牌 {1} · 备牌 {2}	{0}　Main deck {1} · Sideboard {2}	{0}　メインデッキ{1}・サイドボード{2}
+找不到该卡组文件。请先重载。	Deck file not found. Reload decks first.	デッキのファイルが見つかりません。先に再読み込みしてください。
+已删除卡组：{0}	Deleted deck: {0}	デッキを削除：{0}
+保存失败：{0}	Save failed: {0}	保存失敗：{0}
+导出失败：{0}	Export failed: {0}	書き出し失敗：{0}
+视频已导出：{0}	Video exported: {0}	動画を書き出しました：{0}
+加载失败：{0}\n关闭后可重新打开重试。	Loading failed: {0}\nClose and reopen to retry.	読み込みに失敗しました：{0}\n閉じて再度開くと再試行できます。
+{0}\n缺失卡图	{0}\nMissing card image	{0}\nカード画像なし
+Tap	横置	Tap	タップ
+{0}'s Regeneration	{0}的再生护盾	{0}'s Regeneration	{0}の再生シールド
+Regeneration (if creature would be destroyed, regenerate it instead)	再生（如果该生物将被消灭，则改为将它再生）	Regeneration (if creature would be destroyed, regenerate it instead)	再生（そのクリーチャーが破壊されるなら、代わりにそれを再生する）
+Would you like to destroy each equipment equipped to target creature?	是否消灭装备在目标生物上的所有武具？	Would you like to destroy each equipment equipped to target creature?	対象のクリーチャーに装備されているすべての装備品を破壊しますか？
+Choose creature to connive	选择要筹谋的生物	Choose creature to connive	謀議を行うクリーチャーを選択
+Choose any number to phase out	选择任意数量的生物跃离（可以不选）	Choose any number to phase out	フェイズ・アウトさせるクリーチャーを望む数選択（０でも可）
+You may have any number of them phase out. (To have a creature connive, draw a card, then discard a card. If you discarded a nonland card, put a +1/+1 counter on that creature. Treat phased out permanents and anything attached to them as though they don't exist until their controller's next turn.)	你可以使其中的任意数量跃离。（某生物筹谋的流程是抓一张牌，然后弃一张牌。如果你弃的牌不是地，则在该生物上放置一个+1/+1指示物。直到其操控者的下一个回合，跃离的永久物及贴附于其上的所有东西都视作不存在。）	You may have any number of them phase out. (To have a creature connive, draw a card, then discard a card. If you discarded a nonland card, put a +1/+1 counter on that creature. Treat phased out permanents and anything attached to them as though they don't exist until their controller's next turn.)	あなたはそれらのうち望む数をフェイズ・アウトさせてもよい。（クリーチャーに謀議を行わせるには、カード１枚を引き、その後カード１枚を捨てる。土地でないカードを捨てたなら、そのクリーチャーの上に＋１/＋１カウンター１個を置く。フェイズ・アウトしているパーマネントやそれにつけられているものは、そのコントローラーの次のターンまで存在しないものとして扱う。）
+Odds	奇数	Odds	奇数
+odd or even	选择奇数或偶数	Choose odd or even	奇数か偶数を選択
+{0} picked {1}	{0}选择了{1}	{0} picked {1}	{0}は{1}を選んだ
+Select a card from your battlefield	选择你操控的一个战场永久物	Select a card from your battlefield	あなたがコントロールする戦場のパーマネント１つを選択
+Do you want to exchange control of {0} and {1}?	是否交换{0}与{1}的操控权？	Do you want to exchange control of {0} and {1}?	{0}と{1}のコントロールを交換しますか？
+They return a creature they control to its owner's hand. If X is 3, create a 4/4 blue and red Elemental creature token. If X is 4 or more, do all of the above.	该牌手将一个由其操控的生物移回其拥有者手上。如果X为3，派出一个4/4蓝红双色元素生物衍生物。如果X为4或更多，执行上述所有效应。	They return a creature they control to its owner's hand. If X is 3, create a 4/4 blue and red Elemental creature token. If X is 4 or more, do all of the above.	そのプレイヤーは、自分がコントロールしているクリーチャー１体をオーナーの手札に戻す。Xが３なら、青赤の4/4のエレメンタル・クリーチャー・トークン１体を生成する。Xが４以上なら、上記すべてを行う。
+{0}'s chosen card: {1}	{0}选择的牌：{1}	{0}'s chosen card: {1}	{0}が選んだカード：{1}
+{0}'s chosen cards: {1}	{0}选择的牌：{1}	{0}'s chosen cards: {1}	{0}が選んだカード：{1}
+{0}'s chosen player: {1}	{0}选择的玩家：{1}	{0}'s chosen player: {1}	{0}が選んだプレイヤー：{1}
+{0} found no valid choices.	{0}没有合法选项。	{0} found no valid choices.	{0}に適正な選択肢がなかった。
+Choose cards (Card.withFlying)	选择具有飞行的牌	Choose a card with flying	飛行を持つカードを選択
+Choose cards (Card.withFirst Strike)	选择具有先攻的牌	Choose a card with first strike	先制攻撃を持つカードを選択
+Choose cards (Card.withDouble Strike)	选择具有连击的牌	Choose a card with double strike	二段攻撃を持つカードを選択
+Choose cards (Card.withDeathtouch)	选择具有死触的牌	Choose a card with deathtouch	接死を持つカードを選択
+Choose cards (Card.withHaste)	选择具有敏捷的牌	Choose a card with haste	速攻を持つカードを選択
+Choose cards (Card.withHexproof)	选择具有辟邪的牌	Choose a card with hexproof	呪禁を持つカードを選択
+Choose cards (Card.withIndestructible)	选择具有不灭的牌	Choose a card with indestructible	破壊不能を持つカードを選択
+Choose cards (Card.withLifelink)	选择具有系命的牌	Choose a card with lifelink	絆魂を持つカードを選択
+Choose cards (Card.withMenace)	选择具有威慑的牌	Choose a card with menace	威迫を持つカードを選択
+Choose cards (Card.withReach)	选择具有延势的牌	Choose a card with reach	到達を持つカードを選択
+Choose cards (Card.withTrample)	选择具有践踏的牌	Choose a card with trample	トランプルを持つカードを選択
+Choose cards (Card.withVigilance)	选择具有警戒的牌	Choose a card with vigilance	警戒を持つカードを選択
+Choose cards (Creature)	选择生物牌	Choose a creature card	クリーチャー・カードを選択
+Choose cards (Land)	选择地牌	Choose a land card	土地カードを選択
+Choose cards (Spell.!Aura)	选择瞬间或法术牌	Choose an instant or sorcery card	インスタントかソーサリー・カードを選択
+You must choose at least one card.	必须至少选择一张牌。	You must choose at least one card.	少なくとも１枚のカードを選択してください。
+Choose a card to represent the center of the desired card landing location.	选择一张牌作为期望落点的中心。	Choose a card to represent the center of the desired card landing location.	希望する落下位置の中心となるカードを選択。
+The card did not turn over.	卡牌没有翻转。	The card did not turn over.	カードは回転しませんでした。
+The card turned over {0} time(s).	卡牌翻转了 {0} 次。	The card turned over {0} time(s).	カードは{0}回転しました。
+The card did not land on any cards.	卡牌没有落在任何牌上。	The card did not land on any cards.	カードはどのカードにも当たりませんでした。
+The card landed on {0}.	卡牌落在{0}上。	The card landed on {0}.	カードは{0}に当たりました。
+The card landed on {0} and {1}.	卡牌落在{0}和{1}上。	The card landed on {0} and {1}.	カードは{0}と{1}に当たりました。
+
+辅助牌组	Auxiliary decks	補助デッキ
+游乐设施	Attractions	アトラクション
+装置	Contraptions	からくり
+浏览可加入的牌	Browse available cards	追加できるカード
+查看已加入的牌	View registered cards	登録したカード
+{0}：{1} 张 · 至少 {2} 张，每种牌名只能一张	{0}: {1} cards · Minimum {2}, one per card name	{0}：{1}枚 · 最低{2}枚、同名は1枚まで
+游乐设施与装置必须放在各自的辅助牌组，不能放入主牌或备牌。	Attractions and Contraptions must be in their own auxiliary decks, not the main deck or sideboard.	アトラクションとからくりは専用の補助デッキに入れます。メインデッキやサイドボードには入れられません。
+游乐设施辅助牌组必须由不同名且印次可唯一映射的对应卡牌组成，每种只能一张。	Attraction decks require uniquely identified printings of the correct type, one per card name.	アトラクションデッキには正しい種類の、印刷を一意に識別できるカードを同名1枚ずつ入れます。
+游乐设施辅助牌组至少需要 {0} 张，或不使用该辅助牌组。	Attraction decks require at least {0} cards, or no auxiliary deck.	アトラクションデッキは使用しないか、{0}枚以上入れます。
+装置辅助牌组必须由不同名且印次可唯一映射的对应卡牌组成，每种只能一张。	Contraption decks require uniquely identified printings of the correct type, one per card name.	からくりデッキには正しい種類の、印刷を一意に識別できるカードを同名1枚ずつ入れます。
+装置辅助牌组至少需要 {0} 张，或不使用该辅助牌组。	Contraption decks require at least {0} cards, or no auxiliary deck.	からくりデッキは使用しないか、{0}枚以上入れます。
+无法识别的印次	Unknown printing	識別できない印刷

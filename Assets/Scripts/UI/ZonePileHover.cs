@@ -7,14 +7,15 @@ public sealed class ZonePileHover : MonoBehaviour, IPointerEnterHandler, IPointe
     private Text count;
     private RectTransform face;
     private bool hovering;
-    public void Configure(Text countLabel, RectTransform cardFace, int value)
+    private bool showCount=true;
+    public void Configure(Text countLabel, RectTransform cardFace, int value,bool showCountOnHover=true)
     {
-        count=countLabel;face=cardFace;count.text=value.ToString();
-        count.gameObject.SetActive(hovering);
+        count=countLabel;face=cardFace;count.text=value.ToString();showCount=showCountOnHover;
+        count.gameObject.SetActive(hovering&&showCount);
     }
     public void OnPointerEnter(PointerEventData data)
     {
-        hovering=true;if(count!=null)count.gameObject.SetActive(true);
+        hovering=true;if(count!=null)count.gameObject.SetActive(showCount);
     }
     public void OnPointerExit(PointerEventData data)
     {

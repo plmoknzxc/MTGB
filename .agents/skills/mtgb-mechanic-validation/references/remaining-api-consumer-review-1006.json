@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "status": "SOURCE_CLASSIFICATION_NOT_EFFECT_PASS",
+  "graph": {
+    "project": "D-project-MTGB",
+    "generation": "2026-10-05T23:49:31Z",
+    "tier": "Verify",
+    "coverage": "No graph symbol match; upstream .tools excluded, bridge metadata_changed; exact effects/controller/trigger source fallback. Scoped rg sector check covered Tools/ForgeBridge/java and Assets/Scripts; no code-wide exhaustive claim."
+  },
+  "sources": [
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/StoreSVarEffect.java",
+      "sha256": "06c255cbd388ece59782b37e6f8f9dd0e0f2aceee5d5978026fc614504122249"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChooseSectorEffect.java",
+      "sha256": "2db51da50e36788fc7d16dccc904ef16c729ba67cc71c690746b423e568d2613"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ClaimThePrizeEffect.java",
+      "sha256": "5516a62a299ab91a4f1af45de5babe81fc2f8b5aaecea5e053977585360c7d78"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/FlipOntoBattlefieldEffect.java",
+      "sha256": "f63de4f595137b48c640946097f032d0704fffe822040817b535bdc49f89babb"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/trigger/TriggerClaimPrize.java",
+      "sha256": "80b772231bac1b767e879b109ee69f0cf74ff7012ed39ccd630049746cf569b1"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlayerController.java",
+      "sha256": "24ab20e0a7a491345b345529e6018b60f5ecef2b95d5c4f4c68726482966936b"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java",
+      "sha256": "e05ab45ffea33fae2aa5f52d805dfb4e98e24a0ce9de6a6e9e73eeb0d96e61d3"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
+      "sha256": "1d53cdcb0974825f7fc0310e5def0131e8b8a15ccb30fc009569b4efb62ce255"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/Card.java",
+      "sha256": "34994c349cf22a2ab0a0fb091ad81539410e6ebfb878e594b1edc201a7ca143f"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "8ec11d4396c104fc41eeb441cf416d548f73c4e5d066886de832c52f6003a1cc"
+    },
+    {
+      "path": "Assets/Scripts/Networking/ForgeWire.cs",
+      "sha256": "e54dfa7295b20a52c4a748260b69cf418b6c5a2f975016fa84ef50199680ca0e"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/p/pick_a_beeble.txt",
+      "sha256": "253100af7dbbae18ada94b1cb1d2baea24a07e3719e9482b423066336e2f10d4"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/space_beleren.txt",
+      "sha256": "7088b68728e33dfe02332d398430f821128dc208db0c83efe77bd5cb2a16619a"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/c/chaos_orb.txt",
+      "sha256": "7b185acfec5b5ad391bcd9793f23f085de88f9d369692dc4418073d50e7af8fc"
+    }
+  ],
+  "apis": {
+    "StoreSVar": {
+      "native": [
+        "StoreSVarEffect.resolve computes Number/Count/CountSVar/Targeted/Triggered/Calculate/AdditiveForEach",
+        "setSVar Number$N on host and root/subability chain"
+      ],
+      "client": [
+        "No new decision callback from resolve; expression consumed by downstream rules/fields and their own native requests"
+      ],
+      "remaining": "Actual calculation, EachPlayer loop, snapshot timing, subchain persistence, replacement/target/control combinations remain A02/A03/A04 and relevant rules packages; 146 script rows are not 146 effects."
+    },
+    "ChooseSector": {
+      "native": [
+        "PlayerController.chooseSector supplies Alpha/Beta/Gamma",
+        "PlayerControllerHuman.chooseSector -> IGuiGame.one -> bridge modal",
+        "GameAction assigns creatures sector and CardView updates sector",
+        "ChooseSectorEffect sets chosenSector for counter/destroy subability"
+      ],
+      "client": [
+        "Generic mandatory choice can transport sector labels; dedicated spatial assignment projection/display not found in inspected bridge and Assets/Scripts"
+      ],
+      "remaining": "S06 needs native exact assignment/counter/destroy/block proofs plus sector field and spatial UI; generic choice classification does not prove that presentation."
+    },
+    "ClaimThePrize": {
+      "native": [
+        "ClaimThePrizeEffect triggers ClaimPrize with activating Player and exact attraction Card",
+        "TriggerClaimPrize validates player/card and propagates trigger objects",
+        "Pick-a-Beeble actual scripted chain uses die/luck counters/Treasure/threshold prize, then sacrifice/OpenAttraction"
+      ],
+      "client": [
+        "Existing trigger/stack/counter/token/zone consumers are candidate reusable paths; no interactive minigame in this ClaimThePrizeEffect"
+      ],
+      "remaining": "S07/S04 need actual threshold/prize/order/sacrifice/open-attraction lifecycle, ownership/replacements; no effects tested here."
+    },
+    "FlipOntoBattlefield": {
+      "native": [
+        "chooseCardsForEffect desired location",
+        "native random flip/hit plus ordered-neighbor/attachment simulation",
+        "remembered hit card IDs and notifyOfValue",
+        "Chaos Orb destroys remembered non-token cards and itself; Falling Star has distinct aftermath"
+      ],
+      "client": [
+        "Existing accurate-card picker and value notices are candidate paths; no physical 3D flip interface from this effect"
+      ],
+      "remaining": "S07 remains open: define current native RNG simulation versus future physical UX; actual empty/cancel/hit/miss/attachment/order/token/damage lifecycle untested."
+    }
+  },
+  "storeRows": {
+    "path": ".tools/state-branches-1006/store-svar-structural-inputs-complete.json",
+    "sha256": "3682230216e2ea923baf4b7a62e41976af47aabcf03647591341b395209cc128"
+  },
+  "nativeTestsRun": 0,
+  "uiTestsRun": 0
+}

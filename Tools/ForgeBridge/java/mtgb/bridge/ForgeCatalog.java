@@ -2,6 +2,7 @@
 package mtgb.bridge;
 
 import com.google.gson.Gson;
+import com.google.gson.*;
 import forge.card.*;
 import forge.item.PaperCard;
 import forge.model.FModel;
@@ -28,6 +29,50 @@ public final class ForgeCatalog {
             List<PaperCard> candidates = result.computeIfAbsent(key(card), k -> new ArrayList<>());
             if (!candidates.contains(card)) candidates.add(card);
         }
+        return result;
+    }
+
+    /** Resolve registered printings through Forge's lazy database, without building a full catalog. */
+    static Map<String, List<PaperCard>> registeredPrintings(Path path, JsonObject config) throws IOException {
+        Set<String> required = new HashSet<>();
+        for (String field : List.of("decks", "authorizedAuxiliarySeriesPools")) {
+            if (!config.has(field) || config.get(field).isJsonNull()) continue;
+            for (JsonElement deck : config.getAsJsonArray(field)) {
+                if (deck.isJsonNull()) continue;
+                for (String section : List.of("cards", "sideboard", "attractions", "contraptions")) {
+                    JsonObject source = deck.getAsJsonObject();
+                    if (!source.has(section) || source.get(section).isJsonNull()) continue;
+                    for (JsonElement entry : source.getAsJsonArray(section)) {
+                        JsonObject row = entry.getAsJsonObject();
+                        required.add(row.get("setCode").getAsString().toUpperCase(Locale.ROOT) + "/" + row.get("collectorNumber").getAsString());
+                    }
+                }
+            }
+        }
+        Map<String, List<PaperCard>> result = new HashMap<>();
+        Set<String> seen = new HashSet<>();
+        // The packaged, hash-verified exporter writes key first. Parse only required rows.
+        java.util.regex.Pattern prefix = java.util.regex.Pattern.compile("^\\{\\\"key\\\":\\s*\\\"([^\\\"\\\\]*)\\\"\\s*,");
+        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                java.util.regex.Matcher match = prefix.matcher(line);
+                if (!match.find()) throw new IOException("Invalid exported catalog row");
+                String key = match.group(1);
+                if (!required.contains(key)) continue;
+                JsonObject row = JsonParser.parseString(line).getAsJsonObject();
+                if (!seen.add(key) || row.get("ambiguous").getAsBoolean())
+                    throw new IllegalArgumentException("Ambiguous printing: " + key);
+                String name = row.get("name").getAsString(), set = row.get("forgeSet").getAsString();
+                String number = key.substring(key.indexOf('/') + 1);
+                PaperCard card = FModel.getMagicDb().getCommonCards().getCard(name, set, number);
+                if (card == null || !key(card).equals(key)) card = FModel.getMagicDb().getVariantCards().getCard(name, set, number);
+                if (card == null || !key(card).equals(key) || card.getArtIndex() != row.get("artIndex").getAsInt())
+                    throw new IllegalArgumentException("Missing exact printing: " + key);
+                result.put(key, List.of(card));
+            }
+        }
+        if (!result.keySet().containsAll(required)) throw new IllegalArgumentException("Missing registered printing");
         return result;
     }
 

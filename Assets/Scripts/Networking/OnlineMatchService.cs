@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,16 @@ using UnityEngine.SceneManagement;
 [DisallowMultipleComponent]
 public sealed partial class OnlineMatchService : MonoBehaviour
 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    // Null in normal sessions; a validation driver can discard a received acknowledgement.
+    internal static Func<OnlineMatchService,OnlineEnvelope,bool> ValidationDropClientEnvelope;
+#endif
     private const string MainSceneName = "Main";
     private const int DefaultPort = 7777;
+    // Two seat snapshots can each approach the envelope limit and fragment into
+    // hundreds of UTF-16 packets in one update. UTP's default 128 packet slots
+    // exhaust during ordinary action/resync bursts; leave room for both views.
+    private const int TransportPacketQueueCapacity = 2048;
     private const double ActionTimeoutSeconds = 10d;
     private const double ReconnectGraceSeconds = 30d;
     private const double ReconnectRetrySeconds = 2d;
@@ -43,6 +51,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     public bool HasJoinedLobby => HasLobbyIdentity(IsConnected, LocalSeat, LobbyState);
     public bool IsSpectator => LocalSeat > 2;
     public bool IsInMatch { get; private set; }
+    public bool IsPreparingMatch { get; private set; }
     public bool HasPendingAction => actionGate.State == OnlineClientInteractionState.Submitting;
     public bool CanSubmitRuleAction => EndReview == null && !IsSpectator && ((IsServer && !IsHost) || !IsInMatch || (IsConnected && actionGate.CanSubmit));
     public OnlineClientInteractionState InteractionState => actionGate.State;
@@ -53,6 +62,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     public double ReconnectGraceRemainingSeconds => clientReconnectWindow.RemainingSeconds(Time.realtimeSinceStartupAsDouble);
     public int LocalSeat { get; private set; }
     public OnlineLobbyState LobbyState { get; private set; }
+    private DeckDefinition clientRegisteredDeck;
+    public DeckDefinition LocalRegisteredDeck => CloneDeck(clientRegisteredDeck);
 
     private static bool HasLobbyIdentity(bool transportConnected, int localSeat, OnlineLobbyState lobby)
     {
@@ -96,6 +107,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         bool developmentClient = ShouldAutoStartNetworkClient(playerName, HasArgument("-mtgb-client"));
         if (HasArgument("-mtgb-server") || developmentServer)
         {
+            if (HasArgument("-mtgb-server")) Application.targetFrameRate = 30;
             if (preparedMainEditorServer)
             {
                 PlayerPrefs.DeleteKey(DevelopmentServerFlag);
@@ -146,8 +158,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void OnDestroy()
     {
-        foreach (var stream in receivingReplays.Values) stream.Dispose();
-        receivingReplays.Clear(); expectedReplays.Clear();
+        ClearReplayReceivers();
         Shutdown();
         if (shuttingDownManager != null)
         {
@@ -209,7 +220,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 if(now>=nextDirectorySnapshot) {
                     directorySnapshot=JsonUtility.ToJson(new OnlineRoomDirectory { instanceId=roomDirectory.InstanceId,rooms=roomRegistry.Rooms.Where(r=>!r.IsEmpty).Select(r=>new OnlineRoomListing {
                         roomId=r.roomId,hostName=r.members.TryGetValue(r.hostSeat,out var hostMember)?hostMember.displayName:"房主",
-                        players=r.members.Values.Count(m=>!m.IsSpectator),spectators=r.members.Values.Count(m=>m.IsSpectator),lanHosted=IsHost,allowCustomContent=r.config.allowCustomContent,format=r.config.formatId,bestOf=r.config.bestOf,inMatch=r.match!=null&&!r.series.betweenGames
+                        players=r.members.Values.Count(m=>!m.IsSpectator),spectators=r.members.Values.Count(m=>m.IsSpectator),lanHosted=IsHost,allowCustomContent=r.config.allowCustomContent,format=r.config.formatId,bestOf=r.config.bestOf,inMatch=r.SpectatorOnly,state=r.DirectoryState
                     }).ToArray() });nextDirectorySnapshot=now+.2;
                 }
                 roomDirectory.Pump(directorySnapshot);
@@ -347,8 +358,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     public void SubmitDeck(DeckDefinition deck)
     {
-        if (HasJoinedLobby && deck != null)
+        if (HasJoinedLobby && deck != null) {
+            clientRegisteredDeck=CloneDeck(deck);
             SendToServer(OnlineProtocol.SubmitDeck, new OnlineDeckMessage { deck = CloneDeck(deck) });
+        }
     }
 
     public void SetReady(bool ready)
@@ -409,6 +422,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         handlersRegistered = false;
         GameObject managerObject = new GameObject("MTGBNetworkManager");
         transport = managerObject.AddComponent<UnityTransport>();
+        transport.MaxPacketQueueSize = TransportPacketQueueCapacity;
         networkManager = managerObject.AddComponent<NetworkManager>();
         if (Application.isPlaying) DontDestroyOnLoad(managerObject);
         networkManager.NetworkConfig = new NetworkConfig
@@ -587,11 +601,15 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 RejectClient(senderClientId, "message-rejected", guardError);
                 return;
             }
+            try { OnlineEnvelopeCodec.Decode(envelope); }
+            catch (Exception) { RejectClient(senderClientId, "malformed-message", "消息编码非法。"); return; }
             HandleServerMessage(senderClientId, envelope);
             return;
         }
         if (IsClient && !serverBound && senderClientId == NetworkManager.ServerClientId)
         {
+            try { OnlineEnvelopeCodec.Decode(envelope); }
+            catch (Exception) { SetStatus("收到无法解析的网络消息。"); return; }
             HandleClientMessage(envelope);
             return;
         }
@@ -613,6 +631,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             case OnlineProtocol.HashReport:
             case OnlineProtocol.RequestResync:
             case OnlineProtocol.Concede:
+            case OnlineProtocol.LeaveReview:
             case OnlineProtocol.Heartbeat:
                 return true;
             default:
@@ -635,6 +654,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             case OnlineProtocol.HashReport: HandleHashReport(clientId, Deserialize<OnlineHashReportMessage>(envelope)); break;
             case OnlineProtocol.RequestResync: HandleResyncRequest(clientId); break;
             case OnlineProtocol.Concede: HandleConcede(clientId); break;
+            case OnlineProtocol.LeaveReview:
+                if(TryGetMember(clientId,out var reviewRoom,out var reviewMember)){reviewMember.reviewing=false;BroadcastLobby(reviewRoom);}
+                break;
             case OnlineProtocol.Heartbeat:
                 Send(clientId, OnlineProtocol.HeartbeatAck, Deserialize<OnlineHeartbeatMessage>(envelope));
                 break;
@@ -644,6 +666,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void HandleClientMessage(OnlineEnvelope envelope)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if(ValidationDropClientEnvelope?.Invoke(this,envelope)==true)return;
+#endif
         switch (envelope.type)
         {
             case OnlineProtocol.Welcome: HandleWelcome(Deserialize<OnlineWelcomeMessage>(envelope)); break;
@@ -651,6 +676,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             case OnlineProtocol.Lobby:
                 LobbyState = Deserialize<OnlineLobbyState>(envelope);
                 LobbyChanged?.Invoke(LobbyState);
+                if(HasJoinedLobby && LobbyState.playDrawChooserSeat>0){IsPreparingMatch=true;ForgeBattlefieldController.Open(this);}
+                else if(IsPreparingMatch && (LobbyState?.players?.Count(p=>p.seat<=2&&p.connected&&p.ready)??0)<2)IsPreparingMatch=false;
                 break;
             case OnlineProtocol.StartMatch: BeginClientMatch(Deserialize<OnlineStartMatchMessage>(envelope)); break;
             case OnlineProtocol.StateUpdate: ApplyStateUpdate(Deserialize<OnlineStateUpdateMessage>(envelope)); break;
@@ -670,7 +697,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 break;
             case OnlineProtocol.MatchEnded:
                 OnlineMatchEndedMessage ended = Deserialize<OnlineMatchEndedMessage>(envelope);
-                if (!IsSpectator && ended != null && !ended.aborted) expectedReplays.Add(ended.matchId);
+                if(ended?.ownDeck!=null)clientRegisteredDeck=CloneDeck(ended.ownDeck);
+                if (!IsSpectator && ended != null && !ended.aborted) ExpectReplay(ended.matchId);
                 IsInMatch = false;
                 reconnectingMatch = false;
                 matchId = string.Empty;
@@ -686,6 +714,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 NotifyInteractionStateChanged();
                 MatchEnded?.Invoke(ended);
                 SetStatus(ended?.reason ?? "对局结束。");
+                if(IsSpectator&&ended?.finalView!=null&&SceneManager.GetActiveScene().name!=ForgeBattlefieldController.SceneName)ForgeBattlefieldController.Open(this);
                 break;
             case OnlineProtocol.Error:
                 OnlineErrorMessage protocolError = Deserialize<OnlineErrorMessage>(envelope);
@@ -809,7 +838,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 BroadcastLobby(room);
                 if (!roomRegistry.TryGet(room.roomId, out room)) return;
             }
-            int seat = room.match == null && hello.roomAction != "spectate" ? (!room.members.ContainsKey(1) ? 1 : !room.members.ContainsKey(2) ? 2 : 0) : 0;
+            int seat = !room.SpectatorOnly && hello.roomAction != "spectate" ? (!room.members.ContainsKey(1) ? 1 : !room.members.ContainsKey(2) ? 2 : 0) : 0;
             if (seat == 0) seat = Enumerable.Range(3, 32).First(s => !room.members.ContainsKey(s));
             member = new OnlineRoomMember { seat = seat, reconnectToken = Guid.NewGuid().ToString("N") };
             room.members.Add(seat, member);
@@ -834,25 +863,29 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         });
         BroadcastLobby(room);
         if (resuming || (member.IsSpectator && room.match != null)) SendStartMatch(room, member);
+        else if(member.IsSpectator&&room.publicReview!=null&&room.SpectatorOnly) {
+            var review=room.SpectatorReview(member.seat);
+            if(review!=null){member.reviewing=true;Send(member.clientId,OnlineProtocol.MatchEnded,review);}
+        }
     }
 
     private void HandleDeck(ulong clientId, OnlineDeckMessage message)
     {
         if (!TryGetMember(clientId, out OnlineRoomState room, out OnlineRoomMember member) || room.match != null || member.IsSpectator) return;
-        if (!ValidateDeck(message?.deck, room.config, out string error))
+        if (!ValidateDeck(message?.deck, SeriesValidationConfig(room,member), out string error))
         {
             Send(clientId, OnlineProtocol.Error, new OnlineErrorMessage { code = "invalid-deck", message = error });
             return;
         }
-        if (room.series?.betweenGames == true
+        if ((room.series?.betweenGames == true || member.seriesDeckChanged && room.series?.finished != true)
             && member.registeredDeck != null
-            && !ValidateSideboardChange(member.registeredDeck, message.deck, room.config, out error))
+            && !ValidateSideboardChange(member.registeredDeck, message.deck, SeriesValidationConfig(room,member), out error))
         {
             Send(clientId, OnlineProtocol.Error, new OnlineErrorMessage { code = "invalid-sideboard", message = error });
             return;
         }
         member.deck = CloneDeck(message.deck);
-        if (room.series?.finished == true) member.registeredDeck = null;
+        if (room.series?.finished == true) { member.registeredDeck = null; member.seriesOriginalDeck = null; member.seriesDeckChanged = false; }
         member.ready = false;
         BroadcastLobby(room);
     }
@@ -923,6 +956,14 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             error = "需要两名玩家都提交牌组并准备。";
             return false;
         }
+        // Dedicated hosts can cap concurrent games without limiting ordinary LAN hosts.
+        if (HasArgument("-mtgb-server") && int.TryParse(OnlineClientProfileStore.ReadArgument("-max-matches"), out int maxMatches)
+            && maxMatches > 0 && Instance != null
+            && Instance.roomRegistry.Rooms.Count(other => other != room && (other.match != null || other.playDrawChooserSeat != 0)) >= maxMatches)
+        {
+            error = "服务器当前对局数量已达上限，请稍后再试。";
+            return false;
+        }
         error = string.Empty;
         return true;
     }
@@ -933,7 +974,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (room.series.finished)
         {
             room.series.Reset(room.config.bestOf);
-            foreach (var member in room.members.Values) member.registeredDeck = null;
+            RestoreSeriesDecks(room);
         }
         if (room.config.bestOf == 3)
         {
@@ -963,20 +1004,26 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             if (room.series.finished)
             {
                 room.series.Reset(room.config.bestOf);
-                foreach (OnlineRoomMember member in room.members.Values) member.registeredDeck = null;
+                RestoreSeriesDecks(room);
             }
             foreach (OnlineRoomMember member in room.members.Values)
             {
-                if (member.registeredDeck == null) member.registeredDeck = CloneDeck(member.deck);
+                if (member.registeredDeck == null) { member.registeredDeck = CloneDeck(member.deck); member.seriesOriginalDeck = CloneDeck(member.deck); }
             }
             room.series.BeginGame();
             int seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
             OnlineRoomConfig matchConfig = CloneRoomConfig(room.config);
             matchConfig.firstPlayerSeat = firstPlayerSeat;
+            matchConfig.authorizedAuxiliarySeriesPools = new[] {
+                room.members[1].seriesDeckChanged ? room.members[1].registeredDeck : null,
+                room.members[2].seriesDeckChanged ? room.members[2].registeredDeck : null
+            };
             room.match = new OnlineMatchSession(Guid.NewGuid().ToString("N"),
                 room.members[1].deck, room.members[2].deck, seed, matchConfig);
+            room.publicReview=null;
             foreach (OnlineRoomMember member in room.members.Values)
             {
+                member.reviewing=false;
                 member.sceneReady = false;
                 member.restoring = false;
                 SendStartMatch(room, member);
@@ -986,6 +1033,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         }
         catch (Exception exception)
         {
+            // Return both clients from the preparation board if native startup
+            // fails; a cleared chooser alone is indistinguishable from loading.
+            foreach(var member in room.members.Values)member.ready=false;
+            BroadcastLobby(room);
             SetRoomStatus(room, $"无法开始对局：{exception.Message}");
         }
     }
@@ -1003,17 +1054,24 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void BeginClientMatch(OnlineStartMatchMessage message)
     {
+        IsPreparingMatch=false;
         if (message?.view == null) return;
         ClearEndReview();
         LocalSeat = message.localSeat;
         matchId = message.matchId ?? string.Empty;
         OnlinePlayerContext.SetLocalPlayer(LocalSeat);
         IsInMatch = true;
+        ForgeView=null;
+        if(!ApplyPlayerView(message.view,out string openingError)) {
+            actionGate.BeginResync();NotifyInteractionStateChanged();
+            SetStatus("起手状态校验失败，正在重新同步："+openingError);
+            ForgeBattlefieldController.Open(this);
+            SendToServer<OnlineHashReportMessage>(OnlineProtocol.RequestResync,null);return;
+        }
         actionGate.SetConnected(true);
         if (reconnectingMatch) actionGate.BeginResync();
         NotifyInteractionStateChanged();
         SetStatus(reconnectingMatch ? "正在恢复对局视图。" : "正在载入权威对局视图。");
-        ForgeView = message.view;
         ForgeBattlefieldController.Open(this);
         SendToServer(OnlineProtocol.SceneReady, new OnlineSceneReadyMessage { initialStateHash = ForgeView.viewHash });
     }
@@ -1158,9 +1216,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         error = string.Empty;
         if (view?.forge == null || view.viewerSeat != LocalSeat || view.matchId != matchId)
         { error = "Invalid Forge match or seat projection."; return false; }
-        string expected = view.viewHash;
-        view.SealHash();
-        if (!string.Equals(expected, view.viewHash, StringComparison.Ordinal)) { error = "Forge view hash mismatch."; return false; }
+        if (!view.HasValidHash()) { error = "Forge view hash mismatch."; return false; }
         if (ForgeView != null && view.appliedSequence < ForgeView.appliedSequence) { error = "Stale Forge view."; return false; }
         ForgeView = view;
         return true;
@@ -1176,6 +1232,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (room?.match == null) return;
         room.series ??= new OnlineSeriesState();
         int replayGame = room.series.gameNumber;
+        if (!aborted) {
+            try { ApplySeriesRemovals(room); }
+            catch (Exception error) { aborted = true; reason = "比赛内卡池变更无效：" + error.Message; }
+        }
         if (!aborted) room.series.RecordGameResult(winnerSeat);
         // An engine failure does not complete a game or open a sideboarding window.
         else room.series.betweenGames = false;
@@ -1189,7 +1249,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         };
         foreach (var member in room.members.Values.Where(m => m.connected))
         {
-            var personal = JsonUtility.FromJson<OnlineMatchEndedMessage>(JsonUtility.ToJson(ended));
+            var personal = ServerSnapshotJson.Copy(ended);
+            member.reviewing=true;
             personal.finalView = room.match.GetView(member.seat);
             personal.ownDeck = member.IsSpectator ? null : CloneDeck(member.deck);
             Send(member.clientId, OnlineProtocol.MatchEnded, personal);
@@ -1208,10 +1269,12 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         try
         {
             System.IO.File.AppendAllText(System.IO.Path.Combine(Application.persistentDataPath, "ForgeMatchHistory.jsonl"),
-                JsonUtility.ToJson(ended) + Environment.NewLine);
+                ServerSnapshotJson.Serialize(ended) + Environment.NewLine);
         }
         catch (Exception exception) { Debug.LogError("无法保存 Forge 对局结束记录：" + exception.Message); }
         SetRoomStatus(room, $"对局结束，胜者席位 {winnerSeat}：{ended.reason}");
+        room.publicReview=ServerSnapshotJson.Copy(ended);
+        room.publicReview.finalView=room.match.GetView(3);
         room.match.Dispose();
         room.match = null;
         foreach (OnlineRoomMember member in room.members.Values)
@@ -1250,6 +1313,12 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     public ForgeControlMode ControlMode { get; set; } = ForgeControlMode.Auto;
 
     public void SubmitForgeOption(int optionIndex)
+        => SubmitForgeChoice(optionIndex, null);
+
+    public void SubmitForgeOrder(int optionIndex, int[] order)
+        => SubmitForgeChoice(optionIndex, order);
+
+    private void SubmitForgeChoice(int optionIndex, int[] order)
     {
         ForgeRequest request = ForgeView?.forge?.awaitingInput == true ? ForgeView.forge.request : null;
         if (request == null || !IsConnected || !actionGate.CanSubmit) return;
@@ -1259,7 +1328,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             matchId = matchId,
             requestId = requestId,
             action = new GameAction { type = GameActionType.ConfirmChoice, playerId = LocalSeat,
-                sourceObjectId = request.requestId, optionId = optionIndex }
+                sourceObjectId = request.requestId, optionId = optionIndex,
+                optionIds = order == null ? new List<int>() : new List<int>(order) }
         });
         NotifyInteractionStateChanged();
     }
@@ -1348,6 +1418,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private void BroadcastLobby(OnlineRoomState room)
     {
         if (room == null) return;
+        // Membership/review/series changes invalidate the directory before
+        // its next TCP request; a cached listing must not lag a lobby event.
+        nextDirectorySnapshot=0;
         if (room.playDrawChooserSeat != 0 && !CanStartRoomMatch(room, room.hostSeat, out _)) room.playDrawChooserSeat = 0;
         SendToRoom(room, OnlineProtocol.Lobby, BuildLobbyState(room));
     }
@@ -1419,8 +1492,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private void Send<T>(ulong clientId, string type, T payload)
     {
         if (networkManager?.CustomMessagingManager == null) return;
-        string payloadJson = payload == null ? string.Empty : JsonUtility.ToJson(payload);
-        string json = JsonUtility.ToJson(new OnlineEnvelope { type = type, payload = payloadJson });
+        string payloadJson = payload == null ? string.Empty : payload is OnlineStateUpdateMessage or OnlineStartMatchMessage or OnlineResyncMessage or OnlineMatchEndedMessage ? ServerSnapshotJson.Serialize(payload) : JsonUtility.ToJson(payload);
+        string json = JsonUtility.ToJson(OnlineEnvelopeCodec.Encode(type, payloadJson));
         if (json.Length > OnlineMessageGuard.MaxEnvelopeCharacters)
         {
             if (IsServer && clientLocations.TryGetValue(clientId, out ClientLocation location)
@@ -1454,7 +1527,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private static T Deserialize<T>(OnlineEnvelope envelope) where T : class
     {
         if (envelope == null || string.IsNullOrEmpty(envelope.payload)) return null;
-        try { return JsonUtility.FromJson<T>(envelope.payload); }
+        try { return typeof(T)==typeof(OnlineStateUpdateMessage)||typeof(T)==typeof(OnlineStartMatchMessage)||typeof(T)==typeof(OnlineResyncMessage)||typeof(T)==typeof(OnlineMatchEndedMessage) ? ServerSnapshotJson.Deserialize<T>(envelope.payload) : JsonUtility.FromJson<T>(envelope.payload); }
         catch { return null; }
     }
 
@@ -1466,6 +1539,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         { error = "当前 Forge 联机支持主牌/备牌构筑，尚未适配指挥官牌组。"; return false; }
         IReadOnlyList<CardDefinition> cards = CardDatabaseRepository.LoadAll();
         string format = string.IsNullOrEmpty(config?.formatId) ? "none" : config.formatId;
+        bool authorizedPool=config?.authorizedSeriesPool!=null&&HaveSameCardPool(config.authorizedSeriesPool,deck)
+            &&HaveSameEntries(config.authorizedSeriesPool.commanders,deck.commanders);
+        if (!DeckAuxiliary.Validate(deck, cards, out error,authorizedPool ? config.authorizedSeriesPool : null)) return false;
         if (Array.IndexOf(DeckFormatLegality.OnlineKeys, format) < 0) { error = "不支持的房间赛制。"; return false; }
         if (format != "none")
         {
@@ -1478,7 +1554,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 if (card == null || card.customContent) continue; // Custom content has its separate room permission below.
                 counts.TryGetValue(card.cardName, out int count); counts[card.cardName] = count + entry.count;
                 string legality = roomLegality.Get(card, format, DeckFormatLegality.Current);
-                if (legality == "banned" || legality == "not_legal" || legality == "unknown" || legality == "restricted" && counts[card.cardName] > 1)
+                if (legality == "banned" || legality == "not_legal" || legality == "unknown" || legality == "restricted" && counts[card.cardName] > 1 && !authorizedPool)
                 { error = $"卡牌 {card.cardName} 不符合房间赛制。"; return false; }
             }
         }
@@ -1488,16 +1564,18 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             { error = $"无法唯一映射牌组条目 {(string.IsNullOrWhiteSpace(entry.PrintingKey) ? "旧本地 ID " + entry.cardId : entry.PrintingKey)}；请修正缺失或歧义条目。"; return false; }
         }
         DeckDefinition copy = CloneDeck(deck);
-        DeckRepository.EnforceCopyLimits(copy, cards);
+        if(!authorizedPool)DeckRepository.EnforceCopyLimits(copy, cards);
         List<CardDefinition> runtime = DeckRepository.BuildRuntimeDeck(copy, cards, out string warning);
-        if (runtime.Count == 0)
+        // Only the host's series-removal config can lower the minimum to zero.
+        // An emptied registered pool must reach Forge's normal empty-library loss.
+        if (runtime.Count == 0 && config?.minimumMainDeckSize != 0)
         {
             error = string.IsNullOrEmpty(warning) ? "牌组没有有效卡牌。" : warning;
             return false;
         }
         int mainCount = DeckRepository.GetTotalCount(deck, false);
         int sideboardCount = DeckRepository.GetTotalCount(deck, true);
-        int minimumMain = Math.Max(1, config?.minimumMainDeckSize ?? 60);
+        int minimumMain = Math.Max(0, config?.minimumMainDeckSize ?? 60);
         int maximumSideboard = Math.Max(0, config?.maximumSideboardSize ?? 15);
         if (mainCount < minimumMain)
         {
@@ -1546,6 +1624,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         if (!ValidateDeck(submittedDeck, config, out error)) return false;
         if (!HaveSameEntries(registeredDeck.commanders, submittedDeck.commanders)
+            || !HaveSameEntries(registeredDeck.attractions, submittedDeck.attractions)
+            || !HaveSameEntries(registeredDeck.contraptions, submittedDeck.contraptions)
             || !HaveSameCardPool(registeredDeck, submittedDeck))
         {
             error = "局间换备只能在本轮注册的主牌与备牌之间交换卡牌。";
@@ -1558,7 +1638,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         Dictionary<string, int> firstPool = BuildEntryCounts(first?.cards, first?.sideboard);
         Dictionary<string, int> secondPool = BuildEntryCounts(second?.cards, second?.sideboard);
-        return CountsEqual(firstPool, secondPool);
+        return CountsEqual(firstPool, secondPool)
+            && HaveSameEntries(first?.attractions, second?.attractions)
+            && HaveSameEntries(first?.contraptions, second?.contraptions);
     }
 
     private static bool HaveSameEntries(List<DeckEntry> first, List<DeckEntry> second)
@@ -1604,6 +1686,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             for (int i = 0; i < deck.cards.Count; i++) if (deck.cards[i] != null) yield return deck.cards[i];
         if (deck?.sideboard != null)
             for (int i = 0; i < deck.sideboard.Count; i++) if (deck.sideboard[i] != null) yield return deck.sideboard[i];
+        if (deck?.attractions != null)
+            for (int i = 0; i < deck.attractions.Count; i++) if (deck.attractions[i] != null) yield return deck.attractions[i];
+        if (deck?.contraptions != null)
+            for (int i = 0; i < deck.contraptions.Count; i++) if (deck.contraptions[i] != null) yield return deck.contraptions[i];
     }
 
     private static OnlineRoomConfig SanitizeRoomConfig(OnlineRoomConfig source)
@@ -1616,7 +1702,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             formatId = string.IsNullOrEmpty(source?.formatId) ? "none" : source.formatId,
             minimumMainDeckSize = Math.Max(1, Math.Min(250, source?.minimumMainDeckSize ?? 60)),
             maximumSideboardSize = Math.Max(0, Math.Min(30, source?.maximumSideboardSize ?? 15)),
-            allowCustomContent = source?.allowCustomContent == true
+            allowCustomContent = source?.allowCustomContent == true,
+            useAnte = source?.useAnte == true
         };
         if (source?.allowedSetCodes == null) return result;
         for (int i = 0; i < source.allowedSetCodes.Count && result.allowedSetCodes.Count < 64; i++)
@@ -1655,8 +1742,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         declinedReviewReplays.Clear();
         roomDirectory?.Dispose();roomDirectory=null;
-        foreach (var stream in receivingReplays.Values) stream.Dispose();
-        receivingReplays.Clear(); expectedReplays.Clear();
+        ClearReplayReceivers();
         if (networkManager != null)
         {
             if (handlersRegistered)
@@ -1697,6 +1783,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void ClearLobbyState()
     {
+        IsPreparingMatch=false;
+        clientRegisteredDeck=null;
         LobbyState = null;
         LobbyChanged?.Invoke(null);
     }

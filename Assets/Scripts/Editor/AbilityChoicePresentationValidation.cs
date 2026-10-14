@@ -46,7 +46,7 @@ public static class AbilityChoicePresentationValidation
         var corners=new Vector3[4];menu.GetWorldCorners(corners);
         Check(corners.All(c=>canvas.rect.Contains(canvas.InverseTransformPoint(c))),"Choice menu leaves the canvas.");
         Check(Option(0).GetComponentInChildren<RawImage>().texture!=null,"Source art is missing.");
-        Check(menu.position.y>GameObject.Find("Card_910").transform.position.y,"Choices are not above their source.");
+        Check(Vector2.Distance(menu.anchoredPosition,Vector2.zero)<.1f,"Card ability list is not centered.");
         Check(menu.Find("Cancel")==null && menu.rect.height<=432,"Ability menu still contains a cancel button or is oversized.");
         ScreenCapture.CaptureScreenshot(Folder+"/evoke.png");yield return new WaitForEndOfFrame();
         var button=Option(1);var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,button.transform.TransformPoint(((RectTransform)button.transform).rect.center)),button=PointerEventData.InputButton.Left};
@@ -90,10 +90,15 @@ public static class AbilityChoicePresentationValidation
         // through the player update, then restore the user's editor preferences.
         inputSettings.backgroundBehavior=UnityEngine.InputSystem.InputSettings.BackgroundBehavior.IgnoreFocus;
         inputSettings.editorInputBehaviorInPlayMode=UnityEngine.InputSystem.InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+        // An unfocused editor can disable a device when it is added. Changing
+        // focus routing afterwards does not re-enable that synthetic device.
+        UnityEngine.InputSystem.InputSystem.EnableDevice(mouse);
+        mouse.MakeCurrent();
         UnityEngine.InputSystem.InputSystem.QueueStateEvent(mouse,new UnityEngine.InputSystem.LowLevel.MouseState());
         UnityEngine.InputSystem.InputSystem.Update();
         UnityEngine.InputSystem.InputSystem.QueueStateEvent(mouse,new UnityEngine.InputSystem.LowLevel.MouseState().WithButton(UnityEngine.InputSystem.LowLevel.MouseButton.Right));
         UnityEngine.InputSystem.InputSystem.Update();
+        Check(mouse.rightButton.wasPressedThisFrame,"Synthetic right-click was not delivered to the input system.");
         GameObject.Find("DismissAbilityChoices").SendMessage("Update");
         UnityEngine.InputSystem.InputSystem.QueueStateEvent(mouse,new UnityEngine.InputSystem.LowLevel.MouseState());
         UnityEngine.InputSystem.InputSystem.Update();
@@ -108,7 +113,7 @@ public static class AbilityChoicePresentationValidation
         // This is an optional-effect confirmation fixture, NOT a planeswalker activation.
         ExecuteEvents.Execute(GameObject.Find("DismissAbilityChoices"),new PointerEventData(EventSystem.current){button=PointerEventData.InputButton.Left},ExecuteEvents.pointerClickHandler);
         Check(calls==5 && menu.gameObject.activeSelf,"Mandatory dialog was dismissed without an offered cancel.");
-        File.WriteAllText(Folder+"/result.txt","PASS: compact source-anchored choices without cancel buttons; direct ability options; outside left/right dismissal and global right-click; stable option ID; duplicate prevention; mandatory decisions; disabled viewer; mana symbols; long-text scrolling. Screenshots are UI fixtures, not engine end-to-end tests.");
+        File.WriteAllText(Folder+"/result.txt","PASS: centered card ability lists and compact source-anchored mana/confirmation choices; direct ability options; outside left/right dismissal and global right-click; stable option ID; duplicate prevention; mandatory decisions; disabled viewer; mana symbols; long-text scrolling. Screenshots are UI fixtures, not engine end-to-end tests.");
         Debug.Log("AbilityChoicePresentationValidation PASS");
     }
 }

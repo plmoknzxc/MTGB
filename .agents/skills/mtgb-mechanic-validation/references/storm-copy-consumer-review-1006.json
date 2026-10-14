@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/StormCopyConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "a78c70a4b89b7ab6cd02f9b1177d2fbcd808629bfd747701436a1eac63b010f7"
+  },
+  "runtimeHash": "fab8031f7b97fdc498631137a3247e8aced754e6f74ae02978f6af6b3b577ae1",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-StormCopies.py",
+      "sha256": "7ee3eed81e65b67d8f81ec0c9d45673e0c801228fc727b41697e8c19a2aede52"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "58dc4ee585910cb813a1e948688e75262136235d0cb0c9dd32c25d348947daea"
+    },
+    {
+      "path": "Assets/Scripts/Editor/StormCopyPresentationValidation.cs",
+      "sha256": "4f177dcbd043a199af57836d9cfc025a0dc5493f76543bbfd70826b03af0569f"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Stack.cs",
+      "sha256": "4f34eaca39eb77d9ab0cd2d48187ddd1087561f7749b3ceff6e4968e90330cd0"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.StackList.cs",
+      "sha256": "da1f6bde5e2739c7fd5b51d3be01812c329e3c53f622fae3c60190ece8d291bf"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "fed15a27d925d6e7f1205294ebc2a777f148a36f2128441c8aae2940f8a40654"
+    },
+    {
+      "path": "Assets/Scripts/UI/TemporaryCopyGlow.cs",
+      "sha256": "ea845360e93f994c01f20417451ecddd450ba9eab93d27171ef7268a5f1753f4"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/storm-copy-1006/native/storm-split/1791261118043472600/result.json",
+      "sha256": "3cac54a4f05f11aca8021d153d66892984bfec2f8755490e090a65454bee8821"
+    },
+    {
+      "path": ".tools/storm-copy-1006/native/original-countered/1791261150270622500/result.json",
+      "sha256": "8425cfb0a9b436b1a0c54ef6c3af91f9e7a4938ad1e7d7e32c529186f87e8f72"
+    },
+    {
+      "path": ".tools/storm-copy-1006/native/copy-countered/1791261164507265300/result.json",
+      "sha256": "0ef4c4e9549fdd0f6c7355a11925d574284af383828e38b48b2c0d940b041fd1"
+    },
+    {
+      "path": ".tools/storm-copy-1006/native/trigger-countered/1791261177069425300/result.json",
+      "sha256": "58987652c81b421994fc3e3d5f7f922dfaf41d4d35f83418c719ec1564b63974"
+    }
+  ],
+  "incrementalUi": [
+    {
+      "path": ".tools/storm-copy-1006/ui/20261006T0435044424005Z/result.txt",
+      "sha256": "11d93ee8c400d495e9603ca40167ba28117484ffe64e4ab8120f2d9aa2d18834"
+    },
+    {
+      "path": ".tools/storm-copy-1006/ui/20261006T0435044424005Z/input-hashes.tsv",
+      "sha256": "624f5ec9a95ba729a0a760e063221d3cc1dff437a344a53b0eb3589ce9e50655"
+    },
+    {
+      "path": ".tools/storm-copy-1006/ui/20261006T0435044424005Z/producer-hashes.tsv",
+      "sha256": "9d94b40cce9b6f0822adf80f7995aeb605b5f4ac1b332bbb5a73b51f843afde1"
+    }
+  ],
+  "reuse": {
+    "path": ".tools/storm-copy-1006/reuse-method-hash.json",
+    "sha256": "c182d5740ff4bab60644a6be11d88a47766e00bdbaee0aa421caeb510a3e2ce9"
+  },
+  "remaining": "永久物复杂复制例外、复制状态/来源变化及其他复制交互；不重复已验证外部牺牲安排不继承及本批两复制改目标、反击原件/单复制/风暴触发四条准确实例规则"
+}

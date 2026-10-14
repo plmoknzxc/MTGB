@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "runtimeHash": "a3862b7d74deb7a17f0fa133810d2a6e3d032c8156bc568362e1034c07d79073",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T01:09:09Z",
+    "coverage": "Metadata changed; exact source read. InputSelectTargets/ChangeTargetsEffect upstream .tools excluded, bounded source fallback. PresentTargeting/BattlefieldWindows/BridgeAllocation.run traces inspected."
+  },
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-TargetBranches.py",
+      "sha256": "fe20f74fe00f9bf0bea35756b492e9d138a2eb59235a14e320a9c09b30d9c44e"
+    },
+    {
+      "path": ".tools/target-branches-1006/driver-attempt-1.py",
+      "sha256": "c31553230b7f620661311a0f4bb6b2ab209fd5a107d259b7188b36febfcff221"
+    },
+    {
+      "path": ".tools/target-branches-1006/driver-attempt-2.py",
+      "sha256": "5b0e32887409c9746892b6bfa3fd70e6aa30a9af10ac45fbe4ba393ed90da489"
+    },
+    {
+      "path": ".tools/target-branches-1006/driver-attempt-3.py",
+      "sha256": "8a21748832e0b51b71554d1d29f1a9ff09929347849616c8d49fd7184024872a"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/VariableBranchFixture.java",
+      "sha256": "2e6250b3004665993ccd0608a0dc02cd9729fe7ae2afeddc9f0913e49edf7a25"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Assets/Scripts/Editor/TargetBranchPresentationValidation.cs",
+      "sha256": "1c436583cf241d5533b521a3eb6b14f93b413cdfa3e3b50f63a331a31e8e54ba"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Targeting.cs",
+      "sha256": "63f42bbf447ba4c09e72ddabb2d61958560f639704bfabe2d6d704a41b054eb7"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Allocation.cs",
+      "sha256": "feabc5ee6a5115a07a14a2427c7f44f021dc20356f4623e7ca5b95564bf41ca8"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "a48ef85a539e33938d5d2b308c3fb1b767dad8ba3a4389fe530ac45e5ca66aa8"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Stack.cs",
+      "sha256": "704365d7b9800b5a41dbb649c7832dd6d234f28464256ef54da4e988df320d8f"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.BattlefieldView.cs",
+      "sha256": "641fe46db7a1c0707a61eb4a6ecd2fae7b3d317d809b430e0ba421dba1be8d02"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "8ec11d4396c104fc41eeb441cf416d548f73c4e5d066886de832c52f6003a1cc"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeAllocation.java",
+      "sha256": "09d92c3f673f5789d4105e7c6f484ad4d03c0a123b14e16bac66fd4f28795dde"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/target-branches-1006/native/finale-zero/1791248360253926100/result.json",
+      "sha256": "d7185d41b896497acaddfe65bfe54772a3018fcfa2f9d1669efba534e5e16541"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/finale-ten-zero/1791248376624983500/result.json",
+      "sha256": "20bd0dfb5ea74fa7e69b2f6a9a9647d1518a4feef9c0782310588ce1492fdb6f"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/hex-six/1791248393876054200/result.json",
+      "sha256": "09ce425f5d1ad12c23ad72ad7d221350f9dc4ce6d9a0a85e562e99bfcd81947b"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/hex-five/1791248410274821900/result.json",
+      "sha256": "aa20916b2d66ab3cc590ce9e1f74bc49975ce1e96399efa975a44e9a9fb4bc09"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/shock-reset-cancel/1791248425680667000/result.json",
+      "sha256": "aa2c5ad80e902a6f13e61f2469bb5a950823be13c1055e4a6119e0bfde1dd385"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/arc-partial/1791248526950491700/result.json",
+      "sha256": "03329a3667c083bb6fefefd84a65344eea8183e41d8207be0cccce61b9c06d99"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/arc-all-invalid/1791248546177620600/result.json",
+      "sha256": "0b3c06ba64116687b07c66ab8cc08a3fd4e58c4acd86be0e934da4341e1e477e"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/redirect-change/1791248761504002500/result.json",
+      "sha256": "f8853d2490459352fa9bfd95a9b3966df33b01929f1b9d2b34d2c44ad45b56b1"
+    },
+    {
+      "path": ".tools/target-branches-1006/native/redirect-decline/1791248780099712800/result.json",
+      "sha256": "87f0434f9cba461a30d3fd1dace5177939fb8b1246be09348202b5523f3e4200"
+    }
+  ],
+  "ui": {
+    "path": ".tools/target-branches-1006/ui/20261006T0113554204631Z/result.txt",
+    "sha256": "8c3957e6a30dae3b50947bf3535d2f7407347925c9213e9af3638d71a42769a5"
+  },
+  "titleIncremental": {
+    "path": ".tools/target-branches-1006/title/20261006T0118041956818Z/result.txt",
+    "sha256": "30bcfed028443efde6d4cbb714d1228451397d17ae566cf410973a8d03cd3421"
+  },
+  "changedProduction": [
+    "Assets/Scripts/UI/ForgeBattlefieldController.BattlefieldView.cs",
+    "Assets/Scripts/UI/ForgeBattlefieldController.Allocation.cs"
+  ],
+  "remaining": "Only R13/R14 original rows closed; other hidden/control/copy/expression/random/network/multiplayer boundaries remain in related packages."
+}

@@ -1,0 +1,9 @@
+{
+  "case": "entwine",
+  "result": "PASS entwine actual cast/payment/stack choices/targets/effects/priority",
+  "timeUtc": "2026-10-05T21:29:01.671013+00:00",
+  "testSha256": "ad21a193f5a7bc93971a2b1fa29f5e5b2c829a2685c369a59714cad7eb20f2fa",
+  "fixtureSha256": "a16a2113002bbc0b2724d56351195cefdd2af4497ed16b451ec1c03926eded1c",
+  "runtimeManifest": "0fba42a96913a18c1b0761611a120b2a6e25145993b99ec400cdd9cdbc88cf03",
+  "traceSha256": "0091f968b3172e95d5344433044029b2a8b14baa5736f997297b1ce62ab558f3"
+}

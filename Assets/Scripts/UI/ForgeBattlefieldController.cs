@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,10 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private bool canAct, submitted;
     private long requestId;
     private string renderedKey;
+    private string boardPreferenceKey;
+    private bool? componentFaceMode;
     private Action<int> submit;
+    private Action<int,int[]> submitOrder;
     private Action concede;
     private readonly Dictionary<string, CardDefinition> catalog = new Dictionary<string, CardDefinition>();
     private readonly Dictionary<string, int> pages = new Dictionary<string, int>();
@@ -41,9 +44,9 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         loading = true;
         try
         {
-            if (SceneManager.GetActiveScene().name != SceneName)
+            if (SceneManager.GetActiveScene().name != SceneName || OnlineLobbyPanel.HasBattlefieldLobby)
                 yield return SceneManager.LoadSceneAsync(SceneName);
-            if (owner == null || (!owner.IsInMatch && owner.EndReview == null))
+            if (owner == null || (!owner.IsInMatch && !owner.IsPreparingMatch && owner.EndReview == null))
             {
                 if(SceneManager.GetActiveScene().name==SceneName) SceneManager.LoadScene("Main");
                 yield break;
@@ -65,15 +68,29 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
 
     private void OnDestroy()
     {
+        ResetZoneMotion();
         if (service != null) service.InteractionStateChanged -= InvalidateInteraction;
     }
 
+    private void OnDisable() { ResetZoneMotion(); }
+
     private void Update()
     {
+        UpdateChoiceCancelShortcut();
         UpdateTargeting();
         UpdateUndoShortcut();
         UpdateExpandedGroupDismissal();
+        UpdateNoticeExpiry();
+        UpdateManaPoolPulse();
+        bool faceMode=GamePreferences.UseComponentCardFaces;
+        if(componentFaceMode.HasValue&&componentFaceMode.Value!=faceMode&&integrated&&view!=null)
+            PresentIntegrated(connectionText.text);
+        componentFaceMode=faceMode;
         if (service == null) return; // The editor acceptance harness supplies real local-session views separately.
+        if(service.IsPreparingMatch){PresentMatchPreparation();return;}
+        if(WaitingForOpeningView){CloseMatchPreparation();return;}
+        if(matchPreparationRoot!=null){Destroy(matchPreparationRoot.gameObject);matchPreparationRoot=null;preparationKey=null;
+            if(!service.IsInMatch){SceneManager.LoadScene("Main");return;}}
         if (service.EndReview != null) { PresentEndReview(); return; }
         if (endCanvas != null) { Destroy(endCanvas.gameObject); if (leaveReviewButton != null) Destroy(leaveReviewButton.gameObject); CloseReviewCards(); reviewedMatch = null; }
         if (!service.IsInMatch)
@@ -84,13 +101,13 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             SceneManager.LoadScene("Main");
             return;
         }
-        string key = (service.ForgeView?.viewHash ?? "") + service.InteractionState + service.IsConnected + GamePreferences.Revision;
+        string key = (service.ForgeView?.viewHash ?? "") + service.InteractionState + service.IsConnected + GamePreferences.Revision + "/" + SeriesPresentationKey(service.LobbyState?.series)+"/"+PlayerNamesKey();
         if (key == renderedKey) {UpdateAutomaticControl();return;}
         renderedKey = key;
         Present(service.ForgeView?.forge, service.IsSpectator ? 1 : service.LocalSeat,
             !service.IsSpectator && service.IsConnected && service.InteractionState == OnlineClientInteractionState.Idle,
             service.SubmitForgeOption, service.IsSpectator ? (Action)null : service.Concede,
-            service.IsReconnecting ? "连接中断 · 正在恢复对局" : service.HasPendingAction ? "正在提交操作…" : (service.IsSpectator ? "观战 · " : "房间 ") + service.CurrentRoomId);
+            service.IsReconnecting ? "连接中断 · 正在恢复对局" : service.HasPendingAction ? "正在提交操作…" : (service.IsSpectator ? "观战 · " : "房间 ") + service.CurrentRoomId, service.SubmitForgeOrder);
         UpdateAutomaticControl();
     }
 
@@ -101,12 +118,14 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         return submitted;
     }
 
-    public void Present(ForgeSeatView state, int localSeat, bool enabledInput, Action<int> onChoice, Action onConcede, string status)
+    public void Present(ForgeSeatView state, int localSeat, bool enabledInput, Action<int> onChoice, Action onConcede, string status, Action<int,int[]> onOrder = null)
     {
         Build();
+        bool restarted=state!=null&&view!=null&&seat==localSeat&&state.restartRevision!=view.restartRevision;
+        if(restarted)ResetRestartPresentation();
         // A server acknowledgement clears its request until Forge publishes the
         // next snapshot. Freeze the existing surface instead of closing/reopening it.
-        if(integrated && state?.inputPending==true && view!=null && seat==localSeat) {
+        if(!restarted && integrated && state?.inputPending==true && view!=null && seat==localSeat) {
             canAct=false;submitted=true;
             DisableIntegratedChoices();
             if(cardSelectionOverlay!=null)foreach(var button in cardSelectionOverlay.GetComponentsInChildren<Button>())button.interactable=false;
@@ -114,25 +133,51 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         }
         // Retain the current surface while its response is in flight. The next
         // authoritative request updates it; a submitting notification is not a new scene.
-        if(integrated && submitted && service!=null && service.HasPendingAction && seat==localSeat) return;
-        bool pickerUpdate=integrated && IsCardPickerRequest && state?.awaitingInput==true && state.request?.kind==view.request.kind
+        if(!restarted && integrated && submitted && service!=null && service.HasPendingAction && seat==localSeat) return;
+        string preferenceKey=GamePreferences.Revision+"/"+PlayerNamesKey();
+        bool pickerUpdate=!restarted && integrated && boardPreferenceKey==preferenceKey && IsCardPickerRequest && state?.awaitingInput==true && state.request?.kind==view.request.kind
             && state.turn==view.turn && state.phase==view.phase && state.stackCount==view.stackCount
-            && string.Join("|",(state.players??Array.Empty<ForgePlayerView>()).Select(JsonUtility.ToJson))==string.Join("|",(view.players??Array.Empty<ForgePlayerView>()).Select(JsonUtility.ToJson));
+            && (!string.IsNullOrEmpty(state.boardKey)?state.boardKey==view.boardKey:
+                string.Join("|",(state.players??Array.Empty<ForgePlayerView>()).Select(p=>ServerSnapshotJson.Serialize(p)))==string.Join("|",(view.players??Array.Empty<ForgePlayerView>()).Select(p=>ServerSnapshotJson.Serialize(p))));
         if(integrated && (seat!=localSeat || state==null))ResetCastingVisual();
-        view = state; seat = localSeat; canAct = enabledInput; submit = onChoice; concede = onConcede;
+        if(state==null||seat!=localSeat)RestoreBattlefieldWindows();
+        if(integrated&&(state==null||seat!=localSeat)) {
+            hoveredStack=null;detailCard=null;detailCardId=inspectedCardId=0;inspectHoverRevision++;
+            Node("InspectPanel").gameObject.SetActive(false);
+        }
+        if(state==null){nameRequest=0;nameLanguageRevision=-1;pileRequest=0;selectedPileIndex=-1;ResetNotices();}
+        if(seat!=localSeat)ResetNotices();
+        view = state; seat = localSeat; canAct = enabledInput; submit = onChoice; submitOrder = onOrder; concede = onConcede;
+        boardPreferenceKey=preferenceKey;
         requestId = state?.awaitingInput == true ? state.request.requestId : 0;
         submitted = false;
-        if(pickerUpdate){PresentCardSelection();return;}
-        if (integrated) { PresentIntegrated(status); return; }
+        PresentNotices();
+        if(pickerUpdate){SetText("PriorityPill/Text","等待你完成选择");PresentCardSelection();PresentTargetChoiceActions();RefreshBattlefieldViewControls();return;}
+        if (integrated) { PresentIntegrated(status);RefreshBattlefieldViewControls(); return; }
         Clear(cardsRoot); Clear(actionRoot); Clear(previewRoot);
         connectionText.text = status;
-        phaseText.text = state == null || state.turn == 0 ? "准备对局 · 起手选择" : $"第 {state.turn} 回合  ·  {(state.turnSeat == seat ? "你的回合" : "对手回合")}  /  {Phase(state.phase)}";
+        phaseText.text = state == null || state.turn == 0 ? "准备对局 · 起手选择" : $"第 {state.turn} 回合  ·  {GamePreferences.T(state.turnSeat == seat ? "你的回合" : "对手回合")}  /  {GamePreferences.T(Phase(state.phase))}";
         promptText.text = state == null ? "等待对局状态" : Prompt(state, localSeat);
         foreach (var player in state?.players ?? Array.Empty<ForgePlayerView>()) DrawPlayer(player);
         DrawActions();
         PresentCardSelection();
         Label(previewRoot, "Help", "点击高亮卡牌或头像进行操作\n悬停卡牌查看详情\n拖动手牌到战场也可出牌", new Vector2(0, -285), new Vector2(250, 100), 18, new Color(.6f,.65f,.72f));
     }
+
+    // Hands and inspectors change sibling order while animating. These overlays
+    // retain their order independently; only scrollable notices accept input.
+    private void SetOverlayLayer(RectTransform root, int offset, bool interactive = false)
+    {
+        var overlay = root.GetComponent<Canvas>();
+        if (overlay == null) overlay = root.gameObject.AddComponent<Canvas>();
+        overlay.overrideSorting = true;
+        overlay.sortingLayerID = canvas.sortingLayerID;
+        overlay.sortingOrder = canvas.sortingOrder + offset;
+        if (interactive && root.GetComponent<GraphicRaycaster>() == null)
+            root.gameObject.AddComponent<GraphicRaycaster>();
+    }
+
+    private const int NoticeLayerOffset = 10, DragArrowLayerOffset = 20;
 
     private void Build()
     {
@@ -172,9 +217,10 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         int target = OptionIndex("player:" + player.targetId);
         long capturedRequest = requestId;
         float avatarY = own ? -292 : 405;
-        var avatar = Button(cardsRoot, "PlayerTarget_" + player.seat, $"{(own ? "你" : "对手")}   {player.life}",
+        var avatar = Button(cardsRoot, "PlayerTarget_" + player.seat, $"{PlayerDisplayName(player.seat)}   {player.life}",
             new Vector2(-60, avatarY), new Vector2(210,52), () => Choose(target, capturedRequest), target >= 0 ? Gold : Ink);
         avatar.interactable = target >= 0 && canAct;
+        SetNamedPlayerText(avatar.GetComponentInChildren<Text>(),$"{PlayerDisplayName(player.seat)}   {player.life}");
         Label(cardsRoot, "ZoneCounts_" + player.seat, $"手牌 {player.handCount}    牌库 {player.libraryCount}",
             new Vector2(370,avatarY), new Vector2(300,35), 18, Paper);
         Button(cardsRoot, "Graveyard_" + player.seat, $"坟墓场  {player.graveyard?.Length ?? 0}",
@@ -234,11 +280,11 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         var frame = Panel(parent, "Card_"+card.id, position, size, playable ? Gold : card.attacking ? new Color(.8f,.28f,.18f) : card.blocking ? Blue : new Color(.24f,.28f,.34f));
         if (!inspect && card.tapped) frame.localRotation = Quaternion.Euler(0,0,-14);
         var face = Panel(frame,"Face",Vector2.zero,size-new Vector2(5,5),Ink);
-        bool hasArt = definition != null && CardImageLibrary.TryLoadFullCard(definition, out _);
-        if (hasArt && definition != null)
+        Sprite fullArt=null;
+        bool hasArt = IsSpecializedFace(card)?TryBattlefieldArt(card,out fullArt):definition != null && CardImageLibrary.TryLoadFullCard(definition, out fullArt);
+        if (hasArt)
         {
-            CardImageLibrary.TryLoadFullCard(definition,out var art);
-            var img = face.GetComponent<Image>(); img.sprite=art; img.color=Color.white; img.preserveAspect=true;
+            var img = face.GetComponent<Image>(); img.sprite=fullArt; img.color=Color.white; img.preserveAspect=true;
         }
         else
         {
@@ -253,8 +299,8 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         }
         if (card.creature)
             Label(frame,"PowerToughness",$"{card.power}/{card.toughness}",new Vector2(size.x*.29f,-size.y*.42f),new Vector2(size.x*.4f,size.y*.12f),inspect?24:16,Paper);
-        if (card.tapped || card.attacking || card.blocking || card.damage>0)
-            Label(frame,"State",card.attacking ? "攻击中" : card.blocking ? "阻挡中" : card.damage>0 ? "伤害 "+card.damage : "已横置",
+        if (card.tapped || card.attacking || card.blocking || card.creature&&card.damage>0)
+            Label(frame,"State",card.attacking ? "攻击中" : card.blocking ? "阻挡中" : card.creature&&card.damage>0 ? "伤害 "+card.damage : "已横置",
                 new Vector2(0,-size.y*.49f),new Vector2(size.x,22),inspect?18:13,Gold);
         if (inspect) return;
         var button = frame.gameObject.AddComponent<Button>(); button.targetGraphic=frame.GetComponent<Image>();
@@ -313,6 +359,8 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
 
     private bool RepresentedOnBoard(string id)
     {
+        // Spending a pool color is already bound to its native mana-pool chip.
+        if(integrated && id.StartsWith("mana:",StringComparison.Ordinal))return true;
         if(integrated && view?.request?.kind=="InputPassPriority" && AvailableExileCards().Any(c=>id=="card:"+c.id))return true;
         if(integrated && (id.StartsWith("block:") || id.StartsWith("block-remove:")))return true;
         if(integrated && (view?.stackItems ?? Array.Empty<ForgeStackItem>()).Any(e=>id=="stack:"+e.id))return true;
@@ -338,9 +386,15 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         ? Array.FindIndex(view.request.options,o=>o.id==id) : -1;
 
     public void Choose(int index, long expectedRequest)
+        => ChooseCore(index,expectedRequest,null);
+
+    private void ChooseCore(int index,long expectedRequest,int[] attackGroup)
     {
-        if(!canAct || submitted || index<0 || requestId!=expectedRequest || view?.awaitingInput!=true || index>=view.request.options.Length) return;
+        if(viewingBattlefield || !canAct || submitted || index<0 || requestId!=expectedRequest || view?.awaitingInput!=true || index>=view.request.options.Length) return;
+        if(view.request.options[index].disabled)return;
+        if(attackGroup!=null && (submitOrder==null || view.request.kind!="InputAttack" || !view.request.options[index].id.StartsWith("attack:")))return;
         if(service!=null && (service.ForgeView?.forge?.request?.requestId!=expectedRequest || !service.CanSubmitRuleAction)) return;
+        if(TryStageHandChoice(index,expectedRequest))return;
         RememberCastingOrigin(view.request.options[index]);
         RememberLandChoice(view.request.options[index]);
         submitted=true;
@@ -352,7 +406,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if (integrated) DisableIntegratedChoices();
         foreach(var button in cardsRoot.GetComponentsInChildren<Button>()) button.interactable=false;
         foreach(var button in actionRoot.GetComponentsInChildren<Button>()) button.interactable=false;
-        submit?.Invoke(index);
+        if(attackGroup!=null)submitOrder(index,attackGroup);else submit?.Invoke(index);
     }
 
     private void ConfirmConcede()
@@ -367,9 +421,18 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     {
         if(!v.awaitingInput)return "等待对手操作";
         var req=v.request;
-        if(req.kind=="InputLondonMulligan")return $"已保留 · 选择回牌库底\n已选 {req.selectedCount} 张，还需 {req.remainingCount} 张";
-        if(req.kind.Contains("Mulligan"))return req.remainingCount>0?$"保留后需放回 {req.remainingCount} 张\n也可以继续调度，重新抓 7 张":"保留这手牌，或调度重新抓牌";
-        if(req.kind.Contains("PayMana"))return "尚未完成施放 · 请支付费用\n无法支付时点「取消施放」";
+        if(req.selectionPurpose=="chooseLibraryCostOwner")return TapPaymentText("选择支付用的坟墓场\n选中玩家后确认","Choose a graveyard\nSelect player and confirm.","支払いに使う墓地を選択\nプレイヤーを選んで確認");
+        if(req.selectionPurpose=="putLibraryCost")return TapPaymentText("选择作为费用放回的牌","Choose cards for payment","支払いに使うカードを選択");
+        if(req.kind=="InputLondonMulligan")return TapPaymentText($"已保留 · 选择回牌库底\n已选 {req.selectedCount} 张，还需 {req.remainingCount} 张",$"Hand kept · choose cards for the bottom\nSelected {req.selectedCount}; {req.remainingCount} remaining",$"手札をキープ・ライブラリーの一番下に置くカードを選択\n選択済み {req.selectedCount} 枚・あと {req.remainingCount} 枚");
+        if(req.kind.Contains("Mulligan"))return req.remainingCount>0?TapPaymentText($"保留后需放回 {req.remainingCount} 张\n也可以继续调度，重新抓 7 张",$"Keeping requires returning {req.remainingCount} cards\nOr mulligan and draw 7 again",$"キープ後に {req.remainingCount} 枚を戻します\nまたはマリガンして 7 枚引き直します"):TapPaymentText("保留这手牌，或调度重新抓牌","Keep this hand, or mulligan","この手札をキープ、またはマリガン");
+        if(req.kind.Contains("PayMana")) {
+            string cost=req.remainingManaCost;
+            if(string.IsNullOrEmpty(cost)) {
+                var match=System.Text.RegularExpressions.Regex.Match(req.message??"",@"Pay Mana Cost:\s*([^\r\n]+)");
+                if(match.Success)cost=match.Groups[1].Value.Trim();
+            }
+            return TapPaymentText($"支付费用 {cost}\n地牌产费／取消支付",$"Pay {cost}\nTap lands or cancel.",$"コスト {cost} を支払う\n土地をタップ／キャンセル");
+        }
         if(req.kind.Contains("Targets"))return "选择目标 · 点击高亮卡牌/头像\n也可从待施放牌拖出箭头";
         if(req.kind=="InputPassPriority")return v.stackCount>0?"你有优先权 · 可以响应\n双方连续让过后，结算堆叠顶项":"你有优先权\n可以行动，或让过优先权";
         return RequestTitle(req.kind);
@@ -396,16 +459,62 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     }
     private string RequestOptionLabel(ForgeOption option)
     {
+        if(view?.request?.selectionPurpose=="forageMethod") {
+            if(option.id=="ok")return TapPaymentText("牺牲食品","Sacrifice Food","食物を生け贄");
+            if(option.id=="cancel")return TapPaymentText("放逐坟场三张","Exile three from graveyard","墓地３枚を追放");
+        }
+
+        string auxiliary=AuxiliaryOptionLabel(option);if(auxiliary!=null)return auxiliary;
         string kind=view?.request?.kind??"";
+        if(kind=="ChooseOptions"&&option.id.StartsWith("select:",StringComparison.Ordinal)) {
+            string source=view.request.sourceCard?.originalName??view.request.sourceCard?.name;
+            if(source=="Bronze Tablet"||source=="Tempest Efreet") {
+                string label=option.label??"";
+                if(label.Contains("Pay 10 life."))return TapPaymentText("支付 10 点生命","Pay 10 life","10点のライフを支払う");
+                if(source=="Bronze Tablet"&&label.Contains("Exchange ownership of your card"))return TapPaymentText("交换拥有权","Exchange ownership","所有権を交換");
+                if(source=="Bronze Tablet"&&label.Contains("Concede the game."))return TapPaymentText("认输","Concede","投了");
+                if(source=="Tempest Efreet"&&label.Contains("Reveal a card at random"))return TapPaymentText("随机展示手牌并交换","Reveal randomly and exchange","手札を無作為公開し交換");
+            }
+        }
+        if(kind=="dialog" && view.request.message=="one: Choose a shared type")
+            return GamePreferences.NativeText(option.label);
+        if(kind=="dialog" && (view.request.message=="one: Choose a basic land type" || view.request.message=="one: Choose a land type"))
+            return SearchInsertionMenu.Label(option.label);
+        if(kind=="dialog" && (view.request.message=="one: Select type of counters to remove"||view.request.message=="one: Select type counters to remove"||view.request.message=="one: Select type of counters to add or remove"))
+            return CounterChoiceName(option.label);
+        if(kind=="dialog" && option.label=="[FINISH TARGETING]" &&
+           (view.request.options??Array.Empty<ForgeOption>()).Any(IsCrossZoneTargetHeader) &&
+           (view.request.options??Array.Empty<ForgeOption>()).Any(HasChoiceCard))
+            return TapPaymentText("确认目标","Confirm targets","対象を確定");
+        if(view?.request?.paymentMode=="manual") {
+            if(option.id is "ok" or "confirm-cards" or "confirm-number")return TapPaymentText("下一步","Next","次へ");
+            if(option.id=="cancel" && (option.label=="Cancel"||option.label=="取消"))return TapPaymentText("取消","Cancel","キャンセル");
+        }
+        if(view?.request?.selectionPurpose=="chooseLibraryCostOwner"||view?.request?.selectionPurpose=="putLibraryCost") {
+            if(option.id=="cancel")return TapPaymentText("取消支付","Cancel payment","支払いをキャンセル");
+            if(option.id=="ok")return TapPaymentText("确认选择","Confirm selection","選択を確認");
+        }
+        if(kind=="InputChooseStartingHand") {
+            if(option.id=="ok")return TapPaymentText("查看下一组","View next hand","次の手札を見る");
+            if(option.id=="cancel")return TapPaymentText("保留这组起手","Accept this hand","この手札を選ぶ");
+        }
+        // Preserve native option IDs; these labels describe the two destinations.
+        if(kind=="InputConfirm") {
+            if(option.label=="Cast")return TapPaymentText("施放","Cast","唱える");
+            if(option.label=="Hand")return TapPaymentText("放入手牌","Put in hand","手札に加える");
+        }
         if(option.id=="ok")
         {
             if(kind=="InputPassPriority")return view.turnSeat==seat && view.stackCount==0?"结束阶段":"让过";
-            if(kind=="InputLondonMulligan")return "确认放回所选牌";
+            if(kind=="InputLondonMulligan")return TapPaymentText("确认放回所选牌","Return selected cards","選択したカードを戻す");
             if(kind=="InputAttack")return "确认攻击";
         }
-        if(option.id=="cancel" && (kind.Contains("PayMana") || kind.Contains("Targets")))return "取消施放";
-        if(kind=="InputLondonMulligan" && option.label=="Auto")return "自动补选并放回";
-        if(kind.Contains("Mulligan") && option.label=="Keep")return view.request.remainingCount>0?"保留 · 然后选择放回":"保留起手";
+        if(option.id=="cancel" && kind.Contains("PayMana"))return TapPaymentText("取消支付","Cancel payment","支払いをキャンセル");
+        if(option.id=="cancel" && kind.Contains("Targets"))return "取消施放";
+        if(kind=="InputLondonMulligan" && option.label=="Auto")return TapPaymentText("自动补选并放回","Auto-select and return","自動選択して戻す");
+        if(kind.Contains("Mulligan") && option.label=="Keep")return view.request.remainingCount>0?TapPaymentText("保留 · 然后选择放回","Keep · then return cards","キープ・カードを戻す"):TapPaymentText("保留起手","Keep hand","手札をキープ");
+        if(kind.Contains("Mulligan") && option.label=="Mulligan")return TapPaymentText("再调度","Mulligan","マリガン");
+        if(kind=="dialog"||kind=="InputConfirm")return RandomChoiceLabel(option.label);
         return OptionLabel(option);
     }
     public static string RequestTitle(string kind)
@@ -435,7 +544,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             case "Play land": return "放置地牌";
             case "Yes": return "是";
             case "No": return "否";
-            default: return option.label;
+            default: return GamePreferences.NativeText(option.label);
         }
     }
     private static string Phase(string phase)
@@ -457,7 +566,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private static Text Label(Transform parent,string name,string text,Vector2 pos,Vector2 size,int fontSize,Color color)
     {var t=IntegratedUiUtility.Text(parent,name,text,fontSize,color);IntegratedUiUtility.Place(t.rectTransform,pos,size);t.horizontalOverflow=HorizontalWrapMode.Wrap;t.verticalOverflow=VerticalWrapMode.Truncate;return t;}
     private static Button Button(Transform parent,string name,string text,Vector2 pos,Vector2 size,Action click,Color color)
-    {var r=Panel(parent,name,pos,size,color);var b=r.gameObject.AddComponent<Button>();b.targetGraphic=r.GetComponent<Image>();b.onClick.AddListener(()=>click());Label(r,"Label",text,Vector2.zero,size-new Vector2(12,4),18,Paper);return b;}
+    {var r=Panel(parent,name,pos,size,color);var b=r.gameObject.AddComponent<Button>();b.targetGraphic=r.GetComponent<Image>();b.onClick.AddListener(()=>click());Label(r,"Label",text,Vector2.zero,size-new Vector2(12,4),18,Paper);if(!string.IsNullOrEmpty(text))IntegratedUiUtility.StyleButton(b,color);return b;}
     private static RectTransform Scroll(Transform parent,string name,Vector2 pos,Vector2 size)
     {
         var r=Rect(parent,name,pos,size);var image=r.gameObject.AddComponent<Image>();image.color=new Color(0,0,0,.03f);

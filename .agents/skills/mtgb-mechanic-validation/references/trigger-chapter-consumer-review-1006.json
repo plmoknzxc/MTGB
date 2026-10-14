@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/TriggerChapterConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "1b041b9fe994782219be533f192c9c11c2fec22c3a9881d84063654654334af1"
+  },
+  "runtimeHash": "fab8031f7b97fdc498631137a3247e8aced754e6f74ae02978f6af6b3b577ae1",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T04:09:39Z",
+    "coverage": "metadata_changed/not_tracked exact-source fallback; upstream excluded direct reads; graph heuristic cross-module ToJson/Max edges ignored in favor of source"
+  },
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-TriggerOrdering.py",
+      "sha256": "6d7625fff1e73aee2aacd458babf078fda6a21c0eda32830940dd932089b45c6"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-SagaChapters.py",
+      "sha256": "fae370bb16bea1c1520e25c802686ed0a3468166056e499c6bdef4ca1bc22dc2"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Stack.cs",
+      "sha256": "4f34eaca39eb77d9ab0cd2d48187ddd1087561f7749b3ceff6e4968e90330cd0"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.CardSelection.cs",
+      "sha256": "9817c8097c79f34ba7b5e88a48ab236a1891c61ab82e2849f7a4ec8c67e06118"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.HandActions.cs",
+      "sha256": "bbc105f3e9a2453eb704c642da2743c7d82ebb54ccc7dfdf61f1ce582aa9e90a"
+    },
+    {
+      "path": "Assets/Scripts/Editor/TriggerOrderingPresentationValidation.cs",
+      "sha256": "cf940a008469cc6cfd57ff0a0523564ae750fbc2d1b3f0313db73c09ce50ae35"
+    },
+    {
+      "path": "Assets/Scripts/Editor/SagaChapterPresentationValidation.cs",
+      "sha256": "aeedda9e6249f6f00206c6e0b3cac244a29fe531239930703da00a860cd27528"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/trigger-order-1006/native/apnap-life/1791258782972867600/result.json",
+      "sha256": "51bef54c7d269290a0bec00a64ab8d756e921f96d400ee6604c9e8c5c76f7435"
+    },
+    {
+      "path": ".tools/trigger-order-1006/native/apnap-life-seat2/1791258797541334400/result.json",
+      "sha256": "2e004f841153468ba3201aa0919dcc500485dc4416d721c87be2a0714518c6d3"
+    },
+    {
+      "path": ".tools/trigger-order-1006/native/apnap-life-decline/1791258813813959800/result.json",
+      "sha256": "839d075f194a21e8b345ac770b2af0bd179f1bd8fbfa67396592b5e8f3d2e7dd"
+    },
+    {
+      "path": ".tools/trigger-order-1006/native/apnap-targets/1791258864052562300/result.json",
+      "sha256": "cbd5199f69895a6e93a51aa354520a0ec2bf6b2b3fba5219910356552227c386"
+    },
+    {
+      "path": ".tools/saga-chapters-1006/native/chapter-draw/1791259501711266900/result.json",
+      "sha256": "6c23abb4e5001678e2c73d7b8a96dbb18b8347cfefab3660ae69601d9ae47c99"
+    },
+    {
+      "path": ".tools/saga-chapters-1006/native/chapter-decline/1791259516901077300/result.json",
+      "sha256": "a43d31e36f127d2b833c0a7404fd5916440439c486de94c7437de7bc68503b53"
+    },
+    {
+      "path": ".tools/saga-chapters-1006/native/chapter-seat2/1791259532079658000/result.json",
+      "sha256": "40c9e684fc09bbd16054622f9f79b7d995539ae13f7a2cd0c372eda6cd3624ba"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/trigger-order-1006/ui/20261006T0402172241137Z/result.txt",
+      "sha256": "97913e285b57e042af2b1442a84a031c638c6471c1a5ba790d790be135f8f025"
+    },
+    {
+      "path": ".tools/trigger-order-1006/ui/20261006T0402172241137Z/input-hashes.tsv",
+      "sha256": "fe3c184b79a7cba0a5d264d21567cc5660aca2d42e6c1a8bfb05f968301be801"
+    },
+    {
+      "path": ".tools/trigger-order-1006/ui/20261006T0402172241137Z/producer-hashes.tsv",
+      "sha256": "0fe4d95dcdeb15ff85aeae73128c1e0dd84e511024a825541bcfb65d2e35ac63"
+    },
+    {
+      "path": ".tools/saga-chapters-1006/ui/20261006T0412198720087Z/result.txt",
+      "sha256": "04406fd2aae98c59cc6022787935592c422fd65de992f020ee1775f3e8d8fd2d"
+    },
+    {
+      "path": ".tools/saga-chapters-1006/ui/20261006T0412198720087Z/input-hashes.tsv",
+      "sha256": "35a629246113f6b8bcc2d0e404c2c6871c6cebb9ea918377c4fd6409314806dd"
+    },
+    {
+      "path": ".tools/saga-chapters-1006/ui/20261006T0412198720087Z/producer-hashes.tsv",
+      "sha256": "e82cad1cb6d8dd8a5a6c15f51e7c061834fae291d16f87cb20bd2cdc7ea723eb"
+    }
+  ],
+  "regressionUi": [
+    {
+      "path": ".tools/effect-source-1006/ui/20261006T0404230592005Z/result.txt",
+      "sha256": "8078977317bfa81b09a0d956c1e2256852dc0ba246312cd9527e4e79b4f1c67d"
+    },
+    {
+      "path": ".tools/effect-source-1006/ui/20261006T0404230592005Z/input-hashes.tsv",
+      "sha256": "c004cc47ad321b76e10251e2cdf07871bf9e952d0efabc72fb7300d47626be10"
+    },
+    {
+      "path": ".tools/effect-source-1006/ui/20261006T0404230592005Z/producer-hashes.tsv",
+      "sha256": "35a3689471682b1593095904b050beb262e90fbbe414c899f424c0bab84766b6"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0405100098801Z/result.txt",
+      "sha256": "989b939aa6903be95b9da0f6243a9403cd7ab9b03f7ada84a7c4338e73775345"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0405100098801Z/input-hashes.tsv",
+      "sha256": "6399037067b0f3ce14a797cfb48e97251672ff43a90d15ca0756933aa1bfca82"
+    },
+    {
+      "path": ".tools/ability-text-1006/consumers/20261006T0405100098801Z/producer-hashes.tsv",
+      "sha256": "0c62ef903e01c74bc3ac03498fd71e947fd2f60e320203e3773ed00f5f99b8dd"
+    }
+  ],
+  "remaining": "R18 partial, R47 unknown text/resources, R03/R36 other control/multiplayer, R15/R17 private receiver/transport remain open. Saga read-only guard uses same recipient view."
+}

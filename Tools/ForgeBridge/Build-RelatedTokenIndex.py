@@ -7,6 +7,33 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
+def apply_project_links(entries):
+    """Preserve exact-source project token art when rebuilding the display index."""
+    supplement = ROOT / 'Tools/ForgeBridge/ProjectTokenArt.json'
+    if not supplement.exists():
+        return entries
+    catalog = {}
+    for line in (ROOT / 'ForgeRuntime/catalog.jsonl').read_text(encoding='utf8').splitlines():
+        row = json.loads(line)
+        catalog[row['key']] = row
+    for link in json.loads(supplement.read_text(encoding='utf8'))['entries']:
+        source = catalog.get(link['key'])
+        if source is None or source.get('name', source.get('cardName')) != link['name']:
+            raise ValueError('Project token source identity changed: ' + link['key'])
+        existing = [e for e in entries if e['key'] == link['key']]
+        if len(existing) > 1 or existing and existing[0]['name'] != link['name']:
+            raise ValueError('Ambiguous project token source: ' + link['key'])
+        target = existing[0] if existing else dict(key=link['key'], name=link['name'], tokens=[])
+        if not existing:
+            entries.append(target)
+        for token in link['tokens']:
+            prior = [t for t in target['tokens'] if t['key'] == token['key']]
+            if prior and prior != [token]:
+                raise ValueError('Conflicting project token: ' + token['key'])
+            if not prior:
+                target['tokens'].append(token.copy())
+    return entries
+
 def build():
     sources = {}
     for line in (ROOT / 'Assets/StreamingAssets/CardArtSources.jsonl').read_text(encoding='utf8').splitlines():
@@ -19,7 +46,8 @@ def build():
             key = row.get('set', '').upper() + '/' + row.get('collector_number', '')
             tokens[row['id']] = dict(key=key, name=row['name'], rules=row.get('oracle_text', ''))
             if key in sources and sources[key] in [row['name']] + [f['name'] for f in row.get('card_faces', [])]:
-                links = [p for p in row.get('all_parts', []) if p['component'] == 'token' or p.get('type_line') == 'Emblem']
+                links = [p for p in row.get('all_parts', []) if p['component'] == 'token'
+                         or p.get('type_line', '').split('—', 1)[0].strip() == 'Emblem']
                 if links:
                     parents.append((key, sources[key], links))
     # A few exact token printings referenced by all_parts are omitted from Scryfall's
@@ -40,6 +68,7 @@ def build():
             if token not in related:
                 related.append(token)
         entries.append(dict(key=key, name=name, tokens=related))
+    entries = apply_project_links(entries)
     dest = ROOT / 'Assets/Resources/RelatedTokenArt.json'
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(dict(entries=entries), ensure_ascii=False, separators=(',', ':')), encoding='utf8')

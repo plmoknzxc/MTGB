@@ -1,0 +1,8 @@
+PASS damage: two blockers, lethal constraints, reset, trample remainder and actual deaths/life
+PASS storm: two prior spells, separate copied objects, retarget and 3 damage
+PASS ninjutsu: legal unblocked return cost, ability stack, tapped attacking entry and combat damage
+PASS battle: defeat trigger, transformed casting and correct back-face battlefield state
+PASS crew: choose crew ability, select and tap creature cost, vehicle becomes creature on resolution
+PASS evidence: Forge mana-value tally, zero-value land, under-threshold gate, deselection, cancellation without exile, exact threshold and real exile/animation
+PASS rooms: separate door names/state, real unlock cost and both doors remain unlocked
+PASS X: double X=2, two numeric stack cost symbols, 4 mana paid, Walking Ballista enters with 2 counters as 2/2

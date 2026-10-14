@@ -18,17 +18,29 @@ Assets/TutorialInfo/
 Assets/TutorialInfo.meta
 Assets/Readme.asset
 Assets/Readme.asset.meta
+Assets/_Recovery/
+Assets/_Recovery.meta
+# Local proprietary card-template fonts; supply separately with redistribution rights.
+Assets/Resources/UI/CardTemplates/Fonts/*
+!Assets/Resources/UI/CardTemplates/Fonts/README.md
 
 # IDE and local tooling
 .vs/
 .idea/
 .vscode/
 .vsconfig
-.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/mtgb-mechanic-validation/
 .claude/
 .codex/
 .tools/
 ForgeRuntime/
+# Reproducible bridge traces and snapshots, archived locally by MechanicCoverage.
+/Tools/Validation/Reports/CommonMechanics/
+/Tools/Validation/Reports/GenericChoices/
+/Tools/Validation/Reports/OpeningContracts/
 # Local card image packs and their download manifests; keep only setup notes.
 /CardImages/**
 !/CardImages/README.txt
@@ -62,3 +74,22 @@ desktop.ini
 /Replays/*.mtgbr
 /Replays/Videos/
 /VideoTools/*.exe
+
+/Tools/Validation/Reports/PlayerControl/
+/Tools/Validation/Reports/CardNames/
+/Tools/Validation/Reports/MulliganRounds/*.json
+/Tools/Validation/Reports/MulliganRounds/*.jsonl
+
+/Tools/Validation/Reports/DigitalMechanics/
+
+/Tools/Validation/Reports/Piles/
+/Tools/Validation/Reports/RandomMechanics/
+/Tools/Validation/Reports/RandomBoundaries/
+
+/Tools/Validation/Reports/LibraryCosts/
+
+/Tools/Validation/Reports/BaseCallbacks/
+/Tools/Validation/Reports/Replacements/
+/Tools/Validation/Reports/DamageDraw/
+
+/Tools/Validation/Reports/CombatAllocation/

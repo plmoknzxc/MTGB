@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -11,6 +11,8 @@ public static class CardImageLibrary
     private static readonly Dictionary<string, CacheEntry> Cache = new Dictionary<string, CacheEntry>(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> FailedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     private static Sprite cardBackSprite;
+    private static readonly Dictionary<string,Sprite> DisplayedFullCards = new Dictionary<string,Sprite>();
+    private static readonly Dictionary<string,int> DisplayedFrames = new Dictionary<string,int>();
 
     private sealed class CacheEntry
     {
@@ -26,8 +28,10 @@ public static class CardImageLibrary
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
+#if !UNITY_SERVER
         ClearCache();
         EnsureDirectory(ExternalRoot);
+#endif
     }
 
     public static bool TryLoadFullCard(CardDefinition card, out Sprite sprite)
@@ -35,7 +39,33 @@ public static class CardImageLibrary
         return TryLoadFullCard(card, 0, out sprite);
     }
 
+    private static string DisplayKey(CardDefinition card,int faceIndex)
+        => card.PrintingKey+"/"+faceIndex+"/"+GamePreferences.Language+"/"+CardArtPreferences.Get(card);
+    internal static bool TryReuseFullCard(CardDefinition card,out Sprite sprite)=>TryReuseFullCard(card,0,out sprite);
+    private static bool TryReuseFullCard(CardDefinition card,int faceIndex,out Sprite sprite)
+    {
+        sprite=null;
+        if(card==null||!DisplayedFullCards.TryGetValue(DisplayKey(card,faceIndex),out var displayed)||displayed==null)return false;
+        // Retain file-change checks when reusing the art from the current game.
+        string path=null;
+        foreach(var pair in Cache)if(pair.Value.Sprite==displayed){path=pair.Key;break;}
+        if(path==null||!File.Exists(path))return false;
+        sprite=LoadSprite(path);
+        if(sprite!=null)DisplayedFullCards[DisplayKey(card,faceIndex)]=sprite;
+        return sprite!=null;
+    }
     public static bool TryLoadFullCard(CardDefinition card, int faceIndex, out Sprite sprite)
+    {
+        string key=card==null?null:DisplayKey(card,faceIndex);
+        // A render can ask for the same printing for seven hand cards, plus its
+        // previews. Resolve once per frame; later frames still discover new art.
+        if(key!=null&&DisplayedFrames.TryGetValue(key,out int frame)&&frame==Time.frameCount
+            &&TryReuseFullCard(card,faceIndex,out sprite))return true;
+        bool loaded=TryLoadFullCardCore(card,faceIndex,out sprite);
+        if(loaded&&key!=null){DisplayedFullCards[key]=sprite;DisplayedFrames[key]=Time.frameCount;}
+        return loaded;
+    }
+    private static bool TryLoadFullCardCore(CardDefinition card,int faceIndex,out Sprite sprite)
     {
         sprite = null;
         string preferred = CardArtPreferences.Get(card);
@@ -58,6 +88,7 @@ public static class CardImageLibrary
                 if (version.PrintingKey == preferred && TryLoadExact(version, faceIndex, out sprite)) return true;
         if (CardArtImportService.TryGetPath(card, faceIndex, out string customPath)) sprite = LoadSprite(customPath);
         if (sprite != null) return true;
+        if(faceIndex==1&&MeldCardArt.TryLoad(card,out sprite))return true;
         if (TryFindImagePath(card, faceIndex, out string path, false)) sprite = LoadSprite(path);
         if (sprite != null) return true;
         foreach (var version in CardArtVersions.GetVersions(card))
@@ -197,6 +228,8 @@ public static class CardImageLibrary
             if (texture != null) UnityEngine.Object.Destroy(texture);
         }
         Cache.Clear();
+        DisplayedFullCards.Clear();
+        DisplayedFrames.Clear();
         FailedFiles.Clear();
         cardBackSprite = null;
     }
@@ -220,6 +253,9 @@ public static class CardImageLibrary
             {
                 name = $"CardImage_{info.Directory?.Name}_{Path.GetFileNameWithoutExtension(info.Name)}",
                 filterMode = FilterMode.Trilinear,
+                // A small positive bias softens minified, rotated scans without
+                // blurring the original full-size hover image.
+                mipMapBias = .3f,
                 wrapMode = TextureWrapMode.Clamp
             };
             if (!texture.LoadImage(bytes, false))

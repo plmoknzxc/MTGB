@@ -26,7 +26,7 @@ public static class StackInteractionValidation
         {
             object next;
             try {if(!test.MoveNext())break;next=test.Current;}
-            catch(Exception e){File.WriteAllText(Folder+"/ui-result.txt","FAIL "+e);Debug.LogException(e);running=false;yield break;}
+            catch(Exception e){running=false;Debug.LogException(e);File.WriteAllText(Folder+"/ui-result.txt","FAIL "+e);yield break;}
             yield return next;
         }
         running=false;
@@ -47,10 +47,11 @@ public static class StackInteractionValidation
             scroll.verticalNormalizedPosition=1-i*.5f;Canvas.ForceUpdateCanvases();yield return null;
             var tile=GameObject.Find("StackCard_"+i).GetComponent<RectTransform>();
             Check(RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport,Point(tile)),"Entry unreachable by scrolling");
-            tile.GetComponent<Button>().onClick.Invoke();yield return null;
-            var details=canvas.Find("StackDetails");
-            Check(details.gameObject.activeSelf && details.GetComponentsInChildren<Text>().Any(t=>t.text==state.stackItems[i].description),"Specific stack effect missing");
-            details.Find("Close").GetComponent<Button>().onClick.Invoke();
+            ExecuteEvents.Execute(tile.gameObject,new PointerEventData(EventSystem.current),ExecuteEvents.pointerEnterHandler);yield return null;
+            var details=canvas.Find("InspectPanel");
+            var rules=details.Find("Rules").GetComponent<Text>();
+            Check(details.gameObject.activeSelf && rules.text.Contains(state.stackItems[i].kind=="spell" ? GamePreferences.CardRules(CardDatabaseRepository.LoadAll().First(c=>c.PrintingKey==state.stackItems[i].source.printingKey)) : state.stackItems[i].description),"Specific stack effect missing");
+            ExecuteEvents.Execute(tile.gameObject,new PointerEventData(EventSystem.current),ExecuteEvents.pointerExitHandler);
         }
         float offset=scroll.content.anchoredPosition.y;present(state);yield return null;
         Check(Mathf.Abs(offset-scroll.content.anchoredPosition.y)<1,"Refresh resets stack scroll");
@@ -66,22 +67,29 @@ public static class StackInteractionValidation
         Check(last=="stack:"+target.stackItems[0].id && submitted==1,"Wrong stack instance submitted");
         Check(!ui.TryChooseTargetAt(point,target.request.requestId),"Duplicate target accepted");
         present(target);yield return new WaitForSecondsRealtime(.4f);
-        GameObject.Find("StackCard_0").transform.Find("Details").GetComponent<Button>().onClick.Invoke();
-        Check(submitted==1,"Inspecting target submitted it");canvas.Find("StackDetails/Close").GetComponent<Button>().onClick.Invoke();
+        var inspectCard=GameObject.Find("StackCard_0");
+        ExecuteEvents.Execute(inspectCard,new PointerEventData(EventSystem.current),ExecuteEvents.pointerEnterHandler);
+        Check(submitted==1&&canvas.Find("InspectPanel").gameObject.activeSelf,"Inspecting target submitted it or omitted its details");
+        ExecuteEvents.Execute(inspectCard,new PointerEventData(EventSystem.current),ExecuteEvents.pointerExitHandler);
+        yield return new WaitForSecondsRealtime(.2f);
         scroll.verticalNormalizedPosition=0;Canvas.ForceUpdateCanvases();yield return null;
         var bottom=(RectTransform)GameObject.Find("StackCard_1").transform;
-        Check(ui.TryChooseTargetAt(Point(bottom),target.request.requestId) && last=="stack:"+target.stackItems[1].id && submitted==2,"Scrolled lower stack target rejected");
+        // The stack is fanned: the earlier entry's center is covered by the top
+        // entry. Choose its exposed left strip through the actual raycaster.
+        var exposed=RectTransformUtility.WorldToScreenPoint(null,bottom.TransformPoint(new Vector2(bottom.rect.xMin+8,bottom.rect.center.y)));
+        Check(ui.TryChooseTargetAt(exposed,target.request.requestId) && last=="stack:"+target.stackItems[1].id && submitted==2,"Scrolled lower stack target rejected");
         var firstOrder=File.ReadLines(Folder+"/triggers.jsonl").Select(line=>JsonUtility.FromJson<ForgeWireMessage>(line)).First(m=>m.request?.kind=="OrderAbilities");
         var ordering=firstOrder.views[0];ordering.request=firstOrder.request;ordering.awaitingInput=true;
         present(ordering);yield return new WaitForSecondsRealtime(.3f);
-        var chooseFirst=canvas.Find("AbilityOrder").GetComponentsInChildren<Button>().First(b=>b.name=="Order_0");
+        var chooseFirst=canvas.Find("AbilityOrder").GetComponentsInChildren<Button>().First(b=>b.name=="OrderedAbility_"+firstOrder.request.options.First(o=>o.id=="order:0").ability.id);
         chooseFirst.onClick.Invoke();Check(last=="order:0" && submitted==3,"Initial ability selection not submitted");
         var order=Load("triggers-order");present(order);yield return new WaitForSecondsRealtime(.3f);
         Check(!canvas.Find("ForgeChoices").gameObject.activeSelf,"Order uses generic sidebar");
         var panel=canvas.Find("AbilityOrder");Check(panel.gameObject.activeSelf,"Order panel missing");
-        Check(panel.GetComponentsInChildren<Text>().Any(t=>t.text.Contains("1. Soul Warden") && t.text.Contains("2. Soul's Attendant")),"Resolution order unclear");
+        foreach(var entry in order.request.orderedAbilities.Select((ability,index)=>new {ability,index}))
+            Check(panel.GetComponentsInChildren<Transform>().First(t=>t.name=="OrderedAbility_"+entry.ability.id).Find("Order").GetComponent<Text>().text==(entry.index+1).ToString(),"Resolution order unclear");
         ScreenCapture.CaptureScreenshot(Folder+"/order.png");yield return new WaitForEndOfFrame();
-        panel.GetComponentsInChildren<Button>().First(b=>b.GetComponentInChildren<Text>().text.Contains("确认此结算顺序")).onClick.Invoke();
+        panel.Find("ConfirmOrder").GetComponent<Button>().onClick.Invoke();
         Check(last=="confirm-order" && submitted==4,"Order not explicitly confirmed");
         // Presentation-only pressure check. Engine behavior is covered by the separate real-card run.
         state.stackItems=Enumerable.Range(0,12).Select(i=>new ForgeStackItem{id=10000+i,kind="trigger",controllerSeat=1,source=state.stackItems[0].source,description="Ability "+i+"\n"+string.Join("\n",Enumerable.Repeat("Long effect line",45))}).ToArray();
@@ -89,12 +97,12 @@ public static class StackInteractionValidation
         scroll.verticalNormalizedPosition=0;Canvas.ForceUpdateCanvases();yield return null;
         var lastCard=GameObject.Find("StackCard_11").GetComponent<RectTransform>();
         Check(RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport,Point(lastCard)),"12th entry unreachable");
-        lastCard.GetComponent<Button>().onClick.Invoke();yield return null;
-        var effect=canvas.Find("StackDetails/Effect").GetComponent<ScrollRect>();
+        ExecuteEvents.Execute(lastCard.gameObject,new PointerEventData(EventSystem.current),ExecuteEvents.pointerEnterHandler);yield return null;
+        var effect=canvas.Find("InspectPanel/Rules/RuleScroll").GetComponent<ScrollRect>();
         Check(effect.content.rect.height>effect.viewport.rect.height,"Long effect cannot scroll");
         effect.verticalNormalizedPosition=0;Canvas.ForceUpdateCanvases();yield return null;
         Check(effect.content.anchoredPosition.y>0,"Long effect scroll stuck");
-        canvas.Find("StackDetails/Close").GetComponent<Button>().onClick.Invoke();
+        ExecuteEvents.Execute(lastCard.gameObject,new PointerEventData(EventSystem.current),ExecuteEvents.pointerExitHandler);
         present(Load("triggers-resolved"));yield return null;
         Check(!panel.gameObject.activeSelf && !canvas.Find("StackColumn").gameObject.activeSelf,"Resolved stack/order remains");
         const string result="PASS: three real Forge entries scroll and show individual effects; stack target arrow, correct instance, stale/empty/duplicate guards; separate inspect during targeting; explicit trigger order confirmation; 12-entry presentation stress and long effect scrolling.";

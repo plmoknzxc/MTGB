@@ -32,6 +32,9 @@ public static class ForgeControlModeValidation
         s.turnSeat=2;
         Check(ForgeControlPolicy.AutomaticOption(s,1,ForgeControlMode.Auto,false)==0,"AUTO stopped without responses");
         s.canRespond=true;Check(ForgeControlPolicy.AutomaticOption(s,1,ForgeControlMode.Auto,false)==-1,"AUTO skipped available response");
+        s.canRespond=false;s.request.playerSeat=2;
+        Check(ForgeControlPolicy.AutomaticOption(s,1,ForgeControlMode.Auto,false)==-1,"AUTO skipped controlled player's main phase");
+        s.request.playerSeat=0;
         s.request.kind="InputPayManaOfCostPayment";
         foreach(var mode in new[]{ForgeControlMode.On,ForgeControlMode.Auto,ForgeControlMode.Off})
             Check(ForgeControlPolicy.AutomaticOption(s,1,mode,false)==(mode==ForgeControlMode.On?-1:0),"Payment mode mismatch");

@@ -1,0 +1,34 @@
+#if UNITY_EDITOR
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+public static class AbilityFaceConsumerValidation
+{
+    public static string Output {get;private set;}
+    public static bool Running {get;private set;}
+    static void Check(bool ok,string text){if(!ok)throw new Exception(text);}
+    static string Hash(string p){using var h=SHA256.Create();return BitConverter.ToString(h.ComputeHash(File.ReadAllBytes(p))).Replace("-","").ToLowerInvariant();}
+    static IEnumerator Frame(){yield return new WaitForSecondsRealtime(.25f);yield return new WaitForEndOfFrame();Canvas.ForceUpdateCanvases();}
+    static void Click(Button b){var r=(RectTransform)b.transform;var p=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,r.TransformPoint(r.rect.center)),button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(p,hits);Check(hits.Count>0&&hits[0].gameObject.GetComponentInParent<Button>()==b,"Click blocked "+b.name);ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,p,ExecuteEvents.pointerClickHandler);}
+    public static void Run(){Check(Application.isPlaying&&!Running&&GamePreferences.Language=="zh-CN","Chinese Play required");Running=true;Output=".tools/ability-text-1006/consumers/"+DateTime.UtcNow.ToString("yyyyMMddTHHmmssfffffffZ");Directory.CreateDirectory(Output+"/inputs");File.WriteAllText(".tools/ability-text-1006/consumers/latest.txt",Output);File.WriteAllText(Output+"/result.txt","RUNNING");File.WriteAllText(Output+"/producer-hashes.tsv",string.Join("\n",new[]{"Assets/Scripts/Editor/AbilityFaceConsumerValidation.cs","Assets/Scripts/UI/ForgeBattlefieldController.AbilityFace.cs","Assets/Scripts/UI/ForgeBattlefieldController.Stack.cs"}.Select(p=>p+"\t"+Hash(p)))+"\n");var go=new GameObject("AbilityFaceConsumers");go.AddComponent<Host>().StartCoroutine(Exercise(go));}
+    sealed class Host:MonoBehaviour{}
+    static IEnumerator Exercise(GameObject go){var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("AbilityConsumerBattlefield").AddComponent<ForgeBattlefieldController>();bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool active=module!=null&&module.enabled;if(module!=null)module.enabled=false;
+        IEnumerator steps=Steps(ui);Exception error=null;while(true){bool more=false;object item=null;try{more=steps.MoveNext();if(more)item=steps.Current;}catch(Exception ex){error=ex;break;}if(!more)break;if(item is IEnumerator nested){while(true){bool moreChild=false;object child=null;try{moreChild=nested.MoveNext();if(moreChild)child=nested.Current;}catch(Exception ex){error=ex;break;}if(!moreChild)break;yield return child;}if(error!=null)break;}else yield return item;}
+        (steps as IDisposable)?.Dispose();ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=active;File.WriteAllText(Output+"/result.txt",error==null?"PASS: actual Hellion pre-target preview and Embolden replacement-order native inputs: exact source/rules or known prevention translation with original amounts, symbols/scroll/layout, real target/order click IDs, view/return fonts. Chinese incremental consumer check; shared three-language format in full suite, no new effect/network claim.":"FAIL\n"+error);Running=false;UnityEngine.Object.Destroy(go);
+    }
+    static IEnumerator Steps(ForgeBattlefieldController ui){yield return Frame();float until=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale unavailable");yield return Frame();foreach(var input in new[]{("target",".tools/number-auction-1006/native/hellion-large/1791252555759846800/step-20.json"),("order",".tools/quantity-allocation-1006/native/shield-division/1791253979146302500/step-50.json")}){
+        File.Copy(input.Item2,Output+"/inputs/"+input.Item1+".json",true);File.AppendAllText(Output+"/input-hashes.tsv",input.Item2+"\t"+Hash(input.Item2)+"\n");var v=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(input.Item2));int calls=0,last=-1;ui.Present(null,1,false,null,null,"");ui.Present(v,v.request.seat,true,i=>{calls++;last=i;},null,"");yield return Frame();foreach(var pointer in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldCardPointer>(FindObjectsSortMode.None)){pointer.ResetHover();pointer.enabled=false;}
+        var root=GameObject.Find("Canvas").transform;var panel=root.Find(input.Item1=="target"?"TargetOrigin":"AbilityOrder");Check(panel!=null&&panel.gameObject.activeInHierarchy,"Consumer missing "+input.Item1);var faces=panel.GetComponentsInChildren<Transform>().Where(t=>t.name=="AbilityFace").ToArray();Check(faces.Length==(input.Item1=="target"?1:2),"Native consumer entries");
+        foreach(var face in faces){var label=face.Find("EffectClip/Effect").GetComponent<Text>();var symbols=label.GetComponentInChildren<TMPro.TextMeshProUGUI>();Check(!label.resizeTextForBestFit&&!symbols.enableAutoSizing,"Consumer font shrink");Check(symbols.text==CardSymbolText.Format(label.text),"Consumer symbol text");var scroll=face.Find("EffectClip").GetComponent<ScrollRect>();Check(face.Find("EffectScrollbar").gameObject.activeSelf==(scroll.content.rect.height>scroll.viewport.rect.height+.1f),"Consumer scrollbar");if(input.Item1=="target")Check(label.text.StartsWith("当此生物进场时"),"Pre-target translation");else Check(label.text.Contains("防止接下来")&&label.text.Contains("剩余预防量："),"Known prevention amount lost");}
+        var fonts=faces.Select(t=>t.GetComponentInChildren<TMPro.TextMeshProUGUI>().fontSize).ToArray();ui.ViewBattlefield();yield return Frame();Check(panel.GetComponentInParent<CanvasGroup>().alpha==0,"Consumer window remains visible");ui.RestoreBattlefieldWindows();yield return Frame();Check(fonts.SequenceEqual(faces.Select(t=>t.GetComponentInChildren<TMPro.TextMeshProUGUI>().fontSize))&&calls==0,"Consumer return drifts/submits");ScreenCapture.CaptureScreenshot(Output+"/"+input.Item1+".png");yield return Frame();
+        var o=v.request.options.First(x=>x.id.StartsWith(input.Item1=="target"?"card:183":"order:"));int expected=ui.OptionIndex(o.id);Button b=input.Item1=="target"?root.GetComponentsInChildren<Button>().First(x=>x.name=="Card_183"):panel.GetComponentsInChildren<Button>().First(x=>x.name=="OrderedAbility_"+o.id.Split(':')[1]);Click(b);Check(calls==1&&last==expected&&!ui.TrySubmitPresentedOption(expected,v.request.requestId),"Consumer native identity / duplicate");File.AppendAllText(Output+"/steps.log","PASS "+input.Item1+" exact native consumer \n");
+    }}
+}
+#endif

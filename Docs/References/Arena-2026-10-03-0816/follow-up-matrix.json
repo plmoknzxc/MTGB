@@ -1,0 +1,300 @@
+{
+  "schema": 1,
+  "scope": "本段录像与源码对照的后续场景；不是所有机制的封闭清单。",
+  "reference": "Docs/ArenaReferenceAudit-2026-10-03-0816.zh-CN.md",
+  "baseline": "Docs/References/Arena-2026-10-03-0816/state-probes.json",
+  "baselineScope": "10 个直接状态夹具通过，包含自然资格条件、持续效果层次、状态动作及部分桥接投影；不代替施放、支付与 Unity。",
+  "rulesReferences": [
+    "https://magic.wizards.com/en/news/feature/the-hobbit-mechanics",
+    "https://magic.wizards.com/en/news/feature/modern-horizons-3-mechanics",
+    "https://magic.wizards.com/en/news/feature/final-fantasy-release-notes",
+    "https://magic.wizards.com/en/news/announcements/secrets-of-strixhaven-update-bulletin"
+  ],
+  "scenarios": [
+    {
+      "id": "dungeon-entry",
+      "priority": 1,
+      "title": "真实普通探索与首次进入",
+      "videoTimes": [
+        "04:50",
+        "18:09"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "无正在探索的地城时只提交引擎提供的合法地城",
+        "普通探索候选不混入幽暗地域",
+        "非操作玩家不能选择",
+        "来源异能与所选地城身份分开"
+      ]
+    },
+    {
+      "id": "dungeon-path",
+      "priority": 1,
+      "title": "地图内选房间",
+      "videoTimes": [
+        "05:25",
+        "07:55",
+        "20:00",
+        "22:30"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "房间按稳定 ID 和对应图形区域点击",
+        "当前房间与合法下一房间分别高亮",
+        "非法路径和旧请求不提交",
+        "双分支、三分支及整行房间都能选中"
+      ]
+    },
+    {
+      "id": "dungeon-completion",
+      "priority": 1,
+      "title": "最后房间、完成与再次进入",
+      "videoTimes": [
+        "15:30",
+        "18:09"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "最后房间效果正常进入堆叠并结算",
+        "完成次数更新一次",
+        "移除旧地图后保留已完成记录",
+        "下一次探索能重新选择合法地城"
+      ]
+    },
+    {
+      "id": "initiative-undercity",
+      "priority": 1,
+      "title": "先制与幽暗地域实际规则",
+      "videoTimes": [],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "首次获得及维持先制按引擎推进",
+        "先制转移影响正确玩家",
+        "普通探索与探索幽暗地域的候选不同",
+        "录像未出现的分支另建真实对局证据"
+      ]
+    },
+    {
+      "id": "qualification-cast",
+      "priority": 1,
+      "title": "真实施放后自然获得资格",
+      "videoTimes": [
+        "06:05",
+        "10:25",
+        "16:00"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "Óin 等立传来源真实施放、支付和结算",
+        "登殿的永久物和咒语来源分别检查",
+        "传奇神器只计一个永久物",
+        "来源离场及永久物减少后资格保留"
+      ]
+    },
+    {
+      "id": "qualification-ui",
+      "priority": 1,
+      "title": "资格进度与常驻展示",
+      "videoTimes": [
+        "02:50",
+        "10:25",
+        "16:00"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "立传与登殿各使用正确分母和计数对象",
+        "超过门槛仍显示真实进度",
+        "同一资格只出现一次且位置稳定",
+        "双方资格、地城、魔戒和多个延迟效果同时可见",
+        "换盘正确清理"
+      ]
+    },
+    {
+      "id": "land-cast-removal",
+      "priority": 1,
+      "title": "真实红月蓝月施放与移除",
+      "videoTimes": [
+        "17:35",
+        "17:51",
+        "22:50",
+        "23:02",
+        "23:04"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "正常施放支付、响应和结算",
+        "改变己方及对方非基本地",
+        "相反时间顺序和树灵叠加结果来自引擎",
+        "移除效果后类型、异能和展示恢复"
+      ]
+    },
+    {
+      "id": "land-effective-ui",
+      "priority": 1,
+      "title": "有效地类别、异能和来源展示",
+      "videoTimes": [
+        "17:51",
+        "22:50",
+        "23:05"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "原牌名及美术保留",
+        "当前类型和产费来自快照",
+        "失去异能灰显及来源说明一致",
+        "五种基本地、雪境、神器、传奇、生物、传纪特征分别核对",
+        "三语言无固定中文或剩余英文混入"
+      ]
+    },
+    {
+      "id": "saga-moon-entry",
+      "priority": 1,
+      "title": "2026 规则下克撒传真正进场",
+      "videoTimes": [],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "月亮已在场时真实打出克撒传",
+        "进场传纪指示物符合 2026 规则",
+        "无章节时不因传纪状态动作牺牲",
+        "月亮移除后章节恢复和后续阶段推进正确"
+      ]
+    },
+    {
+      "id": "animated-land-duration",
+      "priority": 2,
+      "title": "运土与临时变生物的地",
+      "videoTimes": [
+        "02:50",
+        "08:50",
+        "09:05"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "同一对象不在地行与生物行重复显示",
+        "运土离场返回实际结算",
+        "已激活人地随后受到月亮影响",
+        "期限结束恢复类型、数值、可用能力和布局"
+      ]
+    },
+    {
+      "id": "creature-planeswalker",
+      "priority": 2,
+      "title": "鹏洛客成为生物",
+      "videoTimes": [
+        "19:25",
+        "23:05"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "一个实例保留忠诚并显示当前身材",
+        "忠诚不重复为普通指示物",
+        "当前类别变化调整布局",
+        "回合结束恢复并保留正确选择与附着"
+      ]
+    },
+    {
+      "id": "ring-bearer",
+      "priority": 2,
+      "title": "魔戒与持戒者",
+      "videoTimes": [
+        "06:05",
+        "08:00",
+        "21:40",
+        "23:54"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "四级解锁与累计次数分开",
+        "持戒者按永久物 ID 选择和高亮",
+        "更多引诱不生成第五级",
+        "移除或更换持戒者不混淆玩家魔戒状态",
+        "双方视角和连续请求正确"
+      ]
+    },
+    {
+      "id": "prepared-graveyard",
+      "priority": 2,
+      "title": "备法与同名区域选牌",
+      "videoTimes": [
+        "09:30",
+        "09:40"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "来源与所施放法术身份分开",
+        "支付、目标、许可消耗真实发生",
+        "多张同名坟墓场牌按 ID 选择",
+        "许可期限及来源移除分别验证"
+      ]
+    },
+    {
+      "id": "saga-face-transition",
+      "priority": 2,
+      "title": "传纪章节与放逐回场另一面",
+      "videoTimes": [
+        "13:10",
+        "14:30",
+        "14:40",
+        "15:00"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "章节数和对应触发只更新一次",
+        "当前牌面为真实引擎结果",
+        "放逐回场身份重建和附着清理正确",
+        "不同于衍生物、复制或暗置翻面"
+      ]
+    },
+    {
+      "id": "trigger-order-damage",
+      "priority": 2,
+      "title": "同名阻挡者与多个同时触发",
+      "videoTimes": [
+        "13:20",
+        "16:00",
+        "18:40"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "同时触发排序按控制者及请求范围",
+        "每个触发目标和来源不混淆",
+        "同名阻挡者伤害按实例分配",
+        "显式确认、撤销、旧请求及重复提交保护"
+      ]
+    },
+    {
+      "id": "layout-language-art",
+      "priority": 2,
+      "title": "多语言、字号与本地素材压力",
+      "videoTimes": [
+        "20:10",
+        "17:51",
+        "23:05"
+      ],
+      "engineStatus": "待新增或复核完整效果场景；本次未验证此行全部断言",
+      "unityStatus": "待专项验证；本次未运行",
+      "assertions": [
+        "小窗口与大字号下完整详情和地图不裁切",
+        "刷新和悬停时字体不瞬间缩放或方块",
+        "中文及日文效果与类别一致",
+        "辅助图按本地语言优先并在缺图时明确显示缺失",
+        "快速悬停及连续快照不抖动、不错误清理"
+      ]
+    }
+  ]
+}

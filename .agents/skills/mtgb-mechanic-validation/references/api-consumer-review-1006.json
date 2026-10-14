@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "scope": "Discover, Empower and BlankLine classified from exact source/callback/consumer paths. BlankLine has inherited no-op resolve and only returns a newline for formatting. Classification confers no effect or family-wide PASS.",
+  "graph": {
+    "project": "D-project-MTGB",
+    "generation": "2026-10-05T22:49:08Z",
+    "tier": "Verify",
+    "coverage": "Upstream .tools excluded; bridge/client metadata_changed; exact source fallback read. No exhaustive negative claim."
+  },
+  "sources": [
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/DiscoverEffect.java",
+      "sha256": "157898d50bb0615675f90a465aadfcf1cf75386e68f30a0565e48fc52b26f415"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/EmpowerEffect.java",
+      "sha256": "731faf9a50ba8ab428b4c4112e8de90147681ca4078c6a7dcb77b984b26e14f4"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java",
+      "sha256": "e05ab45ffea33fae2aa5f52d805dfb4e98e24a0ce9de6a6e9e73eeb0d96e61d3"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "8ec11d4396c104fc41eeb441cf416d548f73c4e5d066886de832c52f6003a1cc"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.CardSelection.cs",
+      "sha256": "f9c423209d48bac77e3af0cfb9a30c4c02bb31e0b1d95cf10f4c988e48dc038b"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.cs",
+      "sha256": "196a7825a1d73413c5eb9c18ce3d65a3a835cf6d6116ba8884cc8b73b3b9d692"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/BlankLineEffect.java",
+      "sha256": "d304f5736e4427e8c337ac3b6e82a8e5ecd40941be9a84604e6b12b4da003101"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
+      "sha256": "519e78380c2d0936f353d6d58e46f6d102caca72da56c42d94fcb38ec0b7f4e4"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/ApiType.java",
+      "sha256": "8b92327fbf6bc44015c0cf10827bacdfdf8c16d17e943e2ed657fee93e09cded"
+    }
+  ],
+  "apis": [
+    {
+      "api": "Discover",
+      "families": [
+        "cards",
+        "reveal",
+        "stack"
+      ],
+      "nativeCalls": [
+        "GameAction.reveal",
+        "PlayerController.confirmAction(Cast,Hand,found)",
+        "getAbilityToPlay",
+        "playSaFromPlayEffect",
+        "ChangeZone",
+        "TriggerType.Discover"
+      ],
+      "requests": [
+        "RevealCards/confirm-cards",
+        "InputConfirm/ok/cancel with found preview",
+        "existing spell ability/targets/payment requests"
+      ],
+      "clientConsumers": [
+        "RenderCardSelection",
+        "PresentSelectionFooter",
+        "RequestOptionLabel",
+        "TrySubmitPresentedOption"
+      ],
+      "nativeProof": ".tools/mechanic-coverage/runs/20261005T222717608774Z/results.json",
+      "independentBoundaries": [
+        "Other rare mandatory costs/permission/combinations remain R51/R36; discovery event trigger consumers remain A03."
+      ]
+    },
+    {
+      "api": "Empower",
+      "families": [
+        "objects",
+        "state"
+      ],
+      "nativeCalls": [
+        "TokenEffectBase.makeTokenTable",
+        "chooseSingleEntityForEffect",
+        "addCounter(LOYALTY)",
+        "replaceCounterEffect"
+      ],
+      "requests": [
+        "Single forced candidate may auto-select natively",
+        "Multiple entities use InputSelectEntitiesFromList or bridge SelectCards",
+        "Native loyalty activation and Surveil use existing ability/payment/arrange paths"
+      ],
+      "clientConsumers": [
+        "Battlefield permanent rendering/loyalty",
+        "RenderCardSelection",
+        "Existing ability selection and Surveil"
+      ],
+      "nativeProof": ".tools/mechanic-coverage/runs/20261005T224704158313Z/results.json",
+      "historicalUiProof": ".tools/mechanic-coverage/unity/20261004T0037163401098Z/empower",
+      "independentBoundaries": [
+        "Custom token types/counter replacement/multi-control and arbitrary combinations remain R22/R44/R36; historical UI remains historical."
+      ]
+    },
+    {
+      "api": "BlankLine",
+      "families": [
+        "stack"
+      ],
+      "classification": "formatting only; inherited no-op resolve",
+      "nativeCalls": [
+        "ApiType.BlankLine binds BlankLineEffect",
+        "BlankLineEffect.getStackDescription returns CRLF",
+        "SpellAbilityEffect.resolve is empty"
+      ],
+      "requests": [],
+      "clientConsumers": [
+        "Existing stack description text consumer"
+      ],
+      "nativeProof": null,
+      "independentBoundaries": [
+        "Related meaningful SubAbility/consumer effects remain in A02/A03; not counted as a new game effect test."
+      ]
+    }
+  ]
+}

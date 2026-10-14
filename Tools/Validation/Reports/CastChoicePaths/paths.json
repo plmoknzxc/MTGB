@@ -1,0 +1,475 @@
+{
+  "scope": "Pinned enum identities and extra-keyword branches only; not all casting meanings, cards, combinations or runtime validation.",
+  "revision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+  "runtimeHash": "7bf879988cc29a445857e9e250adffc9cfec05b875f7e11c62daa64fdb626d63",
+  "sourcesSha256": {
+    "optional": "c056d4936b9db4df315f0a26ebc98aa750e64315463c4bda7e2832722b5dac1f",
+    "alternative": "028c6469a7906106da6134ef2aaa4150c4addcd0b2899aacd6f5d673c09e5274",
+    "action": "16876282776a20192c1f4461383e438fd7685c717efca8c7eb846b0becb09f08"
+  },
+  "rows": [
+    {
+      "group": "optional",
+      "kind": "Bargain",
+      "samples": [
+        {
+          "kind": "Bargain",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/bargain-stack-seat1.json",
+          "inputSha256": "10a12f3c052c01c2e1003cccf32a825f61e2bffa59baed03282c0405e8c60c50"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "optional",
+      "kind": "Buyback",
+      "samples": [
+        {
+          "kind": "Buyback",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/buyback-stack-seat1.json",
+          "inputSha256": "81a6b1dced66eb035824ef7b40fd813185b56b6409ed3d8a001def8bbb803498"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "optional",
+      "kind": "Entwine",
+      "samples": [
+        {
+          "kind": "Entwine",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/entwine-stack-seat1.json",
+          "inputSha256": "8db415d3296365d6e6e3381d7604c41aaf3cdb8aaeefa0157365aa767f9b059a"
+        },
+        {
+          "kind": "Entwine",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/entwine-stack.json",
+          "inputSha256": "b72d866878858e4d4c6737f33c843b3438ecdcedb3dd9812679fd509081b7be4"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "optional",
+      "kind": "Kicker1",
+      "samples": [
+        {
+          "kind": "Kicker1",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/kicker-stack-seat1.json",
+          "inputSha256": "ac090c442b2c0c489675e207e623d0278888c335fbee2a5e87ba8e6957b4ad88"
+        },
+        {
+          "kind": "Kicker1",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/kicker-stack.json",
+          "inputSha256": "243237071ac543599a22932a524fa2aff439cb37044172446a8d2cb7129b71bb"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "optional",
+      "kind": "Kicker2",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "PromiseGift",
+      "samples": [
+        {
+          "kind": "PromiseGift",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/gift-stack-seat1.json",
+          "inputSha256": "ad660cc3fdbaa40830f2b1f8692b822a231a3a864449348efc231270b0546204"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "optional",
+      "kind": "Retrace",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "Jumpstart",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "Offering",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "Teamwork",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "ReduceW",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "ReduceU",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "ReduceB",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "ReduceR",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "ReduceG",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "AltCost",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "Flash",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "optional",
+      "kind": "Generic",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Awaken",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "BeamMeUp",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Bestow",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Blitz",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Dash",
+      "samples": [
+        {
+          "kind": "Dash",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/dash-stack-seat1.json",
+          "inputSha256": "8198f26502a7710cfc21bf8b750f17fe485684a4e15f707f46ac49ad3162285a"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "alternative",
+      "kind": "Disturb",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Emerge",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Escape",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Evoke",
+      "samples": [
+        {
+          "kind": "Evoke",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/evoke-limited-stack-seat1.json",
+          "inputSha256": "5541d9b8ac48d33915699de00abcd441c632a7fd451a00ccd7d8bc6d77d030b7"
+        },
+        {
+          "kind": "Evoke",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/evoke-limited-stack.json",
+          "inputSha256": "1bb9fd9d5344e4426a1a494d6f80fd921bde3867d9dfe1b6c46a516b653776c5"
+        },
+        {
+          "kind": "Evoke",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/evoke-stack-seat1.json",
+          "inputSha256": "4eda05d9335e094d7028ba72169ffd35751ac46440e222be1354a328c6d65262"
+        },
+        {
+          "kind": "Evoke",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/evoke-stack.json",
+          "inputSha256": "f50c24a9fdccfa47a93afec0d32c51791cad1f0c7d198bb5b7362a7bf96916b1"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "alternative",
+      "kind": "Flashback",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Harmonize",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Foretold",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Freerunning",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Impending",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Madness",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Mayhem",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "MTMtE",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Mutate",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Overload",
+      "samples": [
+        {
+          "kind": "Overload",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/overload-stack-seat1.json",
+          "inputSha256": "f573d9ea5c0ffcabeb6b1567a3acce82a6f3d3fd84420db31ae971e5bd287edb"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "alternative",
+      "kind": "Prowl",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Plotted",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Sneak",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Spectacle",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Surge",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "Warp",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "alternative",
+      "kind": "WebSlinging",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    },
+    {
+      "group": "keyword",
+      "kind": "Casualty",
+      "samples": [
+        {
+          "kind": "CASUALTY",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/casualty-stack-seat1.json",
+          "inputSha256": "7a98c46d99e233d216ab40db337a12ad6b0ec02fdbc05843eafae4ac0998b81d"
+        },
+        {
+          "kind": "CASUALTY",
+          "count": 3,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/profit-stack-seat1.json",
+          "inputSha256": "fd932c13609b8666d6a9d782c4dfa8abcb7c2bbea2010d889581b7f5eb3eaecb"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "keyword",
+      "kind": "Conspire",
+      "samples": [
+        {
+          "kind": "CONSPIRE",
+          "count": 1,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/conspire-stack-seat1.json",
+          "inputSha256": "ba05bad7c927037d1e7744a3f77bc8f314a2e916a7b778eca8dab9ee5c303f06"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "keyword",
+      "kind": "Multikicker",
+      "samples": [
+        {
+          "kind": "MULTIKICKER",
+          "count": 2,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/multikicker-stack-seat1.json",
+          "inputSha256": "da25bf06d5213ad9b28d8128b73af54584c16dc5b278a495cf48aa5c53932dcf"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "keyword",
+      "kind": "Offspring",
+      "samples": [
+        {
+          "kind": "OFFSPRING",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/offspring-stack-seat1.json",
+          "inputSha256": "d15d70287b9ef8fcc68970c53f23def6f723b0eb16c0b5146e0c34b7205d96ce"
+        },
+        {
+          "kind": "OFFSPRING",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/offspring-stack.json",
+          "inputSha256": "9b5a001072a398730e334abd5156f1355afbcde4b92532e6e01a9ba52501c799"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "keyword",
+      "kind": "Replicate",
+      "samples": [
+        {
+          "kind": "REPLICATE",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/replicate-stack-seat1.json",
+          "inputSha256": "55ade22d58447a3b8ed1a6869b102ebe073387d8e4eec3ca27fda5c8f77cd103"
+        },
+        {
+          "kind": "REPLICATE",
+          "count": 1,
+          "input": "Tools/Validation/Reports/ModeChoices/replicate-stack.json",
+          "inputSha256": "27fb4def81659a2ffad84259841a45546a322179e89edf7e8b68e34b056b4177"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "keyword",
+      "kind": "Squad",
+      "samples": [
+        {
+          "kind": "SQUAD",
+          "count": 2,
+          "input": "Tools/Validation/Reports/CastChoiceFamilies/squad-stack-seat1.json",
+          "inputSha256": "072cf7d9b643fe96376198eca9a3737bca798f67ede341cccdddb3acd0763e20"
+        }
+      ],
+      "status": "有实际堆叠样本（结算／UI以独立记录为准）"
+    },
+    {
+      "group": "keyword",
+      "kind": "Harmonize",
+      "samples": [],
+      "status": "本次堆叠专项缺少实际样本"
+    }
+  ],
+  "otherPaths": [
+    "ordinary/Spree/Escalate/Entwine modal choices",
+    "repeatable/X modal choices",
+    "X amounts",
+    "alternate faces/split/fuse/adventure/omen/MDFC",
+    "Prototype",
+    "face-down casting",
+    "optional costs granted by another source",
+    "additional nonmana costs and reductions",
+    "casting through another effect/without paying mana cost"
+  ]
+}

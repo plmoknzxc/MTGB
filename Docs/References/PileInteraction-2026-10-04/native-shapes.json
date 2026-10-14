@@ -1,0 +1,352 @@
+{
+  "revision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+  "scope": "Static TwoPiles API declarations only; Execute references are excluded. Includes upcoming scripts. Shared UI route is not proof every card effect passed.",
+  "rows": [
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/a/abstract_performance.txt",
+      "name": "Abstract Performance",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": null,
+      "chooser": "Opponent",
+      "definedPiles": "Remembered,Imprinted",
+      "script": "SVar:TheyChoose:DB$ TwoPiles | Zone$ Exile | DefinedPiles$ Remembered,Imprinted | Chooser$ Opponent | ChosenPile$ ToGrave | UnchosenPile$ DBPlay | SubAbility$ DBCleanup | StackDescription$ SpellDescription | SpellDescription$ An opponent chooses one of those piles. Put that pile into your graveyard. Look at the cards in the other pile. You may cast a spell from among them without paying its mana cost. Put the rest into your hand."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/a/atris_oracle_of_half_truths.txt",
+      "name": "Atris, Oracle of Half-Truths",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": "Targeted",
+      "chooser": "You",
+      "definedPiles": null,
+      "script": "SVar:Separate:DB$ TwoPiles | Defined$ You | Separator$ Targeted | Chooser$ You | DefinedCards$ Remembered | ChosenPile$ DBHand | UnchosenPile$ DBGrave | Zone$ Library | FaceDown$ One | StackDescription$ None"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/b/bend_or_break.txt",
+      "name": "Bend or Break",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Remembered",
+      "chooser": "ChosenPlayer",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ Remembered | Separator$ Remembered | Chooser$ ChosenPlayer | ChosenPile$ DBBreak | UnchosenPile$ DBBend | ValidCards$ Land.!token+RememberedPlayerCtrl | Zone$ Battlefield | SubAbility$ DBCleanupChosen"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/b/boneyard_parley.txt",
+      "name": "Boneyard Parley",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Targeted | Separator$ Opponent | ChosenPile$ DBBattlefield | UnchosenPile$ DBGrave"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/b/brilliant_ultimatum.txt",
+      "name": "Brilliant Ultimatum",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBPlay"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/c/choose_your_demise.txt",
+      "name": "Choose Your Demise",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:Separate:DB$ TwoPiles | Defined$ You | Separator$ You | Chooser$ Opponent | DefinedCards$ Remembered | ChosenPile$ DBHand | UnchosenPile$ DBLibraryBottom | Zone$ Library | FaceDown$ One | StackDescription$ None"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/c/curator_of_destinies.txt",
+      "name": "Curator of Destinies",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:Separate:DB$ TwoPiles | Defined$ You | Separator$ You | Chooser$ Opponent | DefinedCards$ Remembered | ChosenPile$ DBHand | UnchosenPile$ DBGraveyard | Zone$ Library | FaceDown$ One"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/d/death_or_glory.txt",
+      "name": "Death or Glory",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "A:SP$ TwoPiles | Defined$ You | Separator$ You | Chooser$ Opponent | ChosenPile$ DBExile | UnchosenPile$ DBReturn | ValidCards$ Creature | Zone$ Graveyard | AILogic$ Worst | SpellDescription$ Separate all creature cards in your graveyard into two piles. Exile the pile of an opponent's choice and return the other to the battlefield."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/d/do_or_die.txt",
+      "name": "Do or Die",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "A:SP$ TwoPiles | ValidTgts$ Player | Separator$ You | ChosenPile$ DBDestroy | ValidCards$ Creature | Zone$ Battlefield | AILogic$ Worst | SpellDescription$ Separate all creatures target player controls into two piles. Destroy all creatures in the pile of that player's choice. They can't be regenerated."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/e/epiphany_at_the_drownyard.txt",
+      "name": "Epiphany at the Drownyard",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Chooser$ Opponent | DefinedCards$ Remembered | Separator$ You | ChosenPile$ DBHand | UnchosenPile$ DBGrave | AILogic$ Worst"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/f/fact_or_fiction.txt",
+      "name": "Fact or Fiction",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBHand | UnchosenPile$ DBGrave | StackDescription$ An opponent separates those cards into two piles. {p:You} puts one pile into their hand and the other into their graveyard."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/f/fight_or_flight.txt",
+      "name": "Fight or Flight",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "TriggeredPlayer",
+      "definedPiles": null,
+      "script": "SVar:TrigTwoPile:DB$ TwoPiles | Defined$ TriggeredPlayer | Chooser$ TriggeredPlayer | ValidCards$ Creature | Zone$ Battlefield | Separator$ You | ChosenPile$ DBEffect"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/f/fortunes_favor.txt",
+      "name": "Fortune's Favor",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": "TargetedPlayer",
+      "chooser": "You",
+      "definedPiles": null,
+      "script": "SVar:Separate:DB$ TwoPiles | Defined$ You | Separator$ TargetedPlayer | Chooser$ You | ValidTgts$ Opponent | DefinedCards$ Remembered | ChosenPile$ DBHand | UnchosenPile$ DBGrave | Zone$ Library | FaceDown$ One | StackDescription$ None"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/h/hostile_negotiations.txt",
+      "name": "Hostile Negotiations",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": null,
+      "chooser": null,
+      "definedPiles": "Remembered,Imprinted",
+      "script": "SVar:YouChoose:DB$ TwoPiles | Zone$ Exile | DefinedPiles$ Remembered,Imprinted | ChosenPile$ TurnFaceUp | SubAbility$ TheyChoose | KeepRemembered$ True | StackDescription$ SpellDescription | SpellDescription$ Look at the cards in each pile, then turn a pile of your choice face up."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/h/hostile_negotiations.txt",
+      "name": "Hostile Negotiations",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": null,
+      "chooser": "Opponent",
+      "definedPiles": "Remembered,Imprinted",
+      "script": "SVar:TheyChoose:DB$ TwoPiles | Zone$ Exile | DefinedPiles$ Remembered,Imprinted | Chooser$ Opponent | ChosenPile$ ToHand | UnchosenPile$ ToGrave | SubAbility$ DBLoseLife | StackDescription$ SpellDescription | SpellDescription$ An opponent chooses one of those piles. Put all cards in the chosen pile into your hand and the rest into your graveyard."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/i/intrude_on_the_mind.txt",
+      "name": "Intrude on the Mind",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Chooser$ Opponent | DefinedCards$ Remembered | Separator$ You | ChosenPile$ DBHand | UnchosenPile$ DBGrave | AILogic$ Worst"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/j/jace_architect_of_thought.txt",
+      "name": "Jace, Architect of Thought",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBHand | UnchosenPile$ DBLibraryBottom"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/l/liliana_of_the_veil.txt",
+      "name": "Liliana of the Veil",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "A:AB$ TwoPiles | Cost$ SubCounter<6/LOYALTY> | Planeswalker$ True | Ultimate$ True | ValidTgts$ Player | Separator$ You | ChosenPile$ DBSacAll | ValidCards$ Permanent | Zone$ Battlefield | AILogic$ Worst | StackDescription$ REP target player_{p:Targeted} | SpellDescription$ Separate all permanents target player controls into two piles. That player sacrifices all permanents in the pile of their choice."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/m/make_an_example.txt",
+      "name": "Make an Example",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Remembered",
+      "chooser": "You",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ Remembered | Separator$ Remembered | Chooser$ You | RememberChosen$ True | ValidCards$ Creature.RememberedPlayerCtrl | Zone$ Battlefield"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/p/phyrexian_portal.txt",
+      "name": "Phyrexian Portal",
+      "faceDown": "True",
+      "leftRight": null,
+      "separator": "Targeted",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Targeted | FaceDown$ True | ConditionCheckSVar$ X | ConditionSVarCompare$ GE10 | ChosenPile$ DBHand | UnchosenPile$ DBExile"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/r/raging_river.txt",
+      "name": "Raging River",
+      "faceDown": "False",
+      "leftRight": "True",
+      "separator": "Remembered",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBDefLeftRight:DB$ TwoPiles | Defined$ Remembered | Separator$ Remembered | ValidCards$ Creature.withoutFlying+RememberedPlayerCtrl | Zone$ Battlefield | LeftRightPile$ True | ChosenPile$ DBDefLeftPile | UnchosenPile$ DBDefRightPile | AILogic$ Random | SubAbility$ DBClearImprinted"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/r/raging_river.txt",
+      "name": "Raging River",
+      "faceDown": "False",
+      "leftRight": "True",
+      "separator": "You",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBAtkLeftRight:DB$ TwoPiles | Defined$ You | Separator$ You | ValidCards$ Creature.attacking+YouCtrl | Zone$ Battlefield | LeftRightPile$ True | ChosenPile$ DBAtkLeftPile | UnchosenPile$ DBAtkRightPile | AILogic$ Random"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/r/riddles_in_the_dark.txt",
+      "name": "Riddles in the Dark",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | Separator$ You | Chooser$ Opponent | DefinedCards$ Remembered | ChosenPile$ DBHand | UnchosenPile$ DBGraveyard | Zone$ Library | FaceDown$ One | StackDescription$ None"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/rebalanced/a-split_the_spoils.txt",
+      "name": "A-Split the Spoils",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Chooser$ Opponent | DefinedCards$ Targeted | Separator$ You | ChosenPile$ DBHand | UnchosenPile$ DBGrave | AILogic$ Worst | StackDescription$ REP separate_separates & Put that_{p:You} puts that & pile into your_pile into their & other into your_other into their | SpellDescription$ and separate them into two piles. An opponent chooses one of those piles. Put that pile into your hand and the other into your graveyard. (Piles can be empty.)"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/saurons_ransom.txt",
+      "name": "Sauron's Ransom",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": "You",
+      "definedPiles": null,
+      "script": "A:SP$ TwoPiles | Defined$ You | Separator$ Opponent | Chooser$ You | DefinedCards$ Top_4_OfLibrary | ChosenPile$ DBHand | UnchosenPile$ DBGrave | FaceDown$ One | SubAbility$ TrigTempt | SpellDescription$ Choose an opponent. They look at the top four cards of your library and separate them into a face-down pile and a face-up pile. Put one pile into your hand and the other into your graveyard. The Ring tempts you."
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/sphinx_of_clear_skies.txt",
+      "name": "Sphinx of Clear Skies",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBHand | UnchosenPile$ DBGrave"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/sphinx_of_uthuun.txt",
+      "name": "Sphinx of Uthuun",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBHand | UnchosenPile$ DBGrave"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/split_the_spoils.txt",
+      "name": "Split the Spoils",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Chooser$ Opponent | DefinedCards$ Targeted | Separator$ You | ChosenPile$ DBHand | UnchosenPile$ DBGrave | AILogic$ Worst | StackDescription$ REP separate_separates & Put that_{p:You} puts that & pile into your_pile into their & other into your_other into their | SpellDescription$ and separate them into two piles. An opponent chooses one of those piles. Put that pile into your hand and the other into your graveyard. (Piles can be empty.)"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/stand_or_fall.txt",
+      "name": "Stand or Fall",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ Remembered | Zone$ Battlefield | ValidCards$ Creature.RememberedPlayerCtrl | Separator$ You | RememberChosen$ True | AILogic$ Best"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/s/steam_augury.txt",
+      "name": "Steam Augury",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Chooser$ Opponent | DefinedCards$ Remembered | Separator$ You | ChosenPile$ DBHand | UnchosenPile$ DBGrave | AILogic$ Worst"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/t/the_celestial_toymaker.txt",
+      "name": "The Celestial Toymaker",
+      "faceDown": "One",
+      "leftRight": null,
+      "separator": null,
+      "chooser": "TriggeredDefendingPlayer",
+      "definedPiles": "Imprinted,Remembered",
+      "script": "SVar:Separate:DB$ TwoPiles | Defined$ You | DefinedPiles$ Imprinted,Remembered | Chooser$ TriggeredDefendingPlayer | ChosenPile$ DBHand | FaceDown$ One | SubAbility$ DBCleanup"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/t/truth_or_tale.txt",
+      "name": "Truth or Tale",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "You",
+      "chooser": "Opponent",
+      "definedPiles": null,
+      "script": "SVar:DBTwoPile:DB$ TwoPiles | Chooser$ Opponent | DefinedCards$ Imprinted | Separator$ You | ChosenPile$ DBHand | AILogic$ Worst"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/u/unesh_criosphinx_sovereign.txt",
+      "name": "Unesh, Criosphinx Sovereign",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBHand | UnchosenPile$ DBGrave"
+    },
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/u/urza_academy_headmaster.txt",
+      "name": "Urza, Academy Headmaster",
+      "faceDown": "False",
+      "leftRight": null,
+      "separator": "Opponent",
+      "chooser": null,
+      "definedPiles": null,
+      "script": "SVar:DBTwoPiles9M:DB$ TwoPiles | Defined$ You | DefinedCards$ Remembered | Separator$ Opponent | ChosenPile$ DBHand9M | UnchosenPile$ DBLibraryBottom9M"
+    }
+  ],
+  "excludedReferences": [
+    {
+      "path": "ForgeRuntime/assets/res/cardsfolder/c/choose_your_demise.txt",
+      "reason": "T: Execute$ TwoPiles is a reference to a named SVar, not an API declaration; its SVar:Separate:DB$ TwoPiles remains included."
+    }
+  ]
+}

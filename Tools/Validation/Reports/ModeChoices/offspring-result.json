@@ -1,0 +1,9 @@
+{
+  "case": "offspring",
+  "result": "PASS offspring actual cast/payment/stack choices/targets/effects/priority",
+  "timeUtc": "2026-10-05T21:29:29.473378+00:00",
+  "testSha256": "ad21a193f5a7bc93971a2b1fa29f5e5b2c829a2685c369a59714cad7eb20f2fa",
+  "fixtureSha256": "a16a2113002bbc0b2724d56351195cefdd2af4497ed16b451ec1c03926eded1c",
+  "runtimeManifest": "0fba42a96913a18c1b0761611a120b2a6e25145993b99ec400cdd9cdbc88cf03",
+  "traceSha256": "8c6442a0102f6d14d3f2e9a235b501619cc06950eef76b4aaa9cf090fe5e6eaf"
+}

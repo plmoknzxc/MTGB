@@ -65,6 +65,8 @@ def run(case):
      snap(m,'reveal');pick='confirm-cards'
     elif kind in ('Surveil','Scry'):
      surveilled=True;snap(m,'surveil');pick='confirm-scry' if 'confirm-scry' in ids else next(i for i in ids if i.startswith('scry-bottom:'))
+    elif case=='modal' and kind=='ChooseModes':
+     snap(m,'modes');pick=next((o['id'] for o in opts if o['id'].startswith('mode:') and not o.get('selected') and not o.get('disabled') and ('Create a' in o['label'] or 'Draw a card' in o['label'])),None) or 'confirm-modes'
     elif case=='modal' and kind not in ('InputPassPriority',):
      snap(m,'modes');pick=next((o['id'] for o in opts if ('Create a' in o['label'] or 'Draw a card' in o['label']) and o['id'] not in selected),None) or ('ok' if 'ok' in ids else ids[0]);selected.append(pick)
     elif kind=='SelectCards':

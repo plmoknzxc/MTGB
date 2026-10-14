@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,7 +12,8 @@ public sealed class ReplayBrowser : MonoBehaviour
     public static string ReturnMessage;
     private RectTransform rows;
     private Text details, status, pagination;
-    private Button play, export, previousPage, nextPage;
+    private Button play, export, delete, previousPage, nextPage;
+    private RectTransform deleteDialog;
     private string[] files = Array.Empty<string>();
     private string selectedPath;
     private MatchReplay selected;
@@ -51,8 +52,9 @@ public sealed class ReplayBrowser : MonoBehaviour
         ReplayWidgets.Panel(info, "DetailRule", 0, 238, 510, 1, Border).GetComponent<Image>().raycastTarget = false;
         ReplayWidgets.Label(info, "录像详情", 0, 279, 510, 50, 28);
         details = ReplayWidgets.Label(info, "选择一场对局", 0, 42, 510, 385, 22, TextAnchor.UpperLeft);
-        play = ReplayWidgets.Button(info, "播放录像", 0, -220, 500, () => OpenSelected(false), true);
-        export = ReplayWidgets.Button(info, "导出视频", 0, -288, 500, () => OpenSelected(true));
+        play = ReplayWidgets.Button(info, "播放录像", 0, -208, 500, () => OpenSelected(false), true);
+        export = ReplayWidgets.Button(info, "导出视频", -130, -276, 240, () => OpenSelected(true));
+        delete = ReplayWidgets.Button(info, "删除录像", 130, -276, 240, ShowDeleteSelected);
         pagination = ReplayWidgets.Label(transform, "", -300, -420, 480, 52, 20, TextAnchor.MiddleCenter);
         previousPage = ReplayWidgets.Button(transform, "上一页", -695, -420, 170, () => { if (page > 0) { page--; RenderFiles(); } });
         nextPage = ReplayWidgets.Button(transform, "下一页", 95, -420, 170, () => { if ((page + 1) * PageSize < files.Length) { page++; RenderFiles(); } });
@@ -68,7 +70,14 @@ public sealed class ReplayBrowser : MonoBehaviour
     private void OnDestroy() { ReplayRepository.Changed -= RefreshFiles; GamePreferences.Changed -= RefreshDetails; if (current == this) current = null; }
     public void RefreshFiles()
     {
-        try { files = ReplayRepository.ListFiles(); page = Math.Min(page, Math.Max(0, (files.Length - 1) / PageSize)); RenderFiles(); }
+        try {
+            files = ReplayRepository.ListFiles();
+            if (selectedPath != null && Array.IndexOf(files, selectedPath) < 0) {
+                ++selectionRevision; selected = null; selectedPath = null;
+                details.text = "选择一场对局";
+            }
+            page = Math.Min(page, Math.Max(0, (files.Length - 1) / PageSize)); RenderFiles();
+        }
         catch (Exception e) { status.text = e.Message; }
     }
     private void RenderFiles()
@@ -88,6 +97,7 @@ public sealed class ReplayBrowser : MonoBehaviour
         if (files.Length == 0) ReplayWidgets.Label(rows, "还没有保存的录像", 0, 0, 900, 80, 28, TextAnchor.MiddleCenter).color = new Color(.60f,.62f,.64f);
         pagination.text = (page + 1) + " / " + Math.Max(1, (files.Length + PageSize - 1) / PageSize);
         play.interactable = export.interactable = selected != null;
+        delete.interactable = selectedPath != null && File.Exists(selectedPath);
         previousPage.interactable = page > 0;
         nextPage.interactable = (page + 1) * PageSize < files.Length;
     }
@@ -107,6 +117,7 @@ public sealed class ReplayBrowser : MonoBehaviour
     {
         int request = ++selectionRevision;
         selected = null; selectedPath = path; play.interactable = export.interactable = false;
+        delete.interactable = File.Exists(path);
         details.text = "正在读取录像…";
         try
         {
@@ -132,6 +143,32 @@ public sealed class ReplayBrowser : MonoBehaviour
         if (video && !ReplayVideoEncoder.TryFind(out _)) { status.text = "未找到 FFmpeg，请将 ffmpeg.exe 放入 VideoTools 文件夹或加入 PATH。"; return; }
         if (OnlineMatchService.Instance?.IsInMatch == true) { status.text = "请先完成当前对局。"; return; }
         ReplayPlayback.Open(selected, selectedPath, video); Destroy(gameObject);
+    }
+    private void ShowDeleteSelected()
+    {
+        if (selectedPath == null || deleteDialog != null) return;
+        string path = selectedPath;
+        deleteDialog = ReplayWidgets.Panel(transform, "DeleteReplayModal", 0, 0, 1920, 1080, new Color(0,0,0,.7f));
+        deleteDialog.anchorMin = Vector2.zero; deleteDialog.anchorMax = Vector2.one;
+        deleteDialog.offsetMin = deleteDialog.offsetMax = Vector2.zero;
+        var box = ReplayWidgets.Panel(deleteDialog, "DeleteReplayDialog", 0, 0, 720, 300, Surface);
+        ReplayWidgets.Label(box, "删除录像", 0, 96, 640, 52, 30);
+        var question = ReplayWidgets.Label(box, "确定删除“" + Path.GetFileNameWithoutExtension(path) + "”？\n删除后无法恢复。", 0, 8, 640, 100, 21);
+        question.horizontalOverflow = HorizontalWrapMode.Wrap;
+        var cancel = ReplayWidgets.Button(box, "取消", -145, -100, 250, CloseDeleteDialog);
+        var confirm = ReplayWidgets.Button(box, "确认删除", 145, -100, 250, () => {
+            try {
+                bool removed = ReplayRepository.Delete(path);
+                CloseDeleteDialog();
+                status.text = removed ? "录像已删除。" : "录像已不存在，列表已刷新。";
+            } catch (Exception e) { CloseDeleteDialog(); status.text = "删除失败：" + e.Message; }
+        });
+        StyleButton(cancel, false); StyleButton(confirm, false);
+    }
+    private void CloseDeleteDialog()
+    {
+        if (deleteDialog == null) return;
+        deleteDialog.gameObject.SetActive(false); Destroy(deleteDialog.gameObject); deleteDialog = null;
     }
     private void OpenFolder()
     {

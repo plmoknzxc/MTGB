@@ -5,6 +5,10 @@ using UnityEngine.UI;
 // Retains the source separately so repeated locale/scale changes never accumulate.
 public sealed class PreferenceText : MonoBehaviour
 {
+    // Icon fonts and numeric-only serif labels must survive locale refreshes.
+    // Ordinary text keeps the locale font by default.
+    public bool KeepFont;
+    public bool Literal;
     Text text;
     TMP_Text tmp;
     string source,last;
@@ -22,13 +26,28 @@ public sealed class PreferenceText : MonoBehaviour
         if(baseSize<=0) baseSize=text!=null?text.fontSize:tmp.fontSize;
         var input=GetComponentInParent<InputField>();
         var dropdown=GetComponentInParent<Dropdown>();
-        inputText=input!=null && input.textComponent==text;
+        var tmpInput=GetComponentInParent<TMP_InputField>();
+        inputText=input!=null && input.textComponent==text || tmpInput!=null&&tmpInput.textComponent==tmp;
         userText=inputText || dropdown!=null;
         source=Current;
         initialized=true;
         return true;
     }
     string Current { get => text!=null?text.text:tmp.text; set {if(text!=null) text.text=value;else tmp.text=value;} }
+    // Call at construction or an intentional layout size change, before the
+    // first frame. Raw fontSize writes are overwritten by periodic BindScene.
+    public static void SetSize(Text label,float size)
+    {
+        var binding=label.GetComponent<PreferenceText>();
+        if(binding==null)binding=label.gameObject.AddComponent<PreferenceText>();
+        binding.SetBaseSize(size);
+    }
+    public static void SetSize(TMP_Text label,float size)
+    {
+        var binding=label.GetComponent<PreferenceText>();
+        if(binding==null)binding=label.gameObject.AddComponent<PreferenceText>();
+        binding.SetBaseSize(size);
+    }
     public void SetBaseSize(float size)
     {
         baseSize=size;
@@ -47,15 +66,15 @@ public sealed class PreferenceText : MonoBehaviour
         if(!EnsureInitialized()) return;
         if(Current!=last) source=Current;
         revision=GamePreferences.Revision;
-        last=userText?source:GamePreferences.T(source ?? ""); Current=last;
+        last=userText||Literal?source:GamePreferences.T(source ?? ""); Current=last;
         if(text!=null) {
             text.fontSize=Mathf.RoundToInt(baseSize*GamePreferences.TextScale);
             // Best-fit labels must retain their vertical bounds after localization
             // or font scaling, otherwise long ability text grows over adjacent UI.
             if(text.resizeTextForBestFit)text.verticalOverflow=VerticalWrapMode.Truncate;
             else if(!userText || inputText)text.verticalOverflow=VerticalWrapMode.Overflow;
-            if(GamePreferences.Font!=null)text.font=GamePreferences.Font;
+            if(!KeepFont && GamePreferences.Font!=null)text.font=GamePreferences.Font;
         }
-        else {tmp.fontSize=baseSize*GamePreferences.TextScale;if(GamePreferences.TmpFont!=null) tmp.font=GamePreferences.TmpFont;}
+        else {tmp.fontSize=baseSize*GamePreferences.TextScale;if(!KeepFont && GamePreferences.TmpFont!=null) tmp.font=GamePreferences.TmpFont;}
     }
 }

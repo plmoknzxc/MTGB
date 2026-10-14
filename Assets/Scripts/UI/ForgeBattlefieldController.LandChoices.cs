@@ -8,6 +8,8 @@ public sealed partial class ForgeBattlefieldController
 {
     private RectTransform landChoiceMenu, choiceDismiss;
     private int clickedLandId, choiceSeat;
+    private long choiceScrollContext;
+    private float choiceScrollOffset;
     private Vector2 clickedChoiceAnchor;
 
     private void RememberLandChoice(ForgeOption option)
@@ -33,31 +35,79 @@ public sealed partial class ForgeBattlefieldController
         return match.Success?match.Groups[1].Value.Trim():null;
     }
 
+    public static string ChoiceManaSymbols(string label,ForgeRequest request)
+    {
+        // The native convoke color dialog uses COLORLESS for a generic payment,
+        // not for producing {C}. Keep ordinary production/allocation unchanged.
+        bool convoke=request?.kind=="dialog" && Regex.IsMatch(request.message??"",
+            @"^one: Convoke .+ \(\d+\)  for which color\?$");
+        return convoke && string.Equals(label?.Trim(),"COLORLESS",StringComparison.OrdinalIgnoreCase)
+            ? "{1}" : ChoiceManaSymbols(label);
+    }
+    private static bool IsManaProductionChoice(ForgeRequest request)=>request!=null
+        && (request.message??"").EndsWith("Select Mana to Produce",StringComparison.Ordinal)
+        && (request.options?.Length??0)>0 && request.options.All(o=>ChoiceManaSymbols(o.label,request)!=null);
+
     private ForgeCardView AbilityChoiceSource()
     {
         if(view.request.sourceCard!=null && !string.IsNullOrEmpty(view.request.sourceCard.name))return view.request.sourceCard;
         int id=view.request.sourceCardId>0?view.request.sourceCardId:choiceSeat==seat?clickedLandId:0;
         return (view.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>(p.hand??Array.Empty<ForgeCardView>())
-            .Concat(p.battlefield??Array.Empty<ForgeCardView>())).FirstOrDefault(c=>c.id==id);
+            .Concat(p.battlefield??Array.Empty<ForgeCardView>()))
+            .Concat((view.stackItems??Array.Empty<ForgeStackItem>()).Select(s=>s.source))
+            .FirstOrDefault(c=>c!=null&&c.id==id);
+    }
+
+    private int GroupAssignmentSeat(ForgeCardView source)
+    {
+        var request=view?.request;
+        if(request?.kind!="dialog"||source==null||!(source.originalRules??"").StartsWith("For each player, choose friend or foe.",StringComparison.Ordinal)
+            ||request.options.Length!=2||request.options[0].id!="choice:0"||request.options[1].id!="choice:1")return 0;
+        var match=Regex.Match(request.message??"",@"^one: Choose ability for Player (\d+)$");
+        return match.Success&&int.TryParse(match.Groups[1].Value,out int player)&&view.players.Any(p=>p.seat==player)?player:0;
+    }
+
+    private string GroupChoiceText(ForgeCardView source,ForgeOption option)
+    {
+        // These are the exact two native child descriptions, not the entire
+        // printed paragraph. Unknown child text keeps its existing display path.
+        if(source?.name=="Pir's Whim") {
+            if(option.id=="choice:0"&&option.label=="Friend searches their library for a land card, puts it onto the battlefield tapped, then shuffles their library.")
+                return TapPaymentText("每位友方各从其牌库中搜寻一张地牌，将之横置放进战场，然后洗牌。",option.label,"各味方はそれぞれ、自分のライブラリーから土地カード１枚を探し、それをタップ状態で戦場に出し、その後ライブラリーを切り直す。");
+            if(option.id=="choice:1"&&option.label=="Foe sacrifices an artifact or enchantment they control.")
+                return TapPaymentText("每位敌方各牺牲一个依其选择的神器或结界。",option.label,"各敵はそれぞれ、自分がコントロールしているアーティファクト１つかエンチャント１つを生け贄に捧げる。");
+        }
+        return AbilityEffectText(source,option.label);
     }
 
     private bool PrepareLandChoices()
     {
+        long context=view?.request?.contextId>0?view.request.contextId:view?.request?.requestId??0;
+        var previousScroll=landChoiceMenu!=null?landChoiceMenu.GetComponentInChildren<BattlefieldHorizontalScroll>(true):null;
+        choiceScrollOffset=context==choiceScrollContext&&previousScroll!=null?-previousScroll.content.anchoredPosition.x:0;
+        choiceScrollContext=context;
         if(landChoiceMenu!=null){landChoiceMenu.gameObject.SetActive(false);Clear(landChoiceMenu);}
         if(choiceDismiss!=null)choiceDismiss.gameObject.SetActive(false);
-        if(view?.awaitingInput!=true || (view.request.kind!="dialog"&&view.request.kind!="ChooseNumber"&&view.request.kind!="ChooseModes") || IsCardPickerRequest)return false;
-        var options=view.request.options.Where(o=>o.id!="cancel" && o.id!="ok" && !RepresentedOnBoard(o.id)).ToArray();
+        if(IsCostOrderRequest) { PresentCostOrderChoices(); return true; }
+        bool playerVote=view?.awaitingInput==true && view.request.votingPlayerSeat>0
+            && view.request.options.Any(o=>o.id.StartsWith("player:",StringComparison.Ordinal));
+        if(view?.awaitingInput!=true || view.request.selectionPurpose=="optionalReplacement" || view.request.selectionPurpose=="costConfirmation" || (!playerVote&&view.request.kind!="dialog"&&view.request.kind!="ChooseNumber"&&view.request.kind!="ChooseModes"&&view.request.kind!="ChooseOptions"&&view.request.kind!="InputConfirm") || IsCardPickerRequest)return false;
+        bool manaProduction=IsManaProductionChoice(view.request);
+        bool valueChoice=!manaProduction&&(view.request.kind=="InputConfirm"||RandomChoiceTitle()!=null);
+        var options=view.request.options.Where(o=>playerVote?o.id.StartsWith("player:",StringComparison.Ordinal):
+            (view.request.selectionPurpose!="costScalar" || o.id!="ok"&&o.id!="cancel") && (manaProduction||valueChoice||o.id!="cancel" && o.id!="ok" && !RepresentedOnBoard(o.id))).ToArray();
         if(options.Length==0)return false;
-        var source=AbilityChoiceSource();
+        bool sectorChoice=IsSectorChoice(view.request);
+        var source=sectorChoice?SectorChoiceSource(view.request):AbilityChoiceSource();
         Vector2 anchor=clickedChoiceAnchor;
         var sourceVisual=arenaCards.Values.FirstOrDefault(c=>c.root.name=="Card_"+source?.id);
         if(sourceVisual!=null) {
             var corners=new Vector3[4];sourceVisual.face.GetWorldCorners(corners);
             anchor=new Vector2(surface.InverseTransformPoint(sourceVisual.root.position).x,corners.Max(c=>surface.InverseTransformPoint(c).y));
         }
-        bool mana=options.All(o=>ChoiceManaSymbols(o.label)!=null);
+        bool mana=options.All(o=>ChoiceManaSymbols(o.label,view.request)!=null);
         bool confirmation=options.All(o=>o.label=="Yes" || o.label=="No" || o.label=="是" || o.label=="否");
-        bool cards=!mana && !confirmation;
+        bool cards=!mana && !confirmation && !sectorChoice;
         if(choiceDismiss==null) {
             choiceDismiss=Panel(surface,"DismissAbilityChoices",Vector2.zero,Vector2.zero,Color.clear);
             choiceDismiss.anchorMin=Vector2.zero;choiceDismiss.anchorMax=Vector2.one;
@@ -66,64 +116,115 @@ public sealed partial class ForgeBattlefieldController
         }
         long captured=requestId;
         choiceDismiss.GetComponent<Image>().color=new Color(.015f,.025f,.04f,.32f);
-        choiceDismiss.GetComponent<ForgeChoiceDismiss>().Dismiss=()=>{if(canAct && !submitted && OptionIndex("cancel")>=0)Choose(OptionIndex("cancel"),captured);};
+        choiceDismiss.GetComponent<ForgeChoiceDismiss>().Dismiss=()=>{if(!manaProduction&&!valueChoice&&canAct && !submitted && OptionIndex("cancel")>=0)Choose(OptionIndex("cancel"),captured);};
         choiceDismiss.gameObject.SetActive(true);choiceDismiss.SetAsLastSibling();
         if(landChoiceMenu==null)landChoiceMenu=Panel(surface,"CardAbilityChoices",Vector2.zero,Vector2.zero,Color.clear);
+        landChoiceMenu.SetParent(surface,false);
         var menuDismiss=landChoiceMenu.GetComponent<ForgeChoiceDismiss>();
         if(menuDismiss==null)menuDismiss=landChoiceMenu.gameObject.AddComponent<ForgeChoiceDismiss>();
+        menuDismiss.ListenForRightClick=false;
         menuDismiss.Dismiss=choiceDismiss.GetComponent<ForgeChoiceDismiss>().Dismiss;
         landChoiceMenu.anchorMin=landChoiceMenu.anchorMax=landChoiceMenu.pivot=new Vector2(.5f,.5f);
         landChoiceMenu.GetComponent<Image>().color=cards?Color.clear:Ink;
         landChoiceMenu.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(500,240,16);
+        if(playerVote){PresentGenericChoices(captured);return true;}
+        if(view.request.paymentMode=="manual" && (view.request.kind=="ChooseNumber"||options.All(o=>int.TryParse(o.label,out _)))) {
+            PresentNumericChoices(options,source,anchor,captured);return true;
+        }
+        if(valueChoice){PresentValueChoices(options,captured);return true;}
+        if(view.request.message=="one: Choose a creature type" || view.request.message=="oneOrNone: Choose a creature type") {PresentCreatureTypeChoices(captured);return true;}
+        if(view.request.selectionPurpose=="cardName") {PresentCardNameChoices(captured);return true;}
+        if(view.request.selectionPurpose=="dungeonRoom") {PresentDungeonRoomChoices(source,captured);return true;}
+        if(view.request.selectionPurpose=="roomDoor") {PresentRoomDoorChoices(options,captured);return true;}
+        if(view.request.kind=="ChooseOptions") {
+            if(view.request.selectionPurpose=="optionalCosts")PresentModeCards(source,captured,false);
+            else PresentGenericChoices(captured);return true;
+        }
         if(view.request.kind=="ChooseModes") {PresentSpreeChoices(source,anchor,captured);return true;}
+        if(view.request.selectionPurpose=="castingCosts") {PresentModeCards(source,captured,false,true);return true;}
         bool numeric=options.Length>0&&options.All(o=>int.TryParse(o.label,out _));
         if(numeric || view.request.kind=="ChooseNumber") {
             PresentNumericChoices(options,source,anchor,captured);return true;
         }
         int columns=Math.Min(options.Length,cards?3:6);
-        bool hasFooter=view.request.options.Any(o=>o.id=="ok");
-        float width=Mathf.Min(surface.rect.width-64,cards?columns*232+24:mana?columns*44+24:228);
+        bool hasFooter=!manaProduction&&view.request.options.Any(o=>o.id=="ok");
+        float width=Mathf.Min(surface.rect.width-64,sectorChoice?420:cards?columns*232+24:mana?columns*44+24:228);
         float height=cards?Mathf.Min(432,surface.rect.height-80):(mana?96:104)+(hasFooter?32:0);
         landChoiceMenu.sizeDelta=new Vector2(width,height);
-        landChoiceMenu.anchoredPosition=new Vector2(
+        landChoiceMenu.anchoredPosition=cards||sectorChoice?Vector2.zero:new Vector2(
             Mathf.Clamp(anchor.x,surface.rect.xMin+width/2+20,surface.rect.xMax-width/2-20),
             Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+20,surface.rect.yMax-height/2-20));
-        var title=Label(landChoiceMenu,"Title",mana?"选择法术力":confirmation?"是否执行？":"选择异能或施放方式",new Vector2(0,height/2-(cards?20:16)),new Vector2(width,26),cards?21:17,Color.white);
+        bool assigningSector=sectorChoice&&view.request.message!="one: Choose a sector";
+        int groupPlayer=GroupAssignmentSeat(source);
+        string sectorTitle=assigningSector?TapPaymentText("分配分区","Assign a sector","セクターを割り当て"):TapPaymentText("选择分区","Choose a sector","セクターを選択");
+        string groupTitle=groupPlayer>0?TapPaymentText($"为{PlayerDisplayName(groupPlayer)}选择友方或敌方",$"Choose friend or foe for {PlayerDisplayName(groupPlayer)}",$"{PlayerDisplayName(groupPlayer)}を味方か敵かに選ぶ"):null;
+        var title=Label(landChoiceMenu,"Title",groupTitle??(sectorChoice?sectorTitle:mana?TapPaymentText("选择法术力","Choose mana","マナを選択"):confirmation?"是否执行？":TapPaymentText("选择异能或施放方式","Choose ability or spell","能力や唱え方を選択")),new Vector2(0,height/2-(cards?20:16)),new Vector2(width,26),cards?21:17,Color.white);
         title.raycastTarget=false;
         string name=source?.name??"";
-        if(source!=null && catalog.TryGetValue(source.printingKey??"",out var definition))name=GamePreferences.CardName(definition);
-        var subtitle=Label(landChoiceMenu,"Source",name,new Vector2(0,height/2-(cards?48:36)),new Vector2(width-20,20),cards?15:13,new Color(.7f,.78f,.84f));subtitle.raycastTarget=false;
-        float viewportHeight=cards?height-(hasFooter?128:88):46,cellWidth=(width-24)/columns;
-        var content=Scroll(landChoiceMenu,"Choices",new Vector2(0,cards?(hasFooter?-12:-32):(hasFooter?-4:-22)),new Vector2(width,viewportHeight));
-        var scroll=content.parent.GetComponent<ScrollRect>();scroll.horizontal=false;scroll.vertical=true;scroll.scrollSensitivity=35;
-        float itemHeight=cards?viewportHeight-12:mana?36:32;
-        int rows=(options.Length+columns-1)/columns;
-        content.anchorMin=content.anchorMax=content.pivot=new Vector2(.5f,1);
-        content.sizeDelta=new Vector2(width,rows*(itemHeight+18));
-        if(rows>1)AddStackScrollIndicator(content);
+        if(source!=null && (!sectorChoice||source.name==source.originalName) && catalog.TryGetValue(source.printingKey??"",out var definition))name=GamePreferences.CardName(definition);
+        if(sectorChoice)name=source!=null?$"{name} ({source.id})":assigningSector?Regex.Match(view.request.message,@"^one: Assign (.+) to a sector$").Groups[1].Value:"";
+        var subtitle=Label(landChoiceMenu,"Source",name,new Vector2(0,height/2-(cards?48:36)),new Vector2(width-20,20),cards||sectorChoice?15:13,new Color(.7f,.78f,.84f));subtitle.raycastTarget=false;
+        float groupHeader=0;
+        if(groupPlayer>0){
+            title.supportRichText=subtitle.supportRichText=false;PreferenceText.SetSize(title,17);PreferenceText.SetSize(subtitle,13);title.resizeTextForBestFit=subtitle.resizeTextForBestFit=false;
+            float titleHeight=Mathf.Max(26,title.preferredHeight+4),sourceHeight=Mathf.Max(20,subtitle.preferredHeight+4);
+            title.rectTransform.sizeDelta=new Vector2(width,titleHeight);title.rectTransform.anchoredPosition=new Vector2(0,height/2-6-titleHeight/2);
+            subtitle.rectTransform.sizeDelta=new Vector2(width-20,sourceHeight);subtitle.rectTransform.anchoredPosition=new Vector2(0,height/2-10-titleHeight-sourceHeight/2);
+            groupHeader=titleHeight+sourceHeight+22;
+        }
+        if(sectorChoice){title.resizeTextForBestFit=subtitle.resizeTextForBestFit=false;subtitle.supportRichText=false;PreferenceText.SetSize(title,17);PreferenceText.SetSize(subtitle,15);}
+        float sectorItemHeight=Mathf.Max(36,24*GamePreferences.TextScale+12);
+        if(mana||sectorChoice) {
+            // Locale fonts and the accessibility scale can make even a short
+            // heading taller than one fixed row. Reserve its measured height
+            // before the first frame, keeping the mana buttons below it.
+            float titleHeight=Mathf.Max(26,title.preferredHeight+4);
+            float sourceHeight=string.IsNullOrEmpty(name)?0:Mathf.Max(20,subtitle.preferredHeight+4);
+            float headerHeight=titleHeight+12+(sourceHeight>0?sourceHeight+4:0);
+            height=headerHeight+(sectorChoice?sectorItemHeight+10:46)+12+(hasFooter?32:0);
+            landChoiceMenu.sizeDelta=new Vector2(width,height);
+            var menuPosition=landChoiceMenu.anchoredPosition;
+            menuPosition.y=sectorChoice?0:Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+20,surface.rect.yMax-height/2-20);
+            landChoiceMenu.anchoredPosition=menuPosition;
+            title.rectTransform.sizeDelta=new Vector2(width,titleHeight);
+            title.rectTransform.anchoredPosition=new Vector2(0,height/2-6-titleHeight/2);
+            subtitle.gameObject.SetActive(sourceHeight>0);
+            subtitle.rectTransform.sizeDelta=new Vector2(width-20,sourceHeight);
+            subtitle.rectTransform.anchoredPosition=new Vector2(0,height/2-10-titleHeight-sourceHeight/2);
+        }
+        float viewportHeight=sectorChoice?sectorItemHeight+10:cards?height-(hasFooter?128:88):46,cellWidth=(width-24)/columns;
+        float choicesY=mana||sectorChoice?-height/2+12+(hasFooter?32:0)+viewportHeight/2:cards?(hasFooter?-12:-32):(hasFooter?-4:-22);
+        if(groupPlayer>0){viewportHeight=height-groupHeader-16-(hasFooter?32:0);choicesY=-height/2+12+(hasFooter?32:0)+viewportHeight/2;}
+        var clip=Panel(landChoiceMenu,"Choices",new Vector2(0,choicesY),new Vector2(width-24,viewportHeight),Color.clear);
+        clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;
+        var content=Rect(clip,"Content",Vector2.zero,new Vector2(width,viewportHeight));scroll.viewport=clip;scroll.content=content;scroll.Configure(cellWidth);
+        float itemHeight=sectorChoice?sectorItemHeight:cards?viewportHeight-12:mana?36:32;
+
+        content.anchorMin=content.anchorMax=content.pivot=new Vector2(0,1);
+        content.sizeDelta=new Vector2(Mathf.Max(width-24,options.Length*cellWidth),viewportHeight);
         for(int i=0;i<options.Length;i++) {
             var option=options[i];int index=OptionIndex(option.id);
             var size=new Vector2(cards?cellWidth-16:mana?36:cellWidth-10,itemHeight);
-            var tile=Panel(content,"Option_"+index,Vector2.zero,size,new Color(.25f,.48f,.57f));
-            tile.anchorMin=tile.anchorMax=tile.pivot=new Vector2(.5f,1);
-            int rowCount=Math.Min(columns,options.Length-i/columns*columns);
-            tile.anchoredPosition=new Vector2((i%columns-(rowCount-1)*.5f)*cellWidth,-4-(i/columns)*(itemHeight+18));
+            var tile=Panel(content,"Option_"+index,Vector2.zero,size,option.selected?Gold:new Color(.25f,.48f,.57f));
+            tile.anchorMin=tile.anchorMax=tile.pivot=new Vector2(0,1);
+            tile.anchoredPosition=new Vector2(i*cellWidth+(cellWidth-size.x)*.5f,-4);
             tile.GetComponent<Image>().sprite=cards?AbilityShape():mana?IntegratedUiUtility.Circle(96):IntegratedUiUtility.RoundedRect(112,36,7);
             var button=tile.gameObject.AddComponent<Button>();button.targetGraphic=tile.GetComponent<Image>();
-            button.onClick.AddListener(()=>Choose(index,captured));button.interactable=canAct&&!submitted;
+            button.onClick.AddListener(()=>Choose(index,captured));button.interactable=canAct&&!submitted&&!option.disabled;
             tile.gameObject.AddComponent<CanvasGroup>().alpha=button.interactable?1f:.45f;
             var colors=button.colors;colors.normalColor=Color.white;colors.highlightedColor=new Color(1.3f,1.8f,2);colors.pressedColor=Gold;colors.disabledColor=new Color(.35f,.35f,.35f);button.colors=colors;
             var inner=Panel(tile,"Face",Vector2.zero,size-Vector2.one*5,new Color(.055f,.085f,.11f));
             inner.GetComponent<Image>().sprite=tile.GetComponent<Image>().sprite;inner.GetComponent<Image>().raycastTarget=false;
             if(mana) {
                 var symbol=CardSymbolText.Create(inner,"Mana",26,Color.white);IntegratedUiUtility.Place(symbol.rectTransform,Vector2.zero,new Vector2(size.x-6,size.y-6));
-                symbol.alignment=TMPro.TextAlignmentOptions.Center;symbol.text=CardSymbolText.Format(ChoiceManaSymbols(option.label));
+                symbol.alignment=TMPro.TextAlignmentOptions.Center;symbol.text=CardSymbolText.Format(ChoiceManaSymbols(option.label,view.request));
             }
             else if(cards)DrawAbilityChoice(inner,source,option,size-Vector2.one*5);
-            else {var text=Label(inner,"Answer",RequestOptionLabel(option),Vector2.zero,size-Vector2.one*4,19,Paper);text.raycastTarget=false;}
+            else {var text=Label(inner,"Answer",RequestOptionLabel(option),Vector2.zero,size-Vector2.one*4,19,Paper);text.raycastTarget=false;if(sectorChoice){PreferenceText.SetSize(text,19);text.resizeTextForBestFit=false;}}
         }
+        content.anchoredPosition=new Vector2(-choiceScrollOffset,0);scroll.Configure(cellWidth);
         // Dismissible choices use outside-click/right-click; keep only an actual engine confirmation.
-        var footer=view.request.options.Where(o=>o.id=="ok").ToArray();
+        var footer=view.request.options.Where(o=>!manaProduction&&o.id=="ok"&&!HasTargetChoice).ToArray();
         for(int i=0;i<footer.Length;i++) {
             int action=OptionIndex(footer[i].id);
             var close=Button(landChoiceMenu,footer[i].id=="cancel"?"Cancel":"Confirm",footer[i].id=="cancel"?"取消":"确认",new Vector2((i-(footer.Length-1)*.5f)*(cards?182:120),-height/2+(cards?24:19)),new Vector2(cards?166:106,cards?42:28),()=>Choose(action,captured),new Color(.14f,.2f,.26f));
@@ -131,47 +232,88 @@ public sealed partial class ForgeBattlefieldController
         }
         landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return true;
     }
+    private static bool IsSectorChoice(ForgeRequest request)
+    {
+        if(request?.kind!="dialog" || request.options?.Length!=3)return false;
+        string[] sectors={"Alpha","Beta","Gamma"};
+        for(int i=0;i<sectors.Length;i++)if(request.options[i].id!="choice:"+i || request.options[i].label!=sectors[i])return false;
+        return request.message=="one: Choose a sector" || Regex.IsMatch(request.message??"",@"^one: Assign .+ \(\d+\) to a sector$");
+    }
+
+    private ForgeCardView SectorChoiceSource(ForgeRequest request)
+    {
+        var match=Regex.Match(request.message??"",@"^one: Assign .+ \((\d+)\) to a sector$");
+        if(match.Success&&int.TryParse(match.Groups[1].Value,out int id))
+            return (view.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>p.battlefield??Array.Empty<ForgeCardView>()).FirstOrDefault(c=>c.id==id);
+        return view.stackItems?.FirstOrDefault()?.source;
+    }
+
     private void PresentNumericChoices(ForgeOption[] options,ForgeCardView source,Vector2 anchor,long captured)
     {
-        const float width=264,height=154;
-        landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.GetComponent<Image>().color=Ink;
-        landChoiceMenu.anchoredPosition=new Vector2(Mathf.Clamp(anchor.x,surface.rect.xMin+width/2+20,surface.rect.xMax-width/2-20),
-            Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+20,surface.rect.yMax-height/2-20));
+        // Numeric decisions occupy exactly the same dock slot as advance,
+        // payment and hand actions. They do not cover or dim the battlefield.
+        landChoiceMenu.SetParent(Node("CornerCluster/ControlRow"),false);
+        landChoiceMenu.anchorMin=landChoiceMenu.anchorMax=landChoiceMenu.pivot=new Vector2(.5f,.5f);
+        landChoiceMenu.anchoredPosition=new Vector2(48,-20);landChoiceMenu.sizeDelta=new Vector2(184,48);
+        landChoiceMenu.GetComponent<Image>().color=Color.clear;
+        if(choiceDismiss!=null)choiceDismiss.gameObject.SetActive(false);
+        var dismiss=landChoiceMenu.GetComponent<ForgeChoiceDismiss>();
+        dismiss.ListenForRightClick=true;
+        dismiss.Dismiss=()=>{if(UnityEngine.InputSystem.Mouse.current?.rightButton.wasPressedThisFrame==true && canAct&&!submitted&&OptionIndex("cancel")>=0)Choose(OptionIndex("cancel"),captured);};
         bool serverRange=view.request.kind=="ChooseNumber";
         var choices=serverRange?options:options.OrderBy(o=>int.Parse(o.label)).ToArray();int selected=0;
-        Label(landChoiceMenu,"Title","选择数值",new Vector2(0,55),new Vector2(width-20,26),19,Paper);
-        var context=Label(landChoiceMenu,"Context",view.request.message.StartsWith("one: ")?view.request.message.Substring(5):view.request.message,
-            new Vector2(0,29),new Vector2(width-22,26),13,new Color(.7f,.78f,.84f));context.supportRichText=false;
-        context.resizeTextForBestFit=true;context.resizeTextMinSize=10;context.resizeTextMaxSize=13;
-        var value=Label(landChoiceMenu,"NumericValue",serverRange?view.request.selectedValue.ToString():choices[0].label,new Vector2(0,-5),new Vector2(100,36),28,Paper);value.fontStyle=FontStyle.Bold;
-        if(serverRange) {
-            foreach(var item in new[]{("Decrease","−","number-minus",-68f),("Increase","+","number-plus",68f),("DecreaseFive","−5","number-minus-five",-110f),("IncreaseFive","+5","number-plus-five",110f)}) {
-                int index=OptionIndex(item.Item3);
-                var control=Button(landChoiceMenu,item.Item1,item.Item2,new Vector2(item.Item4,-5),new Vector2(36,34),()=>Choose(index,captured),new Color(.14f,.2f,.26f));
-                control.interactable=index>=0&&canAct&&!submitted;var label=control.GetComponentInChildren<Text>();label.fontSize=16;
-                label.rectTransform.sizeDelta=new Vector2(36,34);label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Truncate;
+        var value=Label(landChoiceMenu,"NumericValue",serverRange?view.request.selectedValue.ToString():choices[0].label,new Vector2(-47.5f,0),new Vector2(35,40),18,Paper);value.fontStyle=FontStyle.Bold;value.raycastTarget=false;
+        value.horizontalOverflow=HorizontalWrapMode.Overflow;value.resizeTextForBestFit=false;
+        // Keep a fixed font and the right edge of the dock; grow left only when
+        // the native number needs more space than the ordinary numeric slot.
+        string widest=serverRange?value.text:choices.OrderByDescending(o=>o.label.Length).First().label;
+        string shown=value.text;value.text=widest;
+        float extra=Mathf.Max(0,value.preferredWidth+8-35);value.text=shown;
+        landChoiceMenu.sizeDelta=new Vector2(184+extra,48);
+        landChoiceMenu.anchoredPosition=new Vector2(48-extra/2,-20);
+        value.rectTransform.sizeDelta=new Vector2(35+extra,40);
+        bool costNumber=view.request.paymentMode=="manual";
+        float left=-79-extra/2,right=-16+extra/2,commitX=47.5f+extra/2;
+        if(costNumber) {
+            landChoiceMenu.sizeDelta=new Vector2(279+extra,48);landChoiceMenu.anchoredPosition=new Vector2(.5f-extra/2,-20);
+            value.rectTransform.anchoredPosition+=new Vector2(-47.5f,0);left-=47.5f;right-=47.5f;commitX=-47.5f+extra/2;
+            int decline=PresentedCancelOption;
+            if(decline>=0) {
+                var cancel=DockAction(landChoiceMenu,"CancelValue",TapPaymentText("取消","Cancel","キャンセル"),new Vector2(47.5f+extra/2,0),89,()=>Choose(decline,captured),true);
+                cancel.interactable=canAct&&!submitted;
             }
-            var commit=Button(landChoiceMenu,"ConfirmValue","确认",new Vector2(0,-52),new Vector2(140,32),()=>Choose(OptionIndex("confirm-number"),captured),new Color(.18f,.32f,.49f));
-            commit.interactable=canAct&&!submitted;landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return;
+        }
+        if(serverRange) {
+            foreach(var item in new[]{("Decrease","−","number-minus",left),("Increase","+","number-plus",right)}) {
+                int index=OptionIndex(item.Item3);
+                var control=Button(landChoiceMenu,item.Item1,item.Item2,new Vector2(item.Item4,0),new Vector2(26,36),()=>Choose(index,captured),new Color(.14f,.2f,.26f));
+                control.interactable=index>=0&&canAct&&!submitted;var label=control.GetComponentInChildren<Text>();PreferenceText.SetSize(label,16);
+                label.rectTransform.sizeDelta=new Vector2(26,34);label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Truncate;
+            }
+            int confirmation=OptionIndex("confirm-number");
+            var commit=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(confirmation,captured),false);
+            commit.interactable=canAct&&!submitted&&confirmation>=0&&!view.request.options[confirmation].disabled;landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return;
         }
         Button minus=null,plus=null;
         Action refresh=()=>{value.text=choices[selected].label;minus.interactable=canAct&&!submitted&&selected>0;plus.interactable=canAct&&!submitted&&selected+1<choices.Length;};
-        minus=Button(landChoiceMenu,"Decrease","−",new Vector2(-78,-5),new Vector2(40,34),()=>{if(selected>0)selected--;refresh();},new Color(.14f,.2f,.26f));
-        plus=Button(landChoiceMenu,"Increase","+",new Vector2(78,-5),new Vector2(40,34),()=>{if(selected+1<choices.Length)selected++;refresh();},new Color(.14f,.2f,.26f));
-        var confirm=Button(landChoiceMenu,"ConfirmValue","确认",new Vector2(0,-52),new Vector2(140,32),()=>Choose(OptionIndex(choices[selected].id),captured),new Color(.18f,.32f,.49f));
-        confirm.interactable=canAct&&!submitted;refresh();landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
+        minus=Button(landChoiceMenu,"Decrease","−",new Vector2(left,0),new Vector2(26,36),()=>{if(selected>0)selected--;refresh();},new Color(.14f,.2f,.26f));
+        plus=Button(landChoiceMenu,"Increase","+",new Vector2(right,0),new Vector2(26,36),()=>{if(selected+1<choices.Length)selected++;refresh();},new Color(.14f,.2f,.26f));
+        foreach(var control in new[]{minus,plus}){var label=control.GetComponentInChildren<Text>();PreferenceText.SetSize(label,16);label.rectTransform.sizeDelta=new Vector2(26,34);label.resizeTextForBestFit=false;}
+        var confirm=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(OptionIndex(choices[selected].id),captured),false);
+        confirm.interactable=canAct&&!submitted&&!choices[selected].disabled;refresh();landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
     }
 
     private void DrawAbilityChoice(RectTransform face,ForgeCardView source,ForgeOption option,Vector2 size)
     {
         string description=option.label??"";
         string title="发动能力",cost="";
-        var keyword=Regex.Match(description,@"^(Evoke|Cycling|Ninjutsu|Basic landcycling|Plainscycling|Islandcycling|Swampcycling|Mountaincycling|Forestcycling|Flashback|Unearth|Equip|Crew|Surge|Kicker|Cast|Play)\b",RegexOptions.IgnoreCase);
+        string keywordPattern=string.Join("|",DeckKeywordGlossary.All.Select(e=>e.English).Concat(new[]{"Basic landcycling","Plainscycling","Islandcycling","Swampcycling","Mountaincycling","Forestcycling","Cast","Play"}).Distinct().OrderByDescending(s=>s.Length).Select(Regex.Escape));
+        var keyword=Regex.Match(description,"^("+keywordPattern+")\\b",RegexOptions.IgnoreCase);
         if(keyword.Success) {
             switch(keyword.Value.ToLowerInvariant()) {
                 case "evoke":title="呼魂";break;case "cycling":title="循环";break;case "ninjutsu":title="忍术";break;case "equip":title="佩带";break;case "crew":title="搭载";break;
                 case "flashback":title="返照";break;case "unearth":title="破坟";break;case "kicker":title="增幅";break;case "surge":title="怒涛";break;
-                case "cast":case "play":title="施放";break;default:title="地循环";break;
+                case "cast":case "play":title="施放";break;default:title=DeckKeywordGlossary.All.FirstOrDefault(e=>string.Equals(e.English,keyword.Value,StringComparison.OrdinalIgnoreCase))?.Name??"地循环";break;
             }
             description=description.Substring(keyword.Length).TrimStart(' ',':','—','-');
         }
@@ -179,14 +321,52 @@ public sealed partial class ForgeBattlefieldController
         var prefix=Regex.Match(description,keyword.Success?@"^(?<cost>(?:\{[^{}]+\}\s*)+)\s*[:—-]?\s*":@"^(?<cost>(?:\{[^{}]+\}\s*)+|[+−-]?\d+)\s*[:—-]\s*");
         if(prefix.Success){cost=prefix.Groups["cost"].Value;description=description.Substring(prefix.Length);}
         bool casting=option.castingFace!=null&&!string.IsNullOrEmpty(option.castingFace.name);
+        bool grouping=GroupAssignmentSeat(source)>0;
+        if(grouping){title=option.id=="choice:0"?TapPaymentText("友方","Friend","味方"):TapPaymentText("敌方","Foe","敵");description=GroupChoiceText(source,option);}
         if(casting) {
-            source=option.castingFace;description=source.currentRules?.Replace("\\n","\n")??"";cost=source.manaCost;
+            source=option.castingFace;description=PrintedRuleText(source,source.currentRules?.Replace("\\n","\n")??"");cost=source.manaCost;
             title=option.faceKind=="prepare"?"备法":option.faceKind=="adventure"?"历险":option.faceKind=="omen"?"前兆":option.faceKind=="mdfc-front"?"正面":option.faceKind=="mdfc-back"?"背面":"施放";
+        }
+        else if(view.request.kind=="dialog" && view.request.message=="getAbilityToPlay" && source!=null && !source.faceDown) {
+            // Native alternate permissions may have no castingFace metadata.
+            // Keep their exact option identity; localize only the public display.
+            // A rules sentence can begin with a glossary word (e.g. Counter).
+            // Without a keyword cost prefix, it is still part of the effect:
+            // stripping it breaks the exact printed-rule translation match.
+            if(keyword.Success&&!prefix.Success)description=option.label??"";
+            if(!keyword.Success||!prefix.Success)title=source.zone=="Battlefield"&&prefix.Success?TapPaymentText("激活异能","Activate ability","能力起動"):"施放";
+            string permission="";
+            description=Regex.Replace(description,@" by (.+?) \(([0-9]+)\) \(without paying its mana cost\)",m=> {
+                var producer=(view.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>p.battlefield??Array.Empty<ForgeCardView>())
+                    .FirstOrDefault(c=>c!=null&&!c.faceDown&&c.id.ToString()==m.Groups[2].Value);
+                bool printedName=producer!=null&&catalog.TryGetValue(producer.printingKey??"",out var producerDefinition)
+                    &&producerDefinition.cardName==m.Groups[1].Value;
+                if(producer==null||!(producer.name==m.Groups[1].Value||printedName))return m.Value;
+                permission=TapPaymentText("无需支付法术力费用（来源：","Without paying its mana cost (source: ","マナ・コストを支払わずに（発生源：")
+                    +GamePreferences.CardFaceName(producer.name)+" ("+producer.id+")"+TapPaymentText("）", ")", "）");
+                return "";
+            });
+            // The permission must be visible before the scrollable rules text.
+            var summary=Regex.Match(description,"^"+Regex.Escape(source.name??"")+@" - (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*(?: -?\d+\s*/\s*-?\d+)?$");
+            if(summary.Success){description=PrintedRuleText(source,(source.currentRules??source.originalRules??"").Replace("\\n","\n"));cost=source.manaCost;}
+            description=(permission.Length>0?permission+"\n":"")+AbilityEffectText(source,description);
         }
         float top=size.y/2;
         var heading=Label(face,"Mode",title,new Vector2(0,top-19),new Vector2(size.x-18,28),20,Color.white);heading.raycastTarget=false;
+        if(!casting&&source?.zone=="Battlefield"&&prefix.Success)
+            heading.rectTransform.sizeDelta=new Vector2(size.x-18,Mathf.Max(28,heading.preferredHeight+4));
+        if(grouping){PreferenceText.SetSize(heading,17);heading.resizeTextForBestFit=false;heading.rectTransform.sizeDelta=new Vector2(size.x-18,Mathf.Max(28,heading.preferredHeight+4));}
+        if(casting&&UsesComponentFace(source)) {
+            var full=Rect(face,"CastingFace",new Vector2(0,-14),new Vector2(size.x-14,size.y-58));
+            full.gameObject.AddComponent<Image>().raycastTarget=false;
+            if(PresentComponentFace(full,source))return;
+            full.gameObject.SetActive(false);Destroy(full.gameObject);
+        }
         Sprite sprite=null;
-        if(source!=null && !source.faceDown && catalog.TryGetValue(source.printingKey??"",out var definition)) {
+        if(source?.copy==true || IsSpecializedFace(source))TryBattlefieldArt(source,out sprite);
+        if(IsSpecializedFace(source)&&description==source.name)
+            description=GamePreferences.FeatureRules(new CardFeatureDefinition {cardName=source.name,description=(source.currentRules??"").Replace("\\n","\n")});
+        if(sprite==null && source!=null && !source.faceDown && catalog.TryGetValue(source.printingKey??"",out var definition)) {
             CardImageLibrary.TryLoadFullCard(definition,source.backFace?1:0,out sprite);
             if(description==source.name)description=GamePreferences.CardRules(definition);
         }
@@ -194,55 +374,40 @@ public sealed partial class ForgeBattlefieldController
         if(casting && option.faceKind.StartsWith("mdfc-")) {
             var full=Rect(face,"CastingFace",new Vector2(0,-10),new Vector2(size.x-14,size.y-64)).gameObject.AddComponent<Image>();
             full.sprite=sprite;full.preserveAspect=true;full.color=sprite==null?Ink:Color.white;full.raycastTarget=false;
-            if(sprite==null)Label(face,"MissingFace",source.name+"\n"+source.currentType+"\n"+description,Vector2.zero,size-Vector2.one*18,16,Paper);
-            var name=Label(face,"FaceName",source.name,new Vector2(0,-size.y*.5f+12),new Vector2(size.x-12,24),13,Paper);
+            if(sprite==null)Label(face,"MissingFace",GamePreferences.CardFaceName(source.name)+"\n"+VisibleCardType(source)+"\n"+description,Vector2.zero,size-Vector2.one*18,16,Paper);
+            var name=Label(face,"FaceName",GamePreferences.CardFaceName(source.name),new Vector2(0,-size.y*.5f+12),new Vector2(size.x-12,24),13,Paper);
             name.resizeTextForBestFit=true;name.resizeTextMinSize=10;name.resizeTextMaxSize=13;return;
         }
         float artHeight=size.y*.27f;
         var art=Rect(face,"Art",new Vector2(0,top-38-artHeight/2),new Vector2(size.x-16,artHeight)).gameObject.AddComponent<RawImage>();
         art.texture=sprite?.texture;art.color=sprite==null?new Color(.12f,.18f,.22f):Color.white;art.raycastTarget=false;
-        if(sprite!=null){var r=sprite.rect;art.uvRect=new Rect((r.x+r.width*.07f)/sprite.texture.width,(r.y+r.height*.43f)/sprite.texture.height,r.width*.86f/sprite.texture.width,r.height*.38f/sprite.texture.height);}
+        CardArtCrop.Illustration(art,sprite);
         if(casting) {
             var strip=Panel(face,"FaceNameStrip",new Vector2(0,top-38-artHeight+10),new Vector2(size.x-16,24),new Color(.03f,.04f,.05f,.92f));strip.GetComponent<Image>().raycastTarget=false;
-            var name=Label(strip,"FaceName",source.name,Vector2.zero,new Vector2(size.x-24,22),14,Paper);name.resizeTextForBestFit=true;name.resizeTextMinSize=10;name.resizeTextMaxSize=14;
+            var name=Label(strip,"FaceName",GamePreferences.CardFaceName(source.name),Vector2.zero,new Vector2(size.x-24,22),14,Paper);name.resizeTextForBestFit=true;name.resizeTextMinSize=10;name.resizeTextMaxSize=14;
         }
         float effectHeight=size.y-artHeight-94;
         var effect=Panel(face,"EffectPanel",new Vector2(0,top-44-artHeight-effectHeight/2),new Vector2(size.x-16,effectHeight),new Color(.86f,.88f,.84f));effect.GetComponent<Image>().raycastTarget=false;
         float typeHeight=casting?20:0;
-        if(casting){var type=Label(effect,"Type",source.currentType,new Vector2(0,effectHeight*.5f-12),new Vector2(size.x-30,20),11,new Color(.16f,.2f,.21f));type.resizeTextForBestFit=true;type.resizeTextMinSize=9;type.resizeTextMaxSize=11;}
+        if(casting){var type=Label(effect,"Type",VisibleCardType(source),new Vector2(0,effectHeight*.5f-12),new Vector2(size.x-30,20),11,new Color(.16f,.2f,.21f));type.resizeTextForBestFit=true;type.resizeTextMinSize=9;type.resizeTextMaxSize=11;}
         var effectContent=Scroll(effect,"TextScroll",new Vector2(0,-typeHeight*.5f),new Vector2(size.x-28,effectHeight-12-typeHeight));
-        var body=Label(effectContent,"Effect",description,Vector2.zero,new Vector2(size.x-38,effectHeight-14-typeHeight),casting?12:15,new Color(.055f,.075f,.085f));
+        var body=Label(effectContent,"Effect",PrintedRuleText(source,description),Vector2.zero,new Vector2(size.x-38,effectHeight-14-typeHeight),casting?12:15,new Color(.055f,.075f,.085f));
         body.alignment=TextAnchor.UpperLeft;body.supportRichText=false;body.raycastTarget=false;
+        if(grouping){PreferenceText.SetSize(body,15);body.resizeTextForBestFit=false;}
         float textHeight=Mathf.Max(effectHeight-14-typeHeight,body.preferredHeight+4);
         body.rectTransform.anchorMin=body.rectTransform.anchorMax=body.rectTransform.pivot=new Vector2(.5f,1);
         body.rectTransform.anchoredPosition=Vector2.zero;body.rectTransform.sizeDelta=new Vector2(size.x-38,textHeight);
         effectContent.sizeDelta=new Vector2(size.x-28,textHeight);
+        var bodySymbols=SymbolizeStackLabel(body);
+        FitAbilityBodyText(body,bodySymbols,size.x-38,effectHeight-14-typeHeight,casting?13:15,18);
+        textHeight=Mathf.Max(effectHeight-14-typeHeight,bodySymbols.GetPreferredValues(bodySymbols.text,size.x-38,10000).y+4);
+        body.rectTransform.sizeDelta=new Vector2(size.x-38,textHeight);effectContent.sizeDelta=new Vector2(size.x-28,textHeight);
         if(textHeight>effectHeight-12-typeHeight)AddStackScrollIndicator(effectContent);
         if(!string.IsNullOrEmpty(cost)) {
             if(cost.Contains("{")){var symbols=CardSymbolText.Create(face,"Cost",25,Paper);IntegratedUiUtility.Place(symbols.rectTransform,new Vector2(0,-top+29),new Vector2(size.x-22,34));symbols.alignment=TMPro.TextAlignmentOptions.Center;symbols.text=CardSymbolText.Format(cost);}
-            else {var value=Label(face,"Cost",cost,new Vector2(0,-top+29),new Vector2(size.x-22,34),26,Gold);value.raycastTarget=false;}
+            else {var value=Label(face,"Cost",PrintedCostText(source,cost),new Vector2(0,-top+29),new Vector2(size.x-22,34),26,Gold);value.raycastTarget=false;}
         }
         if(casting&&source.creature){var stats=Label(face,"CreatureStats",source.power+"/"+source.toughness,new Vector2(size.x*.5f-25,-top+29),new Vector2(42,28),18,Paper);stats.fontStyle=FontStyle.Bold;}
     }
-    private void PresentSpreeChoices(ForgeCardView source,Vector2 anchor,long captured)
-    {
-        var modes=view.request.options.Where(o=>o.id.StartsWith("mode:")).ToArray();
-        float width=430,height=96+modes.Length*82;
-        landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.GetComponent<Image>().color=Ink;
-        landChoiceMenu.anchoredPosition=new Vector2(Mathf.Clamp(anchor.x,surface.rect.xMin+width/2+16,surface.rect.xMax-width/2-16),Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+16,surface.rect.yMax-height/2-16));
-        Label(landChoiceMenu,"Title","追欢 · 选择一项或多项",new Vector2(0,height/2-20),new Vector2(width-24,28),19,Paper);
-        for(int i=0;i<modes.Length;i++) {
-            var option=modes[i];int index=OptionIndex(option.id);
-            var button=Button(landChoiceMenu,"Mode_"+option.id,"",new Vector2(0,height/2-78-i*82),new Vector2(width-24,74),()=>Choose(index,captured),option.selected?new Color(.38f,.3f,.13f):new Color(.09f,.14f,.18f));
-            button.interactable=canAct&&!submitted;button.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(400,74,7);
-            Label(button.transform,"Selection",option.selected?"✓":"○",new Vector2(-182,0),new Vector2(26,28),22,option.selected?Gold:Paper);
-            var body=Label(button.transform,"Effect",option.label,new Vector2(18,-8),new Vector2(334,49),15,Paper);body.alignment=TextAnchor.UpperLeft;body.supportRichText=false;
-            body.resizeTextForBestFit=true;body.resizeTextMinSize=11;body.resizeTextMaxSize=15;
-            var cost=CardSymbolText.Create(button.transform,"ExtraCost",17,Gold);IntegratedUiUtility.Place(cost.rectTransform,new Vector2(18,24),new Vector2(334,22));cost.text=CardSymbolText.Format("+ "+option.modeCost);cost.alignment=TMPro.TextAlignmentOptions.Left;
-        }
-        foreach(var item in new[]{("confirm-modes","确认",-76f),("reset-modes","重新选择",76f)}) {
-            int index=OptionIndex(item.Item1);var button=Button(landChoiceMenu,item.Item1,item.Item2,new Vector2(item.Item3,-height/2+25),new Vector2(140,34),()=>Choose(index,captured),new Color(.18f,.3f,.44f));button.interactable=index>=0&&canAct&&!submitted;
-        }
-        landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
-    }
+    private void PresentSpreeChoices(ForgeCardView source,Vector2 anchor,long captured) => PresentModeCards(source,captured,true);
 }

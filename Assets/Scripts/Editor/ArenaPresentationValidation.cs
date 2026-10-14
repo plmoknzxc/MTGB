@@ -98,7 +98,7 @@ public static class ArenaPresentationValidation
         Require(phaseButton.GetComponentInChildren<Text>().text=="结束阶段","Own empty-stack priority should show end phase.");
         Require(!GameObject.Find("Canvas").transform.Find("CornerCluster/ControlRow/EndTurnButton").gameObject.activeSelf,"End-turn shortcut remains visible.");
         var playerPlate=(RectTransform)GameObject.Find("PlayerPlate").transform;var opponentPlate=(RectTransform)GameObject.Find("OpponentPlate").transform;
-        Require(playerPlate.anchorMin==Vector2.zero && opponentPlate.anchorMin==Vector2.one,"Player plates use the wrong corners.");
+        Require(playerPlate.anchorMin==Vector2.zero && opponentPlate.anchorMin==new Vector2(0,1),"Players must each occupy their left-side half.");
         Require(playerPlate.rect.width>playerPlate.rect.height*2,"Player plate is not rectangular.");
         Require(playerPlate.Find("Life").GetComponent<Text>().fontSize==Mathf.RoundToInt(42*GamePreferences.TextScale),"Preference refresh restored the old life font size.");
         state.turnSeat=2;ui.Present(state,1,true,_=>submitted++,null,"对方回合按钮验证");
@@ -111,7 +111,9 @@ public static class ArenaPresentationValidation
         Require(Find(200).GetComponentsInChildren<Text>().Any(t=>t.text=="×3"),"Untapped identical lands did not stack.");
         Require(Find(203).GetComponentsInChildren<Text>().Any(t=>t.text=="×2"),"Tapped lands must form a separate stack.");
         Find(200).onClick.Invoke();yield return null;
-        Require(submitted==1 && Find(200).GetComponentsInChildren<Text>().Any(t=>t.text=="×3"),"Stacked land must choose one member without expanding.");
+        Require(submitted==0 && !Find(200).GetComponentsInChildren<Text>().Any(t=>t.text=="×3"),"Grouped land must expand before selecting an exact member.");
+        Find(200).onClick.Invoke();yield return null;
+        Require(submitted==1,"Expanded land did not select its member.");
         submitted=0;state.request.requestId++;ui.Present(state,1,true,_=>submitted++,null,"叠放恢复");
         yield return new WaitForSecondsRealtime(.4f);
         var tapped=Find(203);var tappedPointer=tapped.GetComponent<ForgeBattlefieldCardPointer>();

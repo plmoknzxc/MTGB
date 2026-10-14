@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -164,7 +164,7 @@ public sealed class EndReviewValidation : MonoBehaviour
         Check(service.EndReplayStatus=="录像已保存","Replay save failed: "+service.EndReplayStatus);
         Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName,"Saving replay left review");
         service.LeaveEndReview(AutomaticCase);yield return new WaitForSecondsRealtime(1);
-        Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name=="Main"&&(AutomaticCase?!service.IsOnline:service.LobbyState.series.betweenGames),"Manual exit/sideboard transition failed");
+        Check(AutomaticCase?UnityEngine.SceneManagement.SceneManager.GetActiveScene().name=="Main"&&!service.IsOnline:OnlineLobbyPanel.HasBattlefieldLobby&&service.LobbyState.series.betweenGames,"Manual exit/sideboard transition failed");
         File.WriteAllText(Output,"PASS: real host + opponent + observer; real Forge concession; centered result retained in battlefield; own hand/library/deck; opponent/observer privacy; read-only result; "+(AutomaticCase?"automatic replay save and explicit room exit":"manual replay save and explicit sideboard transition"));
     }
 }

@@ -42,7 +42,7 @@ public static class ForgeInteractionValidation
         var origin=GameObject.Find("TargetOrigin");Check(origin!=null,"Missing target source");
         Check(origin.GetComponent<Image>().sprite==null,"Source rules card bleeds through ability face");
         Check(origin.transform.Find("AbilityFace/Art").GetComponent<RawImage>().texture!=null,"Missing ability illustration");
-        Check(!string.IsNullOrWhiteSpace(origin.transform.Find("AbilityFace/Effect").GetComponent<Text>().text),"Missing effect text");
+        Check(!string.IsNullOrWhiteSpace(origin.transform.Find("AbilityFace/EffectClip/Effect").GetComponent<Text>().text),"Missing effect text");
         foreach(string button in new[]{"ConfirmTarget","ResetTarget"})Check(origin.transform.Find(button).GetComponent<Button>().interactable,button+" disabled");
         ScreenCapture.CaptureScreenshot(Folder+"trigger-ui.png");yield return new WaitForEndOfFrame();
         var stacked=Read("library-0");
@@ -57,7 +57,8 @@ public static class ForgeInteractionValidation
         Check(corners.All(c=>bounds.Contains((Vector2)tile.InverseTransformPoint(c))),"Ability face outside stack tile");
         Check(!tile.Find("Fallback").gameObject.activeSelf,"Duplicate ability title");
         Check(face.Find("Art").GetComponent<RawImage>().texture!=null,"Stack ability art missing");
-        Check(face.Find("Effect").GetComponent<Text>().verticalOverflow==VerticalWrapMode.Truncate,"Preferences removed ability text bounds");
+        var effectClip=face.Find("EffectClip");
+        Check(effectClip.GetComponent<RectMask2D>()!=null&&effectClip.GetComponent<ScrollRect>().vertical&&!effectClip.Find("Effect/Symbols").GetComponent<TMPro.TextMeshProUGUI>().enableAutoSizing,"Preferences removed ability text bounds");
         Check(face.Find("Kind")==null && tile.Find("Details")==null,"Redundant ability labels remain");
         var glow=tile.GetComponentInChildren<ForgeStackGlow>();
         Check(glow!=null && glow.enabled && !glow.raycastTarget,"Active border missing or intercepting input");
@@ -74,6 +75,9 @@ public static class ForgeInteractionValidation
         var inspect=(RectTransform)GameObject.Find("InspectPanel").transform;
         Check(inspect.position.x>Screen.width*.5f,"Stack hover still uses fixed left sidebar");
         ExecuteEvents.Execute(tile.gameObject,pointer,ExecuteEvents.pointerExitHandler);
+        var exitMouse=UnityEngine.InputSystem.Mouse.current;
+        if(exitMouse!=null){UnityEngine.InputSystem.InputSystem.QueueDeltaStateEvent(exitMouse.position,new Vector2(1,1));UnityEngine.InputSystem.InputSystem.Update();}
+        yield return new WaitForSecondsRealtime(.2f);
         Check(GameObject.Find("InspectPanel")==null,"Stack hover did not close details");
         ScreenCapture.CaptureScreenshot(Folder+"stack-ui.png");yield return new WaitForEndOfFrame();
         var lower=JsonUtility.FromJson<ForgeStackItem>(JsonUtility.ToJson(stacked.stackItems[0]));lower.id+=10000;

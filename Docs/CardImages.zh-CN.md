@@ -4,17 +4,15 @@
 
 ## 目录
 
-### 基础卡图包（2026-09-16）
+### 基础卡图包
 
-分发文件：`Builds/CardImages-Basic.zip`。解压到游戏 EXE 同级，包内已有 `CardImages` 目录；客户端必须包含同规则牌缺图回退功能。请在干净的分发目录使用，直接覆盖到旧全量目录不会自动移除旧异画。
+2026-10-12 按用户要求恢复基础包：按 Forge 规范规则牌名及牌面去重，先从所有非歧义印刷中选中文卡图；该牌面没有本地中文图时才选英文。双面牌保留正反面；衍生物、合体、特化与机制辅助图保留展示消费者需要的准确键，逐键中文优先。排除日文图与完整异画库，不重新压缩图片。项目根目录的完整 `CardImages` 保持原样，用于本机显示与按需下载源，玩家个人导入图片另行保存。
 
-按 Forge 规范规则名每种卡选择一个印刷版本，保留所需正反面；优先牌面完整、高清来源、`artIndex=1`，最后按印刷键稳定排序。不修改图片内容或卡牌数据，不按文件哈希把不同牌合并。
+`Tools/ForgeBridge/Package-Client.py` 将选中的完整卡面原字节放在发布包的 `CardImages/<SET>/<NUMBER>.<原扩展名>`，供各界面语言使用；`package-manifest.json` 保留原始语言、来源路径、准确印刷/牌面、SHA-256、尺寸及缺图清单。中文资源只是采用通用加载路径，不被标为英文。运行包使用当前客户端的同规则牌回退；准确键辅助图不跨印刷替换。生成时逐张检查 JPEG/PNG 格式、尺寸及完整性，并核对运行资源哈希和最终 ZIP CRC。
 
-本次保留 33,705 种卡、34,204 张卡面，图片内容共 3,661,879,971 字节（约 3.410 GiB），排除 63,735 张额外印刷卡面。目录中 116 种卡没有完整且无歧义的可用图片候选，详见包内 `basic-card-images-manifest.json` 的 `missing` 列表。清单同时记录每种卡选择的印刷键、各面路径及 SHA-256。
+本次 Windows x64 发布 ZIP 为 5,364,660,558 字节，包含 36,862 张卡面（31,710 中文、5,152 英文替补），覆盖 33,872 个规则牌名及准确键辅助图。全部图片像素解码/尺寸与 ZIP CRC 通过，独立核对 5,152 个英文替补均满足相应中文缺失条件；Unity 生产卡图加载器对十个发布路径样本解码通过，样本字节与 ZIP 清单一致。仍有 108 个牌名的 109 个牌面没有可用的非歧义本地图，逐项留在清单中，不视为完整卡图覆盖。
 
-项目根目录的完整 `CardImages` 仍保留，作为 Ubuntu 异画下载源。玩家个人导入图片不参与此基础包筛选。
-
-复现：`python Tools/ForgeBridge/Build-BasicCardImages.py --output Builds/CardImages-Basic-new.zip`。脚本拒绝覆盖已有输出，逐张检查来源清单哈希和图片完整性，打包后检查全部 ZIP CRC。JPEG 不再压缩，使用 ZIP 容器分发；卡牌规则与 ForgeRuntime 哈希保持原样。
+发布程序在本机持续测试服务器下两端 BO1、调度、选择中重连与终局检查通过。首轮并发校验期间的 Forge 启动超时和第二轮 LAN 房主测试进程退出后的客户端超时保留，不授完整 LAN 或跨机器通过。本批未重跑完整语言切换/详情 UI 矩阵和全卡效果；卡图解码不作为机制效果证据。成品、原报告和审计保存在 `C:/Users/Sam/MTGB-Releases/2026-10-12/`，核心审计为 `package-audit.json`。
 
 - 正面：`CardImages/<SET>/<NUMBER>.jpg`
 - 双面牌背面：`CardImages/<SET>/<NUMBER>_2.jpg`
@@ -25,6 +23,12 @@
 当前 `Builds/ForgeValidation/CardImages` 已建立到项目 CardImages 的目录链接，供本机测试客户端共享图片。独立分发或移到其他机器时，应携带实际 CardImages 文件夹，不能只复制这条目录链接。
 
 图片不放进 Assets，不需要重新编译或 Unity 纹理导入。已经显示的占位卡可能要等下一次界面刷新或重新开局才更新。
+
+## Specialize 数字特化卡面
+
+Assets/Resources/SpecializeCardArt.json 用原物理印刷键、原生 SpecializeW/U/B/R/G 状态和准确当前卡名映射该面官方印刷键。完整普通JPEG保存在 CardImages/HBG/<NUMBER>w.jpg 等，不挤入双面牌 _2 索引，原物理牌图保留。
+
+Tools/ForgeBridge/Import-SpecializeImages.py --metadata <冻结来源目录> --output <工作目录> --install 从当前Forge卡文与Scryfall原印刷 all_parts 精确关联，不按相似名字猜面。2026-10-10的19原牌/95关联面导入和Unity解码通过，这是数据核对不是95效果case。关联图使用官方英文完整卡面，已有本地图不覆盖。原生状态/费用/移区证据见 .tools/specialize-tail-1010/audit.json，独立payload仍归机制goal。
 
 ## 玩家按需下载（无 UI 接口）
 
@@ -99,6 +103,14 @@ Nginx 工作进程需要目录读取权限；该位置应直接返回 JPEG 或�
 
 2026-09-16：上述 HTTP 下载验证在 Unity Editor 内通过，脚本编译无错误；真实目录查询 Lightning Bolt 得到 67 个版本，缺失精确图片时成功回退到 `2ED/162`。未验证实际 Ubuntu 域名、HTTPS 证书、公网带宽或独立客户端构建。测试服务已关闭。
 
+## 完整 Windows 客户端图包（2026-10-13）
+
+本次交付 `C:/Users/Sam/MTGB-Releases/2026-10-13/MTGB-Windows-x64-zhCN.zip`，桌面解压客户端为 `C:/Users/Sam/Desktop/MTGB/MTGB.exe`。图像是包内真实文件，不依赖项目目录链接。按规则名／牌面选一个版本，中文优先、无中文才使用英文，必要的双面与精确辅助牌面保留，不含日文或完整异画库。
+
+包含 36,862 张卡面，其中中文 31,710、英文回退 5,152；图像 5,097,907,567 字节，ZIP 5,365,104,887 字节。仍有 109 个牌面本地无可用图，详情在交付 manifest 的 `missing`，不声称卡图全覆盖。压缩包 SHA-256 为 `b5c8523c66f80fc93817aafea428c44ccdaab1dfd769e6b26bf79202f7ff538b`。
+
+打包器执行完整图片像素解码、尺寸和哈希、ZIP CRC 检查；独立解压文件与中文优先核对见交付目录 `package-audit.json`。实际 Unity 客户端的 10 个中文／英文／双面／特殊辅助键图像加载样本与完整牌图加载通过，见 `unity-image-samples.json`。取证与范围见 `.tools/client-full-1013/README.zh-CN.md`；仅验证图包，不替代规则效果或联网完整对局验证。
+
 ## 下载与续传
 
 需要 Python、requests、Pillow：
@@ -127,3 +139,8 @@ python Tools/ForgeBridge/Import-CardImages.py --refresh-metadata
 - `summary.json`：该轮结束时的汇总；下载途中不能用上一轮汇总判断完成。
 
 卡图 JPG 是可重新下载的外部资源，已排除出 Git。素材版权归原权利人，来源：https://scryfall.com/。
+
+
+### Incubob 特殊衍生物配图（2026-10-12）
+
+用户授权将 Incubob 生成的 Incubator Dark Confidant／Dark Confidant 以普通抚育器 TMOM/18 正面、黑暗亲信 RAV/81 背面显示。字节副本位于 CardImages/MTGB/Incubob.jpg 与 Incubob_2.jpg，准确来源链接及配图出处保存 Tools/ForgeBridge/ProjectTokenArt.json；Build-RelatedTokenIndex.py 在离线重建索引时保留该链接。这是展示替用，不声称存在该印刷的特殊官方双面衍生物；原生名字、类别、规则、指示物与攻防保持真实对局值，不给其他来源的普通抚育器换图。双方正反面／详情实际加载及数据检查见 .tools/incubob-art-and-reuse-1012/audit.json。

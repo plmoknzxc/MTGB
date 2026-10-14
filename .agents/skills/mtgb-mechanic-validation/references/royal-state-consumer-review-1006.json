@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/RoyalStateConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "4ce4654eca67df4d93ab775bcac34c71e9884ea1968704d972db332d42233e15"
+  },
+  "runtimeHash": "fab8031f7b97fdc498631137a3247e8aced754e6f74ae02978f6af6b3b577ae1",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-RoyalStates.py",
+      "sha256": "aeb8f2a3d45562db9f12f572980a66e420071dbaf78b2284e08beb524610576a"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/RoyalStateFixture.java",
+      "sha256": "09d4cfbdbaf1ab92d749fc7731414f837f441e943d10e2a669f277528f10b60e"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "58dc4ee585910cb813a1e948688e75262136235d0cb0c9dd32c25d348947daea"
+    },
+    {
+      "path": "Assets/Scripts/Editor/RoyalStatePresentationValidation.cs",
+      "sha256": "6ea8902d9d53a21226ba83f1cfd6e7cb6e5326ebf533ca28467f28d7b7e30533"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "bce12aad8a896d5941414415d038d0190e58b72bc644eb345949525867a4ddf0"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Emblems.cs",
+      "sha256": "f3bd25d471edeaa1d8bef2712cec54cb7a36b14a1a6d3a30d980451b466f0d03"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "fed15a27d925d6e7f1205294ebc2a777f148a36f2128441c8aae2940f8a40654"
+    },
+    {
+      "path": "Assets/Scripts/UI/TemporaryCopyGlow.cs",
+      "sha256": "ea845360e93f994c01f20417451ecddd450ba9eab93d27171ef7268a5f1753f4"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/royal-state-1006/native/monarch-draw/1791261637125967600/result.json",
+      "sha256": "621d6ef7af3ba1c0da1489ceaed96e1f7437f89549ef673ffbda31066df7f6b6"
+    },
+    {
+      "path": ".tools/royal-state-1006/native/monarch-source-left/1791261702711259500/result.json",
+      "sha256": "5aaaf38f5322329c66fa481e4c6481d8b0de1da18a3ff90e945bd8ad92a5c424"
+    },
+    {
+      "path": ".tools/royal-state-1006/native/monarch-combat/1791261717113341600/result.json",
+      "sha256": "03fb1e5d3259cbc0d169b860d12cd0f40110fa65f1573bcafde5e8d3b4d09d74"
+    },
+    {
+      "path": ".tools/royal-state-1006/native/initiative-upkeep/1791261778125114000/result.json",
+      "sha256": "aa80e0ef56aaaa04bdd174037b4dc27326d1d5b0a8c0067764e7b006cc7c5d3e"
+    },
+    {
+      "path": ".tools/royal-state-1006/native/initiative-source-left/1791261894805517800/result.json",
+      "sha256": "b924ade18aeb10051fc199fbece9e8cd5c7bdfbd2284cc6e113ef4d8d962d736"
+    },
+    {
+      "path": ".tools/royal-state-1006/native/initiative-combat/1791261804139172400/result.json",
+      "sha256": "c2cd84ec44cdd1ae8b923d7101c162c799927baab67eb94be8ad6140e4493ac9"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/royal-state-1006/ui/20261006T0449062946926Z/result.txt",
+      "sha256": "8ab19fc492dee470d364efe2ce835b6755c3dcca39098b437be0e9141f507f4f"
+    },
+    {
+      "path": ".tools/royal-state-1006/ui/20261006T0449062946926Z/input-hashes.tsv",
+      "sha256": "80ac533d88aff942a932d165f1bd69a74f0620c7bf923692b919420585ca02b6"
+    },
+    {
+      "path": ".tools/royal-state-1006/ui/20261006T0449062946926Z/producer-hashes.tsv",
+      "sha256": "6db48f5db61b5c243ce7ac65724b3aaeb1b6e809bea769c7bd246efd16118df7"
+    }
+  ],
+  "driverArtifacts": [
+    {
+      "path": ".tools/royal-state-1006/attempt3/driver.py",
+      "sha256": "3d33bdfe2ce7c9fc300dc7df8459344c64a17c80935f790004591d25157073a4"
+    },
+    {
+      "path": ".tools/royal-state-1006/attempt4/driver.py",
+      "sha256": "60c2b1c41024a62e16edba90e0b3cdd39037ab5555dee8cf5b2c576db0a412c6"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-RoyalStates.py",
+      "sha256": "aeb8f2a3d45562db9f12f572980a66e420071dbaf78b2284e08beb524610576a"
+    },
+    {
+      "path": ".tools/royal-state-1006/attempt2/driver.py",
+      "sha256": "d4f4d675e379773fae4b2aae0112f954da2b7c3d4465ddd404ab9dd5889ff37f"
+    }
+  ],
+  "remaining": "重复掌握已有先制、同战斗多来源合并、失去君主的旧结束触发、玩家离场/多人交互；不重复六条已验获得、来源被杀后保留、君主结束抓牌、先制维持两房间和双方战斗转移"
+}

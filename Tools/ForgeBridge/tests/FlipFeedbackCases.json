@@ -1,0 +1,136 @@
+{
+  "orb-real-token": {
+    "source": "Chaos Orb",
+    "action": "activate",
+    "mana": 1,
+    "seed": 3,
+    "positions": [
+      {
+        "Battlefield": [
+          "Chaos Orb",
+          "Mountain"
+        ]
+      },
+      {
+        "Battlefield": [
+          "Silvercoat Lion",
+          "Hill Giant"
+        ],
+        "realTokens": [
+          "Silvercoat Lion"
+        ]
+      }
+    ],
+    "location": [
+      2,
+      "Silvercoat Lion"
+    ],
+    "expected": [
+      [
+        2,
+        "Silvercoat Lion",
+        "Battlefield",
+        false
+      ],
+      [
+        2,
+        "Hill Giant",
+        "Graveyard",
+        false
+      ]
+    ]
+  },
+  "orb-noflip": {
+    "source": "Chaos Orb",
+    "action": "activate",
+    "mana": 1,
+    "seed": 2048,
+    "positions": [
+      {
+        "Battlefield": [
+          "Chaos Orb",
+          "Mountain"
+        ]
+      },
+      {
+        "Battlefield": [
+          "Silvercoat Lion",
+          "Hill Giant"
+        ]
+      }
+    ],
+    "location": [
+      2,
+      "Silvercoat Lion"
+    ],
+    "expected": [
+      [
+        2,
+        "Silvercoat Lion",
+        "Battlefield",
+        false
+      ],
+      [
+        2,
+        "Hill Giant",
+        "Battlefield",
+        false
+      ]
+    ]
+  },
+  "star-miss": {
+    "source": "Falling Star",
+    "mana": 3,
+    "seed": 2,
+    "positions": [
+      {
+        "Hand": [
+          "Falling Star"
+        ],
+        "Battlefield": [
+          "Black Lotus"
+        ]
+      },
+      {
+        "Battlefield": [
+          "Air Elemental",
+          "Hill Giant"
+        ]
+      }
+    ],
+    "location": [
+      2,
+      "Air Elemental"
+    ],
+    "expected": [
+      [
+        2,
+        "Air Elemental",
+        "Battlefield",
+        false
+      ],
+      [
+        2,
+        "Hill Giant",
+        "Battlefield",
+        false
+      ]
+    ]
+  },
+  "empty-fixed": {
+    "source": "Falling Star",
+    "mana": 3,
+    "seed": 0,
+    "positions": [
+      {
+        "Hand": [
+          "Falling Star"
+        ],
+        "Battlefield": [
+          "Black Lotus"
+        ]
+      },
+      {}
+    ]
+  }
+}

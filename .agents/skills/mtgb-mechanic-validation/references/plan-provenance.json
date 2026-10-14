@@ -1,0 +1,4134 @@
+{
+  "reviewedOn": "2026-10-11",
+  "scope": "Manual grouping of current documented gaps; not semantic completeness or effect proof",
+  "sourceSnapshot": {
+    "familyContracts": "201787ee8213d37c3e7476589df75b7254533668bd3d7ccface1a7c9a002c630",
+    "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+    "unreviewedTests": "49bd19f84d70c755641f92558bc782056d998e5f4a27636794d68930721f0b45",
+    "reviewedScripts": "1cec1dc68d206bc451bf71fcdf9c7c699cd9618ece7f085e96ceadf3bb7a70ac",
+    "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+    "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+  },
+  "reviewNote": "Reviewed mana family changes: bounded R06/R07/R08 now archived/closed; X seven historical cases registered without rerun. Ten remaining old script sources classified with identity guards, retained as tools/adapters/input contracts/legacy regressions; four legacy effect proof migrations and unknown mechanism/API/declaration audits remain open. Source summaries are classification only. 本次明确新增非瑞/原生最低费用与强制加减费边界；保留R51/R10/A03开放范围，原关闭支付行未扩大。 雪境池新增四场规则/一套UI核销到R10，保留其他替代费用和恢复组合。 费用专项新增126条命名组合及一套三语言付款重放，费用解析器51 token仅为结构候选；R09/R10/R11/R12/R51精确核销命名边界，其他资源/权限/替代/特殊费用保留开放。 Discover/Empower/BlankLine原生消费者审查与归类；原R48九条规则沿用+一套实际UI完成；其他费用/控制/长文本/联网保留原包。BlankLine仅格式，不增加效果PASS。 本次刷新新Test-StateBranches进入未登记队列，原生三代表结果未核销；A01/S03继续审查。本次只接受该队列变化到计划归属，不代表源码/效果审查完成。 State branches登记十条真实规则及一套三语言UI，强度类型化字段/刷新/分组/隐藏信息已验，Recruit/Blight/Intensify归族；新增脚本登记移出未登记队列。S03精确核销已测边界，其余控制/替代/复制保留；审计见StateBranchConsumerAudit。 剩余四API按有界源码分类：StoreSVar是有实际计算的数值助手仍需七类原生结果；ChooseSector明确缺区域字段/空间展示，ClaimThePrize是事件/奖励链，FlipOntoBattlefield是原生随机模拟。S06/S07及A02边界保持开放。此次分类零新增效果/UI PASS。 VariableBranches九条真实规则及一套UI已登记；七类StoreSVar命名消费者、两席保密选项、联合支付与重复生命支付核销到A02/R03/R05。其他表达式、消费者和真实联网保持开放；来源变化仅接受本批已审查的新增登记。 TargetBranches九条原生及三语言完整UI已核对；零目标／同名六实例／部分及全失效／改目标及分配分别证明。R13/R14原行保留闭包证据后从开放队列移除；追加仅分配标题本地化定向补验。已复核受影响targets/number族与新增脚本登记，其他边界原身份保留。 关闭R13/R14后targets无开放归属，核对已有R02真实请求时序/R36嵌套选择控制范围，将targets标为它们的消费者；不新增/扩大原边界，不因有界行关闭删除残余控制/联网。 Exert六原生/三语言完整UI及双攻击者增量已核对；R50原行保存闭包哈希后关闭，R09荣光竞技场/R21原生合并门槛等保留原归属。新运行包的原生状态及UI输入已冻结，历史批次不升为当前全量PASS。 R47实际Hellion段落/目标/滚动及两个共用消费者展示核销；R25九条原生昼夜/速度和双方三语言状态展示通过，原行有界关闭。新增登记源码/映射来源已审查，其他历史身份及未分类声明保留。 Generated-effect source artwork four fields and known prevention text have real replacement inputs/three-locale UI; two native shield flows are regressions, one eight-condition direct adapter newly declared. Hidden zone/private title/description wider consumers retain R15/R17/R26/R36; classification source changes reviewed, other unknown boundaries retained. Trigger/chapter consumers reviewed with seven actual native flows/two exact-input/raycast UI suites; R18 completed scope reconciled, other chapters/replacement/control combinations retained. Source/locale-aware order cache and optional discard min/max wording changes have affected-consumer regressions; old baselines unchanged. Delayed-expiry three actual paths and unchanged-consumer UI incremental reconciled to R19. Other phases/conditions/blink/trigger-copy retained; old evidence unchanged. Storm copy four actual paths and current exact-contract UI incremental, historical three-language format only reconciled to R20. Other complex permanent copy/state/source cases retained; old evidence unchanged. Royal state and boundary audits reconciled R32; pending removed helper identity and typed source projection regression. Both runtime identities preserved, UI increments not counted first. Ring R33 original bounded row closed; multi-combat and face-down combinations explicitly assigned R31/R26; observed count glyph issue R47. Original runtime/driver identities preserved. R34 four native dungeon paths/candidates/completion/reentry bounded closure with exact original row and proofs; R47 specific first-frame count clipping fixed, other dynamic/resources open. 48 current/old projections equal except public cannot-attack keyword; all historical runtime/driver/failed identities preserved. R34 four native dungeon paths/candidates/completion/reentry bounded closure with exact original row and proofs; R47 specific first-frame count clipping fixed, other dynamic/resources open. 48 current/old projections equal except public cannot-attack keyword; all historical runtime/driver/failed identities preserved. R35 specific double/mixed/stolen-source and next-own-turn hover/art/count scopes completed; complex/dynamic/conditional delayed combinations remain. Exact source printing resources only, failed native/private-seat and UI/missing-art identities preserved. R35 specific double/mixed/stolen-source and next-own-turn hover/art/count scopes completed; complex/dynamic/conditional delayed combinations remain. Exact source printing resources only, failed native/private-seat and UI/missing-art identities preserved. R36 real mutual next-turn and Word/Opt payment/resolution nested operators, exact initial private projections and normal restoration scoped; controller death/other pending/true network remain. R02 localhost dedicated BO1 actual dual pending-opening reconnect reconciled; delay/reorder/duplication/other requests and observed queue saturation retained. No structural manifest change or full-network PASS. A04有界声明提取纠正与原生解析器2732写法对照；275旧声明归并，新增保留Visit后100待审查。原374全部来源保留，结构/语义审查仍开放，不增加规则/UI首验。 R30原行完成：五场真实预防/翻倍/共享致命/跳过/任意分配与1946准确候选/卡图UI证明；初1682弱证明与截图反例保留并撤回关闭后重验。只接受combat/replacements已审查来源更新，其他未分类项保持。 R31十条新原生及196项UI有界部分完成；EmptySa战斗税预览fatal修复，原Offering/Emerge两场增量回归；多人Ring4仍原包开放，不重复两人已核销范围。 R31原行以两条真实四人Ring4各席失血补齐而关闭，原十条及196UI不重跑；生产多人客户端／轮序R37、指挥官未来支持（未验证）、联网R02与共享控制R36保留。 R12四条指示物/牌库成本差异核销，两个退款回归与确认文本三语言增量；保留未支持原语和具体牌库等号/不可逆混合边界。S01指挥官误标签已勘误，未来指挥官与生产四人仍未验证。",
+  "progressReviewNote": "2026-10-09 close A04.01 bounded source dimension audit:2016structural identities,100declaration values/1873original rows;651/143historical batches preserved.3original clause/setup gaps retained A01/R49;5surplus contexts retained A01/A02/A03.47->46pending(6audit/32evidence/8decision);0new goal IDs/effect/UI runs;552/41first-proof entries unchanged. 2026-10-11 R02.02/03 bounded real UTP network audit registered, no new first targets; protocol18 codec consumer impact and current source identities preserved, old global invalidation not overwritten.",
+  "executionReview": {
+    "reviewedOn": "2026-10-06",
+    "plan": "execution-plan.json",
+    "reason": "历史记录（2026-10-06）：当时54开放边界唯一归属8批次；19条边界明确共用检查负责包。随后R45、R42、R46、R43、R16有证据关闭，当前49开放边界见progressReviewNote及execution-plan.json。非生命取消归R12、罕见费用归R51、延迟规则归R19、分组归R21；A01–A05共用分类，UI/网络/语言按差异复用。原始边界保留，不关闭未验证范围。 R01现有起手底牌/开局配置/取消重入证据闭包，当前48开放。"
+  },
+  "boundaryOwnershipReview": {
+    "reviewedOn": "2026-10-06",
+    "scope": "Planning ownership and reused-check deduplication only; no new effect proof, no package closure, no supported mode removed. A referencing package retains its distinct native semantic/result assertions; the shared owner supplies only the common contract check. Circular cross-references denote complementary checks, never a completion condition depending on both packages being closed.",
+    "changes": [
+      {
+        "id": "R03",
+        "before": "投票、方向、其他多个决策者/嵌套控制与等待切换；双方秘密Whack/Doodle、共同付款及三轮生命支付的原生结果和操作座位首验保留，不代表四人组合",
+        "after": "投票、方向、多决策者候选与等待切换；共享嵌套控制/归还检查引用R36，仅补多方选择合同差异。既有秘密选择、共同付款、三轮生命支付保留，不宣称四人组合通过",
+        "sharedCheckOwners": [
+          "R36"
+        ]
+      },
+      {
+        "id": "R10",
+        "before": "其他产费撤销、分步付出非生命成本的取消/重试、特殊替代和受限资源组合；不重做已存档普通/雪境退款及本次矩阵",
+        "after": "其他产费撤销、特殊替代付款恢复及受限法术力组合；非生命多段资源取消统一归R12，受限来源合法性归R09。已存档普通/雪境退款与费用矩阵沿用",
+        "sharedCheckOwners": [
+          "R12",
+          "R09"
+        ]
+      },
+      {
+        "id": "R11",
+        "before": "召集/拼造/水御复杂多色选择及未采样跨区域成本、罕见费用原语与替代/控制组合；不重做本次命名来源的加减费/最低费用矩阵",
+        "after": "召集/拼造/水御复杂多色资源选择及跨区域成本结果；罕见费用原语/宣布选择样本统一归R51，部分付款取消归R12，共享控制守卫引用R36。已有加减费/最低费用矩阵沿用",
+        "sharedCheckOwners": [
+          "R51",
+          "R12",
+          "R36"
+        ]
+      },
+      {
+        "id": "R12",
+        "before": "分步已付弃牌/牺牲/放逐等多段成本撤销、费用替代来源和控制/嵌套流程；保留同墓地及本次横置/生命取消首验",
+        "after": "统一补分步已付弃牌/牺牲/放逐等非生命多段成本取消/重试及费用替代来源；记录实际部分付款身份与撤销结果。共享控制/归还引用R36；已有同墓地、横置/生命取消保留",
+        "sharedCheckOwners": [
+          "R36"
+        ]
+      },
+      {
+        "id": "R15",
+        "before": "其他区域实际打开/选择、全部不可选、其他权限与隐藏信息；窃取效果见单独包",
+        "after": "浏览入口、区域筛选与全部不可选的选择合同；揭示/短时知识生命周期统一归R17，可选搜索结算及替代权限归R46，Heist特殊候选归S02。浏览只读及实际选牌权限分别核对",
+        "sharedCheckOwners": [
+          "R17",
+          "R46",
+          "S02"
+        ]
+      },
+      {
+        "id": "R18",
+        "before": "其他章节消费者、多来源/目标及多重替代与控制组合；不重做双方四触发APNAP、血艺家准确目标/逐次生命结果、裂镜奇谭三章零/两弃牌及第二席位首验",
+        "after": "尚未覆盖的章节/触发来源和目标消费者；多重替代共用检查引用R44，控制/等待引用R36，仅保留章节/触发特有结果差异。既有双方APNAP、血艺家逐次结果及裂镜奇谭三章沿用",
+        "sharedCheckOwners": [
+          "R44",
+          "R36"
+        ]
+      },
+      {
+        "id": "R21",
+        "before": "空白/右键收起、非生物/复制叠放、复杂附着身份；已有Bears展开保留；两耗竭攻击者回合结束后原生stackablePermanent=false的合并门槛待审查，R50保留准确身份未强制合并",
+        "after": "统一叠放/展开/收起及非生物/复制对象分组合同；附着身份规则归R41，布局格式共用检查引用R47。保留耗竭攻击者原生stackablePermanent=false门槛待查及已测Bears展开",
+        "sharedCheckOwners": [
+          "R41",
+          "R47"
+        ]
+      },
+      {
+        "id": "R22",
+        "before": "食品/地图/珍宝及其他非生物对象身份、尺寸、排序、换行；是否衍生物/复制状态",
+        "after": "非生物衍生物的准确身份、衍生物/复制分类和特有排序/资源差异；尺寸/换行检查复用R47，叠放/浏览复用R21。食品/地图/珍宝名称本身不分别追加相同布局验证",
+        "sharedCheckOwners": [
+          "R47",
+          "R21"
+        ]
+      },
+      {
+        "id": "R23",
+        "before": "复杂复制例外、多个来源修改同一关键词、CDA及分体/等级固有基线、其他动态描述；基础改写与普通增益颜色不重复首验",
+        "after": "多个来源修改同一关键词、CDA/分体/等级基线及动态描述的有效特征/颜色差异；复杂复制规则归R20，只补复制后与原始基线比较的展示差异。已验基础改写/普通增益颜色沿用",
+        "sharedCheckOwners": [
+          "R20"
+        ]
+      },
+      {
+        "id": "R31",
+        "before": "实际指针选择防守者、其他宣攻/阻挡限制、额外战斗及传统插入回调真实触发；多人魔戒四级分别失去生命、额外战斗/其他控制组合",
+        "after": "实际指针选择防守者、具体宣攻/阻挡限制和额外战斗/插入回调；多人魔戒四级各席实际失去生命结果保留。共享控制/请求归还引用R36，多方轮序引用R37，仅补战斗特有差异",
+        "sharedCheckOwners": [
+          "R36",
+          "R37"
+        ]
+      },
+      {
+        "id": "R35",
+        "before": "其他复杂徽记/动态配方、延迟标记来源或控制变化及未采样跨阶段/条件组合；不重复同/异类真实两徽记、来源被夺或离场、下一回合同ID悬停及既有折叠/展开/分页首验",
+        "after": "尚未覆盖的复杂徽记/动态配方与标记身份/悬停差异；延迟触发的跨阶段/条件/来源或控制变化规则统一归R19，R35只补对应标记展示差异。已验双徽记/来源变化/下一回合及折叠分页沿用",
+        "sharedCheckOwners": [
+          "R19"
+        ]
+      },
+      {
+        "id": "R39",
+        "before": "移除永久修改、复制/替代组合、跨区域和回手重施边界",
+        "after": "永久修改移除、换区/回手重施的身份及持续特征；共用复制/替代检查引用R20/R44，只补永久修改在这些流程中的独特保留/清除规则",
+        "sharedCheckOwners": [
+          "R20",
+          "R44"
+        ]
+      },
+      {
+        "id": "R41",
+        "before": "其他装备/灵气费用、附着来源离场、控制/复制/叠放，准确牌号",
+        "after": "装备/灵气具体费用、附着来源离场及控制/复制下的准确附着身份；叠放/展开共用消费者引用R21，控制归还引用R36，仍保留附着特有的规则结果",
+        "sharedCheckOwners": [
+          "R21",
+          "R36"
+        ]
+      },
+      {
+        "id": "R46",
+        "before": "可选搜索、其他来源区域、空池与替代后的权限",
+        "after": "可选搜索的来源区域、空池和搜索替代后的合法权限/结果；通用区域浏览引用R15，揭示/短时信息引用R17，只补搜索特有候选与结果差异",
+        "sharedCheckOwners": [
+          "R15",
+          "R17"
+        ]
+      },
+      {
+        "id": "S03",
+        "before": "Recruit/Blight的其他受影响玩家、多玩家/控制及抓牌/弃牌/指示物替代组合；Intensify的复制/起始关键词变化、其他目标及强度数值组合；真实联网和未采样语言/长文本仍按原归属开放",
+        "after": "Recruit/Blight不同受影响玩家及抓牌/弃牌/指示物替代的独特规则结果；Intensify复制/起始关键词/目标差异。共用控制、替代、网络、语言分别引用R36/R44/R02/R47，仅补实际合同/状态差异，既有十场规则/UI沿用",
+        "sharedCheckOwners": [
+          "R36",
+          "R44",
+          "R02",
+          "R47"
+        ]
+      },
+      {
+        "id": "A02",
+        "before": "已归族API的其余真实语义/消费者边界；StoreSVar其他表达式、目标/来源改变、条件/时序/费用/替代/控制组合；七类代表和EachPlayer重复已核销；ChooseSector/ClaimThePrize/Flip分别保留S06/S07真实结果和表现范围",
+        "after": "共用A01–A05同一消费者分类表，补已归族API的具体无证据语义；StoreSVar七类代表之外先定位实际表达式/调用差异，控制/费用/替代共用检查引用负责包；ChooseSector/ClaimThePrize/Flip的实际任务保留S06/S07",
+        "sharedCheckOwners": [
+          "A01",
+          "S06",
+          "S07"
+        ]
+      },
+      {
+        "id": "A03",
+        "before": "触发/持续异能/替代/费用无登记条目，按真实消费者与不同原生分支合并",
+        "after": "在A01–A05共用分类表补事件/持续异能/替代/费用维度；同一消费者只审查一次，不把维度重复条目变成新场景；具体无证据分支交现有规则包或R49",
+        "sharedCheckOwners": [
+          "A01",
+          "R49"
+        ]
+      },
+      {
+        "id": "A04",
+        "before": "结构条目及未归类声明，数量读取当前报告；参数/同义形式合并，语义未知保留并扩展工作包",
+        "after": "在A01–A05共用分类表归并结构参数/同义声明；374尚未分类声明保留来源与归属，未知执行语义交现有包或R49，不按声明数量追加效果测试",
+        "sharedCheckOwners": [
+          "A01",
+          "R49"
+        ]
+      },
+      {
+        "id": "A05",
+        "before": "105游戏+48基础接口、145控制器签名及直接/间接/别名消费者；宏/大厅/原生网络区分项目普通对局",
+        "after": "在A01–A05共用分类表核对105游戏+48基础接口、145控制器签名及直接/间接/别名消费者；宏/大厅/原生网络范围仍区分，已审查调用链沿用，仅补未知可达入口",
+        "sharedCheckOwners": [
+          "A01"
+        ]
+      }
+    ],
+    "unresolvedPhrases": "Other combinations/consumers remain classification work; identify an actual changed path or missing assertion before scheduling a new run."
+  },
+  "networkQueueReview": {
+    "beforeBoundary": "延迟、乱序、重复和自动提交；其他待选咒语/付款/控制/战斗断线重连、宽限期与跨机器边界；send queue full饱和原因/可靠交付待查。保留旧离线守卫；不重复本机dedicated BO1双席起手请求原编号/视图哈希恢复及London六张起手",
+    "remainingBoundary": "延迟、乱序、重复和自动提交；其他待选咒语/付款/控制/战斗断线重连、宽限期与跨机器边界。保留旧离线守卫及普通负载本机dedicated/LAN队列修复和原请求/视图恢复证明；极端多房间突发容量未证明",
+    "evidence": {
+      "path": ".tools/network-queue-1006/result.json",
+      "sha256": "f3c513b96617421610bec0b0389d5893b58448042ace6bdf215e88820a6fc9d0"
+    },
+    "scope": "Specific observed error resolved; broader network timing remains open."
+  },
+  "legacyProofReview": {
+    "evidence": {
+      "path": ".tools/legacy-proof-review-1006/result.json",
+      "sha256": "d9606c9d40fd553a6fdf84969f3ee77c4661880cf1fe432e627d5f92f5f6954d"
+    },
+    "decision": "Four classified drivers reconciled to unversioned history; execution hashes unknown, independent observations preserved. Concrete deltas assigned existing packages, no migration gate requiring rerun four whole scripts."
+  },
+  "restrictedManaReview": {
+    "evidence": {
+      "path": ".tools/restricted-mana-1006/result.json",
+      "sha256": "719cb7456b3692ecf2639764cb6fff41d88e9e824826318d54cafb92c732e18b"
+    },
+    "completedNative": 5,
+    "completedUI": 1,
+    "remainingBoundary": "其他实际受限用途公式/来源的语义差异、魂灵洞窟不可反击的实际结果及荣光竞技场特殊产费/敏捷；已核销洞窟类别限制、远古金字塔生物限制、映景湖不继承用途限制/空色、污染替代产费，不重跑相同颜色/数值。多段资源取消统一R12"
+  },
+  "currentEvidenceReview": {
+    "legacyHistoryAndRestrictedMana": "Proof/source hashes retained; reviewed legacy remaining text changed after concrete output review; sourceSnapshot is planning classification freshness, not runtime PASS.",
+    "sourceChanges": {
+      "reviewedScripts": {
+        "before": "096ee1beb05fc37fb32f6f96f52b7d9ac39f7eece796e498cfdeee03e6160683",
+        "after": "31a933e34703cf3a7cafd8e3aa2ed8101f02c948c3da1de8cfbe5b577b7b7f8b"
+      }
+    }
+  },
+  "restrictedManaCounterReview": {
+    "evidence": {
+      "path": ".tools/restricted-mana-1006/counter-increment.json",
+      "sha256": "2b57d7329212ae3a85117094a5ff4056d522c76ce7725b0b02d1529193876284"
+    },
+    "completedNative": 2,
+    "reusedUI": "existing stack/payment contract",
+    "remainingBoundary": "尚未分类的受限用途公式/来源先按消费者和具体支付差异审查；荣光竞技场特殊产费/敏捷保留。洞窟类别限制/不可反击、金字塔生物限制、映景湖用途/不可反击不继承与空色、污染替代产费均核销；同路径颜色/数值不重跑，多段资源取消统一R12"
+  },
+  "incrementalSourceReviews": [
+    {
+      "reviewedOn": "2026-10-06",
+      "changed": [
+        "familyContracts"
+      ],
+      "before": "bda6c73bed36ca4c68faefcb2b274366a722381e2b477395349f581223524a2f",
+      "after": "d175e920c831ee654140d0cb744ded0a8fbfb9009dc3746c20cddded381011eb",
+      "reason": "Only mana gap summary reconciled for Arena/spending eight native first deltas and bounded source classification. New two jobs and compact-confirm UI increment reviewed; unmapped/interface/legacy hashes unchanged. No full/current PASS conferred.",
+      "evidence": [
+        ".tools/arena-mana-1006/result.json",
+        ".tools/arena-mana-1006/ui-increment.json",
+        ".tools/mana-spending-1006/result.json",
+        ".tools/mana-consumer-classification-1006/result.json"
+      ]
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/mana-lifecycle-1006/result.json",
+          "sha256": "9a0f6b05ac92977a1497811ff3176d27a00de1469110b07533d0274a5eed2e2d"
+        },
+        {
+          "path": ".tools/mana-lifecycle-1006/ui-increment.json",
+          "sha256": "96d6faf286d0b197318321810afdce203432a538e7aaf5f3ca204a6c21563992"
+        }
+      ],
+      "scope": "New seven-rule manifest/UI increment and exact mana family gap reviewed; optional fixture setup does not invalidate frozen historical producer versions. Other declarations/interfaces unchanged."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/mana-predicates-1006/result.json",
+          "sha256": "ae5f15adf6643d43b2a43fa73fd627c52e91e482bb917bf9044fb0fc32225330"
+        },
+        {
+          "path": ".tools/mana-predicates-1006/ui-reuse.json",
+          "sha256": "9f1dfbc0b9cd6260f30fb0a31027b5ab6dc554eeac3e61780a528e47dceb3036"
+        }
+      ],
+      "scope": "New five-rule manifest/mana-family gap; runtime exact two-class addition and precise native source delta reviewed. No protocol/card data/UI production changes. Original first identities and global invalidation retained. Two related structured-result registrations corrected to fresh run-summary object; main-only six harness checks, historical results unchanged.",
+      "sourceSnapshotDelta": [
+        "familyContracts"
+      ]
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/mana-echo-1006/result.json",
+          "sha256": "101d6c0414e05f66a28e5cd6789b5b77210503f506af6f9dc12e7f18dc2fe2e2"
+        },
+        {
+          "path": ".tools/mana-echo-1006/ui-reuse.json",
+          "sha256": "48580bf04deaa781c20641a0935c33a206dea50ffb829d4a1b00ea0088b1049b"
+        }
+      ],
+      "scope": "New three-rule manifest and mana gap review; explicit native Echo source exact diff/single-class runtime change. No protocol/data/UI change, frozen success/failure identities retained.",
+      "sourceSnapshotDelta": {
+        "familyContracts": {
+          "old": "aa167e2d3645f004d403af052d3cfd743d32d054e02d5bc16d3523531eacb07c",
+          "new": "74c197d4f10657967ae024c684d09ad44e373dc16244e2dcce3a0a6ccda8bc4c"
+        }
+      }
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/mana-spent-effects-1006/result.json",
+          "sha256": "ddd9c12620ebf5f7a7cfc79034c82d97043df2ec17c712ca810536ba13c909d2"
+        },
+        {
+          "path": ".tools/mana-spent-effects-1006/ui/aggregate.json",
+          "sha256": "20c9e70f058133a9be3a3a87e208c81637f3804772723efb4613e340967be61f"
+        }
+      ],
+      "scope": "Six-case spending job/new UI consumer; R09 spent-choice lifecycle reduced, R47 static-label observation retained. Same runtime, real partial/subset identities frozen.",
+      "delta": {
+        "familyContracts": {
+          "before": "74c197d4f10657967ae024c684d09ad44e373dc16244e2dcce3a0a6ccda8bc4c",
+          "after": "6291f168204ce6b2779b8f95d52231f61fc20d30c9c00eee40dd63f19aa49498"
+        }
+      }
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/conditional-spent-mana-1006/result.json",
+          "sha256": "275fab11e410ac084aa52c98d71792add63202a25f3badc0f728cecfd3233e6f"
+        },
+        {
+          "path": ".tools/conditional-spent-mana-1006/ui-reuse.json",
+          "sha256": "cbda4e42f5987fc6d29173909391aadcc093e38af56a53bf8ff5dc269b11f952"
+        }
+      ],
+      "scope": "R09 predicates narrowed by six real-spending results, unchanged production/runtime/UI.",
+      "delta": {
+        "familyContracts": {
+          "before": "6291f168204ce6b2779b8f95d52231f61fc20d30c9c00eee40dd63f19aa49498",
+          "after": "ec3d2d7797c5fe5ef9da32e5b959a7ade4983cbb426cb1924e7a1732df6fd985"
+        }
+      }
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/draw-boundaries-1007/result.json",
+          "sha256": "89fef48570f9ff94a61d41c6e13ae94a15ba970d6485b7fbc91d5f21d0e23a8b"
+        },
+        {
+          "path": ".tools/draw-boundaries-1007/ui-reuse.json",
+          "sha256": "a710b212e86946769d871fac4a698a3997fb69e9ac7a08ce1fdef6c96defb035"
+        },
+        {
+          "path": "Docs/DrawBoundaryConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "1821b11c79dbdc84233bdf4da6b28366cf18cf7cd4ffa6b4cce9df64847fd7c4"
+        }
+      ],
+      "scope": "Only local EndReview best-fit/layer changes; actual four-seat-context ray verification. R45 removed from open plan with original row preserved. Source fingerprint review follows one coverage refresh.",
+      "sourceDelta": {
+        "familyContracts": {
+          "before": "ec3d2d7797c5fe5ef9da32e5b959a7ade4983cbb426cb1924e7a1732df6fd985",
+          "after": "ad1915804210699dcbe18eb8a128b39b29fe8faaff01997a3a299f29564e00de"
+        }
+      },
+      "coverageNote": "One no-run refresh:2686 unregistered/201 needs-retest, total fingerprint invalidation retained; familyContracts only changed by bounded R45 registration/gap narrowing. Other snapshot keys unchanged."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/dice-combinations-1007/result.json",
+          "sha256": "e680d2fddd2f67cd9775857177dd18bf0997c69c31845230bdc73ffaf483f845"
+        },
+        {
+          "path": ".tools/dice-combinations-1007/ui-matrix.json",
+          "sha256": "9f32887851ca11aefa8c3384551a62a9a4beff885ea3a10054b705ce3548266a"
+        },
+        {
+          "path": "Docs/DiceCombinationConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "b463f26fa535abc46c50cd53938ffa370b01ac0dbbd3434d2ca4f88b46f3b423"
+        }
+      ],
+      "scope": "Bounded Notices local prompt changes, current39-cell UI matrix and legacy binary/coin checks; no rule/bridge/runtime/network change. Source review after single coverage refresh.",
+      "sourceDelta": {
+        "familyContracts": {
+          "before": "ad1915804210699dcbe18eb8a128b39b29fe8faaff01997a3a299f29564e00de",
+          "after": "801bde1532b9f072732e10d4d6b947de87bfa3ecb4dd81a67d539797df337fc0"
+        }
+      },
+      "coverageNote": "Two no-run refreshes: second fixes retained historical24 random-rule label to29 (24+5); no rule/UI rerun.2683 unregistered/204 needs-retest, only familyContracts changed; total fingerprint invalidation retained.",
+      "familyCountCorrection": {
+        "familyContracts": {
+          "before": "801bde1532b9f072732e10d4d6b947de87bfa3ecb4dd81a67d539797df337fc0",
+          "after": "cde01580816d8d654eec4f5bdd032a38e28c2d028fa95e086ff951a77cee8f92"
+        }
+      }
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/search-boundaries-1007/result.json",
+          "sha256": "d3d4f544e4e31806749c91c9d56d99a7d1216d9dc6e5fbf74dbbb347f3ac9e03"
+        },
+        {
+          "path": ".tools/search-boundaries-1007/contracts.json",
+          "sha256": "336f46a2e5618e4cf15c1f52578666e868ec2417943a9d3863a70af557499f08"
+        },
+        {
+          "path": "Docs/SearchBoundaryConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "32f0759f167436bcd1346cfe47e7de344a310737697fae52a209ccbef65d1e24"
+        }
+      ],
+      "scope": "Only Notices exact search and multiline trigger localization; current52-cell increment and legacy binary. No rule/bridge/runtime/resource/network changes. Source review after batch-end coverage refresh.",
+      "sourceChanges": {
+        "familyContracts": {
+          "before": "cde01580816d8d654eec4f5bdd032a38e28c2d028fa95e086ff951a77cee8f92",
+          "after": "0e1f799b4864ce7448d4ab0752155ceadb9a218a68d61221eafe53b578e781e1"
+        }
+      },
+      "coverageNote": "One no-run refresh;2683 unregistered/204 needs-retest unchanged. Only bounded family-contract gap registration changed; other source keys unchanged. Historical whole-fingerprint invalidation retained."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/pile-boundaries-1007/result.json",
+          "sha256": "7e52fc4be97f133c31182f71b726fa53f792b5036917a2482e10be7b5c487832"
+        },
+        {
+          "path": ".tools/pile-boundaries-1007/contracts.json",
+          "sha256": "703cd81b111166d075467cc730cf3d60d0b25767714227bc1e3788c08b3e214a"
+        },
+        {
+          "path": "Docs/PileBoundaryConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "810e4638eda7cbbad6389aef576c16122f646b2b5b7e32be62d4da4804d6533b"
+        },
+        {
+          "path": ".tools/pile-boundaries-1007/runtime-delta.json",
+          "sha256": "94481505a25f539611eccfd08796c6e0223996c01c33051deb6d71ffd48ac05b"
+        }
+      ],
+      "scope": "Only chooseCardsPile/choosePile look/zoneCard projection and Piles recipient art/header rows; four real affected consumer regressions, original two MultiplePiles producers reused. Native jars/card data/assets unchanged; seven bridge class delta recorded. Source review after batch-end no-run coverage.",
+      "sourceChanges": {
+        "familyContracts": {
+          "before": "0e1f799b4864ce7448d4ab0752155ceadb9a218a68d61221eafe53b578e781e1",
+          "after": "4d7c8baef9568e0bbdd85826c91c0f0f4139485926b161c6322ed2b563748e1e"
+        }
+      }
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/pile-boundaries-1007/runner-contract.json",
+          "sha256": "96cb63bfa9997d82dbf651fc8498f260d17c7e632ca2635b61874bd2b680a6b2"
+        }
+      ],
+      "scope": "Search/pile job structuredResult now references fresh run-summary emitted by each invocation. Six isolated actual-main checks; no rule operations, Unity, or new first-verification. Original aggregate/producers preserved.",
+      "sourceChanges": {},
+      "coverageNote": "No-run refresh:2682 unregistered/206 needs-retest unchanged. Source snapshot identical; coverage fingerprint changes with manifest metadata. No current whole-suite PASS."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/library-order-1007/result.json",
+          "sha256": "648d003c06420561dbdbbf719b2164f3f4e083d5edc826aaec3bdb6529009f9c"
+        },
+        {
+          "path": ".tools/library-order-1007/post-audit.json",
+          "sha256": "7c36bd740ade2e9cb61abcb4b3b7923d487f9d0ca6ff01a6714267db4d144bf4"
+        },
+        {
+          "path": "Docs/LibraryOrderConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "a484e8c45328c0f3c5a6a94617895b70e104ca2a725ee34833ed29c878acad31"
+        }
+      ],
+      "scope": "OrderCards-only measured header sizing and existing prompt expansion; only UI retested after actual44/38 failure. Seven actual rules plus frozen resource/candidate assertions, three historical bottom identities reused. GUI-only MoveCards source classification assignedA05, Chinese English footer assignedR47. Runtime/bridge/rules/art unchanged.",
+      "sourceChanges": {
+        "familyContracts": {
+          "before": "4d7c8baef9568e0bbdd85826c91c0f0f4139485926b161c6322ed2b563748e1e",
+          "after": "6b2675ca666353d510d259f957140c80ab60649eb9a49c1b53d24b348c59c6f7"
+        }
+      },
+      "coverageNote": "One no-run refresh:2680 unregistered/208 needs-retest. Seven rules registered, exact family/order consumers reviewed. Runtime unchanged, automatic whole-fingerprint invalidation retained."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/opening-boundaries-1007/result.json",
+          "sha256": "1649d0cb4d46feae386741098060b37f941fba9b013877d9f5de4fce9fec2e93"
+        },
+        {
+          "path": "Docs/OpeningBoundaryConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "625bfc2a9c7ee736836734afe345cd24dd2273bfa784beacb367a3069c1f464b"
+        }
+      ],
+      "scope": "New read-only observer/native driver and editor checks only. No product/bridge/rules/art/network/runtime changes;4 native opening+1 real lobby UI first,2 production session steps; prior full mulligan/UI/transport not rerun. Driver UPKEEP expectation corrected, old FAIL retained.",
+      "sourceChanges": {
+        "familyContracts": {
+          "before": "6b2675ca666353d510d259f957140c80ab60649eb9a49c1b53d24b348c59c6f7",
+          "after": "2985e8462488a81d5925b84f3ed08de61c14b965cd3316c4f554c390af360c8d"
+        }
+      },
+      "coverageNote": "One no-run refresh:2680 unregistered/208 needs-retest unchanged. Five opening cases with original per-producer identities; one LAN suite, production-session and Auto increments. No product/rule/runtime change, whole-fingerprint invalidation remains."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/multipart-cost-1007/result.json",
+          "sha256": "8fc6fa8dfec6dfe2973792fdc1497e3a7c8b3eead38c796e0d48c1c487ba6922"
+        },
+        {
+          "path": "Docs/MultipartCostConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "38745421e9adf61dbaa56dcac7277fe03a76e33ae65f1548f526ef3457e593f9"
+        }
+      ],
+      "scope": "CostPayment/GameActionUtil local rollback change; exact3override delta. Eight firsts with actual identities,8 related regressions and9UI steps; final library guard only barrier+ordinary regression. Other success identities retained; unsupported costs/history explicit, R47costorder visual failure retained.",
+      "sourceChanges": {
+        "familyContracts": {
+          "before": "2985e8462488a81d5925b84f3ed08de61c14b965cd3316c4f554c390af360c8d",
+          "after": "b9daeb52894a8324ee75233d7e3c53007421c47e392191af7a376c3dc39bc90a"
+        }
+      },
+      "coverageNote": "One no-run refresh:2680 unregistered/208 needs-retest unchanged. 83jobs642rule-or-opening12adapters,74UI25families. New R12eight firsts with actual runtime identities;9UI incremental steps not extra UI first. Runtime change retains old full-fingerprint invalidation."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/multipart-cost-1007/state-boundaries-result.json",
+          "sha256": "14a5739cb5855326ba640d7bf09807d8a120da2c139748be0d7f01d4a207bb7d"
+        },
+        {
+          "path": "Docs/MultipartCostStateAudit-2026-10-07.zh-CN.md",
+          "sha256": "173733c6225b2a16ca33232ef3a52c6b64581e4ff7e12371be04effefcdaa76b"
+        }
+      ],
+      "scope": "Payment-local exact card counter journal, one class delta. Three new difference proofs plus current4targeted cases. Original false counter assertion/actual trace loss and delayed driver-only failures retained. No UI production changes/extra first/network; immutable summary migration preserves original evidence hashes.",
+      "sourceChanges": {},
+      "coverageNote": "83engineJobs645rulesOrOpening12adapters;74UI25families,435/36first. Current147counter journal4affected scenarios; prior855/0e identities retained. No whole-fingerprint result rewrite."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/mixed-tap-costs-1007/result.json",
+          "sha256": "bce775064ab79477525bd4e29752e0fc43bc55d55e11c7a25ff96d89439b97d1"
+        },
+        {
+          "path": "Docs/MixedTapCostConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "eb4ffe589536170784d3f92f62c11dd2354576c83ec3b7bc59d0a12d53531fe2"
+        }
+      ],
+      "scope": "New validation sources only;5 native firsts/6 UI ray increments and6 read-only historical exact-ID audits; old drivers/runtime retained. R11 original row closed, R12/R36/R47/R51 unaffected scopes stay open."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/mana-source-refunds-1007/result.json",
+          "sha256": "96d1e5651e63842fd09607fc5ef1e03ecaa71fe3d0ad5d4af13d0b9ba170b774"
+        },
+        {
+          "path": "Docs/ManaSourceRefundConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "e749d85a1faa875d1f19f0c4ecd76edf1909dba1a94303f4146ff24312bce0a2"
+        }
+      ],
+      "scope": "Validation driver and focused existing Editor entry only; native refund/undo/accountFor source review,5 real differences/3UI steps, no production or runtime change; original invalid full-control/typed source/timing driver expectations retained as FAIL. R10 closes original row; other owners explicit."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/convoke-generic-1007/result.json",
+          "sha256": "194bc3533e06692d56a130e9533bae181fd384ec2dcdb47a27b836f5a78db76d"
+        },
+        {
+          "path": "Docs/ConvokeGenericIconAudit-2026-10-07.zh-CN.md",
+          "sha256": "35ee95d9fb8adb1a51b253ff26838c0489c99d2e7903d05c8df05c4831be7c41"
+        }
+      ],
+      "scope": "ChoiceManaSymbols original single-arg unchanged; new overload used by only LandChoices color menu, precise native convoke dialog maps COLORLESS to generic1. Other callers retained exact source behavior. Added generic-only driver branch with frozen old5 R11 case versions; one actual native case,3locale UI increment. Native runtime unchanged; R47 title/static-language remain."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/group-safety-1007/result.json",
+          "sha256": "92c4d8ff9db167a9827e330385a36e6bc795aa70024307869b13f0a1d0c05365"
+        },
+        {
+          "path": "Docs/PermanentGroupingConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "46634087190e32d3e17297bad27969dcd4c9eb54173b8c4bca7101226b797774"
+        }
+      ],
+      "scope": "Arena count>1 click expands all permanent summaries; old land shortcut removed, native request reset unchanged. Actual selected land ID and focused full group contract checked; existing three-locale format, other rule consumers retained. R22/R41/R47 independent. Exert activatedThisGame audit is regression, not native first."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/noncreature-copies-1007/result.json",
+          "sha256": "3f328a6b78bc0811084b4e5b631c6a5588bec2781aba58e02f2e59216b857114"
+        },
+        {
+          "path": "Docs/NoncreatureCopyConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "1a0d49918f55a5a6055aa1c0bd396b6da2058fd73e0b14adf4862f402292f513"
+        }
+      ],
+      "scope": "Only public copy current-art projection, additive fields; common loader and two physical-art bypasses plus grouping-key resource equality. Source fallback for changed graph metadata, hidden guard and backface checked. Native rules/resources unchanged. 12 consumers traced; actual art and relevant detail/menu branches checked, other noncopy paths unchanged; no all-consumer/network PASS."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/attachments-1007/result.json",
+          "sha256": "29b46070008f098e2ce8ab6dff94bf0975be1d7842ce4ebe53d929bd1874d937"
+        },
+        {
+          "path": "Docs/AttachmentConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "05ecc62c60eb56d2f8e9b3c501f2e3d6a8389c2551b035a56feed7d188d7e30b"
+        }
+      ],
+      "scope": "Additive public attachment identities only; native rules/resources unchanged. Existing arrow consumer, identity grouping, copied battlefield current vs physical detail. Source fallback for changed graph metadata, direct callers reviewed; actual 33 UI steps preserve earlier producer identities. Battlefield guard equivalence read-only; stack X path unchanged. No all-consumer/network PASS."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/continuous-state-1007/result.json",
+          "sha256": "34b6a924633264ef9a1ac8e9fd818e41be9e8868d8d753e7c80360e1355ea5b7"
+        },
+        {
+          "path": "Docs/ContinuousStateConsumerAudit-2026-10-07.zh-CN.md",
+          "sha256": "8cde0ab637a1eb71cbc22edcfe1a5107920dfb7734cd22c5d616200458c3edb4"
+        }
+      ],
+      "scope": "R24 test-only source review; metadata_changed fallback exact source for native driver/fixture and existing characteristic consumers. Fixed native/runtime/resources unchanged. Natural expiry opponent turn2; actual land sprite identity refinement against existing snapshots. No all-combination/current-full/network PASS."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/facedown-lifecycle-1007/result.json",
+          "sha256": "aadcb201ebb5941aaa9cacae6b416b8b9dcbf2e0d4bcdd1522c2f041d6fa4218"
+        },
+        {
+          "path": "Docs/FaceDownLifecycleAudit-2026-10-07.zh-CN.md",
+          "sha256": "918dbd7e9b07043011f2d46af5a36b901d315e03f158f7c5da17e8a6bfa05066"
+        }
+      ],
+      "scope": "R26 Verify graph evidence generation01:55:45Z and exact metadata_changed source fallback; final reconnect graph Transport closed retained. Existing Clear hides old children before deferred Destroy. Private known face, native turn-up options and actual ray lifecycle checked. No production/runtime change or full/network/translation PASS."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/bending-lifecycle-1007/result.json",
+          "sha256": "4a946b59abcca41bad5174316a5bc8e043413e0a95c235686b32583aea3c40f2"
+        },
+        {
+          "path": "Docs/BendingLifecycleAudit-2026-10-07.zh-CN.md",
+          "sha256": "5e3ea1ea417eeb3a9c33fb5422a90828f89ac36c7783a13746246ef60323acc8"
+        }
+      ],
+      "scope": "R27 graph list_projects/check_index_coverage Transport closed; no current generation claim. Exact existing Exile/CardSelection/controller/native TargetSelection/Airbend/Earthbend and dialog projection sources read. UI-only conditional header/finish changes, actual three locales and adjacent target consumer; no native/runtime/protocol change, no full/network PASS."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/stack-target-preview-1007/result.json",
+          "sha256": "a5d219b3aeabf79eaf9020e353615a1ca1e67be3fad27397cefacd4094335bda"
+        },
+        {
+          "path": "Docs/StackTargetVisibilityAudit-2026-10-07.zh-CN.md",
+          "sha256": "62d9d04a176ee4a3fbb06076f4d59a169d0e744e2f0e142396d88e645205f8d4"
+        }
+      ],
+      "scope": "Confirmed stack targets additive projection and shared read-only detail consumer. Six actual casts/resolution regressions, four privacy projection adapter assertions, twenty UI assertions including both seats and three locale labels, crowded horizontal browse/normal detail cleanup. Runtime classes/manifest verified; historical runtimes/proofs preserved. No new first-validation counts, package closure, full or true-network PASS; R15/R17/R02 retain broader boundaries. Graph Transport closed, exact source fallback."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/zone-target-hints-1007/result.json",
+          "sha256": "1bdb6af72ce1d0e16a9face0567f574e74388e8243a13dc74ed0714736898b8f"
+        },
+        {
+          "path": "Docs/ZoneTargetHintAudit-2026-10-07.zh-CN.md",
+          "sha256": "17ee86df97c504b0550e27e715a0a454e8df2fece95ddb0acbab8d000ae91ca9"
+        }
+      ],
+      "scope": "Read-only graveyard/exile confirmed-target annotations and stack ordinal cache invalidation. Ten initial UI checks plus four final overflow/localization checks; prior native inputs reused, no native rerun/runtime delta/first-count/package closure. Graph generation 2026-10-07T04:44:43Z metadata_changed; exact source fallback. R15/R17/R02 broader boundaries remain."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/zone-browser-1007/result.json",
+          "sha256": "757497b012462fdee0f0b69e59e5bb8d41cb83aeb50936efb9dcff063637dc74"
+        },
+        {
+          "path": ".tools/zone-browser-1007/ui/result-all.txt",
+          "sha256": "18da0470b66a7f117fea78bc71886920bb940153e78b92fbd016d8938ba2b4c9"
+        },
+        {
+          "path": "Docs/ZoneBrowserBoundaryAudit-2026-10-07.zh-CN.md",
+          "sha256": "fe02584092d36bddfdd9010919c44b3d79b498dd70d9e16fca15f4d8a109ea7c"
+        }
+      ],
+      "scope": "R15 original bounded consumer closed: 1 native first and20 UI increments, no new UI first. Prior search/target/visibility evidence reused; only Chinese object->target wording in production. 19+1 dynamic executions retained; reusable combined class compiled, not repeated. Initial wrong deck and compile failures retained; native future path/report wrapper syntax checked. Knowledge/unknown text/live network/Heist remainR17/R47/R02/S02. Graph D-project-MTGB generation2026-10-07T05:00:56Z metadata_changed: exact source read. Native publish candidate permission branch and UI Present/Choose/Render/ZoneCards checked; no router/rule changes."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/permission-lifecycle-1007/result.json",
+          "sha256": "9db0e0ae74ec59a2b0da94e3502e1e81424869f889d8c13cfdfaead3921aa23e"
+        },
+        {
+          "path": ".tools/permission-lifecycle-1007/ui/result.txt",
+          "sha256": "8fc4a627dd63e4d64f15425ef5c3b875773eb6d77721dbecdd4adb5d2d09c872"
+        },
+        {
+          "path": "Docs/PermissionLifecycleAudit-2026-10-07.zh-CN.md",
+          "sha256": "dde943b7610192ced4217b74c1f33bf537eb2ccf6092750a1be46342cb5ec2f4"
+        }
+      ],
+      "scope": "Original R28 closed:4 native firsts and23 existing-consumer UI increments. Timed impulse actual spell/land play/cancel/natural expiration; Gonti independent permission stays through source donation/leaving, prepared source permission transfers/disappears. Fixed authorized facedown exile casting shelf; no native rules/protocol change. Historical successes keep6aea3341; only Gonti rerun atd581bde4. Existing Airbend/Prepare evidence reused; no full/live-network claim. Graph D-project-MTGB generations05:30/05:43/05:52 metadata_changed; exact sources read including excluded upstream. Bridge views->zoneCard and UI AvailableExileCards->IntegratedRow/RepresentedOnBoard/RememberCastingOrigin consumers checked. Rules jars/input routing unchanged."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/knowledge-lifecycle-1007/result.json",
+          "sha256": "c5a81d9c225569d8840bbcd5f42f56f4649b8702629652cf53fbe654058e87fc"
+        },
+        {
+          "path": ".tools/knowledge-lifecycle-1007/ui/result.txt",
+          "sha256": "4f780938d09a1a3ef46382435af131def4444adf7099ceb17232d632a5d0c785"
+        },
+        {
+          "path": "Docs/KnowledgeLifecycleAudit-2026-10-07.zh-CN.md",
+          "sha256": "a66e7af5ba80b98313471eb7df2172be7cb5453a7cc26a463e2fe68e0dd3da10"
+        }
+      ],
+      "scope": "Original R17 bounded row closed:5 native firsts,24 existing-consumer UI increments including6 spectator projection adapters,2 prior-version hover checks and10 readonly resource/privacy audits. Fixed recipient known library-to-hand moves and private ordered/current top; actual Thoughtseize->Brainstorm invalidation regression retained with launch-version association limitation. Mulch/Peek original successes at aaf01cf5 reused because final Scry/Surveil ordered-top fix has no callback/candidate in them; Index/source-draw/shuffle at ec324ea3. No rules/assets/protocol changes; no whole-baseline/all-hidden-position/control/live-network claim. Graph D-project-MTGB generations06:05/06:23/06:27/06:37/06:50 metadata_changed; exact source read including excluded upstream Zone and RearrangeTopOfLibrary. Consumers: revealCards/selectCards/arrange->knowledge.remember/ordered/arranged->GameEventZone/shuffle->views/hand/top; readonly library/known hand and OnlineSpectatorView checked. Original failed assertions/versions retained."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/combat-keywords-1007/result.json",
+          "sha256": "9e310bedb03c0ca4cefd2aca7628a971c41fb47afc8ea3d9af6aad94ce1145e7"
+        },
+        {
+          "path": ".tools/combat-keywords-1007/ui/result.txt",
+          "sha256": "4cbf1059b48b3bc2fa03902b9f75572021eaf778e60028ddb317e662265f3068"
+        },
+        {
+          "path": ".tools/combat-keywords-1007/counter-fix-ui/result.txt",
+          "sha256": "21105b6dba0dbf18d99955f2ad678b587f7864c646bfb4ed75ba10f9a574eb78"
+        },
+        {
+          "path": "Docs/CombatKeywordAudit-2026-10-07.zh-CN.md",
+          "sha256": "b1c8ee9a65121112589f81df23b1c28385cf5f905f3fa2abef6729537bcc2335"
+        }
+      ],
+      "scope": "R29 partial:9 native firsts;19 original UI structural/click increments +3 focused counter glyph fixes. Attacking band missing reproduced with native singleton groups; not closed. Only Arena permanent counter Count overflow changed, native runtime/protocol/assets unchanged. Both-public projection checks on original trace, prior combat allocation/characteristic three-language contracts reused. Failed driver assumptions and first screenshots retained; no live-network/full baseline PASS. Graph D-project-MTGB07:08/07:25 metadata_changed -> exact source; excluded upstream InputAttack read. InputAttack->addAttackOptions repeated action early return confirmed. AssignAmount->BridgeAllocation->native band defender damage and existing Unity allocation unchanged. Unknown other counter line widths/languages/first resource frame remain R47, actual band interaction stays R29."
+    },
+    {
+      "evidence": [
+        {
+          "path": ".tools/attack-bands-1008/result.json",
+          "sha256": "b715f03b33c85600a712366cb23f085a0877e5fc5c1850b93dd0fb53946cb563"
+        },
+        {
+          "path": "Docs/AttackBandConsumerAudit-2026-10-08.zh-CN.md",
+          "sha256": "b266168c7d3ae27f61d497a1525988544cfaa7229f5a60bf566ace146148bf0b"
+        }
+      ],
+      "scope": "Original R29 bounded closure: prior9 keyword native firsts reused;5 band native firsts and1 new UI contract. Explicit native band activation/join/deselect/recall, legality differences, same-band blocking and attacking-seat allocation; final nine exact-locale badge/control checks supplement55 original input steps. Ordinary-repeat and prior defense regressions separate. Original failures/versions retained; no all-combat/full/live-network claim. Graph no recorded gap but metadata_changed; exact source fallback. InputAttack->addAttackOptions/native getActivateAction->setHighlighted; native Combat band->public attackingBandIds->Arena badge, Targeting band/recall controls and existing damage allocation. Family gaps updated only for proven R29, R30/R31 retained."
+    }
+  ],
+  "closedFamilyOwnershipReview": {
+    "package": "R41",
+    "family": "attachments",
+    "remainingOwner": "R20",
+    "scope": "Only already-owned complex permanent copying; no new package or test expansion. R23/R19/R36/R47 keep their named differences."
+  },
+  "concreteWorkReview": {
+    "reviewedOn": "2026-10-08",
+    "catalog": "remaining-work.json",
+    "originalPlan": {
+      "path": ".tools/goal-scope整理-1008/before/.agents/skills/mtgb-mechanic-validation/references/plan-provenance.json",
+      "sha256": "1bf6f041fc5f7838b91b636076c51650955fc10e3591bdcf535f56206a0fff73"
+    },
+    "gapReconciliation": {
+      "path": ".tools/goal-scope整理-1008/family-gap-review.json",
+      "sha256": "a6ead0e04ba288e8631538d7af1a1d86ab8dcee3f167c3fbe856080511bc4ac4"
+    },
+    "sourceChanges": [
+      "familyContracts"
+    ],
+    "result": "PLANNING_ONLY_NOT_SEMANTIC_OR_EFFECT_PASS"
+  },
+  "sourceClassificationReview": {
+    "path": ".tools/scope-classification-1008/classification.json",
+    "sha256": "97ebe1b5cbd99edf622f19bb895ed7f3a8fbb29d4078118edec33c2c0a02a36d"
+  },
+  "beholdEntryReview": {
+    "path": ".tools/behold-entry-review-1008/classification.json",
+    "sha256": "62765610eff5d98d276505c017c42987dad091f80d6904e730da20a9b2c76ac9"
+  },
+  "castIdentityReview": {
+    "path": ".tools/cast-entry-review-1008/classification.json",
+    "sha256": "d38205916f56314a4da10136ded73ae732a3f32b8bc27672c1e5c9ef80a81c55"
+  },
+  "multiplayerChoiceReview": {
+    "path": ".tools/multiplayer-choice-review-1008/classification.json",
+    "sha256": "e7515e40c434231df229f1b44f82963822a9668ba3482f70c73e10a131f37d22"
+  },
+  "manaLifecycleReview": {
+    "path": ".tools/mana-scope-review-1008/classification.json",
+    "sha256": "f23545e2dc61ce423b028c15bf10bbf7a702966fa21b15bec20e8136dec20ae4"
+  },
+  "manaRestrictionReview": {
+    "path": ".tools/mana-restriction-review-1008/classification.json",
+    "sha256": "63cd6098503fb11432fdf9f86919cb38d1bcacc8e8524d3d4c2ddac3f2b82c87"
+  },
+  "paymentSnapshotReview": {
+    "path": ".tools/payment-snapshot-review-1008/classification.json",
+    "sha256": "7e829d513718852b23936c917504af851a188149d3596268c74b5f3c93688b8f"
+  },
+  "variableExpressionReview": {
+    "path": ".tools/variable-consumer-review-1008/classification.json",
+    "sha256": "6363fae4e690ebdd52516a2fd691efa012ad965b83865990f26dd20efef38ac7"
+  },
+  "apiDispatchPartialReview": {
+    "path": ".tools/api-consumer-review-1008/reconciliation.json",
+    "sha256": "961006c202a380aea5fac4cdf97d2e5c1a3f3df4a75c375d24748cded6aa6cff"
+  },
+  "selectorRoutePartialReview": {
+    "path": ".tools/selection-route-review-1008/classification.json",
+    "sha256": "7ce30bdc917ac3bd23f5d234605b1e1f1ab57cd598038dd3e06833d080f8f8ac"
+  },
+  "moveAdapterReachabilityReview": {
+    "path": ".tools/move-adapter-review-1008/classification.json",
+    "sha256": "e1b29673f35c799f6bc751d7e9e2a82500c1c51c12b84fccb1ba6fbe0d91b24f"
+  },
+  "legacyDifferenceReview": {
+    "path": ".tools/legacy-delta-review-1008/classification.json",
+    "sha256": "bf1b35ea62b8f838e9d6ba03a1f0f75b8dd58f8e9dbddde6edb014ccc983b7e1"
+  },
+  "nameTypeColorReview": {
+    "path": ".tools/name-type-color-review-1008/classification.json",
+    "sha256": "78dac035dad687b72d75b700d1d42caf08af9fb4471f0c139eed87fcf469b974"
+  },
+  "delayedConsumerReview": {
+    "path": ".tools/delayed-consumer-review-1008/classification.json",
+    "sha256": "da7da2f965bf1d554b4fb6ddf2a597aa4286c16b1fbbbe6d73ff79e3ba29b3f9"
+  },
+  "typeFallbackReview": {
+    "path": ".tools/type-fallback-review-1008/classification.json",
+    "sha256": "513b7a031cf56ea9dc3919b88c93b96ae50ac910930f3d532e8566c60c3d5453"
+  },
+  "characteristicConsumerReview": {
+    "path": ".tools/characteristic-consumer-review-1008/classification.json",
+    "sha256": "3543292c602c2e79898f25ba8a7b2d3c34b2818abb1e022653aa498e16f6e8a1"
+  },
+  "baselinePerpetualReview": {
+    "path": ".tools/baseline-perpetual-review-1008/classification.json",
+    "sha256": "ff368867267fe76ae5165c50b9e542a3d3c8dfa9e7e2b4a8e1400bfd6470ab24"
+  },
+  "copyConsumerReview": {
+    "path": ".tools/copy-consumer-review-1008/classification.json",
+    "sha256": "8b9ee67f38e1dfc6154827bf93d44e688b43bcfff6490cd201907bdd831b7fa9"
+  },
+  "sharedConsumerReview": {
+    "path": ".tools/private-choice-reconnect-review-1008/classification.json",
+    "sha256": "d979b853ac97490a03a2dbf85a3556c03c1772b915e4d03117c413ffa7d41dd1"
+  },
+  "evidenceRecordReview": {
+    "path": ".tools/evidence-record-review-1008/classification.json",
+    "sha256": "f020992f6b095dde93386e06f9c188d2156ad33c85d680740fdf8cd06e2d3491"
+  },
+  "sharedClassifiedInput": {
+    "path": ".tools/shared-consumer-review-entry-1009/classification.json",
+    "sha256": "cdeef0f6f05ebae0386f3e2edf0f3837738d82207df97603ed84df04d298b466"
+  },
+  "interfaceConsumerReview": {
+    "path": ".tools/interface-consumer-review-1008/classification.json",
+    "sha256": "25c8fcf980ae113d48fa7984ebf8510d35335ef9228a143ce3514e245bcd2a9b"
+  },
+  "structuralConsumerPartialReview": {
+    "path": ".tools/structural-consumer-review-1009/classification.json",
+    "sha256": "6147f8a2284b8baf77c5eaa1508ac75e279e1e8eeec21f88cad6f0da48734d48"
+  },
+  "structuralBindingPartialReview": {
+    "path": ".tools/structural-binding-review-1009/classification.json",
+    "sha256": "bdf1a846ff6d384159a56025d6467fceffcc0352a5125f012833325b4d6fd558"
+  },
+  "structuralConsumerCompleteReview": {
+    "path": ".tools/parameter-consumer-review-1009/audit.json",
+    "sha256": "339d58ce63f277919c66e67e537efdda5acdd3fdaa746dc3dd74a789bbc55c74"
+  },
+  "apiStateConsumerReview": {
+    "path": ".tools/api-state-consumer-review-1009/classification.json",
+    "sha256": "d8706163918f0bc24100ea7cbb998deb4e3c0a615f09d9644de7a6abed22c32f"
+  },
+  "apiFlowConsumerReview": {
+    "path": ".tools/api-flow-consumer-review-1009/classification.json",
+    "sha256": "df9eee4621f4b20df0fddef4c9320b51a057c52e36f1d53d0ef455efde8f2a90"
+  },
+  "apiResultConsumerReview": {
+    "path": ".tools/api-result-consumer-review-1009/classification.json",
+    "sha256": "8b0793e2fc04cda23f7fd5ba843bc53f746e6ce9c5e2347c69e650e08acf482c"
+  },
+  "apiResultPendingSourceRisk": {
+    "path": ".tools/api-result-consumer-review-1009/pending-source-risk.json",
+    "sha256": "06abc1048868fdab1c738a577fec3a10bddcd67cf0045f7ea4e0f6c063b54450"
+  },
+  "apiChoiceConsumerReview": {
+    "path": ".tools/api-choice-consumer-review-1009/classification.json",
+    "sha256": "344c03c305d337d4215a2693674dd5bd9b84a062185b5299dcfd414067e917cc"
+  },
+  "apiSpecialConsumerReview": {
+    "path": ".tools/api-special-consumer-review-1009/classification.json",
+    "sha256": "389b20695ccd707a93f426cab593f4e9e462cacf6a6092b5ee5a57db411425e0"
+  },
+  "apiConsumerClosure": {
+    "path": ".tools/api-special-consumer-review-1009/closure.json",
+    "sha256": "25a0501109acd5506e3e8aaa867a8e27ad629331b5ca688e7f4e5d4a972be181"
+  },
+  "costConsumerReview": {
+    "path": ".tools/cost-consumer-review-1009/classification.json",
+    "sha256": "ae520edd5f91ef221dce6f7db9cf000d23f96e4741f397859aeb41ae267fa54b"
+  },
+  "dimensionConsumerReview": {
+    "path": ".tools/dimension-consumer-review-1009/classification.json",
+    "sha256": "14b8c4d7e03c1aa17d3908b612d012e8768fa781bec65f383b162682356982b9"
+  },
+  "dimensionConsumerClosure": {
+    "path": ".tools/dimension-consumer-review-1009/closure.json",
+    "sha256": "3552d37351fad2b47d4427877e325f891b0ff4252788187d5fbc96ef398c51fb"
+  },
+  "sharedFieldConsumerReview": {
+    "path": ".tools/shared-field-consumer-review-1009/classification.json",
+    "sha256": "24a5ca866d6d9e635eed2109662d2f441ff13ab11c9c22e8dba20ce155ce1e68"
+  },
+  "sharedFieldConsumerClosure": {
+    "path": ".tools/shared-field-consumer-review-1009/closure.json",
+    "sha256": "767694a42ff6de2a410e303b01c922a1b73d62220adf2bb6751d23f3ff0cf9d2"
+  },
+  "entryReceptionReview": {
+    "path": ".tools/entry-reception-review-1009/classification.json",
+    "sha256": "842ec7f702b486e3f1884b5e823fe9f0636c62c0f8f1181bccddc4a688131eb5"
+  },
+  "entryReceptionClosure": {
+    "path": ".tools/entry-reception-review-1009/closure.json",
+    "sha256": "e2618d12e9e8628a7ca584fde87dfa7cd42bbf751ff3d0ea3204d817aa7cafdc"
+  },
+  "mechanicSourceRouteProgress": {
+    "path": ".tools/mechanic-route-review-1009/progress.json",
+    "sha256": "3218b29bbadb0b683a76576d695a85b25f5c27eb4b39951fb0131aeb52303e18"
+  },
+  "mechanicSourceDisposition": {
+    "path": ".tools/mechanic-consumer-role-1009/receipt.json",
+    "sha256": "498fbcb5f046fcc340365814f3dc3eb7dc758bedc1c0d7fb7012ae6295bc911f"
+  },
+  "companionOptionalStartupIncrement": {
+    "path": ".tools/companion-entry-1009/audit.json",
+    "sha256": "087e09793b8b291258ab34d0805f2e8d408a35f607d1c3cdd6e75dad3a7a7487"
+  },
+  "companionPaymentCommandUiIncrement": {
+    "path": ".tools/companion-payment-1009/audit.json",
+    "sha256": "d15b1a739dd859b7d3c1219c41c0ec7f79550b22e9092326e13bfd0e152b745b"
+  },
+  "assistPaymentCancellationIncrement": {
+    "path": ".tools/assist-payment-1009/audit.json",
+    "sha256": "af76f08695a7c819bc4bf7bebfdf600236a066ef97a99e8edfe7ddaa6ba9d624"
+  },
+  "opalCommanderClosure": {
+    "path": ".tools/opal-commander-1009/audit.json",
+    "sha256": "d6c983a9a088258a37a61a18e4fb71043790ee33b83ef13bbcda3bf6430f4de9"
+  },
+  "chosenTypeCostIncrement": {
+    "path": ".tools/chosen-type-cost-1009/audit.json",
+    "sha256": "77025f37e4e54ee1a740c97a2525f1d27cf2a122b77086ad09a7fa51ce28c821"
+  },
+  "libraryEventClosure": {
+    "path": ".tools/library-event-1009/audit.json",
+    "sha256": "fb60babc182a0b1bfc4a4474cb2837720099125b97b5424cabba95dd11fa8458"
+  },
+  "foundryRecastIncrement": {
+    "path": ".tools/foundry-recast-1009/audit.json",
+    "sha256": "be051df009f528ee27b68b67ff6f7a3020578b3c238dcfc535fcdfc2611c4603"
+  },
+  "delayedTriggerCopyIncrement": {
+    "path": ".tools/delayed-trigger-copy-1009/audit.json",
+    "sha256": "27a7a6ba32ea3b2dfc3b589d88ffdbcaa2b17154be79f16622355d4c0cd8bb64"
+  },
+  "delayedTriggerCopyRememberedIncrement": {
+    "path": ".tools/delayed-trigger-copy-1009/remembered-audit.json",
+    "sha256": "91cf6c8530f5db52117d2dccca90afc62738b77313e9c9afac06941642f01148"
+  },
+  "delayedLifecycleClosure": {
+    "path": ".tools/delayed-lifecycle-1009/audit.json",
+    "sha256": "db16b4f0ebe38b06acc8d369c380d0bd582853a8a77948b365e0101b12d47a42"
+  },
+  "copyExceptionIncrement": {
+    "path": ".tools/copy-exceptions-1009/audit.json",
+    "sha256": "185525a9c5d4d50c368fb88b1e4349a1eac859ea48b4cae4c35325753e1a7733"
+  },
+  "copyTraitIncrement": {
+    "path": ".tools/copy-traits-1009/audit.json",
+    "sha256": "bb6b15215ada867fd97173794b76cbe686ad62a4e7ba6ba256eff58dfe33df78"
+  },
+  "copyNameDurationIncrement": {
+    "path": ".tools/copy-name-duration-1009/audit.json",
+    "sha256": "8b3ba9f171e155a885cd5c5e1fdac13ee7ace0b50b3f3b6d506edca3a5365352"
+  },
+  "copyStateIncrement": {
+    "path": ".tools/copy-states-1009/audit.json",
+    "sha256": "e5440674a0ae22fa96b726280b56bfac3b5203180d03615a9c103c078e913a6d"
+  },
+  "copyStateRemainderIncrement": {
+    "path": ".tools/copy-state-remainder-1009/audit.json",
+    "sha256": "f3ad904221a97633bd9946ff02f9121d6af781d6c322d14a4afc2323a7c3dc5b"
+  },
+  "mergedSourceDisplayIncrement": {
+    "path": ".tools/merged-source-display-1009/audit.json",
+    "sha256": "b0b3a947792edb23149bbd8f9485ca011e7e6cd1b929deca9183ed1d6c69281b"
+  },
+  "splitCopyIncrement": {
+    "path": ".tools/split-copy-1009/audit.json",
+    "sha256": "7aac911452f879ae67dc7d0aa65bf89c335407a0d6cd2e228cbb5838864d5c8f"
+  },
+  "keywordSourcesClosure": {
+    "path": ".tools/keyword-sources-1009/audit.json",
+    "sha256": "6ab7118b66597f9678d33c7d2629796d57d78319e27015b21e94232f0a546131"
+  },
+  "costOrderFormatClosure": {
+    "path": ".tools/cost-order-format-1009/audit.json",
+    "sha256": "d75340a0e3619b6990c7c4226a8bf910dcfbd92f8206f32a3a8f1dbd56d1e608"
+  },
+  "markerFieldsClosure": {
+    "path": ".tools/marker-fields-1009/audit.json",
+    "sha256": "a61cd3d2848835b05fc17a35e9b9e6c5aaef392858526611c03b8d96b895d8a0"
+  },
+  "chapterBoundariesClosure": {
+    "path": ".tools/chapter-boundaries-1009/audit.json",
+    "sha256": "35942dcd564f61b80cfe2ba6a899b9dc1ba090bbe72f490686e71fc2620db519"
+  },
+  "knownPhrasesClosure": {
+    "path": ".tools/known-phrases-1009/audit.json",
+    "sha256": "d838d62416d5266d427e8a281ee35ffb7479069f09a8198e48175f42b63a406f"
+  },
+  "intensityCopyClosure": {
+    "path": ".tools/intensity-copy-1009/audit.json",
+    "sha256": "c41649502352d4681c0425e14f80ee3fbdf2ea1801463fa56b3b914a5ba917c2"
+  },
+  "recruitBlightBoundariesClosure": {
+    "path": ".tools/recruit-blight-boundaries-1009/audit.json",
+    "sha256": "0c2032d204188b80299a4b35937d9fc03d659e9536aa824cee3f1effafce5198"
+  },
+  "nameBanUnionClosure": {
+    "path": ".tools/name-ban-union-1009/audit.json",
+    "sha256": "86141378711217e0f9c6cbf41ddab08e6e6eceed73c16154940ec42b7a18dcea"
+  },
+  "staticLabelClosure": {
+    "reviewedOn": "2026-10-09",
+    "audit": {
+      "path": ".tools/static-labels-1009/audit.json",
+      "sha256": "521719d5d97a7da095670e62b4639da9fb41d2b2a09672df98e65cfb3ee98b2d"
+    },
+    "scope": "中英日静态选牌/查看/确认/搜证标题、玩家默认名、忠诚值徽章、卡牌排序按钮、占卜/刺探去向、关键词与当前/原始状态标签修复；实际原始编号射线、重复/只读守卫、查看返回固定字号及默认/最大字号容纳。新增搜证/刺探/泛型标题仅展示适配器，原生结果复用五份冻结请求；资源未就绪/首帧/切语言过渡与任意长正文仍归R47.05。",
+    "sourceChange": "UI-only; coverage source snapshot unchanged. R47 row only drops completed R47.01. No new mechanism or whole-package closure.",
+    "pendingBefore": 28,
+    "pendingAfter": 27
+  },
+  "controlledConcessionClosure": {
+    "audit": {
+      "path": ".tools/controlled-concession-1009/audit.json",
+      "sha256": "908b16126b18821b501fb33887cb08743bff198b0213c81f16dffdd8c4e67b97"
+    },
+    "pendingBefore": 27,
+    "pendingAfter": 26,
+    "sourceChange": "One newly classified Test-ControlledConcession.py bounded regression; no baseline effect jobs/cases or family contracts changed. Source fingerprint changes retain needs-retest. R36 concrete archived; surviving multi-seat and transport boundaries unchanged.",
+    "previousSourceSnapshot": {
+      "familyContracts": "45cda8c80a4522cb95ced2bbdfa859f0bfe2ad36cfc9afec01ab7291bc539cfb",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "31a933e34703cf3a7cafd8e3aa2ed8101f02c948c3da1de8cfbe5b577b7b7f8b",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "45cda8c80a4522cb95ced2bbdfa859f0bfe2ad36cfc9afec01ab7291bc539cfb",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "81c23cd1e0f273f7af29846164dc7e85d877c8cf5d12a186665104101056231e",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "R36.01当前1v1控制者在部分付款队列或双来源替代modal等待时实际认输：准确赢家、只终结一次、旧双方响应拒绝、原生worker释放；部分付款原生取消未完成施放、手牌数恢复并重置已付地；已付替代链保留资源/堆叠目标。修复终局活动玩家移除导致回合/优先权/堆叠席位重编号，保持注册席位。修复modal Future仍等待的真实阻塞：终局取消已登记回调、晚到publish拒绝、只识别专用终局异常；正常原生替代链仍抓8张并恢复控制者优先权。客户端实际wire经Poll/Present清掉两类窗口、双方请求权限、旧按钮与回放；普通战斗旧请求只补清理合同适配器。已知手牌知识不强行删除，原生投影政策保留。存活多方归还R37、实时网络R02、总体依赖A06继续开放。"
+  },
+  "controlledConcessionFamilyOwnership": {
+    "audit": {
+      "path": ".tools/controlled-concession-1009/family-ownership.json",
+      "sha256": "15f6f51cb83a8a7bc2d453681097751fec317f048665cc76bc0c1633499c96f6"
+    },
+    "scope": "Only closed-family index reassignment to existing A06.01 dependency work; zero additional mechanism/tasks/runs. Preserve R02/R37 actual boundaries."
+  },
+  "controlledConcessionOpenRiskReconciliation": {
+    "audit": {
+      "path": ".tools/controlled-concession-1009/closure-review.json",
+      "sha256": "9ac3a7a74864d6bc87fca84cdf388877d9faa7c33ba0b324a1d8090c002afedc"
+    },
+    "pendingItems": 27,
+    "pendingKinds": {
+      "audit": 1,
+      "evidence": 18,
+      "decision": 8
+    },
+    "scope": "部分付款/多来源替代中的实际认输终局、等待释放、旧双方响应拒绝、正常抓8张、客户端窗口与回放清理、终局注册席位修复已完成。QuasiLibrarySearch可选选牌拒绝后的临时搜寻控制归还未验证；沿原R36.01保留，不能用终局认输替代。",
+    "sourceChange": "No extra engine/consumer/source classification edits; preserve26-step artifacts as superseded completion claims, maintain original81 IDs and actual missing assertions."
+  },
+  "controlledSearchClosure": {
+    "audit": {
+      "path": ".tools/controlled-search-1009/audit.json",
+      "sha256": "b1b0b81aa0fbc15cf512b4407047ceea2debec54c9ab55b2f5949312e59c987b"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "b36ad060edabb9c7b378cb6fde31c33032f98e843a5d7dbe047c05e5a6d1a187",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "81c23cd1e0f273f7af29846164dc7e85d877c8cf5d12a186665104101056231e",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "944fc491a5f5575a4fcf8ab466ae01ba75a56c1e86ca13cbd2e06466cf81ab95",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "5391cb532b200395728aa035204b54545241382b7ee409dfee9feb7c2f0bbb88",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "New classified test-only regression, two reviewed native effects overrides and archived R36 ownership removed from current family gaps; no baseline jobs/cases or request contract change.552/41first unchanged. Original risk resolved by actual casts; no source-only closure."
+  },
+  "playerCounterClosure": {
+    "audit": {
+      "path": ".tools/player-counters-1009/audit.json",
+      "sha256": "59f7ed8ffb55e2975a3418f85b84607734f9b7250e34216f92a8d7da10d09217"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "944fc491a5f5575a4fcf8ab466ae01ba75a56c1e86ca13cbd2e06466cf81ab95",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "5391cb532b200395728aa035204b54545241382b7ee409dfee9feb7c2f0bbb88",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "944fc491a5f5575a4fcf8ab466ae01ba75a56c1e86ca13cbd2e06466cf81ab95",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "0997ccc737e049fe905e2383698304d5237fc1a0a0aab332cee2312496442d92",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "New classified test-only regression and UI increment; original API scope/conditional guards retained; active Radiation phase typo corrected. No new baseline jobs/cases or IDs.552/41first unchanged."
+  },
+  "multiObjectReplacementClosure": {
+    "audit": {
+      "path": ".tools/multi-object-replacements-1009/audit.json",
+      "sha256": "57c16020ec865f168cedb0c4f9fbaa8977c87b865bf4d07751a68063fac052e5"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "944fc491a5f5575a4fcf8ab466ae01ba75a56c1e86ca13cbd2e06466cf81ab95",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "0997ccc737e049fe905e2383698304d5237fc1a0a0aab332cee2312496442d92",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "17258b8044937a6b4d06462ca89db0d7af2c72e4e6a8155fffa09336cd60cbff",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "R44 minimum closure and original shared-primary-owner reconciliation; no baseline jobs/cases or original81 ID changes. Test-only increment; explicit A01 conditional and R47 captured text branches retained.552/41first unchanged."
+  },
+  "directionChoiceIncrement": {
+    "audit": {
+      "path": ".tools/direction-choice-1009/audit.json",
+      "sha256": "160b6a4069593cc76afa11375d2111ba63b6d0963562a76400b644bf9722c86c"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "17258b8044937a6b4d06462ca89db0d7af2c72e4e6a8155fffa09336cd60cbff",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "b30543105fd35837acf951c896d76600c63e80ad93967e8cda68a72f346d305a",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original R03.02 two group increment, no item closure/new IDs/firsts. Current UI fingerprint changes only3 direction localization lines, original successful native flows not rerun."
+  },
+  "directionLifecycleIncrement": {
+    "audit": {
+      "path": ".tools/direction-lifecycle-1009/audit.json",
+      "sha256": "604f0e8b11d37f078978070e9786f1f15544a982c48896d8c57b1b38939f5d3b"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "b30543105fd35837acf951c896d76600c63e80ad93967e8cda68a72f346d305a",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "c1eb571d5e8179a620f77ff8b495319b6143247a90ac615773e53817d236fdbf",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "R03.02 original third group complete, no whole item closure/new IDs/firsts.3 actual flows/48 UI;4 equal native directions reuse previous101 UI. No production change."
+  },
+  "voteResultIncrement": {
+    "audit": {
+      "path": ".tools/vote-choice-1009/audit.json",
+      "sha256": "6bc498b40760cd0a950d4b1e4dde40e503ab56b46db7e4336d53483af0177a5a"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "c1eb571d5e8179a620f77ff8b495319b6143247a90ac615773e53817d236fdbf",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "2313b73bafe3ded6fa19d2e8c575bd0e17805bdd9bd6c91800db162f6fb3e134",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Three original R03.02 groups completed, cumulative6/11,5groups+original APIs remain; no item closure/new IDs/firsts/production change.9actual flows/228UI, identical mandatory card selector reused."
+  },
+  "voteOriginalPlayerIncrement": {
+    "audit": {
+      "path": ".tools/vote-followup-1009/audit.json",
+      "sha256": "9bdd0284e426746c939c1e59b229dd214020c77c0f0685a54474dda01e37b19f"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "2313b73bafe3ded6fa19d2e8c575bd0e17805bdd9bd6c91800db162f6fb3e134",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "9853b835be65f1ba3983be576f99fbc064d9b8c878172c1b9ed59da3c012ec9b",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original group7/11 closed,4groups and full original payload ranges remain; no new/closed whole items. Bounded native patch8classes, actual UI context3routes, original producer source versions retained."
+  },
+  "voteResolutionIncrement": {
+    "audit": {
+      "path": ".tools/vote-resolution-1009/audit.json",
+      "sha256": "c686d79891e0bb0430c8e5adeee7e689c46cfa2a70f59967a870fd3e5ed45356"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "9853b835be65f1ba3983be576f99fbc064d9b8c878172c1b9ed59da3c012ec9b",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "59bbd0b1c932cd663ecab7fe9efc5c9e5a6510079731c46852c2de6ff71e5e2c",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original groups7→10/11;1 group and full original forwarded payloads remain; no new or whole item closures. Production native runtime unchanged; exact optional card-vote captions and metadata cache title delta proved; successful producers retained."
+  },
+  "villainMultipleIncrement": {
+    "audit": {
+      "path": ".tools/villain-multi-1009/audit.json",
+      "sha256": "3f4f39b732c12433d2fd3d9e84028eb5d2bfcd475f435155f3578f973a9e272e"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "59bbd0b1c932cd663ecab7fe9efc5c9e5a6510079731c46852c2de6ff71e5e2c",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "c51c70dd210b733b14951a16c53eed12c6a8a61008b01e104f1c6357fc5fd8e2",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original11 groups complete exact minima, no full item closed/new; all inherited source payloads preserved. Native runtime unchanged; actual long generic option row fix and private discard delta; no native replay to repair UI driver."
+  },
+  "combatChoiceIncrement": {
+    "audit": {
+      "path": ".tools/combat-choice-1009/audit.json",
+      "sha256": "d5b4bc5f9c070244646b2a79bc014d7129fc493a514e185f64ac3ef191d8f7ed"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "c51c70dd210b733b14951a16c53eed12c6a8a61008b01e104f1c6357fc5fd8e2",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "3c43370bc8297fb2e84409a8ba522f13466b7438bd710ddbf5267d547813cae9",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original two API bounded minima completed; full original flags/childs retained. No full item closure/newgoal; only new Camouflage override, exact unaffected old native class identities retained."
+  },
+  "combatChoiceDriverFollowup": {
+    "path": ".tools/combat-choice-1009/driver-followup.json",
+    "sha256": "6990495f75aa1c448bed1bb2fa84d928099513b2494039adc032f6d65ea00b52"
+  },
+  "controlVariantIncrement": {
+    "audit": {
+      "path": ".tools/control-variant-1010/audit.json",
+      "sha256": "5ae376690481c170da04361cbee26644382512c172b1e4ccac8e858869260a4a"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "890d9639450f4db03dbdfde88d7e72b91e097078c04f4c405f68703327b61ceb",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "e768d8ada747192acebb6257d4e15098bd52d6cbc6afca16854d997ce076e89f",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original GainControlVariant minimum modes now complete via reused direction plus three actual results; original flags/guards/full payload fields retained. No whole item/newgoal/global PASS or production change."
+  },
+  "switchBlockBoundaryIncrement": {
+    "audit": {
+      "path": ".tools/switchblock-boundary-1010/audit.json",
+      "sha256": "b775d4ee80a8cb6e718e079d32c193245807f974e06bb7fda9f9415f44398ea4"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "e768d8ada747192acebb6257d4e15098bd52d6cbc6afca16854d997ce076e89f",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "19ff10f4c31561cf8abf3e8752a83658a1cb6108bc077f2ca77f056a9279c79a",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original SwitchBlock pending boundaries completed and one current source-inactive branch classified. One native capacity fix; local dependency review retains old unchanged producers. Original scope/item identity unchanged; no whole R03 closure."
+  },
+  "camouflageCapacityIncrement": {
+    "audit": {
+      "path": ".tools/camouflage-boundary-1010/audit.json",
+      "sha256": "d0f01d1ce1b4394b3d64b42130b4d50f46d2b166d32aef58ab52b6a38a10c09f"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "19ff10f4c31561cf8abf3e8752a83658a1cb6108bc077f2ca77f056a9279c79a",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "f495a86556011ae6861bf61311f01ae9cef13ae9b027a74b221af354816988ab",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "One actual finite additional capacity result; existing UI proof reused by exact unchanged consumer hashes. Conditional native AI/multiple-defender scope retained; no whole R03 closure."
+  },
+  "r03OriginalConsumerClosure": {
+    "audit": {
+      "path": ".tools/r03-payload-1010/audit.json",
+      "sha256": "ee551d3171f6fff9baca1f10579a0252c1301f87aff4cd5d753a9e32b2eaa50b"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "f495a86556011ae6861bf61311f01ae9cef13ae9b027a74b221af354816988ab",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "e82cad44bf61e959f958cf4e55a9b8dbfd3ea7d4c01e3e6e138bd276280514cb",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "R03 original consumer minimum closed and archived with47exact files/fields; independent child/factory and unsupported mode questions explicitly retained in original open owners; no81 ID or552/41 identity changes."
+  },
+  "r38IdentityIncrement": {
+    "audit": {
+      "path": ".tools/digital-identity-1010/audit.json",
+      "sha256": "34ae088f32aa773857b3323a83d43f712024fc94e0431e6b95b8266a8eea9154"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "e82cad44bf61e959f958cf4e55a9b8dbfd3ea7d4c01e3e6e138bd276280514cb",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "19c796497f2dff3f760900a26c2d5b109d72f9c6f17d1d8c7909abd9c2bd62b7",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Same81/552/41 original identities. Exact digital first group completed, second retains accurate memory/replace scope. No whole-item closure or all producer/factory/runtime/UI/network PASS."
+  },
+  "r38OriginalConsumerClosure": {
+    "audit": {
+      "path": ".tools/digital-identity-1010/closure-audit.json",
+      "sha256": "5364fa9d4be3db9d9f864047ebf08115065e6622f7a98f7440983b3c5df00a78"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "19c796497f2dff3f760900a26c2d5b109d72f9c6f17d1d8c7909abd9c2bd62b7",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "348f2e824fb356d0e9c4f367e8acccede50573274eb21c1d171a652175faeff1",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Exact R38 minimum closed/archived with all363 digital declarations/560 full source hashes unchanged. Six original baseline reuse plus six real native increments;552/41 firsts unchanged, original81 IDs retained. Conditional product mode/independent payloads remain original owners."
+  },
+  "r39SelfRemovalIncrement": {
+    "audit": {
+      "path": ".tools/perpetual-removal-1010/audit.json",
+      "sha256": "4cad8cb9c936e009e1bc99b4453ffd17d6dc51e3b899309bd8acd4bed42be335"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "348f2e824fb356d0e9c4f367e8acccede50573274eb21c1d171a652175faeff1",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "9ef56e4b13290b5e934fb4b408b413306a7ca4ace90fad62f4262fcf949ec37b",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original R39 partial self-removal minimum only,22 pending and all81 original IDs retained; source/test classification and one UI increment added,552/41 first-validation unchanged."
+  },
+  "r39CostColorIncrement": {
+    "audit": {
+      "path": ".tools/perpetual-fields-1010/audit.json",
+      "sha256": "730f17f016a353d02abd4d9e9a3437b94e275d44f8192e10640fc14cce13e137"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "9ef56e4b13290b5e934fb4b408b413306a7ca4ace90fad62f4262fcf949ec37b",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "57c2f9ccc27fad188d5e2ff3ad1971f9ecf92d76bcee3137729414f8557de3bf",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original R39 partial exact characteristic cost/color/tax/zone/recast only;22pending81original IDs552/41firsts preserved. One test classification and UI increment added."
+  },
+  "r39FieldRetentionIncrement": {
+    "audit": {
+      "path": ".tools/perpetual-retention-1010/audit.json",
+      "sha256": "e2df34ac09ca71cd91108de039ef9a19c01fc72f1c2a5a0f37a8da3d15bc65cb"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "57c2f9ccc27fad188d5e2ff3ad1971f9ecf92d76bcee3137729414f8557de3bf",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "42bf78004d76b98b0b485473d3fde05165ab271dc2591bdcc7d75f8fb692bd50",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Original R39 partial exact NewPT/null/types/keywords/cost-static zone/recast only;22pending81original IDs552/41firsts preserved. One test classification and UI increment added."
+  },
+  "r39OriginalConsumerClosure": {
+    "audit": {
+      "path": ".tools/perpetual-lifecycle-1010/closure-audit.json",
+      "sha256": "f8e81477c09ba284dbb46cb0654cb4e84fe9bdf586bf249581c98acc05fe0c94"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "42bf78004d76b98b0b485473d3fde05165ab271dc2591bdcc7d75f8fb692bd50",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "1fd610e8757a6cbad2db070d28d5f89cebf6b92b673f55fd47d780a6a1f5771c",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "Exact R39 original named field/remove/copy/Moved lifecycle minimum closed, archived. All264 independent original declarations retained with A01/A03;552/41 firsts unchanged,81original IDs60closed21pending."
+  },
+  "r47LocaleLoadFallbackIncrement": {
+    "audit": {
+      "path": ".tools/locale-fallback-1010/audit.json",
+      "sha256": "af82eb0e15919d25492020a719d3e9918adce85cf7b252059ab6c39d8e8a8753"
+    },
+    "previousSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "1fd610e8757a6cbad2db070d28d5f89cebf6b92b673f55fd47d780a6a1f5771c",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "newSourceSnapshot": {
+      "familyContracts": "8d7ebba18e8fb9b9b5b1373d1a8616715cccce338f209adecdf868c0dbf77cfd",
+      "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+      "unreviewedTests": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reviewedScripts": "1fd610e8757a6cbad2db070d28d5f89cebf6b92b673f55fd47d780a6a1f5771c",
+      "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+      "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+    },
+    "scope": "60/81/21 original progress unchanged; exact original R47.05 classified file failure/recovery gate complete. Shared GamePreferences UI consumer changed with114bounded checks; no new firsts or all historic current PASS."
+  },
+  "r47ConvokeTitleFirstFrameIncrement": {
+    "audit": {
+      "path": ".tools/convoke-first-frame-1010/audit.json",
+      "sha256": "02ce2d1f073714b2d06fed9af4dcd96538a36fedb6339d0c1c2aeaf57e54c89a"
+    },
+    "scope": "Only UI result registry added; family contracts and reviewed-script source snapshot unchanged. Original title minimum complete, R47 remaining explicit."
+  },
+  "r47AuxiliaryResultIncrement": {
+    "audit": {
+      "path": ".tools/auxiliary-result-1010/audit.json",
+      "sha256": "83245a3ff02823ca9cf8184c85a8589d0ec9dcac17d8656559173af20f1891d7"
+    },
+    "scope": "Result UI registry only. Original actual Attraction grammar/lifecycle complete; planar enum still S04.02. No existing effect job/case changed or new goal ID."
+  },
+  "r47DirectionVoteTextIncrement": {
+    "audit": {
+      "path": ".tools/vote-direction-text-1010/audit.json",
+      "sha256": "2d54ccfef4964c8cb2ceec0b63739ac7406c745789f11ec9cfb87488ac637caf"
+    },
+    "scope": "UI registry only, old effects/source snapshot unchanged. Completed exact recorded direction/vote/purpose text. Original R47 remaining scope kept explicit; no added goal ID."
+  },
+  "r47LongNoticeIncrement": {
+    "audit": {
+      "path": ".tools/notice-scroll-1010/audit.json",
+      "sha256": "ed97cda25293b4c6fcabbc70b1f385b18226e668c9e5cb842b31405b0340b679"
+    },
+    "scope": "UI registry only, effects/source snapshot unchanged; scoped readonly long result toast done, long pickers/dynamic fields preserved. No goalID added."
+  },
+  "r47RawPickerIncrement": {
+    "audit": {
+      "path": ".tools/picker-fallback-scroll-1010/audit.json",
+      "sha256": "d94765fbb9440a1073663cc52a60fc991dd42320e5718f3ba48060eaec3d2bb0"
+    },
+    "scope": "UI registry only, original effects retained; Spark/unknown raw description boundary done, dynamic rules/source/image language preserved, no new goalID."
+  },
+  "r20KeepNameOriginalClosure": {
+    "audit": {
+      "path": ".tools/keep-name-1010/closure-audit.json",
+      "sha256": "2c496bd88db23fcc1b9cc6a2ceb7e1506efcf0f330d07aa142c6da639fa863cb"
+    },
+    "explicitModeOwner": "A01.01",
+    "scope": "仅核销R20复制结果；正常生产main→run(args,null)仍为双人Constructed，只载入Main/Sideboard，无Avatar注册。测试使用已存在的验收registrationHook及Forge RegisteredPlayer.assignVanguardAvatar，未改变生产GameType、未实现Vanguard模式，条件结果不是生产入口或新Command UI验收。原KeepName完整operation/missingAssertions和A01/A05入口要求显式保留A01.01 variable-vanguard-conspiracy-entry，仍PENDING；包括支持/排除决定、真实生产注册入口、Command展示与后续其他六变量来源，不隐式排除。R23/R47/A06及R02原边界保持，旧成功不为总指纹重跑。"
+  },
+  "r20ClosedFamilyOwnership": {
+    "audit": {
+      "path": ".tools/keep-name-1010/family-ownership.json",
+      "sha256": "9190ceb2502d1a97cb26fd29caca1c9f10263821f80358f071ad59eb295acaac"
+    },
+    "scope": "Existing A06 owns historical contract dependency index only; A01 mode/payload remains. No new work, all25family IDs assigned."
+  },
+  "r40ZoneValueMotionClosure": {
+    "audit": {
+      "path": ".tools/zone-motion-1010/closure-audit.json",
+      "sha256": "da692cf4be06c1a673d5704ad5f39a15d05b75499a74b697dfa53c375c3d5a8e"
+    },
+    "productionChanges": [
+      "Assets/Scripts/UI/ForgeBattlefieldController.ZoneMotion.cs",
+      "Assets/Scripts/UI/ForgeBattlefieldController.ZoneMotion.cs.meta",
+      "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "Assets/Scripts/UI/ForgeBattlefieldController.cs"
+    ],
+    "reusedNativeResults": "immutable original producers;0 new native runs",
+    "boundedLifeBehavior": "instant values, existing mana pulse; no invented delta animation",
+    "pending": 19
+  },
+  "r40ClosedIndexReconciliation": {
+    "audit": {
+      "path": ".tools/zone-motion-1010/index-reconciliation.json",
+      "sha256": "1a3ff3da86d335a70d6b98e473452f142f323c56dfb6e44e649df2308395efad"
+    },
+    "scope": "R40 last package of E05 now closed. Remove empty scheduling batch; C06 shared browser/collapse proof references retained with E04 current concrete UI consumer owner, no new mandatory tests. Historical outcome family index has A06 current dependency owner only."
+  },
+  "r47CapturedSourceRuleIncrement": {
+    "audit": {
+      "path": ".tools/remaining-display-1010/audit.json",
+      "sha256": "908f340504c677563122f8486eb51692c175263c306511b4c81aea8e92e1e012"
+    },
+    "remaining": "R47.05仍开放：抚育实际tokenArtKey/backFace正反面图片比对随A02.01原抚育结算/数量/零值消费者补证据；融合牌与两原件预览随S01.02决定，活动时空骰结果随S04.02决定，Flip结果随S07.02决定。Teyo规则、Healer来源、Spark完整正文/滚动、通知滚动、方向/投票、召集首帧、翻译I/O故障恢复不重复。A06启动/全局依赖及R02真实网络保留；未知规则保持原文，不宣称全部未知文本已经翻译。",
+    "newNativeRuns": 0,
+    "newGoalIds": []
+  },
+  "r47OriginalDisplayClosure": {
+    "audit": {
+      "path": ".tools/incubate-native-1010/closure-audit.json",
+      "sha256": "d16be404307fa424be6b5f1a812f04f1752517d8d5a15c1312af491bb123b80f"
+    },
+    "newGoalIds": [],
+    "pending": 18,
+    "handoffs": [
+      {
+        "owner": "S01.02",
+        "originalInput": "meld-component-presentation",
+        "operation": "Readable merged current face plus both actual originals; actual component IDs/printing/current visibility; after split no stale relationship.",
+        "missingAssertions": [
+          "Actual combined face/body/loyalty image and exact two-original read-only preview, preserving one battlefield action object.",
+          "Actual split current public/private identity and no stale hover/target."
+        ]
+      },
+      {
+        "owner": "S04.02",
+        "originalInput": "auxiliary-visible-result-format",
+        "operation": "After production Planechase variant/active planes decision, actual planar enum/result symbols and source identity/next input; outside variant no-op already proven.",
+        "missingAssertions": [
+          "Actual active-mode planar enum/native source/current phase recipient visibility and nonblocking readable result; numeric dice is not proof."
+        ]
+      },
+      {
+        "owner": "S07.02",
+        "originalInput": "native-flip-simulation-feedback",
+        "operation": "After native-flip feedback decision, actual flip sentence/count/hit IDs and accurate source/card language; no physical simulation assumption/history button.",
+        "missingAssertions": [
+          "Actual chosen/hit identities/notice text/affected card and recipient permissions; visible feedback without blocking next request."
+        ]
+      }
+    ],
+    "incubateIncrement": {
+      "path": ".tools/incubate-native-1010/audit.json",
+      "sha256": "3734c1d51c8c10c2adaa6f43fe133a4898e09eacacba8f7b52f3078659a1e5c5"
+    }
+  },
+  "archivedFamilyAssignments": {
+    "audit": {
+      "path": ".tools/incubate-native-1010/planner-audit.json",
+      "sha256": "15c5e87782d0a4955d640a59716408c57330198b854a61e60703da2f337ae0d8"
+    },
+    "scope": "Closed-package originalPlanRow family assignment remains represented after validated native/UI increments and closure hash checks. Older archived CSV strings/new lists both normalized; no reassignment to open packages/no new workload. Actual summary63/81 SOURCE_SNAPSHOT_MATCHES; tampered R47 audit still denied; genuinely unassigned new family still flagged. Only source assignment bookkeeping changed, not current-version PASS/remaining operations."
+  },
+  "incubatePayloadIncrement": {
+    "audit": {
+      "path": ".tools/incubate-payload-1010/audit.json",
+      "sha256": "68ed6f583c88f1f116ad9f5edb93b5409a932272eb74adc8ee81ed27c34241a2"
+    },
+    "newGoalIds": [],
+    "beforePending": 18,
+    "afterPending": 18,
+    "retainedResourceBoundary": "Incubob实际来源UNK/UB02b存在97713生产catalog，特殊tokenArtKey=TUNK/N.A.无本地可用精确衍生物卡图；反面不得套普通Phyrexian或同名实体Dark Confidant图。规则/操作与当前正文可用，但缺图资源仍在原A01.01同组保持开放，未声明完整展示或所有UNK支持。"
+  },
+  "sectorNativeIncrement": {
+    "audit": {
+      "path": ".tools/sector-native-1010/audit.json",
+      "sha256": "b670efcaf6e492eb0664c8dd279935195726ec94f790ea04883e2c231981dd1b"
+    },
+    "newGoalIds": [],
+    "closedItems": [
+      "S06.01"
+    ],
+    "beforePending": 18,
+    "afterPending": 17,
+    "retainedDecision": "S06.02"
+  },
+  "royalMultiplayerClosure": {
+    "audit": {
+      "path": ".tools/royal-multiplayer-1010/audit.json",
+      "sha256": "717e865a6f32ede39da3d70ddba4a47d5c8c611b1e1da08efa574566f9e0d10c"
+    },
+    "closedItems": [
+      "R32.01"
+    ],
+    "closedPackages": [
+      "R32"
+    ],
+    "newGoalIds": [],
+    "beforePending": 17,
+    "afterPending": 16,
+    "removedEmptyBatch": "E07",
+    "sharedCheckOwnersUnchanged": true,
+    "remainingOwners": [
+      "R37.02",
+      "R37.03"
+    ]
+  },
+  "lossDrawIncrement": {
+    "owner": "R37.02",
+    "audit": {
+      "path": ".tools/loss-draw-native-1010/audit.json",
+      "sha256": "bbdd14605ba4ff331a486685d5951105a5ed0575a76bc277d39912931793d79c"
+    },
+    "closedItems": [],
+    "newGoalIds": [],
+    "pendingUnchanged": 16,
+    "originalIds": 81,
+    "nativeFlows": 1,
+    "actualPaidOperations": 4,
+    "newUiJobs": 0,
+    "remaining": "R37.02存活多方共享控制者离场/未完modal归还、准确其他6个seat字段、实际EndRoomMatch终局/会话/BO3绑定仍保留；原R36当前1v1控制终局和搜寻归还、R32离场等待/席位/终局守卫不重复。R37.03生产四人/指挥官支持、R02真实网络、A06全局依赖独立未通过。"
+  },
+  "sixSeatProjectionRepair": {
+    "owner": "R37.02",
+    "audit": {
+      "path": ".tools/seat-projection-1010/audit.json",
+      "sha256": "0dc7c43fc1141c0ebbdd7840b85780704243b13bb0c1cc14060f5d579affb49a"
+    },
+    "closedItems": [],
+    "newGoalIds": [],
+    "pendingUnchanged": 16,
+    "sourceOnly": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+    "actualPaidOperations": 0,
+    "newUiJobs": 0,
+    "remaining": "R37.02实际多方控制者离场后存活被控制者的未完输入/modal归还、准确实际EndRoomMatch终局/会话/BO3绑定仍待验证；真实控制/投票/督战/替代/战役的既有规则证明不由本直接属性适配器取代。4客户端/Unity/大厅/指挥官仍R37.03，真实网络R02、全局依赖A06独立开放。已完成的6字段序列化和原生防输/效果离场/平局不重复验证。"
+  },
+  "livingControlReturnRepair": {
+    "owner": "R37.02",
+    "audit": {
+      "path": ".tools/control-return-1010/audit.json",
+      "sha256": "94d7904e72850f76f75d4d789e27ee83ded416f8f3bfcbe8d834d89ae1e0d876"
+    },
+    "closedItems": [],
+    "newGoalIds": [],
+    "pendingUnchanged": 16,
+    "remaining": "R37.02实际EndRoomMatch终局/会话/BO3最终视图与状态绑定仍待验证，原先仅Poll/series头部适配器不足。已完成的存活共享控制付款/取消/modal归还与新私有牌权限、6字段准确席位、防输/效果离场/平局原生结果不重复。生产四客户端/大厅/战场/指挥官仍R37.03，真实网络R02、全局依赖A06独立开放。"
+  },
+  "terminalBindingClosure": {
+    "owner": "R37.02",
+    "audit": {
+      "path": ".tools/terminal-binding-1010/audit.json",
+      "sha256": "933269695c056f1e9669cadee7c4aa4690c96bf6769549251820ac2b18c3aa99"
+    },
+    "closedItems": [
+      "R37.02"
+    ],
+    "newGoalIds": [],
+    "beforePending": 16,
+    "afterPending": 15,
+    "remaining": "R37.01反转/跳过/额外回合阶段原生轮序及R37.03生产四人/大厅/战场/指挥官支持仍开放；真实远程网络时序/宽限归R02，当前全局依赖归A06。此本机终局集成不授四客户端、不同远程clientID/UDP或全部回放传输PASS。"
+  },
+  "turnWheelClosure": {
+    "owner": "R37.01",
+    "audit": {
+      "path": ".tools/turn-wheel-1010/audit.json",
+      "sha256": "d38cb9a031a9695bc9617eac132999dcbd9f5512eaec24cc0d6cc9d0072990b2"
+    },
+    "closedItems": [
+      "R37.01"
+    ],
+    "newGoalIds": [],
+    "beforePending": 15,
+    "afterPending": 14,
+    "conditionalHandoff": {
+      "owner": "A01.01",
+      "group": "scheme-set-abandon-lifecycle",
+      "parameter": "NoSchemes",
+      "originalNativeObligationRetained": true
+    },
+    "remaining": "NoSchemes仅真实All In Good Time的SchemeDeck/Archenemy专属入口，完整原参数/源/禁止SetInMotion及回合结束移除结果义务转入原A01.01 scheme-set-abandon-lifecycle，保持PENDING未支持/未验证；生产四人/大厅/Unity/指挥官R37.03、真实远程传输R02及A06当前全局依赖仍开放。0生产改动/新UI套，不把测试4席位规则授为生产四人。"
+  },
+  "castCostCoreIncrement": {
+    "owner": "R51.02",
+    "audit": {
+      "path": ".tools/cast-cost-tail-1010/audit.json",
+      "sha256": "b3fa0106c7762480965f0d0f4317f94e39f187793af7fd746c1c29fe7d9422c8"
+    },
+    "closedItems": [],
+    "completedCoreBoundaries": 4,
+    "newGoalIds": [],
+    "beforePending": 14,
+    "afterPending": 14,
+    "remaining": "R51.02仍PENDING：7个原分类组additional-mana-alternative、optional-generic-consumers、flashback-three、flash-speed、resolution-switched、trigger-cost、legacy-endurance-cancel-delta；准确7组minimum/missing与source不改。Behold类别两张已归R12.01不重跑。当前四个core结果已完成，不再为R51.02重复付款/试验；R37.03生产4/指挥官、R02真实远程网络、A01不同精确payload与A06全局当前依赖保持开放。"
+  },
+  "optionalGenericIncrement": {
+    "owner": "R51.02",
+    "audit": {
+      "path": ".tools/behold-generic-tail-1010/audit.json",
+      "sha256": "8c4a172970cfe3de051ddadb488a22df2ff4d3b0ec00a804f12c3b1c77a9549b"
+    },
+    "completedGroup": "optional-generic-consumers",
+    "remainingOriginalGroups": 6,
+    "productionClassDelta": [
+      "classes/forge/game/spellability/TargetRestrictions.class"
+    ],
+    "beforePending": 14,
+    "afterPending": 14,
+    "newGoalIds": []
+  },
+  "beholdTriggerIncrement": {
+    "owner": "R51.02",
+    "audit": {
+      "path": ".tools/behold-trigger-1010/audit.json",
+      "sha256": "625aafc9ea26bd23491c405080e35ffb811be533babc475cadc8b7ff0045432c"
+    },
+    "completedGroup": "trigger-cost",
+    "remainingOriginalGroups": 5,
+    "productionChanges": [],
+    "beforePending": 14,
+    "afterPending": 14,
+    "newGoalIds": []
+  },
+  "beholdAlternativeFlashbackIncrement": {
+    "owner": "R51.02",
+    "audit": {
+      "path": ".tools/behold-alt-flashback-1010/audit.json",
+      "sha256": "4d120a35ad71270a3c2830a81dbf530599d96fb560f35dd0012fc70b196cb272"
+    },
+    "completedGroups": [
+      "additional-mana-alternative",
+      "flashback-three"
+    ],
+    "remainingOriginalGroups": 3,
+    "productionChanges": [],
+    "beforePending": 14,
+    "afterPending": 14,
+    "newGoalIds": []
+  },
+  "castCostOriginalClosure": {
+    "audit": {
+      "path": ".tools/cast-cost-closure-1010/audit.json",
+      "sha256": "240e9373b117c29fe95c15529fb21ac6f5dcba769c233524e8b0d198a3260b4f"
+    },
+    "closedItems": [
+      "R51.02"
+    ],
+    "closedPackages": [
+      "R51"
+    ],
+    "completedGroups": [
+      "resolution-switched",
+      "flash-speed",
+      "legacy-endurance-cancel-delta"
+    ],
+    "beforePending": 14,
+    "afterPending": 13,
+    "newGoalIds": [],
+    "removedEmptyBatch": "E03",
+    "sharedCheckOwnerTransfer": {
+      "id": "C02",
+      "before": "E03",
+      "after": "E02",
+      "reason": "R51 closes; remaining R02.03 disconnect after partial payment still consumes the same retained resource-rollback check."
+    },
+    "productionChanges": [
+      "Tools/ForgeBridge/NativePatches.json",
+      "Assets/Scripts/UI/ForgeBattlefieldController.ModeCards.cs"
+    ]
+  },
+  "heistOriginalIncrement": {
+    "audit": {
+      "path": ".tools/heist-tail-1010/audit.json",
+      "sha256": "8fdb165a978a28ae666ebf05f3a6d3fe79b807018cd104146c3a0bc8cab09121"
+    },
+    "owner": "S02.02",
+    "completedGroups": [
+      "heist-repeat-random-private-permission"
+    ],
+    "remainingGroups": [
+      "self-your-turn-field",
+      "specialize-color-discard-cancel-state"
+    ],
+    "beforePending": 13,
+    "afterPending": 13,
+    "productionChanges": [
+      "Assets/Scripts/UI/ForgeBattlefieldController.CardSelection.cs"
+    ],
+    "newGoalIds": [],
+    "nativeRuntimeUnchanged": true
+  },
+  "specializeOriginalClosure": {
+    "audit": {
+      "path": ".tools/specialize-tail-1010/audit-v2.json",
+      "sha256": "30a19588dd9f954022c4a922e2a633d76b5d6839e9e54c8acc54c086f45d05ff"
+    },
+    "closedItems": [
+      "S02.02"
+    ],
+    "closedPackages": [
+      "S02"
+    ],
+    "completedGroups": [
+      "specialize-color-discard-cancel-state",
+      "self-your-turn-field"
+    ],
+    "beforePending": 13,
+    "afterPending": 12,
+    "newGoalIds": [],
+    "removedEmptyBatch": "E04",
+    "sharedCheckOwnerTransfers": [
+      {
+        "id": "C03",
+        "before": "E04",
+        "after": "E01"
+      },
+      {
+        "id": "C04",
+        "before": "E04",
+        "after": "E01"
+      },
+      {
+        "id": "C05",
+        "before": "E04",
+        "after": "E01"
+      },
+      {
+        "id": "C06",
+        "before": "E04",
+        "after": "E01"
+      }
+    ],
+    "sourceCorrection": "Prior prose names CardFactoryUtil incorrectly; actual AtEOTTrig You_Sacrifice call is TokenEffectBase.createTokens -> SpellAbilityEffect.addSelfTrigger. Original owner/scope unchanged. Full source/JAR/current narrow override and actual wrong opponent-END outcome retained.",
+    "runtimeVersions": [
+      "27500c836dfaf14be01e37690bbd1a4edcb2a61962616a43feef6bbc2fae9886",
+      "7ef28507e6fce63456e936544fa24f10679bcc46f23152eb769c98ae98133bc9",
+      "cc1046ac4ea114785baabbe137f6c9fa9409d2e2801fb0dc6802e8caf47c8f9d"
+    ]
+  },
+  "storedDrainResultIncrement": {
+    "audit": {
+      "path": ".tools/stored-drain-1010/audit.json",
+      "sha256": "2be2100201203561f7a3d7378b7044f91fed0ef333301e5ae23fdead21c15bcc"
+    },
+    "completedInputIds": [
+      "stored-loyalty-before-damage",
+      "soul-burn-black-x-subset"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12
+  },
+  "jointPayloadResultIncrement": {
+    "audit": {
+      "path": ".tools/joint-payload-1010/audit.json",
+      "sha256": "27059bb4294661aae516e573b957d4300000953c146e5d41ad12b8975ca773d2"
+    },
+    "completedInputIds": [
+      "joint-payment-different-payload"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12
+  },
+  "firstContactResultIncrement": {
+    "audit": {
+      "path": ".tools/first-contact-1010/audit.json",
+      "sha256": "a4d8c672a3d17e24135ae15f8873249ba32f5114addb4b5607987ecf612e29a5"
+    },
+    "completedInputIds": [
+      "stored-first-cast-time"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12
+  },
+  "etbLifeResultIncrement": {
+    "audit": {
+      "path": ".tools/etb-life-1010/audit.json",
+      "sha256": "776c39368e607dc215d609507a4fae251124ddd89d31080c04373c197e5d846c"
+    },
+    "completedInputIds": [
+      "stored-etb-life-payment"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12
+  },
+  "orggStoredLifeResultIncrement": {
+    "audit": {
+      "path": ".tools/orgg-life-1010/audit.json",
+      "sha256": "7443e5276fdc91b0723968e0f171cb1b42c681850630509aea642a9e59622d25"
+    },
+    "completedSubBoundaries": [
+      "stored-last-known-mana-value-and-life/Soulgorger Orgg"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12
+  },
+  "sharedLocaleIncrement": {
+    "audit": {
+      "path": ".tools/language-unification-1010/audit.json",
+      "sha256": "d0413696d567aef09385af0947233fd61e18d89ff3ec96860eeacbbd8116c12d"
+    },
+    "currentUiDependency": true,
+    "nativeRuntimeChanged": false,
+    "newGoalIds": []
+  },
+  "transmuteOriginalStoredLkiIncrement": {
+    "audit": {
+      "path": ".tools/transmute-1010/audit.json",
+      "sha256": "3c0016fc7995d16aa9a620519bdfa1eec5bc4b2e622ecac384b449bee43e9979"
+    },
+    "completedInputIds": [
+      "stored-last-known-mana-value-and-life"
+    ],
+    "beforePending": 12,
+    "afterPending": 12,
+    "newGoalIds": [],
+    "nativeFlows": 2,
+    "actualPaidOperations": 5,
+    "committedMana": 12
+  },
+  "rhysticOriginalControllerPaymentIncrement": {
+    "audit": {
+      "path": ".tools/rhystic-1010/audit.json",
+      "sha256": "4f1257d73fc1724a501eebbb7e7bb6bf7ce44562b6380c2208079549bdf302ad"
+    },
+    "completedInputIds": [
+      "rhystic-target-controller-payment"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12,
+    "nativeFlows": 1,
+    "actualPaidOperations": 11,
+    "committedMana": 26
+  },
+  "notedOriginalResultsIncrement": {
+    "audit": {
+      "path": ".tools/noted-1010/audit.json",
+      "sha256": "faa8a13e59c081b272cc6e341b763ead9e20bc52db8f6529ce2355aa9efaaf6a"
+    },
+    "completedInputIds": [
+      "stored-noted-power-life-and-cost"
+    ],
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12,
+    "nativeFlows": 5,
+    "actualPaidOperations": 28,
+    "committedMana": 49,
+    "failedRawProofPreserved": true
+  },
+  "horizontalPoolIncrement": {
+    "audit": {
+      "path": ".tools/horizontal-pool-1010/audit.json",
+      "sha256": "aec16b7919b3e40f8bd6c80280a5dc027401626683bd69be45b72428d5d28ec6"
+    },
+    "closedItems": [],
+    "closedPackages": [],
+    "newGoalIds": [],
+    "pending": 12,
+    "scope": "Six dense lanes horizontal in exactly two rows, including lands/creatures/support. Ability and shared generic option list horizontal, preserve selection-context offset. Long rule paragraphs keep their own text scroll; existing horizontal stack/zone review windows unchanged. Mana pool is a short single horizontal row of four visible columns, separate native restrictions/source/ability buckets, distinct colored shield around glyph, normal and snow retained."
+  },
+  "levelThresholdIncrement": {
+    "audit": {
+      "path": ".tools/level-threshold-1010/audit.json",
+      "sha256": "d7ce53117aab09aa49d97a046f30779f1fb602c407f699491c2394f4f726e34a"
+    },
+    "completedInputIds": [
+      "level-threshold-baseline"
+    ],
+    "originalGroupsBefore": 9,
+    "originalGroupsAfter": 10,
+    "newGoalIds": [],
+    "beforePending": 12,
+    "afterPending": 12,
+    "nativeFlows": 4,
+    "nativeCompletedPrefixes": 3,
+    "nativeFullPassFlows": 1,
+    "actualManaPayingOperations": 8,
+    "committedMana": 9,
+    "actualSacrificeActivations": 1,
+    "rawFailuresRetained": true,
+    "productionChanged": false
+  },
+  "tapFlowIncrement": {
+    "audit": {
+      "path": ".tools/tap-flows-1010/audit.json",
+      "sha256": "a035d10a0af632eb67a28bbc8630b7536c6579ad7958b21c04eef3d310055fa3"
+    },
+    "completedInputIds": [
+      "api-flow-TapAll",
+      "api-flow-TapOrUntap",
+      "api-flow-TapOrUntapAll",
+      "api-flow-Untap"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 10,
+    "completedInputsAfter": 14,
+    "unclosedBefore": 115,
+    "unclosedAfter": 111,
+    "currentPending": 11,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "nativeFlows": 8,
+    "actualPaidOperations": 9,
+    "committedMana": 25,
+    "uiChecks": 294,
+    "rawFailuresRetained": true,
+    "runtimeChanged": false
+  },
+  "counterFlowIncrement": {
+    "audit": {
+      "path": ".tools/counter-flows-1010/audit.json",
+      "sha256": "4e6c36ae574b68e9c5892464805ba8a5bf216156117a6d9c1a3f12c5bb018668"
+    },
+    "completedInputIds": [
+      "api-state-RemoveCounterAll",
+      "api-choice-RemoveCounter",
+      "api-choice-MoveCounter",
+      "api-choice-TimeTravel"
+    ],
+    "partiallyProvedInputIds": [
+      "api-choice-AddOrRemoveCounter"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 14,
+    "completedInputsAfter": 18,
+    "unclosedBefore": 111,
+    "unclosedAfter": 107,
+    "currentPending": 11,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "nativeFlows": 17,
+    "actualPaidOperations": 23,
+    "committedMana": 68,
+    "uiChecks": 388,
+    "rawFailuresRetained": true,
+    "runtimeChanged": true,
+    "singleNativeClass": {
+      "path": ".tools/counter-flows-1010/native-fix.json",
+      "sha256": "cc22bc868fb808983ccb0316d6f80e03300e8738f45c6bba7477ebed7e1091a3"
+    }
+  },
+  "counterAddFlagsIncrement": {
+    "audit": {
+      "path": ".tools/counter-addflags-1010/audit.json",
+      "sha256": "b704647c34cc1c476857cc2b4d76cd3dc5be796d42c361e768db90073209ec87"
+    },
+    "completedInputIds": [
+      "api-choice-AddOrRemoveCounter"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 18,
+    "completedInputsAfter": 19,
+    "unclosedBefore": 107,
+    "unclosedAfter": 106,
+    "currentPending": 11,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "actualPaidOperations": 9,
+    "committedMana": 20,
+    "nativeFlows": 8,
+    "completedNativeResults": 17,
+    "uiChecks": 212,
+    "rawFailuresRetained": true,
+    "singleNativeClass": {
+      "path": ".tools/counter-addflags-1010/native-fix.json",
+      "sha256": "fbbe0f01538d2eb51b97b38a627726ee71fb51bbf8cfe1c875c27b58eef3389a"
+    }
+  },
+  "networkBoundaryIncrement": {
+    "audit": {
+      "path": ".tools/network-boundaries-1010/audit.json",
+      "sha256": "9f61b1376f11debfc5854d2e3e0528faf88e8777387254d08b06055d88fa090a"
+    },
+    "closedItems": [
+      "R02.02",
+      "R02.03"
+    ],
+    "currentPendingBefore": 11,
+    "currentPendingAfter": 9,
+    "wholePendingBefore": 12,
+    "wholePendingAfter": 10,
+    "commanderDeferredItems": 1,
+    "commanderDeferredBranches": 3,
+    "newIds": [],
+    "firstNativeUnchanged": 552,
+    "firstUnityUnchanged": 41,
+    "scope": "R02.02/03原最低边界完成：当前Windows真实dedicated服务器与两个standalone客户端经UTP，目标/宣攻/阻挡/受控私有选牌/分堆及部分付款等待共7次宽限内恢复，原worker、请求、双方私有hash及操作权限保留；旧match/真实曾有效native ID/旧及重复client ID、手动AUTO竞争和丢失确认后的inputPending恢复；付款完成、取消退款后重试、实际30秒双方断线平局及部分付款方超时判负，旧令牌/动作不能复活或重复计分。4实际施放+2激活共18mana，103冻结断言/43证据引用。真实超512KiB状态被丢弃已修：protocol18可选有界gzip，JSON/hash不变，小包原路径，非法压缩/16MiB展开/旧协议拒绝。仅本机真实传输，不授跨机器/全部网络或费用组合PASS。",
+    "runtimeUnchanged": "f92a2041eec6c0245ff0615ef859170d1b59317ab0043a85c5c64eb0317c63d6",
+    "sourceChangesReviewed": [
+      "reviewedScripts"
+    ],
+    "coverageNote": "No effect jobs run; current fingerprint keeps233 needs-retest and2659 unregistered structural entries. No global PASS or elimination of original scope."
+  },
+  "regenerationFlowIncrement": {
+    "audit": {
+      "path": ".tools/regeneration-flows-1011/audit.json",
+      "sha256": "dc375a0bcf2d92a18af10dce2149c84fd6f76c6a8b66984206c1fdf664c5365a"
+    },
+    "completedInputIds": [
+      "api-flow-Regenerate",
+      "api-flow-Regeneration"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 19,
+    "completedInputsAfter": 21,
+    "unclosedBefore": 106,
+    "unclosedAfter": 104,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "actualPaidOperations": 22,
+    "committedMana": 51,
+    "nativeFlows": 5,
+    "completedNativeResults": 24,
+    "uiChecks": 176,
+    "offlineChecks": 384,
+    "rawFailuresRetained": true,
+    "nativeRuntimeUnchanged": true
+  },
+  "massResultIncrement": {
+    "audit": {
+      "path": ".tools/mass-results-1011/audit.json",
+      "sha256": "2e0bd5c6ed92a69422be53fc97dae671b815ce94e63d8a4f4cff7261333ccb05"
+    },
+    "completedInputIds": [
+      "api-result-DestroyAll",
+      "api-result-SacrificeAll"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 21,
+    "completedInputsAfter": 23,
+    "unclosedBefore": 104,
+    "unclosedAfter": 102,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "actualPaidOperations": 13,
+    "committedMana": 42,
+    "nativeFlows": 6,
+    "completedNativeResults": 14,
+    "uiChecks": 76,
+    "offlineChecks": 341,
+    "rawFailuresRetained": true,
+    "nativeRuntimeUnchanged": true
+  },
+  "currentObjectIncrement": {
+    "audit": {
+      "path": ".tools/current-object-flows-1011/audit.json",
+      "sha256": "017f1f29f4aea88e871dfd599df34f12f674246784720f961e345179b710e35b"
+    },
+    "completedInputIds": [
+      "api-state-Detain",
+      "api-state-HealDamage",
+      "api-flow-RemoveFromCombat",
+      "api-flow-Unattach"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 23,
+    "completedInputsAfter": 27,
+    "unclosedBefore": 102,
+    "unclosedAfter": 98,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "actualPaidOperations": 21,
+    "committedMana": 45,
+    "nativeFlows": 5,
+    "completeDriverFlows": 4,
+    "boundedFrozenPrefixFlows": 1,
+    "completedNativeResults": 35,
+    "uiChecks": 123,
+    "offlineChecks": 1162,
+    "rawFailuresRetained": true,
+    "runtimeBefore": "f92a2041eec6c0245ff0615ef859170d1b59317ab0043a85c5c64eb0317c63d6",
+    "runtimeAfter": "69a50f142a77b24db461cb2466d7c0d3f04cc1433176c3fa404fc7b3ea58d078",
+    "nativeEngineUnchanged": true
+  },
+  "combatRelationIncrement": {
+    "audit": {
+      "path": ".tools/combat-relations-1011/audit.json",
+      "sha256": "d4f1e9f1598243e9feba1d4e3523f11f5b879b9b81207b064f4fe4831cfda512"
+    },
+    "completedInputIds": [
+      "api-flow-MustBlock",
+      "api-flow-ChangeCombatants",
+      "api-flow-BecomesBlocked",
+      "api-flow-Block"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 27,
+    "completedInputsAfter": 31,
+    "unclosedBefore": 98,
+    "unclosedAfter": 94,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "actualPaidOperations": 8,
+    "committedMana": 20,
+    "nativeFlows": 8,
+    "completeDriverFlows": 7,
+    "boundedFrozenPrefixFlows": 1,
+    "completedNativeResults": 29,
+    "uiChecks": 390,
+    "offlineChecks": 676,
+    "runtimeBefore": "69a50f142a77b24db461cb2466d7c0d3f04cc1433176c3fa404fc7b3ea58d078",
+    "runtimeAfter": "442c865866fba4ffe575a1b1c9ce2b5f92ed58a379720a151f46ca929e7abeda",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/combat-relations-1011/source-snapshot-review.json",
+      "sha256": "578f5a4bf4eeef79cd8a5cfa5235b3be341d74b6b3204f22fe5f58bc14f09c46"
+    }
+  },
+  "lifePowerIncrement": {
+    "audit": {
+      "path": ".tools/life-power-flows-1011/audit.json",
+      "sha256": "c851a72df4124147f40db81260252a763ee0c9d692f776e635665387ff160a74"
+    },
+    "completedInputIds": [
+      "api-result-SetLife",
+      "api-result-ExchangeLife",
+      "api-result-ExchangeLifeVariant",
+      "api-result-ExchangePower"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 31,
+    "completedInputsAfter": 35,
+    "unclosedBefore": 94,
+    "unclosedAfter": 90,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "nativeFlows": 10,
+    "completedNativeResults": 40,
+    "actualPaidOperations": 30,
+    "nonzeroManaOperations": 26,
+    "committedMana": 141,
+    "uiChecks": 612,
+    "uiTailChecks": 570,
+    "uiPrefixChecks": 42,
+    "offlineChecks": 7945,
+    "runtimeHash": "442c865866fba4ffe575a1b1c9ce2b5f92ed58a379720a151f46ca929e7abeda",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/life-power-flows-1011/source-snapshot-review.json",
+      "sha256": "c06173ff8324c365d593d8b6b38de54134fe7de8074a28034d028c51edaa08b0"
+    }
+  },
+  "tokenExploreIncrement": {
+    "audit": {
+      "path": ".tools/token-explore-flows-1011/audit.json",
+      "sha256": "21473383269504845601305a45c52fb576eaf6ed3ac7eb06b1cc6e7d3ab41e8a"
+    },
+    "completedInputIds": [
+      "api-result-Amass",
+      "api-result-Endure",
+      "api-result-Investigate",
+      "api-result-Explore"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 35,
+    "completedInputsAfter": 39,
+    "unclosedBefore": 90,
+    "unclosedAfter": 86,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "deferredBranches": 3,
+    "newGoalIds": [],
+    "nativeFlows": 9,
+    "completedNativeResults": 16,
+    "actualPaidOperations": 16,
+    "committedMana": 40,
+    "uiChecks": 263,
+    "offlineChecks": 377,
+    "runtimeHash": "442c865866fba4ffe575a1b1c9ce2b5f92ed58a379720a151f46ca929e7abeda",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/token-explore-flows-1011/source-snapshot-review.json",
+      "sha256": "27a8627b0c859d20017b3c164310ebf4b42be508c5c50d9624190016ee43f569"
+    }
+  },
+  "selectionResultIncrement": {
+    "audit": {
+      "path": ".tools/selection-results-1011/audit.json",
+      "sha256": "255d86ea106630d2e083675c7812231818d40641a4efa33673df8200525ebd6f"
+    },
+    "completedInputIds": [
+      "api-result-Learn"
+    ],
+    "partialInputIds": [
+      "api-result-ManifestDread"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 39,
+    "completedInputsAfter": 40,
+    "unclosedBefore": 86,
+    "unclosedAfter": 85,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 7,
+    "completedNativeResults": 9,
+    "actualPaidOperations": 8,
+    "committedMana": 18,
+    "uiChecks": 93,
+    "offlineChecks": 339,
+    "runtimeHash": "282ff76e9863b34fb6837e8e6783cf8f3ae1baeed30929186fd3b071b9a4db57",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/selection-results-1011/source-snapshot-review.json",
+      "sha256": "96f6c1c74cf1d12e6b143616272fe4f0773b64e0e9f92c7247f33ad60aadc99c"
+    }
+  },
+  "selectionResultTailIncrement": {
+    "audit": {
+      "path": ".tools/selection-results-tail-1011/audit.json",
+      "sha256": "5f3aef3281f97c1244986491eaad7d1d74b8219b5ac4ace9aeb35f7fbcc133bd"
+    },
+    "completedInputIds": [
+      "api-result-Surveil",
+      "api-result-Connive",
+      "api-result-ManifestDread"
+    ],
+    "expandedDistinctLeafInputs": 125,
+    "completedInputsBefore": 40,
+    "completedInputsAfter": 43,
+    "unclosedBefore": 85,
+    "unclosedAfter": 82,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 10,
+    "completedNativeResults": 18,
+    "actualPaidOperations": 16,
+    "committedMana": 34,
+    "uiChecks": 237,
+    "offlineChecks": 711,
+    "runtimeHash": "282ff76e9863b34fb6837e8e6783cf8f3ae1baeed30929186fd3b071b9a4db57",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/selection-results-tail-1011/source-snapshot-review.json",
+      "sha256": "9aea1359f7d7d9b5971995a1baae64b410915d4b377d5deb3326a675de263602"
+    }
+  },
+  "branchXResultIncrement": {
+    "audit": {
+      "path": ".tools/branch-x-flows-1011/audit.json",
+      "sha256": "17966bac75baa9203be8c39718bcc0db7fd15b0decf1fea5ee589861c5e6fdb5"
+    },
+    "completedInputIds": [
+      "api-state-Branch",
+      "api-state-ChangeX",
+      "api-flow-ChooseDirection"
+    ],
+    "completedInputsBefore": 43,
+    "completedInputsAfter": 46,
+    "unclosedBefore": 82,
+    "unclosedAfter": 79,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 7,
+    "actualCasts": 10,
+    "actualPaidOperations": 10,
+    "committedMana": 26,
+    "uiChecks": 49,
+    "offlineChecks": 1496,
+    "runtimeHash": "282ff76e9863b34fb6837e8e6783cf8f3ae1baeed30929186fd3b071b9a4db57",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/branch-x-flows-1011/source-snapshot-review.json",
+      "sha256": "56ddaf058fde801b6606a910fbe366d7f657e088145166acac560c8e5efe6eee"
+    }
+  },
+  "lookPhaseResultIncrement": {
+    "audit": {
+      "path": ".tools/look-phase-flows-1011/audit.json",
+      "sha256": "9696d40df786e76807c3b04ee8a5bba7eddd908b9077c8c0888db578016df683"
+    },
+    "completedInputIds": [
+      "api-flow-LookAt",
+      "api-result-Phases"
+    ],
+    "completedInputsBefore": 46,
+    "completedInputsAfter": 48,
+    "unclosedBefore": 79,
+    "unclosedAfter": 77,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 13,
+    "actualPaidOperations": 23,
+    "committedMana": 41,
+    "lifePayment": 1,
+    "uiChecks": 165,
+    "offlineChecks": 1269,
+    "runtimeHash": "07d137f689eb6693f80ac90897c0e0b3217269631063cecacd95b8651ecc82cd",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/look-phase-flows-1011/source-snapshot-review.json",
+      "sha256": "cdd14715980ffd5ce8f2494f391d9135e1a89293d76595aa0ddaae113f4f27f3"
+    }
+  },
+  "selectionMemoryResultIncrement": {
+    "audit": {
+      "path": ".tools/selection-memory-flows-1011/audit.json",
+      "sha256": "bace17466fc2d535ef12bf959df55333b40629111099270907d502cc84e5937c"
+    },
+    "completedInputIds": [
+      "api-flow-ChooseEvenOdd",
+      "api-result-Reveal"
+    ],
+    "partialInputIds": [
+      "api-result-Cleanup"
+    ],
+    "completedInputsBefore": 48,
+    "completedInputsAfter": 50,
+    "unclosedBefore": 77,
+    "unclosedAfter": 75,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 14,
+    "actualOperations": 16,
+    "committedMana": 38,
+    "uiChecks": 196,
+    "offlineChecks": 730,
+    "runtimeHash": "07d137f689eb6693f80ac90897c0e0b3217269631063cecacd95b8651ecc82cd",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/selection-memory-flows-1011/source-snapshot-review.json",
+      "sha256": "e6c6efd4c4092797918dd5bddb9423df651b92b412a6ea06d375829ccd17d54d"
+    }
+  },
+  "playerControlMemoryResultIncrement": {
+    "audit": {
+      "path": ".tools/player-control-memory-flows-1011/audit.json",
+      "sha256": "fc7a42ce8c050ea0431e843f56b2f889295f3f9d86d8454db191e0cc03a6d4ae"
+    },
+    "completedInputIds": [
+      "api-flow-ChoosePlayer",
+      "api-result-ExchangeControl"
+    ],
+    "partialInputIds": [
+      "api-result-Cleanup"
+    ],
+    "completedInputsBefore": 50,
+    "completedInputsAfter": 52,
+    "unclosedBefore": 75,
+    "unclosedAfter": 73,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 16,
+    "actualOperations": 27,
+    "committedMana": 54,
+    "uiChecks": 175,
+    "offlineChecks": 1144,
+    "runtimeHash": "7f533c551cfce26ba322d0a754eed5f7cd75deff688d56ed5bdae21b788c03e2",
+    "runtimeDelta": {
+      "path": ".tools/player-control-memory-flows-1011/runtime-delta.json",
+      "sha256": "994853bb5b00fcd9b2cc7a10651afd0acf07aaf1b95c53a091ffd93f3d586d5c"
+    },
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/player-control-memory-flows-1011/source-snapshot-review.json",
+      "sha256": "d0700e04ebc4a14d3b97ace25ad20eddb3b37076aa474f0974fef789eb458cd9"
+    }
+  },
+  "cleanupTailResultIncrement": {
+    "audit": {
+      "path": ".tools/cleanup-tail-flows-1011/audit.json",
+      "sha256": "d76360bb450ca7254bc3df342bd99be51e1c5917f2de9e220ee8ae525e91cb8c"
+    },
+    "completedInputIds": [],
+    "partialInputIds": [
+      "api-result-Cleanup",
+      "type-state-selector-deltas"
+    ],
+    "completedInputsBefore": 52,
+    "completedInputsAfter": 52,
+    "unclosedBefore": 73,
+    "unclosedAfter": 73,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 6,
+    "actualOperations": 11,
+    "committedMana": 37,
+    "uiChecks": 102,
+    "offlineChecks": 770,
+    "runtimeHash": "7f533c551cfce26ba322d0a754eed5f7cd75deff688d56ed5bdae21b788c03e2",
+    "rawFailuresRetained": true,
+    "sourceSnapshotReview": {
+      "path": ".tools/cleanup-tail-flows-1011/source-snapshot-review.json",
+      "sha256": "371db7c76588797684416353176b8cccac25551cc2a403cfbe17b42103a7f46c"
+    }
+  },
+  "cleanupLogDeliveryIncrement": {
+    "audit": {
+      "path": ".tools/cleanup-log-delivery-1011/audit.json",
+      "sha256": "bcdb071bdb6e4b5fff007cf61ba21aa1d5ea1cee1e3efb73f27ea0e13b71c3c1"
+    },
+    "completedInputIds": [
+      "api-result-Cleanup"
+    ],
+    "completedInputsBefore": 52,
+    "completedInputsAfter": 53,
+    "unclosedBefore": 73,
+    "unclosedAfter": 72,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 2,
+    "actualOperations": 2,
+    "committedMana": 13,
+    "uiChecks": 318,
+    "offlineChecks": 539,
+    "runtimeHash": "bc211062133023ef6551e839ecd014636c1c43cd132af21c15159775bfda58ea",
+    "sourceSnapshotReview": {
+      "path": ".tools/cleanup-log-delivery-1011/source-snapshot-review.json",
+      "sha256": "55a397ed5b940c020ab02732868983ae4c1059639e2ee9ededf7c7b8a61c9fa1"
+    }
+  },
+  "selectorFlowsIncrement": {
+    "audit": {
+      "path": ".tools/selector-flows-1011/audit.json",
+      "sha256": "6183353d8bb2db2327ee0f884b00e397b6d2035c8b51f9aa0090181b3a7d5339"
+    },
+    "completedInputIds": [
+      "color-candidate-count-deltas"
+    ],
+    "partialInputIds": [
+      "type-state-selector-deltas"
+    ],
+    "completedInputsBefore": 53,
+    "completedInputsAfter": 54,
+    "unclosedBefore": 72,
+    "unclosedAfter": 71,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 13,
+    "completedEndpoints": 25,
+    "actualPaidOperations": 15,
+    "committedMana": 28,
+    "uiChecks": 211,
+    "offlineChecks": 313,
+    "runtimeHash": "bc211062133023ef6551e839ecd014636c1c43cd132af21c15159775bfda58ea",
+    "sourceSnapshotReview": {
+      "path": ".tools/selector-flows-1011/source-snapshot-review.json",
+      "sha256": "bf71c8b1c1223e92e9494d24f627dde42eedb836b5f5bd3c00a2870f14d81a1c"
+    }
+  },
+  "typeStateTailIncrement": {
+    "audit": {
+      "path": ".tools/type-state-tail-1011/audit.json",
+      "sha256": "2d5378911c30e248e13ec8ea7e9dcff97b20319a4ab207b1fe0a062ae69a2a48"
+    },
+    "completedInputIds": [],
+    "partialInputIds": [
+      "type-state-selector-deltas"
+    ],
+    "completedInputsBefore": 54,
+    "completedInputsAfter": 54,
+    "unclosedBefore": 71,
+    "unclosedAfter": 71,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 6,
+    "completedEndpoints": 19,
+    "actualPaidOperations": 11,
+    "committedMana": 25,
+    "uiChecks": 81,
+    "offlineChecks": 146,
+    "runtimeHash": "52f2f48d909682ed1de7d5b06740aa64a1cdf8e83b9bf5e5a53ea05bb4de5dc7",
+    "sourceSnapshotReview": {
+      "path": ".tools/type-state-tail-1011/source-snapshot-review.json",
+      "sha256": "90624a70fe5a76b05056700b855a3bef0b3b0a2a84d90c703d50013c21f9e810"
+    }
+  },
+  "stateGuardsIncrement": {
+    "audit": {
+      "path": ".tools/state-guards-1011/audit.json",
+      "sha256": "f52d09785910224aea7d89a5c627194ceb686f418e00841aa039e488e42fa57e"
+    },
+    "completedInputIds": [
+      "type-state-selector-deltas"
+    ],
+    "completedInputsBefore": 54,
+    "completedInputsAfter": 55,
+    "unclosedBefore": 71,
+    "unclosedAfter": 70,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 8,
+    "completedEndpoints": 24,
+    "actualPaidOperations": 19,
+    "committedMana": 38,
+    "uiChecks": 174,
+    "offlineChecks": 524,
+    "runtimeHash": "52f2f48d909682ed1de7d5b06740aa64a1cdf8e83b9bf5e5a53ea05bb4de5dc7",
+    "sourceSnapshotReview": {
+      "path": ".tools/state-guards-1011/source-snapshot-review.json",
+      "sha256": "8f1249eb56a2271f2ad9d893904676e1f5b400fe96cc89a3f85539ef4e574999"
+    }
+  },
+  "controlGroupIncrement": {
+    "audit": {
+      "path": ".tools/control-group-flows-1011/audit.json",
+      "sha256": "67eceec4a01c9aa8e130b51ac802c93c9272776cc640b6a18d0d988c3fea873e"
+    },
+    "completedInputIds": [
+      "api-result-ExchangeControlVariant",
+      "api-result-ControlSpell",
+      "api-result-AssignGroup"
+    ],
+    "completedInputsBefore": 55,
+    "completedInputsAfter": 58,
+    "unclosedBefore": 70,
+    "unclosedAfter": 67,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 11,
+    "completedEndpoints": 11,
+    "actualPaidOperations": 14,
+    "committedMana": 48,
+    "uiChecks": 207,
+    "offlineChecks": 1207,
+    "runtimeHash": "52f2f48d909682ed1de7d5b06740aa64a1cdf8e83b9bf5e5a53ea05bb4de5dc7",
+    "sourceSnapshotReview": {
+      "path": ".tools/control-group-flows-1011/source-snapshot-review.json",
+      "sha256": "15f6d0643e75ca55a48353f03c5f28236ab93d2ade5737a3cca42be1e1705336"
+    }
+  },
+  "balanceFightClashIncrement": {
+    "audit": {
+      "path": ".tools/balance-fight-clash-1011/audit.json",
+      "sha256": "6d7ce50495da94de86f73f13f7665bdd84cbb516ab5f9a27cddbec5e29e18e19"
+    },
+    "completedInputIds": [
+      "api-result-Balance",
+      "api-choice-Fight",
+      "api-choice-Clash"
+    ],
+    "completedInputsBefore": 58,
+    "completedInputsAfter": 61,
+    "unclosedBefore": 67,
+    "unclosedAfter": 64,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 14,
+    "completedEndpoints": 16,
+    "actualPaidOperations": 15,
+    "committedMana": 43,
+    "runnableNativeJobs": 14,
+    "uiChecks": 301,
+    "offlineChecks": 1417,
+    "runtimeHash": "e3a014e488b3531bc291bfef32aae923b6935a0e2c2a90f1b237df95e8e45e7f",
+    "paidRuntimeHash": "52f2f48d909682ed1de7d5b06740aa64a1cdf8e83b9bf5e5a53ea05bb4de5dc7",
+    "knowledgeAdapterPaid": 0,
+    "knowledgeAdapterScenes": 0,
+    "diskMaintenance": {
+      "path": ".tools/balance-fight-clash-1011/disk-maintenance.json",
+      "sha256": "fc462d5795019881fec6d6bfa07e05ced54aaae038870eb6f6fd7bca81dc22ba"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/balance-fight-clash-1011/source-snapshot-review.json",
+      "sha256": "28373f5dc2633ee639f27f98710f563f46133f3ea249a287ea3e36b280679177"
+    }
+  },
+  "digDrainFlipIncrement": {
+    "audit": {
+      "path": ".tools/dig-drain-flip-1011/audit.json",
+      "sha256": "7170c8abb80601878f6fb9785c79f8fbc0a1f5c07e5639024b673363bd89eb06"
+    },
+    "completedInputIds": [
+      "digmultiple-category-results",
+      "digmultiple-rest-order",
+      "drain-clear-retained-and-all-players",
+      "drain-remembered-delayed-number",
+      "drain-transfer-source-and-spending",
+      "flip-empty-and-real-outcomes"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 61,
+    "completedInputsAfter": 67,
+    "unclosedBefore": 64,
+    "unclosedAfter": 58,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 21,
+    "completedEndpoints": 37,
+    "actualPaidOperations": 27,
+    "committedMana": 78,
+    "runnableNativeJobs": 21,
+    "uiChecks": 927,
+    "offlineChecks": 2754,
+    "runtimeHash": "8bf2bd9ac53434d0b9bba64077d98afa72ea13c2d3229d74f1d8843cf00fddbd",
+    "paidBaseRuntimeHash": "e3a014e488b3531bc291bfef32aae923b6935a0e2c2a90f1b237df95e8e45e7f",
+    "runtimePublication": {
+      "path": ".tools/dig-drain-flip-1011/runtime-publish.json",
+      "sha256": "5a822deb3d030f4ac75e8f4b3800e8a88912f7816df2fe2a83902dd1a7d40093"
+    },
+    "defectReproductions": {
+      "paidOperations": 2,
+      "mana": 6,
+      "completedEndpoints": 0
+    },
+    "diskMaintenance": {
+      "path": ".tools/dig-drain-flip-1011/disk-maintenance.json",
+      "sha256": "5c9d6605d86b78450ef6a42d8f4f3e2d48bae1ccdbb3760875be4da6b999e339"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/dig-drain-flip-1011/source-snapshot-review.json",
+      "sha256": "a756a92b9ec9c7d8ceea6f14edac2898637cd1e05182c0d2ceb79afdc70eab70"
+    }
+  },
+  "primitiveApiTailIncrement": {
+    "audit": {
+      "path": ".tools/primitive-api-tail-1011/audit.json",
+      "sha256": "c5add4a3fe6020c326404673bef94bacd0c2ce54cdcfaf2be67c54ffb8b20ef9"
+    },
+    "completedInputIds": [
+      "combat-pool-first-end-before-extra",
+      "conditional-no-counter-not-permanent",
+      "early-end-combat-pool-cleanup",
+      "lose-mana-color-conversion-provenance",
+      "mana-burn-cleared-only",
+      "nonartifact-ban-allows-ability-cost",
+      "piracy-extra-restriction-and-source-permission",
+      "production-replacement-type-amount-choice",
+      "restricted-mana-colored-two-hybrid-arm",
+      "restricted-static-operation-flags",
+      "static-retention-color-all-expiry"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 67,
+    "completedInputsAfter": 78,
+    "unclosedBefore": 58,
+    "unclosedAfter": 47,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 23,
+    "completedEndpoints": 127,
+    "actualPaidOperations": 45,
+    "committedMana": 86,
+    "runnableNativeJobs": 21,
+    "uiChecks": 684,
+    "offlineChecks": 8083,
+    "runtimeHash": "3c2e628a9c997987325c0279fd354b9d785ed0b334253a019c27fdd83e92ffbe",
+    "paidBaseRuntimeHash": "8bf2bd9ac53434d0b9bba64077d98afa72ea13c2d3229d74f1d8843cf00fddbd",
+    "runtimePublication": {
+      "path": ".tools/primitive-api-tail-1011/runtime-publish.json",
+      "sha256": "585ced9a85d4b0dae044795dd818b1e1391217433a4f326b88ab73773470f8ab"
+    },
+    "defectReproductions": {
+      "paidOperations": 1,
+      "mana": 2,
+      "completedEndpoints": 0
+    },
+    "diskMaintenance": {
+      "path": ".tools/primitive-api-tail-1011/disk-maintenance.json",
+      "sha256": "2868ca8acd68d97b09074844c4be3b0bedb080196eefd35403b9e71d0f3af526"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/primitive-api-tail-1011/source-snapshot-review.json",
+      "sha256": "f51a82a8b27ea0565311eaff123cb2d49c6549d9ec5a3e231926f69906c8288e"
+    }
+  },
+  "characteristicsKeywordsPaymentsIncrement": {
+    "audit": {
+      "path": ".tools/characteristics-keywords-payments-1011/audit.json",
+      "sha256": "a6ec3ca9c3c2d1e4e08a27e85d7a87bde1c2a9a05dceacbb7496e324e54fd9c3"
+    },
+    "completedInputIds": [
+      "cda-effective-baseline",
+      "cda-non-pt-baseline",
+      "other-public-hidden-restrictions",
+      "api-state-PermanentNoncreature",
+      "suspend-special-action-last-counter",
+      "firebending-own-attacks-and-live-amount",
+      "ordinary-snapshot-pending-spell-history",
+      "mana-trigger-versus-local-snapshot",
+      "restricted-snow-mana-snapshot-identity",
+      "queue-ownership-and-during-payment-writers"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 78,
+    "completedInputsAfter": 88,
+    "unclosedBefore": 47,
+    "unclosedAfter": 37,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 14,
+    "completedEndpoints": 40,
+    "actualPaidOperations": 28,
+    "costOperations": 29,
+    "tapOnlyOperations": 1,
+    "committedMana": 55,
+    "runnableNativeJobs": 14,
+    "uiChecks": 66,
+    "offlineChecks": 6572,
+    "runtimeHash": "e89991f147d1d0afc682ad589650f7cbcfecc12ec930520104c980744bc71e61",
+    "paidBaseRuntimeHash": "3c2e628a9c997987325c0279fd354b9d785ed0b334253a019c27fdd83e92ffbe",
+    "runtimePublication": {
+      "path": ".tools/characteristics-keywords-payments-1011/runtime-publish.json",
+      "sha256": "a84de3a55836d4c3be401cc4c07a763dc2f74286a0ead805955a9dd24444aa05"
+    },
+    "diskMaintenance": {
+      "path": ".tools/characteristics-keywords-payments-1011/disk-maintenance.json",
+      "sha256": "24a18499b2c1b192d4ae828a2f5ce29468a6608d1684ba45dcd924ab647a0ccd"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/characteristics-keywords-payments-1011/source-snapshot-review.json",
+      "sha256": "c6ec3db1d0d75aaa25479a0d0b9dcb109f36a39228799014cda835f0c3e5c61f"
+    }
+  },
+  "repeatRevealNamesIncrement": {
+    "audit": {
+      "path": ".tools/repeat-reveal-names-1011/audit.json",
+      "sha256": "981e18fd63c7c17e288302825a63da663da59bb9d2ac107278fc71f4773379c4"
+    },
+    "completedInputIds": [
+      "stored-minus-times-repeat-results",
+      "repeat-stop-and-reset-consumers",
+      "reveal-chosen-payloads",
+      "reveal-type-sacrifice-tax",
+      "reveal-player-tax",
+      "legacy-no-admittance-payload",
+      "name-set-and-additional-names"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 88,
+    "completedInputsAfter": 95,
+    "unclosedBefore": 37,
+    "unclosedAfter": 30,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeFlows": 13,
+    "nativeCountsByComponent": {
+      "repeats": {
+        "originalInputIds": 2,
+        "nativeHistories": 7,
+        "runnableJobs": 5,
+        "nativeChecks": 96,
+        "protocolChecks": 1443,
+        "frozenSourceChecks": 83,
+        "driverContractChecks": 115,
+        "independentSourceAdapterChecks": 101,
+        "completedOperationEndpoints": 18,
+        "additionalSparkUpkeepEndpoints": 2,
+        "paidOperations": 16,
+        "positiveManaOperations": 15,
+        "freeCastOperations": 1,
+        "mana": 39,
+        "actualAttackOperations": 2,
+        "failedOrIncidentalPaidOperations": 3,
+        "failedOrIncidentalMana": 9
+      },
+      "reveals": {
+        "nativeFlows": 4,
+        "completedEndpoints": 4,
+        "terminalFlowEndpoints": 4,
+        "actualPaidEffectEndpoints": 18,
+        "paidOperations": 18,
+        "mana": 52,
+        "endpointMeaning": "One terminal restored native flow per unique caseArg; paid effects are counted separately."
+      },
+      "names": {
+        "flows": 2,
+        "runnableJobs": 2,
+        "completedEndpoints": 10,
+        "paidOperations": 8,
+        "mana": 18,
+        "driverAssertionCalls": 908,
+        "independentChecks": 1085,
+        "checksByKind": {
+          "refIntegrity": 214,
+          "source": 3,
+          "native": 162,
+          "protocol": 694,
+          "projectionDelta": 1,
+          "futureDriverContract": 11
+        },
+        "newUnitySamples": 0,
+        "adapterMechanicFlows": 0
+      }
+    },
+    "runnableNativeJobs": 11,
+    "uiChecks": 97,
+    "offlineInputAlignmentChecks": 62,
+    "projectionAdapterChecks": 53,
+    "runtimeHash": "d6fcd0072e2609b0ba9112d28a1218b21415cac5037bf2e7f2567aa8c36cfe38",
+    "paidBaseRuntimeHash": "e89991f147d1d0afc682ad589650f7cbcfecc12ec930520104c980744bc71e61",
+    "runtimePublication": {
+      "path": ".tools/repeat-reveal-names-1011/runtime-publish.json",
+      "sha256": "1e9b8b071b2373e754f7cff704dd2a679459c92ea0fe9abb4c80397139510d83"
+    },
+    "diskMaintenance": {
+      "path": ".tools/repeat-reveal-names-1011/disk-maintenance.json",
+      "sha256": "a80b4ca1ab5e77646b3487720d6bd048299ee6695293093dd0a789d3c9d4c762"
+    },
+    "skillUpdate": {
+      "path": ".tools/repeat-reveal-names-1011/skill-update.json",
+      "sha256": "56df26ee772a2914acfc5476b5f93173c819bcebbc4a9853250fec62c949b248"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/repeat-reveal-names-1011/source-snapshot-review.json",
+      "sha256": "1126dd65a9fc8626e6e0f66573219854c053c6618049555dcd5c74f5d9218d99"
+    }
+  },
+  "layersSpellbookIncrement": {
+    "audit": {
+      "path": ".tools/layers-spellbook-reconcile-1011/audit.json",
+      "sha256": "dad0f2634a959e1ddc05496498bc9c99281ea08a0ea1a7296ab5ef26ffedb34b"
+    },
+    "completedInputIds": [
+      "api-choice-AnimateAll",
+      "api-choice-ExchangeTextBox",
+      "change-text-word-flow",
+      "copy-spell-and-token-replacement-delta",
+      "makecard-random-spellbook-exhaustion",
+      "room-effect-face-selection",
+      "shared-copy-layer-mapping"
+    ],
+    "partialInputIds": [
+      "incubate-token-counter-transform"
+    ],
+    "completedInputsBefore": 95,
+    "completedInputsAfter": 102,
+    "unclosedBefore": 30,
+    "unclosedAfter": 23,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeCountsByComponent": {
+      "layers": {
+        "flows": 3,
+        "completePassFlows": 1,
+        "completedEndpoints": 20,
+        "paidOperations": 18,
+        "mana": 41,
+        "endpointMeaning": "20 selected successful actual checkpoints from three retained histories: 4 original prefix + 3 type/mana prefix + 13 final complete tail; includes three necessary repeated final prerequisites, one mana activation and one natural EOT checkpoint. Not 20 paid effects.",
+        "uniqueOriginalContracts": 17,
+        "uniqueOriginalPaidContracts": 15,
+        "uniqueOriginalContractMana": 32,
+        "allAttemptedNativeHistories": 7,
+        "compileOnlyFailures": 1,
+        "actualAllCommittedPaidOperations": 39,
+        "actualAllCommittedMana": 79,
+        "rawRecordedCheckpoints": 39,
+        "unselectedCommittedOperations": 21,
+        "unselectedCommittedMana": 38,
+        "independentChecks": 1009,
+        "checkKinds": {
+          "native": 305,
+          "protocol": 420,
+          "source": 102,
+          "ref-integrity": 182
+        },
+        "nativeJobs": 1
+      },
+      "reconciliation": {
+        "nativeFlows": 1,
+        "completedEndpoints": 1,
+        "paidOperations": 2,
+        "mana": 7,
+        "newUiChecks": 0,
+        "newJobs": 1,
+        "setupFailures": 1,
+        "setupPaidOperations": 0,
+        "offlineChecks": 1188
+      },
+      "digital-room": {
+        "nativeChecks": 94,
+        "protocolChecks": 187,
+        "driverContractAudit": 14,
+        "sourceReconciliationChecks": 0,
+        "nativeHistories": 3,
+        "runnableJobs": 2,
+        "actualPaidOperations": 10,
+        "actualMana": 53,
+        "successfulEndpoints": 9,
+        "failedPaidNativeOperations": 1,
+        "actualAttacks": 2,
+        "environmentOnlyFailures": 1,
+        "roomDoorAdapterChecks": 150
+      }
+    },
+    "runnableNativeJobs": 4,
+    "uiChecks": 1213,
+    "runtimeHash": "78faebe25fa96a9ac87fac0c9d42c755f160e40ae13e6df7130f17673e04c188",
+    "paidBaseRuntimeHash": "d6fcd0072e2609b0ba9112d28a1218b21415cac5037bf2e7f2567aa8c36cfe38",
+    "diskMaintenance": {
+      "path": ".tools/layers-spellbook-reconcile-1011/disk-maintenance.json",
+      "sha256": "02a85d2445da5c2c9b2ad20939c624f472be8f012b9950a7befeb3ff4626c0dd"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/layers-spellbook-reconcile-1011/source-snapshot-review.json",
+      "sha256": "38c9f632f3aebe29dfb4d289ace49cf089c7b213274a82c940c93b4c4a82c34c"
+    }
+  },
+  "chooseCardIncrement": {
+    "audit": {
+      "path": ".tools/mechanic-tail-review-1011/audit.json",
+      "sha256": "905596a27df933b049b325e87b3b1af93824ccff6b9c081f4891f1756924242e"
+    },
+    "completedInputIds": [
+      "api-choice-ChooseCard"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 102,
+    "completedInputsAfter": 103,
+    "unclosedBefore": 23,
+    "unclosedAfter": 22,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeCountsByComponent": {
+      "chooseCard": {
+        "histories": 7,
+        "completedEndpoints": 9,
+        "paidOperations": 8,
+        "mana": 37,
+        "allAttemptedHistories": 9,
+        "allAttemptedPaidOperations": 10,
+        "allAttemptedMana": 45
+      }
+    },
+    "runnableNativeJobs": 6,
+    "uiChecks": 361,
+    "runtimeHash": "03d445da11bae6b49632216d9174e31910d05f18d865ccf8b155a8dd2f1d4dfe",
+    "paidBaseRuntimeHash": "78faebe25fa96a9ac87fac0c9d42c755f160e40ae13e6df7130f17673e04c188",
+    "diskMaintenance": {
+      "path": ".tools/mechanic-tail-review-1011/disk-maintenance.json",
+      "sha256": "41a384f31d6a676469d3a744c306661801a2a999e1a709b9b7dfc10a7b8d5b6d"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/mechanic-tail-review-1011/source-snapshot-review.json",
+      "sha256": "b87a76815e35e190533545cc12eb0e06be7ef6e375efd289dffb8012a93c9fca"
+    }
+  },
+  "attributeIncrement": {
+    "audit": {
+      "path": ".tools/attribute-selector-tail-1011/audit.json",
+      "sha256": "13d69ae29faf4b91aecc1111f60d7d7cea4aa9cd3fb0c6b067688b30a0bcf4de"
+    },
+    "completedInputIds": [
+      "api-choice-AlterAttribute"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 103,
+    "completedInputsAfter": 104,
+    "unclosedBefore": 22,
+    "unclosedAfter": 21,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeCountsByComponent": {
+      "attributes": {
+        "histories": 7,
+        "endpoints": 19,
+        "committedOperations": 13,
+        "positivePaidOperations": 12,
+        "mana": 31,
+        "zeroManaCasts": 1
+      },
+      "serializer": {
+        "effectRuns": 0,
+        "positivePayments": 0,
+        "samples": 14
+      }
+    },
+    "runnableNativeJobs": 7,
+    "uiChecks": 413,
+    "runtimeHash": "235bc9647c58adeb5ea1fd8b09cf416c49b7cefe5f2ffda4c697574d038204eb",
+    "paidBaseRuntimeHash": "03d445da11bae6b49632216d9174e31910d05f18d865ccf8b155a8dd2f1d4dfe",
+    "diskMaintenance": {
+      "path": ".tools/attribute-selector-tail-1011/disk-maintenance.json",
+      "sha256": "370e673ade35364bf00a7f26599752469c1bcba30b2e26017cfff94e7bd3b177"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/attribute-selector-tail-1011/source-snapshot-review.json",
+      "sha256": "1773a6878eb43d3ce8d1781965234f670b51627f0bcbceeef62af643b0900a9a"
+    }
+  },
+  "namePredicateIncrement": {
+    "audit": {
+      "path": ".tools/name-predicate-tail-1011/audit.json",
+      "sha256": "83d9591fd691517a939d2537ee29dfbbd170acdcd583e45f7e0f2a81e95cd180"
+    },
+    "completedInputIds": [
+      "name-predicate-selector-deltas"
+    ],
+    "partialInputIds": [],
+    "completedInputsBefore": 104,
+    "completedInputsAfter": 105,
+    "unclosedBefore": 21,
+    "unclosedAfter": 20,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeCountsByComponent": {
+      "names": {
+        "nativeHistories": 13,
+        "endpoints": 29,
+        "positivePaidOperations": 18,
+        "totalMana": 80,
+        "zeroManaCommittedOperations": 10
+      },
+      "staticAdapter": {
+        "originalGroups": 34,
+        "newEngineEffects": 0,
+        "positivePayments": 0
+      },
+      "priorReuse": {
+        "realNativeCases": 13
+      }
+    },
+    "runnableNativeJobs": 9,
+    "uiChecks": 204,
+    "runtimeHash": "e0a716efa1cbfba79cb3380c879dc2517fe85d5eb746e8fc9d56bd573a748a42",
+    "paidBaseRuntimeHash": "235bc9647c58adeb5ea1fd8b09cf416c49b7cefe5f2ffda4c697574d038204eb",
+    "diskMaintenance": {
+      "path": ".tools/name-predicate-tail-1011/disk-maintenance.json",
+      "sha256": "14254b0e41c6b5f7d5da2e26033665a4c7d18b1c768e283d3319ba8d3635ecc5"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/name-predicate-tail-1011/source-snapshot-review.json",
+      "sha256": "1023719cab5962b88f431808a0938a67164762b6c32a398e4b98f04166da4d8f"
+    }
+  },
+  "attractionPayloadIncrement": {
+    "audit": {
+      "path": ".tools/payload-tail-1011/audit.json",
+      "sha256": "0ec2447d48ae70c9800c2deee3e148147f0d6ce5df50ed396ece6b59c26cf916"
+    },
+    "completedInputIds": [
+      "claim-prize-threshold-payload"
+    ],
+    "partialInputIds": [
+      "open-and-visit-attractions"
+    ],
+    "completedInputsBefore": 105,
+    "completedInputsAfter": 106,
+    "unclosedBefore": 20,
+    "unclosedAfter": 19,
+    "currentPending": 9,
+    "deferredWhole": 1,
+    "nativeCountsByComponent": {
+      "attractionPrize": {
+        "nativeHistories": 4,
+        "endpoints": 14,
+        "positivePaidOperations": 14,
+        "totalMana": 56,
+        "zeroManaCommittedOperations": 0
+      }
+    },
+    "runnableNativeJobs": 3,
+    "uiChecks": 262,
+    "runtimeHash": "e0a716efa1cbfba79cb3380c879dc2517fe85d5eb746e8fc9d56bd573a748a42",
+    "paidBaseRuntimeHash": "e0a716efa1cbfba79cb3380c879dc2517fe85d5eb746e8fc9d56bd573a748a42",
+    "diskMaintenance": {
+      "path": ".tools/payload-tail-1011/disk-maintenance.json",
+      "sha256": "27e1a1e950a172f8ebe660e8a734a4a1005628b9d069193c27db354257e6962a"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/payload-tail-1011/source-snapshot-review.json",
+      "sha256": "676afcfd7c0b63900b7ea7c0987a02b3fd97b105928a0a110ff2e23004036f15"
+    }
+  },
+  "goalScopeExclusionReview": {
+    "reviewedOn": "2026-10-11",
+    "authority": "用户：子游戏相关整理出来和指挥官放一起排除在goal之外；涉及卡在卡组编辑效果详情最前面加（暂时无法正常使用）。",
+    "registry": {
+      "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+      "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+    },
+    "priorScope": {
+      "path": ".tools/goal-exclusions-1011/prior-scope.json",
+      "sha256": "d74ee5c75702a9435e32a2794c8c7fe4bc88cd122ff30d038eb8650506ccedad"
+    },
+    "counts": "完成71/81与A01 106/125不变；当前9仍含卡恩重开/BO3组合项；1整项与2条件分支及1完整子游戏输入排除本次goal，不标关闭。"
+  },
+  "meldIncrement": {
+    "audit": {
+      "path": ".tools/meld-tail-1011/audit.json",
+      "sha256": "a84743d6a5a6ab4be3de40c94adff6e278fd89dc7bcceaccd912a57b1697a503"
+    },
+    "closure": {
+      "path": ".tools/meld-tail-1011/closure-audit.json",
+      "sha256": "838eefc4f8e56a1a760a7518d1a69b7f3a4f3e5bf47c2f910c8e7e92374f6395"
+    },
+    "verified": {
+      "path": ".tools/meld-tail-1011/verified.json",
+      "sha256": "71b2a777995891dd4591c82f4297141a2f0ad94132dbece71fd10caba538c4f1"
+    },
+    "completedInputIds": [
+      "meld-linked-native-objects"
+    ],
+    "a01Before": 106,
+    "a01After": 107,
+    "a01Unclosed": 18,
+    "currentPending": 8,
+    "rawPending": 9,
+    "nativeFlows": 19,
+    "actualPaidOperations": 21,
+    "uiChecks": 533,
+    "runtimeHash": "c8543310267a78f339eb24ef9f05dd5e0d7fa1d6d24b430c6e769164dbe97ac3",
+    "baseRuntimeHash": "e0a716efa1cbfba79cb3380c879dc2517fe85d5eb746e8fc9d56bd573a748a42",
+    "excludedRegistry": {
+      "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+      "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/meld-tail-1011/source-snapshot-review.json",
+      "sha256": "b316446adb05a1776fbb469d5553bde71a1a4932b3ba21ed88b8d4962a2a1120"
+    }
+  },
+  "removedObjectIncrement": {
+    "audit": {
+      "path": ".tools/removed-object-1011/audit.json",
+      "sha256": "96c93a7af158a26cce530f7d19cb875cbe766e6183d39904b070b96d6341c0c9"
+    },
+    "verified": {
+      "path": ".tools/removed-object-1011/verified.json",
+      "sha256": "b11bae5dac1295bf252db6fb520b8d8d2db1e98f3bbd4075e921521f443fc13d"
+    },
+    "completedInputIds": [
+      "api-state-RemoveFromGame"
+    ],
+    "a01Before": 107,
+    "a01After": 108,
+    "a01Unclosed": 17,
+    "currentPending": 8,
+    "rawPending": 9,
+    "nativeFlows": 2,
+    "actualPaidOperations": 3,
+    "uiChecks": 25,
+    "runtimeHash": "bcc9869a81659993248e1e70870cbc836840a0c80c6bb7e6c633ce5f13b6c196",
+    "baseRuntimeHash": "c8543310267a78f339eb24ef9f05dd5e0d7fa1d6d24b430c6e769164dbe97ac3",
+    "sourceSnapshotReview": {
+      "path": ".tools/removed-object-1011/source-snapshot-review.json",
+      "sha256": "61eeb665a2826fc31bbe25e2691d1fca96171aef76728590771a3f5bd9d7e7e0"
+    }
+  },
+  "flipFeedbackIncrement": {
+    "audit": {
+      "path": ".tools/flip-feedback-1011/audit.json",
+      "sha256": "94d904e137b04f0c76232bf61c3218c012dfa619339cab489eb81657991284a1"
+    },
+    "closure": {
+      "path": ".tools/flip-feedback-1011/closure-audit.json",
+      "sha256": "d529afb97a2a764f045e5f07e8374d7456091ea070358d75c409b1ab399b4ee7"
+    },
+    "verified": {
+      "path": ".tools/flip-feedback-1011/verified.json",
+      "sha256": "981b8ee0ef5e200e7fec8a0f2e65ae139d0bc317283d7a2948447c3b118b86af"
+    },
+    "a01Before": 108,
+    "a01After": 108,
+    "a01Unclosed": 17,
+    "currentPending": 7,
+    "rawPending": 8,
+    "nativeFlows": 4,
+    "actualPaidOperations": 4,
+    "uiChecks": 431,
+    "runtimeHash": "555038178c1ab1de69988ae1b6cc92c28f3af85974bc3e1e128705523c6c6836",
+    "baseRuntimeHash": "bcc9869a81659993248e1e70870cbc836840a0c80c6bb7e6c633ce5f13b6c196",
+    "excludedRegistry": {
+      "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+      "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/flip-feedback-1011/source-snapshot-review.json",
+      "sha256": "90449544958e8e8c6373e6a4587ef70538ca026bef61f280359b9a3f6e7584d8"
+    }
+  },
+  "karnRestartIncrement": {
+    "audit": {
+      "path": ".tools/restart-series-1011/audit.json",
+      "sha256": "823514e6a7680f10d01fe45596ef8d98ddc5fb2c5679080007932701dec3d07e"
+    },
+    "verified": {
+      "path": ".tools/restart-series-1011/verified.json",
+      "sha256": "3e3010f04b5e4881a37c1140ff5a256493729e1b67194dc006b4723f6a6144ea"
+    },
+    "completedInputIds": [
+      "karn-same-game-reset",
+      "restart-and-child-shared-mutable-state"
+    ],
+    "a01Before": 108,
+    "a01After": 110,
+    "a01Unclosed": 15,
+    "currentPending": 7,
+    "rawPending": 8,
+    "nativeFlows": 2,
+    "actualPaidOperations": 8,
+    "uiChecks": 202,
+    "runtimeHash": "aec6e7eb5a036bb05e0c013e362670941ee858c822673e665a3f4c1f5877d8bf",
+    "baseRuntimeHash": "555038178c1ab1de69988ae1b6cc92c28f3af85974bc3e1e128705523c6c6836",
+    "excludedRegistry": {
+      "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+      "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/restart-series-1011/source-snapshot-review.json",
+      "sha256": "ba804b92834db3dd40ade22976d3924d8cc63c57373f567956c9991beeaf31ce"
+    }
+  },
+  "bo3SideboardClosure": {
+    "audit": {
+      "path": ".tools/bo3-sideboard-1011/audit.json",
+      "sha256": "08e055953212201bd2a04a02c29a148187f1aafb561a501ea4c5fec3a8bbdbf1"
+    },
+    "verified": {
+      "path": ".tools/bo3-sideboard-1011/verified.json",
+      "sha256": "e006f7ab17f8715290cbd763e788a4741c0a8f6d0cd895a680c85f0390daa961"
+    },
+    "closedItems": [
+      "S08.02"
+    ],
+    "closedPackages": [
+      "S08"
+    ],
+    "currentPending": 6,
+    "rawPending": 7,
+    "closedConcrete": 74,
+    "totalConcrete": 81,
+    "a01Completed": 110,
+    "a01Remaining": 15,
+    "newNativeJobs": 0,
+    "newUiJobs": 1,
+    "firstNative": 552,
+    "firstUi": 41,
+    "exclusions": {
+      "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+      "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+    },
+    "sourceSnapshotReview": {
+      "path": ".tools/bo3-sideboard-1011/source-snapshot-review.json",
+      "sha256": "646e1b13f3f4d1571bd5b8deb6f85bb384b6c22eca0e6b7aced73a71f2554971"
+    }
+  },
+  "payloadReconciliationIncrement": {
+    "audit": {
+      "path": ".tools/payload-reconciliation-1012/audit.json",
+      "sha256": "8ea946d42c0ce2845daf3d1a908608340b88fc793b6b55b961430497ae157d49"
+    },
+    "verified": {
+      "path": ".tools/payload-reconciliation-1012/verified.json",
+      "sha256": "a2f43e9e242e2e4ec09904d3c7a3914b2c528fd4253ef4bd12070b8748c4b15f"
+    },
+    "sourceSnapshotDelta": {},
+    "runtimeHash": "2f58769423c75f1ac3c746fe93525fd21360d3600aa775da9c7f8254da95633d",
+    "originalCountsUnchanged": true
+  },
+  "specializePayloadBatchIncrement": {
+    "audit": {
+      "path": ".tools/specialize-payload-batch-1012/audit.json",
+      "sha256": "c40b1c939ee440b5221c82f159d409bfc2390ef4a463b0e9e291fb71122c5d57"
+    },
+    "intakeDelta": {
+      "path": ".tools/specialize-payload-batch-1012/intake-delta.json",
+      "sha256": "4a43e76f85d71742bfd2971c2802ecf592cf7d1a4fd5653b0f747ddb180b925e"
+    },
+    "runtimeHash": "8f39c7dfc7d0bf5311765785839029761bb656ceb8097b531d2e5649106c408b",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "specializeMoreIncrement": {
+    "audit": {
+      "path": ".tools/specialize-more-1012/audit.json",
+      "sha256": "d3172cf6db0c0e8baa5200a4d77139a879166aea6a745319f0158b89389eccad"
+    },
+    "runtimeHash": "28997a853cefdd8d7399184e231f906ebcd2fd03824a9bcabfc75effb9cf00d6",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "specializeFinalIncrement": {
+    "audit": {
+      "path": ".tools/specialize-final-1012/audit.json",
+      "sha256": "5d0495f589542f834030bb5811f3ff822694fdd0c961877a2c112f4433c59cbf"
+    },
+    "runtimeHash": "61c31aa6647ac44e79e850da1cb797e281c096d6661a7d7793be1644404a4212",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "makecardTailIncrement": {
+    "audit": {
+      "path": ".tools/payload-tail-1012/audit.json",
+      "sha256": "b4b7a2d0fc171e814fe6c046101576a43be7c6f552f2debc65606e32cdbf2c54"
+    },
+    "runtimeHash": "00240829d6df4dd161d3ca871682f4d7c1fea8ecc7148d649d7d5b234ebaf5bb",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "generationFinalIncrement": {
+    "audit": {
+      "path": ".tools/booster-copy-tail-1012/audit.json",
+      "sha256": "8f0ec6163c349a84d3644a0e6113054e7428e13a0124f8f325daacb43bc6ed19"
+    },
+    "runtimeHash": "a910d3f4dc7f96284abcf61f8d570dcad9e9d5d8a22b653aa350ee7df9575c47",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "generatedDelayIncrement": {
+    "audit": {
+      "path": ".tools/generated-delayed-tail-1012/audit.json",
+      "sha256": "fd9e868a28b2dea3e8ce3b237b20a1487ce478b7476e4fdc3fb4eb86716cd444"
+    },
+    "runtimeHash": "a910d3f4dc7f96284abcf61f8d570dcad9e9d5d8a22b653aa350ee7df9575c47",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "matchRemovalIncrement": {
+    "audit": {
+      "path": ".tools/match-removal-1012/audit.json",
+      "sha256": "1a52fcc1fdded3d72b1568a3c96bf5cef883a7d4ee9b1264bf752dce1b912e9c"
+    },
+    "runtimeHash": "a910d3f4dc7f96284abcf61f8d570dcad9e9d5d8a22b653aa350ee7df9575c47",
+    "sourceSnapshotDelta": {},
+    "originalCountsUnchanged": true
+  },
+  "choicePayloadTailIncrement": {
+    "audit": {
+      "path": ".tools/choice-payload-tail-1012/audit.json",
+      "sha256": "1515406b4190132098c909318bec752a6cd7d6ee008e40e8030f0d78bbe5882f"
+    },
+    "runtimeHash": "a910d3f4dc7f96284abcf61f8d570dcad9e9d5d8a22b653aa350ee7df9575c47",
+    "sourceSnapshotDelta": {},
+    "productionChanges": [
+      {
+        "path": "Assets/Resources/SearchTypeLabels.json",
+        "before": {
+          "path": ".tools/choice-payload-tail-1012/SearchTypeLabels-before.json",
+          "sha256": "6cd63c31327ca3387758bf84abdd293937d548bc2f9d77134e1d2823b55c9000"
+        },
+        "after": {
+          "path": "Assets/Resources/SearchTypeLabels.json",
+          "sha256": "c11ea9d52286e5622d36d07bd7585743da3ff587741cf62f713e1fdd0a2135e0"
+        },
+        "scope": "Only Army.zh added from existing project Army=军队 vocabulary; all other records and ja/en fields identical."
+      }
+    ],
+    "originalCountsUnchanged": true
+  },
+  "sectorDisplayClosure": {
+    "audit": {
+      "path": ".tools/sector-display-1012/audit.json",
+      "sha256": "a513504770d047f11235c783178b4d3800b19fd5874971aa1da5c520d332970f"
+    },
+    "verified": {
+      "path": ".tools/sector-display-1012/verified.json",
+      "sha256": "7c4a36f430fa3b54a0246aad6fd0725b63b3ee8cd77a013ac57e79ffdb4ae6e4"
+    },
+    "closedItems": [
+      "S06.02"
+    ],
+    "closedPackages": [
+      "S06"
+    ],
+    "currentPending": 5,
+    "rawPending": 6,
+    "closedConcrete": 75,
+    "totalConcrete": 81,
+    "a01Completed": 112,
+    "a01Remaining": 13,
+    "runtimeHash": "aa82c51f588dcd5c4fb25a416c947537096911bd762c2159704fc2c6d5f0eda2",
+    "productionChanges": [
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+        "sha256": "dc30190ef0616cd91d69771e1f4ce29e3ecb8b447d3715ea1a620a89fd206a30"
+      },
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeSectorDetails.java",
+        "sha256": "4bb4505d9d45bd8f56f98a82d3ef6c97941148a54237be164e68a1d3cdf560bb"
+      },
+      {
+        "path": "Assets/Scripts/Networking/ForgeWire.cs",
+        "sha256": "84504d4340fb35bd90318d32145ff9c6fa1d7ad531af2317de4b81137aa77dec"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+        "sha256": "f4b1db5ab6ab98e7892624237d4567ba948bec80b5d6fa8c8ad624df20b81344"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+        "sha256": "c52175b053628703c4df746912b634d9c02dff0f5fae607350558152f1b72be8"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.Sectors.cs",
+        "sha256": "bd74fd7694c1553c727dbceec474d1c6c892fea4eed93515b04329d6136a0ca1"
+      }
+    ],
+    "firstNative": 552,
+    "firstUi": 41,
+    "snapshotDelta": {}
+  },
+  "seriesRemovalIncrement": {
+    "audit": {
+      "path": ".tools/series-removal-1012/audit.json",
+      "sha256": "984a2e17cb84cf04e41ded11dd1c66461d38aedaa1ae256dbd06c1cf049e174d"
+    },
+    "verified": {
+      "path": ".tools/series-removal-1012/verified.json",
+      "sha256": "4014a5026ce4ddd3e43f66777384e08e2038d3e6d84f1175c7d511d0e35ec367"
+    },
+    "completedInputIds": [
+      "api-choice-RemoveFromMatch"
+    ],
+    "a01Completed": 113,
+    "a01Remaining": 12,
+    "closedConcrete": 75,
+    "currentPending": 5,
+    "rawPending": 6,
+    "runtimeHash": "eee0ec1246f9d29e3ec3af51891f3880e6c1467badbb5068b65898145d398cf3",
+    "productionChanges": [
+      {
+        "path": "Tools/ForgeBridge/NativePatches.json",
+        "sha256": "a46fea42170a0ef3e632cc8cdeb395117cac2200d32091432cf120e4aeef438b"
+      },
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+        "sha256": "8dff8ad05088db583b028b55b44812a3598d42dc3172f3d0172f68c4b0fc082f"
+      },
+      {
+        "path": "Assets/Scripts/Networking/ForgeWire.cs",
+        "sha256": "e3749e533714447c79d15e4d9a6d3f91ee3255e71e7133b968cd9b854205e33d"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineMatchService.cs",
+        "sha256": "5843973de2f6b21610afdaead3b2edd120cb5ea09ee3f8f0cc7477ba1917ce79"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineMatchSession.cs",
+        "sha256": "88ecff61216434017d4a474aa8a270172283f68d2848d25047ef643366310b19"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineRoomRegistry.cs",
+        "sha256": "96fe72d4566abc306b779d913136262c6fb5859bb3f7ee072fa355881bb91d01"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.Notices.cs",
+        "sha256": "4b6487462eb2a6ea20e9113d0b0dba1a6595fa63119d1d34427871d1deaaddd9"
+      },
+      {
+        "path": "Assets/Scripts/UI/OnlineLobbyPanel.cs",
+        "sha256": "5e7aaa463db2f833dff39ba70c8420d85066b346ba8beab696631f94bb130eb1"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineSeriesDeckChanges.cs",
+        "sha256": "1016b605c939234e8af79b8f77c3d0a3bee7836f7ade260be142c762d98bd592"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineMatchService.SeriesDeckChanges.cs",
+        "sha256": "98af1c9a83b02af782f59d757df9fc7043cf49adf5c2163258cca8b9e500b675"
+      },
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeMatchRemovals.java",
+        "sha256": "86c60fb460a0c475221ec6f5ce17d94de425c917afc0e42a5cf77311f0cab367"
+      }
+    ],
+    "sourceSnapshotDelta": {
+      "unreviewedTests": {
+        "before": "12f240cce5210d40d72bceeb26b49198ceb8a2c92f5524d821e9de86b6a3f2e2",
+        "after": "49bd19f84d70c755641f92558bc782056d998e5f4a27636794d68930721f0b45"
+      },
+      "reviewedScripts": {
+        "before": "2152288b39ce322a43013416fa476da5ed275c907023b2e63607c0a508482faa",
+        "after": "1fd610e8757a6cbad2db070d28d5f89cebf6b92b673f55fd47d780a6a1f5771c"
+      }
+    },
+    "firstCountsUnchanged": true
+  },
+  "seriesOwnershipIncrement": {
+    "audit": {
+      "path": ".tools/series-ownership-1012/audit.json",
+      "sha256": "189d0d9c51cb7584184a70284a55b388b4a784bacb2e5af2ab0bbb7b82c1d7e8"
+    },
+    "verified": {
+      "path": ".tools/series-ownership-1012/verified.json",
+      "sha256": "7ebe8ed9e1ed0257018bc0e38a935bef9ca7383a798bb74d7fcee4e5caa9b697"
+    },
+    "completedInputIds": [
+      "api-state-GainOwnership"
+    ],
+    "a01Completed": 114,
+    "a01Remaining": 11,
+    "closedConcrete": 75,
+    "currentPending": 5,
+    "rawPending": 6,
+    "runtimeHash": "3c0e36b1b97189e8f0c785b3cc6a1c3eb3b2359af395f75f32be4679185a265a",
+    "productionChanges": [
+      {
+        "path": "Tools/ForgeBridge/NativePatches.json",
+        "sha256": "a5938da802421187659f5c0ed6464873c618acf87e262c70d0d5b0af300a0f3a"
+      },
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeMatchRemovals.java",
+        "sha256": "c611eaaa88e43bd00f2ee9449c09b1922497a9a07314987e05dbb77ef54e824b"
+      },
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+        "sha256": "d515cdc096d0f68af243282db38651d2fa7c95685d4b499c0eea0fe250da4a04"
+      },
+      {
+        "path": "ForgeRuntime/assets/res/cardsfolder/b/bronze_tablet.txt",
+        "sha256": "b76ca4997934e02d8c4507c629a084258cde8d32d78ce16fab2b464dbc4891b1"
+      },
+      {
+        "path": "ForgeRuntime/assets/res/cardsfolder/t/timmerian_fiends.txt",
+        "sha256": "943f0eebc4188eec68ff22119ea2e8830f2cc3bf734f08f6716e970293aefcde"
+      },
+      {
+        "path": "Assets/Scripts/Networking/ForgeWire.cs",
+        "sha256": "dd94cd41fb4cc710625d6059665e0beea3d82fec17e4d1e1ff178f94d945d402"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineMatchService.cs",
+        "sha256": "83aac50d8c812cd4bc2289ac48466450c656b87bf69f59453ab4345cd99c2ef2"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineMatchService.SeriesDeckChanges.cs",
+        "sha256": "136a45181d8654c1af4e045673c16ad5dacd2d9f3daf3e497cb9b837ad9dcc11"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineMatchSession.cs",
+        "sha256": "c310ddfa468dd03af202b19f988ece04444ababf0c6e9dcbb883bc3b7c64f845"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineRoomRegistry.cs",
+        "sha256": "2bf0294f385d21c5f48572056d810bebf65d2290cd0d1d707dbd52aa90f0b9f7"
+      },
+      {
+        "path": "Assets/Scripts/Networking/OnlineSeriesDeckChanges.cs",
+        "sha256": "3ea72d8b41fbcf8e062f71817ffdbdc422a01556b8158e86deb23ae77779cd50"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.GenericChoices.cs",
+        "sha256": "ac2819c0842f064e1116d9f1abdcaa5f062284e0b7e55f3b4b18ba09091c1c15"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.Zones.cs",
+        "sha256": "3fdf6a4fdb81a5ad014fa5b2c21fe58bf488a4134ee4067dbc31b89a7bdd15ae"
+      },
+      {
+        "path": "Assets/Scripts/UI/MenuVisualTheme.cs",
+        "sha256": "876c009314086e7f69f7fccc9d1fe23f3c698e3056169a5fe5d02d4f30764f63"
+      },
+      {
+        "path": "Assets/Scripts/UI/OnlineLobbyPanel.Browser.cs",
+        "sha256": "c247733de3d4e2e51820a947dbd5a6d5cc4ecc1d814b4a1746da4b8ab68f1547"
+      },
+      {
+        "path": "Assets/Scripts/UI/OnlineLobbyPanel.cs",
+        "sha256": "e2fbbd4c845651aaeea658d33ca48bc09f6e0345c3dbb0c79011850a1218f02d"
+      },
+      {
+        "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeSeriesOwnership.java",
+        "sha256": "6ce5ee9f2b5519cd346d4182ecbef7efbd84a98de73a1582eaececfdd571d839"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.cs",
+        "sha256": "6d043c687fc7d228410e639de0afd473da988747d2761613bb5f9a2f83708e97"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.Notices.cs",
+        "sha256": "64709d4cb3930393c74d149d74b84d08ca25d802a9c7cbd19c59c7e4fe86c540"
+      },
+      {
+        "path": "Assets/Scripts/UI/ForgeBattlefieldController.StackTargets.cs",
+        "sha256": "00f8901879568696925da172492ad42fd1128e3422d880de4c1bb036149ea3b6"
+      }
+    ],
+    "sourceSnapshotDelta": {},
+    "firstCountsUnchanged": true
+  },
+  "ordinaryScopeDecision": {
+    "audit": {
+      "path": ".tools/ordinary-scope-1012/audit.json",
+      "sha256": "211c8234e473bdc1049e29749e322541dde047459c1f4f94251269add493475e"
+    },
+    "outsideGoalReference": {
+      "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+      "sha256": "219a27ce4dce138d33036cb968c488f235eeae512282e829216e498a5e5582c0"
+    },
+    "firstCountsUnchanged": true,
+    "effectCompletionUnchanged": true
+  },
+  "auxiliaryEntryIncrement": {
+    "audit": {
+      "path": ".tools/auxiliary-entry-1012/audit.json",
+      "sha256": "91db41211966b331f9b2d348bb1187b10b040abdc3e03a7125d93488d08954aa"
+    },
+    "runtimeHash": "ae39cfb86837a56625bf892f144a0c92895c86f19385abffa2d19904ee70816e",
+    "sourceSnapshotDelta": {},
+    "partialInputIds": [
+      "assemble-sprocket-crank",
+      "open-and-visit-attractions"
+    ],
+    "noInputClosure": true,
+    "firstCountsUnchanged": true
+  },
+  "auxiliaryEditorIncrement": {
+    "audit": {
+      "path": ".tools/auxiliary-entry-1012/editor-audit.json",
+      "sha256": "46bdf8cd0987bd6a97acb118c75c785292b670acb9d5533739ac990ce4d2cac0"
+    },
+    "runtimeHash": "ae39cfb86837a56625bf892f144a0c92895c86f19385abffa2d19904ee70816e",
+    "noInputClosure": true,
+    "firstCountsUnchanged": true
+  },
+  "auxiliaryLifecycleIncrement": {
+    "audit": {
+      "path": ".tools/auxiliary-lifecycle-1012/audit.json",
+      "sha256": "f4b17f9b11b7b32f66515fc9c9c3ff4aa69c114c6ac83c7701bc9f36fb70c85b"
+    },
+    "closure": {
+      "path": ".tools/auxiliary-lifecycle-1012/closure-audit.json",
+      "sha256": "29b9058f85c186a3aae8c487d35cd4f7e6412a0fe6008d6ad4428169a0760b0e"
+    },
+    "a01Completed": 115,
+    "currentA01": 4,
+    "deferredA01": 6,
+    "currentPending": 4,
+    "closedConcrete": 76,
+    "firstCountsUnchanged": true
+  },
+  "attractionVisitIncrement": {
+    "audit": {
+      "path": ".tools/attraction-visit-1012/audit.json",
+      "sha256": "b1974bdc3d775d6497f5797db6b80a632258ab1ed03a1e5a28aaaf6b5d0d4f57"
+    },
+    "closure": {
+      "path": ".tools/attraction-visit-1012/closure-audit.json",
+      "sha256": "3b8cb0ac40606248500fe98566269a7dd40f7f077280f562bfce45abae9cb655"
+    },
+    "a01Completed": 116,
+    "currentA01": 3,
+    "deferredA01": 6,
+    "currentPending": 3,
+    "closedConcrete": 77,
+    "firstCountsUnchanged": true
+  },
+  "choiceNonManaIncrement": {
+    "audit": {
+      "path": ".tools/choice-nonmana-1012/audit.json",
+      "sha256": "30eb293f365a8f84b61d9ff7c6ea5051c2ba5c65ea36fcc4e4e16f6e4ba5dee9"
+    },
+    "currentPending": 3,
+    "A01Current": 3,
+    "A01Completed": 116,
+    "A01Deferred": 6,
+    "completedRootRecords": [
+      "independent-choice-payloads:41",
+      "independent-choice-payloads:341"
+    ],
+    "firstCountsUnchanged": true
+  },
+  "auxiliarySeriesIncrement": {
+    "audit": {
+      "path": ".tools/auxiliary-series-1012/audit.json",
+      "sha256": "f387953f82c5a229ef61ff6796be0262d07f9addd9c1556d7bd59e45a65bb02a"
+    },
+    "currentPending": 3,
+    "A01Current": 3,
+    "A01Completed": 116,
+    "A01Deferred": 6,
+    "resolvedAuxiliaryDifference": true,
+    "firstCountsUnchanged": true,
+    "sourceSnapshotChange": {
+      "before": {
+        "familyContracts": "201787ee8213d37c3e7476589df75b7254533668bd3d7ccface1a7c9a002c630",
+        "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+        "unreviewedTests": "49bd19f84d70c755641f92558bc782056d998e5f4a27636794d68930721f0b45",
+        "reviewedScripts": "1fd610e8757a6cbad2db070d28d5f89cebf6b92b673f55fd47d780a6a1f5771c",
+        "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+        "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+      },
+      "after": {
+        "familyContracts": "201787ee8213d37c3e7476589df75b7254533668bd3d7ccface1a7c9a002c630",
+        "unmappedAPIs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "unmappedDeclarations": "40af5d549783d0d9f1387bcb4bb9dcfd604744cddbc80af74bc71518e7b37836",
+        "unreviewedTests": "49bd19f84d70c755641f92558bc782056d998e5f4a27636794d68930721f0b45",
+        "reviewedScripts": "1fd610e8757a6cbad2db070d28d5f89cebf6b92b673f55fd47d780a6a1f5771c",
+        "interfaceGaps": "af9eb93b2fa4b48efefdca9220a5b2adca50445f272b9ea3b99135c695c28c58",
+        "interfaceUnclassified": "d33d9953f524ad604d3eb7e9af7941921f2f378d04738904cf7cf8145dee3638"
+      },
+      "method": "One no-run manifest refresh; registration classification only, no effect proof"
+    }
+  },
+  "exactPayloadJoinIncrement": {
+    "audit": {
+      "path": ".tools/payload-proof-joins-1012/audit.json",
+      "sha256": "88b4fff9d13aea1e523141c3da3ec673d575153b1bcf190f3c0f93b0bab65e2e"
+    },
+    "currentPending": 3,
+    "A01Current": 3,
+    "A01Completed": 116,
+    "A01Deferred": 6,
+    "independentChoiceRootsBefore": 13,
+    "independentChoiceRootsAfter": 20,
+    "sourceSnapshotUnchanged": true,
+    "firstCountsUnchanged": true
+  },
+  "nameConsumerIncrement": {
+    "audit": {
+      "path": ".tools/name-consumer-delta-1012/audit.json",
+      "sha256": "e2572e50ba312a70f5fc7bf974728f1cdfb3b4909b1b9bf90fa0d325bbce8d62"
+    },
+    "currentPending": 3,
+    "A01Current": 3,
+    "A01Completed": 116,
+    "A01Deferred": 6,
+    "independentChoiceRootsBefore": 20,
+    "independentChoiceRootsAfter": 23,
+    "firstCountsUnchanged": true
+  },
+  "bulkPayloadAttributionIncrement": {
+    "audit": {
+      "path": ".tools/payload-bulk-reconciliation-1012/audit.json",
+      "sha256": "06c51661b213e09874a6db047104fabaae82d7cf63757204126fdc0b162ffcc5"
+    },
+    "currentPending": 3,
+    "A01Current": 3,
+    "A01Completed": 116,
+    "A01Deferred": 6,
+    "independentChoiceRootsBefore": 23,
+    "independentChoiceRootsAfter": 24,
+    "mixedModeDeferredRoots": 10,
+    "sourceSnapshotUnchanged": true,
+    "firstCountsUnchanged": true
+  },
+  "incubobArtAndReuseIncrement": {
+    "audit": {
+      "path": ".tools/incubob-art-and-reuse-1012/audit.json",
+      "sha256": "fa21d00c646a48ece1c99a8ca1a7da6005e714b228c553279ceb6bfdd2144075"
+    },
+    "note": "N57抚育特殊资源按用户决定复用TMOM/18正面和RAV/81黑暗亲信背面；实际双方正反面/详情32检查、准确原ID/3/2和原规则保持。0新原生对局，旧转化/支付/揭示原证明保留。完整关联77共享实现的旧有界结果范围（46来自正式首验/基线API标签，另31补原A01闭合和准确专项证明）；重复声明合并审查引用，不按API或原声明开新测试。 当前仅1个事项A01.01，含独立选择与生成/事件2原组；117/125原输入完成，6特殊模式组后置。R02.04外部机器/容量交用户自行测试，A06.01全局当前依赖核对后置；与Commander共3完整事项后置，不算通过。两组只核对选择值下游、生成对象权限/离场和延迟/LKI/反身链的具体差异；旧基础结算和UI合同复用，不把1054未精确逐卡关联或77共享实现当作新测试数量。"
+  },
+  "payloadReuseRoundN58": {
+    "audit": {
+      "path": ".tools/payload-reuse-round-1012/audit.json",
+      "sha256": "5d586a16f2fe1099ac04284869a22f5ac43cd448badb7c9eaeb1311b1e1e0903"
+    },
+    "counts": {
+      "path": ".tools/payload-reuse-round-1012/counts.json",
+      "sha256": "0e54d0f31efa1d7b029e765b9589428cbef548840534627783aeaa5433da37f6"
+    },
+    "firstCountsUnchanged": true,
+    "wholeCurrentItems": 1,
+    "wholeCurrentGroups": 2
+  },
+  "payloadReuseRoundN59": {
+    "audit": {
+      "path": ".tools/payload-reuse-next-1012/audit.json",
+      "sha256": "8e0c7b19d10ef882af15ddbe9e1a9b79f51b188bc54eb17c1ae9e4054a44fc50"
+    },
+    "counts": {
+      "path": ".tools/payload-reuse-next-1012/counts.json",
+      "sha256": "c540777291fce02b5a70b723fa18ad6a922941fa4d70fce39ec6e2d97ea8e09e"
+    },
+    "firstCountsUnchanged": true,
+    "wholeCurrentItems": 1,
+    "wholeCurrentGroups": 2
+  },
+  "choiceReaderRoundN60": {
+    "audit": {
+      "path": ".tools/choice-reader-delta-1012/audit.json",
+      "sha256": "e59ed6582d901397195b9615be0d32af56ec0a556df501fb4524c0ac7946a66c"
+    },
+    "counts": {
+      "path": ".tools/choice-reader-delta-1012/counts.json",
+      "sha256": "a04e171f93f06ae43128a04fbd75d283022292003179404ecfe786c7da8937c1"
+    },
+    "firstCountsUnchanged": true,
+    "wholeCurrentItems": 1,
+    "wholeCurrentGroups": 2,
+    "localImpact": {
+      "path": ".tools/choice-reader-delta-1012/impact.json",
+      "sha256": "a35700a154dfbdd9f9d268df0739c03a3fa2bfdc20dbfea2359cc9633c6c7ed1"
+    }
+  },
+  "generatedReaderRoundN61": {
+    "audit": {
+      "path": ".tools/generated-reader-tail-1012/audit.json",
+      "sha256": "48556a0bc91fbec446e1dbd157cda78a7d93fef92f2d33fa20dcd1982a1a7121"
+    },
+    "counts": {
+      "path": ".tools/generated-reader-tail-1012/counts.json",
+      "sha256": "1b7edb555b625d99a96b1c78c3b4089308085f91ddbe79cc9efe34f9b3472c0c"
+    },
+    "firstCountsUnchanged": true,
+    "wholeCurrentItems": 1,
+    "wholeCurrentGroups": 2,
+    "localImpact": {
+      "path": ".tools/generated-reader-tail-1012/impact.json",
+      "sha256": "f297082dc52a9ada20d2790b7c866b1abcdaa23fd84d1306ca73627a5e3631d5"
+    }
+  },
+  "workloadContractReviewN62": {
+    "path": ".tools/workload-contract-review-1012/review.json",
+    "sha256": "42c20ec8588951835edaebccc5fd850951afa188835edc664f2e0c20089ecf70"
+  },
+  "sharedContractRoutingN63": {
+    "path": ".tools/shared-contract-routing-1012/audit.json",
+    "sha256": "4e1ce1055a983efae29d0a4fd7c4131ef97d1f6a127679d70a0526356687ae35"
+  },
+  "n64UnnecessaryWorkDisposition": {
+    "audit": {
+      "path": ".tools/redundant-work-disposition-1012/audit.json",
+      "sha256": "07d27969cfa7840dabce542104f54765e25b00fde52b6ea7e131961a37a99bb8"
+    },
+    "workloadReview": {
+      "path": ".tools/redundant-work-disposition-1012/workload-review.json",
+      "sha256": "5ddfbb241a5feb94907888832ef67765da660f77d130951c80f558217a117c5d"
+    },
+    "note": "N64取消两类无具体接入差异的整链/逐卡追加验证，复用已有真实生成施放、授权期限、牺牲后新目标、LKI及延迟恢复证据。A01普通1v1接入范围闭合，当前待办0；六特殊模式原组及原后置事项保持未验证。0新运行、0新增整牌PASS，70原卡结果身份和552/41首验不变。"
+  },
+  "n65CompletionCorrection": {
+    "audit": {
+      "path": ".tools/redundant-work-disposition-1012/closure-clarification.json",
+      "sha256": "5d84205de2de81047d8233381b60613b070b7f2f2d2d13f8475e0e34e1f282c0"
+    },
+    "note": "N65更正N64过早收尾：两类已做旧证据/源码复用判断，但1015未关联声明未逐项证明均重复或无需验证。保留有效共享复用与取消逐卡整链配额；当前1项有界接入差异筛查、0已确认补测，不能以此授全部普通1v1接入完成。"
+  }
+}

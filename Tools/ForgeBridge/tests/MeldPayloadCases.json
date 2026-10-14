@@ -1,0 +1,1299 @@
+{
+  "bounce": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Unsummon"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "u/unsummon.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "meld"
+      },
+      {
+        "action": "cast",
+        "source": "Unsummon",
+        "mana": 1,
+        "result": "split",
+        "zone": "Hand"
+      }
+    ],
+    "checkComponents": false
+  },
+  "component-preview-replacement": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Murder"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison",
+          "Rest in Peace"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "m/murder.txt",
+      "r/rest_in_peace.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Murder",
+        "mana": 3,
+        "result": "split",
+        "zone": "Exile"
+      }
+    ],
+    "initialMeld": true,
+    "firstComponent": "primary",
+    "preconditionEvidence": {
+      "operation": 0,
+      "result": "meld",
+      "requestId": 22,
+      "wire": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-wire.json",
+        "sha256": "5244197a9df436efffe1a91e9e3e75a803661a32187dcd09f1cd01f1bc96ad2a"
+      },
+      "observation": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-observation.json",
+        "sha256": "463f30bb0c4a69e6d2fd479e8cffd475e86ede18ec09b5fa4813e4ef0ccc518b"
+      }
+    },
+    "deltaOnly": "Public physical front DTO plus actual death redirected to Exile by Rest in Peace; prior paid Meld precondition retained separately.",
+    "checkComponents": true
+  },
+  "death": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Murder"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "m/murder.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "meld"
+      },
+      {
+        "action": "cast",
+        "source": "Murder",
+        "mana": 3,
+        "result": "split",
+        "zone": "Graveyard"
+      }
+    ],
+    "checkComponents": false
+  },
+  "death-trigger-lki": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Murder"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison",
+          "Zulaport Cutthroat"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "m/murder.txt",
+      "z/zulaport_cutthroat.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Murder",
+        "mana": 3,
+        "result": "split",
+        "zone": "Graveyard",
+        "life": [
+          31,
+          29
+        ]
+      }
+    ],
+    "initialMeld": true,
+    "firstComponent": "primary",
+    "preconditionEvidence": {
+      "operation": 0,
+      "result": "meld",
+      "requestId": 22,
+      "wire": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-wire.json",
+        "sha256": "5244197a9df436efffe1a91e9e3e75a803661a32187dcd09f1cd01f1bc96ad2a"
+      },
+      "observation": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-observation.json",
+        "sha256": "463f30bb0c4a69e6d2fd479e8cffd475e86ede18ec09b5fa4813e4ef0ccc518b"
+      }
+    },
+    "deltaOnly": "One real merged-creature death trigger from initial Meld precondition; not two creature deaths for physical parts.",
+    "checkComponents": true
+  },
+  "exile": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Swords to Plowshares"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "s/swords_to_plowshares.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "meld"
+      },
+      {
+        "action": "cast",
+        "source": "Swords to Plowshares",
+        "mana": 1,
+        "result": "split",
+        "zone": "Exile"
+      }
+    ],
+    "checkComponents": false
+  },
+  "graveyard-order": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Murder"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison",
+          "Zulaport Cutthroat"
+        ],
+        "Graveyard": [
+          "Nether Shadow"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "m/murder.txt",
+      "z/zulaport_cutthroat.txt",
+      "n/nether_shadow.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Murder",
+        "mana": 3,
+        "result": "split",
+        "zone": "Graveyard",
+        "life": [
+          31,
+          29
+        ]
+      }
+    ],
+    "initialMeld": true,
+    "firstComponent": "secondary",
+    "preconditionEvidence": {
+      "operation": 0,
+      "result": "meld",
+      "requestId": 22,
+      "wire": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-wire.json",
+        "sha256": "5244197a9df436efffe1a91e9e3e75a803661a32187dcd09f1cd01f1bc96ad2a"
+      },
+      "observation": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-observation.json",
+        "sha256": "463f30bb0c4a69e6d2fd479e8cffd475e86ede18ec09b5fa4813e4ef0ccc518b"
+      }
+    },
+    "deltaOnly": "Only changed ordered-graveyard branch; native NeedsOrderedGraveyard gate and actual owner ordering. Reuse successful ordinary death/split/trigger and library ordering branches.",
+    "orderedGraveyard": true,
+    "checkComponents": true
+  },
+  "library-order-primary": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Hallowed Burial"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "h/hallowed_burial.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Hallowed Burial",
+        "mana": 5,
+        "result": "split",
+        "zone": "Library"
+      }
+    ],
+    "initialMeld": true,
+    "firstComponent": "primary",
+    "preconditionEvidence": {
+      "operation": 0,
+      "result": "meld",
+      "requestId": 22,
+      "wire": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-wire.json",
+        "sha256": "5244197a9df436efffe1a91e9e3e75a803661a32187dcd09f1cd01f1bc96ad2a"
+      },
+      "observation": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-observation.json",
+        "sha256": "463f30bb0c4a69e6d2fd479e8cffd475e86ede18ec09b5fa4813e4ef0ccc518b"
+      }
+    },
+    "checkComponents": false
+  },
+  "library-order-secondary": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Hallowed Burial"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "h/hallowed_burial.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Hallowed Burial",
+        "mana": 5,
+        "result": "split",
+        "zone": "Library"
+      }
+    ],
+    "initialMeld": true,
+    "firstComponent": "secondary",
+    "preconditionEvidence": {
+      "operation": 0,
+      "result": "meld",
+      "requestId": 22,
+      "wire": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-wire.json",
+        "sha256": "5244197a9df436efffe1a91e9e3e75a803661a32187dcd09f1cd01f1bc96ad2a"
+      },
+      "observation": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-observation.json",
+        "sha256": "463f30bb0c4a69e6d2fd479e8cffd475e86ede18ec09b5fa4813e4ef0ccc518b"
+      }
+    },
+    "checkComponents": false
+  },
+  "library-top-order": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Excommunicate"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "e/excommunicate.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Excommunicate",
+        "mana": 3,
+        "result": "split",
+        "zone": "Library"
+      }
+    ],
+    "initialMeld": true,
+    "firstComponent": "primary",
+    "preconditionEvidence": {
+      "operation": 0,
+      "result": "meld",
+      "requestId": 22,
+      "wire": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-wire.json",
+        "sha256": "5244197a9df436efffe1a91e9e3e75a803661a32187dcd09f1cd01f1bc96ad2a"
+      },
+      "observation": {
+        "path": ".tools/meld-tail-1011/native/library/1791715912955841400/after-0-observation.json",
+        "sha256": "463f30bb0c4a69e6d2fd479e8cffd475e86ede18ec09b5fa4813e4ef0ccc518b"
+      }
+    },
+    "deltaOnly": "Only TOP insertion/order reversal branch; paid original Meld and both BOTTOM orders retained.",
+    "libraryTop": true,
+    "checkComponents": true
+  },
+  "mishra-attacking-components": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Mishra, Claimed by Gix",
+          "Phyrexian Dragon Engine"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "m/mishra_claimed_by_gix_mishra_lost_to_phyrexia.txt",
+      "p/phyrexian_dragon_engine.txt"
+    ],
+    "operations": [
+      {
+        "action": "attack",
+        "source": "Mishra, Claimed by Gix",
+        "mana": 0,
+        "result": "meld",
+        "modes": [
+          "menace",
+          "-1/-1",
+          "Powerstone"
+        ]
+      }
+    ],
+    "primary": "Mishra, Claimed by Gix",
+    "secondary": "Phyrexian Dragon Engine",
+    "meldName": "Mishra, Lost to Phyrexia",
+    "meldPT": [
+      9,
+      9
+    ],
+    "checkComponents": true
+  },
+  "multiple-partner-components": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "meld"
+      }
+    ],
+    "partnerOrdinal": 1,
+    "checkComponents": true
+  },
+  "negative-actual-clone": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [
+          "Clone"
+        ],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt",
+      "c/clone.txt"
+    ],
+    "operations": [
+      {
+        "action": "cast",
+        "source": "Clone",
+        "mana": 4,
+        "result": "clone"
+      },
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "no-meld",
+        "expectedZones": {
+          "Clone": "Exile",
+          "Hanweir Battlements": "Exile",
+          "Hanweir Garrison": "Battlefield"
+        }
+      }
+    ],
+    "actualClone": true,
+    "deltaOnly": "Actual nontoken Clone creation and exact copied partner chosen for paid Meld; original real partner remains unused. Earlier artificial clone-origin precondition was invalid and is retained as FAIL, not counted.",
+    "checkComponents": true
+  },
+  "negative-insufficient-exile": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Mishra, Claimed by Gix",
+          "Phyrexian Dragon Engine",
+          "The Master, Multiplied"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "m/mishra_claimed_by_gix_mishra_lost_to_phyrexia.txt",
+      "p/phyrexian_dragon_engine.txt",
+      "t/the_master_multiplied.txt"
+    ],
+    "operations": [
+      {
+        "action": "attack",
+        "source": "Mishra, Claimed by Gix",
+        "mana": 0,
+        "result": "no-meld",
+        "expectedZones": {
+          "Mishra, Claimed by Gix": "Exile",
+          "Phyrexian Dragon Engine": "Battlefield"
+        }
+      }
+    ],
+    "primary": "Mishra, Claimed by Gix",
+    "secondary": "Phyrexian Dragon Engine",
+    "meldName": "Mishra, Lost to Phyrexia",
+    "meldPT": [
+      9,
+      9
+    ],
+    "initialPartner": "token",
+    "deltaOnly": "Initial native token Dragon Engine; actual two-creature attack triggers Mishra. The Master prohibits trigger exiling controlled token, only primary exiles; no linked merged object. Token generation semantics reused separately.",
+    "checkComponents": true
+  },
+  "negative-missing": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "no-meld"
+      }
+    ],
+    "initialPartner": "missing",
+    "deltaOnly": "Opening missing partner precondition; actual native five-mana Meld activation and resolution. No claim of token/copy/control generation.",
+    "checkComponents": true
+  },
+  "negative-token": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "no-meld"
+      }
+    ],
+    "initialPartner": "token",
+    "deltaOnly": "Opening token partner precondition; actual native five-mana Meld activation and resolution. No claim of token/copy/control generation.",
+    "checkComponents": true
+  },
+  "negative-wrong-owner": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Hanweir Battlements",
+          "Hanweir Garrison"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "h/hanweir_battlements_hanweir_the_writhing_township.txt",
+      "h/hanweir_garrison.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Hanweir Battlements",
+        "ability": "meld",
+        "mana": 5,
+        "result": "no-meld"
+      }
+    ],
+    "initialPartner": "wrong-owner",
+    "deltaOnly": "Opening wrong-owner partner precondition; actual native five-mana Meld activation and resolution. No claim of token/copy/control generation.",
+    "checkComponents": true
+  },
+  "urza-loyalty-components": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Urza, Lord Protector",
+          "The Mightstone and Weakstone"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "u/urza_lord_protector_urza_planeswalker.txt",
+      "t/the_mightstone_and_weakstone.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Urza, Lord Protector",
+        "ability": "meld",
+        "mana": 7,
+        "result": "meld"
+      },
+      {
+        "action": "activate",
+        "source": "Urza, Planeswalker",
+        "ability": "gain 2 life",
+        "mana": 0,
+        "result": "loyalty",
+        "loyalty": 9,
+        "life": 32
+      }
+    ],
+    "primary": "Urza, Lord Protector",
+    "secondary": "The Mightstone and Weakstone",
+    "meldName": "Urza, Planeswalker",
+    "meldLoyalty": 7,
+    "checkComponents": true
+  },
+  "urza-loyalty-tail": {
+    "seed": 4,
+    "positions": [
+      {
+        "Hand": [],
+        "Battlefield": [
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Mountain",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Island",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Swamp",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Plains",
+          "Urza, Lord Protector",
+          "The Mightstone and Weakstone"
+        ]
+      },
+      {}
+    ],
+    "scripts": [
+      "u/urza_lord_protector_urza_planeswalker.txt",
+      "t/the_mightstone_and_weakstone.txt"
+    ],
+    "operations": [
+      {
+        "action": "activate",
+        "source": "Urza, Planeswalker",
+        "ability": "gain 2 life",
+        "mana": 0,
+        "result": "loyalty",
+        "loyalty": 9,
+        "life": 32
+      }
+    ],
+    "primary": "Urza, Lord Protector",
+    "secondary": "The Mightstone and Weakstone",
+    "meldName": "Urza, Planeswalker",
+    "meldLoyalty": 7,
+    "initialMeld": true,
+    "preconditionEvidence": {
+      "wire": ".tools/meld-tail-1011/native/urza-loyalty-components/1791718952441757500/after-0-wire.json",
+      "observation": ".tools/meld-tail-1011/native/urza-loyalty-components/1791718952441757500/after-0-observation.json",
+      "note": "Actual 7-mana Meld succeeded; old raw FAIL is observer counters-field mismatch, not rule failure. This is separate suffix history, not same game."
+    },
+    "checkComponents": true
+  }
+}

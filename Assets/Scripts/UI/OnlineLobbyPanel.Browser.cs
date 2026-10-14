@@ -56,6 +56,7 @@ public sealed partial class OnlineLobbyPanel
         AddText(setup,"RoomNameLabel","房间名称",new Vector2(-238,257),new Vector2(172,28),17,browserFont,TextAnchor.MiddleLeft,MutedTextColor);
         MoveBrowserField(roomInput,setup,new Vector2(100,257),new Vector2(448,48));
         setup.Find("RulesHelp").gameObject.SetActive(false);Place((RectTransform)setup.Find("ConnectionStatusPanel"),new Vector2(0,-208),new Vector2(648,92));
+        if(anteToggle!=null)Place((RectTransform)setup.Find("ConnectionStatusPanel"),new Vector2(0,-245),new Vector2(648,70));
         hostButton.transform.SetParent(setup,false);Place(hostButton.GetComponent<RectTransform>(),new Vector2(170,-319),new Vector2(308,52));
         AddButton(setup,"BackToBrowser","返回房间列表",new Vector2(-170,-319),new Vector2(308,52),browserFont,PanelColor).onClick.AddListener(BrowserBack);
         BindBrowserText(page.transform);
@@ -121,7 +122,8 @@ public sealed partial class OnlineLobbyPanel
             var badge=AddText(row.transform,"SourceBadge",room.source,new Vector2(290,0),new Vector2(100,34),16,browserFont,TextAnchor.MiddleCenter,room.lanHosted?new Color(.46f,.76f,.7f):new Color(.79f,.68f,.93f));
             AddText(row.transform,"DiyBadge",room.allowCustomContent?"DIY 允许":"DIY 禁用",new Vector2(150,18),new Vector2(150,30),15,browserFont,TextAnchor.MiddleCenter,MutedTextColor);
             var title=AddText(row.transform,"RoomName",room.roomId,new Vector2(-224,18),new Vector2(548,30),22,browserFont,TextAnchor.MiddleLeft,TextColor);title.supportRichText=false;
-            var detail=AddText(row.transform,"Detail",$"{room.hostName} · {DeckFormatLegality.FormatName(room.format)} · BO{room.bestOf} · {room.players}/2 · {(room.inMatch?"对局中":"等待开局")} · 观战 {room.spectators}",new Vector2(-174,-20),new Vector2(648,28),16,browserFont,TextAnchor.MiddleLeft,MutedTextColor);detail.supportRichText=false;
+            string roomState=room.state=="sideboarding"?"局间换备":room.state=="review"?"已结束 · 查看战场":room.inMatch?"对局中":"等待开局";
+            var detail=AddText(row.transform,"Detail",$"{room.hostName} · {DeckFormatLegality.FormatName(room.format)} · BO{room.bestOf} · {room.players}/2 · {roomState} · 观战 {room.spectators}",new Vector2(-174,-20),new Vector2(648,28),16,browserFont,TextAnchor.MiddleLeft,MutedTextColor);detail.supportRichText=false;
             var join=AddButton(row.transform,"Join",room.inMatch||room.players>=2?"观战":"加入",new Vector2(423,0),new Vector2(150,46),browserFont,AccentColor);join.interactable=true;
             join.onClick.AddListener(()=>JoinListedRoom(room));
         }
@@ -147,7 +149,7 @@ public sealed partial class OnlineLobbyPanel
         }
         if(this==null||generation!=browserGeneration||!gameObject.activeInHierarchy)return;
         createRoomButton.interactable=true;creatingRoom=true;SaveBrowserIdentity();
-        connectionStatusText.text=server?$"服务器 {addressInput.text.Trim()}:{port} 已连接，设置完成后建立房间。":"在本机建立房间，局域网内的玩家可刷新找到。";Refresh();
+        connectionStatusText.text=server?$"服务器 {addressInput.text.Trim()}:{port} 可访问，设置完成后建立房间。":"在本机建立房间，局域网内的玩家可刷新找到。";Refresh();
     }
     private void CreateSelectedRoom()
     {

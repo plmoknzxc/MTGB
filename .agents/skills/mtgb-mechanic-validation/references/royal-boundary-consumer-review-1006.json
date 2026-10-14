@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/RoyalBoundaryConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "57af55e511a7ea4acfed07b7c596829a83f7076cf9b7288c4a4f8189a7ac7c9c"
+  },
+  "runtimeHash": "84de4fda0004ea15e731a1d8dec734bfe900d3e453940febe2172069b2629d8f",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-RoyalBoundaries.py",
+      "sha256": "1e76e14b2873e8d8e728c06a71614bd785bca6eb5603cb1d49cf34c335efdf0a"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-MonarchOldEndstep.py",
+      "sha256": "964c1776423e8242d0aeb4dc2a20897379495caa478745c891dad57743e7e957"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-RoyalHelperProjection.py",
+      "sha256": "68c25713e9a624553a505ab274f4d5d94a2e452bd177201d6bbcf64d57b385aa"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/RoyalHelperProjectionFixture.java",
+      "sha256": "0b4961711e0661b2ff44e2662d673664ef6bc9d05e594e7d23c9986de5f0eff8"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "45afef7b98096f570643cd7a15aecc495bbd147da0eaeea30496fda37302be3b"
+    },
+    {
+      "path": "Assets/Scripts/Editor/RoyalAbilityPresentationValidation.cs",
+      "sha256": "c92df20daacee56f5e887f5a5ddb70dc2406c959512a2f0d2213920f2736764f"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.AbilityFace.cs",
+      "sha256": "577409df1d5229d4b364cc83bc1952b89821f8ba429cfeb71ad3e8198203dbfc"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Emblems.cs",
+      "sha256": "c628736055e1ae641f328cfcd1061e3cf0cfef91a963cc1d1037bf940928bd65"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/royal-boundaries-1006/native/initiative-repeat/1791262320161662100/result.json",
+      "sha256": "8287c74d1ecb4b09c24a0aaae763c52faa56d46b6663833cfb0c4e5ad98423d8"
+    },
+    {
+      "path": ".tools/royal-boundaries-1006/native/monarch-multi-combat/1791262334504240800/result.json",
+      "sha256": "b5af0b1086bfc3ab16470d3818c130326b8e18904ec1df921e9d3449063e4b6f"
+    },
+    {
+      "path": ".tools/royal-boundaries-1006/native/initiative-multi-combat/1791262348946926900/result.json",
+      "sha256": "75e11e1a8ad94a17b6e0f355644e5e48cff9e884134ace05eada9d8aac2ff6e8"
+    },
+    {
+      "path": ".tools/monarch-old-endstep-1006/native/monarch-old-endstep/1791263417915754600/result.json",
+      "sha256": "74f383a1d6cfc7cb79fbd1a263898e25f7e89b9b6fdd2767b702df9ed3f108bd"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/royal-boundaries-1006/ui/20261006T0510248116629Z/result.txt",
+      "sha256": "ff507487af870602dc833e5174eea6845140ee1e3f263ee9cf15de99cbb40c6e"
+    },
+    {
+      "path": ".tools/royal-boundaries-1006/ui/20261006T0510248116629Z/input-hashes.tsv",
+      "sha256": "797b2eb0c5db6baeb32e4b085804a285f2e02910e09cd2e61df37e6bff6292c8"
+    },
+    {
+      "path": ".tools/royal-boundaries-1006/ui/20261006T0510248116629Z/producer-hashes.tsv",
+      "sha256": "b51d5f8370b8d799f7496b2a95f0e1e1f6393878940bd3e823b8a42a6eb58288"
+    }
+  ],
+  "regressions": [
+    {
+      "path": ".tools/royal-boundaries-1006/regression/results.json",
+      "sha256": "e0b06538acabb9c15fd453762da642dd70058b22e7396dc55fc7546498b987ae"
+    },
+    {
+      "path": ".tools/royal-boundaries-1006/projection/result.json",
+      "sha256": "4aa8562852e630e59ea90f45f567c773185eb84652e8eaa8e5b7a9706abe0484"
+    },
+    {
+      "path": ".tools/royal-boundaries-1006/trace-assertions.json",
+      "sha256": "e6e038e3c4ef448b7b8bc19a60c2d72e7a93e7cc2f99c3af337dfec637cad754"
+    }
+  ],
+  "firstRuntimeHash": "fab8031f7b97fdc498631137a3247e8aced754e6f74ae02978f6af6b3b577ae1",
+  "remaining": "玩家离场/多人交互；不重复已验君主/先制获得、来源离场仍保留、结束抓牌/维持深入、双方战斗转移、重复先制、同战斗双来源触发/合并、失去君主后旧结束抓牌触发"
+}

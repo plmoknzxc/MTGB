@@ -34,7 +34,6 @@
 法术力费用	Mana cost	マナ・コスト
 规则文本	Rules text	ルール文章
 风味文字	Flavor text	フレイバー・テキスト
-异画 · 下载	Artwork / download	別イラスト・ダウンロード
 选择异画 · 偏好仅影响本机显示	Choose artwork. Preferences apply on this device.	別イラストを選択。この端末の表示に適用します。
 上一页	Previous	前へ
 下一页	Next	次へ
@@ -81,10 +80,6 @@ DIY 卡牌	DIY cards	DIY カード
 正在下载 {0} · {1}	Downloading {0} · {1}	{0} をダウンロード中 · {1}
 正在使用：{0} · 可取消偏好恢复默认	Using {0} · Clear preference to restore default	使用中：{0} · 優先設定を解除すると既定に戻ります
 加载失败：{0}	Loading failed: {0}	読み込み失敗：{0}
-Created an empty deck.	Created an empty deck.	空のデッキを作成しました。
-Loaded deck: {0}	Loaded deck: {0}	デッキを読み込みました：{0}
-Saved deck: {0}	Saved deck: {0}	デッキを保存しました：{0}
-Deck "{0}" has unsaved changes.	Deck "{0}" has unsaved changes.	デッキ「{0}」に未保存の変更があります。
 Created an empty deck.	已创建空牌组。	Created an empty deck.	空のデッキを作成しました。
 Loaded deck: {0}	已加载牌组：{0}	Loaded deck: {0}	デッキを読み込みました：{0}
 Saved deck: {0}	已保存牌组：{0}	Saved deck: {0}	デッキを保存しました：{0}
@@ -116,7 +111,6 @@ Selected {0}.	已选择 {0}。	Selected {0}.	{0} を選択しました。
 房间号	Room ID	ルーム番号
 创建局域网主机	Host LAN game	LAN ホストを作成
 加入已有主机	Join host	ホストに参加
-下一步	Next step	次のステップ
 赛制	Format	フォーマット
 先后手	Play / draw	先攻・後攻
 每局随机决定	Random each game	ゲームごとにランダム
@@ -134,8 +128,6 @@ Selected {0}.	已选择 {0}。	Selected {0}.	{0} を選択しました。
 开始比赛	Start match	対戦開始
 等待双方准备	Waiting for both players	両プレイヤーの準備待ち
 等待房主开始	Waiting for host	ホストの開始待ち
-已允许	Enabled	許可
-已禁用	Disabled	無効
 当前赛制	Format	フォーマット
 赛制规则 · 日期	Ban list · Date	禁止・制限リスト・日付
 更改立即生效。N/A 只取消禁限，仍检查该赛制的卡池。	Changes apply immediately. N/A removes bans and restrictions, but still checks the format's card pool.	変更はすぐに反映されます。N/A は禁止・制限のみを解除し、使用可能なカードは引き続き確認します。
@@ -154,18 +146,12 @@ N/A（无禁限）	N/A (no bans or restrictions)	N/A（禁止・制限なし）
 争锋	Brawl	ブロール
 史迹	Historic	ヒストリック
 永恒	Timeless	タイムレス
-禁用	Banned	禁止
 限1	Restricted	制限1
 卡牌信息	Card info	カード情報
 异画·下载	Artwork	別イラスト
 MTGB .mdk：保留系列、编号、分区、赛制和禁表日期。	MTGB .mdk: Preserves sets, collector numbers, sections, format, and ban-list date.	MTGB .mdk：セット、コレクター番号、区分、フォーマット、禁止・制限リストの日付を保持します。
 MO 纯文本：保留数量与主备牌；不保留版本、赛制或禁表日期。	MO text: Preserves quantities and main/sideboard; does not preserve printings, format, or ban-list date.	MO テキスト：枚数とメイン・サイドボードを保持します。カードの版、フォーマット、禁止・制限リストの日付は保持しません。
 MTGA 文本：保留系列与编号；不保留赛制或禁表日期。	MTGA text: Preserves sets and collector numbers; does not preserve format or ban-list date.	MTGA テキスト：セットとコレクター番号を保持します。フォーマットと禁止・制限リストの日付は保持しません。
-● 未连接	● Disconnected	● 未接続
-● 主机在线	● Hosting	● ホスト接続中
-● 已加入房间	● Joined room	● 入室済み
-● 正在连接	● Connecting	● 接続中
-● 正在退出房间	● Leaving room	● 退室中
 局间换备	Sideboarding	サイドボーディング
 比赛开始后	When the match starts	対戦開始後
 主牌 · 拖到右侧移入备牌	Main deck · Drag right to sideboard	メイン · 右へドラッグしてサイドへ
@@ -426,3 +412,50 @@ BO{0} · {1} 点生命 · 每局随机先后手\n{2} · DIY {3}	BO{0} · {1} lif
 平台	Games	プラットフォーム
 纸质	Paper	紙のカード
 未收录平台或合法性资料的版本不参与搜索	Printings without platform or legality data are excluded from search.	プラットフォームまたは適法性の情報が未収録の版は検索対象外です。
+Choose a card to draft	选择一张牌加入手牌	Choose a card to draft	手札に加えるカード１枚を選ぶ
+Choose a card to heist	选择一张要劫掠的牌	Choose a card to heist	強奪するカード１枚を選ぶ
+Choose a creature type	选择一种生物类别	Choose a creature type	クリーチャー・タイプを１つ選ぶ
+Choose a creature you control	选择一个由你操控的生物	Choose a creature you control	あなたがコントロールするクリーチャー１体を選ぶ
+Choose X for {0}	为{0}选择 X 的数值	Choose X for {0}	{0}のＸの値を選ぶ
+Search your graveyard and exile?	要从你的坟墓场或放逐区选择一张牌吗？	Search your graveyard and exile?	あなたの墓地や追放領域からカードを選びますか？
+Search your library?	要搜索你的牌库吗？	Search your library?	あなたのライブラリーを探しますか？
+Search your graveyard?	要搜索你的坟墓场吗？	Search your graveyard?	あなたの墓地を探しますか？
+Search your hand?	要查看你的手牌吗？	Search your hand?	あなたの手札を見ますか？
+Select a card from your graveyard and exile	从你的坟墓场或放逐区选择一张牌	Select a card from your graveyard and exile	あなたの墓地や追放領域からカード１枚を選ぶ
+Select a card to put onto the battlefield tapped	选择一张牌横置放进战场	Select a card to put onto the battlefield tapped	タップ状態で戦場に出すカード１枚を選ぶ
+Select a card to put onto the battlefield	选择一张牌放进战场	Select a card to put onto the battlefield	戦場に出すカード１枚を選ぶ
+Select up to one target creature card in your graveyard	选择你坟墓场中至多一张目标生物牌	Select up to one target creature card in your graveyard	あなたの墓地にあるクリーチャー・カード最大１枚を対象に選ぶ
+Choose target triggered ability you control	选择一个由你操控的目标触发式异能	Choose target triggered ability you control	あなたがコントロールする誘発型能力１つを対象に選ぶ
+Select target instant or sorcery	选择一个目标瞬间或法术	Select target instant or sorcery	インスタントかソーサリー１つを対象に選ぶ
+Select target creature with the same name.	选择一个同名目标生物。	Select target creature with the same name.	同じ名前のクリーチャー１体を対象に選ぶ。
+Choose two target blocked attacking creatures	选择两个被阻挡的目标攻击生物	Choose two target blocked attacking creatures	ブロックされている攻撃クリーチャー２体を対象に選ぶ
+Choose two target blocking creatures an opponent controls	选择两个由对手操控的目标阻挡生物	Choose two target blocking creatures an opponent controls	対戦相手がコントロールするブロック・クリーチャー２体を対象に選ぶ
+({0} more can be targeted)	（还可以选择 {0} 个目标）	({0} more can be targeted)	（あと{0}個を対象に選べる）
+Choose one for the new Controller: Player {0}	为新的操控者（玩家 {0}）选择一项	Choose one for the new Controller: Player {0}	新しいコントローラー（プレイヤー{0}）のために１つ選ぶ
+Villainous Choice by Player {0}	玩家 {0} 的邪恶抉择	Villainous Choice by Player {0}	プレイヤー{0}の悪の選択
+Exile evidence with a total CMC {0} or more	选择要放逐的证据，法术力值总和至少为 {0}	Exile evidence with a total CMC {0} or more	マナ総量の合計が{0}以上になる証拠を選び、追放する
+Select a creature to remove {0} +1/+1 counter(s) from	选择一个生物，从其上移去 {0} 个 +1/+1 指示物	Select a creature to remove {0} +1/+1 counter(s) from	＋１/＋１カウンターを{0}個取り除くクリーチャー１体を選ぶ
+Select a this creature to remove {0} counter(s) from	选择要移去 {0} 个指示物的此生物	Select a this creature to remove {0} counter(s) from	カウンターを{0}個取り除くこのクリーチャーを選ぶ
+Apply replacement effect of {0}?	要应用{0}的替代性效应吗？	Apply replacement effect of {0}?	{0}の置換効果を適用しますか？
+Do you want to pay {0} life?	支付 {0} 点生命？	Do you want to pay {0} life?	{0}点のライフを支払いますか？
+Choose a card from the {0}'s spellbook	从{0}的法术书中选择一张牌	Choose a card from the {0}'s spellbook	{0}の呪文書からカード１枚を選ぶ
+You may choose a card with the same name from your library	你可以从牌库中选择一张同名牌	You may choose a card with the same name from your library	あなたのライブラリーから同じ名前のカード１枚を選んでもよい
+You may choose a card with the same name from target opponent's library	你可以从目标对手的牌库中选择一张同名牌	You may choose a card with the same name from target opponent's library	対象の対戦相手のライブラリーから同じ名前のカード１枚を選んでもよい
+Select creatures to attack Player {0} or select player/card you wish to attack.	选择攻击玩家 {0} 的生物，或选择要攻击的玩家或牌。	Select creatures to attack Player {0} or select player/card you wish to attack.	プレイヤー{0}を攻撃するクリーチャー、または攻撃するプレイヤーやカードを選ぶ。
+Exile two Card.Green cards from your hand	从手牌中放逐两张绿色牌	Exile two Card.Green cards from your hand	手札から緑のカード２枚を追放する
+Return two Islands you control to their owner's hand	将你操控的两座海岛移回其拥有者手上	Return two Islands you control to their owner's hand	あなたがコントロールする島２つをオーナーの手札に戻す
+Discard a card of the chosen color or its associated basic land type card	弃掉一张所选颜色的牌，或一张对应基本地类别的牌	Discard a card of the chosen color or its associated basic land type card	選んだ色のカードか対応する基本土地タイプのカード１枚を捨てる
+Player {0} loses {1} life.	玩家 {0} 失去 {1} 点生命。	Player {0} loses {1} life.	プレイヤー{0}は{1}点のライフを失う。
+Player {0} gains {1} life.	玩家 {0} 获得 {1} 点生命。	Player {0} gains {1} life.	プレイヤー{0}は{1}点のライフを得る。
+{0} deals {1} damage to {2}.	{0}对{2}造成 {1} 点伤害。	{0} deals {1} damage to {2}.	{0}は{2}に{1}点のダメージを与える。
+请从联机大厅提交牌组并开局，战场会自动载入真实对局。	Submit decks and start a game in the multiplayer lobby. The battlefield will load the match automatically.	オンライン・ロビーでデッキを提出して対戦を開始してください。戦場は対戦の開始時に自動的に表示されます。
+返回主菜单	Return to main menu	メインメニューに戻る
+
+Select a card from your library	从你的牌库选择一张牌	Select a card from your library	あなたのライブラリーからカード１枚を選択
+Select {0} artifact(s) to sacrifice.	选择 {0} 个神器来牺牲。	Select {0} artifact(s) to sacrifice.	生け贄に捧げるアーティファクトを{0}個選択。
+
+Choose amount of mana to pay for {0}	为{0}选择要支付的法术力数量	Choose amount of mana to pay for {0}	{0}のために支払うマナの数を選ぶ
+Noted number: {0}	记录值：{0}	Noted number: {0}	記録した数：{0}
+{0}'s boon	{0}的赐福	{0}'s boon	{0}の恩恵
+When you cast your next creature spell, it perpetually gets +X/+0, where X is the noted number.	当你施放下一个生物咒语时，它永久得 +X/+0，X 为记录值。	When you cast your next creature spell, it perpetually gets +X/+0, where X is the noted number.	あなたが次のクリーチャー呪文を唱えたとき、それは永久に＋X/＋0の修整を受ける。Xは記録した数である。
+The next instant or sorcery spell you cast this turn costs {X} less to cast, where X is the noted number.	本回合中，你施放的下一个瞬间或法术咒语的费用减少 {X}，X 为记录值。	The next instant or sorcery spell you cast this turn costs {X} less to cast, where X is the noted number.	このターンにあなたが次に唱えるインスタントやソーサリー呪文を唱えるためのコストは{X}少なくなる。Xは記録した数である。

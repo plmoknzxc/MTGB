@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public sealed partial class ForgeBattlefieldController
 {
+    private static bool IsSpecializedFace(ForgeCardView card)=>card!=null&&!card.faceDown&&(card.stateName??"").StartsWith("Specialize",StringComparison.Ordinal);
     private static bool HasTokenFrame(ForgeCardView card) => !card.faceDown && (card.token || card.copy);
+    private static bool HasTemporaryTokenFrame(ForgeCardView card) => HasTokenFrame(card) && (card.pendingDepartures?.Length??0)>0;
+    private static Sprite TokenFrame(ForgeCardView card)=>TokenArch();
     static Sprite tokenArch;
     private static Sprite TokenArch()
     {
@@ -25,7 +28,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private static void PresentSpecialPermanentFace(RectTransform parent,Sprite sprite,Vector2 size,ForgeCardView card)
     {
-        var image=parent.GetComponent<Image>();image.sprite=HasTokenFrame(card)?TokenArch():IntegratedUiUtility.RoundedRect(136,190,5);image.color=Ink;
+        var image=parent.GetComponent<Image>();image.sprite=HasTokenFrame(card)?TokenFrame(card):IntegratedUiUtility.RoundedRect(136,190,5);image.color=Ink;
         parent.gameObject.AddComponent<Mask>().showMaskGraphic=true;
         var r=sprite.rect;
         float titleHeight=HasTokenFrame(card)||card.emblem||card.effectMarker?0:Mathf.Min(12,size.x*.08f);
@@ -47,7 +50,15 @@ public sealed partial class ForgeBattlefieldController
         sprite = null;
         if (card == null) return false;
         if (card.faceDown) return CardImageLibrary.TryLoadCardBack(out sprite);
+        if ((card.stateName ?? "").StartsWith("Specialize", StringComparison.Ordinal))
+            return SpecializeCardArt.TryGetKey(card, out string specializedKey)
+                && CardImageLibrary.TryLoadPrintingKey(specializedKey, out sprite);
+        if((card.copy||card.merged) && !string.IsNullOrEmpty(card.currentArtPrintingKey)
+            && catalog.TryGetValue(card.currentArtPrintingKey,out var copiedArt))
+            return CardImageLibrary.TryLoadFullCard(copiedArt,card.currentArtBackFace?1:0,out sprite);
         if(card.effectMarker && SpecialEffectArt.TryLoad(card.helperArtName,out sprite))return true;
+        if(!string.IsNullOrEmpty(card.effectSourcePrintingKey)&&catalog.TryGetValue(card.effectSourcePrintingKey,out var effectSource))
+            return CardImageLibrary.TryLoadFullCard(effectSource,card.effectSourceBackFace?1:0,out sprite);
         if(card.emblem) {
             if(CardImageLibrary.TryLoadPrintingKey(card.tokenArtKey,out sprite))return true;
             if(!catalog.TryGetValue(card.tokenSourcePrintingKey??"",out var emblemSource))return false;
@@ -57,11 +68,24 @@ public sealed partial class ForgeBattlefieldController
         }
         if (catalog.TryGetValue(card.printingKey ?? "", out var definition))
             return CardImageLibrary.TryLoadFullCard(definition, card.backFace ? 1 : 0, out sprite);
-        if(card.token && CardImageLibrary.TryLoadPrintingKey(card.tokenArtKey,out sprite))return true;
-        if (!card.token || !catalog.TryGetValue(card.tokenSourcePrintingKey ?? "", out var source)) return false;
+        if (!card.token) return false;
         string name = card.name ?? "";
         if (name.EndsWith(" Token", StringComparison.Ordinal)) name = name.Substring(0, name.Length - 6);
-        var matches = DeckRelatedTokenArt.GetReferences(source).Where(t => string.Equals(t.name, name, StringComparison.OrdinalIgnoreCase)).ToArray();
+        var related = catalog.TryGetValue(card.tokenSourcePrintingKey ?? "", out var source)
+            ? DeckRelatedTokenArt.GetReferences(source).ToArray() : Array.Empty<DeckRelatedTokenArt.Art>();
+        var paired = related.Where(t => {
+            var faces = (t.name ?? "").Split(new[] { " // " }, StringSplitOptions.None);
+            return faces.Length == 2 && string.Equals(faces[card.backFace ? 1 : 0], name, StringComparison.OrdinalIgnoreCase);
+        }).ToArray();
+        if (paired.Length > 0) {
+            // Native token keys may select an unavailable art variant. The source's
+            // exact paired link identifies both local faces; never load its front for a back.
+            var exact = paired.Where(t => t.key == card.tokenArtKey).ToArray();
+            var pair = exact.Length == 1 ? exact[0] : paired.Length == 1 ? paired[0] : null;
+            return pair != null && CardImageLibrary.TryLoadPrintingKey(pair.key, card.backFace ? 1 : 0, out sprite);
+        }
+        if (CardImageLibrary.TryLoadPrintingKey(card.tokenArtKey, out sprite)) return true;
+        var matches = related.Where(t => string.Equals(t.name, name, StringComparison.OrdinalIgnoreCase)).ToArray();
         // Never guess between different tokens with the same name.
         return matches.Length == 1 && CardImageLibrary.TryLoadPrintingKey(matches[0].key, out sprite);
     }

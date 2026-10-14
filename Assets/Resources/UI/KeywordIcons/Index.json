@@ -1,0 +1,375 @@
+{
+  "entries": [
+    {
+      "kind": "COMMANDER",
+      "x": 330,
+      "y": 576,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "ANNIHILATOR",
+      "x": 166,
+      "y": 658,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "TOXIC",
+      "x": 248,
+      "y": 658,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "DEATHTOUCH",
+      "x": 2,
+      "y": 2,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "DEFENDER",
+      "x": 84,
+      "y": 2,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "DOUBLE_STRIKE",
+      "x": 166,
+      "y": 2,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "EXALTED",
+      "x": 330,
+      "y": 658,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "FIRST_STRIKE",
+      "x": 248,
+      "y": 2,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "FEAR",
+      "x": 84,
+      "y": 412,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "FLASH",
+      "x": 166,
+      "y": 576,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "FLYING",
+      "x": 330,
+      "y": 2,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HASTE",
+      "x": 412,
+      "y": 494,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF",
+      "x": 412,
+      "y": 2,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HORSEMANSHIP",
+      "x": 2,
+      "y": 576,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "INDESTRUCTIBLE",
+      "x": 2,
+      "y": 84,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "INTIMIDATE",
+      "x": 166,
+      "y": 412,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "LANDWALK",
+      "x": 248,
+      "y": 576,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "LIFELINK",
+      "x": 84,
+      "y": 84,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "MENACE",
+      "x": 166,
+      "y": 84,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "REACH",
+      "x": 248,
+      "y": 330,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "SHADOW",
+      "x": 84,
+      "y": 576,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "SHROUD",
+      "x": 330,
+      "y": 330,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "TRAMPLE",
+      "x": 412,
+      "y": 330,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "WARD",
+      "x": 84,
+      "y": 658,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "WITHER",
+      "x": 2,
+      "y": 658,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "VIGILANCE",
+      "x": 2,
+      "y": 412,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_R",
+      "x": 2,
+      "y": 494,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_G",
+      "x": 412,
+      "y": 412,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_B",
+      "x": 248,
+      "y": 412,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_U",
+      "x": 84,
+      "y": 494,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_W",
+      "x": 248,
+      "y": 494,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_C",
+      "x": 330,
+      "y": 412,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "HEXPROOF_UB",
+      "x": 166,
+      "y": 494,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "TOKEN",
+      "x": 330,
+      "y": 494,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_ALL",
+      "x": 248,
+      "y": 84,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_B",
+      "x": 330,
+      "y": 84,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_BU",
+      "x": 412,
+      "y": 84,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_BW",
+      "x": 2,
+      "y": 166,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_COLOREDSPELLS",
+      "x": 84,
+      "y": 166,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_G",
+      "x": 166,
+      "y": 166,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_GB",
+      "x": 248,
+      "y": 166,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_GU",
+      "x": 330,
+      "y": 166,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_GW",
+      "x": 412,
+      "y": 166,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_GENERIC",
+      "x": 2,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_R",
+      "x": 84,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_RB",
+      "x": 166,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_RG",
+      "x": 248,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_RU",
+      "x": 330,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_RW",
+      "x": 412,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_U",
+      "x": 2,
+      "y": 330,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_UW",
+      "x": 84,
+      "y": 330,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECT_W",
+      "x": 166,
+      "y": 330,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "kind": "PROTECTION",
+      "x": 2,
+      "y": 248,
+      "width": 80,
+      "height": 80
+    }
+  ]
+}

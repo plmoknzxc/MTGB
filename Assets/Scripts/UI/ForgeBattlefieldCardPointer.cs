@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,9 +17,12 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private Vector3 initial;
     private Action<Vector2> combatBegin, combatMove, combatEnd, activeCombatEnd;
     private bool combatDragging;
+    private float hoverStartedAt;
+    private bool detailShown;
+    private BattlefieldHorizontalScroll scrollDrag;
     public void ResetHover()
     {
-        hovering=false;
+        hovering=false;detailShown=false;
         if(hoverSurface!=null)hoverSurface.raycastTarget=false;
         if(face!=null){face.localPosition=Vector3.zero;face.localScale=Vector3.one;face.localRotation=Quaternion.identity;}
     }
@@ -36,6 +39,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     }
     private void LateUpdate()
     {
+        if(hovering&&!dragging&&!combatDragging&&!detailShown&&Time.unscaledTime-hoverStartedAt>=.75f){detailShown=true;enter?.Invoke();}
         if(!animated || dragging || root==null || face==null)return;
         float speed=1-Mathf.Exp(-18*Time.unscaledDeltaTime);
         root.anchoredPosition=Vector2.Lerp(root.anchoredPosition,destination,speed);
@@ -43,17 +47,21 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         // artwork rather than placing it on a real table; use only in-plane rotation.
         var tableRotation=Quaternion.Euler(0,0,angle);
         root.localRotation=Quaternion.Slerp(root.localRotation,tableRotation,speed);
-        face.localPosition=Vector3.Lerp(face.localPosition,hovering && hand?new Vector3(0,130,0):Vector3.zero,speed);
+        // Lift in table coordinates, keeping the end cards from sliding sideways.
+        bool topHand=root.parent.name=="OpponentHandRoot";
+        var lift=Quaternion.Inverse(tableRotation)*new Vector3(0,topHand?-130:130,0);
+        face.localPosition=Vector3.Lerp(face.localPosition,hovering && hand?lift:Vector3.zero,speed);
         face.localScale=Vector3.Lerp(face.localScale,Vector3.one*(hovering && hand?1.32f:1),speed);
         // Hover straightens a fanned hand card, but must preserve a permanent's tapped orientation.
-        face.localRotation=Quaternion.Slerp(face.localRotation,Quaternion.Euler(0,0,hovering && hand?-angle:0),speed);
+        face.localRotation=Quaternion.Slerp(face.localRotation,Quaternion.Euler(0,0,hovering && hand?(topHand?180:0)-angle:0),speed);
         // The lifted face stays clickable while crossing from the hand's original hit area.
         if(hoverSurface!=null)hoverSurface.raycastTarget=hovering;
     }
+    private void OnDisable() { bool open=detailShown; ResetHover(); if(open)exit?.Invoke(); }
     public void OnPointerEnter(PointerEventData eventData)
-    {if(dragging || hovering)return; hovering=true; sibling=transform.GetSiblingIndex(); transform.SetAsLastSibling(); enter?.Invoke();}
+    {if(dragging || hovering)return; hovering=true;detailShown=false;hoverStartedAt=Time.unscaledTime; sibling=transform.GetSiblingIndex(); transform.SetAsLastSibling();}
     public void OnPointerExit(PointerEventData eventData)
-    {if(dragging || !hovering)return; hovering=false; RestoreOrder(); exit?.Invoke();}
+    {if(dragging || !hovering)return; hovering=false;detailShown=false; RestoreOrder(); exit?.Invoke();}
     public static void RestoreHandOrder(Transform parent)
     {
         var cards=parent.GetComponentsInChildren<ForgeBattlefieldCardPointer>(false)
@@ -67,10 +75,13 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     {
         if(eventData.button==PointerEventData.InputButton.Left && combatBegin!=null)
         {
-            combatDragging=true;activeCombatEnd=combatEnd;exit?.Invoke();
+            combatDragging=true;activeCombatEnd=combatEnd;ResetHover();exit?.Invoke();
             combatBegin(eventData.position);return;
         }
-        if(!draggable || eventData.button!=PointerEventData.InputButton.Left)return;
+        if(!draggable || eventData.button!=PointerEventData.InputButton.Left) {
+            scrollDrag=GetComponentInParent<BattlefieldHorizontalScroll>();
+            if(scrollDrag!=null){ResetHover();exit?.Invoke();scrollDrag.OnBeginDrag(eventData);}return;
+        }
         if(!hovering)sibling=transform.GetSiblingIndex();
         dragging=true; hovering=false; initial=transform.position; transform.SetAsLastSibling(); exit?.Invoke();
         if(face!=null){face.localPosition=Vector3.zero;face.localRotation=Quaternion.identity;face.localScale=Vector3.one*1.12f;}
@@ -79,11 +90,13 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     public void OnDrag(PointerEventData eventData)
     {
         if(combatDragging){combatMove?.Invoke(eventData.position);return;}
+        if(scrollDrag!=null){scrollDrag.OnDrag(eventData);return;}
         if(!dragging)return;
         if(RectTransformUtility.ScreenPointToWorldPointInRectangle((RectTransform)transform.parent,eventData.position,eventData.pressEventCamera,out var point))transform.position=point;
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+        if(scrollDrag!=null){scrollDrag.OnEndDrag(eventData);scrollDrag=null;eventData.eligibleForClick=false;return;}
         if(combatDragging)
         {
             combatDragging=false;eventData.eligibleForClick=false;

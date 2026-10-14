@@ -1,0 +1,9 @@
+{
+  "case": "gift-base",
+  "result": "PASS gift-base native choice/payment/two-seat stack/effects/endstep/priority",
+  "timeUtc": "2026-10-05T21:31:40.544484+00:00",
+  "testSha256": "107049b41edab1e0bdd1345f9e7a490a0524dec29a27fca0581ff6520b0e7878",
+  "fixtureSha256": "081e00a24fedfdc05c717184a2b2575c11c6c51b28429a176af1d52c30064549",
+  "runtimeManifest": "0fba42a96913a18c1b0761611a120b2a6e25145993b99ec400cdd9cdbc88cf03",
+  "traceSha256": "efa894a17eb6b9327fa0d12057062c2633237dd4a6ad4f4f31e9e9e42ffac20f"
+}

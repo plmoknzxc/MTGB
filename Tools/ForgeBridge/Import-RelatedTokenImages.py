@@ -41,7 +41,7 @@ def plan(emblems_only=False):
         for line in source:
             card = json.loads(line)
             key = card.get('set', '').upper() + '/' + card.get('collector_number', '')
-            if key in keys and (not emblems_only or card.get('type_line') == 'Emblem'):
+            if key in keys and (not emblems_only or card.get('type_line', '').split('—', 1)[0].strip() == 'Emblem'):
                 rows[key].append(card)
     if emblems_only:
         keys = set(rows)

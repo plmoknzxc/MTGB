@@ -14,6 +14,10 @@ public final class ForgeEnvironment {
     public static final ExecutorService UI = Executors.newSingleThreadExecutor(r -> new Thread(r, "mtgb-forge-ui"));
 
     public static void initialize(String directory) throws Exception {
+        initialize(directory, false);
+    }
+
+    static void initialize(String directory, boolean lazyCards) throws Exception {
         String assets = new File(directory).getCanonicalPath().replace('\\', '/') + "/";
         GuiBase.setInterface((IGuiBase) Proxy.newProxyInstance(IGuiBase.class.getClassLoader(),
             new Class<?>[]{IGuiBase.class}, (proxy, method, args) -> {
@@ -41,7 +45,7 @@ public final class ForgeEnvironment {
         FModel.initialize(null, prefs -> {
             prefs.setPref(FPref.UI_LANGUAGE, "en-US");
             prefs.setPref(FPref.DECKGEN_CARDBASED, false);
-            prefs.setPref(FPref.LOAD_CARD_SCRIPTS_LAZILY, false);
+            prefs.setPref(FPref.LOAD_CARD_SCRIPTS_LAZILY, lazyCards);
             prefs.setPref(FPref.YIELD_AUTO_PASS_NO_ACTIONS, false);
             return null;
         });

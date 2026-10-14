@@ -12,6 +12,7 @@ public static class ForgeCardCatalog
     public const string Revision = "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676";
     public const int Protocol = 1;
     public static string Root => Path.Combine(PrintingKeyUtility.ApplicationRoot, "ForgeRuntime");
+    public static string BundledJavaRelativePath => Path.DirectorySeparatorChar == '\\' ? "jre/bin/java.exe" : "jre/bin/java";
     private static string verifiedRuntimeHash;
     private static string verifiedRuntimeRoot;
     private static readonly object verificationLock = new object();
@@ -61,7 +62,7 @@ public static class ForgeCardCatalog
     {
         runtimeRoot = runtimeRoot ?? Root;
         RuntimeConfig config = ReadConfigMetadata(runtimeRoot);
-        if (config.java != "jre/bin/java.exe" || config.assets != "assets")
+        if (config.java != BundledJavaRelativePath || config.assets != "assets")
             throw new InvalidDataException("Forge 运行资源配置无效。");
         if (!File.Exists(Path.Combine(runtimeRoot, config.java)) ||
             !Directory.Exists(Path.Combine(runtimeRoot, config.assets)) ||
@@ -92,7 +93,7 @@ public static class ForgeCardCatalog
     {
         if (string.IsNullOrEmpty(config.runtimeHash)) throw new InvalidDataException("缺少 Forge 运行资源哈希。");
         string root = Path.GetFullPath(runtimeRoot) + Path.DirectorySeparatorChar;
-        if (config.java != "jre/bin/java.exe" || config.assets != "assets")
+        if (config.java != BundledJavaRelativePath || config.assets != "assets")
             throw new InvalidDataException("Forge 必须使用包内 Java 和资源目录。");
         if (verifiedRuntimeHash == config.runtimeHash && verifiedRuntimeRoot == root) return;
         string manifestPath = Path.Combine(runtimeRoot, "files.json");
@@ -139,7 +140,7 @@ public static class ForgeCardCatalog
                 cancellation.ThrowIfCancellationRequested();
                 if (!listed.Contains(Path.GetFullPath(path))) throw new InvalidDataException("Forge 存在未登记资源：" + path);
             }
-        if (config.java != "jre/bin/java.exe" || config.assets != "assets")
+        if (config.java != BundledJavaRelativePath || config.assets != "assets")
             throw new InvalidDataException("Forge 必须使用包内 Java 和资源目录。");
         verifiedRuntimeHash = config.runtimeHash;
         verifiedRuntimeRoot = root;

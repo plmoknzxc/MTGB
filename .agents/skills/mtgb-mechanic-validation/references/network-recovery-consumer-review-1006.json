@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "evidence": [
+    {
+      "path": "Docs/NetworkRecoveryConsumerAudit-2026-10-06.zh-CN.md",
+      "sha256": "fe9b59fd9ba54befd23099b82b6e2e794c25fad44335c0ac658eda2a19b6a308"
+    },
+    {
+      "path": ".tools/network-recovery-1006/result.json",
+      "sha256": "2ffe772a80be312fe8b6f47d83a488b0205bbb17e5faab02f4e0912ffd4f1753"
+    },
+    {
+      "path": ".tools/network-recovery-1006/driver.py",
+      "sha256": "bab007a94cdeb8d1b24647142b375ce8b7dd399027e48fa527ea9cf349c17dbb"
+    },
+    {
+      "path": ".tools/network-recovery-1006/attempt1/client1.json",
+      "sha256": "229d07e9f269865445e5bd172d16e701be438b5f8f963b5453d95f80f336484b"
+    },
+    {
+      "path": ".tools/network-recovery-1006/attempt1/client2.json",
+      "sha256": "229d07e9f269865445e5bd172d16e701be438b5f8f963b5453d95f80f336484b"
+    },
+    {
+      "path": ".tools/network-recovery-1006/attempt1/client1.log",
+      "sha256": "6ac0dfc146d9a8355a57a6698cd9610a0b8aaa59fd63bb2c447f297fbdd2a7f6"
+    },
+    {
+      "path": ".tools/network-recovery-1006/attempt1/client2.log",
+      "sha256": "613ed843dbcb6bc9eb969120aa35f728d3f6b11e670062a6478877aef2b93214"
+    },
+    {
+      "path": ".tools/network-recovery-1006/attempt1/server.log",
+      "sha256": "953a0a4c47cd93ea189524bcb9a5d229068acb1aa2637b5e1f82682e62d41c06"
+    }
+  ],
+  "runtimeHash": "b3c1f7604b168fa54075d81674a745ba185d4581a9742ed46e06408bc55f8bed",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Run-NetworkSmoke.py",
+      "sha256": "bab007a94cdeb8d1b24647142b375ce8b7dd399027e48fa527ea9cf349c17dbb"
+    },
+    {
+      "path": "Assets/Scripts/Networking/ForgeNetworkSmoke.cs",
+      "sha256": "1ab1280cf61b23dd9fbbf7622770fb3935f13b21b08882949e19dae1b96013d3"
+    },
+    {
+      "path": "Assets/Scripts/Networking/OnlineMatchService.cs",
+      "sha256": "64240e5ff5a91425e15c7789e05b49996bbdff563d89b78f071e9204873dbd20"
+    },
+    {
+      "path": "Assets/Scripts/Networking/OnlineClientActionGate.cs",
+      "sha256": "15689c30b7029d45f1f9107b2d4256064372f66159b0c689fceb9e4e1932f728"
+    },
+    {
+      "path": "Assets/Scripts/Networking/OnlineServerRequestGate.cs",
+      "sha256": "db2abbf7ff46f2a8dbf55b9625f144b575bfd33d63b8d1dfc6377efd496102b2"
+    },
+    {
+      "path": "Assets/Scripts/Editor/ForgeBuildMenu.cs",
+      "sha256": "238a7dd408396ac1d545b5e8d5218f499dab7975b3d4a5694235bdc3fc520f05"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.cs",
+      "sha256": "196a7825a1d73413c5eb9c18ce3d65a3a835cf6d6116ba8884cc8b73b3b9d692"
+    }
+  ],
+  "buildArtifacts": [
+    {
+      "path": "Builds/ForgeValidation/MTGB.exe",
+      "sha256": "4e015f1b6628d598b2983a999f1004634c40da3a9454de9fa2f9542f0fa1318f"
+    },
+    {
+      "path": "Builds/ForgeValidation/MTGB_Data/Managed/Assembly-CSharp.dll",
+      "sha256": "36fec6a97e03bac1d7eccee6a472c89f3cfb6c81a8de7c79eb2d8a5c5b46efd7"
+    },
+    {
+      "path": "Builds/ForgeValidation/Decks/Forge-Validation.mdk",
+      "sha256": "7b0b95ed22fa926d0c26b8f141adae67465515a0b7c2809df647c6333d29d993"
+    },
+    {
+      "path": "Builds/ForgeValidation/ForgeRuntime/files.json",
+      "sha256": "b3c1f7604b168fa54075d81674a745ba185d4581a9742ed46e06408bc55f8bed"
+    },
+    {
+      "path": "Builds/ForgeValidation/ForgeRuntime/runtime.json",
+      "sha256": "1de4a9246428e4914129b0c1a83c6d619d2abae097734e936089028ce8cecc57"
+    },
+    {
+      "path": "Builds/ForgeValidation/ForgeRuntime/classes/mtgb/bridge/ForgeBridge.class",
+      "sha256": "2e15bf7072e8942eea3b051cd247e105d1f3c297da72ecaeaa685ebe4f81cad2"
+    }
+  ],
+  "remaining": "延迟、乱序、重复和自动提交；其他待选咒语/付款/控制/战斗断线重连、宽限期与跨机器边界；send queue full饱和原因/可靠交付待查。保留旧离线守卫；不重复本机dedicated BO1双席起手请求原编号/视图哈希恢复及London六张起手"
+}

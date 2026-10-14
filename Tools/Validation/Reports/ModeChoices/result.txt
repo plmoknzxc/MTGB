@@ -1,0 +1,16 @@
+PASS spree-rich actual cast/payment/stack choices/targets/effects/priority
+PASS spree-limited actual cast/payment/stack choices/targets/effects/priority
+PASS spree-targets actual cast/payment/stack choices/targets/effects/priority
+PASS spree-unpayable cancel restores hand, priority, untapped lands, life and empty stack
+PASS choose-one actual cast/payment/stack choices/targets/effects/priority
+PASS choose-one-cancel cancel restores hand, priority, untapped lands, life and empty stack
+PASS kicker actual cast/payment/stack choices/targets/effects/priority
+PASS kicker-base actual cast/payment/stack choices/targets/effects/priority
+PASS evoke actual cast/payment/stack choices/targets/effects/priority
+PASS evoke-normal actual cast/payment/stack choices/targets/effects/priority
+PASS evoke-limited actual cast/payment/stack choices/targets/effects/priority
+PASS entwine actual cast/payment/stack choices/targets/effects/priority
+PASS entwine-base actual cast/payment/stack choices/targets/effects/priority
+PASS replicate actual cast/payment/stack choices/targets/effects/priority
+PASS offspring actual cast/payment/stack choices/targets/effects/priority
+PASS offspring-base actual cast/payment/stack choices/targets/effects/priority

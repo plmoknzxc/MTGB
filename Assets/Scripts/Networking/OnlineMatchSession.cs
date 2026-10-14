@@ -9,6 +9,10 @@ using UnityEngine;
 /// <summary>Owns one persistent Forge process and separately projected seat snapshots.</summary>
 public sealed class OnlineMatchSession : IDisposable
 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    // Opt-in validation may configure initial positions before the native worker starts.
+    internal static Action<ProcessStartInfo,string> ValidationBeforeStart;
+#endif
     private static readonly HashSet<OnlineMatchSession> activeSessions = new HashSet<OnlineMatchSession>();
     static OnlineMatchSession()
     {
@@ -26,7 +30,9 @@ public sealed class OnlineMatchSession : IDisposable
     {
         public string session;
         public int seed, startingLife, firstPlayerSeat;
+        public bool useAnte;
         public DeckDefinition[] decks;
+        public DeckDefinition[] authorizedAuxiliarySeriesPools;
     }
     private readonly ConcurrentQueue<string> incoming = new ConcurrentQueue<string>();
     private readonly ConcurrentQueue<string> diagnostics = new ConcurrentQueue<string>();
@@ -66,7 +72,8 @@ public sealed class OnlineMatchSession : IDisposable
         configPath = Path.Combine(directory, "start.json");
         File.WriteAllText(configPath, JsonUtility.ToJson(new StartConfig {
             session = MatchId, seed = seed, startingLife = config?.startingLife ?? 20,
-            firstPlayerSeat = config?.firstPlayerSeat ?? 1, decks = new[] { first, second }
+            firstPlayerSeat = config?.firstPlayerSeat ?? 1, useAnte = config?.useAnte == true, decks = new[] { first, second },
+            authorizedAuxiliarySeriesPools = config?.authorizedAuxiliarySeriesPools
         }));
         try
         {
@@ -74,11 +81,14 @@ public sealed class OnlineMatchSession : IDisposable
             string assets = Path.IsPathRooted(runtime.assets) ? runtime.assets : Path.Combine(ForgeCardCatalog.Root, runtime.assets);
             process = new Process { StartInfo = new ProcessStartInfo {
                 FileName = java,
-                Arguments = "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -cp " + Quote(Path.Combine(ForgeCardCatalog.Root, "classes") + ";" + Path.Combine(ForgeCardCatalog.Root, "lib/*"))
+                Arguments = "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -Duser.home=" + Quote(directory) + " -cp " + Quote(Path.Combine(ForgeCardCatalog.Root, "classes") + Path.PathSeparator + Path.Combine(ForgeCardCatalog.Root, "lib/*"))
                     + " mtgb.bridge.ForgeBridge " + Quote(assets) + " " + Quote(configPath),
                 WorkingDirectory = assets, UseShellExecute = false, CreateNoWindow = true,
                 RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true
             }};
+#if UNITY_SERVER
+            process.StartInfo.Arguments = "-Dmtgb.bridge.lazyCatalog=true " + process.StartInfo.Arguments;
+#endif
             Utf8ProcessIO.Configure(process.StartInfo);
             process.StartInfo.EnvironmentVariables["APPDATA"] = directory;
             process.StartInfo.EnvironmentVariables["LOCALAPPDATA"] = directory;
@@ -89,13 +99,23 @@ public sealed class OnlineMatchSession : IDisposable
                 diagnostics.Enqueue(args.Data);
                 while (diagnostics.Count > 128) diagnostics.TryDequeue(out string discarded);
             };
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            ValidationBeforeStart?.Invoke(process.StartInfo,configPath);
+#endif
             process.Start(); process.BeginOutputReadLine(); process.BeginErrorReadLine();
             activeSessions.Add(this);
         }
         catch { Dispose(); throw; }
     }
-    public OnlinePlayerViewState GetView(int seat) => seat > 2 ? OnlineSpectatorView.Create(views[0],seat) : seat == 1 || seat == 2
-        ? JsonUtility.FromJson<OnlinePlayerViewState>(JsonUtility.ToJson(views[seat - 1])) : null;
+    public OnlinePlayerViewState GetView(int seat)
+    {
+        if (seat > 2) return OnlineSpectatorView.Create(views[0], seat);
+        if (seat != 1 && seat != 2) return null;
+        return ServerSnapshotJson.Copy(views[seat - 1]);
+    }
+
+    public ForgeMatchRemoval[] MatchRemovals { get; private set; } = Array.Empty<ForgeMatchRemoval>();
+    public ForgeMatchOwnership[] MatchOwnership { get; private set; } = Array.Empty<ForgeMatchOwnership>();
 
     public bool Poll()
     {
@@ -105,7 +125,7 @@ public sealed class OnlineMatchSession : IDisposable
         {
             try
             {
-                ForgeWireMessage message = JsonUtility.FromJson<ForgeWireMessage>(line);
+                ForgeWireMessage message = ServerSnapshotJson.Deserialize<ForgeWireMessage>(line);
                 if (message == null || message.session != MatchId) throw new InvalidDataException("Invalid Forge session envelope.");
                 if (message.type == "fatal") { Failure = "Forge 遇到未适配交互或引擎异常，本局异常终止。"; changed = true; break; }
                 if (message.type == "accepted") continue;
@@ -118,6 +138,8 @@ public sealed class OnlineMatchSession : IDisposable
                 }
                 if (message.type == "ended")
                 {
+                    MatchRemovals = message.matchRemovals ?? Array.Empty<ForgeMatchRemoval>();
+                    MatchOwnership = message.matchOwnership ?? Array.Empty<ForgeMatchOwnership>();
                     AppliedSequence++;
                     if (message.views != null && message.views.Length == 2)
                         for (int i = 0; i < 2; i++) {
@@ -163,6 +185,8 @@ public sealed class OnlineMatchSession : IDisposable
         { Failure = "Forge 启动超时，本局异常终止。"; changed = true; }
         if (Failure != null && !diagnosticsWritten)
         {
+            // Release the worker before diagnostics and final snapshots allocate more memory.
+            StopWorker();
             diagnosticsWritten = true;
             string directory = Path.Combine(Application.persistentDataPath, "ForgeDiagnostics");
             Directory.CreateDirectory(directory);
@@ -183,17 +207,43 @@ public sealed class OnlineMatchSession : IDisposable
         if (!concede && (action.type != GameActionType.ConfirmChoice || inputPending || request == null
             || !views[action.playerId - 1].forge.awaitingInput || action.sourceObjectId != request.requestId || action.optionId < 0 || action.optionId >= request.options.Length))
             return GameActionResult.Rejected("过期请求、无效候选或正在等待 Forge。", AppliedSequence);
+        bool bulkOrder = !concede && request.options[action.optionId].id == "submit-order";
+        bool attackGroup = !concede && request.kind=="InputAttack" && request.options[action.optionId].id.StartsWith("attack:")
+            && action.optionIds!=null && action.optionIds.Count>0;
+        if (bulkOrder) {
+            var available = request.options.Where(o => o.id.StartsWith("order:") && o.ability != null).Select(o => o.ability.id)
+                .Concat((request.orderedAbilities ?? Array.Empty<ForgeStackItem>()).Select(a => a.id)).ToHashSet();
+            if (request.kind != "OrderAbilities" || action.optionIds == null || action.optionIds.Count < request.minCount
+                || action.optionIds.Count > request.maxCount || action.optionIds.Distinct().Count() != action.optionIds.Count
+                || action.optionIds.Any(id => !available.Contains(id)))
+                return GameActionResult.Rejected("无效异能顺序。", AppliedSequence);
+        }
+        else if(attackGroup) {
+            if(!LegalAttackGroup(request,action.optionId,action.optionIds))
+                return GameActionResult.Rejected("无效攻击者或共同攻击对象。",AppliedSequence);
+        }
+        else if (!concede && action.optionIds != null && action.optionIds.Count > 0)
+            return GameActionResult.Rejected("此选择不接受排序。", AppliedSequence);
         try
         {
             process.StandardInput.WriteLine(JsonUtility.ToJson(new ForgeResponse {
                 type = concede ? "concede" : "respond", session = MatchId, seat = action.playerId,
-                requestId = request?.requestId ?? 0, option = concede ? null : request.options[action.optionId].id
+                requestId = request?.requestId ?? 0, option = concede ? null : request.options[action.optionId].id,
+                order = bulkOrder || attackGroup ? action.optionIds.ToArray() : null
             }));
             process.StandardInput.Flush(); inputPending = true;
             foreach (var view in views) { view.forge.request = null; view.forge.awaitingInput = false; view.forge.inputPending = true; view.SealHash(); }
             return GameActionResult.Accepted(AppliedSequence, views[action.playerId - 1].viewHash);
         }
         catch (Exception) { Failure = "无法向 Forge 提交输入。"; return GameActionResult.Rejected(Failure, AppliedSequence); }
+    }
+    internal static bool LegalAttackGroup(ForgeRequest request,int optionIndex,List<int> attackers)
+    {
+        if(request?.kind!="InputAttack" || optionIndex<0 || optionIndex>=request.options.Length || attackers==null || attackers.Count==0)return false;
+        var target=request.options[optionIndex];
+        if(target.disabled || !target.id.StartsWith("attack:") || !attackers.Contains(target.attackerId) || attackers.Distinct().Count()!=attackers.Count)return false;
+        return attackers.All(id=>request.options.Any(o=>!o.disabled && o.id.StartsWith("attack:") && o.attackerId==id
+            && o.defenderKind==target.defenderKind && o.defenderId==target.defenderId));
     }
     public void Dispose()
     {
@@ -202,8 +252,8 @@ public sealed class OnlineMatchSession : IDisposable
         activeSessions.Remove(this);
         if (process != null)
         {
-            try { if (!process.HasExited) { process.StandardInput.WriteLine("{\"type\":\"shutdown\"}"); process.StandardInput.Flush(); if (!process.WaitForExit(1500)) process.Kill(); } }
-            catch (InvalidOperationException) { }
+            // Disposal must not wait on a stalled stdin pipe or engine shutdown hook.
+            try { StopWorker(); }
             finally { process.Dispose(); }
         }
         if (configPath != null)
@@ -213,6 +263,14 @@ public sealed class OnlineMatchSession : IDisposable
             if (sessionDirectory.StartsWith(sessionsRoot, StringComparison.OrdinalIgnoreCase) && Directory.Exists(sessionDirectory))
                 Directory.Delete(sessionDirectory, true);
         }
+    }
+    private void StopWorker()
+    {
+        if (process == null) return;
+        try { if (!process.HasExited) process.Kill(); }
+        catch (InvalidOperationException) { } // Process never started or already exited.
+        catch (System.ComponentModel.Win32Exception error)
+        { UnityEngine.Debug.LogError("无法结束 Forge 会话进程：" + error.Message); }
     }
     private static string Quote(string value)
     {

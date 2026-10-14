@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "runtimeHash": "0d108e2e0e509891ac96066396390ed8fabfa55b3bb168dce4c188a3190e7f88",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T02:36:24Z",
+    "coverage": "metadata_changed exact source fallback; upstream/.tools excluded read directly. chooseInteger, BridgeAllocation generic/run, PresentAllocation both-direction traces and exact source inspected; classification bounded consumers, not exhaustive effect proof."
+  },
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-NumberAuction.py",
+      "sha256": "2a46770adc110f13ad0c83f89ee75a2cea1d289bb13d2d32399ae97affefa405"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-QuantityAllocation.py",
+      "sha256": "d78d1e7f8341b5fe69010bd39e866a499fe552a449f8b3b3c2e5923c1e9a6635"
+    },
+    {
+      "path": ".tools/number-auction-1006/create-quantity-driver.py",
+      "sha256": "5ff9810c61704a0815de11517c83d401258a500b0f3194f59956c2b0b55fd7cb"
+    },
+    {
+      "path": ".tools/number-auction-1006/driver-attempt-1.py",
+      "sha256": "9dfea46e623e7a923aec8ebf62a7a987274fb7c5f9db41c8a05f169294850c46"
+    },
+    {
+      "path": ".tools/number-auction-1006/driver-current.py",
+      "sha256": "67ba58388a08cf68b46e47d4205d3e0d225cb82ca7bfbbd53f1cabd189bd7dca"
+    },
+    {
+      "path": ".tools/number-auction-1006/driver-with-cancel.py",
+      "sha256": "2a46770adc110f13ad0c83f89ee75a2cea1d289bb13d2d32399ae97affefa405"
+    },
+    {
+      "path": ".tools/number-auction-1006/quantity-driver-attempt-1.py",
+      "sha256": "0a0aa581f0ba7dbecd2abab0babc15009a3ec7627ad5e9eb3db5dbe67fae0634"
+    },
+    {
+      "path": ".tools/number-auction-1006/quantity-driver-five-current.py",
+      "sha256": "d78d1e7f8341b5fe69010bd39e866a499fe552a449f8b3b3c2e5923c1e9a6635"
+    },
+    {
+      "path": ".tools/number-auction-1006/quantity-driver-four-current.py",
+      "sha256": "2a45c95464ea564c36c5440940de29c109ddd7a1b0c0ce146d1369c6dff7c9f6"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/VariableBranchFixture.java",
+      "sha256": "2e6250b3004665993ccd0608a0dc02cd9729fe7ae2afeddc9f0913e49edf7a25"
+    },
+    {
+      "path": "Tools/ForgeBridge/NativePatches.json",
+      "sha256": "43938ae89ac874ebb34c3de255300263d029c788698cd790d0b0be8cccaba68d"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeAllocation.java",
+      "sha256": "09d92c3f673f5789d4105e7c6f484ad4d03c0a123b14e16bac66fd4f28795dde"
+    },
+    {
+      "path": "Assets/Scripts/UI/CardSymbolText.cs",
+      "sha256": "386fbc99729bce7d68cf965a575b9c3630dcb584466d82fbd7f5d27e3ddb6ba2"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Allocation.cs",
+      "sha256": "62b782d9778fd762a846b0a8b3c4e810b0ac3fdd0346149ed469eb43e0ef663e"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.LandChoices.cs",
+      "sha256": "edd71e780161a539b37f20cb16776f17b6371b8b0300913883b548959ea4ad9f"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Notices.cs",
+      "sha256": "ca7f4326b62cf68813ddeefc18123c3e839ce2aa903a17e5122b27c0909520e3"
+    },
+    {
+      "path": "Assets/Scripts/Editor/NumberAuctionPresentationValidation.cs",
+      "sha256": "f6b034146b9e9ae76b1e4f5bfe856dd70c432a71f40b84695ba140ac46b491e6"
+    },
+    {
+      "path": "Assets/Scripts/Editor/QuantityAllocationPresentationValidation.cs",
+      "sha256": "01da56a6e281a3fec7cfb2ecf85d72b93661b2c7716065fa2faec5aff7db84f7"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/number-auction-1006/native/auction-zero/1791252519244243300/result.json",
+      "sha256": "529c3bbef0317aa16ed8450a0d35bb96c532bcaf042ea170afdfe5d017a513ec"
+    },
+    {
+      "path": ".tools/number-auction-1006/native/auction-other/1791252531443817000/result.json",
+      "sha256": "d116835618eec00cae89ff0a4c04e9dbc07f7b9aaab0e7d2073ff46a70571228"
+    },
+    {
+      "path": ".tools/number-auction-1006/native/auction-caster/1791252544643086700/result.json",
+      "sha256": "7a111fb6216181a9123ae6a5c5ad01846be8236e40597e5d851a9251a5043c17"
+    },
+    {
+      "path": ".tools/number-auction-1006/native/hellion-large/1791252555759846800/result.json",
+      "sha256": "a5c102805e0c3758ce1a0c3337afcc4bd1a38a52b001c594ec26ee185a9c7114"
+    },
+    {
+      "path": ".tools/number-auction-1006/native/hellion-cancel/1791252603652963200/result.json",
+      "sha256": "349ad7ee9ad891199b9ed4c1ae0114e6eec885c3e7cac23893ead7ea60128366"
+    },
+    {
+      "path": ".tools/number-auction-1006/native/bounded-number/1791252567557801200/result.json",
+      "sha256": "d55ea0ca25c66e719c7a0d9c54a9e78c198376804ef1ff322abbb141271ce7b8"
+    },
+    {
+      "path": ".tools/quantity-allocation-1006/native/counter-division/1791253971245392900/result.json",
+      "sha256": "f9fb1991d77a242518ddd4f72fa102f420cf43afd5bf41e505d290db6a094aa9"
+    },
+    {
+      "path": ".tools/quantity-allocation-1006/native/shield-division/1791253979146302500/result.json",
+      "sha256": "6f8555838c67f70fc5d44e4c01b6504c15084bcadad7c868fd4e1ec38a0e35e6"
+    },
+    {
+      "path": ".tools/quantity-allocation-1006/native/shield-on-damage/1791254251611899300/result.json",
+      "sha256": "b1be856a553a7790c0bb30644f5b8fd106e790e7a40883e484553d286ca50ceb"
+    },
+    {
+      "path": ".tools/quantity-allocation-1006/native/mana-combo/1791253986995253600/result.json",
+      "sha256": "4a42965f931fc29129d839cff04d9f3207a207d8b3a41ab2d2e123c38b40574b"
+    },
+    {
+      "path": ".tools/quantity-allocation-1006/native/mana-different/1791253995223539600/result.json",
+      "sha256": "a51ed7c5ba7a1f1fac771aedd6d7f0392a705b6f77ee4ca4f567d1f49d2dc323"
+    }
+  ],
+  "ui": [
+    {
+      "result": {
+        "path": ".tools/number-auction-1006/ui/20261006T0236220864847Z/result.txt",
+        "sha256": "6999357c3e9596692310e4b75c478fbb9641e423f8af16d7b441b189e5d9487f"
+      },
+      "producer": {
+        "path": ".tools/number-auction-1006/ui/20261006T0236220864847Z/producer-hashes.tsv",
+        "sha256": "3537c59f19fb8e61564611418ba1b7c67b7daae73e69737dd63be4ae1efa75ae"
+      },
+      "inputs": {
+        "path": ".tools/number-auction-1006/ui/20261006T0236220864847Z/input-hashes.tsv",
+        "sha256": "5552319736f8154b58b95193bee95c68c5bba864556b7a3fd15a68af06efaf5a"
+      }
+    },
+    {
+      "result": {
+        "path": ".tools/quantity-allocation-1006/ui/20261006T0242457833280Z/result.txt",
+        "sha256": "824335a5e5c43c43a1fa5f5346d7afbcd5ace5d7b1d1d82d71eb85d402095b1a"
+      },
+      "producer": {
+        "path": ".tools/quantity-allocation-1006/ui/20261006T0242457833280Z/producer-hashes.tsv",
+        "sha256": "09f04820b75bdb23ca97d4df859793ec03c55d500d37dd7c3127aa4e977e7208"
+      },
+      "inputs": {
+        "path": ".tools/quantity-allocation-1006/ui/20261006T0242457833280Z/input-hashes.tsv",
+        "sha256": "38e0ec42f0911c267302196f8d05ad5d56a5b724d1a959a9d61b3a0561dbef40"
+      }
+    }
+  ],
+  "relatedRegression": {
+    "path": ".tools/variable-branches-1006/native/join-forces/1791252530187226000/result.json",
+    "sha256": "997593d9283d201ab765c4fb58fd26236e4d492c27946ffccff81f5f4491b8a7"
+  },
+  "classification": {
+    "path": ".tools/number-auction-1006/any-number-consumers.json",
+    "sha256": "cb47e0db5d46558a1cda4631a25376af55ad401444f9c45530b091ee3903a519"
+  },
+  "audit": {
+    "path": "Docs/NumberAllocationConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "964c1a95462bf463667ad4241d8f0985218cce26847fa91109cdc8c465b5c423"
+  },
+  "remaining": "R09/R18/R36/R47, Int32 implementation ceiling and live transport; global fingerprint states preserved."
+}

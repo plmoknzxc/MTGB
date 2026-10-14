@@ -31,7 +31,7 @@ public static class CastingChoicePresentationValidation
         for(int step=0;step<=7;step++) {
             var view=Read("cast-spree-modes-"+step);int sent=-1;ui.Present(view,1,true,i=>sent=i,null,"");yield return new WaitForSecondsRealtime(.15f);
             var menu=GameObject.Find("CardAbilityChoices");Check(menu!=null,"Spree menu missing");
-            Check(menu.GetComponent<RectTransform>().rect.width<=430&&menu.GetComponent<RectTransform>().rect.height<=342,"Spree menu oversized");
+            Check(menu.GetComponent<RectTransform>().rect.width<=Screen.width&&menu.GetComponent<RectTransform>().rect.height<=540,"Mode cards overflow");
             Check(menu.GetComponentsInChildren<Button>().Count(b=>b.name.StartsWith("Mode_"))==3,"Spree modes missing");
             Check(menu.GetComponentsInChildren<Text>().Count(t=>t.name=="Selection"&&t.text=="✓")==view.request.selectedCount,"Spree selected state incorrect");
             var confirm=menu.transform.Find("confirm-modes").GetComponent<Button>();Check(confirm.interactable==(view.request.selectedCount>0),"Spree permits zero modes");

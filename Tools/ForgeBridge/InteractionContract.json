@@ -1,0 +1,872 @@
+{
+  "schema": 1,
+  "methods": [
+    {
+      "name": "isLibgdxPort",
+      "signature": "default boolean isLibgdxPort()",
+      "default": true,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setGameView",
+      "signature": "default void setGameView(GameView gameView, long sequenceNumber)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setGameView",
+      "signature": "void setGameView(GameView gameView)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getGameView",
+      "signature": "GameView getGameView()",
+      "default": false,
+      "returnType": "GameView",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setOriginalGameController",
+      "signature": "void setOriginalGameController(PlayerView view, IGameController gameController)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setGameController",
+      "signature": "void setGameController(PlayerView player, IGameController gameController)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setSpectator",
+      "signature": "void setSpectator(IGameController spectator)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "openView",
+      "signature": "void openView(TrackableCollection<PlayerView> myPlayers)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "afterGameEnd",
+      "signature": "void afterGameEnd()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showCombat",
+      "signature": "void showCombat()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showPromptMessage",
+      "signature": "default void showPromptMessage(PlayerView playerView, String message)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "showPromptMessage",
+      "signature": "void showPromptMessage(PlayerView playerView, String message, CardView card)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateDrawOffer",
+      "signature": "default void updateDrawOffer(DrawOfferMessage.Status update)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateButtons",
+      "signature": "default void updateButtons(final PlayerView owner, final boolean okEnabled, final boolean cancelEnabled, final boolean focusOk)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateButtons",
+      "signature": "void updateButtons(PlayerView owner, String label1, String label2, boolean enable1, boolean enable2, boolean focus1)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "flashIncorrectAction",
+      "signature": "void flashIncorrectAction()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "alertUser",
+      "signature": "void alertUser()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updatePhase",
+      "signature": "default void updatePhase(boolean saveState)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateTurn",
+      "signature": "default void updateTurn(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updatePlayerControl",
+      "signature": "default void updatePlayerControl()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "enableOverlay",
+      "signature": "default void enableOverlay()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "disableOverlay",
+      "signature": "default void disableOverlay()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "finishGame",
+      "signature": "void finishGame()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showManaPool",
+      "signature": "default void showManaPool(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "hideManaPool",
+      "signature": "default void hideManaPool(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateStack",
+      "signature": "default void updateStack()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "notifyStackAddition",
+      "signature": "default void notifyStackAddition(final GameEventSpellAbilityCast event)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "notifyStackRemoval",
+      "signature": "default void notifyStackRemoval(final GameEventSpellRemovedFromStack event)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "handleLandPlayed",
+      "signature": "default void handleLandPlayed(CardView land)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "handleGameEvent",
+      "signature": "void handleGameEvent(GameEvent event)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "handleGameEvents",
+      "signature": "default void handleGameEvents(List<GameEvent> events)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateZones",
+      "signature": "default void updateZones(Iterable<PlayerZoneUpdate> zonesToUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateCard",
+      "signature": "default void updateCard(final CardView card)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateCards",
+      "signature": "default void updateCards(Iterable<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateCardsNetSafe",
+      "signature": "default void updateCardsNetSafe(FCollectionView<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateRevealedCards",
+      "signature": "void updateRevealedCards(TrackableCollection<CardView> collection)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "refreshCardDetails",
+      "signature": "default void refreshCardDetails(Iterable<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "refreshField",
+      "signature": "default void refreshField()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getGamestate",
+      "signature": "GameState getGamestate()",
+      "default": false,
+      "returnType": "GameState",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateManaPool",
+      "signature": "default void updateManaPool(Iterable<PlayerView> manaPoolUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateLives",
+      "signature": "default void updateLives(Iterable<PlayerView> livesUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateShards",
+      "signature": "default void updateShards(Iterable<PlayerView> shardsUpdate)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateDependencies",
+      "signature": "default void updateDependencies()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setPanelSelection",
+      "signature": "void setPanelSelection(CardView hostCard)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getAbilityToPlay",
+      "signature": "SpellAbilityView getAbilityToPlay(CardView hostCard, List<SpellAbilityView> abilities, ITriggerEvent triggerEvent)",
+      "default": false,
+      "returnType": "SpellAbilityView",
+      "role": "decision",
+      "route": "能力／施放方式"
+    },
+    {
+      "name": "assignCombatDamage",
+      "signature": "Map<CardView, Integer> assignCombatDamage(CardView attacker, List<CardView> blockers, int damage, GameEntityView defender, boolean overrideOrder, boolean maySkip)",
+      "default": false,
+      "returnType": "Map<CardView, Integer>",
+      "role": "decision",
+      "route": "战斗伤害分配"
+    },
+    {
+      "name": "assignGenericAmount",
+      "signature": "Map<Object, Integer> assignGenericAmount(CardView effectSource, Map<Object, Integer> target, int amount, final boolean atLeastOne, final String amountLabel)",
+      "default": false,
+      "returnType": "Map<Object, Integer>",
+      "role": "decision",
+      "route": "分配数量"
+    },
+    {
+      "name": "message",
+      "signature": "default void message(final String message)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "原生接收玩家专属的有界通知；固定骰子／硬币调用点单独允许公开投影"
+    },
+    {
+      "name": "message",
+      "signature": "void message(String message, String title)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "原生接收玩家专属的有界通知；固定骰子／硬币调用点单独允许公开投影"
+    },
+    {
+      "name": "showErrorDialog",
+      "signature": "default void showErrorDialog(final String message)",
+      "default": true,
+      "returnType": "void",
+      "role": "fatal",
+      "route": "错误终止且通知客户端"
+    },
+    {
+      "name": "showErrorDialog",
+      "signature": "void showErrorDialog(String message, String title)",
+      "default": false,
+      "returnType": "void",
+      "role": "fatal",
+      "route": "错误终止且通知客户端"
+    },
+    {
+      "name": "showConfirmDialog",
+      "signature": "default boolean showConfirmDialog(final String message, final String title)",
+      "default": true,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "转发到已登记的 showConfirmDialog 重载"
+    },
+    {
+      "name": "showConfirmDialog",
+      "signature": "default boolean showConfirmDialog(final String message, final String title, final String yesButtonText, final String noButtonText)",
+      "default": true,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "转发到已登记的 showConfirmDialog 重载"
+    },
+    {
+      "name": "showConfirmDialog",
+      "signature": "boolean showConfirmDialog(String message, String title, String yesButtonText, String noButtonText, boolean defaultYes)",
+      "default": false,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "确认"
+    },
+    {
+      "name": "showOptionDialog",
+      "signature": "int showOptionDialog(String message, String title, FSkinProp icon, List<String> options, int defaultOption)",
+      "default": false,
+      "returnType": "int",
+      "role": "decision",
+      "route": "单选"
+    },
+    {
+      "name": "showInputDialog",
+      "signature": "String showInputDialog(String message, String title, FSkinProp icon, String initialInput, List<String> inputOptions, boolean isNumeric)",
+      "default": false,
+      "returnType": "String",
+      "role": "unsupported",
+      "route": "仅宏编辑直接调用；自由输入未接入，不能误报成所有牌名选择未接入"
+    },
+    {
+      "name": "confirm",
+      "signature": "default boolean confirm(final CardView c, final String question)",
+      "default": true,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "转发到已登记的 confirm 重载"
+    },
+    {
+      "name": "confirm",
+      "signature": "boolean confirm(CardView c, String question, boolean defaultIsYes, List<String> options)",
+      "default": false,
+      "returnType": "boolean",
+      "role": "decision",
+      "route": "确认"
+    },
+    {
+      "name": "getChoices",
+      "signature": "default <T> List<T> getChoices(final String message, final int min, final int max, final List<T> choices)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 getChoices 重载"
+    },
+    {
+      "name": "getChoices",
+      "signature": "<T> List<T> getChoices(String message, int min, int max, List<T> choices, List<T> selected, FSerializableFunction<T, String> display)",
+      "default": false,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "多选卡牌或通用选项"
+    },
+    {
+      "name": "getInteger",
+      "signature": "Integer getInteger(String message, int min, int max, boolean sortDesc)",
+      "default": false,
+      "returnType": "Integer",
+      "role": "decision",
+      "route": "有界数字"
+    },
+    {
+      "name": "getInteger",
+      "signature": "Integer getInteger(String message, int min, int max, int cutoff)",
+      "default": false,
+      "returnType": "Integer",
+      "role": "decision",
+      "route": "有界数字"
+    },
+    {
+      "name": "oneOrNone",
+      "signature": "<T> T oneOrNone(String message, List<T> choices)",
+      "default": false,
+      "returnType": "T",
+      "role": "decision",
+      "route": "可选单选"
+    },
+    {
+      "name": "one",
+      "signature": "default <T> T one(final String message, final List<T> choices)",
+      "default": true,
+      "returnType": "T",
+      "role": "decision",
+      "route": "转发到已登记的 one 重载"
+    },
+    {
+      "name": "one",
+      "signature": "<T> T one(String message, List<T> choices, FSerializableFunction<T, String> display)",
+      "default": false,
+      "returnType": "T",
+      "role": "decision",
+      "route": "单选"
+    },
+    {
+      "name": "reveal",
+      "signature": "<T> void reveal(String message, List<T> items)",
+      "default": false,
+      "returnType": "void",
+      "role": "decision",
+      "route": "确认展示"
+    },
+    {
+      "name": "many",
+      "signature": "default <T> List<T> many(final String title, final String topCaption, final int cnt, final List<T> sourceChoices, final CardView c)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 many 重载"
+    },
+    {
+      "name": "many",
+      "signature": "default <T> List<T> many(final String title, final String topCaption, final int min, final int max, final List<T> sourceChoices, final CardView c)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 many 重载"
+    },
+    {
+      "name": "many",
+      "signature": "<T> List<T> many(String title, String topCaption, int min, int max, List<T> sourceChoices, List<T> destChoices, CardView c)",
+      "default": false,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "卡牌多选"
+    },
+    {
+      "name": "order",
+      "signature": "default <T> List<T> order(String title, String top, List<T> sourceChoices, CardView c)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 order 重载"
+    },
+    {
+      "name": "order",
+      "signature": "default <T> List<T> order(String title, String top, int remainingObjectsMin, int remainingObjectsMax, List<T> sourceChoices, List<T> destChoices, CardView referenceCard, boolean sideboardingMode)",
+      "default": true,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "转发到已登记的 order 重载"
+    },
+    {
+      "name": "order",
+      "signature": "<T> OrderResult<T> order(String title, String top, int remainingObjectsMin, int remainingObjectsMax, List<T> sourceChoices, List<T> destChoices, CardView referenceCard, boolean sideboardingMode, boolean showRememberCheckbox)",
+      "default": false,
+      "returnType": "OrderResult<T>",
+      "role": "decision",
+      "route": "顺序选择；局间备牌分支未接入"
+    },
+    {
+      "name": "insertInList",
+      "signature": "<T> List<T> insertInList(String title, T newItem, List<T> oldItems)",
+      "default": false,
+      "returnType": "List<T>",
+      "role": "decision",
+      "route": "保留原顺序并插入"
+    },
+    {
+      "name": "sideboard",
+      "signature": "List<PaperCard> sideboard(CardPool sideboard, CardPool main, String message)",
+      "default": false,
+      "returnType": "List<PaperCard>",
+      "role": "unsupported",
+      "route": "原生 Forge 局间换备牌未接入"
+    },
+    {
+      "name": "chooseSingleEntityForEffect",
+      "signature": "GameEntityView chooseSingleEntityForEffect(String title, List<? extends GameEntityView> optionList, DelayedReveal delayedReveal, boolean isOptional)",
+      "default": false,
+      "returnType": "GameEntityView",
+      "role": "decision",
+      "route": "单选实体"
+    },
+    {
+      "name": "chooseEntitiesForEffect",
+      "signature": "List<GameEntityView> chooseEntitiesForEffect(String title, List<? extends GameEntityView> optionList, int min, int max, DelayedReveal delayedReveal)",
+      "default": false,
+      "returnType": "List<GameEntityView>",
+      "role": "decision",
+      "route": "多选实体"
+    },
+    {
+      "name": "manipulateCardList",
+      "signature": "List<CardView> manipulateCardList(String title, final Iterable<CardView> cards, final Iterable<CardView> manipulable, boolean toTop, boolean toBottom, boolean toAnywhere)",
+      "default": false,
+      "returnType": "List<CardView>",
+      "role": "decision",
+      "route": "区域及插入位置"
+    },
+    {
+      "name": "setCard",
+      "signature": "void setCard(CardView card)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setPlayerAvatar",
+      "signature": "void setPlayerAvatar(LobbyPlayer player, IHasIcon ihi)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "openZones",
+      "signature": "default void openZones(PlayerView controller, Collection<ZoneType> zones, Map<PlayerView, Object> players)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setHighlighted",
+      "signature": "void setHighlighted(Iterable<GameEntityView> entities, boolean b)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setSelectables",
+      "signature": "void setSelectables(Iterable<CardView> cards, int min, int max)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "clearSelectables",
+      "signature": "void clearSelectables()",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "isSelecting",
+      "signature": "boolean isSelecting()",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setWeaklySelectable",
+      "signature": "void setWeaklySelectable(final Iterable<CardView> cards)",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "clearWeaklySelectable",
+      "signature": "void clearWeaklySelectable()",
+      "default": false,
+      "returnType": "void",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "showRevealedCards",
+      "signature": "default void showRevealedCards(Iterable<CardView> cards)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "hideRevealedCards",
+      "signature": "default void hideRevealedCards()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "isGamePaused",
+      "signature": "boolean isGamePaused()",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setGamePause",
+      "signature": "void setGamePause(boolean pause)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getGameSpeed",
+      "signature": "PlaybackSpeed getGameSpeed()",
+      "default": false,
+      "returnType": "PlaybackSpeed",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setGameSpeed",
+      "signature": "void setGameSpeed(PlaybackSpeed gameSpeed)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "getDayTime",
+      "signature": "String getDayTime()",
+      "default": false,
+      "returnType": "String",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "updateDayTime",
+      "signature": "void updateDayTime(String daytime)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "awaitNextInput",
+      "signature": "void awaitNextInput()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "cancelAwaitNextInput",
+      "signature": "void cancelAwaitNextInput()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "showWaitingTimer",
+      "signature": "void showWaitingTimer(PlayerView forPlayer, String waitingForPlayerName)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "updateAutoPassPrompt",
+      "signature": "void updateAutoPassPrompt()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "setCurrentPlayer",
+      "signature": "void setCurrentPlayer(PlayerView player)",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "isUiSetToSkipPhase",
+      "signature": "boolean isUiSetToSkipPhase(PlayerView playerTurn, PhaseType phase)",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "refreshYieldUi",
+      "signature": "default void refreshYieldUi(PlayerView player)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    },
+    {
+      "name": "applyYieldUpdate",
+      "signature": "void applyYieldUpdate(YieldUpdate update)",
+      "default": false,
+      "returnType": "void",
+      "role": "unsupported",
+      "route": "原生 Forge yield 同步未接入"
+    },
+    {
+      "name": "applyDelta",
+      "signature": "default void applyDelta(DeltaPacket packet)",
+      "default": true,
+      "returnType": "void",
+      "role": "unsupported",
+      "route": "项目采用自有快照协议；原生 Forge delta 未接入"
+    },
+    {
+      "name": "isNetGame",
+      "signature": "boolean isNetGame()",
+      "default": false,
+      "returnType": "boolean",
+      "role": "state",
+      "route": "已有精确处理或默认转发"
+    },
+    {
+      "name": "setNetGame",
+      "signature": "void setNetGame()",
+      "default": false,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "默认转发／快照展示回调"
+    }
+  ],
+  "knownGaps": [
+    {
+      "id": "showInputDialog",
+      "reason": "仅宏编辑直接调用；自由输入未接入，不能误报成所有牌名选择未接入"
+    },
+    {
+      "id": "sideboard",
+      "reason": "原生 Forge 局间换备牌未接入"
+    },
+    {
+      "id": "applyDelta",
+      "reason": "项目采用自有快照协议；原生 Forge delta 未接入"
+    },
+    {
+      "id": "applyYieldUpdate",
+      "reason": "原生 Forge yield 同步未接入"
+    },
+    {
+      "id": "player-control",
+      "reason": "已适配并用真实控制咒语验证双方座位整回合及仅战斗控制；嵌套/相互控制、控制者离场与网络重连仍须专项回归。"
+    },
+    {
+      "id": "whole-boundary",
+      "reason": "IGuiBase 48 声明、基础静态辅助调用和继承源文件已加入守卫；运行反射表解析145个PlayerController声明到实现。这是结构分类，不能证明全卡池无阻断，别名/间接调用、其他模式及组合仍未全审计。"
+    }
+  ],
+  "reviewedInterfaceSha256": "3f5c63fe76b1252574d2455fe5695a4649694902302618af65b8a731758fdb70"
+}

@@ -3,3 +3,5 @@ PASS MDFC front: distinct spell preview, green payment, graveyard target returne
 PASS MDFC back: separate face preview, cancel/reopen, land play and tapped back-face battlefield
 PASS Spree: cancel, toggle, reset, all three modes, four mana, both destructions and +1/+1
 PASS Omen: Exude Toxin face, X=4, non-Dragon dies, card shuffled into library
+PASS graveyard: legal flashback projected, cast from graveyard, draw resolves, used entry removed
+PASS impulse exile: both revealed cards projected, own legal play actions, opponent excluded

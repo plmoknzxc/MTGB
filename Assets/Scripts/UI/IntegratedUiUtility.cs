@@ -14,6 +14,22 @@ public static class IntegratedUiUtility
     private static Font cachedFont;
     private static readonly Dictionary<string, Sprite> SpriteCache = new Dictionary<string, Sprite>();
 
+    // Opaque raised controls stay legible over both a window and battlefield art.
+    public static void StyleButton(Button button, Color requested)
+    {
+        var image=button.GetComponent<Image>();if(image==null)return;
+        var rect=(RectTransform)button.transform;
+        image.sprite=RoundedRect(Mathf.Max(36,rect.rect.width),Mathf.Max(28,rect.rect.height),6);
+        image.color=new Color(Mathf.Max(.16f,requested.r),Mathf.Max(.26f,requested.g),Mathf.Max(.36f,requested.b),1);
+        var outline=button.GetComponent<Outline>()??button.gameObject.AddComponent<Outline>();
+        outline.effectColor=new Color(.54f,.72f,.85f,.7f);outline.effectDistance=new Vector2(1,-1);outline.useGraphicAlpha=true;
+        button.transition=Selectable.Transition.ColorTint;
+        var colors=button.colors;colors.normalColor=Color.white;colors.highlightedColor=new Color(1.25f,1.25f,1.25f);
+        colors.selectedColor=new Color(1.15f,1.15f,1.15f);colors.pressedColor=new Color(.75f,.85f,.95f);
+        colors.disabledColor=new Color(.48f,.5f,.53f);colors.fadeDuration=.1f;button.colors=colors;
+        foreach(var label in button.GetComponentsInChildren<Text>())label.color=new Color(.97f,.98f,1);
+    }
+
     public static Font Font
     {
         get
@@ -199,6 +215,7 @@ public static class IntegratedUiUtility
         text.raycastTarget = false;
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         text.verticalOverflow = VerticalWrapMode.Overflow;
+        PreferenceText.SetSize(text, fontSize);
         return text;
     }
 

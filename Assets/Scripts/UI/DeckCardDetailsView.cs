@@ -115,8 +115,9 @@ public sealed class DeckCardDetailsView
         settingsLayout.childControlWidth = settingsLayout.childControlHeight = true;
         settingsLayout.childForceExpandWidth = true;
         settingsLayout.childForceExpandHeight = false;
-        CreateSettingsRow("语言", new[] { "简体中文", "日本語", "English" },
-            new[] { "zh-CN", "ja-JP", "en-US" }, value => GamePreferences.SetLanguage(value), languageButtons);
+        if (GamePreferences.LanguageSelectionEnabled)
+            CreateSettingsRow("语言", new[] { "简体中文", "日本語", "English" },
+                new[] { "zh-CN", "ja-JP", "en-US" }, value => GamePreferences.SetLanguage(value), languageButtons);
         CreateSettingsRow("文字大小", new[] { "小", "标准", "大" },
             new[] { "0.85", "1", "1.3" }, value => GamePreferences.SetScale(float.Parse(value, System.Globalization.CultureInfo.InvariantCulture)), sizeButtons);
         ReplayWidgets.AutoSaveToggle(settingsContent.transform);
@@ -463,6 +464,7 @@ public sealed class DeckCardDetailsView
             : GamePreferences.FeatureType(displayedFace, FeatureTypeLine(displayedFace));
         string primaryRules = card == null ? string.Empty : displayedFace == null ? GamePreferences.CardRules(card)
             : GamePreferences.FeatureRules(displayedFace);
+        primaryRules = WithAvailabilityNotice(card, primaryRules);
         SetRules(rules, primaryRules);
         bool hasRules = !string.IsNullOrWhiteSpace(primaryRules);
         rules.gameObject.SetActive(hasRules);
@@ -594,6 +596,18 @@ public sealed class DeckCardDetailsView
             case "Front face": return zh ? "正面" : ja ? "第１面" : en;
             default: return zh ? "另一部分" : ja ? "別の部分" : en;
         }
+    }
+
+    private static string WithAvailabilityNotice(CardDefinition card, string source)
+    {
+        // Match the canonical name across printings and display languages.
+        // Tug of War is not in the pinned catalog yet; keep the same notice if added.
+        if (card == null || !(card.cardName is "Shahrazad" or "Enter the Dungeon"
+            or "The Countdown Is at One" or "Tug of War")) return source;
+        string notice = GamePreferences.Language == "en-US" ? "(Temporarily unavailable)"
+            : GamePreferences.Language == "ja-JP" ? "（現在正常に使用できません）"
+            : "（暂时无法正常使用）";
+        return string.IsNullOrWhiteSpace(source) ? notice : notice + "\n" + source;
     }
 
     private void SetRules(TMPro.TextMeshProUGUI text, string source)

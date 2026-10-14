@@ -12,6 +12,21 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 
 项目仍在开发。卡牌目录可浏览不代表全部卡牌及组合都已验证，复杂交互和视觉表现持续补充；DIY 编辑接口、离线 AI 和多人 Commander 尚未完成。
 
+## 近期更新（2026-10-14）
+
+- 费用和目标选择统一推进／取消，法术力付款等待「下一步」，优先使用池中资源；产色使用紧凑图标选择。
+- 修正已有译文的规则／生成费用匹配、食品按实际状态合并、阶段条连续过渡，以及自动模式无合法攻击者时的战阶推进。
+- BO3 换备和局后留房／晚加入观战修正；结算菜单为「继续查看／前往换备」或「继续查看／返回房间」，两个按钮居中。
+- 调整移区通知、卡牌预览和选择界面；继续按实际消费者做增量验证，保留未验证范围。
+
+最近的说明：[实局修复与验证边界](Docs/LiveGameplayFixes.2026-10-14.zh-CN.md)、[机制验证进度](Docs/MechanicValidation.zh-CN.md)、[项目文件整理](Docs/WorkspaceMaintenance.2026-10-14.zh-CN.md)。
+
+## 开源与第三方许可
+
+自有 Unity／客户端代码采用 [MIT](LICENSE)，Forge 桥接及原生修改采用 GPLv3；字体、卡牌资料、卡图和 Unity 的许可保持独立。完整 Forge 对应源码通过[源码下载页](https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261014)提供。
+
+参阅[第三方声明](THIRD_PARTY_NOTICES.md)和[源码交付／发行边界](Docs/OpenSourceAndDistribution.zh-CN.md)。本地模板字体存在重分发限制，公共仓库不包含这些字体；分发客户端前需使用有授权的替代素材。
+
 ## 构建与运行
 
 需要 Unity **6000.3.22f1**、Java 17、Maven、Python 3.11+ 和 PowerShell 7。
@@ -28,7 +43,7 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 Builds/Server/MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777
 ```
 
-Windows 构建包含 Java、固定 Forge 资源和对应源码。卡图包另行放置在程序旁的 `CardImages`；生成的运行包、构建产物和本地卡图包不提交到 Git。
+Windows 构建包含 Java 和固定 Forge 资源；当前精简构建的对应源码单独提供。卡图包另行放置在程序旁的 `CardImages`；运行包、构建产物、本地卡图包、受限字体、恢复场景、凭据和个人录像不提交到 Git。首次构建重绘界面请按模板字体目录说明准备有授权的字体。
 
 ## 项目资料
 

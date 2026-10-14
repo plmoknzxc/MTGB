@@ -18,6 +18,7 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
     private DeckDefinition deck;
     private int mulligans;
     private bool openingVerified;
+    private int packetQueueCapacity;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Boot()
@@ -86,6 +87,9 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
     private void Update()
     {
         if (service == null) return;
+        var activeTransport = Unity.Netcode.NetworkManager.Singleton?.NetworkConfig?.NetworkTransport
+            as Unity.Netcode.Transports.UTP.UnityTransport;
+        if (activeTransport != null) packetQueueCapacity = activeTransport.MaxPacketQueueSize;
         double now = Time.realtimeSinceStartupAsDouble;
         if (now > deadline) { Complete(false, "Network smoke timed out."); return; }
         if (role == "server" || now < nextAction) return;
@@ -93,6 +97,8 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         if (!service.HasJoinedLobby) return;
         if (!service.IsInMatch)
         {
+            if (service.LobbyState.playDrawChooserSeat == service.LocalSeat)
+            { service.ChoosePlayDraw(true); return; }
             if (!submitted) { service.SubmitDeck(deck); submitted = true; return; }
             var own = service.LobbyState.players.Find(p => p.seat == service.LocalSeat);
             if (own?.hasDeck == true && !own.ready) { service.SetReady(true); return; }
@@ -143,7 +149,8 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
     private void Complete(bool success, string detail)
     {
         if (!string.IsNullOrWhiteSpace(report))
-            File.WriteAllText(report, JsonUtility.ToJson(new Result { success = success, games = games, detail = detail }, true));
+            File.WriteAllText(report, JsonUtility.ToJson(new Result { success = success, games = games,
+                detail = detail, packetQueueCapacity = packetQueueCapacity }, true));
         enabled = false;
         StartCoroutine(QuitAfterDelivery(success));
     }
@@ -153,5 +160,5 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         yield return new WaitForSecondsRealtime(2);
         service?.Disconnect(); Application.Quit(success ? 0 : 1);
     }
-    [Serializable] private sealed class Result { public bool success; public int games; public string detail; }
+    [Serializable] private sealed class Result { public bool success; public int games; public string detail; public int packetQueueCapacity; }
 }

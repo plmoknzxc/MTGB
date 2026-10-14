@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/MultiEmblemConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "8801513b6372170d2964c2fcc65dec22c3fce25df4ea1ef4ca489f8629b7a818"
+  },
+  "runtimeHash": "b3c1f7604b168fa54075d81674a745ba185d4581a9742ed46e06408bc55f8bed",
+  "sources": [
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.EmblemText.cs",
+      "sha256": "994244ee3b3dea999026e010f6d1337bddd9cb1b8af7ad4ef2c9ce7ee32a1cdf"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "857d5caf828365feff048cf6568a7ab6992dc96ff270e0fa3a713cb6849935be"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.TokenArt.cs",
+      "sha256": "f32dabcc4cd16a7f9bca3176da9dc384f40f1f2cf1843451a71090c91aa5f980"
+    },
+    {
+      "path": "Assets/Scripts/UI/DeckRelatedTokenArt.cs",
+      "sha256": "5397dc3e15468acda39c6182fcf194be978afb3655f92aa8bc1e2d4c8c26591c"
+    },
+    {
+      "path": "Assets/Resources/RelatedTokenArt.json",
+      "sha256": "83287cb6bb17b66fb8fe1bd56640a62791bd450e2580a16049b17aeab198ea90"
+    },
+    {
+      "path": "Tools/ForgeBridge/Build-RelatedTokenIndex.py",
+      "sha256": "17914c21a712de046149d846c34990f0203548628d840908172e38a411473e1b"
+    },
+    {
+      "path": "Tools/ForgeBridge/Import-RelatedTokenImages.py",
+      "sha256": "c04a0172451ab5f5fe47beba345044839bc93777f6a4ae587f6208bd5fa358fb"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/test_related_token_emblems.py",
+      "sha256": "b2b0072a158cf3aefcb477c57dda9a5d1d87525e84ba79ca404b03e5f7fcb569"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/multi-emblems-1006/native/double-emblems/1791269761273153200/result.json",
+      "sha256": "c439cb130f5acf6d74fcd7b86294cf494bddc5d70f4bbf0d1c27b31bb7bbd861"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/native/stolen-source-emblem/1791269867634504800/result.json",
+      "sha256": "1f3488980288cc8a16a0446032ec6589027e38848cee80271ab83735d8bf8226"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/native/mixed-source-left/1791269781944289800/result.json",
+      "sha256": "4509f5325e2f8e1083d059d191da2c68bb150d22616cd2a109a3d9643e7b558e"
+    }
+  ],
+  "driverArtifacts": [
+    {
+      "path": ".tools/multi-emblems-1006/attempt1/driver.py",
+      "sha256": "0df68fb82f0738f21a9a722669664833c90be40849acda0d806de640e84fa204"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-MultiEmblems.py",
+      "sha256": "471e93e23b4be19d080f8e710cef8b6aac3c2420719b627e777f7953ebd1ee69"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/multi-emblems-1006/ui/20261006T0718411318015Z/result.txt",
+      "sha256": "a36bd364240642aca7c25c317e3bd852fe37270c4fa9cb721c336028d94329f6"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/ui/20261006T0718411318015Z/input-hashes.tsv",
+      "sha256": "c7566845101da2e8a416929cf6fdcbff535130ddb82d1d3331bc977a1f265a3d"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/ui/20261006T0718411318015Z/producer-hashes.tsv",
+      "sha256": "22499bce833373a304b3e6ae030d4d7d370c98ed3ab04630194029310633c538"
+    }
+  ],
+  "art": [
+    {
+      "path": ".tools/multi-emblems-1006/art-source/akr-19-image-result.json",
+      "sha256": "5ba216f5c3e1ad2344a0dbb1517a7693f6cbc36ef4bbcc4f1bb75f99926d4c60"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/akr-19.json",
+      "sha256": "27fdd6f0e7f0dac19d4a42f2d4295c016be4f8ba09bfdc58d0961d2920515fa0"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/index-diff.json",
+      "sha256": "343a55144e4d43dadaa35aada78578c98800b712a9575370bb88595e6eedd22a"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/pio-14-image-result.json",
+      "sha256": "f56b145defc1e72ee6b3cac59f0b9101e9965a1d1b862f1689d126140d2621dd"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/pio-14.json",
+      "sha256": "9a6855398ed87e52334b08a573e6c4c1e7a24643252cb4efe8407221da61a5d8"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/RelatedTokenArt.before.json",
+      "sha256": "50d6f27f3eb7d65606af8c6b27b06c0528fc3078f45eb805e51477616d0c33cd"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/RelatedTokenArt.candidate.json",
+      "sha256": "83287cb6bb17b66fb8fe1bd56640a62791bd450e2580a16049b17aeab198ea90"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/tbfz-12.json",
+      "sha256": "1eec26b8f6a28831202a73f333ad369d56a9940686890b82c5c138a28efa791e"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/tool-regression.txt",
+      "sha256": "cabd3eb42fdd7a2a72c072fe45069487df273a3047b0a73b2ee760e965e2b990"
+    },
+    {
+      "path": ".tools/multi-emblems-1006/art-source/trials-emblem.json",
+      "sha256": "565a022054d2fcb8f85ecbbd5500f95321bb649dfb6c665a6eeaebf53b6393b4"
+    },
+    {
+      "path": "CardImages/TBFZ/12.jpg",
+      "sha256": "d6ab4ad4bbf0617f69f07f24594ac5cb14b918091691a9fa0bd2fd33358f3131"
+    },
+    {
+      "path": "CardImages/TAKH/25.jpg",
+      "sha256": "4c8fab76e2ebfcf087ac873e23f238c5869664dc793a4ac7813d81487cfe120f"
+    }
+  ],
+  "remaining": "其他复杂徽记/动态配方、延迟标记来源或控制变化及未采样跨阶段/条件组合；不重复同/异类真实两徽记、来源被夺或离场、下一回合同ID悬停及既有折叠/展开/分页首验; R47 other resource/translation gaps, R23 baseline, R36 nested control/outcome combinations; automatic total fingerprint status unchanged."
+}

@@ -11,7 +11,7 @@ public static class MTGBValidationRunner
     private static int stage;
     private static double deadline;
     public static void ScheduleForAutomation() => Begin(false);
-    [MenuItem("MTGB/验证/项目整体")]
+    [MenuItem("MTGB/验证/基础运行检查")]
     public static void ValidateFromMenu() => Begin(false);
     [CliCommand("mtgb_validate_project", "Validate Forge catalog, persistent session and process isolation")]
     public static void ValidateFromCli() => Begin(false);

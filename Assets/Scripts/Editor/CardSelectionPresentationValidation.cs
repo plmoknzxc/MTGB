@@ -82,11 +82,25 @@ public static class CardSelectionPresentationValidation
             ScreenCapture.CaptureScreenshot(Output+"/room-"+state+".png");yield return new WaitForEndOfFrame();
             if(state=="locked") {
                 var card=roomView.players.SelectMany(p=>p.battlefield).First(c=>c.room);
-                typeof(ForgeBattlefieldController).GetMethod("InspectIntegrated",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(ui,new object[]{card});
-                yield return new WaitForSecondsRealtime(.2f);
-                var inspect=GameObject.Find("InspectPanel");var name=inspect.transform.Find("Name").GetComponent<Text>();
-                Check(name.resizeTextForBestFit&&name.verticalOverflow==VerticalWrapMode.Truncate,"Long room name overflows inspector");
-                ScreenCapture.CaptureScreenshot(Output+"/room-inspect.png");yield return new WaitForEndOfFrame();inspect.SetActive(false);
+                string originalLanguage=GamePreferences.Language;
+                try {
+                    foreach(string language in new[]{"zh-CN","en-US","ja-JP"}) {
+                        bool changingLanguage=GamePreferences.Language!=language;int revision=GamePreferences.Revision;
+                        GamePreferences.SetLanguage(language);
+                        float deadline=Time.realtimeSinceStartup+10;
+                        while(changingLanguage&&GamePreferences.Revision==revision&&Time.realtimeSinceStartup<deadline)yield return null;
+                        Check(!changingLanguage||GamePreferences.Revision>revision,"Language resources did not finish loading: "+language);
+                        typeof(ForgeBattlefieldController).GetMethod("InspectIntegrated",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(ui,new object[]{card});
+                        yield return new WaitForSecondsRealtime(.2f);
+                        var inspect=GameObject.Find("InspectPanel");var name=inspect.transform.Find("Name").GetComponent<Text>();
+                        Check(!name.resizeTextForBestFit&&name.preferredHeight<=name.rectTransform.rect.height,"Long room name overflows inspector: "+language);
+                        int fontSize=name.fontSize;yield return null;
+                        Check(name.fontSize==fontSize&&name.preferredHeight<=name.rectTransform.rect.height,"Room name font or bounds change after localization update: "+language);
+                        var nameRect=name.rectTransform;var costRect=(RectTransform)inspect.transform.Find("CostRow");
+                        Check(costRect.anchoredPosition.y<=nameRect.anchoredPosition.y-nameRect.rect.height,"Room title overlaps its mana cost: "+language);
+                        ScreenCapture.CaptureScreenshot(Output+"/room-inspect-"+language+".png");yield return new WaitForEndOfFrame();inspect.SetActive(false);
+                    }
+                } finally {GamePreferences.SetLanguage(originalLanguage);}
             }
         }
         var statuses=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText("Tools/Validation/Reports/AdvancedInteractions/statuses-field.json"));

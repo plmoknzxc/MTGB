@@ -2,7 +2,8 @@
 import json, os, queue, subprocess, tempfile, threading, sys
 from pathlib import Path
 root=Path(__file__).resolve().parents[2];runtime=root/'ForgeRuntime';cfg=json.loads((runtime/'runtime.json').read_text(encoding='utf-8-sig'))
-out=root/'Tools/Validation/Reports/AdvancedInteractions';out.mkdir(parents=True,exist_ok=True)
+out=Path(os.environ.get('MTGB_ADVANCED_OUTPUT',str(root/'Tools/Validation/Reports/AdvancedInteractions')));out.mkdir(parents=True,exist_ok=True)
+x_value=int(os.environ.get('MTGB_X_VALUE','2'))
 classes=root/'.tools/advanced-interactions/classes';classes.mkdir(parents=True,exist_ok=True)
 subprocess.run(['javac','-encoding','UTF-8','-cp',str(runtime/'classes')+';'+str(runtime/'lib/*'),'-d',str(classes),str(root/'Tools/ForgeBridge/tests/AdvancedInteractionFixture.java')],check=True)
 deck={'cards':[{'setCode':'10E','collectorNumber':'376','count':60}],'sideboard':[]}
@@ -18,7 +19,7 @@ def run(case):
   def snap(m,label):
    v=dict(m['views'][m['request']['seat']-1]);v.update(request=m['request'],awaitingInput=True);(out/(case+'-'+label+'.json')).write_text(json.dumps(v),encoding='utf-8')
   try:
-   casts=0;seen_damage=False;seen_copies=False;seen_ninja=False;seen_ninja_stack=False;reset=False;blocked=set();removed=False;declared=False;evidence_step=0;x_step=0
+   casts=0;seen_damage=False;seen_copies=False;seen_ninja=False;seen_ninja_stack=False;reset=False;blocked=set();removed=False;declared=False;evidence_step=0;x_step=0;seen_x_stack=False
    for step in range(260):
     m=req();r=m['request'];v=m['views'][r['seat']-1];opts=r['options'];ids=[o['id'] for o in opts];kind=r['kind'];pick='ok'
     one,two=m['views'][0]['players'];field=one['battlefield'];stack=v['stackItems']
@@ -49,10 +50,19 @@ def run(case):
       if r['seat']==1 and v['phase']=='MAIN1' and casts==0:
        assert room['leftRoomUnlocked'] and not room['rightRoomUnlocked'];snap(m,'locked');pick='card:'+str(room['id']);casts=1
      if case=='x':
+      if stack and stack[0]['source']['name']=='Walking Ballista':
+       assert stack[0]['hasXValue'] and stack[0]['xValue']==x_value,stack[0]
+       assert stack[0]['source']['manaCost']==('{'+str(x_value)+'}')*2,stack[0]['source']
+       seen_x_stack=True
+       snap(m,'stack')
       ballista=next((c for c in field if c['name']=='Walking Ballista'),None)
       if ballista:
-       assert ballista['power']==2 and ballista['toughness']==2
-       assert sum(c['tapped'] for c in field if c['land'])==4;snap(m,'resolved');return 'PASS X: numeric choice X=2, four mana paid, Walking Ballista enters as 2/2'
+       assert seen_x_stack and ballista['power']==x_value and ballista['toughness']==x_value
+       assert any(c['kind']=='P1P1' and c['count']==x_value for c in ballista['counters'])
+       assert sum(c['tapped'] for c in field if c['land'])==2*x_value;snap(m,'resolved');return f'PASS X: double X={x_value}, two numeric stack cost symbols, {2*x_value} mana paid, Walking Ballista enters with {x_value} counters as {x_value}/{x_value}'
+      if x_value==0 and seen_x_stack and not stack:
+       assert 'Walking Ballista' in one['graveyard']
+       assert not any(c['tapped'] for c in field if c['land']);snap(m,'resolved');return 'PASS XX: X=0, {0}{0} stack cost, zero mana paid, 0/0 dies by state-based actions'
       if r['seat']==1 and v['phase']=='MAIN1' and casts==0:
        pick='card:'+str(next(c for c in one['hand'] if c['name']=='Walking Ballista')['id']);casts=1
      if case=='evidence':
@@ -109,9 +119,11 @@ def run(case):
       pick='cancel';reset=True;casts=0
       assert not any(c['tapped'] for c in field if c['land'])
      else:
-      assert r['selectedValue']==[0,5,0,1,2][x_step]
-      if x_step==4:snap(m,'number')
-      pick=['number-plus-five','number-minus-five','number-plus','number-plus','confirm-number'][x_step];x_step+=1
+      values=[0,5,0]+list(range(1,x_value+1)) if x_value>0 else [0]
+      actions=['number-plus-five','number-minus-five']+['number-plus']*x_value+['confirm-number'] if x_value>0 else ['confirm-number']
+      assert r['selectedValue']==values[x_step]
+      if x_step==len(actions)-1:snap(m,'number')
+      pick=actions[x_step];x_step+=1
     elif kind=='AssignAmount':
      seen_damage=True;amounts=r['allocations'];snap(m,'assign')
      assert len(amounts)==3
@@ -121,7 +133,10 @@ def run(case):
       if amounts[0]['amount']<2 or amounts[1]['amount']<2:assert 'amount-add:2' not in ids
     elif kind.startswith('InputPayMana'):
      desired='U' if case=='ninjutsu' else 'W' if case=='rooms' else 'R';pick='mana:'+desired
-     if pick not in ids:
+     if case=='x':
+      pick=next((i for i in ids if i.startswith('mana:')),None)
+      if pick is None:pick='card:'+str(next(c for c in field if c['land'] and not c['tapped'] and 'card:'+str(c['id']) in ids)['id'])
+     elif pick not in ids:
       card=next(c for c in field if c['name']==('Island' if desired=='U' else 'Plains' if desired=='W' else 'Mountain') and 'card:'+str(c['id']) in ids);pick='card:'+str(card['id'])
     elif kind=='InputSelectTargets':
      if case=='graveyards':

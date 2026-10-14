@@ -1,0 +1,2 @@
+# Preserve the exact bytes of the published, hashed native source snapshot.
+/ThirdParty/Forge/native-patches/** -text

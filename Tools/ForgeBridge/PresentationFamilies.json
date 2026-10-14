@@ -1,0 +1,3877 @@
+{
+  "schema": 1,
+  "reference": "Docs/ArenaReferenceAudit-2026-10-03.zh-CN.md",
+  "uiJobs": [
+    {
+      "id": "choices",
+      "type": "AbilityChoicePresentationValidation",
+      "result": ".tools/ability-choices/result.txt",
+      "engineJobs": [],
+      "assertions": "Synthetic fixtures: source art, direct loyalty/mana choices, pointer raycast, option ID, duplicate guard, optional cancellation, mandatory choice, disabled viewer and long-text scrolling."
+    },
+    {
+      "id": "selection",
+      "type": "CardSelectionPresentationValidation",
+      "result": ".tools/card-selection-presentation/result.txt",
+      "engineJobs": [
+        "advanced",
+        "selection"
+      ],
+      "assertions": "Real request replay: evidence tally/gate, stable picker/card instances, surveil reset controls, ordering/fetch, X confirmation, mixed graveyard ownership, room doors and current counters."
+    },
+    {
+      "id": "advanced",
+      "type": "AdvancedInteractionPresentationValidation",
+      "result": ".tools/advanced-interactions/presentation-result.txt",
+      "engineJobs": [
+        "advanced",
+        "stack"
+      ],
+      "assertions": "Real request replay: allocation and blocker click mapping, trigger ordering/reset, stack target confirmation, battle transformation and final creature stats. Storm screenshot alone is not a copy-rendering assertion."
+    },
+    {
+      "id": "stack",
+      "type": "StackInteractionValidation",
+      "result": "Tools/Validation/Reports/StackInteractions/ui-result.txt",
+      "engineJobs": [
+        "stack"
+      ],
+      "assertions": "Real snapshots plus synthetic stress: scroll individual stack effects, stack-instance hit testing, stale/duplicate/empty guards, explicit order confirmation, twelve entries and long effect text."
+    },
+    {
+      "id": "target",
+      "type": "TargetPresentationValidation",
+      "result": "Tools/Validation/Reports/TargetPresentation/result.txt",
+      "engineJobs": [],
+      "assertions": "Synthetic fixture: rendered curved arrow/endpoint, source preview, legal creature click, invalid/stale/duplicate guards and cancel cleanup."
+    },
+    {
+      "id": "prepare",
+      "type": "PreparePresentationValidation",
+      "result": ".tools/prepare-ui/result.txt",
+      "engineJobs": [
+        "prepare",
+        "advanced"
+      ],
+      "assertions": "Real JSON replay: distinct prepared spell ID/name/text/art in playable shelf, click, payment and stack; source remains; spent preparation removed; X +5 mapping."
+    },
+    {
+      "id": "empower",
+      "type": "EmpowerPresentationValidation",
+      "result": ".tools/empower-ui/result.txt",
+      "engineJobs": [
+        "empower"
+      ],
+      "assertions": "Real snapshots: local Jace art, portrait aspect, loyalty badge, multiple-token selector, ability click submission, zero-loyalty removal. Surveil screenshot does not assert destination clicks."
+    },
+    {
+      "id": "fra",
+      "type": "FraMechanicsPresentationValidation",
+      "result": ".tools/fra-mechanics-ui/result.txt",
+      "engineJobs": [
+        "fra"
+      ],
+      "assertions": "Eight real snapshot replays: token art, battlefield object presence, no wrapping count labels. Other snapshot screenshots need visual review."
+    },
+    {
+      "id": "tap-payment",
+      "type": "TapPaymentPresentationValidation",
+      "result": ".tools/tap-payment-ui/result.txt",
+      "engineJobs": [
+        "tap-payment"
+      ],
+      "assertions": "Real request replay: current source/cost/count, selection reset and stable card instances, pointer option ID, stale/duplicate rejection, waiting viewer disabled; Chinese/English/Japanese titles."
+    },
+    {
+      "id": "common",
+      "type": "CommonMechanicPresentationValidation",
+      "result": ".tools/common-mechanics-ui/result.txt",
+      "engineJobs": [
+        "common"
+      ],
+      "assertions": "Real requests in Chinese/English/Japanese: qualification count and earned color; persistent marker; three legal local dungeon faces; full room map and exact branch click; duplicate/stale/viewer guards; Ring level versus temptation. Full rules translation, marker-hover interactions and animation equivalence remain unverified."
+    },
+    {
+      "id": "generic-choices",
+      "type": "GenericChoicePresentationValidation",
+      "result": ".tools/generic-choices-ui/result.txt",
+      "engineJobs": [
+        "generic-choices"
+      ],
+      "assertions": "Real color/villain requests replayed in three languages: selected state, min/max count, confirm gate, raycast, correct index, duplicate/stale/viewer guards, fixed font; synthetic many/long options scroll."
+    },
+    {
+      "id": "starting-hands",
+      "type": "StartingHandPresentationValidation",
+      "result": ".tools/starting-hand-ui/result.txt",
+      "engineJobs": [
+        "starting-hands",
+        "callback-contracts",
+        "mulligan-rounds"
+      ],
+      "assertions": "Actual requests in three languages: next/accept semantics, raycast, IDs, stale/duplicate/viewer guards; actual adapter zero count and initial display selections; fixed font. Rules and callback outputs remain separate. Actual seat-2 London requests in three languages: selection tally 0/1/2, legal confirmation gate, card and confirmation raycasts, original option indexes and localized fixed-font prompt. Isolated request replay, not full network."
+    },
+    {
+      "id": "player-control",
+      "type": "PlayerControlPresentationValidation",
+      "engineJobs": [
+        "player-control"
+      ],
+      "result": ".tools/player-control-ui/result.txt",
+      "assertions": "Actual turn-control/both seats/combat requests in three languages: controlled hand and local viewing toggle, different mana-owner values, card/payment/self-target/attack raycasts and source indexes, independent stale/duplicate/viewer denial, restored hand hiding, spectator projection, controlled-main AUTO policy. Isolated request replay; no full network/animation claim."
+    },
+    {
+      "id": "card-names",
+      "type": "CardNamePresentationValidation",
+      "result": ".tools/card-names-ui/result.txt",
+      "engineJobs": [
+        "card-names"
+      ],
+      "assertions": "Real requests in zh-CN/en-US/ja-JP: distinct bounded rows, page navigation, localized/English filtering, empty filter gate, local art or missing indicator, native original option indexes, explicit confirmation, mandatory dismissal, duplicate/stale/viewer guards and fixed fonts. Optional cancellation separately synthetic. Timing only on sampled editor/resolution."
+    },
+    {
+      "id": "digital",
+      "type": "DigitalMechanicPresentationValidation",
+      "result": ".tools/digital-mechanics-ui/result.txt",
+      "engineJobs": [
+        "digital",
+        "card-names"
+      ],
+      "assertions": "Real request replay in zh-CN/en-US/ja-JP: exact Conjure name subset/index/localized label and explicit confirmation; Draft three original previews/local art or missing fallback, select/confirm native indexes; duplicate/stale/viewer guards; native perpetual current stats/color before/after expiry/recast; completed picker cleanup and spectator hand hiding. Four real prohibited-response snapshots check AUTO/ON/OFF policy and rendered mode-button raycast cycle. Network/timer delivery and complete translation/art coverage remain outside this replay. New selected native request clears stale submitting status; mode button center remains above hand cards and below Conjure/Draft modal blockers."
+    },
+    {
+      "id": "piles",
+      "type": "PilePresentationValidation",
+      "result": ".tools/piles-ui/result.txt",
+      "engineJobs": [
+        "piles"
+      ],
+      "assertions": "Real request replay in zh-CN/en-US/ja-JP: two distinct columns/counts, empty/all/one-hidden/both-hidden/mixed-owner cases and both operator seats; center raycast, local provisional selection and exact native index confirmation, same-request stability, duplicate/stale/viewer guards, fixed fonts, exact localized names, local art or missing indicator and completed cleanup. Real Portal native search pool/select/confirm replays remain restricted to chosen pile; twenty-card scrolling is a separate synthetic adapter case."
+    },
+    {
+      "id": "random",
+      "type": "RandomPresentationValidation",
+      "result": ".tools/random-mechanics-ui/result.txt",
+      "engineJobs": [
+        "random"
+      ],
+      "assertions": "Real native request replay in three languages: binary and optional dice/coin choice pointer indexes, mandatory choices, native reroll selection/confirmation, stale/duplicate/viewer guards. Native results and bounded nonblocking history, expiry/deduplication. Recipient and spectator privacy use two separate adapter contract fixtures. Actual network timing, all branches and all card prompts remain unverified."
+    },
+    {
+      "id": "random-boundaries",
+      "type": "RandomBoundaryPresentationValidation",
+      "result": ".tools/random-boundaries-ui/result.txt",
+      "engineJobs": [
+        "random-boundaries"
+      ],
+      "assertions": "Real native request replay in zh-CN/en-US/ja-JP: localized in-resolution payment cancellation, real pointer/index, independently actionable stale/duplicate/viewer guards, restored next reroll request and explicit keep confirmation. Native Fly EOT creature/flying/body removal, Whacker retained/new ETB stats, Xenosquirrels death and no phantom choices. Real effects separately proved; actual casting preview/network and all animation timing not claimed."
+    },
+    {
+      "id": "mana-results",
+      "type": "ManaResultPresentationValidation",
+      "result": ".tools/mana-result-ui/result.txt",
+      "engineJobs": [
+        "random",
+        "player-control",
+        "combat-allocation",
+        "mana-pool"
+      ],
+      "assertions": "Native notification IDs once/in-order across repeated/rolling snapshots; deterministic procedural coin flip/die tumble, no random text banner, actual native outcome, unscaled first-visible-frame lifetime/nonblocking/expiry/reset. Native manual blue pool click exact offered index; stale/duplicate/viewer guards, compact borderless counts/controlled owner. Display fixtures cover six literal color IDs/unoffered/empty, increment/decrement, private error interruption/resume (remapped IDs), zh-CN/en-US/ja-JP. No live-network/all-card-effect/distribution claim."
+    },
+    {
+      "id": "payment-dock",
+      "type": "PaymentDockPresentationValidation",
+      "result": ".tools/resolution-ui-1005/payment/ui-result.txt",
+      "engineJobs": [],
+      "assertions": "Native shockland and Mana Leak tax: compact horizontal yes/no, half-width cancel/auto replaces advance while phase remains visible; three languages, true raycasts, exact IDs and guards. Current audit: Docs/ResolutionChoiceAudit-2026-10-05.zh-CN.md; historical payment audit retained."
+    },
+    {
+      "id": "library-costs",
+      "type": "LibraryCostPresentationValidation",
+      "result": ".tools/library-costs-ui/result.txt",
+      "engineJobs": [
+        "library-costs"
+      ],
+      "assertions": "Real native upkeep requests in three languages: player/card payment cancellation and confirmation, native source/count/legality, stable picker/tiles, actual pointer and native indices, independent stale/duplicate/nonacting guards, opponent-owned ordering, localized fixed instructions at user scale, native age-two survivor/sacrificed removal/no phantom choices. Not actual network or complete animation."
+    },
+    {
+      "id": "replacements",
+      "type": "ReplacementPresentationValidation",
+      "result": ".tools/replacements-ui/result.txt",
+      "engineJobs": [
+        "replacements"
+      ],
+      "assertions": "Actual native replacement requests: affected-seat/source/effect IDs, first-only/full confirmation, reset and saved order, localized titles/names and exact unchanged paragraphs, fixed font/scrollable complete body, stable tiles/panel, pointer index and independent stale/duplicate/nonacting guards, counter/token/collapsed count/exile end states in zh-CN/en-US/ja-JP. Not network/animation timing or all replacement cards."
+    },
+    {
+      "id": "damage-draw",
+      "type": "DamageDrawPresentationValidation",
+      "result": ".tools/damage-draw-ui/result.txt",
+      "engineJobs": [
+        "damage-draw"
+      ],
+      "assertions": "Native request replay in zh-CN/en-US/ja-JP: optional replacement source/effect/affected player, exact accept/decline and exclusive presenter; unchanged printed paragraph/Dredge reminder, fixed fonts and complete body height and wheel/end checks when overflowing; long-body scroll proof belongs to replacements suite; replacement order IDs, source picker without negative heading cards, pointer/index/confirm, stable instances; private looked-at selection absent from other-seat UI; life/damage/token final displays. Replay separate from native rules, not network or all-card text/animation."
+    },
+    {
+      "id": "combat-allocation",
+      "type": "CombatAllocationPresentationValidation",
+      "result": ".tools/combat-allocation-ui/result.txt",
+      "engineJobs": [
+        "combat-allocation"
+      ],
+      "assertions": "Real native request replay in zh-CN/en-US/ja-JP at 1.3 scale: exact source/recipient identities and native lethal values, plus/minus/reset/confirm gates and actual pointer option mapping, stable draft panels/recipient instances and fixed fonts with label height checks; first-strike/normal context transition, wheel and last of eleven rows, menace rejection fresh request and private localized error, blocker retry/confirmation, independent stale/duplicate/nonacting guards; final life values, deaths/aura returned to hand, collapsed survivor counts and actual expansion to every exact ID. Not full live-network gameplay, stat badge values, all combat constraints or all texts/art."
+    },
+    {
+      "id": "opponent-hand",
+      "type": "OpponentHandPresentationValidation",
+      "result": ".tools/direct-hand-review-1004/result.txt",
+      "engineJobs": [
+        "thoughtseize",
+        "selection"
+      ],
+      "assertions": "Actual Thoughtseize/Mind Rot hand requests in three locales: eligible native hand IDs glow, direct raycast selection, privacy/stale/duplicate/viewer guards; both fan ends lift vertically and straighten; explicitly synthetic dense hands use window fallback for both sides."
+    },
+    {
+      "id": "mode-cards",
+      "type": "ModeCardPresentationValidation",
+      "result": ".tools/mode-polish-review-1004/result.txt",
+      "engineJobs": [
+        "mode-choices"
+      ],
+      "assertions": "Three locales: real separate mode/Spree/optional-cost card art and effects; original ordinal survives target filtering; disabled/minimum/selected gates, raycast identity/stale/duplicate/viewer guards; fixed font and bounded scroll."
+    },
+    {
+      "id": "stack-choices",
+      "type": "StackChoicePresentationValidation",
+      "result": ".tools/stack-choice-review-1004/result.txt",
+      "engineJobs": [
+        "mode-choices"
+      ],
+      "assertions": "Real public stack snapshots in three locales: chosen modal rules and paid Kicker/Evoke/Entwine/Offspring/Replicate; normal casting has no false marker; local art, fixed font, bounded scroll; stack hover shares chosen face; stable settings-side View/Return and end-review Leave slot; contrast and raycast checks. End-review is a UI adapter; no full match/network or all-card claim."
+    },
+    {
+      "id": "cast-choice-families",
+      "type": "CastChoiceFamilyPresentationValidation",
+      "result": ".tools/cast-choice-families-ui-1004/result.txt",
+      "engineJobs": [
+        "cast-choice-families"
+      ],
+      "assertions": "25 actual native stack snapshots x three locales: paid/unpaid choices and counts, repeated modes, X=0/3, no added bullet/leading blank, localized overloaded effect, fixed font/full content height, chosen hover/art. Alias/threshold naming adapters separately marked. Not all casting mechanisms, combinations or network."
+    },
+    {
+      "id": "stack-list",
+      "type": "StackListPresentationValidation",
+      "result": ".tools/stack-list-ui-1004/result.txt",
+      "engineJobs": [
+        "stack",
+        "mode-choices"
+      ],
+      "assertions": "Three-language native snapshot replay + explicit crowded-layout adapters: mana sprite body/heading/ability, icon-only threshold/animated collapse/restore, read-only horizontal browse and endpoint/scroll retention, exact legal stack target identity and guards/cancel/reset/confirm, view battlefield lifecycle. No new engine or all-pool effect PASS."
+    },
+    {
+      "id": "stack-fan-font",
+      "type": "StackFanFontPresentationValidation",
+      "result": ".tools/stack-fan-review-1004/ui/result.txt",
+      "engineJobs": [
+        "stack",
+        "mode-choices"
+      ],
+      "assertions": "Archived requests: first construction and each sampled frame across preference scans and View/Return, three languages x three scales x fifteen choice consumers, immediate legacy/TMP factory fonts and symbols. Compact 1/3/7/12 full-size stack fan, native order and unclipped corners; extended counts are display adapters."
+    },
+    {
+      "id": "choice-art-aspect",
+      "type": "ChoiceArtAspectValidation",
+      "result": ".tools/choice-art-top-review-1004/result.txt",
+      "engineJobs": [
+        "combat-allocation",
+        "advanced",
+        "casting",
+        "stack",
+        "prepare",
+        "mode-choices"
+      ],
+      "assertions": "Crop source pixel aspect equals effective UI aspect; sprite subrect and inherited scale/rotation, missing art reset, source bounds, top-aligned illustrations and centered headers; native assignment/casting/prepared/ability/modal/chosen header consumers in three locales, exact recipient raycasts and hidden/returned art. Archived UI replay only, no new effects."
+    },
+    {
+      "id": "resolution-library-top",
+      "type": "ResolutionDockPresentationValidation",
+      "result": ".tools/resolution-dock-1005/ui-result.txt",
+      "engineJobs": [],
+      "assertions": "Current delta: native optional hand draft/confirm/cancel in dock and large list, exact raycasts/IDs and stale/duplicate/nonacting guards; no optional direct prompt or empty generic panel; X/energy dock clear of phase/AUTO, compact yes/no and payment; readonly known library without physical top tiles; Thoughtseize hand memory persists and clears after native Brainstorm. Three locales, native rule proof separate; no live-network/full-pool claim. Historical job ID retained."
+    },
+    {
+      "id": "known-hand-browser",
+      "type": "KnownHandBrowserPresentationValidation",
+      "result": ".tools/resolution-dock-1005/hand-browser-result.txt",
+      "engineJobs": [],
+      "assertions": "Focused native Thoughtseize/Brainstorm snapshots in three locales: readonly known/unknown/own hand browsing, knowledge invalidation while browser remains open, no old backs in fully known hand. Exact raycasts; no new full-engine or live-network claim."
+    },
+    {
+      "id": "temporary-copies",
+      "type": "TemporaryCopyPresentationValidation",
+      "result": ".tools/temporary-copy-1006/ui/result.txt",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "Real native copy/expiry/counter snapshots: silver flowing edge, localized blue scheduled instruction, original-state distinction and marker folding ray clicks in both seats/three locales. Distinct conditions, emblem folding and paging are presentation adapters."
+    },
+    {
+      "id": "characteristic-changes",
+      "type": "CharacteristicChangePresentationValidation",
+      "result": ".tools/characteristic-colors-1006/ui/result.txt",
+      "engineJobs": [
+        "characteristics"
+      ],
+      "assertions": "Native modifier snapshot replay in three locales and both seats: blue name/color/cost/trait/keyword/base-P/T, gray lost trait, normal boost red/green; original-state ray and same-ID restoration; Ward parameter and public face-down adapters. No extra casting or network claim."
+    },
+    {
+      "id": "mana-variants",
+      "type": "ManaVariantPresentationValidation",
+      "result": ".tools/mana-variants-1006/ui/result.txt",
+      "engineJobs": [
+        "mana-variants"
+      ],
+      "assertions": "PASS: zh-CN/en-US/ja-JP native snow/hybrid/two-brid snapshots, native payers 1/2; original printed cost sprites visible; actual hand cast, Auto/Cancel and offered source callbacks by ray; stale/duplicate/viewer/inputPending guards; native wrong-color retry and cancel recovery; insufficient spell never submits; dock/phase bounds and fixed fonts; no rule effects or live transport inferred from replay."
+    },
+    {
+      "id": "phyrexian-payments",
+      "type": "PhyrexianPaymentPresentationValidation",
+      "result": ".tools/mana-variants-1006/phyrexian-ui/result.txt",
+      "engineJobs": [
+        "mana-variants"
+      ],
+      "assertions": "PASS: actual native Phyrexian and K'rrik life-payment snapshots; zh-CN/en-US/ja-JP, native payers 1/2; payer life-total ray submits exact player ID once; stale, viewer, inputPending, other-player and unavailable-life guards; reserved life unchanged in HUD until real native commit; second reservation, cancel/recast and native resolution/recovery; sprite costs without braces. Rules and live networking are separate."
+    },
+    {
+      "id": "phyrexian-modifiers",
+      "type": "PhyrexianModifierPresentationValidation",
+      "result": ".tools/phyrexian-modifiers-1006/ui/result.txt",
+      "engineJobs": [
+        "phyrexian-modifiers"
+      ],
+      "assertions": "PASS: native Trinisphere/life/mixed/reduction/cancel snapshots; zh-CN/en-US/ja-JP, payers 1/2; exact life and land IDs via real rays, reserved life stays 20 then native commit is 16/18; adjusted remaining mana rendered as visible sprites with fixed-size text inside dock; cancel/recast release and resolved stack empty. Native rules and live networking are separate."
+    },
+    {
+      "id": "snow-pool",
+      "type": "SnowPoolPresentationValidation",
+      "result": ".tools/snow-pool-1006/ui/result.txt",
+      "engineJobs": [
+        "snow-pool"
+      ],
+      "assertions": "Native twelve-category snapshots, four scenarios, three locales and both seat viewpoints; snowflake vector glyphs retain color, total-minus-snow ordinary counts, native option IDs via rays, stale/duplicate/non-actor/pending guards, empty and separately labelled large-count layout. No live-network assertion."
+    },
+    {
+      "id": "cost-interactions",
+      "type": "CostInteractionPresentationValidation",
+      "result": ".tools/cost-interactions-1006/ui/result.txt",
+      "engineJobs": [
+        "cost-interactions",
+        "cost-optional-combinations"
+      ],
+      "assertions": "Current native replay in three languages: payment costs rendered as visible mana sprites with fixed font and no overflow; cancel/early-life/nonmana tap selection raycast exact native options; duplicate/stale/viewer rejected, dock released after resolution and cancellation life restored. All 15 native colorless-hybrid/hybrid-Phyrexian glyphs plus energy visible and distinct. Request replay, not live transport."
+    },
+    {
+      "id": "discover",
+      "type": "DiscoverPresentationValidation",
+      "result": ".tools/discover-1006/ui/result.txt",
+      "engineJobs": [
+        "discover"
+      ],
+      "assertions": "Actual native Discover requests: translated Cast/Hand buttons and bounded localized instruction, raycasts in three locales; zh-CN repeat/seat-two, stale/duplicate/nonacting and View/Return stable font guards; both-seat revealed exact readonly cards and confirm; empty completion clears picker. x-zero/kicker/floor/activated choice contracts compared and reuse clicks. Native effects, unlisted long-name layouts and real networking separate."
+    },
+    {
+      "id": "state-branches",
+      "type": "StateBranchPresentationValidation",
+      "result": ".tools/state-branches-1006/ui/20261005T2344421965468Z/result.txt",
+      "engineJobs": [
+        "state-branches"
+      ],
+      "assertions": "PASS: actual native Recruit hand/discard and Blight creature-picker requests clicked in three locales; second-seat Recruit and Blight death sampled in zh-CN; native selected confirmation, exact ID/index, stale/duplicate/nonacting guards, View/Return font stability, native next-priority cleanup and forced/empty Blight no-picker. Intensify real 3->4->5 and self 1->2 snapshots inspected in three locales with changed values blue, original toggle and same-ID refresh. Equal/different intensity grouping and face-up/face-down spectator filtering are adapters. Native effect assertions and real networking are separate."
+    },
+    {
+      "id": "variable-branches",
+      "type": "VariableBranchPresentationValidation",
+      "result": ".tools/variable-branches-1006/ui/20261006T0048367334637Z/result.txt",
+      "engineJobs": [
+        "variable-branches"
+      ],
+      "assertions": "PASS: native Doodle choices in both seats, selected confirmation and source identity; native join-forces range/second payer, Vermin life enumeration/local draft and confirmation in three locales, exact option indices, stale/duplicate/nonacting gates, View/Return font stability, numeric/payment dock rectangles, native next-priority cleanup. Secret-choice projection and spectator filtering through OnlineMatchSession.Poll are adapters with archived native envelopes, not live-network or additional effect tests."
+    },
+    {
+      "id": "target-branches",
+      "type": "TargetBranchPresentationValidation",
+      "result": ".tools/target-branches-1006/ui/20261006T0113554204631Z/result.txt",
+      "engineJobs": [
+        "target-branches"
+      ],
+      "assertions": "PASS: archived native zero-target confirmation, six same-name individual identities and min/max gating, single-target reset/cancel, exact target pointer mapping, stale/duplicate/nonacting guards, View/Return font stability; native ordinary-spell division amounts/minima/reset/confirmation, Redirect stack/accept/decline/new player and end-state cleanup in three locales. Native effect results recorded separately; no all-card or live-network claim."
+    },
+    {
+      "id": "exert-branches",
+      "type": "ExertBranchPresentationValidation",
+      "result": ".tools/exert-branches-1006/ui/20261006T0147485127662Z/result.txt",
+      "engineJobs": [
+        "exert-branches"
+      ],
+      "assertions": "PASS: actual native attack-exert selection zero/one, confirm/de-selection/reset and decline indices; view/return stable fonts, stale/duplicate/nonacting guards; actual mana ability both alternatives clicked; typed exert state/blue detail/original view and same-ID expiry across next/following untap in three locales. Equal/different pending exert grouping and face-down spectator projection are adapters. Native effect evidence is separate; no control-change or live-network claim."
+    },
+    {
+      "id": "number-auction",
+      "type": "NumberAuctionPresentationValidation",
+      "result": ".tools/number-auction-1006/ui/20261006T0236220864847Z/result.txt",
+      "engineJobs": [
+        "number-auction"
+      ],
+      "assertions": "PASS: native auction raise/refuse both seats, mandatory increments and bounded number, large 123 native range, stale/duplicate/nonacting guards, dock layout and font stability in zh-CN/en-US/ja-JP; Int32-max formatting adapter only, no network claim."
+    },
+    {
+      "id": "quantity-allocation",
+      "type": "QuantityAllocationPresentationValidation",
+      "result": ".tools/quantity-allocation-1006/ui/20261006T0242457833280Z/result.txt",
+      "engineJobs": [
+        "quantity-allocation"
+      ],
+      "assertions": "PASS: native counter/shield/mana/different-color allocation replay and actual clicks: amount/reset/confirm, native lower/upper/total gates and exact IDs, font/window stability, existing mana symbols and titles in three locales; no network claim."
+    },
+    {
+      "id": "ability-text",
+      "type": "AbilityTextPresentationValidation",
+      "result": ".tools/ability-text-1006/20261006T0301180171152Z/result.txt",
+      "engineJobs": [
+        "number-auction",
+        "quantity-allocation"
+      ],
+      "assertions": "PASS: real Volcano Hellion trigger input translated by exact paragraph with actual target retained; three locales, raycast scrolling reaches final text, scrollbar/viewport, unchanged-render and view/return font/scroll stability, hover rules use same text; changed/unknown rule adapter remains native. No new rule or live-network proof. Chinese target/order incremental: PASS: actual Hellion pre-target preview and Embolden replacement-order native inputs: exact source/rules or unknown unchanged text, symbols/scroll/layout, real target/order click IDs, view/return fonts. Chinese incremental consumer check; shared three-language format in full suite, no new effect/network claim."
+    },
+    {
+      "id": "player-status",
+      "type": "PlayerStatusPresentationValidation",
+      "result": ".tools/player-status-1006/ui/20261006T0324399098554Z/result.txt",
+      "engineJobs": [
+        "player-status"
+      ],
+      "assertions": "PASS: actual native day/night and speed1/2/3/4/max/source-leave inputs, both-seat perspectives, three locales, exact helper artwork and native object IDs, visible fixed-size speed value, raycast hover localized details, unchanged render/view-return fonts, no selection submissions; unknown marker adapter preserves engine text. No new rule or network proof."
+    },
+    {
+      "id": "effect-source",
+      "type": "EffectSourcePresentationValidation",
+      "result": ".tools/effect-source-1006/ui/20261006T0337011857208Z/result.txt",
+      "engineJobs": [
+        "quantity-allocation",
+        "effect-source-projection"
+      ],
+      "assertions": "PASS: actual Embolden replacement-order inputs, generated effect IDs separate from public artwork source, three locales exact art/localized generic title/prevention values; actual native order IDs by raycast, duplicate/read-only guards, view/return font stability; unknown effect text/name and face-down artwork adapters preserved. No new rule or network proof."
+    },
+    {
+      "id": "trigger-order",
+      "type": "TriggerOrderingPresentationValidation",
+      "result": ".tools/trigger-order-1006/ui/20261006T0402172241137Z/result.txt",
+      "engineJobs": [
+        "trigger-order"
+      ],
+      "assertions": "PASS: actual both-controller Soul trigger ordering requests, all partial/reset/full-order transitions, exact native option IDs by raycast; chosen tiles disabled, confirm only after all, reset only after partial; observer cannot submit, no duplicate; three locales, source refresh between seats, exact source art/rules, fixed fonts through view/return. Actual APNAP/life/targets separately asserted by native driver; no network claim."
+    },
+    {
+      "id": "saga-chapters",
+      "type": "SagaChapterPresentationValidation",
+      "result": ".tools/saga-chapters-1006/ui/20261006T0412198720087Z/result.txt",
+      "engineJobs": [
+        "saga-chapters"
+      ],
+      "assertions": "PASS: actual Fable chapterII hand-choice requests from both seats and zero/two discards: exact card and confirm option IDs via raycast, native selection counts, 0–2 localized instruction and font stability in three locales; same-recipient disabled submission and duplicate guard. Three actual chapter outcomes proved separately by native driver; no opponent-private-view/network claim."
+    },
+    {
+      "id": "delayed-expiry",
+      "type": "DelayedExpiryPresentationValidation",
+      "result": ".tools/delayed-expiry-1006/ui/20261006T0428292046029Z/result.txt",
+      "engineJobs": [
+        "delayed-expiry"
+      ],
+      "assertions": "PASS: Chinese incremental replay of actual self-exile counter/repeat, source-killed sacrifice and donated-token expiry; both display perspectives, exact token ID and controller region, silver mesh/no ray blocking and blue instruction while native obligation exists, same-ID clear after control-changed expiry, disappearing tokens cleared. Existing three-locale shape/text evidence reused; no new first UI suite/transport or hidden-information proof."
+    },
+    {
+      "id": "storm-copy",
+      "type": "StormCopyPresentationValidation",
+      "result": ".tools/storm-copy-1006/ui/20261006T0435044424005Z/result.txt",
+      "engineJobs": [
+        "storm-copy"
+      ],
+      "assertions": "PASS: Chinese actual storm original/copy stack targets, exact distinct IDs by raycast, actual selected-state confirm/reset and readonly/duplicate/stale gates, shared same artwork without conflation, browse-only and view/return font stability; zero new first UI, existing layout/locale contract reused; native outcomes separate."
+    },
+    {
+      "id": "royal-state",
+      "type": "RoyalStatePresentationValidation",
+      "result": ".tools/royal-state-1006/ui/20261006T0449062946926Z/result.txt",
+      "engineJobs": [
+        "royal-state"
+      ],
+      "assertions": "PASS: six actual monarch/initiative flows across three locales and both display perspectives, exact status helper artwork and object IDs, hover localized known rules/name, source-left persistence and former-owner cleanup on combat transfer, native dungeon room text retained; view-return fixed fonts and no selection submit; unknown condition adapter retained. Adjacent actual day/max-speed inputs sampled as UI regressions; native effects separate, no network proof."
+    },
+    {
+      "id": "royal-ability",
+      "type": "RoyalAbilityPresentationValidation",
+      "result": ".tools/royal-boundaries-1006/ui/20261006T0510248116629Z/result.txt",
+      "engineJobs": [
+        "royal-boundaries",
+        "monarch-old-endstep",
+        "royal-helper-projection"
+      ],
+      "assertions": "PASS: current native monarch/initiative ability helpers in real ordering/stack requests, same-source distinct trigger IDs and event details, removed-helper pending stack retained; exact resource and three-language known rule/name paths, raycast/native option/read-only/duplicate gates, view-return fixed fonts. Ordinary Soul trigger actual-input text/art regression, altered rule retained; no network/full PASS."
+    },
+    {
+      "id": "ring-combat",
+      "type": "RingCombatPresentationValidation",
+      "result": ".tools/ring-combat-1006/ui/20261006T0543549359709Z/result.txt",
+      "engineJobs": [
+        "ring-combat",
+        "ring-bearer-change"
+      ],
+      "assertions": "PASS: current actual Ring inputs, three-language exact helper art/known unlocked rules and counters, exact bearer icon and native identity in both public battlefield perspectives, change/control/leave removal, same-printing different designation grouping adapter; actual bearer choice and loot card IDs by raycast, readonly/duplicate guards and fixed fonts through view-return, exact helper ability event/remembered identity on stack. Native effect outcomes separate; no network/privacy/full PASS."
+    },
+    {
+      "id": "stack-count",
+      "type": "StackCountPresentationValidation",
+      "result": ".tools/stack-count-1006/ui/20261006T0606243825899Z/result.txt",
+      "engineJobs": [
+        "ring-combat"
+      ],
+      "assertions": "PASS: actual grouped land count badges, first-frame and later-frame glyph mesh, preferred-height bounds, both public perspectives and three languages at .85/1/1.3 font scales. Local formatting regression only; no new native/UI first or full/network PASS."
+    },
+    {
+      "id": "dungeon-paths",
+      "type": "DungeonPathPresentationValidation",
+      "result": ".tools/dungeon-paths-1006/ui/20261006T0611526669615Z/result.txt",
+      "engineJobs": [
+        "dungeon-paths",
+        "dungeon-expiry",
+        "dungeon-reentry",
+        "dungeon-dark-pool"
+      ],
+      "assertions": "PASS: native three-dungeon legal choices/branches and completed/reentered helper identities, three-language full maps and exact known localized room labels, fixed font/fit, raycast native option mapping and readonly/duplicate guards, battlefield view-return; native effects and network separately. Existing choice consumers incremental, no UI first."
+    },
+    {
+      "id": "dungeon-restrictions",
+      "type": "DungeonRestrictionPresentationValidation",
+      "result": ".tools/dungeon-paths-1006/restriction-ui/20261006T0642406343166Z/result.txt",
+      "engineJobs": [
+        "dungeon-expiry",
+        "dungeon-reentry",
+        "undercity-paths"
+      ],
+      "assertions": "PASS: native attack restriction blue and localized, original/current ray toggle and same-ID expiry both projections; exact dungeon room stack paragraph/name localization and unchanged unknown/ordinary branch; native one-candidate freecast card-window yes/no ray accept/decline with readonly/duplicate guards; tomb reentry helper identity. Existing UI consumers incremental, not new native/UI first or network proof."
+    },
+    {
+      "id": "dungeon-completion",
+      "type": "DungeonCompletionPresentationValidation",
+      "result": ".tools/undercity-paths-1006/ui/20261006T0643549998258Z/result.txt",
+      "engineJobs": [
+        "undercity-paths",
+        "undercity-expiry"
+      ],
+      "assertions": "PASS: native Undercity legal successors/known Archive alias and ordinary room branch, completed/reentered helper identities, three-language full maps and exact known localized room labels, fixed font/fit, raycast native option mapping and readonly/duplicate guards, battlefield view-return; native effects and network separately. Existing choice consumers incremental, no UI first."
+    },
+    {
+      "id": "multi-emblems",
+      "type": "MultiEmblemPresentationValidation",
+      "result": ".tools/multi-emblems-1006/ui/20261006T0718411318015Z/result.txt",
+      "engineJobs": [
+        "multi-emblems"
+      ],
+      "assertions": "PASS: actual same/mixed and stolen-source native emblem snapshots, both public views/three languages, holder lanes and exact IDs/art/count, ray hover localized exact source recipe, unknown/custom negative, source gone and same IDs cross-turn, fixed text; existing UI increment only, no new native/UI first or live transport"
+    },
+    {
+      "id": "nested-player-control",
+      "type": "NestedPlayerControlPresentationValidation",
+      "result": ".tools/nested-control-1006/ui/20261006T0739272895430Z/result.txt",
+      "engineJobs": [
+        "nested-player-control"
+      ],
+      "assertions": "PASS: current actual mutual and nested Word control requests, physical/action player identities and hand/payment owner, Chinese real ray original index/stale/duplicate, denying other physical seat, controlled restoration/ordinary expiry hand and readonly spectator; existing unchanged consumers/language contract increment, no new first UI or live transport"
+    },
+    {
+      "id": "restricted-mana",
+      "type": "RestrictedManaPresentationValidation",
+      "result": ".tools/restricted-mana-1006/ui/result.txt",
+      "engineJobs": [
+        "restricted-mana"
+      ],
+      "assertions": "PASS: actual Cavern 356-type request in zh-CN/en-US/ja-JP; bounded searchable/paged text rows, last native index, empty filter, localized/canonical search, Human exact raycast index, mandatory choice, duplicate/stale/viewer guards, fixed fonts; actual ability and ManaColor requests reuse original choice callbacks. Native payment/results separately proved by five engine cases; missing type translations retain canonical names."
+    },
+    {
+      "id": "arena-mana-confirm",
+      "type": "ArenaManaPresentationValidation",
+      "result": ".tools/arena-mana-1006/ui/20261006T0943172102348Z/result.txt",
+      "engineJobs": [
+        "arena-mana"
+      ],
+      "assertions": "PASS: actual Arena of Glory paid-cost exert confirmation in zh-CN/en-US/ja-JP; localized exert prompt, bounded compact Yes/No exact-index raycasts, stale/duplicate/nonacting guards, view/return fixed fonts. Existing mana/ability and native exert state consumers reused; no new UI family, native effect or live-network claim."
+    },
+    {
+      "id": "mana-lifecycle-confirm",
+      "type": "ManaLifecyclePresentationValidation",
+      "result": ".tools/mana-lifecycle-1006/ui/20261006T1015391959092Z/result.txt",
+      "engineJobs": [
+        "mana-restriction-lifecycle"
+      ],
+      "assertions": "PASS: actual native sacrifice/optional-trigger/life confirmations three locales; precise source and printed Phase-trigger rule text, fixed compact fonts, exact Yes/No raycasts, stale/duplicate/nonacting guards and view/return. Increment only; no UI first or true-network claim."
+    },
+    {
+      "id": "mana-spent-effects",
+      "type": "ManaSpentEffectsPresentationValidation",
+      "result": ".tools/mana-spent-effects-1006/ui/result.txt",
+      "families": [
+        "mana",
+        "replacements"
+      ],
+      "engineJobs": [
+        "mana-spent-effects"
+      ],
+      "assertions": "PASS_BOUNDED_AGGREGATE: native color/Riot/Foundry replacement and Jade/Foundry trigger paragraphs in zh-CN/en-US/ja-JP, exact rays/guards/fixed fonts/scrolling. Matrix in aggregate.json identifies original successful subscopes; initial full run remains FAIL for en-US clipping. en-US/ja-JP completed separately, affected zh-CN color and three-locale Riot names retried; unrelated successes not rerun. Payment/Scry/current-info and network consumers reused within listed contracts."
+    },
+    {
+      "id": "draw-boundaries",
+      "type": "DrawBoundaryPresentationValidation",
+      "result": ".tools/draw-boundaries-1007/ui/20261006T2015453317623Z/result.txt",
+      "engineJobs": [
+        "draw-boundaries"
+      ],
+      "assertions": "PASS: actual empty-loss/Laboratory-Maniac native ended envelopes winner2/1, both final seat projections, Chinese current result title; result/continue/reopen and readonly public exile browsing by ray, no rule choices or callbacks, fixed fonts/bounds and exact public IDs. Adapter replay only; payment/replacement/optional/target/life consumers reuse prior proofs, native draw/expiry/outcome separately tested. No new live network or whole-locale claim."
+    },
+    {
+      "id": "dice-combinations",
+      "type": "DiceCombinationPresentationValidation",
+      "result": ".tools/dice-combinations-1007/ui/20261006T2043053720470Z/result.txt",
+      "engineJobs": [
+        "dice-combinations"
+      ],
+      "assertions": "PASS: remaining UI differences: zh-CN source/reroll/reset/legacy; en-US/ja-JP numeric/binary/source/reroll/reset/legacy. Six earlier zh-CN numeric/binary PASS steps remain in original failed source-control harness run, separately audited; actual native low/high/duplicate result IDs, two-source picker and confirmation, two selected dice plus reset/confirm, real rays/stale/duplicate/viewer guards, fixed font and bounded localized dice/counter prompts; legacy coin/inc/dec consumers sampled. UI increment only; native costs/rolls/outcomes independently tested, no live network/all-text claim."
+    },
+    {
+      "id": "search-boundaries",
+      "type": "SearchBoundaryPresentationValidation",
+      "result": ".tools/search-boundaries-1007/ui/20261006T2103263597842Z/result.txt",
+      "engineJobs": [
+        "search-boundaries"
+      ],
+      "assertions": "PASS: actual search native prompts/pickers, three languages on changed confirmations; main-language restricted/grave/hand native identity and confirmation, cancellation, request/seat/duplicate guards, actual rays and fixed fonts/bounds; existing binary regression. UI increment only; native rule outcomes independently proved."
+    },
+    {
+      "id": "pile-boundaries",
+      "type": "PileBoundaryPresentationValidation",
+      "result": ".tools/pile-boundaries-1007/ui/20261006T2131172583877Z/result.txt",
+      "engineJobs": [
+        "pile-boundaries"
+      ],
+      "assertions": "PASS: six actual known-face/opposing-private pile cells across three locales after header row-height change: first-render title/instruction/count glyphs and preferred-height bounds, fixed fonts, whole-pile rays/native indexes/stale/duplicate/readonly guards. Earlier23 consumer cells remain separate evidence; no native tests rerun."
+    },
+    {
+      "id": "library-order-boundaries",
+      "type": "LibraryOrderBoundaryPresentationValidation",
+      "result": ".tools/library-order-1007/ui/20261006T2154395246890Z/result.txt",
+      "engineJobs": [
+        "library-order-boundaries"
+      ],
+      "assertions": "PASS: actual five same-name library ordering and mixed graveyard ordering sequences in three languages: original individual card IDs/art, exact order numbers/count/confirm threshold, reset, panel reuse, fixed typography bounds, actual ray clicks/native indexes and stale/duplicate/readonly guards. Actual two-stage Telling Time selection in primary language. Native outcomes independent; existing consumer increment, no new UI first."
+    },
+    {
+      "id": "opening-boundaries",
+      "type": "OpeningBoundaryPresentationValidation",
+      "result": ".tools/opening-boundaries-1007/ui/20261006T2207582450396Z/result.txt",
+      "engineJobs": [
+        "opening-boundaries"
+      ],
+      "assertions": "PASS: actual LAN lobby raycast: cancel setup/reenter, BO3/life27 authoritative config, host leave/shutdown, BO1/life37 new room no stale members/readiness, close and reopen. Private London callbacks and three languages reuse existing exact-contract proof; this suite adds no card effects or full-network claim."
+    },
+    {
+      "id": "multipart-cost-boundaries",
+      "type": "MultipartCostPresentationValidation",
+      "result": ".tools/multipart-cost-1007/ui/result.txt",
+      "engineJobs": [
+        "multipart-cost-boundaries"
+      ],
+      "assertions": "PASS: current native multipart-cost inputs, zh-CN. Actual sacrifice-picker and payment-dock cancellation rays, exact original indices, stale/duplicate/nonacting guards and restored priority cleanup. Native mandatory-after-life confirm remains available without cancel. Non-card cost-order options and confirmation ray checked separately. Native fixture enables cost-order full-control solely for that engine branch; this is not a frontend full-control toggle or live network test."
+    },
+    {
+      "id": "mixed-tap-costs",
+      "type": "MixedTapCostPresentationValidation",
+      "result": ".tools/mixed-tap-costs-1007/ui/result.txt",
+      "engineJobs": [
+        "mixed-tap-costs"
+      ],
+      "assertions": "PASS zh-CN actual mixed-tap native replay: nested convoke color icons/indices/rays/guards and return to preserved selection, multicolor artifact and overlapping artifact-creature confirmation, unpayable cancellation/priority cleanup. Shared prior three-language picker proof reused; no new UI first, effect or live-network claim."
+    },
+    {
+      "id": "mana-source-refunds",
+      "type": "PaymentDockPresentationValidation.RunSourceRefunds",
+      "result": ".tools/mana-source-refunds-1007/ui/result.txt",
+      "engineJobs": [
+        "mana-source-refunds"
+      ],
+      "assertions": "PASS zh-CN actual native nested filter-cost -> parent payment -> cancellation priority cleanup, original indices/old-request/duplicate guards via real ray; life and sacrifice mana-source confirmation -> payment cleanup. Historical three-language payment/pool/confirmation contracts retained; no new UI first or live-network claim."
+    },
+    {
+      "id": "convoke-generic-icon",
+      "type": "ConvokeGenericPresentationValidation",
+      "result": ".tools/convoke-generic-1007/ui/result.txt",
+      "engineJobs": [
+        "convoke-generic-icon"
+      ],
+      "assertions": "PASS three-language actual convoke COLORLESS request renders generic {1}, green/white preserved, original index/raycast/stale/duplicate guards and native selected-state return. Separate ordinary-colorless UI adapter renders {C}; no additional native effect or live-network claim."
+    },
+    {
+      "id": "group-safety",
+      "type": "GroupSafetyPresentationValidation",
+      "result": ".tools/group-safety-1007/ui/result.txt",
+      "engineJobs": [
+        "group-safety"
+      ],
+      "assertions": "PASS: actual grouped-land expand/second exact ID submission and tapped-state split; six-category native metadata adapter, quantity-only grouping, native unsafe remembered/cloned gate, hidden identity isolation, state split/regroup, actual card rays expand and select exact candidate, inside/outside/right pointer dismissal and new-request reset; native actual exert snapshots gate obeyed through effect/EOT/untaps. zh-CN increment; prior three-language layout proof reused. No new effect/UI first or network claim."
+    },
+    {
+      "id": "noncreature-copies",
+      "type": "NoncreatureCopyPresentationValidation",
+      "result": ".tools/noncreature-copies-1007/ui/result.txt",
+      "engineJobs": [
+        "noncreature-copies"
+      ],
+      "assertions": "PASS three-language actual artifact token/non-token copy classification, copied artwork texture and frame/size, copied ability tap-state refresh; native Manufactor six IDs with exact token art keys/textures, compact layout/order and quantity. Hidden clone art is adapter; R21 grouping, prior replacement input and language contracts reused. No extra UI first or network claim."
+    },
+    {
+      "id": "attachment-branches",
+      "type": "AttachmentPresentationValidation",
+      "result": ".tools/attachments-1007/ui/result.txt",
+      "engineJobs": [
+        "attachment-branches"
+      ],
+      "assertions": "PASS three-language real attachment snapshots: exact hover rays and read-only link endpoints/inverse host, same-ID retarget, removal cleanup, cross-controller host, copied weapon/aura, player target, detail labels and hidden-face adapter. Existing R21 grouping/target and payment contracts reused; no new UI first/network claim."
+    },
+    {
+      "id": "continuous-state",
+      "type": "ContinuousStatePresentationValidation",
+      "result": ".tools/continuous-state-1007/ui/result.txt",
+      "engineJobs": [
+        "continuous-state"
+      ],
+      "assertions": "PASS actual devotion same-ID type/layout transitions and badge/detail in three locales; primary-language actual base/boost/counter/expiry and timestamp detail with original/return rays, dependency land rules/identity and multi-source refresh. Existing payment/target and full characteristic-language contracts reused. UI increment only, no full/network PASS. Supplemental four land actual sprite identities: .tools/continuous-state-1007/land-ui/result.txt"
+    },
+    {
+      "id": "facedown-lifecycle",
+      "type": "FaceDownLifecyclePresentationValidation",
+      "result": ".tools/facedown-lifecycle-1007/ui/result.txt",
+      "engineJobs": [
+        "facedown-lifecycle"
+      ],
+      "assertions": "PASS actual manifest/cloak/Ring snapshots: both-view private/public art and identity, noncreature action absence, exact turn-up card ray, stable public turn-up/ward/ring and attachment lifecycle; real target ray during flip/duplicate suppression and early disappearance cleanup. Existing payment/choice/language contracts reused; First registered private-face and flip-lifecycle UI contract; no network/full PASS."
+    },
+    {
+      "id": "bending-lifecycle",
+      "type": "BendingLifecyclePresentationValidation",
+      "result": ".tools/bending-lifecycle-1007/ui/result.txt",
+      "engineJobs": [
+        "bending-lifecycle"
+      ],
+      "assertions": "PASS actual bending snapshots: land/creature/returned placement and counters; exile readiness/cancel/recast/disappearance and owner/readonly ray permissions; actual multi-zone card target footer and exact original choice ID. Existing characteristic languages/targets/payment contracts reused; UI increment, no network/full PASS."
+    },
+    {
+      "id": "zone-browser-boundaries",
+      "type": "ZoneBrowserPresentationValidation",
+      "result": ".tools/zone-browser-1007/ui/result-all.txt",
+      "engineJobs": [
+        "zone-browser-boundaries"
+      ],
+      "assertions": "PASS R15 bounded browser/filter contract: 19 focused UI checks and 1 real native no-match RevealCards replay, exact IDs/readonly/selection/empty and all-ineligible adapters/request takeover/guards. No new UI first or live-network proof."
+    },
+    {
+      "id": "permission-lifecycle",
+      "type": "PermissionLifecyclePresentationValidation",
+      "result": ".tools/permission-lifecycle-1007/ui/result.txt",
+      "engineJobs": [
+        "permission-lifecycle"
+      ],
+      "assertions": "PASS bounded permission casting shelf: private known face, exact native click, payment and consumed entry; impulse next-turn/expiry; prepared controller/source lifecycle. Actual inputs, no live network proof."
+    },
+    {
+      "id": "knowledge-lifecycle",
+      "type": "KnowledgeLifecyclePresentationValidation",
+      "result": ".tools/knowledge-lifecycle-1007/ui/result.txt",
+      "engineJobs": [
+        "knowledge-lifecycle"
+      ],
+      "assertions": "PASS bounded R17 native-input reveal/order/private recipient; readonly library source-loss/draw/shuffle live refresh both seats; spectator sanitization adapters. Existing consumer languages/guards reused; no live-network or full-hidden-zone claim."
+    },
+    {
+      "id": "combat-keywords",
+      "type": "CombatKeywordPresentationValidation",
+      "result": ".tools/combat-keywords-1007/ui/result.txt",
+      "engineJobs": [
+        "combat-keywords"
+      ],
+      "assertions": "Original19 structural/click checks at ui/result.txt; counter glyph claim superseded by three focused checks at counter-fix-ui/result.txt. Existing allocation/state/counter consumers, no new UI first; original native inputs and source identities in result.json. Attack-band missing remains explicit."
+    },
+    {
+      "id": "component-card-face",
+      "type": "ComponentCardFaceValidation",
+      "result": ".tools/component-card-1007/ui/result.txt",
+      "engineJobs": [
+        "component-card-face"
+      ],
+      "assertions": "Single-card component pilot uses native hand/graveyard/exile/library/stack views; full-face/compact-face glyphs, cast rays/identity/duplicate guard, entire cast-button viewport bounds, independent cost update preserving art/components, localized captions and symbols at current font scale. No full-card rollout or live-network proof."
+    },
+    {
+      "id": "template-card-faces",
+      "type": "TemplateCardFaceValidation",
+      "result": ".tools/component-card-1008/ui/result.txt",
+      "engineJobs": [
+        "template-card-faces"
+      ],
+      "assertions": "Two PSD-based 2D faces consume actual hand, stack, field, graveyard, exile and successive public library top views. Native casting dialog/main-adventure fees, actual cast rays/IDs, fixed paper typography, three locales, art/component reuse and old-pilot host reuse. Live local chosen adventure cast recorded separately; not all-card or live-network proof."
+    },
+    {
+      "id": "attack-bands",
+      "type": "AttackBandPresentationValidation",
+      "result": ".tools/attack-bands-1008/ui/result.txt",
+      "engineJobs": [
+        "attack-bands"
+      ],
+      "assertions": "Exact native recipient views: real attacker/defender, band select/join/deselect and recall rays; availability, stale/duplicate/disabled/observer guards, both-seat public group badges and attacker-owned damage allocation/cleanup. 55 valid original steps; final nine group/control label checks use asserted zh-CN/en-US/ja-JP. Old en/ja fallback claims superseded, no live-network/full-family claim."
+    },
+    {
+      "id": "combat-damage-boundaries",
+      "type": "CombatDamageBoundaryPresentationValidation",
+      "result": ".tools/combat-damage-boundaries-1008/ui/result.txt",
+      "engineJobs": [
+        "combat-damage-boundaries"
+      ],
+      "assertions": "Actual native skip/shared-lethal and unrestricted divide replay in asserted zh-CN/en-US/ja-JP: exact candidate count, source/recipient IDs and card textures/player empty art after clear and reused context37; pointer plus/skip/confirm, native gates, same-draft updates, fresh source contexts and lethal0, stale/duplicate/nonacting guards and request-clear cleanup.1946 assertions; earlier1682 weak proof and visual counterexample retained. No native/all-combat/live-network claim."
+    },
+    {
+      "id": "combat-phase-boundaries",
+      "type": "CombatPhaseBoundaryPresentationValidation",
+      "result": ".tools/combat-phase-boundaries-1008/ui/result.txt",
+      "engineJobs": [
+        "combat-phase-boundaries"
+      ],
+      "assertions": "PASS 196 actual native input replays: real source/defender rays to player, opposing planeswalker and own battle; exact option IDs, duplicate/stale/nonacting guards; fresh second-combat selection; both payer seats combat tax dock auto/cancel rays, native cost symbols/three locale labels and priority cleanup. Engine results registered separately; no multiplayer/live-network/full PASS."
+    },
+    {
+      "id": "counter-cost-boundaries",
+      "type": "CounterCostPresentationValidation",
+      "result": ".tools/counter-cost-boundary-1008/ui/result.txt",
+      "engineJobs": [
+        "cost-primitive-boundaries"
+      ],
+      "assertions": "Actual native counter picker/type dialog:303 three-language checks plus74 zh-CN split/exhaustion/cached-refresh increment. Original option indices/rays, additive per-card/total count, native gates/auto-completion, cancel, duplicate/stale/nonacting guards, card art and lifecycle. CHARGE/STUN/title localized; current shortened Chinese instruction sampled in74. No global/network PASS."
+    },
+    {
+      "id": "stack-exile-cost",
+      "type": "StackExileCostPresentationValidation",
+      "result": ".tools/stack-exile-cost-1008/ui/20261008T0555073084124Z/result.txt",
+      "engineJobs": [
+        "stack-exile-cost-boundary"
+      ],
+      "assertions": "PASS: 102 checks; exact native stack-exile choice/cancel in zh-CN/en-US/ja-JP; localized title/name/stack identity/cancel, first-frame bounds and fixed fonts, real rays, original indices, stale/duplicate/nonacting guards, initial-to-retry request replacement and clear. Existing value-choice UI increment only; native outcomes separately proven; no global/network PASS."
+    },
+    {
+      "id": "stack-restore-list-increment",
+      "type": "StackRestoreListIncrementValidation",
+      "result": ".tools/stack-target-restore-1008/ui/20261008T0629269834333Z/result.txt",
+      "engineJobs": [
+        "stack-target-restore-boundary"
+      ],
+      "assertions": "PASS: 114 checks; actual copied-spell cost list in zh-CN/en-US/ja-JP; exact native three-option count, unique original stack labels for same-name Opt/copy, all nine actual copy-choice/cancel button rays/native indices once; earlier zh-CN ordinary two-spell choices remain separately audited in first failed run, stale and clear checks. Existing list UI increment only; previous three-language/permission lifecycle evidence reused. No new native/global/network claim."
+    },
+    {
+      "id": "reveal-cost-rollback-increment",
+      "type": "RevealCostRollbackPresentationValidation",
+      "result": ".tools/reveal-cost-rollback-1008/ui/20261008T0657057729387Z/result.txt",
+      "engineJobs": [
+        "reveal-cost-rollback-boundary"
+      ],
+      "assertions": "PASS: 13 checks; remaining opponent increment only: partly known hand modal contains exactly two authorized informational card faces, native confirm index via actual ray, duplicate rejection, knowledge-preserving refund and restored-priority cleanup. Source-absent actor card/cancel/stale/duplicate steps retained from 20261008T0648304925564Z/steps.log; not replayed. Current zh-CN contract increment; prior languages/permissions, number/order/payment controls reused. No new UI first/global/network claim."
+    },
+    {
+      "id": "behold-exile-increment",
+      "type": "BeholdExilePresentationValidation",
+      "result": ".tools/behold-exile-1008/ui-combined/result.txt",
+      "engineJobs": [
+        "behold-exile-boundary"
+      ],
+      "assertions": "PASS: 67 terminal increment checks (en-US/ja-JP64 plus ordinary zh text3); completed zh mixed-zone card/reset/confirm/cancel/stale/duplicate/readonly rays retained from interrupted attempt steps.log. Three-language exact origin captions and correct typed Behold/BeholdExile instructions; same-zone layout unchanged. No new UI first/global/network claim."
+    },
+    {
+      "id": "opal-commander-increment",
+      "type": "OpalCommanderPresentationValidation",
+      "result": ".tools/opal-commander-1009/ui/result.txt",
+      "engineJobs": [
+        "restricted-mana"
+      ],
+      "assertions": "PASS bounded actual snapshot increment: own Command commander ray, native4W payment projection, actual ETB counter1/3 and green3/3,5/5 vs original2/2. Native two amounts separately audited; old payment/selector/locale contracts reused, no new UI first/network/four-seat proof."
+    },
+    {
+      "id": "chosen-type-cost-increment",
+      "type": "ChosenTypeCostPresentationValidation",
+      "result": ".tools/chosen-type-cost-1009/ui/20261008T1959472781462Z/result.txt",
+      "engineJobs": [
+        "plain-behold-boundary"
+      ],
+      "assertions": "PASS current38 bounded native-input rays: optional/mandatory creature type and exact-two mixed-origin Behold gates/reset/cancel/retry. Native five outcomes208 assertions audited independently; no new UI first/global/network claim."
+    },
+    {
+      "id": "foundry-recast-increment",
+      "type": "FoundryRecastPresentationValidation",
+      "result": ".tools/foundry-recast-1009/ui-result.txt",
+      "engineJobs": [
+        "mana-spent-effects"
+      ],
+      "assertions": "Original Exile card preview identity121, art/two native yes/no actions, actual topmost rays, retry request identity, stale/duplicate/read-only, battlefield view/restore fonts and input clearing. Three-language changed question checks plus Chinese two-source wording increment;111 composed checks. Other payment/target/sacrifice/scry consumers unchanged and reuse exact existing contracts."
+    },
+    {
+      "id": "delayed-trigger-copy-increment",
+      "type": "DelayedCopyPresentationValidation",
+      "result": ".tools/delayed-trigger-copy-1009/ui/20261008T2048320863812Z/result.txt",
+      "engineJobs": [
+        "delayed-expiry"
+      ],
+      "assertions": "41 targeted Chinese actual-input checks: both seats source graveyard illustration/name/effect readable and fixed symbol font; independent UI roots for original/copy sharing source, copy removal retains exact original root, both resolve clears dock. Actual topmost target ray for stack3, native selected/ok gate and stale/duplicate/read-only. Old three-language/list/payment permission contracts reused by exact branch review."
+    },
+    {
+      "id": "delayed-lifecycle-increment",
+      "type": "DelayedLifecyclePresentationValidation",
+      "result": ".tools/delayed-lifecycle-1009/ui/20261008T2120345192086Z/result.txt",
+      "engineJobs": [
+        "delayed-expiry"
+      ],
+      "assertions": "PASS: 59 checks; actual two-seat same-ID return clears old blue departure and new arrangement restores it; conditional token expiry consumes native obligation and removes silver mesh/text from surviving same ID; actual optional remembered-number yes/no rays, stale/duplicate/readonly guards and next-request cleanup. Shared language/target/payment/attack/transport proof reused at original scope; no global language/network PASS."
+    },
+    {
+      "id": "copy-exceptions-increment",
+      "type": "CopyExceptionPresentationValidation",
+      "result": ".tools/copy-exceptions-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "85 distinct completed supplementary checks with original FAIL/83 passed steps retained and menu-only5 supplement. Native P/T/keyword/original state/current loyalty and accurate recipient/menu rays only. Open current type and removed CDA text gap R23.01,not display PASS."
+    },
+    {
+      "id": "copy-traits-increment",
+      "type": "CopyTraitPresentationValidation",
+      "result": ".tools/copy-traits-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "106 distinct bounded completed labels; exact current type,added/removed intrinsic paragraphs,printed baseline/IfNew and original/return,actual copied recipient/target rays. Chinese two-seat and trait paragraphs English/Japanese; known static labels R47 remain."
+    },
+    {
+      "id": "copy-name-duration-increment",
+      "type": "CopyIdentityPresentationValidation",
+      "result": ".tools/copy-name-duration-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "94 unique labels/125 executions. English current-name/trait/cost,current-original rays,both-seat same-ID lifecycle. Known language/long viewport R47 remains."
+    },
+    {
+      "id": "copy-states-increment",
+      "type": "CopyStatePresentationValidation",
+      "result": ".tools/copy-states-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "152 unique labels/189 executions;exact native face/current-original return,both-seat face-down knowledge,and existing printed PT expressions. No remaining copy-state completeness."
+    },
+    {
+      "id": "copy-state-remainder-increment",
+      "type": "CopyStateRemainderPresentationValidation",
+      "result": ".tools/copy-state-remainder-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "206 unique labels/301 executions;Secondary/PreparedSpell/Room/merged copied recipients,current-original,both seats. Original merged source and long scroll remain explicit gaps."
+    },
+    {
+      "id": "merged-source-display-increment",
+      "type": "MergedSourcePresentationValidation",
+      "result": ".tools/merged-source-display-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "Original merged current top art/miniature PT/lower blue traits,original-return,both seats and unchanged copied siblings;long scroll remains R47."
+    },
+    {
+      "id": "split-copy-increment",
+      "type": "SplitCopyPresentationValidation",
+      "result": ".tools/split-copy-1009/ui-aggregate.json",
+      "engineJobs": [
+        "temporary-copies"
+      ],
+      "assertions": "Chosen right-half original/copy stack name/rules/cost/exact target,full scan and lifecycle,both seats. Fuse separately pending."
+    },
+    {
+      "id": "keyword-sources-increment",
+      "type": "KeywordSourcesPresentationValidation",
+      "result": ".tools/keyword-sources-1009/ui-result.txt",
+      "engineJobs": [
+        "dungeon-expiry"
+      ],
+      "assertions": "Six actual native keyword-source/protection/debuff flows;359 UI executions/current-original/group/real chooser/native permissions;player shield corrected increment,three locales/both seats;not whole-language/scroll/network."
+    },
+    {
+      "id": "cost-order-format-increment",
+      "type": "CostOrderPresentationValidation",
+      "result": ".tools/cost-order-format-1009/ui/20261009T0152374909747Z/result.txt",
+      "engineJobs": [
+        "multipart-cost-boundaries"
+      ],
+      "assertions": "全控制真实费用排序：放逐手牌两张绿色牌/牺牲两山脉/回手两海岛的三语言准确文案、法术力1图标、原生顺序/确认/重排和原编号；9旧原生快照、默认/最大字号、真实射线/旧重复只读守卫、查看返回固定字号及优先权清除，1071执行检查。长自定义选项滚动独立算适配器，不重跑原生效果。 Only R47.02;historical native inputs retain producer/hash,not current global PASS."
+    },
+    {
+      "id": "marker-fields-increment",
+      "type": "MarkerFieldsPresentationValidation",
+      "result": ".tools/marker-fields-1009/ui/20261009T0210131029442Z/result.txt",
+      "engineJobs": [
+        "dungeon-expiry",
+        "casting",
+        "permission-lifecycle"
+      ],
+      "assertions": "R35缺字段增量：复用真实Kick in the Door效果183等的双方存在/到期输入，真实射线核对来源AFR/153卡图、完整原生正文、准确来源标题、同ID无重复及到期移除；复用真实Stomp历险许可148/CLB781全卡图、完整许可及施放本体后移除；真实预备咒语145与原生施放选项保留，隐藏内部辅助对象146；真实Bauble非离场延迟保留钟且没有临死复制品外框；非公开来源匿名字段/无图只做明确展示适配器。57项UI执行，中文主语言，动态英文完整保留。 仅关闭R35原字段/配方展示门槛；原多徽记三条真实结果与折叠/分页/延迟生命周期证据保留，不重跑。匿名源是展示合同适配器，不授予新隐藏源原生效果PASS；当前原生运行包只有一次既有Prepared流程投影回归，0新首次规则场景。英文动态正文/未知自定义配方与缺图缺译沿R47，独立payload A01/A03、全局当前依赖A06及联网/四人/支持决定继续开放。"
+    },
+    {
+      "id": "chapter-boundaries-increment",
+      "type": "ChapterBoundaryPresentationValidation",
+      "result": ".tools/chapter-boundaries-1009/ui/20261009T0234581351687Z/result.txt",
+      "engineJobs": [
+        "saga-chapters",
+        "trigger-order"
+      ],
+      "assertions": "61项主语言UI检查：ReadAhead原生1/2/3真实枚举复用右下数值控件，最小/最大、本地草稿、确定2/3射线原选项ID、无虚构取消、只读/过期/重复/查看返回字号；牺牲后的真实目标/选中确认准确玩家射线及来源、已牺牲熊不在战场；结束后控件清除。旧APNAP四场/Fable三场及三语言排序/普通目标/数字合同保留。 只关闭R18原章节与转交ImmediateTrigger消费者门槛，不代表全部章节payload通过；独立效果与Skateboard准确tap仍A01，旧生产者未知/全局当前依赖A06保持。实际截图的Kardur章节和Added once动态英文仍归R47.03，未知自定义文字原文保留。无生产代码/原生运行包/卡牌修改；没有重跑已成功ReadAhead及旧七个基线，无实时联网/全语言/四人PASS。"
+    },
+    {
+      "id": "known-phrases-increment",
+      "type": "KnownPhrasePresentationValidation",
+      "result": ".tools/known-phrases-1009/result.txt",
+      "engineJobs": [
+        "facedown-lifecycle",
+        "bending-lifecycle",
+        "saga-chapters"
+      ],
+      "assertions": "修复真实暗置私有预览牌名/原文与五条准确原生状态段落，中英日、双方身份/牌图权限；真实截水跨区可选目标与铸阳锤卸装提示三语言、准确卡牌/确认射线、过期/重复/只读守卫、查看返回固定字号及最大字号容纳；卡尔杜I/II/III与反身正文按来源准确匹配既有翻译，Added once来源编号和实际卡牌/玩家目标保留并本地化；未知段落/不同来源尾注及缺译原文回退保留。 仅关闭R47.03登记的实际已知句型与R18转交章节例子。原生结果复用原始批次，不授当前全量、实时联网或全卡池翻译PASS；共用静态语言残留R47.01、资源未就绪/切换R47.05、任意长正文滚动与A06总体依赖仍保留。截图中的原卡图语言按本地实际印次保留，不重绘卡图。"
+    },
+    {
+      "id": "intensity-copy-increment",
+      "type": "IntensityCopyPresentationValidation",
+      "result": ".tools/intensity-copy-1009/ui/20261009T0324105432900Z/result.txt",
+      "engineJobs": [
+        "state-branches",
+        "trigger-order"
+      ],
+      "assertions": "278项中英日/双方视图定向UI检查：复制起始1保持基线、自身增量标蓝2、同ID再复制无起始关键词仍显示蓝1；实际射线切原始/返回、固定字号、正常来源原始1、复制衍生物完整印刷起始文本。修复仅已知实体原牌的复制品原始详情，不附加复制状态的强度基线；未知实体原牌回退、暗置过滤单列适配器。实际截图查看蓝2/蓝1及实体原始无强度。 仅关闭S03.02原复制/起始关键词变化边界。S03.01征募/凋萎其他玩家及抓弃/指示物替代、R39永久修改日志、A01独立payload、R02真实联网及A06整体依赖继续开放。开局来源/热情仅安排在场，不授其施放/进场证明。旧552/41首验身份保留；1新增实际流程、0原生重跑，检查数不当机制数；不授当前全量/四人/所有数值组合PASS。"
+    },
+    {
+      "id": "recruit-blight-boundary-increment",
+      "type": "RecruitBlightBoundaryPresentationValidation",
+      "result": ".tools/recruit-blight-boundaries-1009/ui/20261009T0343336508277Z/result.txt",
+      "engineJobs": [
+        "state-branches"
+      ],
+      "assertions": "87项定向窗口检查：实际衰萎费用选择三语言提示、准确己方卡ID与费用数量、对手targeted/Defined窗口准确第二席及各熊ID、真实射线选项/原生确定、过期/重复/只读守卫、查看返回固定字号、最大字号完整显示、取消按钮回调和恢复后清除。 仅关闭S03.01原受影响玩家/抓弃及指示物替代边界，并与既有S03.02和原十场共同归档S03。固定运行卡池10条直接Recruit均为默认自身，不为不存在的直接对手Recruit造场；对手实际受到抓牌替代且原生已验证。原十场旧生产者身份保留，不冒充当前全量。静态替代来源安排在开局，不授其施放/进场证明；费用取消仅新增UI回调检查，原生多段费用计数回滚沿用R12。R44其余替代、R39永久日志、A01独立payload、R02联网、A06整体依赖保持开放；不授四人/全部卡牌/全部费用互动PASS。"
+    },
+    {
+      "id": "blight-stack-language-increment",
+      "type": "BlightStackPresentationValidation",
+      "result": ".tools/recruit-blight-boundaries-1009/stack-ui/20261009T0357059652922Z/result.txt",
+      "engineJobs": [
+        "state-branches"
+      ],
+      "assertions": "24项中英日实际堆叠来源/受影响玩家2/数量2、Text与Symbols子控件一致、固定字号完整显示/查看返回及未知扩展句原文回退。 仅关闭S03.01原受影响玩家/抓弃及指示物替代边界，并与既有S03.02和原十场共同归档S03。固定运行卡池10条直接Recruit均为默认自身，不为不存在的直接对手Recruit造场；对手实际受到抓牌替代且原生已验证。原十场旧生产者身份保留，不冒充当前全量。静态替代来源安排在开局，不授其施放/进场证明；费用取消仅新增UI回调检查，原生多段费用计数回滚沿用R12。R44其余替代、R39永久日志、A01独立payload、R02联网、A06整体依赖保持开放；不授四人/全部卡牌/全部费用互动PASS。"
+    },
+    {
+      "id": "name-ban-boundary-increment",
+      "type": "NameBanBoundaryPresentationValidation",
+      "result": ".tools/name-ban-union-1009/ui/20261009T0539087719903Z/result.txt",
+      "engineJobs": [
+        "card-names",
+        "generic-choices",
+        "cost-interactions"
+      ],
+      "assertions": "42项主语言定向UI检查：真实mandatory Card type直接1选项和color1-of1选中/确认门槛，实际射线原生索引、查看返回固定字号、无虚构取消、过期/重复/只读守卫及禁令解除前后同一Shock原选项ID。既有指定牌名全池/过滤/分页/本地图/三语言、look/player/card/targets、费用符号/取消/优先权合同复用，未因6来源或数值再乘语言测试。 仅关闭R04.02原三组并与R04.01归档R04。候选计算/排除/Note/秘密/随机A02、独立trigger/look/其他payload A01、声明及费用/持续事件A03/A04、未知量宣布后限制、Vanguard模式、R47长文本/语言资源和A06整体依赖仍开放。Union生产者保留原086e运行包，其余三流程当前cae3；费用驱动最后58常量错误原FAIL不改，独立捕获核对60+2=62→61及准确牌库顺序/ID/资源，未为驱动统一重跑。首552/41及原81编号保持，四新增实际流程、0成功原生重跑；失败诊断/驱动修正均保留。不授所有费用/所有卡牌、实时联网、四人或当前全量PASS。"
+    },
+    {
+      "id": "controlled-concession-terminal-increment",
+      "type": "ForgeBattlefieldController exact native wire/session terminal increment",
+      "result": ".tools/controlled-concession-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "nested-player-control"
+      ],
+      "assertions": "PASS_BOUNDED 54 terminal/session/UI checks (partial-payment completed prefix27 + replacement-modal27) and 7 combat-clearing adapter checks. Actual native wire replay through production Poll and Present, original option ray clicks, both-seat request/permissions/hash/stale/replay clearing. No live transport or new native combat outcome. Failed runs retained."
+    },
+    {
+      "id": "controlled-search-return-increment",
+      "type": "ForgeBattlefieldController native controlled QuasiLibrarySearch return/privacy increment",
+      "result": ".tools/controlled-search-1009/ui/20261009T1006311996539Z/result.txt",
+      "engineJobs": [
+        "nested-player-control"
+      ],
+      "assertions": "PASS_BOUNDED 77 checks: actual native own-library accept/decline and opponent-library request -> production Poll permissions/private candidates -> Unity original option and confirmation rays -> restored next request/both views -> stale and read-only guards. Native outcome separately verified; no live network or four-player claim."
+    },
+    {
+      "id": "player-counter-result-increment",
+      "type": "ForgeBattlefieldController actual counter/player replacement and mixed entity delta",
+      "result": ".tools/player-counters-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "player-status",
+        "state-branches",
+        "replacements"
+      ],
+      "assertions": "PASS_BOUNDED 527 executed UI checks: 38 original affected-player order checks retained,75 production-Poll mixed/zero/radiation checks, 138 Chinese and276 English/Japanese actual mass-selection/default/max-font checks. Frozen intermediate driver failures (session mismatch, filename, locale code) retained; this combines only explicitly successful assertion ranges. No live transport/multiplayer-layout or global-current PASS."
+    },
+    {
+      "id": "multi-object-replacement-result-increment",
+      "type": "ForgeBattlefieldController actual multiobject copy/token/prevention source replacement increment",
+      "result": ".tools/multi-object-replacements-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "replacements",
+        "damage-draw",
+        "noncreature-copies"
+      ],
+      "assertions": "PASS_BOUNDED 170 actual replacement/mandatory sources/controller2 prevention source via production Poll and real rays; original indexes/card IDs, selected confirmation, no premature confirm, optional accept/refuse, exact simultaneous last-state candidates, stale/duplicate/readonly and restored request. No live network or motion proof."
+    },
+    {
+      "id": "direction-choice-result-increment",
+      "type": "ForgeBattlefieldController real Left/Right and next-player mandatory chooser increment",
+      "result": ".tools/direction-choice-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches"
+      ],
+      "assertions": "PASS_BOUNDED 101: 69 frozen completed direction checks (three locales, original Right uses cancel ID) +32 actual selector/confirmation/wait/actor-return checks; production Poll and EventSystem rays. Native four-seat result, UI only existing two supported seats; no live transport/Commander proof."
+    },
+    {
+      "id": "direction-lifecycle-result-increment",
+      "type": "ForgeBattlefieldController actual native effect helper continuity/expiry two-view increment",
+      "result": ".tools/direction-lifecycle-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches"
+      ],
+      "assertions": "PASS_BOUNDED 48 actual production Poll/public helper ID294 in both supported views, single existing marker rendered continuously through all3 opposing turns, same UI instance retained and removed at next own turn. Direction buttons use original exact-contract101 proof; this increment is display lifecycle only, no new clicks/live four-client/transport/text PASS."
+    },
+    {
+      "id": "vote-result-contract-increment",
+      "type": "ForgeBattlefieldController actual vote continuous ballots/optional numeric0..1 two-supported-seat increment",
+      "result": ".tools/vote-choice-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches"
+      ],
+      "assertions": "PASS_BOUNDED 228 current real vote generic one-of-two/selection/confirmation/next original voter, optional0..1 numeric draft/commit in dock, original indices, waiting observer, duplicate/stale/retained handlers and resolved cleanup. Same selector/numeric 3-language formatting references existing contracts. Native extra seats3/4 not production clients; no secret vote/four-client/live network/full localization PASS."
+    },
+    {
+      "id": "vote-original-voter-context-increment",
+      "type": "Actual secret/control player entity vote and ordinary/card original-voter title increment",
+      "result": ".tools/vote-followup-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches"
+      ],
+      "assertions": "PASS_BOUNDED 330 primary actual player-vote clicks/confirmation/permissions/cleanup; English+Japanese caption-only retry; actual ordinary ability/card captions and routes. Original unsupported locale and empty-input failures preserved; no live four-client/global PASS."
+    },
+    {
+      "id": "vote-object-abstain-eachvote-increment",
+      "type": "Actual optional/card/EachVote native request and continuous controlled-card title increment",
+      "result": ".tools/vote-resolution-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches"
+      ],
+      "assertions": "PASS_BOUNDED 340 optional card vote exact native ID/count/abstention/confirm/permissions/cleanup; new optional3locale/maxscale; continuous controlled-card original voter title cache fix and original request gate."
+    },
+    {
+      "id": "villain-multiple-repeat-long-row-increment",
+      "type": "Actual repeated villain choices/private hand discard plus generic long-row measured-height fix",
+      "result": ".tools/villain-multi-1009/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices"
+      ],
+      "assertions": "PASS_BOUNDED 172 original native repeated human alternatives/confirm and private hand card click prefix75, tail-only discard confirm/resolution and long/player shared row max1.3 in actual zh-CN/en-US/ja-JP97; original FAIL retained, no native replay/global/four-client/full localization claim."
+    },
+    {
+      "id": "combat-switch-camouflage-native-increment",
+      "type": "Actual paired board targets, sequential dynamic blocker piles and exact1 fallback",
+      "result": ".tools/combat-choice-1009/ui/20261009T1452119107692Z/result.txt",
+      "engineJobs": [
+        "generic-choices"
+      ],
+      "assertions": "PASS_BOUNDED 418 actual original Jarkeld/Sorrow target rays and sequential Camouflage optional piles/exact-one fallback through Poll. Candidate IDs/dynamic pool/empty confirm/count gates/chooser wait/stale duplicate/priority cleanup verified. Existing zh-CN UI only; full dynamic localization/banding/legacy order/network remain original owners."
+    },
+    {
+      "id": "control-variant-native-increment",
+      "type": "Actual activator chooses for each recipient; original control projection",
+      "result": ".tools/control-variant-1010/ui/20261009T1521078833456Z/result.txt",
+      "engineJobs": [
+        "generic-choices"
+      ],
+      "assertions": "PASS_BOUNDED 202 actual actor-for-recipient original native card lists/confirm gates/title identities and final automatic owner/random projection through Poll/rays. Two supported viewers only, original hidden hand/wait/stale/duplicate/retained/cleanup. Native AI3/4 are not supported clients; full dynamic localization remains R47."
+    },
+    {
+      "id": "switchblock-boundary-native-increment",
+      "type": "Actual band-zero and attacker/defender combat allocation lifecycle",
+      "result": ".tools/switchblock-boundary-1010/ui/20261009T1544109737528Z/result.txt",
+      "engineJobs": [
+        "generic-choices"
+      ],
+      "assertions": "PASS_BOUNDED 209 actual zero-power band and finite-extra blocking allocations, three-point attacker and one-point defender allocations through Poll/rays. Original source/recipient IDs and amounts, increment/confirm gates, chooser/wait, hidden hand, stale same-session/duplicate and MAIN2 cleanup verified. Two supported views, zh-CN shared UI; existing target/band/full-locale contracts reused, no live/four-client claim."
+    },
+    {
+      "id": "r03-stack-vote-final-consumer-increment",
+      "type": "Current original stack-target and native vote consumer incremental contracts",
+      "result": ".tools/r03-payload-1010/ui-combined-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "target-branches"
+      ],
+      "assertions": "PASS_BOUNDED 321 current actual native stack-target and original-voter choice contracts:117 target draft/confirm and204 generic vote checks, three locales, production Poll/rays, private/wait/stale/duplicate/retained/final cleanup. Native outcomes separately reviewed; full text/other payload/live transport/modes remain explicit original owners."
+    },
+    {
+      "id": "digital-successive-identity-increment",
+      "type": "Actual successive digital draft/name/remembered-hand identities",
+      "result": ".tools/digital-identity-1010/ui-combined-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 246 actual continuous four Draft/new-turn and two spellbook name requests plus exact remembered own-hand child selection/confirmation, through current Poll and actual topmost/exposed fan-card rays. Original IDs/count/authority/private/wait/stale/duplicate/retained/final cleanup. Native results separately reviewed; primary locale only, no live transport/global/all-language proof."
+    },
+    {
+      "id": "digital-grave-memory-final-replacement-increment",
+      "type": "Current original grave/optional Seek final-zone replacement native requests",
+      "result": ".tools/digital-identity-1010/ui-memory-combined-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 85 exact original grave target 0/1/confirmation and native optional Seek final-zone replacement accept/decline via Poll/rays; 34 recorded prefix checks plus 51 successful remaining projection/replacement checks. Original FAIL retained; native outcomes separate; production mode/network/all-language out of scope."
+    },
+    {
+      "id": "perpetual-self-removal-increment",
+      "type": "Current native self-removal and optional Play refresh",
+      "result": ".tools/perpetual-removal-1010/ui-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 202 actual self-removal original/current granted text refresh, separate green permanent boost, native optional Play decline/accept original grave preview and exact topmost rays via production Poll, actor/wait/private/stale/duplicate/old callback/cleanup. No production changes or live network/full language/all payload claim."
+    },
+    {
+      "id": "perpetual-cost-color-zone-increment",
+      "type": "Current native perpetual cost/color and original/current refresh",
+      "result": ".tools/perpetual-fields-1010/ui-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 150 actual original/current perpetual characteristic cost/color rows, complete blue fee glyphs, real original/current ray toggles, actual seat/reveal-private field refresh through production Poll. Actual paid tax/payment native evidence separate. No full preview/payment/layout/language/live network certification."
+    },
+    {
+      "id": "perpetual-field-retention-zone-increment",
+      "type": "Current native perpetual NewPT/types/keywords/cost-static lifetime",
+      "result": ".tools/perpetual-retention-1010/ui-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 243 actual native field-lifetime snapshots projected via production Poll; base-power-only blue vs original/total P/T, perpetual types/Flying and cost-static grants, real original/current topmost ray toggles, private hand permissions. Cost payment native separate; no full localization/copy/Moved/live network certification."
+    },
+    {
+      "id": "perpetual-copy-lifecycle-increment",
+      "type": "Current native perpetual perpetual-copy-lifecycle-increment",
+      "result": ".tools/perpetual-copy-1010/ui-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 272 actual native copy snapshots projected via production Poll; physical/copiable baseline, own Artifact/Lifelink blue, exact delayed departure identities, real original/current topmost ray toggles. Native copy selectors reused R20; no full localization/Moved/live network certification."
+    },
+    {
+      "id": "perpetual-moved-lifecycle-increment",
+      "type": "Current native perpetual perpetual-moved-lifecycle-increment",
+      "result": ".tools/perpetual-moved-1010/ui-result.txt",
+      "engineJobs": [
+        "digital"
+      ],
+      "assertions": "PASS_BOUNDED 135 actual native Moved field-lifetime snapshots via production Poll, exact tapped/current ability fields and opponent knowledge, blue granted entry/death replacement rules in BF/Hand/Grave/Exile, original/current actual ray toggles. No full localization/live network certification."
+    },
+    {
+      "id": "locale-resource-fallback-search-increment",
+      "type": "Locale resource fault/reload and search consumers",
+      "result": ".tools/locale-fallback-1010/ui-result.txt",
+      "engineJobs": [],
+      "assertions": "PASS_BOUNDED 114 locale file-fault fallback/reload/stale-error precedence and affected search; 25 accepted prefix +19 tail +70 search; no native effects or whole R47 closure."
+    },
+    {
+      "id": "convoke-title-first-frame-increment",
+      "type": "Actual convoke title first-frame and measured compact mana header",
+      "result": ".tools/convoke-first-frame-1010/ui-result.txt",
+      "engineJobs": [],
+      "assertions": "PASS_BOUNDED 181 actual native convoke title immediate/first render/periodic bind/real view-return rays at three locales and scales1,1.3; no effect rerun or arbitrary resource certification."
+    },
+    {
+      "id": "auxiliary-result-format-increment",
+      "type": "Actual attraction native result and unknown numeric-format fallback",
+      "result": ".tools/auxiliary-result-1010/ui-result.txt",
+      "engineJobs": [
+        "random"
+      ],
+      "assertions": "PASS_BOUNDED 78 two actual native recipient snapshots/three locales, native numeric result geometry/nonblocking/duplicate/expiry; unknown and shared grammar adapters separate. No Planechase UI mode or live network certification."
+    },
+    {
+      "id": "direction-vote-localized-text-increment",
+      "type": "Exact native direction/vote localized text and additional-vote numeric purpose",
+      "result": ".tools/vote-direction-text-1010/ui-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches"
+      ],
+      "assertions": "PASS_BOUNDED_INCREMENT_RECONCILED 447 recorded execution checks: valid failed-run prefix39 + bounded continuation355 + Chinese printed-term delta53. Latest53 supersedes earlier Chinese Evidence/Bribery wording; previous EN/JP and unaffected geometry/indices retained. No new effects or full localization/network claim."
+    },
+    {
+      "id": "long-result-notice-scroll-increment",
+      "type": "Read-only long result notice scroll and lifecycle",
+      "result": ".tools/notice-scroll-1010/ui-result.txt",
+      "engineJobs": [
+        "generic-choices",
+        "variable-branches",
+        "random"
+      ],
+      "assertions": "PASS_BOUNDED 193 actual Poll short native direction/vote inputs, exact final tally layout adapter; explicit long mixed-literal fallback/narrow540x500 adapters in three locales/scales1,1.3; actual canvas mesh/mask/raycast wheel/drag/tail, sameID/rebinding font+offset, hover expiry/queue/duplicate/reset. No new effects/network/all-responsive-battlefield proof."
+    },
+    {
+      "id": "unknown-picker-instruction-scroll-increment",
+      "type": "Unknown raw native picker text scroll and fixed typography",
+      "result": ".tools/picker-fallback-scroll-1010/ui-result.txt",
+      "engineJobs": [
+        "replacements",
+        "noncreature-copies"
+      ],
+      "assertions": "PASS_BOUNDED 271 exact old paid Spark request/selectedconfirm through actual production Poll;3locales/scales1,1.3 literal full fixedfont text+mesh and layout, view/return/candidate/confirm rays preserve original indices+duplicate gate. Explicit unknown30line/narrow640x780 adapters readonly wheel/tail/cachedsameID+BindScene offset; changed description invalidates cache/reset. No new effects/network/all localized picker proof."
+    },
+    {
+      "id": "zone-value-motion-increment",
+      "type": "Actual public-zone motion/value/stack interruption increment",
+      "result": ".tools/zone-motion-1010/ui-results.txt",
+      "engineJobs": [
+        "stack-target-restore-boundary"
+      ],
+      "assertions": "PASS_BOUNDED719 current production Poll/rendered motion/value/ray checks; immutable actual Interlude/Arc/each-damage/Proliferate native proof reused. Public exact-ID three-member flights, repeated/retarget/private/null/viewer/disable adapters, direct authoritative life/PT/damage/card/player counters both seats, next legal actions, actual two native stack IDs and CanvasGroup restoration. Failed driver prefix14 plus tail8 retained; no identical successful rules replay. Source casts unchanged, random-notice queue/temporal reuse and cap16 explicit; no live network/full event bus or generic value animation.",
+      "audit": {
+        "path": ".tools/zone-motion-1010/closure-audit.json",
+        "sha256": "da692cf4be06c1a673d5704ad5f39a15d05b75499a74b697dfa53c375c3d5a8e"
+      },
+      "drivers": [
+        ".tools/zone-motion-1010/ui.cs",
+        ".tools/zone-motion-1010/values.cs",
+        ".tools/zone-motion-1010/stack.cs",
+        ".tools/zone-motion-1010/stack-tail.cs"
+      ],
+      "nativeSourceAudits": [
+        ".tools/replacement-layer-review-1008/classification.json",
+        ".tools/multi-object-replacements-1009/native-verified.json",
+        ".tools/player-counters-1009/native-verified.json",
+        ".tools/stack-target-restore-1008/result.json",
+        ".tools/notice-scroll-1010/audit.json",
+        ".tools/goal-workload-review-1004/ui/mana-results/result.txt",
+        ".tools/snow-pool-1006/ui/20261005T1955086732544Z/result.txt",
+        ".tools/facedown-lifecycle-1007/ui/result.txt"
+      ]
+    },
+    {
+      "id": "captured-effect-source-rule-text-increment",
+      "type": "Captured effect-source and ongoing-rule localization",
+      "result": ".tools/remaining-display-1010/ui-result.txt",
+      "engineJobs": [
+        "replacements"
+      ],
+      "assertions": "PASS_BOUNDED 102 executed checks: final61 + immutable successful11/18 prefixes + type-only tail12. Original FAIL retained, first4 overlapping prefix not recounted. Exact native Teyo/Healer source replay3locales/default+max fonts, actual TMP/rendered mesh, source identity guards, candidate rays/gate; screenshot-driven type label delta. Old real effects reused,0 native reruns/new firsts. Incubate art and mode differences remain.",
+      "audit": {
+        "path": ".tools/remaining-display-1010/audit.json",
+        "sha256": "908f340504c677563122f8486eb51692c175263c306511b4c81aea8e92e1e012"
+      }
+    },
+    {
+      "id": "incubate-native-paired-art-increment",
+      "type": "Actual incubate paired-token face and nativeID rendering",
+      "result": ".tools/incubate-native-1010/ui-result.txt",
+      "engineJobs": [
+        "faces",
+        "x-casting-cost"
+      ],
+      "assertions": "PASS_BOUNDED 171 executed UI/image checks:75 final+21 first successful prefix+70 second successful prefix+5 isolated image guards. Failed drivers retained; duplicate21 rerun not recounted. Native same-ID front→back update in both views through production Poll, physical face texture/current type/PT/detail mesh, zero-SBA cleanup, real token-card ray submits original ID once and duplicate gate, unavailable variant fallback only via exact source paired name, wrong/unknown/ambiguous rejection and exact-key preference. No all language/full network/mechanic claim.",
+      "audit": {
+        "path": ".tools/incubate-native-1010/audit.json",
+        "sha256": "3734c1d51c8c10c2adaa6f43fe133a4898e09eacacba8f7b52f3078659a1e5c5"
+      }
+    },
+    {
+      "id": "incubate-replacement-incubob-payload-increment",
+      "type": "Distinct Incubob back and two-recipient native reveal/private draw contracts",
+      "result": ".tools/incubate-payload-1010/ui-result.txt",
+      "engineJobs": [
+        "faces",
+        "damage-draw"
+      ],
+      "assertions": "两真实原生流程、8付款操作（5施放/3转化）、24法术力、938驱动检查及51离线精确断言：Season+Dawn产生四个40指示物正面；Solemnity+第二Dawn再产生四个零指示物正面，旧40不变；旧146转化40/40并无重复激活选项，新152转化0/0被状态动作删除，七个准确同伴保留。Incubob129造132，付2转化同132为Dark Confidant3/2，1指示物保留；自然下次维持触发、双方94/95分别只读确认原顶130 Air Elemental，入手并失去5生命，记忆对象清空；正常抓原次顶21，只有130继续对手公开，21仍私密。47去重当前UI合同检查，原失败有效14/13前缀加28尾段减8重复；原FAIL不改写。准确确认按钮射线提交原编号/重复拒绝/非接收者不能确认/旧预览清理/两视图最终手牌和生命核对，背面当前异能正文实际mesh。 Incubob实际来源UNK/UB02b存在97713生产catalog，特殊tokenArtKey=TUNK/N.A.无本地可用精确衍生物卡图；反面不得套普通Phyrexian或同名实体Dark Confidant图。规则/操作与当前正文可用，但缺图资源仍在原A01.01同组保持开放，未声明完整展示或所有UNK支持。",
+      "audit": {
+        "path": ".tools/incubate-payload-1010/audit.json",
+        "sha256": "68ed6f583c88f1f116ad9f5edb93b5409a932272eb74adc8ee81ed27c34241a2"
+      }
+    },
+    {
+      "id": "sector-native-choice-increment",
+      "type": "Exact native sector assignment and chooser context",
+      "result": ".tools/sector-native-1010/ui-result.txt",
+      "engineJobs": [
+        "generic-choices"
+      ],
+      "assertions": "S06.01原范围：一条真实原生流程，2施放/5旅法激活/5法术力，自然己方第1/3/5/7/9回合；Space141实际进场先分配对手138/139/140再自己135/136/137，新进142单独分配Gamma。实际+1后九组原生阻挡谓词只同分区可阻挡；真实Alpha135攻击并仅138合法阻挡，原输入提交后下一回合十二组谓词恢复。实际-1选Beta只136/139各加一个指示物；自然两次+1后-5选Alpha，准确135/138消灭，其他五只存活、Beta指示物保留，零忠诚141入坟墓场后其原堆叠来源仍准确。2523驱动检查，170去除重复的离线字段断言；三语言/默认及最大字号、五实际请求/原ordinal射线/重复门槛/非接收者不能选/窗口清理551当前UI检查，不是551独立机制。 S06.02仍PENDING：Card.sector/ChosenSector投影、同名不同分区分组、战场分区归属标识及空间选择位置/方式未实现验收。本批原生分区规则和紧凑选择窗口完成，不宣称整个分区战场/四人/真实网络或全局当前PASS。",
+      "audit": {
+        "path": ".tools/sector-native-1010/audit.json",
+        "sha256": "b670efcaf6e492eb0664c8dd279935195726ec94f790ea04883e2c231981dd1b"
+      }
+    },
+    {
+      "id": "horizontal-field-and-mana",
+      "type": "HorizontalBattlefieldPresentationValidation",
+      "result": ".tools/horizontal-pool-1010/ui/result.txt",
+      "engineJobs": [
+        "restricted-mana-buckets"
+      ],
+      "assertions": "Two-row horizontal battlefield lanes: all representatives reachable, complete adornment bounds/no invisible rays, pixel dragging/no inertia, whole-column wheel/arrows and snapshot retention. Short single-row horizontal pool, exact ordinary/snow/restricted buckets, three locale glyph retention, native split-count and exact restricted callback replay with duplicate/pending/viewer guards. Shared generic chooser last ordinal/scroll retention and real Cavern ability-list native callback. Layout fixtures separate from native payment effects; no live network."
+    },
+    {
+      "id": "meld-component-presentation-increment",
+      "type": "Native linked Meld readonly originals and owner-order request replay",
+      "result": ".tools/meld-tail-1011/ui-result.txt",
+      "engineJobs": [
+        "meld-linked-native-objects"
+      ],
+      "assertions": "N31完成原meld-linked-native-objects普通1v1最低输入与S01.02融合展示：真实原件链接/单场上对象、原件选择、正常离场/重定向/库顶库底及坟墓场排序、攻击米斯拉、克撒7→9忠诚、缺伙伴/非自身所有/衍生物/实际Clone/禁止部分放逐、合成特征LKI及单次死亡触发；现有详情按钮打开两原件只读列表、完整融合图和真实拆分清理。 533实际UI/图加载检查，不是533机制；当前goal排除指挥官与完整子游戏。A01其余18原最低输入保持原归属；七牌对的独立背面payload没有因共享Meld身份/显示通过而整体核销。A06当前全量依赖合并和生产远程联机仍未通过。",
+      "audit": {
+        "path": ".tools/meld-tail-1011/audit.json",
+        "sha256": "a84743d6a5a6ab4be3de40c94adff6e278fd89dc7bcceaccd912a57b1697a503"
+      }
+    },
+    {
+      "id": "removed-object-lifecycle-increment",
+      "type": "Native AWOL target/current-object disappearance request replay",
+      "result": ".tools/removed-object-1011/ui-result.txt",
+      "engineJobs": [
+        "awol-remove-from-game"
+      ],
+      "assertions": "Actual native target/paid/final request views through current production Poll; EventSystem board ray exact target ordinal, duplicate/waiting-seat guard; both seats see battlefield removal, no exile placeholder or stale stack, obsolete detail closes without view reset. A01其余17最低输入、A06当前依赖合并及其他模式/网络原边界保持；子游戏与指挥官继续排除。AWOL规则来源为固定Forge，不宣称所有赛制合法或物理资产/BO3牌池移除通过。",
+      "audit": {
+        "path": ".tools/removed-object-1011/audit.json",
+        "sha256": "96c93a7af158a26cce530f7d19cb875cbe766e6183d39904b070b96d6341c0c9"
+      }
+    },
+    {
+      "id": "native-flip-feedback-presentation",
+      "type": "Native public Flip callback and nonblocking mandatory location/result replay",
+      "result": ".tools/flip-feedback-1011/ui-result.txt",
+      "engineJobs": [
+        "native-flip-public-feedback"
+      ],
+      "assertions": "原S07.02原生随机翻牌反馈：复用必选位置选牌与非阻塞通知，当前桥接捕获准确次数/位置/命中物理ID，双方公开；命中牌已离场仍保留结果，场上命中牌细蓝框，重叠/展开仅标正确成员，通知到期清除并能继续原下一优先权。 431定向检查含7分组展示适配器，非机制场景数。其他原A01/A06最低输入与特殊模式仍开放；子游戏/指挥官排除保持。无物理投掷、全量当前运行包、远程联机或所有生产者PASS。",
+      "audit": {
+        "path": ".tools/flip-feedback-1011/audit.json",
+        "sha256": "94d904e137b04f0c76232bf61c3218c012dfa619339cab489eb81657991284a1"
+      }
+    },
+    {
+      "id": "karn-restart-context-presentation",
+      "type": "Native same-game restart revision, old context cleanup and public nonblocking notice",
+      "result": ".tools/restart-series-1011/ui-result.txt",
+      "engineJobs": [
+        "karn-same-game-state-reset"
+      ],
+      "assertions": "Real request frames through production Poll/GetView, actual old detail and zone browser cleared at native revision; both views and exact next ray/duplicate/waiting/expiry. Three formal locales scale1.3. Position changed after screenshot review; only relocated text geometry resampled. 原A01其余15最低输入、S08的BO3双局/换备/同步错误边界、A06依赖对齐和其他原事项保留。子游戏父子恢复及指挥官专属部分依据用户排除清单后置，绝不记为PASS。无远程联网/完整BO3/全量当前版本PASS。",
+      "audit": {
+        "path": ".tools/restart-series-1011/audit.json",
+        "sha256": "823514e6a7680f10d01fe45596ef8d98ddc5fb2c5679080007932701dec3d07e"
+      }
+    },
+    {
+      "id": "bo3-sideboard-native-lifecycle",
+      "type": "Existing BO3 sideboard and playdraw lifecycle with actual native opening/outcome evidence",
+      "result": ".tools/bo3-sideboard-1011/ui-result.txt",
+      "engineJobs": [
+        "karn-same-game-state-reset"
+      ],
+      "assertions": "S08.02 current BO3 lifecycle: real standard native game1 win, actual quantity/drag/reset/exact pool and printing rejection/readiness wire; read-only actual main/side witness in game2; real second win finishes series, initial/rematch/loser chooser/ready cancel/private ownDeck/old-match and hash rejection; actual process exit7 abort produces no score, actual normal retry opening. 原S08卡恩部分复用N34真实原生重开、共享清理和相关202UI检查；旧实际平局与终局绑定按逐字BO3消费者及已审查协议差异引用。 当前6事项：A01剩15/125原输入、R02.04外部机器环境/容量、S04.02游乐设施/时空、S05.02装置、S06.02分区、A06.01依赖对齐。指挥官及完整子游戏排除，原身份/未验证状态保留。无完整当前版本或不同远程客户端PASS。",
+      "audit": {
+        "path": ".tools/bo3-sideboard-1011/audit.json",
+        "sha256": "08e055953212201bd2a04a02c29a148187f1aafb561a501ea4c5fec3a8bbdbf1"
+      },
+      "nativeLifecycleSupplement": {
+        "path": ".tools/bo3-sideboard-1011/verified.json",
+        "sha256": "e006f7ab17f8715290cbd763e788a4741c0a8f6d0cd895a680c85f0390daa961"
+      }
+    },
+    {
+      "id": "auxiliary-battlefield-presentation-increment",
+      "type": "Conditional auxiliary marker/card badges and public Junkyard browser with native choices",
+      "result": ".tools/auxiliary-lifecycle-1012/ui-result.txt",
+      "engineJobs": [
+        "auxiliary-contraption-lifecycle"
+      ],
+      "assertions": "装置原最低输入：正式注册15原件、自然/主动启动标记、0/部分/全部启动、准确当前组与保存选择、新成员不自动选择；真实Cogmentor改组、战斗接管及新控制者启动、临时衍生物到期、组装不足与耗尽、原件垃圾场/放逐及非装置原牌复制后的坟墓场路线、Rigger双倍组装。战场每卡组号/当前组及数量、公开垃圾场与辅助隐藏库数量；三正式语言1.3、真实原序号点击与接收者权限。",
+      "audit": {
+        "path": ".tools/auxiliary-lifecycle-1012/audit.json",
+        "sha256": "f4b17f9b11b7b32f66515fc9c9c3ff4aa69c114c6ac83c7701bc9f36fb70c85b"
+      }
+    },
+    {
+      "id": "attraction-visit-presentation-increment",
+      "type": "Actual Attraction light/visit order/native numeric result plus life modifier and Ferris phased scene visibility",
+      "result": ".tools/attraction-visit-1012/ui-result.txt",
+      "engineJobs": [
+        "attraction-visit-lifecycle"
+      ],
+      "assertions": "普通1v1游乐设施原最低输入：复用N30打开2/不足1/空0/领奖、N48正式10张准确印次注册/打开及编辑、N49灯号/垃圾场；新自然MAIN1与Line Cutter额外掷骰，未命中/单命中/同时命中、重复触发与唯一造访计数、真实离场进垃圾场、MAIN2/对方/空设施无自然掷骰但显式空效果仍掷骰。实际Night Shift生命改值5→6、普通掷骰不触发造访专属Holder、真实造访6返回原Holder；Ferris自然造访移出相位、普通低点数不返回、正常重置不返回、后续自然造访低点数返回及原生成效果清理。83原灯号与准确功能印次仅适配器0效果证明；三语言实际381UI检查含排序原ordinal/权限、修改/生命二选与骰图。",
+      "audit": {
+        "path": ".tools/attraction-visit-1012/audit.json",
+        "sha256": "6969013386cd10e4732018e093c7d6fcca7245f8bd1e02042aca7ebaada57b73"
+      }
+    },
+    {
+      "id": "chosen-nonmana-produced-trigger-increment",
+      "type": "Actual ordinary mana-origin trigger body/produced symbols and hover localization plus canonical mana colors",
+      "result": ".tools/choice-nonmana-1012/ui-result.txt",
+      "engineJobs": [
+        "chosen-nonmana-land-origin"
+      ],
+      "assertions": "Actual current Poll from frozen ordinary Sun trigger; both viewers3formal locales1.3 localized printed paragraph and produced U mesh; unknown symbol/hidden/no-result guards; CN blue/red canonical rays, duplicate and other-seat restrictions, detail EN/JA/CN blue glyph and original native clear. Exact failed prefixes retained; no new transport claim.",
+      "audit": {
+        "path": ".tools/choice-nonmana-1012/audit.json",
+        "sha256": "30eb293f365a8f84b61d9ff7c6ea5051c2ba5c65ea36fcc4e4e16f6e4ba5dee9"
+      }
+    },
+    {
+      "id": "auxiliary-native-name-difference",
+      "type": "Actual native auxiliary names use existing shared name search/row/confirm and actor permissions",
+      "result": ".tools/auxiliary-series-1012/ui-result.txt",
+      "engineJobs": [
+        "auxiliary-series-provenance"
+      ],
+      "assertions": "Actual native options, real current Poll for both recipients, canonical ordinal/choice:ID, NameSearch+row+confirm rays, nonactor and post-resolution cleanup; primary locale23. No new render/localization/transport implementation.",
+      "audit": {
+        "path": ".tools/auxiliary-series-1012/audit.json",
+        "sha256": "f387953f82c5a229ef61ff6796be0262d07f9addd9c1556d7bd59e45a65bb02a"
+      }
+    },
+    {
+      "id": "generated-copy-confirm-preview",
+      "type": "Exact native generated copy preview, real Poll and accept/refuse rays",
+      "result": ".tools/name-consumer-delta-1012/ui-result.txt",
+      "engineJobs": [
+        "name-consumer-downstream-deltas"
+      ],
+      "assertions": "Current actor/nonactor confirmation, exact ChoiceCard child native printing sprite and two original choices15; old visual FAIL preserved. Adapter replay is zero effects; actual N54 rules original runtime retained.",
+      "audit": {
+        "path": ".tools/name-consumer-delta-1012/audit.json",
+        "sha256": "e2572e50ba312a70f5fc7bf974728f1cdfb3b4909b1b9bf90fa0d325bbce8d62"
+      }
+    }
+  ],
+  "families": [
+    {
+      "id": "opening",
+      "name": "起手与调度",
+      "requests": [
+        "InputConfirmMulligan",
+        "InputLondonMulligan",
+        "InputMulligan",
+        "InputChooseStartingHand"
+      ],
+      "apis": [],
+      "rules": [
+        "starting-hands/accept",
+        "starting-hands/rotate-two",
+        "starting-hands/rotate-cycle",
+        "mulligan-rounds/rounds-1-2-1",
+        "mulligan-rounds/rounds-2-2-2",
+        "mulligan-rounds/rounds-1-0-3",
+        "mulligan-rounds/rounds-1-7-0",
+        "opening-boundaries/seat-one-order",
+        "opening-boundaries/seat-two-order",
+        "opening-boundaries/interrupt-opening",
+        "opening-boundaries/restart-config",
+        "opening-boundaries/auto-remainder"
+      ],
+      "ui": [
+        "starting-hands",
+        "opening-boundaries"
+      ],
+      "reference": [
+        "01:40",
+        "43:40"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02/S08唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "priority",
+      "name": "优先权、响应与等待",
+      "requests": [
+        "InputPassPriority"
+      ],
+      "apis": [],
+      "rules": [
+        "stack/spells",
+        "stack/triggers",
+        "stack/triggers-reverse",
+        "card-names/mage-only",
+        "card-names/mage-other",
+        "card-names/needle-only",
+        "card-names/needle-other",
+        "mana-source-refunds/filter-chain",
+        "mana-source-refunds/life-source",
+        "mana-source-refunds/sacrifice-source",
+        "mana-source-refunds/replacement-quantity",
+        "mana-source-refunds/restricted-source"
+      ],
+      "ui": [
+        "choices",
+        "stack",
+        "digital",
+        "mana-source-refunds"
+      ],
+      "reference": [
+        "36:40",
+        "41:40"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02/R04唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "choices",
+      "name": "施放面、模式与异能选择",
+      "requests": [
+        "dialog",
+        "ChooseModes",
+        "ChooseOptions"
+      ],
+      "apis": [
+        "Charm",
+        "GenericChoice",
+        "ChooseColor",
+        "ChooseType",
+        "ChooseEvenOdd",
+        "ChooseDirection",
+        "ChooseSource",
+        "ChoosePlayer",
+        "NameCard",
+        "Vote",
+        "VillainousChoice",
+        "ChooseSector"
+      ],
+      "rules": [
+        "casting/cast-adventure",
+        "casting/cast-mdfc-front",
+        "casting/cast-mdfc-back",
+        "casting/cast-spree",
+        "fra/modal",
+        "generic-choices/colors",
+        "generic-choices/villain",
+        "generic-choices/villain-repeat",
+        "callback-contracts/empty",
+        "callback-contracts/display",
+        "callback-contracts/zero",
+        "callback-contracts/insert-first",
+        "callback-contracts/insert-middle",
+        "callback-contracts/insert-last",
+        "card-names/therapy-hit",
+        "card-names/therapy-miss",
+        "card-names/therapy-split",
+        "card-names/therapy-cancel",
+        "card-names/mage",
+        "card-names/needle-ability",
+        "card-names/needle-mana",
+        "card-names/arbiter",
+        "card-names/arbiter-empty",
+        "mode-choices/spree-rich",
+        "mode-choices/spree-limited",
+        "mode-choices/spree-targets",
+        "mode-choices/spree-unpayable",
+        "mode-choices/choose-one",
+        "mode-choices/kicker",
+        "mode-choices/kicker-base",
+        "mode-choices/evoke",
+        "mode-choices/evoke-normal",
+        "mode-choices/evoke-limited",
+        "mode-choices/entwine",
+        "mode-choices/entwine-base",
+        "mode-choices/replicate",
+        "mode-choices/offspring",
+        "mode-choices/offspring-base",
+        "cast-choice-families/bargain-base",
+        "cast-choice-families/bargain",
+        "cast-choice-families/buyback-base",
+        "cast-choice-families/buyback",
+        "cast-choice-families/casualty-base",
+        "cast-choice-families/casualty",
+        "cast-choice-families/confluence",
+        "cast-choice-families/conspire-base",
+        "cast-choice-families/conspire",
+        "cast-choice-families/dash-base",
+        "cast-choice-families/dash",
+        "cast-choice-families/escalate-base",
+        "cast-choice-families/escalate",
+        "cast-choice-families/gift-base",
+        "cast-choice-families/gift",
+        "cast-choice-families/multikicker-base",
+        "cast-choice-families/multikicker",
+        "cast-choice-families/overload-base",
+        "cast-choice-families/overload",
+        "cast-choice-families/profit-base",
+        "cast-choice-families/profit",
+        "cast-choice-families/squad-base",
+        "cast-choice-families/squad",
+        "cast-choice-families/xconfluence-base",
+        "cast-choice-families/xconfluence",
+        "variable-branches/doodle-match",
+        "variable-branches/doodle-mismatch",
+        "dungeon-paths/tomb-oubliette",
+        "dungeon-paths/mage-graveyard",
+        "dungeon-paths/mine-goblin-reenter",
+        "dungeon-paths/mine-fungi",
+        "dungeon-paths/tomb-slow",
+        "dungeon-paths/mage-runestone",
+        "dungeon-expiry/mage-twisted-expiry",
+        "dungeon-reentry/tomb-reenter",
+        "dungeon-dark-pool/mine-dark-pool",
+        "undercity-paths/forge-trap-reenter",
+        "undercity-paths/well-arena-empty",
+        "undercity-paths/well-stash",
+        "undercity-expiry/well-arena-complete-expiry",
+        "convoke-generic-icon/convoke-generic",
+        "stack-exile-cost-boundary/stack-exile-before-mana",
+        "stack-exile-cost-boundary/restored-stack-resolves",
+        "stack-target-restore-boundary/two-spells-target-restore",
+        "stack-target-restore-boundary/two-spells-copy-restore",
+        "reveal-cost-rollback-boundary/sacrifice-reveal-before-mana",
+        "reveal-cost-rollback-boundary/sacrifice-before-reveal-cancel",
+        "reveal-cost-rollback-boundary/reveal-library-information-barrier",
+        "behold-exile-boundary/hand-cancel-retry-return",
+        "behold-exile-boundary/battlefield-cancel-retry-return"
+      ],
+      "ui": [
+        "choices",
+        "generic-choices",
+        "starting-hands",
+        "card-names",
+        "replacements",
+        "damage-draw",
+        "mode-cards",
+        "stack-choices",
+        "cast-choice-families",
+        "stack-list",
+        "variable-branches",
+        "dungeon-paths",
+        "dungeon-restrictions",
+        "dungeon-completion",
+        "convoke-generic-icon",
+        "stack-exile-cost",
+        "stack-restore-list-increment",
+        "reveal-cost-rollback-increment",
+        "behold-exile-increment"
+      ],
+      "reference": [
+        "08:00",
+        "51:00"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R03/R04/R47/R51/S02/S06/S07唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "number",
+      "name": "X／数量／分配",
+      "requests": [
+        "ChooseNumber",
+        "AssignAmount",
+        "AssignCombatDamage"
+      ],
+      "apis": [
+        "ChooseNumber",
+        "ChangeX",
+        "BidLife",
+        "AssignGroup",
+        "StoreSVar"
+      ],
+      "rules": [
+        "advanced/x",
+        "advanced/damage",
+        "combat-allocation/trample-reset-release",
+        "combat-allocation/trample-overassign",
+        "combat-allocation/trample-save-blocker",
+        "combat-allocation/trample-seat-two",
+        "combat-allocation/damaged-blocker",
+        "combat-allocation/deathtouch-trample",
+        "combat-allocation/deathtouch",
+        "combat-allocation/first-strike",
+        "combat-allocation/double-strike-blocked",
+        "combat-allocation/double-strike-open",
+        "combat-allocation/menace",
+        "combat-allocation/block-multiple",
+        "combat-allocation/as-unblocked-accept",
+        "combat-allocation/as-unblocked-decline",
+        "combat-allocation/planeswalker",
+        "combat-allocation/many-blockers",
+        "variable-branches/slaughter-single",
+        "variable-branches/slaughter-delirium",
+        "variable-branches/drain-creature",
+        "variable-branches/drain-player",
+        "variable-branches/bell-trigger-reset",
+        "variable-branches/doodle-match",
+        "variable-branches/doodle-mismatch",
+        "variable-branches/join-forces",
+        "variable-branches/vermin-repeat",
+        "target-branches/arc-partial",
+        "number-auction/auction-zero",
+        "number-auction/auction-other",
+        "number-auction/auction-caster",
+        "number-auction/hellion-large",
+        "number-auction/hellion-cancel",
+        "number-auction/bounded-number",
+        "quantity-allocation/counter-division",
+        "quantity-allocation/shield-division",
+        "quantity-allocation/shield-on-damage",
+        "quantity-allocation/mana-combo",
+        "quantity-allocation/mana-different"
+      ],
+      "ui": [
+        "selection",
+        "advanced",
+        "prepare",
+        "combat-allocation",
+        "variable-branches",
+        "target-branches",
+        "number-auction",
+        "quantity-allocation"
+      ],
+      "reference": [
+        "04:40"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R03/R47唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "mana",
+      "name": "法术力来源与支付",
+      "requests": [
+        "InputPayMana",
+        "InputPayManaOfCostPayment"
+      ],
+      "apis": [
+        "Mana",
+        "ManaReflected",
+        "ReplaceMana",
+        "DrainMana"
+      ],
+      "rules": [
+        "casting/cast-spree",
+        "advanced/x",
+        "prepare/default",
+        "affordability/default",
+        "land-abilities/single",
+        "land-abilities/multiple",
+        "mana-pool/pool-retry",
+        "mana-variants/snow-paid",
+        "mana-variants/snow-insufficient",
+        "mana-variants/hybrid-green",
+        "mana-variants/hybrid-red",
+        "mana-variants/hybrid-mixed",
+        "mana-variants/hybrid-insufficient",
+        "mana-variants/hybrid-retry",
+        "mana-variants/twobrid-white",
+        "mana-variants/twobrid-generic",
+        "mana-variants/twobrid-mixed",
+        "mana-variants/twobrid-insufficient",
+        "x-casting-cost/normal",
+        "x-casting-cost/reduce",
+        "x-casting-cost/increase",
+        "x-casting-cost/xx-reduce",
+        "x-casting-cost/xx-increase",
+        "x-casting-cost/xx-zero",
+        "x-casting-cost/counter-tax",
+        "mana-variants/phyrexian-mana",
+        "mana-variants/phyrexian-life",
+        "mana-variants/phyrexian-mixed",
+        "mana-variants/phyrexian-insufficient",
+        "mana-variants/phyrexian-prohibited",
+        "mana-variants/phyrexian-prohibited-mana",
+        "mana-variants/phyrexian-cancel",
+        "mana-variants/phyrexian-black",
+        "phyrexian-modifiers/tri-life",
+        "phyrexian-modifiers/tri-mixed",
+        "phyrexian-modifiers/tri-mana",
+        "phyrexian-modifiers/tri-tapped-life",
+        "phyrexian-modifiers/tax-life",
+        "phyrexian-modifiers/tax-mixed",
+        "phyrexian-modifiers/tax-mana",
+        "phyrexian-modifiers/reduce-life",
+        "phyrexian-modifiers/reduce-mixed",
+        "phyrexian-modifiers/reduce-mana",
+        "phyrexian-modifiers/tax-reduce-life",
+        "phyrexian-modifiers/tri-reduce-life",
+        "phyrexian-modifiers/tri-tax-reduce-life",
+        "phyrexian-modifiers/tri-above-floor-life",
+        "phyrexian-modifiers/tri-insufficient",
+        "phyrexian-modifiers/tri-cancel-life",
+        "phyrexian-modifiers/tri-small-life",
+        "phyrexian-modifiers/tri-small-mana",
+        "phyrexian-modifiers/tri-late-life",
+        "phyrexian-modifiers/tri-above-floor-late-life",
+        "phyrexian-modifiers/tri-krrik-black",
+        "phyrexian-modifiers/small-life",
+        "phyrexian-modifiers/tri-small-insufficient",
+        "snow-pool/snow-green",
+        "snow-pool/snow-colorless",
+        "snow-pool/regular-colored",
+        "snow-pool/snow-colored",
+        "cost-interactions/hybrid-tax",
+        "cost-interactions/twobrid-tax",
+        "cost-interactions/snow-tax",
+        "cost-interactions/xx-tax",
+        "cost-interactions/hybrid-reduce",
+        "cost-interactions/twobrid-reduce",
+        "cost-interactions/snow-reduce",
+        "cost-interactions/xx-reduce",
+        "cost-interactions/hybrid-floor",
+        "cost-interactions/twobrid-floor",
+        "cost-interactions/snow-floor",
+        "cost-interactions/xx-floor",
+        "cost-interactions/strict-colorless-tax",
+        "cost-interactions/strict-colorless-reduce",
+        "cost-interactions/strict-colorless-wrong",
+        "cost-interactions/generic-reducer-keeps-color",
+        "cost-interactions/colored-reduce",
+        "cost-interactions/colored-reduce-floor",
+        "cost-interactions/colored-reduce-krrik",
+        "cost-interactions/krrik-tax",
+        "cost-interactions/krrik-reduce",
+        "cost-interactions/life-additional-tax",
+        "cost-interactions/life-additional-reduce",
+        "cost-interactions/life-additional-floor",
+        "cost-interactions/citadel-base",
+        "cost-interactions/citadel-tax",
+        "cost-interactions/citadel-reduce",
+        "cost-interactions/citadel-floor",
+        "cost-interactions/alt-life-tax",
+        "cost-interactions/alt-life-reduce",
+        "cost-interactions/alt-life-floor",
+        "cost-interactions/convoke-floor",
+        "cost-interactions/convoke-tax",
+        "cost-interactions/delve-floor",
+        "cost-interactions/delve-tax",
+        "cost-interactions/delve-reduce",
+        "cost-interactions/improvise-phy-floor",
+        "cost-interactions/defiler-floor",
+        "cost-interactions/defiler-tax",
+        "cost-interactions/defiler-reduce",
+        "cost-interactions/affinity-floor",
+        "cost-interactions/affinity-tax",
+        "cost-interactions/affinity-reduce",
+        "cost-interactions/twobrid-colored-floor-reduce",
+        "cost-interactions/hybrid-floor-tax-reduce",
+        "cost-interactions/alt-gain-life-tax",
+        "cost-interactions/alt-return-tax",
+        "cost-interactions/alt-sacrifice-tax",
+        "cost-interactions/alt-exile-tax",
+        "cost-interactions/mandatory-discard-tax",
+        "cost-interactions/mandatory-sacrifice-tax",
+        "cost-interactions/alt-gain-life-reduce",
+        "cost-interactions/alt-return-reduce",
+        "cost-interactions/alt-sacrifice-reduce",
+        "cost-interactions/alt-exile-reduce",
+        "cost-interactions/mandatory-discard-reduce",
+        "cost-interactions/mandatory-sacrifice-reduce",
+        "cost-interactions/alt-gain-life-floor",
+        "cost-interactions/alt-return-floor",
+        "cost-interactions/alt-sacrifice-floor",
+        "cost-interactions/alt-exile-floor",
+        "cost-interactions/mandatory-discard-floor",
+        "cost-interactions/mandatory-sacrifice-floor",
+        "cost-interactions/hybrid-phy-tax",
+        "cost-interactions/hybrid-phy-reduce",
+        "cost-interactions/hybrid-phy-floor",
+        "cost-interactions/colorless-hybrid-tax",
+        "cost-interactions/colorless-hybrid-colored-tax",
+        "cost-interactions/colorless-hybrid-reduce",
+        "cost-interactions/colorless-hybrid-colored-reduce",
+        "cost-interactions/colorless-hybrid-floor",
+        "cost-interactions/colorless-hybrid-colored-floor",
+        "cost-interactions/free-cast-tax",
+        "cost-interactions/flashback-tax",
+        "cost-interactions/free-cast-reduce",
+        "cost-interactions/flashback-reduce",
+        "cost-interactions/free-cast-floor",
+        "cost-interactions/flashback-floor",
+        "cost-interactions/krrik-tax-cancel",
+        "cost-interactions/delve-tax-cancel",
+        "cost-interactions/defiler-tax-cancel",
+        "cost-interactions/commander-tax",
+        "cost-interactions/commander-reduce",
+        "cost-interactions/commander-floor",
+        "cost-interactions/activation-unaffected-tax",
+        "cost-interactions/energy-unaffected-tax",
+        "cost-interactions/activation-unaffected-reduce",
+        "cost-interactions/energy-unaffected-reduce",
+        "cost-interactions/activation-unaffected-floor",
+        "cost-interactions/energy-unaffected-floor",
+        "cost-interactions/activation-reducer-floor",
+        "cost-interactions/last-life-is-legal",
+        "cost-interactions/phy-life-prohibited-reduced",
+        "cost-interactions/krrik-life-prohibited-reduced",
+        "cost-interactions/xx-free-fixed-zero",
+        "cost-interactions/xx-free-floor",
+        "cost-interactions/emerge-tax",
+        "cost-interactions/offering-tax",
+        "cost-interactions/escape-tax",
+        "cost-interactions/kicker-tax",
+        "cost-interactions/prototype-tax",
+        "cost-interactions/morph-tax",
+        "cost-interactions/emerge-reduce",
+        "cost-interactions/offering-reduce",
+        "cost-interactions/escape-reduce",
+        "cost-interactions/kicker-reduce",
+        "cost-interactions/prototype-reduce",
+        "cost-interactions/morph-reduce",
+        "cost-interactions/emerge-floor",
+        "cost-interactions/offering-floor",
+        "cost-interactions/escape-floor",
+        "cost-interactions/kicker-floor",
+        "cost-interactions/prototype-floor",
+        "cost-interactions/morph-floor",
+        "cost-interactions/improvise-phy-mixed",
+        "cost-interactions/improvise-phy-reserved-cancel",
+        "cost-interactions/improvise-two-phy-floor",
+        "cost-interactions/convoke-partial-cancel",
+        "cost-interactions/convoke-trigger-cancel",
+        "cost-interactions/waterbend-partial-cancel",
+        "cost-optional-combinations/optional-two-colors-tax",
+        "cost-optional-combinations/optional-same-color-tax",
+        "cost-optional-combinations/optional-two-colors-reduce",
+        "cost-optional-combinations/optional-same-color-reduce",
+        "cost-optional-combinations/optional-two-colors-floor",
+        "cost-optional-combinations/optional-same-color-floor",
+        "exert-branches/mana-exert",
+        "exert-branches/mana-ordinary",
+        "exert-branches/mana-cancel",
+        "quantity-allocation/mana-combo",
+        "quantity-allocation/mana-different",
+        "arena-mana/haste-expiry",
+        "arena-mana/split-haste",
+        "arena-mana/cancel-cost",
+        "arena-mana/noncreature",
+        "mana-spending/colored-not-generic",
+        "mana-spending/nonartifact-forbidden",
+        "mana-spending/mana-etb-counter",
+        "mana-spending/spent-copy",
+        "mana-restriction-lifecycle/cost-X",
+        "mana-restriction-lifecycle/activated-only",
+        "mana-restriction-lifecycle/graveyard-source",
+        "mana-restriction-lifecycle/persistent-expiry",
+        "mana-restriction-lifecycle/combat-expiry",
+        "mana-restriction-lifecycle/nonspell-upkeep",
+        "mana-restriction-lifecycle/cumulative-upkeep",
+        "mana-cost-predicates/activated-X",
+        "mana-cost-predicates/resolving-X",
+        "mana-cost-predicates/resolving-twice-X",
+        "mana-cost-predicates/fixed-tax-forbidden",
+        "mana-cost-predicates/resolving-C",
+        "mana-echo/echo-X",
+        "mana-echo/echo-life-change",
+        "mana-echo/echo-fixed-reject",
+        "mana-spent-effects/riot-counter",
+        "mana-spent-effects/riot-haste",
+        "mana-spent-effects/haste-no-expiry",
+        "mana-spent-effects/jade-next-turn",
+        "mana-spent-effects/foundry-exile",
+        "mana-spent-effects/foundry-graveyard",
+        "conditional-spent-mana/nonhuman-counter",
+        "conditional-spent-mana/human-no-counter",
+        "conditional-spent-mana/multicolor-counter",
+        "conditional-spent-mana/monocolor-no-counter",
+        "conditional-spent-mana/dragon-haste-expiry",
+        "conditional-spent-mana/nondragon-no-haste",
+        "multipart-cost-boundaries/discard-before-sacrifice",
+        "multipart-cost-boundaries/life-discard-forced-completion",
+        "multipart-cost-boundaries/spell-discard-before-sacrifice",
+        "multipart-cost-boundaries/replacement-discard-before-sacrifice",
+        "multipart-cost-boundaries/exile-before-mana",
+        "multipart-cost-boundaries/sacrifice-before-mana",
+        "multipart-cost-boundaries/return-before-mana",
+        "multipart-cost-boundaries/library-information-barrier",
+        "mixed-tap-costs/convoke-color-switch",
+        "mixed-tap-costs/convoke-wrong-color",
+        "mixed-tap-costs/improvise-multicolor",
+        "mixed-tap-costs/improvise-colored-short",
+        "mixed-tap-costs/waterbend-overlap",
+        "mana-source-refunds/filter-chain",
+        "mana-source-refunds/life-source",
+        "mana-source-refunds/sacrifice-source",
+        "mana-source-refunds/replacement-quantity",
+        "mana-source-refunds/restricted-source",
+        "convoke-generic-icon/convoke-generic",
+        "component-card-face/base",
+        "component-card-face/raised",
+        "component-card-face/reduced",
+        "component-card-face/combined",
+        "component-card-face/zones",
+        "template-card-faces/two-cards",
+        "cost-primitive-boundaries/counter-before-mana",
+        "cost-primitive-boundaries/mana-before-counter",
+        "cost-primitive-boundaries/exile-top-before-mana",
+        "cost-primitive-boundaries/mill-before-mana",
+        "cost-primitive-boundaries/mill-exact-four",
+        "cost-primitive-boundaries/mill-insufficient-three",
+        "cost-primitive-boundaries/mill-upkeep-exact-two",
+        "cost-primitive-boundaries/mill-upkeep-insufficient-one",
+        "cost-primitive-boundaries/put-counter-cancel",
+        "cost-primitive-boundaries/put-counter-doubled-cancel",
+        "cost-primitive-boundaries/remove-any-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-split-cancel",
+        "cost-primitive-boundaries/unattach-before-mana",
+        "processor-cost-boundaries/processor-before-mana",
+        "grave-cost-boundaries/evidence-before-mana",
+        "grave-cost-boundaries/forage-grave-before-mana",
+        "grave-cost-boundaries/forage-food-before-mana",
+        "exert-cost-boundary/exert-before-mana",
+        "payment-history-boundary/game-history-before-cancel",
+        "stack-exile-cost-boundary/stack-exile-before-mana",
+        "stack-exile-cost-boundary/restored-stack-resolves"
+      ],
+      "ui": [
+        "choices",
+        "prepare",
+        "mana-results",
+        "payment-dock",
+        "mana-variants",
+        "phyrexian-payments",
+        "phyrexian-modifiers",
+        "snow-pool",
+        "cost-interactions",
+        "exert-branches",
+        "quantity-allocation",
+        "arena-mana-confirm",
+        "mana-lifecycle-confirm",
+        "mana-spent-effects",
+        "multipart-cost-boundaries",
+        "mixed-tap-costs",
+        "mana-source-refunds",
+        "convoke-generic-icon",
+        "component-card-face",
+        "template-card-faces",
+        "stack-exile-cost"
+      ],
+      "reference": [
+        "49:20"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R09/R51唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "cost",
+      "name": "非普通法术力费用",
+      "requests": [
+        "InputSelectCardsForConvokeOrImprovise",
+        "InputSelectCardToRemoveCounter"
+      ],
+      "apis": [
+        "Sacrifice",
+        "SacrificeAll",
+        "Discard",
+        "Tap",
+        "TapAll",
+        "Untap",
+        "UntapAll",
+        "TapOrUntap",
+        "TaporUntapAll"
+      ],
+      "rules": [
+        "advanced/crew",
+        "advanced/evidence",
+        "advanced/ninjutsu",
+        "selection/hand",
+        "tap-payment/convoke",
+        "tap-payment/convoke-zero",
+        "tap-payment/convoke-cancel",
+        "tap-payment/improvise",
+        "tap-payment/waterbend",
+        "tap-payment/convoke-only",
+        "tap-payment/improvise-only",
+        "tap-payment/waterbend-only",
+        "library-costs/own",
+        "library-costs/opponent",
+        "library-costs/seat-two",
+        "library-costs/cancel-player",
+        "library-costs/cancel-card",
+        "library-costs/insufficient",
+        "library-costs/second-age",
+        "cost-interactions/hybrid-tax",
+        "cost-interactions/twobrid-tax",
+        "cost-interactions/snow-tax",
+        "cost-interactions/xx-tax",
+        "cost-interactions/hybrid-reduce",
+        "cost-interactions/twobrid-reduce",
+        "cost-interactions/snow-reduce",
+        "cost-interactions/xx-reduce",
+        "cost-interactions/hybrid-floor",
+        "cost-interactions/twobrid-floor",
+        "cost-interactions/snow-floor",
+        "cost-interactions/xx-floor",
+        "cost-interactions/strict-colorless-tax",
+        "cost-interactions/strict-colorless-reduce",
+        "cost-interactions/strict-colorless-wrong",
+        "cost-interactions/generic-reducer-keeps-color",
+        "cost-interactions/colored-reduce",
+        "cost-interactions/colored-reduce-floor",
+        "cost-interactions/colored-reduce-krrik",
+        "cost-interactions/krrik-tax",
+        "cost-interactions/krrik-reduce",
+        "cost-interactions/life-additional-tax",
+        "cost-interactions/life-additional-reduce",
+        "cost-interactions/life-additional-floor",
+        "cost-interactions/citadel-base",
+        "cost-interactions/citadel-tax",
+        "cost-interactions/citadel-reduce",
+        "cost-interactions/citadel-floor",
+        "cost-interactions/alt-life-tax",
+        "cost-interactions/alt-life-reduce",
+        "cost-interactions/alt-life-floor",
+        "cost-interactions/convoke-floor",
+        "cost-interactions/convoke-tax",
+        "cost-interactions/delve-floor",
+        "cost-interactions/delve-tax",
+        "cost-interactions/delve-reduce",
+        "cost-interactions/improvise-phy-floor",
+        "cost-interactions/defiler-floor",
+        "cost-interactions/defiler-tax",
+        "cost-interactions/defiler-reduce",
+        "cost-interactions/affinity-floor",
+        "cost-interactions/affinity-tax",
+        "cost-interactions/affinity-reduce",
+        "cost-interactions/twobrid-colored-floor-reduce",
+        "cost-interactions/hybrid-floor-tax-reduce",
+        "cost-interactions/alt-gain-life-tax",
+        "cost-interactions/alt-return-tax",
+        "cost-interactions/alt-sacrifice-tax",
+        "cost-interactions/alt-exile-tax",
+        "cost-interactions/mandatory-discard-tax",
+        "cost-interactions/mandatory-sacrifice-tax",
+        "cost-interactions/alt-gain-life-reduce",
+        "cost-interactions/alt-return-reduce",
+        "cost-interactions/alt-sacrifice-reduce",
+        "cost-interactions/alt-exile-reduce",
+        "cost-interactions/mandatory-discard-reduce",
+        "cost-interactions/mandatory-sacrifice-reduce",
+        "cost-interactions/alt-gain-life-floor",
+        "cost-interactions/alt-return-floor",
+        "cost-interactions/alt-sacrifice-floor",
+        "cost-interactions/alt-exile-floor",
+        "cost-interactions/mandatory-discard-floor",
+        "cost-interactions/mandatory-sacrifice-floor",
+        "cost-interactions/hybrid-phy-tax",
+        "cost-interactions/hybrid-phy-reduce",
+        "cost-interactions/hybrid-phy-floor",
+        "cost-interactions/colorless-hybrid-tax",
+        "cost-interactions/colorless-hybrid-colored-tax",
+        "cost-interactions/colorless-hybrid-reduce",
+        "cost-interactions/colorless-hybrid-colored-reduce",
+        "cost-interactions/colorless-hybrid-floor",
+        "cost-interactions/colorless-hybrid-colored-floor",
+        "cost-interactions/free-cast-tax",
+        "cost-interactions/flashback-tax",
+        "cost-interactions/free-cast-reduce",
+        "cost-interactions/flashback-reduce",
+        "cost-interactions/free-cast-floor",
+        "cost-interactions/flashback-floor",
+        "cost-interactions/krrik-tax-cancel",
+        "cost-interactions/delve-tax-cancel",
+        "cost-interactions/defiler-tax-cancel",
+        "cost-interactions/commander-tax",
+        "cost-interactions/commander-reduce",
+        "cost-interactions/commander-floor",
+        "cost-interactions/activation-unaffected-tax",
+        "cost-interactions/energy-unaffected-tax",
+        "cost-interactions/activation-unaffected-reduce",
+        "cost-interactions/energy-unaffected-reduce",
+        "cost-interactions/activation-unaffected-floor",
+        "cost-interactions/energy-unaffected-floor",
+        "cost-interactions/activation-reducer-floor",
+        "cost-interactions/last-life-is-legal",
+        "cost-interactions/phy-life-prohibited-reduced",
+        "cost-interactions/krrik-life-prohibited-reduced",
+        "cost-interactions/xx-free-fixed-zero",
+        "cost-interactions/xx-free-floor",
+        "cost-interactions/emerge-tax",
+        "cost-interactions/offering-tax",
+        "cost-interactions/escape-tax",
+        "cost-interactions/kicker-tax",
+        "cost-interactions/prototype-tax",
+        "cost-interactions/morph-tax",
+        "cost-interactions/emerge-reduce",
+        "cost-interactions/offering-reduce",
+        "cost-interactions/escape-reduce",
+        "cost-interactions/kicker-reduce",
+        "cost-interactions/prototype-reduce",
+        "cost-interactions/morph-reduce",
+        "cost-interactions/emerge-floor",
+        "cost-interactions/offering-floor",
+        "cost-interactions/escape-floor",
+        "cost-interactions/kicker-floor",
+        "cost-interactions/prototype-floor",
+        "cost-interactions/morph-floor",
+        "cost-interactions/improvise-phy-mixed",
+        "cost-interactions/improvise-phy-reserved-cancel",
+        "cost-interactions/improvise-two-phy-floor",
+        "cost-interactions/convoke-partial-cancel",
+        "cost-interactions/convoke-trigger-cancel",
+        "cost-interactions/waterbend-partial-cancel",
+        "cost-optional-combinations/optional-two-colors-tax",
+        "cost-optional-combinations/optional-same-color-tax",
+        "cost-optional-combinations/optional-two-colors-reduce",
+        "cost-optional-combinations/optional-same-color-reduce",
+        "cost-optional-combinations/optional-two-colors-floor",
+        "cost-optional-combinations/optional-same-color-floor",
+        "variable-branches/join-forces",
+        "variable-branches/vermin-repeat",
+        "exert-branches/attack-exert",
+        "exert-branches/attack-decline",
+        "exert-branches/attack-two",
+        "exert-branches/mana-exert",
+        "exert-branches/mana-ordinary",
+        "exert-branches/mana-cancel",
+        "nested-player-control/mutual-next-turn",
+        "nested-player-control/nested-word",
+        "multipart-cost-boundaries/discard-before-sacrifice",
+        "multipart-cost-boundaries/life-discard-forced-completion",
+        "multipart-cost-boundaries/spell-discard-before-sacrifice",
+        "multipart-cost-boundaries/replacement-discard-before-sacrifice",
+        "multipart-cost-boundaries/exile-before-mana",
+        "multipart-cost-boundaries/sacrifice-before-mana",
+        "multipart-cost-boundaries/return-before-mana",
+        "multipart-cost-boundaries/library-information-barrier",
+        "multipart-cost-boundaries/existing-stack-cancel",
+        "multipart-cost-boundaries/existing-delayed-cancel",
+        "multipart-cost-boundaries/sacrifice-counter-cancel",
+        "mixed-tap-costs/convoke-color-switch",
+        "mixed-tap-costs/convoke-wrong-color",
+        "mixed-tap-costs/improvise-multicolor",
+        "mixed-tap-costs/improvise-colored-short",
+        "mixed-tap-costs/waterbend-overlap",
+        "convoke-generic-icon/convoke-generic",
+        "cost-primitive-boundaries/counter-before-mana",
+        "cost-primitive-boundaries/mana-before-counter",
+        "cost-primitive-boundaries/exile-top-before-mana",
+        "cost-primitive-boundaries/mill-before-mana",
+        "cost-primitive-boundaries/mill-exact-four",
+        "cost-primitive-boundaries/mill-insufficient-three",
+        "cost-primitive-boundaries/mill-upkeep-exact-two",
+        "cost-primitive-boundaries/mill-upkeep-insufficient-one",
+        "cost-primitive-boundaries/put-counter-cancel",
+        "cost-primitive-boundaries/put-counter-doubled-cancel",
+        "cost-primitive-boundaries/remove-any-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-split-cancel",
+        "cost-primitive-boundaries/unattach-before-mana",
+        "processor-cost-boundaries/processor-before-mana",
+        "grave-cost-boundaries/evidence-before-mana",
+        "grave-cost-boundaries/forage-grave-before-mana",
+        "grave-cost-boundaries/forage-food-before-mana",
+        "exert-cost-boundary/exert-before-mana",
+        "payment-history-boundary/game-history-before-cancel",
+        "stack-exile-cost-boundary/stack-exile-before-mana",
+        "stack-exile-cost-boundary/restored-stack-resolves",
+        "stack-target-restore-boundary/two-spells-target-restore",
+        "stack-target-restore-boundary/two-spells-copy-restore",
+        "reveal-cost-rollback-boundary/sacrifice-reveal-before-mana",
+        "reveal-cost-rollback-boundary/sacrifice-before-reveal-cancel",
+        "reveal-cost-rollback-boundary/reveal-library-information-barrier",
+        "behold-exile-boundary/hand-cancel-retry-return",
+        "behold-exile-boundary/battlefield-cancel-retry-return",
+        "plain-behold-boundary/hand-reveal-mana-cancel-retry",
+        "plain-behold-boundary/battlefield-choice-mana-cancel-retry"
+      ],
+      "ui": [
+        "selection",
+        "tap-payment",
+        "library-costs",
+        "cost-interactions",
+        "variable-branches",
+        "exert-branches",
+        "nested-player-control",
+        "multipart-cost-boundaries",
+        "mixed-tap-costs",
+        "convoke-generic-icon",
+        "stack-exile-cost",
+        "stack-restore-list-increment",
+        "reveal-cost-rollback-increment",
+        "behold-exile-increment"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R12/R51唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "targets",
+      "name": "选择、重选与确认目标",
+      "requests": [
+        "InputSelectTargets",
+        "SelectStackTarget"
+      ],
+      "apis": [
+        "ChangeTargets",
+        "ChooseCard"
+      ],
+      "rules": [
+        "stack/spells",
+        "stack/triggers",
+        "selection/graveyard",
+        "selection/exile",
+        "target-branches/finale-zero",
+        "target-branches/finale-ten-zero",
+        "target-branches/hex-six",
+        "target-branches/hex-five",
+        "target-branches/shock-reset-cancel",
+        "target-branches/arc-partial",
+        "target-branches/arc-all-invalid",
+        "target-branches/redirect-change",
+        "target-branches/redirect-decline",
+        "trigger-order/apnap-life",
+        "trigger-order/apnap-life-seat2",
+        "trigger-order/apnap-life-decline",
+        "trigger-order/apnap-targets",
+        "storm-copy/storm-split",
+        "storm-copy/original-countered",
+        "storm-copy/copy-countered",
+        "storm-copy/trigger-countered",
+        "royal-state/monarch-draw",
+        "royal-state/monarch-source-left",
+        "royal-state/monarch-combat",
+        "royal-state/initiative-upkeep",
+        "royal-state/initiative-source-left",
+        "royal-state/initiative-combat",
+        "royal-boundaries/initiative-repeat",
+        "royal-boundaries/monarch-multi-combat",
+        "royal-boundaries/initiative-multi-combat",
+        "monarch-old-endstep/monarch-old-endstep",
+        "ring-combat/ring-level1-block-restriction",
+        "ring-combat/ring-level2-loot",
+        "ring-combat/ring-level3-sacrifice",
+        "ring-combat/ring-level4-life-loss",
+        "ring-combat/ring-bearer-leaves",
+        "ring-combat/ring-bearer-control",
+        "ring-bearer-change/ring-bearer-change",
+        "payment-history-boundary/game-history-before-cancel",
+        "stack-target-restore-boundary/two-spells-target-restore",
+        "stack-target-restore-boundary/two-spells-copy-restore"
+      ],
+      "ui": [
+        "target",
+        "stack",
+        "advanced",
+        "stack-list",
+        "target-branches",
+        "ability-text",
+        "trigger-order",
+        "storm-copy",
+        "royal-state",
+        "royal-ability",
+        "ring-combat",
+        "stack-restore-list-increment"
+      ],
+      "reference": [
+        "04:42",
+        "36:40",
+        "40:20"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "cards",
+      "name": "跨区域选牌与区域检视",
+      "requests": [
+        "SelectCards",
+        "InputSelectEntitiesFromList",
+        "InputSelectCardsFromList",
+        "InputSelectCardToRemoveCounter"
+      ],
+      "apis": [
+        "ChangeZone",
+        "ChangeZoneAll",
+        "Dig",
+        "DigUntil",
+        "DigMultiple",
+        "ChooseCard",
+        "MultiplePiles",
+        "Learn",
+        "LookAt",
+        "Seek",
+        "Heist",
+        "Discover",
+        "Recruit",
+        "Blight",
+        "FlipOntoBattlefield"
+      ],
+      "rules": [
+        "selection/library",
+        "selection/library-dialog",
+        "selection/hand",
+        "selection/graveyard",
+        "selection/exile",
+        "selection/multi",
+        "selection/multi-dialog",
+        "selection/gift-dialog",
+        "selection/look",
+        "selection/fetch",
+        "selection/fetch-tarn",
+        "selection/fetch-foothills",
+        "prepare/default",
+        "digital/seek",
+        "digital/seek-empty",
+        "digital/draft-first",
+        "digital/draft-last",
+        "library-costs/own",
+        "library-costs/opponent",
+        "library-costs/seat-two",
+        "library-costs/cancel-player",
+        "library-costs/cancel-card",
+        "library-costs/insufficient",
+        "library-costs/second-age",
+        "discover/cast",
+        "discover/hand",
+        "discover/empty",
+        "discover/repeat",
+        "discover/seat-two",
+        "discover/x-zero",
+        "discover/kicker",
+        "discover/floor",
+        "discover/activated",
+        "state-branches/recruit-land",
+        "state-branches/recruit-nonland",
+        "state-branches/recruit-seat-two",
+        "state-branches/recruit-no-draw",
+        "state-branches/blight-select",
+        "state-branches/blight-forced",
+        "state-branches/blight-death",
+        "state-branches/blight-ineligible",
+        "variable-branches/slaughter-single",
+        "variable-branches/slaughter-delirium",
+        "saga-chapters/chapter-draw",
+        "saga-chapters/chapter-decline",
+        "saga-chapters/chapter-seat2",
+        "royal-state/monarch-draw",
+        "royal-state/monarch-source-left",
+        "royal-state/monarch-combat",
+        "royal-state/initiative-upkeep",
+        "royal-state/initiative-source-left",
+        "royal-state/initiative-combat",
+        "royal-boundaries/initiative-repeat",
+        "royal-boundaries/monarch-multi-combat",
+        "royal-boundaries/initiative-multi-combat",
+        "monarch-old-endstep/monarch-old-endstep",
+        "ring-combat/ring-level1-block-restriction",
+        "ring-combat/ring-level2-loot",
+        "ring-combat/ring-level3-sacrifice",
+        "ring-combat/ring-level4-life-loss",
+        "ring-combat/ring-bearer-leaves",
+        "ring-combat/ring-bearer-control",
+        "ring-bearer-change/ring-bearer-change",
+        "dungeon-paths/tomb-oubliette",
+        "dungeon-paths/mage-graveyard",
+        "dungeon-paths/mine-goblin-reenter",
+        "dungeon-paths/mine-fungi",
+        "dungeon-paths/tomb-slow",
+        "dungeon-paths/mage-runestone",
+        "dungeon-expiry/mage-twisted-expiry",
+        "dungeon-reentry/tomb-reenter",
+        "dungeon-dark-pool/mine-dark-pool",
+        "undercity-paths/forge-trap-reenter",
+        "undercity-paths/well-arena-empty",
+        "undercity-paths/well-stash",
+        "undercity-expiry/well-arena-complete-expiry",
+        "multi-emblems/double-emblems",
+        "multi-emblems/stolen-source-emblem",
+        "multi-emblems/mixed-source-left",
+        "nested-player-control/mutual-next-turn",
+        "nested-player-control/nested-word",
+        "search-boundaries/optional-accept",
+        "search-boundaries/optional-decline",
+        "search-boundaries/optional-empty",
+        "search-boundaries/restricted-select",
+        "search-boundaries/restricted-fail",
+        "search-boundaries/prohibited",
+        "search-boundaries/mixed-grave",
+        "search-boundaries/mixed-hand",
+        "search-boundaries/opponent-accept",
+        "search-boundaries/opponent-decline",
+        "multipart-cost-boundaries/discard-before-sacrifice",
+        "multipart-cost-boundaries/life-discard-forced-completion",
+        "multipart-cost-boundaries/spell-discard-before-sacrifice",
+        "multipart-cost-boundaries/replacement-discard-before-sacrifice",
+        "multipart-cost-boundaries/exile-before-mana",
+        "multipart-cost-boundaries/sacrifice-before-mana",
+        "multipart-cost-boundaries/return-before-mana",
+        "multipart-cost-boundaries/library-information-barrier",
+        "multipart-cost-boundaries/existing-stack-cancel",
+        "multipart-cost-boundaries/existing-delayed-cancel",
+        "multipart-cost-boundaries/sacrifice-counter-cancel",
+        "mixed-tap-costs/convoke-color-switch",
+        "mixed-tap-costs/convoke-wrong-color",
+        "mixed-tap-costs/improvise-multicolor",
+        "mixed-tap-costs/improvise-colored-short",
+        "mixed-tap-costs/waterbend-overlap",
+        "zone-browser-boundaries/fetch-nonempty-no-match",
+        "cost-primitive-boundaries/counter-before-mana",
+        "cost-primitive-boundaries/mana-before-counter",
+        "cost-primitive-boundaries/exile-top-before-mana",
+        "cost-primitive-boundaries/mill-before-mana",
+        "cost-primitive-boundaries/mill-exact-four",
+        "cost-primitive-boundaries/mill-insufficient-three",
+        "cost-primitive-boundaries/mill-upkeep-exact-two",
+        "cost-primitive-boundaries/mill-upkeep-insufficient-one",
+        "cost-primitive-boundaries/put-counter-cancel",
+        "cost-primitive-boundaries/put-counter-doubled-cancel",
+        "cost-primitive-boundaries/remove-any-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-split-cancel",
+        "cost-primitive-boundaries/unattach-before-mana",
+        "processor-cost-boundaries/processor-before-mana",
+        "grave-cost-boundaries/evidence-before-mana",
+        "grave-cost-boundaries/forage-grave-before-mana",
+        "grave-cost-boundaries/forage-food-before-mana",
+        "reveal-cost-rollback-boundary/sacrifice-reveal-before-mana",
+        "reveal-cost-rollback-boundary/sacrifice-before-reveal-cancel",
+        "reveal-cost-rollback-boundary/reveal-library-information-barrier",
+        "behold-exile-boundary/hand-cancel-retry-return",
+        "behold-exile-boundary/battlefield-cancel-retry-return",
+        "plain-behold-boundary/hand-reveal-mana-cancel-retry",
+        "plain-behold-boundary/battlefield-choice-mana-cancel-retry"
+      ],
+      "ui": [
+        "selection",
+        "prepare",
+        "digital",
+        "library-costs",
+        "damage-draw",
+        "discover",
+        "state-branches",
+        "saga-chapters",
+        "royal-state",
+        "royal-ability",
+        "ring-combat",
+        "stack-count",
+        "dungeon-paths",
+        "dungeon-restrictions",
+        "dungeon-completion",
+        "multi-emblems",
+        "nested-player-control",
+        "search-boundaries",
+        "multipart-cost-boundaries",
+        "mixed-tap-costs",
+        "zone-browser-boundaries",
+        "component-card-face",
+        "template-card-faces",
+        "reveal-cost-rollback-increment",
+        "behold-exile-increment"
+      ],
+      "reference": [
+        "50:56"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R12/S02/S03唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "reveal",
+      "name": "展示、揭示与隐藏信息",
+      "requests": [
+        "RevealCards",
+        "InputConfirm"
+      ],
+      "apis": [
+        "Reveal",
+        "RevealHand",
+        "PeekAndReveal",
+        "Explore",
+        "Clash",
+        "Discover"
+      ],
+      "rules": [
+        "selection/reveal",
+        "selection/explore-land",
+        "selection/explore-grave",
+        "selection/explore-keep",
+        "fra/behold-hand",
+        "discover/cast",
+        "discover/seat-two",
+        "discover/repeat",
+        "discover/empty",
+        "knowledge-lifecycle/public-mulch",
+        "knowledge-lifecycle/private-index",
+        "knowledge-lifecycle/private-peek",
+        "knowledge-lifecycle/public-source-draw",
+        "knowledge-lifecycle/public-shuffle",
+        "reveal-cost-rollback-boundary/sacrifice-reveal-before-mana",
+        "reveal-cost-rollback-boundary/sacrifice-before-reveal-cancel",
+        "reveal-cost-rollback-boundary/reveal-library-information-barrier",
+        "behold-exile-boundary/hand-cancel-retry-return",
+        "behold-exile-boundary/battlefield-cancel-retry-return",
+        "plain-behold-boundary/hand-reveal-mana-cancel-retry",
+        "plain-behold-boundary/battlefield-choice-mana-cancel-retry"
+      ],
+      "ui": [
+        "choices",
+        "fra",
+        "discover",
+        "knowledge-lifecycle",
+        "reveal-cost-rollback-increment",
+        "behold-exile-increment"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R47唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "arrange",
+      "name": "检视、去向与顺序",
+      "requests": [
+        "Scry",
+        "Surveil",
+        "OrderCards",
+        "MoveCards"
+      ],
+      "apis": [
+        "Scry",
+        "Surveil",
+        "RearrangeTopOfLibrary",
+        "ReorderZone",
+        "Connive",
+        "Mill",
+        "Shuffle"
+      ],
+      "rules": [
+        "selection/surveil",
+        "selection/order",
+        "selection/explore-grave",
+        "selection/explore-keep",
+        "empower/surveil",
+        "library-costs/own",
+        "library-costs/opponent",
+        "library-costs/seat-two",
+        "library-costs/cancel-player",
+        "library-costs/cancel-card",
+        "library-costs/insufficient",
+        "library-costs/second-age",
+        "nested-player-control/mutual-next-turn",
+        "nested-player-control/nested-word",
+        "library-order-boundaries/index-five",
+        "library-order-boundaries/index-empty",
+        "library-order-boundaries/index-one",
+        "library-order-boundaries/vision-dual",
+        "library-order-boundaries/telling-three",
+        "library-order-boundaries/feast-same-name",
+        "library-order-boundaries/fossil-grave",
+        "multipart-cost-boundaries/discard-before-sacrifice",
+        "multipart-cost-boundaries/life-discard-forced-completion",
+        "multipart-cost-boundaries/spell-discard-before-sacrifice",
+        "multipart-cost-boundaries/replacement-discard-before-sacrifice",
+        "multipart-cost-boundaries/exile-before-mana",
+        "multipart-cost-boundaries/sacrifice-before-mana",
+        "multipart-cost-boundaries/return-before-mana",
+        "multipart-cost-boundaries/library-information-barrier",
+        "cost-primitive-boundaries/counter-before-mana",
+        "cost-primitive-boundaries/mana-before-counter",
+        "cost-primitive-boundaries/exile-top-before-mana",
+        "cost-primitive-boundaries/mill-before-mana",
+        "cost-primitive-boundaries/mill-exact-four",
+        "cost-primitive-boundaries/mill-insufficient-three",
+        "cost-primitive-boundaries/mill-upkeep-exact-two",
+        "cost-primitive-boundaries/mill-upkeep-insufficient-one",
+        "cost-primitive-boundaries/put-counter-cancel",
+        "cost-primitive-boundaries/put-counter-doubled-cancel",
+        "cost-primitive-boundaries/remove-any-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-split-cancel",
+        "cost-primitive-boundaries/unattach-before-mana"
+      ],
+      "ui": [
+        "selection",
+        "library-costs",
+        "replacements",
+        "damage-draw",
+        "nested-player-control",
+        "library-order-boundaries",
+        "multipart-cost-boundaries"
+      ],
+      "reference": [],
+      "gaps": [
+        "已完成的R12费用选择、R16排序与R36当前1v1终局合同保存原证据；当前旧生产者依赖合并仍由A06.01负责。原生modal真实网络时序归R02.02，存活多人归还/席位身份与模式支持归R37，不新增排序机制或重复语言矩阵。"
+      ]
+    },
+    {
+      "id": "trigger",
+      "name": "触发堆叠与结算顺序",
+      "requests": [
+        "OrderAbilities"
+      ],
+      "apis": [
+        "ImmediateTrigger",
+        "DelayedTrigger",
+        "Repeat",
+        "RepeatEach",
+        "Branch",
+        "ClaimThePrize"
+      ],
+      "rules": [
+        "stack/triggers",
+        "stack/triggers-reverse",
+        "variable-branches/bell-trigger-reset",
+        "trigger-order/apnap-life",
+        "trigger-order/apnap-life-seat2",
+        "trigger-order/apnap-life-decline",
+        "trigger-order/apnap-targets",
+        "saga-chapters/chapter-draw",
+        "saga-chapters/chapter-decline",
+        "saga-chapters/chapter-seat2",
+        "delayed-expiry/self-exile-counter",
+        "delayed-expiry/external-source-leave",
+        "delayed-expiry/external-control-change",
+        "storm-copy/storm-split",
+        "storm-copy/original-countered",
+        "storm-copy/copy-countered",
+        "storm-copy/trigger-countered",
+        "royal-state/monarch-draw",
+        "royal-state/monarch-source-left",
+        "royal-state/monarch-combat",
+        "royal-state/initiative-upkeep",
+        "royal-state/initiative-source-left",
+        "royal-state/initiative-combat",
+        "royal-boundaries/initiative-repeat",
+        "royal-boundaries/monarch-multi-combat",
+        "royal-boundaries/initiative-multi-combat",
+        "monarch-old-endstep/monarch-old-endstep",
+        "ring-combat/ring-level1-block-restriction",
+        "ring-combat/ring-level2-loot",
+        "ring-combat/ring-level3-sacrifice",
+        "ring-combat/ring-level4-life-loss",
+        "ring-combat/ring-bearer-leaves",
+        "ring-combat/ring-bearer-control",
+        "ring-bearer-change/ring-bearer-change",
+        "dungeon-paths/tomb-oubliette",
+        "dungeon-paths/mage-graveyard",
+        "dungeon-paths/mine-goblin-reenter",
+        "dungeon-paths/mine-fungi",
+        "dungeon-paths/tomb-slow",
+        "dungeon-paths/mage-runestone",
+        "dungeon-expiry/mage-twisted-expiry",
+        "dungeon-reentry/tomb-reenter",
+        "dungeon-dark-pool/mine-dark-pool",
+        "undercity-paths/forge-trap-reenter",
+        "undercity-paths/well-arena-empty",
+        "undercity-paths/well-stash",
+        "undercity-expiry/well-arena-complete-expiry",
+        "multipart-cost-boundaries/existing-delayed-cancel"
+      ],
+      "ui": [
+        "stack",
+        "advanced",
+        "ability-text",
+        "trigger-order",
+        "saga-chapters",
+        "delayed-expiry",
+        "storm-copy",
+        "royal-state",
+        "royal-ability",
+        "ring-combat",
+        "dungeon-restrictions"
+      ],
+      "reference": [
+        "07:00",
+        "35:00",
+        "50:00"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R18/R19/R49唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "stack",
+      "name": "咒语／异能堆叠、复制与反击",
+      "requests": [],
+      "apis": [
+        "CopySpellAbility",
+        "Counter",
+        "Play",
+        "ControlSpell",
+        "ActivateAbility",
+        "Discover",
+        "BlankLine"
+      ],
+      "rules": [
+        "advanced/storm",
+        "stack/spells",
+        "stack/triggers",
+        "storm-copy/storm-split",
+        "storm-copy/original-countered",
+        "storm-copy/copy-countered",
+        "storm-copy/trigger-countered",
+        "royal-boundaries/initiative-repeat",
+        "royal-boundaries/monarch-multi-combat",
+        "royal-boundaries/initiative-multi-combat",
+        "monarch-old-endstep/monarch-old-endstep",
+        "ring-combat/ring-level1-block-restriction",
+        "ring-combat/ring-level2-loot",
+        "ring-combat/ring-level3-sacrifice",
+        "ring-combat/ring-level4-life-loss",
+        "ring-combat/ring-bearer-leaves",
+        "ring-combat/ring-bearer-control",
+        "ring-bearer-change/ring-bearer-change",
+        "dungeon-paths/tomb-oubliette",
+        "dungeon-paths/mage-graveyard",
+        "dungeon-paths/mine-goblin-reenter",
+        "dungeon-paths/mine-fungi",
+        "dungeon-paths/tomb-slow",
+        "dungeon-paths/mage-runestone",
+        "dungeon-expiry/mage-twisted-expiry",
+        "dungeon-reentry/tomb-reenter",
+        "dungeon-dark-pool/mine-dark-pool",
+        "undercity-paths/forge-trap-reenter",
+        "undercity-paths/well-arena-empty",
+        "undercity-paths/well-stash",
+        "undercity-expiry/well-arena-complete-expiry",
+        "multipart-cost-boundaries/existing-stack-cancel",
+        "stack-exile-cost-boundary/stack-exile-before-mana",
+        "stack-exile-cost-boundary/restored-stack-resolves",
+        "stack-target-restore-boundary/two-spells-target-restore",
+        "stack-target-restore-boundary/two-spells-copy-restore"
+      ],
+      "ui": [
+        "stack",
+        "ability-text",
+        "effect-source",
+        "storm-copy",
+        "royal-ability",
+        "ring-combat",
+        "dungeon-restrictions",
+        "stack-exile-cost",
+        "stack-restore-list-increment"
+      ],
+      "reference": [
+        "08:00",
+        "36:40"
+      ],
+      "gaps": [
+        "R20/R41原复制身份、例外与附着消费者门槛已保存原编号及原证据归档；独立原生payload和Vanguard生产入口保留A01.01，已登记历史依赖与全局指纹审查保留A06.01。其他R02/R37/R47准确待办按remaining-work.json追踪，不重开已完成复制/附着游戏。"
+      ]
+    },
+    {
+      "id": "objects",
+      "name": "永久物／衍生物／复制的进入与叠放",
+      "requests": [],
+      "apis": [
+        "Token",
+        "CopyPermanent",
+        "Clone",
+        "MakeCard",
+        "Investigate",
+        "Amass",
+        "Endure",
+        "Incubate",
+        "AssembleContraption",
+        "OpenAttraction",
+        "PermanentCreature",
+        "PermanentNoncreature",
+        "Empower",
+        "ClaimThePrize",
+        "FlipOntoBattlefield"
+      ],
+      "rules": [
+        "fra/heartwood",
+        "fra/flashback",
+        "empower/draw",
+        "empower/multiple",
+        "delayed-expiry/self-exile-counter",
+        "delayed-expiry/external-source-leave",
+        "delayed-expiry/external-control-change",
+        "storm-copy/storm-split",
+        "storm-copy/original-countered",
+        "storm-copy/copy-countered",
+        "storm-copy/trigger-countered",
+        "group-safety/grouped-land",
+        "noncreature-copies/echo-copy",
+        "noncreature-copies/steel-copy",
+        "noncreature-copies/steel-reverse-copy",
+        "noncreature-copies/manufactor-regression",
+        "attachment-branches/equip-retarget",
+        "attachment-branches/aura-detach",
+        "attachment-branches/equipment-detach",
+        "attachment-branches/control-host",
+        "attachment-branches/copy-equipment",
+        "attachment-branches/aura-player",
+        "attachment-branches/aura-player-self",
+        "attachment-branches/copy-aura"
+      ],
+      "ui": [
+        "fra",
+        "empower",
+        "replacements",
+        "damage-draw",
+        "combat-allocation",
+        "delayed-expiry",
+        "storm-copy",
+        "group-safety",
+        "noncreature-copies",
+        "attachment-branches"
+      ],
+      "reference": [
+        "03:20",
+        "24:00",
+        "38:40",
+        "47:40"
+      ],
+      "gaps": [
+        "R19/R20/R40原具名对象生命周期消费者已按原编号及证据归档；S05/S07的齿轮/随机反馈支持决定仍原owner，独立payload/入口A01.01和当前历史依赖A06.01保持开放，不重开旧复制/移区游戏。"
+      ]
+    },
+    {
+      "id": "state",
+      "name": "身材、关键词、指示物与持续状态",
+      "requests": [],
+      "apis": [
+        "Pump",
+        "PumpAll",
+        "Debuff",
+        "Animate",
+        "AnimateAll",
+        "Protection",
+        "ProtectionAll",
+        "Goad",
+        "Detain",
+        "PutCounter",
+        "PutCounterAll",
+        "RemoveCounter",
+        "RemoveCounterAll",
+        "MoveCounter",
+        "MultiplyCounter",
+        "AddOrRemoveCounter",
+        "Proliferate",
+        "TimeTravel",
+        "AlterAttribute",
+        "ChangeText",
+        "ExchangeTextBox",
+        "ExchangePower",
+        "ChangeSpeed",
+        "DayTime",
+        "Empower",
+        "Intensify",
+        "Blight",
+        "StoreSVar",
+        "ChooseSector"
+      ],
+      "rules": [
+        "characteristics/default",
+        "fra/counter",
+        "fra/threshold",
+        "common/moon-red-blue",
+        "common/moon-blue-red",
+        "empower/surveil",
+        "empower/draw",
+        "empower/multiple",
+        "empower/zero",
+        "state-branches/blight-select",
+        "state-branches/blight-forced",
+        "state-branches/blight-death",
+        "state-branches/blight-ineligible",
+        "state-branches/intensity-all",
+        "state-branches/intensity-self",
+        "variable-branches/doodle-match",
+        "variable-branches/doodle-mismatch",
+        "exert-branches/attack-exert",
+        "exert-branches/attack-decline",
+        "exert-branches/attack-two",
+        "exert-branches/mana-exert",
+        "exert-branches/mana-ordinary",
+        "exert-branches/mana-cancel",
+        "quantity-allocation/counter-division",
+        "player-status/night-explicit",
+        "player-status/day-switch",
+        "player-status/day-natural",
+        "player-status/speed-none",
+        "player-status/speed-once",
+        "player-status/speed-self",
+        "player-status/speed-offturn",
+        "player-status/speed-source-leave",
+        "player-status/speed-max",
+        "dungeon-paths/tomb-oubliette",
+        "dungeon-paths/mage-graveyard",
+        "dungeon-paths/mine-goblin-reenter",
+        "dungeon-paths/mine-fungi",
+        "dungeon-paths/tomb-slow",
+        "dungeon-paths/mage-runestone",
+        "dungeon-expiry/mage-twisted-expiry",
+        "dungeon-reentry/tomb-reenter",
+        "dungeon-dark-pool/mine-dark-pool",
+        "undercity-paths/forge-trap-reenter",
+        "undercity-paths/well-arena-empty",
+        "undercity-paths/well-stash",
+        "undercity-expiry/well-arena-complete-expiry",
+        "multi-emblems/double-emblems",
+        "multi-emblems/stolen-source-emblem",
+        "multi-emblems/mixed-source-left",
+        "continuous-state/devotion-mono",
+        "continuous-state/devotion-dual",
+        "continuous-state/pt-counters-duration",
+        "continuous-state/timestamp-frog-first",
+        "continuous-state/timestamp-ovine-first",
+        "continuous-state/dependency-urborg-first",
+        "continuous-state/dependency-moon-first",
+        "continuous-state/multiple-sources",
+        "combat-keywords/protection-prevent",
+        "combat-keywords/protection-block",
+        "combat-keywords/indestructible",
+        "combat-keywords/infect-creature",
+        "combat-keywords/infect-death",
+        "combat-keywords/infect-player",
+        "combat-keywords/wither-creature",
+        "combat-keywords/wither-death",
+        "combat-keywords/banding-defense",
+        "grave-cost-boundaries/evidence-before-mana",
+        "grave-cost-boundaries/forage-grave-before-mana",
+        "grave-cost-boundaries/forage-food-before-mana",
+        "exert-cost-boundary/exert-before-mana",
+        "payment-history-boundary/game-history-before-cancel"
+      ],
+      "ui": [
+        "selection",
+        "empower",
+        "common",
+        "replacements",
+        "damage-draw",
+        "state-branches",
+        "exert-branches",
+        "quantity-allocation",
+        "player-status",
+        "stack-count",
+        "dungeon-restrictions",
+        "multi-emblems",
+        "continuous-state",
+        "combat-keywords"
+      ],
+      "reference": [
+        "12:00",
+        "37:20",
+        "40:40",
+        "10-03 17:51",
+        "10-03 23:04"
+      ],
+      "gaps": [
+        "R23/R39/R40/R49/S03已核销的原具名字段/效果门槛保留原编号与原证据；尚未完成的独立生成payload、声明与生产入口原A01–A05条目保持，各当前依赖审查原A06.01，不把即时数值刷新宣称通用数值动画。"
+      ]
+    },
+    {
+      "id": "faces",
+      "name": "变形、背面、牌面变化与暗置",
+      "requests": [],
+      "apis": [
+        "SetState",
+        "Meld",
+        "Manifest",
+        "ManifestDread",
+        "Cloak",
+        "UnlockDoor",
+        "Earthbend",
+        "Airbend"
+      ],
+      "rules": [
+        "advanced/battle",
+        "advanced/rooms",
+        "faces/default",
+        "casting/cast-mdfc-back",
+        "saga-chapters/chapter-draw",
+        "saga-chapters/chapter-decline",
+        "saga-chapters/chapter-seat2",
+        "facedown-lifecycle/manifest-creature",
+        "facedown-lifecycle/manifest-noncreature",
+        "facedown-lifecycle/cloak-creature",
+        "facedown-lifecycle/cloak-noncreature",
+        "facedown-lifecycle/ring-facedown",
+        "bending-lifecycle/earth-destroy",
+        "bending-lifecycle/earth-exile",
+        "bending-lifecycle/air-own-cancel",
+        "bending-lifecycle/air-source-gone",
+        "bending-lifecycle/air-owner-permission",
+        "bending-lifecycle/air-permission-leaves",
+        "bending-lifecycle/air-spell",
+        "bending-lifecycle/air-token",
+        "bending-lifecycle/air-decline"
+      ],
+      "ui": [
+        "advanced",
+        "selection",
+        "opponent-hand",
+        "saga-chapters",
+        "facedown-lifecycle",
+        "bending-lifecycle"
+      ],
+      "reference": [
+        "11:00"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R49/R51/S01唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "prepared",
+      "name": "备法、跨区域许可与消耗",
+      "requests": [],
+      "apis": [
+        "Play",
+        "ActivateAbility"
+      ],
+      "rules": [
+        "prepare/default",
+        "fra/prepare",
+        "casting/cast-adventure",
+        "casting/cast-graveyard",
+        "casting/cast-exile",
+        "bending-lifecycle/air-own-cancel",
+        "bending-lifecycle/air-source-gone",
+        "bending-lifecycle/air-owner-permission",
+        "bending-lifecycle/air-permission-leaves",
+        "bending-lifecycle/air-spell",
+        "bending-lifecycle/air-token",
+        "bending-lifecycle/air-decline",
+        "permission-lifecycle/impulse-next-expiry",
+        "permission-lifecycle/impulse-current-expiry",
+        "permission-lifecycle/gonti-control-source",
+        "permission-lifecycle/prepared-control-source"
+      ],
+      "ui": [
+        "prepare",
+        "bending-lifecycle",
+        "permission-lifecycle"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R49唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "combat",
+      "name": "宣攻、防守者、阻挡与伤害",
+      "requests": [
+        "InputAttack",
+        "InputBlock",
+        "AssignAmount",
+        "InputConfirm"
+      ],
+      "apis": [
+        "DealDamage",
+        "DamageAll",
+        "EachDamage",
+        "DamageResolve",
+        "Fight",
+        "ReplaceDamage",
+        "ReplaceSplitDamage",
+        "PreventDamage",
+        "Regenerate",
+        "Regeneration",
+        "Fog",
+        "MustBlock",
+        "Block",
+        "SwitchBlock",
+        "RemoveFromCombat",
+        "ChangeCombatants",
+        "BecomesBlocked",
+        "Camouflage",
+        "HealDamage",
+        "EndCombatPhase"
+      ],
+      "rules": [
+        "attack/default",
+        "advanced/damage",
+        "advanced/ninjutsu",
+        "combat-allocation/trample-reset-release",
+        "combat-allocation/trample-overassign",
+        "combat-allocation/trample-save-blocker",
+        "combat-allocation/trample-seat-two",
+        "combat-allocation/damaged-blocker",
+        "combat-allocation/deathtouch-trample",
+        "combat-allocation/deathtouch",
+        "combat-allocation/first-strike",
+        "combat-allocation/double-strike-blocked",
+        "combat-allocation/double-strike-open",
+        "combat-allocation/menace",
+        "combat-allocation/block-multiple",
+        "combat-allocation/as-unblocked-accept",
+        "combat-allocation/as-unblocked-decline",
+        "combat-allocation/planeswalker",
+        "combat-allocation/many-blockers",
+        "exert-branches/attack-exert",
+        "exert-branches/attack-decline",
+        "exert-branches/attack-two",
+        "royal-state/monarch-draw",
+        "royal-state/monarch-source-left",
+        "royal-state/monarch-combat",
+        "royal-state/initiative-upkeep",
+        "royal-state/initiative-source-left",
+        "royal-state/initiative-combat",
+        "royal-boundaries/initiative-repeat",
+        "royal-boundaries/monarch-multi-combat",
+        "royal-boundaries/initiative-multi-combat",
+        "monarch-old-endstep/monarch-old-endstep",
+        "ring-combat/ring-level1-block-restriction",
+        "ring-combat/ring-level2-loot",
+        "ring-combat/ring-level3-sacrifice",
+        "ring-combat/ring-level4-life-loss",
+        "ring-combat/ring-bearer-leaves",
+        "ring-combat/ring-bearer-control",
+        "ring-bearer-change/ring-bearer-change",
+        "combat-keywords/protection-prevent",
+        "combat-keywords/protection-block",
+        "combat-keywords/indestructible",
+        "combat-keywords/infect-creature",
+        "combat-keywords/infect-death",
+        "combat-keywords/infect-player",
+        "combat-keywords/wither-creature",
+        "combat-keywords/wither-death",
+        "combat-keywords/banding-defense",
+        "attack-bands/join",
+        "attack-bands/recall",
+        "attack-bands/limit",
+        "attack-bands/bandswith",
+        "attack-bands/ordinary-repeat",
+        "attack-bands/join-seat2",
+        "combat-damage-boundaries/fog",
+        "combat-damage-boundaries/furnace",
+        "combat-damage-boundaries/skip-shared",
+        "combat-damage-boundaries/shared-deathtouch",
+        "combat-damage-boundaries/divide",
+        "combat-phase-boundaries/relentless-main2",
+        "combat-phase-boundaries/celebrant-exert",
+        "combat-phase-boundaries/celebrant-decline",
+        "combat-phase-boundaries/attack-tax-pay",
+        "combat-phase-boundaries/attack-tax-auto",
+        "combat-phase-boundaries/attack-tax-cancel",
+        "combat-phase-boundaries/attack-tax-partial-cancel",
+        "combat-phase-boundaries/block-tax-pay",
+        "combat-phase-boundaries/block-tax-cancel",
+        "combat-phase-boundaries/must-attack-wall",
+        "multiplayer-ring/ring4-actor1-defender2",
+        "multiplayer-ring/ring4-actor2-defender4"
+      ],
+      "ui": [
+        "advanced",
+        "combat-allocation",
+        "exert-branches",
+        "royal-state",
+        "royal-ability",
+        "ring-combat",
+        "combat-keywords",
+        "attack-bands",
+        "combat-damage-boundaries",
+        "combat-phase-boundaries"
+      ],
+      "reference": [
+        "52:00",
+        "52:20"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02/R23/R49唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "markers",
+      "name": "玩家状态、徽记、延迟效果与辅助牌面",
+      "requests": [],
+      "apis": [
+        "Effect",
+        "DelayedTrigger",
+        "RingTemptsYou",
+        "Venture",
+        "TakeInitiative",
+        "BecomeMonarch",
+        "Radiation",
+        "Poison",
+        "Planeswalk",
+        "RollPlanarDice",
+        "ChaosEnsues",
+        "RunChaos",
+        "AdvanceCrank",
+        "Abandon",
+        "SetInMotion",
+        "ClaimThePrize"
+      ],
+      "rules": [
+        "faces/default",
+        "common/story",
+        "common/story-unique",
+        "common/ascend",
+        "common/ascend-source",
+        "common/dungeon",
+        "common/initiative",
+        "common/ring",
+        "rebound-marker/default",
+        "player-status/night-explicit",
+        "player-status/day-switch",
+        "player-status/day-natural",
+        "player-status/speed-none",
+        "player-status/speed-once",
+        "player-status/speed-self",
+        "player-status/speed-offturn",
+        "player-status/speed-source-leave",
+        "player-status/speed-max",
+        "delayed-expiry/self-exile-counter",
+        "delayed-expiry/external-source-leave",
+        "delayed-expiry/external-control-change",
+        "royal-state/monarch-draw",
+        "royal-state/monarch-source-left",
+        "royal-state/monarch-combat",
+        "royal-state/initiative-upkeep",
+        "royal-state/initiative-source-left",
+        "royal-state/initiative-combat",
+        "royal-boundaries/initiative-repeat",
+        "royal-boundaries/monarch-multi-combat",
+        "royal-boundaries/initiative-multi-combat",
+        "monarch-old-endstep/monarch-old-endstep",
+        "ring-combat/ring-level1-block-restriction",
+        "ring-combat/ring-level2-loot",
+        "ring-combat/ring-level3-sacrifice",
+        "ring-combat/ring-level4-life-loss",
+        "ring-combat/ring-bearer-leaves",
+        "ring-combat/ring-bearer-control",
+        "ring-bearer-change/ring-bearer-change",
+        "dungeon-paths/tomb-oubliette",
+        "dungeon-paths/mage-graveyard",
+        "dungeon-paths/mine-goblin-reenter",
+        "dungeon-paths/mine-fungi",
+        "dungeon-paths/tomb-slow",
+        "dungeon-paths/mage-runestone",
+        "dungeon-expiry/mage-twisted-expiry",
+        "dungeon-reentry/tomb-reenter",
+        "dungeon-dark-pool/mine-dark-pool",
+        "undercity-paths/forge-trap-reenter",
+        "undercity-paths/well-arena-empty",
+        "undercity-paths/well-stash",
+        "undercity-expiry/well-arena-complete-expiry",
+        "multi-emblems/double-emblems",
+        "multi-emblems/stolen-source-emblem",
+        "multi-emblems/mixed-source-left"
+      ],
+      "ui": [
+        "common",
+        "player-status",
+        "effect-source",
+        "delayed-expiry",
+        "royal-state",
+        "royal-ability",
+        "ring-combat",
+        "dungeon-paths",
+        "dungeon-completion",
+        "multi-emblems"
+      ],
+      "reference": [
+        "10-03 05:25",
+        "10-03 16:00",
+        "10-03 18:09",
+        "10-03 20:10"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R19/R32/R35/S04/S05唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "control",
+      "name": "控制权、玩家控制和对局结构",
+      "requests": [],
+      "apis": [
+        "GainControl",
+        "GainControlVariant",
+        "ExchangeControl",
+        "ExchangeControlVariant",
+        "GainOwnership",
+        "ControlPlayer",
+        "AddTurn",
+        "AddPhase",
+        "SkipTurn",
+        "SkipPhase",
+        "Phases",
+        "EndTurn",
+        "ReverseTurnOrder",
+        "Subgame",
+        "RestartGame",
+        "RemoveFromMatch",
+        "WinsGame",
+        "LosesGame",
+        "GameDrawn"
+      ],
+      "rules": [
+        "player-control/turn-one",
+        "player-control/turn-two",
+        "player-control/combat",
+        "number-auction/auction-zero",
+        "number-auction/auction-other",
+        "number-auction/auction-caster",
+        "nested-player-control/mutual-next-turn",
+        "nested-player-control/nested-word"
+      ],
+      "ui": [
+        "player-control",
+        "number-auction",
+        "nested-player-control"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02/R03/R37/S08唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "digital",
+      "name": "数字专属生成、寻找与永久修改",
+      "requests": [
+        "SelectCards",
+        "dialog"
+      ],
+      "apis": [
+        "MakeCard",
+        "Seek",
+        "Draft",
+        "LosePerpetual",
+        "Intensify"
+      ],
+      "rules": [
+        "digital/conjure-ionize",
+        "digital/conjure-electrolyze",
+        "digital/draft-first",
+        "digital/draft-last",
+        "digital/seek",
+        "digital/seek-empty",
+        "digital/perpetual-same",
+        "digital/perpetual-split",
+        "state-branches/intensity-all",
+        "state-branches/intensity-self"
+      ],
+      "ui": [
+        "digital",
+        "state-branches"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R03/R38/R39/S02/S03唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "outcome",
+      "name": "区域转移、抽弃牌与生命变化",
+      "requests": [],
+      "apis": [
+        "Draw",
+        "GainLife",
+        "LoseLife",
+        "SetLife",
+        "ExchangeLife",
+        "ExchangeLifeVariant",
+        "Destroy",
+        "DestroyAll",
+        "Cleanup",
+        "ExchangeZone",
+        "RemoveFromGame",
+        "Balance",
+        "StoreSVar"
+      ],
+      "rules": [
+        "selection/surveil",
+        "selection/hand",
+        "selection/graveyard",
+        "attack/default",
+        "draw-boundaries/draw-first-thief",
+        "draw-boundaries/draw-first-token",
+        "draw-boundaries/empty-loss",
+        "draw-boundaries/empty-lab-win",
+        "draw-boundaries/empty-skip",
+        "draw-boundaries/prevention-expiry",
+        "draw-boundaries/empty-skip-decline"
+      ],
+      "ui": [
+        "replacements",
+        "damage-draw",
+        "combat-allocation",
+        "draw-boundaries"
+      ],
+      "reference": [
+        "35:00",
+        "35:20",
+        "50:00"
+      ],
+      "gaps": [
+        "R40原同时移区、当前生命/数值、ghost中断恢复门槛已按原编号归档；既有结果通知的当前依赖审查保留A06.01，原生last16上限明确，R02真实网络/恢复及R47其他资源边界原owner保持，不新增未观察的任意突发测试。"
+      ]
+    },
+    {
+      "id": "attachments",
+      "name": "灵气、武具与附着状态",
+      "requests": [],
+      "apis": [
+        "Attach",
+        "Unattach"
+      ],
+      "rules": [
+        "characteristics/default",
+        "combat-allocation/deathtouch-trample",
+        "combat-allocation/first-strike",
+        "combat-allocation/double-strike-blocked",
+        "combat-allocation/double-strike-open",
+        "combat-allocation/many-blockers",
+        "group-safety/grouped-land",
+        "attachment-branches/equip-retarget",
+        "attachment-branches/aura-detach",
+        "attachment-branches/equipment-detach",
+        "attachment-branches/control-host",
+        "attachment-branches/copy-equipment",
+        "attachment-branches/aura-player",
+        "attachment-branches/aura-player-self",
+        "attachment-branches/copy-aura",
+        "cost-primitive-boundaries/unattach-before-mana"
+      ],
+      "ui": [
+        "combat-allocation",
+        "group-safety",
+        "attachment-branches"
+      ],
+      "reference": [
+        "36:40",
+        "37:20"
+      ],
+      "gaps": [
+        "R20/R41原复制身份、例外与附着消费者门槛已保存原编号及原证据归档；独立原生payload和Vanguard生产入口保留A01.01，已登记历史依赖与全局指纹审查保留A06.01。其他R02/R37/R47准确待办按remaining-work.json追踪，不重开已完成复制/附着游戏。"
+      ]
+    },
+    {
+      "id": "random",
+      "name": "掷骰、抛硬币与随机决定",
+      "requests": [
+        "InputConfirm",
+        "dialog",
+        "ChooseOptions"
+      ],
+      "apis": [
+        "RollDice",
+        "FlipCoin",
+        "ClaimThePrize",
+        "FlipOntoBattlefield"
+      ],
+      "rules": [
+        "random/dice-low",
+        "random/dice-mid",
+        "random/dice-high",
+        "random/pixie",
+        "random/monitor-keep",
+        "random/monitor-reroll",
+        "random/xeno-inc",
+        "random/xeno-dec",
+        "random/night-inc",
+        "random/night-dec",
+        "random/swap-power",
+        "random/swap-toughness",
+        "random/coin-win",
+        "random/coin-lose",
+        "random/thumb-win",
+        "random/thumb-lose",
+        "random/mana-clash",
+        "random-boundaries/monitor-no-mana",
+        "random-boundaries/monitor-cancel-retry",
+        "random-boundaries/monitor-limit",
+        "random-boundaries/night-limit",
+        "random-boundaries/night-no-pay",
+        "random-boundaries/xeno-last",
+        "random-boundaries/swap-duration",
+        "dice-combinations/fixed-negative",
+        "dice-combinations/choose-low",
+        "dice-combinations/choose-high",
+        "dice-combinations/multiple-modifiers",
+        "dice-combinations/reroll-both"
+      ],
+      "ui": [
+        "random",
+        "random-boundaries",
+        "mana-results",
+        "dice-combinations"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02/R03/R47/S04唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "piles",
+      "name": "由另一位玩家分堆并选择整堆",
+      "requests": [
+        "ChoosePile",
+        "InputSelectCardsFromList"
+      ],
+      "apis": [
+        "TwoPiles"
+      ],
+      "rules": [
+        "piles/fof-left",
+        "piles/fof-right",
+        "piles/fof-empty",
+        "piles/fof-all",
+        "piles/fof-seat2",
+        "piles/favor-hidden",
+        "piles/favor-visible",
+        "piles/favor-empty",
+        "piles/parley-left",
+        "piles/parley-right",
+        "piles/parley-zero",
+        "piles/portal-left",
+        "piles/portal-right",
+        "piles/portal-empty",
+        "pile-boundaries/whims-balanced",
+        "pile-boundaries/whims-empty",
+        "pile-boundaries/whims-replaced",
+        "pile-boundaries/hostile-left-hidden",
+        "pile-boundaries/hostile-right-visible",
+        "pile-boundaries/hostile-empty",
+        "pile-boundaries/hostile-cancel",
+        "pile-boundaries/abstract-hidden",
+        "pile-boundaries/abstract-visible",
+        "pile-boundaries/river-piles",
+        "pile-boundaries/toymaker-hidden"
+      ],
+      "ui": [
+        "piles",
+        "pile-boundaries"
+      ],
+      "reference": [],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R02/R03唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    },
+    {
+      "id": "replacements",
+      "name": "替代效果、来源与应用顺序",
+      "reference": [],
+      "apis": [
+        "ReplaceToken",
+        "ReplaceCounter",
+        "ReplaceDamage",
+        "ReplaceSplitDamage",
+        "ReplaceEffect",
+        "ChooseSource",
+        "StoreSVar"
+      ],
+      "requests": [
+        "OrderAbilities",
+        "InputConfirm",
+        "SelectCards",
+        "InputSelectEntitiesFromList"
+      ],
+      "rules": [
+        "replacements/counter-none",
+        "replacements/counter-zero-target",
+        "replacements/counter-scales-first",
+        "replacements/counter-double-first",
+        "replacements/counter-single-choice",
+        "replacements/counter-seat-two",
+        "replacements/counter-other-player",
+        "replacements/counter-repeat",
+        "replacements/token-double",
+        "replacements/token-manufactor",
+        "replacements/token-other-player",
+        "replacements/zone-rest-first",
+        "replacements/zone-leyline-first",
+        "damage-draw/damage-add-first",
+        "damage-draw/damage-double-first",
+        "damage-draw/damage-seat-two",
+        "damage-draw/damage-creature-survive",
+        "damage-draw/damage-prevent-first",
+        "damage-draw/damage-double-prevent",
+        "damage-draw/damage-cant-prevent",
+        "damage-draw/damage-only-prevent",
+        "damage-draw/damage-optional-accept",
+        "damage-draw/damage-optional-decline",
+        "damage-draw/damage-split-repeat",
+        "damage-draw/draw-double",
+        "damage-draw/draw-thief-first",
+        "damage-draw/draw-token-first",
+        "damage-draw/draw-underrealm-first",
+        "damage-draw/draw-underrealm-middle",
+        "damage-draw/draw-underrealm-short",
+        "damage-draw/draw-underrealm-seat-two",
+        "damage-draw/draw-dredge-accept",
+        "damage-draw/draw-dredge-decline",
+        "damage-draw/draw-dredge-short",
+        "damage-draw/draw-optional-skip",
+        "damage-draw/draw-optional-draw",
+        "damage-draw/draw-limit",
+        "damage-draw/draw-limit-after-first",
+        "quantity-allocation/shield-division",
+        "quantity-allocation/shield-on-damage",
+        "draw-boundaries/draw-first-thief",
+        "draw-boundaries/draw-first-token",
+        "draw-boundaries/empty-loss",
+        "draw-boundaries/empty-lab-win",
+        "draw-boundaries/empty-skip",
+        "draw-boundaries/prevention-expiry",
+        "draw-boundaries/empty-skip-decline",
+        "multipart-cost-boundaries/discard-before-sacrifice",
+        "multipart-cost-boundaries/life-discard-forced-completion",
+        "multipart-cost-boundaries/spell-discard-before-sacrifice",
+        "multipart-cost-boundaries/replacement-discard-before-sacrifice",
+        "multipart-cost-boundaries/exile-before-mana",
+        "multipart-cost-boundaries/sacrifice-before-mana",
+        "multipart-cost-boundaries/return-before-mana",
+        "multipart-cost-boundaries/library-information-barrier",
+        "combat-damage-boundaries/fog",
+        "combat-damage-boundaries/furnace",
+        "cost-primitive-boundaries/counter-before-mana",
+        "cost-primitive-boundaries/mana-before-counter",
+        "cost-primitive-boundaries/exile-top-before-mana",
+        "cost-primitive-boundaries/mill-before-mana",
+        "cost-primitive-boundaries/mill-exact-four",
+        "cost-primitive-boundaries/mill-insufficient-three",
+        "cost-primitive-boundaries/mill-upkeep-exact-two",
+        "cost-primitive-boundaries/mill-upkeep-insufficient-one",
+        "cost-primitive-boundaries/put-counter-cancel",
+        "cost-primitive-boundaries/put-counter-doubled-cancel",
+        "cost-primitive-boundaries/remove-any-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-cancel",
+        "cost-primitive-boundaries/remove-two-counter-split-cancel"
+      ],
+      "ui": [
+        "replacements",
+        "damage-draw",
+        "quantity-allocation",
+        "ability-text",
+        "effect-source",
+        "mana-spent-effects",
+        "draw-boundaries",
+        "multipart-cost-boundaries",
+        "combat-damage-boundaries"
+      ],
+      "gaps": [
+        "当前未完成事项由remaining-work.json中R03/R12/R18/R39/R47唯一追踪；逐项完成门槛与原证据复用见该表。早期范围段落仅保留在goal-scope整理-1008/before，不重新生成任务。"
+      ]
+    }
+  ],
+  "additionalReferences": [
+    "Docs/ArenaReferenceAudit-2026-10-03-0816.zh-CN.md",
+    "Docs/ArenaReferenceAudit-2026-10-04-1016.zh-CN.md"
+  ]
+}

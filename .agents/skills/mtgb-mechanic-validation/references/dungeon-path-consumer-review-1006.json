@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/DungeonPathConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "2c933a278e3def363c7cf92ea1e6cb58f942136a639428844bf6ae252cdad2cf"
+  },
+  "countAudit": {
+    "path": "Docs/StackCountGlyphAudit-2026-10-06.zh-CN.md",
+    "sha256": "d734bd142c4d9f69d015d3d5be83c215f9220f95e65c2d212e37fda06e441cb8"
+  },
+  "runtimeHash": "b3c1f7604b168fa54075d81674a745ba185d4581a9742ed46e06408bc55f8bed",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeCharacteristicDetails.java",
+      "sha256": "98a642f12d699e55d3a8acd6272f7ad7926214fdbb69ef5b34ce6500cdbd9d2d"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.ModifiedCharacteristics.cs",
+      "sha256": "b6608398c88bc5e8e2ea5f28d42b5047059d71bd141e99dbf1f1b7c558f35657"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.DungeonChoices.cs",
+      "sha256": "e9263b9c5f2ad7df80102a820d2017988407123d1b47d870f8e9743f661c2e40"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.AbilityFace.cs",
+      "sha256": "238171edf70d9ca352c22778738ac2c8a3105272e64db37e4365fead771a93c2"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "0524e81d0d67e7e7687d9e27f5dc492184b4ac52a54bda26c37e6063195fb9d5"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/RoyalStateFixture.java",
+      "sha256": "09d4cfbdbaf1ab92d749fc7731414f837f441e943d10e2a669f277528f10b60e"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/UndercityStateFixture.java",
+      "sha256": "a2d76e7569b775d57b6a30d34e0513aa0a66aecb29a953934cdaeaac83cfb523"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/dungeon-paths-1006/native/tomb-oubliette/1791266221185138100/result.json",
+      "sha256": "1d518478992b3bb70ca622e301452fd9b202cf5859b673a4590638c67c7cec2c"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/native/mage-graveyard/1791266244209908700/result.json",
+      "sha256": "7271e85365e6d6aead24a9f6ef9919aff8a0c69094db2963e8797b12000dc633"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/native/mine-goblin-reenter/1791266314792947500/result.json",
+      "sha256": "c92ef09621d8101a042d0309dbba81ff00b5564ee324ab66b1db53d10006c657"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/native/mine-fungi/1791266330528593100/result.json",
+      "sha256": "4c986fe68c21ad6fcae9e0eb89dc9e0ea653dfbda5064f1658f51fb0d609622a"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/native/tomb-slow/1791266348447711400/result.json",
+      "sha256": "bc16aebb782dcf7373e52bdce647baca38969c10f9e800c88bc5c1b49982c78d"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/native/mage-runestone/1791266463552158500/result.json",
+      "sha256": "7389885a7513e014b4e216dd8071939aa17e535d1f1c98c525d465346ce78431"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/expiry-native/mage-twisted-expiry/1791266983574847200/result.json",
+      "sha256": "2dca4a0eb7685a20372797dd66d9e73efbfc2195ebe7c92be008577735e29136"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/reentry-native/tomb-reenter/1791267765538669100/result.json",
+      "sha256": "654554c2a81fe7b331f35b18b1cea36ccefe6c94271efd3cc2dd01fb42e62be1"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/pool-native/mine-dark-pool/1791268235391572200/result.json",
+      "sha256": "b35f1688864bd253c002033737b3a5f1fe5ee647efc0c792fe83809c873850b7"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/native/forge-trap-reenter/1791268661075942900/result.json",
+      "sha256": "5f6816c0e0e06976f52f32e2d943a735c9c322ca3394a72a02952da4de8e16e0"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/native/well-arena-empty/1791268556308364800/result.json",
+      "sha256": "e1c6fddacb2eb1df4cf292ee27ef7b99190f222d27e1f4a72ae6cba76a61641f"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/native/well-stash/1791268463463668000/result.json",
+      "sha256": "98d17db0e2ee467f6e2c0bd78f6954e947a421b114974c132bc627d78bf6f959"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/expiry-native/well-arena-complete-expiry/1791268938637410500/result.json",
+      "sha256": "14d913449e036cee279af52cd852bf9671cdaebf7bbe6adf7dab222143152dfc"
+    }
+  ],
+  "driverArtifacts": [
+    {
+      "path": ".tools/dungeon-paths-1006/attempt3/driver.py",
+      "sha256": "44f3bc64b0e8af0f2e99be7bd70ef4403c140c2c1169715f25a1308a2187ccee"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/attempt4/driver.py",
+      "sha256": "c5a55ffbfba1d4dd038c141825b92de470876061dd5bc574c446ba51ede2cb84"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/native-current.py",
+      "sha256": "b8de47c6986c5f995b00b47041ac03b623d7bd3b0e2d4fbe4fbccc9741918844"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-DungeonExpiry.py",
+      "sha256": "3c97d7c05ac1ba1a455d3df9ecd0343303270c08c00d7a8b36627253cca15362"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-DungeonReentry.py",
+      "sha256": "0599034ac08a3882f4cf3b0615cc6ec09c51806a325645e951f0a0cfc3e0382c"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-DungeonDarkPool.py",
+      "sha256": "b1a82830505c166720a535e7a9864c59bd63c32b460b5f4a4f2d4f5947be9853"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/attempt1/driver.py",
+      "sha256": "c1708bddaeeda003c8632e7fa08266c96f345b9cd788578e501c5b389647b0fb"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/attempt2/driver.py",
+      "sha256": "6163fef8cb23a0d600f38c37b2af0a7c1ea62cea47d7bd2410669a222f5e7432"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-UndercityPaths.py",
+      "sha256": "402d456308b17a704d13f31d4078a3e0bcaab73df6caad4c48348c8c003f18d6"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-UndercityExpiry.py",
+      "sha256": "17e2800aa5237bb64d11497c2a41395f8aae48b681f9caa53e49a06321057f59"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/stack-count-1006/ui/20261006T0606243825899Z/result.txt",
+      "sha256": "e2b7034938c14a70b275254fc30058e1551fdd86e3cca3664253c163b019135f"
+    },
+    {
+      "path": ".tools/stack-count-1006/ui/20261006T0606243825899Z/input-hashes.tsv",
+      "sha256": "82416065705caab7564684bdc3d42e89d7650506872458b290696b7da2ddc483"
+    },
+    {
+      "path": ".tools/stack-count-1006/ui/20261006T0606243825899Z/producer-hashes.tsv",
+      "sha256": "b8ba5f5129228be1b7132dabf64b99f535a56c6f4b50814839dfb22266fba288"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/ui/20261006T0611526669615Z/result.txt",
+      "sha256": "7dfd08f391b8e1cacb58311ddb4c2f526a68ac095a795adbdbdb90c41b9dba65"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/ui/20261006T0611526669615Z/input-hashes.tsv",
+      "sha256": "b0a681709d6051345525acf7a93e737473de5bf2825a20da0afbec03fb180d44"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/ui/20261006T0611526669615Z/producer-hashes.tsv",
+      "sha256": "fe3ff938cf005351d291a49c9f6f35c0cfb1c6e92718e587e39d8154052cb36e"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/restriction-ui/20261006T0642406343166Z/result.txt",
+      "sha256": "3206c7155947b538da9cc194ce6505102d10d370ad2a82fa3ab110580c2773dc"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/restriction-ui/20261006T0642406343166Z/input-hashes.tsv",
+      "sha256": "ac1be5be1cfc0549c1eb24e572a91480b77e7982d1c23611d8b191f4d932e6d8"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/restriction-ui/20261006T0642406343166Z/producer-hashes.tsv",
+      "sha256": "a16d60dfe74098fd63a7311d279152684a9eb069c3831b37ba99f949a0de27b1"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/ui/20261006T0643549998258Z/result.txt",
+      "sha256": "36acc9460557d630f0633ef2277ffe76a8244d3a0fab8dcd88d483e4caded0c9"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/ui/20261006T0643549998258Z/input-hashes.tsv",
+      "sha256": "6076d8ad83a90a0beaa17398fa6da665f505c12873e1fc5bb88c0b8bb97b1bbb"
+    },
+    {
+      "path": ".tools/undercity-paths-1006/ui/20261006T0643549998258Z/producer-hashes.tsv",
+      "sha256": "9b9b17862e9f20012c160e7b7ead44940fdd99643fe3ac89058616fa38c9e3ae"
+    }
+  ],
+  "regressions": [
+    {
+      "path": ".tools/dungeon-paths-1006/current-expiry/results.json",
+      "sha256": "e337a013b1b47ff6f489edecc5a96e9f9ecc961c10205949a2094eaec2874cf4"
+    },
+    {
+      "path": ".tools/dungeon-paths-1006/projection-comparison.json",
+      "sha256": "f5091be8b64950545de4b26d6212d9b2fc3159d55bc472aa942e0b2d6f60a97e"
+    }
+  ],
+  "remaining": "R23 other hidden/external restrictions and CDA/copy baseline; R31/R32 multiplayer/combat,R26 hidden,R36 control,R47 unknown dynamic text/resources. Original full automatic status remains invalidated."
+}

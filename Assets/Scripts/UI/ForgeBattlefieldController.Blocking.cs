@@ -51,7 +51,10 @@ public sealed partial class ForgeBattlefieldController
             Button(blockHint,"Remove","取消此生物的阻挡",new Vector2(0,-20),new Vector2(190,32),()=>Choose(OptionIndex("block-remove:"+selectedBlocker),requestId),Ink);
         }
         if(blockHint!=null){blockHint.gameObject.SetActive(selecting);if(selecting){var from=AttackEntity("card",selectedBlocker);blockHint.anchoredPosition=(Vector2)surface.InverseTransformPoint(from.position)+new Vector2(0,from.rect.height/2+50);blockHint.Find("Remove").gameObject.SetActive(OptionIndex("block-remove:"+selectedBlocker)>=0);}}
-        if(blockArrow==null&&selecting)blockArrow=NewAttackArrow("BlockDraftArrow");
+        if(blockArrow==null&&selecting) {
+            blockArrow=NewAttackArrow("BlockDraftArrow");
+            SetOverlayLayer(blockArrow.rectTransform,DragArrowLayerOffset);
+        }
         if(blockArrow!=null)blockArrow.gameObject.SetActive(selecting);
         int used=0;
         foreach(var blocker in (view?.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>p.battlefield??Array.Empty<ForgeCardView>()))

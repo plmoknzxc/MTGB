@@ -11,6 +11,10 @@ public sealed class OnlineRoomConfig
     public int minimumMainDeckSize = 60;
     public int maximumSideboardSize = 15;
     public bool allowCustomContent;
+    public bool useAnte;
+    // Host-only authorization; never accepted from a client's serialized configuration.
+    [NonSerialized] internal DeckDefinition authorizedSeriesPool;
+    [NonSerialized] internal DeckDefinition[] authorizedAuxiliarySeriesPools;
     public List<string> allowedSetCodes = new List<string>();
 }
 
@@ -77,9 +81,12 @@ public sealed class OnlineRoomMember
     public string reconnectToken;
     public DeckDefinition deck;
     public DeckDefinition registeredDeck;
+    public DeckDefinition seriesOriginalDeck;
+    public bool seriesDeckChanged;
     public bool connected;
     public bool ready;
     public bool sceneReady;
+    public bool reviewing;
     public bool restoring;
     public double disconnectedAt;
     public OnlineReconnectWindow reconnectWindow = new OnlineReconnectWindow(30d);
@@ -95,6 +102,18 @@ public sealed class OnlineRoomState : IDisposable
     public OnlineSeriesState series = new OnlineSeriesState();
     public readonly Dictionary<int, OnlineRoomMember> members = new Dictionary<int, OnlineRoomMember>();
     public OnlineMatchSession match;
+    // Only a public projection survives engine disposal for late spectators.
+    public OnlineMatchEndedMessage publicReview;
+    public bool HasReviewers => publicReview?.finalView?.forge!=null && System.Linq.Enumerable.Any(members.Values,m=>m.connected&&m.reviewing);
+    public bool SpectatorOnly => match!=null || series.betweenGames || HasReviewers;
+    public string DirectoryState => match!=null ? "playing" : series.betweenGames&&members.ContainsKey(1)&&members.ContainsKey(2) ? "sideboarding" : HasReviewers||series.betweenGames&&publicReview!=null ? "review" : "waiting";
+    public OnlineMatchEndedMessage SpectatorReview(int seat)
+    {
+        if(publicReview?.finalView?.forge==null||seat<=2)return null;
+        var copy=ServerSnapshotJson.Copy(publicReview);
+        copy.ownDeck=null;copy.finalView=OnlineSpectatorView.Create(publicReview.finalView,seat);
+        return copy;
+    }
 
     public bool IsEmpty => members.Count == 0;
 
@@ -102,6 +121,7 @@ public sealed class OnlineRoomState : IDisposable
     {
         match?.Dispose();
         match = null;
+        publicReview=null;
         members.Clear();
     }
 }

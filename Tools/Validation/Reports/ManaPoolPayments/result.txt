@@ -1,0 +1,1 @@
+PASS pool-retry: native blue 2 -> 1 from controlled player, unpayable blue for red leaves complete players/remaining cost/options unchanged; fresh same-context request; correct red source then Shock/Opt/control/attack resolve and release

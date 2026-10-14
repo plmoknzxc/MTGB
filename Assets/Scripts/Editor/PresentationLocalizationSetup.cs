@@ -13,6 +13,18 @@ public static class PresentationLocalizationSetup
     public static void Build()
     {
         const string root="Assets/Localization";
+        var rows=new[]{"Interface.tsv","RuntimeInterface.tsv","ForgeInterface.tsv"}.SelectMany(file=>File.ReadLines(root+"/"+file))
+            .Where(line=>!string.IsNullOrWhiteSpace(line)).Select(line=>line.TrimStart('\uFEFF').Split('\t')).ToArray();
+        var keys=new System.Collections.Generic.HashSet<string>(System.StringComparer.Ordinal);
+        foreach(var row in rows) {
+            if(row.Length!=3&&row.Length!=4||row.Any(string.IsNullOrEmpty)||!keys.Add(row[0]))
+                throw new System.IO.InvalidDataException("Invalid or duplicate interface translation: "+row[0]);
+            var parameters=System.Text.RegularExpressions.Regex.Matches(row[0],@"\{[0-7]\}").Cast<System.Text.RegularExpressions.Match>().Select(m=>m.Value).ToHashSet();
+            foreach(var value in row.Skip(row.Length==4?1:0)) {
+                var translated=System.Text.RegularExpressions.Regex.Matches(value,@"\{[0-7]\}").Cast<System.Text.RegularExpressions.Match>().Select(m=>m.Value).ToHashSet();
+                if(!parameters.SetEquals(translated))throw new System.IO.InvalidDataException("Interface parameters differ: "+row[0]);
+            }
+        }
         var settings=LocalizationEditorSettings.ActiveLocalizationSettings;
         if(settings==null) {settings=ScriptableObject.CreateInstance<LocalizationSettings>();AssetDatabase.CreateAsset(settings,root+"/LocalizationSettings.asset");LocalizationEditorSettings.ActiveLocalizationSettings=settings;}
         string[] codes={"zh-CN","en-US","ja-JP"};
@@ -22,9 +34,14 @@ public static class PresentationLocalizationSetup
             var locale=Locale.CreateLocale(code);AssetDatabase.CreateAsset(locale,root+"/"+code+".asset");LocalizationEditorSettings.AddLocale(locale);
         }
         var strings=LocalizationEditorSettings.GetStringTableCollection("Interface") ?? LocalizationEditorSettings.CreateStringTableCollection("Interface",root);
-        foreach(string line in File.ReadLines(root+"/Interface.tsv"))
+        // The TSV files are authoritative; retired unsafe formats must not
+        // survive in a built table and keep matching future native messages.
+        foreach(var stale in strings.SharedData.Entries.Where(entry=>!keys.Contains(entry.Key.Replace("\n","\\n"))).ToArray()) {
+            foreach(var table in strings.StringTables)table.RemoveEntry(stale.Id);
+            strings.SharedData.RemoveKey(stale.Id);
+        }
+        foreach(var parts in rows)
         {
-            var parts=line.TrimStart('\uFEFF').Split('\t');if(parts.Length!=3 && parts.Length!=4) continue;
             foreach(var table in strings.StringTables)
             {
                 int index=System.Array.IndexOf(codes,table.LocaleIdentifier.Code);if(index<0) continue;

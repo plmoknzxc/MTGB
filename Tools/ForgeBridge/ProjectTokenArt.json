@@ -1,0 +1,18 @@
+{
+  "provenance": "Display-only paired aliases authorized by user 2026-10-12: ordinary Incubator front and any installed Dark Confidant printing for the special Incubob back. These are visual stand-ins, not a claim of an official Incubob token printing. Native identity and rules stay unchanged.",
+  "entries": [
+    {
+      "key": "UNK/UB02b",
+      "name": "Incubob",
+      "tokenScript": "ForgeRuntime/assets/res/tokenscripts/incubator_dark_confidant.txt",
+      "faceImages": ["CardImages/TMOM/18.jpg", "CardImages/RAV/81.jpg"],
+      "tokens": [
+        {
+          "key": "MTGB/Incubob",
+          "name": "Incubator Dark Confidant // Dark Confidant",
+          "rules": "{2}: Transform this artifact.\n//\nAt the beginning of your upkeep, reveal the top card of your library and put that card into your hand. You lose life equal to its mana value."
+        }
+      ]
+    }
+  ]
+}

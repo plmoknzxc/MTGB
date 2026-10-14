@@ -68,14 +68,7 @@ public sealed partial class OnlineLobbyPanel
             contentGroup.transform.Find(name).gameObject.SetActive(!betweenGames);
         int chooser = service?.LobbyState?.playDrawChooserSeat ?? 0;
         if (playDrawOverlay == null) return;
-        bool choosing = chooser != 0 && service.HasJoinedLobby;
-        playDrawOverlay.SetActive(choosing);
-        if (!choosing) return;
-        playDrawOverlay.transform.SetAsLastSibling();
-        bool local = chooser == service.LocalSeat;
-        string nameOfChooser = service.LobbyState.players.Find(p => p.seat == chooser)?.displayName ?? "对手";
-        playDrawTitle.text = local ? "选择先攻或后攻" : $"等待 {nameOfChooser} 选择先后攻";
-        playFirstButton.gameObject.SetActive(local);
-        drawFirstButton.gameObject.SetActive(local);
+        // The authoritative choice now lives over the battlefield scene.
+        playDrawOverlay.SetActive(false);
     }
 }

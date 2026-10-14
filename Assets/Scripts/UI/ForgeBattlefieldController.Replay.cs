@@ -6,7 +6,7 @@ public sealed partial class ForgeBattlefieldController
     {
         if (seek) ResetCastingVisual();
         // Keep the recorded views immutable; hide interactive choices while preserving the board.
-        var display = JsonUtility.FromJson<ForgeSeatView>(JsonUtility.ToJson(state));
+        var display = ServerSnapshotJson.Copy(state);
         display.awaitingInput = false; display.request = null;
         Present(display, perspective, false, null, null, GamePreferences.T("观看录像"));
         if (!integrated) return;

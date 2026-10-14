@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/PlayerStatusConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "c7a62b6baf0526c12fa30d791fc49e13b7317195abd8209c4ad7a14ff806f7fa"
+  },
+  "runtimeHash": "0d108e2e0e509891ac96066396390ed8fabfa55b3bb168dce4c188a3190e7f88",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T03:18:23Z",
+    "coverage": "metadata_changed exact-source fallback; upstream/.tools excluded bounded direct reads"
+  },
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-PlayerStatus.py",
+      "sha256": "57c06e4cd87cf02e921438b607acfe84676c56f410d28b04dc48e50702b467cf"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/PlayerStatusFixture.java",
+      "sha256": "7b21a0bd5b2d9392109653d94684054cff8ce533a2159467c835f9e3bc0446a4"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Assets/Scripts/Editor/PlayerStatusPresentationValidation.cs",
+      "sha256": "57c3e2b882bcc45df9480731d5437e140ccb2349749ce0e372553f794a7c2245"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Emblems.cs",
+      "sha256": "33cbbd587ef012f67ef854b7c8e1af5e40e76ced2f6a95d00e2f8c26a892220e"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "9d647c8fa7cd2f4ca491597b9b8143e1143ee8dda144c05bc619aa956e2ae4a2"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Integrated.cs",
+      "sha256": "4e42b462e166616f47996d26abe59b591281c5fe6a9fd22e2e87ba312d75e0fe"
+    },
+    {
+      "path": "Assets/Scripts/UI/SpecialEffectArt.cs",
+      "sha256": "3e684b546318e9e520521cac1908142d9df9d78a1d2286c76f8a1d3ba089b933"
+    },
+    {
+      "path": "Assets/Resources/SpecialEffectArt.json",
+      "sha256": "59c11db218e16614dca0c3ad342a2a00a56909b3129f53d90847c3588216b9f7"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/player-status-1006/native/night-explicit/1791256183066185200/result.json",
+      "sha256": "c0d2466c01c63c8a793d210c57a63daae4b78c035c08d3912955b40a4e12a470"
+    },
+    {
+      "path": ".tools/player-status-1006/native/day-switch/1791256193971049900/result.json",
+      "sha256": "80de61a6bccee09e4a3d7e161f487449a8c3a65fae9679d5460e2b069e989a1d"
+    },
+    {
+      "path": ".tools/player-status-1006/native/day-natural/1791256204233159400/result.json",
+      "sha256": "a23baea53bc6b2a6524b5414895e1e465a64dd5aebb75e7cd141f49a08c971e7"
+    },
+    {
+      "path": ".tools/player-status-1006/native/speed-none/1791256216079923300/result.json",
+      "sha256": "3336198947a1b8f8727244bc50c934d5a4575733a24a1baa3e175ea0fdde4afe"
+    },
+    {
+      "path": ".tools/player-status-1006/native/speed-once/1791256225020019300/result.json",
+      "sha256": "05ad289cf9b9a0cabc1b7f64ec491c1c6bb743fb9f76645d94cb27222bd2bbb3"
+    },
+    {
+      "path": ".tools/player-status-1006/native/speed-self/1791256236659745400/result.json",
+      "sha256": "2998c2b30195970af0bcfb675b9df2a938d98eba4d90273646a264d5abe6f278"
+    },
+    {
+      "path": ".tools/player-status-1006/native/speed-offturn/1791256249269689100/result.json",
+      "sha256": "dd189e057ff9ffc0d7de6ba6e268cd2f63ff7964f21dfd8cfb1d08b18b9b7f7f"
+    },
+    {
+      "path": ".tools/player-status-1006/native/speed-source-leave/1791256263073329200/result.json",
+      "sha256": "8d0d30855d7651ff1bbd013e65eec577796cfae8f05a7045356851279d85f584"
+    },
+    {
+      "path": ".tools/player-status-1006/native/speed-max/1791256275995988500/result.json",
+      "sha256": "c4e5a931ce91df65c96693d650d3c3ded24157fb8a583292ad46b84fb78498e0"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/player-status-1006/ui/20261006T0324399098554Z/result.txt",
+      "sha256": "6d949a0e39e295710464d688459bef6abdc3175b82524963bef4be733d6c8b29"
+    },
+    {
+      "path": ".tools/player-status-1006/ui/20261006T0324399098554Z/input-hashes.tsv",
+      "sha256": "6385176f9d23975501c64e61ca9948e470cc4931a95aea6cb3b0a63ccfc1d30b"
+    },
+    {
+      "path": ".tools/player-status-1006/ui/20261006T0324399098554Z/producer-hashes.tsv",
+      "sha256": "2ef9d4896fbeed3f12379105dc315f11dee7a3a74b2a24d3dc1d011c0fd1d8c5"
+    }
+  ],
+  "remaining": "Only original R25 closed; unknown markers/translations, other native consumers/combinations and live transport open."
+}

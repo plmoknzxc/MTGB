@@ -1,0 +1,51 @@
+#if UNITY_EDITOR
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+// R21 adapter increment. The native attack-two flow remains separate evidence.
+public static class GroupSafetyPresentationValidation
+{
+    const string Output=".tools/group-safety-1007/ui";
+    static bool running;
+    public static bool TargetOnly;
+    public static bool LandOnly;
+    [Serializable] class Meta { public string folder; }
+    static void Check(bool ok,string why){if(!ok)throw new Exception(why);}
+    static IEnumerator Frame(){yield return new WaitForSecondsRealtime(.25f);yield return new WaitForEndOfFrame();Canvas.ForceUpdateCanvases();}
+    static GameObject Card(int id)=>GameObject.Find("Card_"+id);
+    static int Quantity(int id){var root=Card(id);if(root==null)return 0;var label=root.transform.Find("Visual/Count/Value")?.GetComponent<Text>();return label==null?1:int.Parse(label.text.TrimStart('×'));}
+    static void Click(int id){var b=Card(id).GetComponent<Button>();var r=(RectTransform)b.transform;var p=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,r.TransformPoint(r.rect.center)),button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(p,hits);Check(b.interactable&&hits.Count>0&&hits[0].gameObject.GetComponentInParent<Button>()==b,"Blocked card "+id+" by "+string.Join(",",hits.Take(5).Select(h=>h.gameObject.name)));ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,p,ExecuteEvents.pointerClickHandler);}
+    static void Dismiss(ForgeBattlefieldController ui,int id,bool right){var r=(RectTransform)Card(id).transform;typeof(ForgeBattlefieldController).GetMethod("HandleExpandedGroupPointer",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(ui,new object[]{RectTransformUtility.WorldToScreenPoint(null,r.TransformPoint(r.rect.center)),right});}
+    public static void Run(){Check(Application.isPlaying&&!running,"Play/runner state");running=true;Directory.CreateDirectory(Output);File.WriteAllText(Output+"/result.txt","RUNNING");var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("GroupSafetyValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(ui));}
+    static IEnumerator Guard(ForgeBattlefieldController ui){var stack=new Stack<IEnumerator>();stack.Push(Validate(ui));try{while(stack.Count>0){object current;try{var e=stack.Peek();if(!e.MoveNext()){(e as IDisposable)?.Dispose();stack.Pop();continue;}current=e.Current;if(current is IEnumerator child){stack.Push(child);continue;}}catch(Exception error){File.WriteAllText(Output+"/result.txt","FAIL "+error);throw;}yield return current;}File.WriteAllText(Output+"/result.txt","PASS: actual grouped-land expand/second exact ID submission and tapped-state split; six-category native metadata adapter, quantity-only grouping, native unsafe remembered/cloned gate, hidden identity isolation, state split/regroup, actual card rays expand and select exact candidate, inside/outside/right pointer dismissal and new-request reset; native actual exert snapshots gate obeyed through effect/EOT/untaps. zh-CN increment; prior three-language layout proof reused. No new effect/UI first or network claim.");}finally{while(stack.Count>0)(stack.Pop() as IDisposable)?.Dispose();running=false;}}
+    static IEnumerator Validate(ForgeBattlefieldController ui){bool enabled=ui.enabled;ui.enabled=false;string locale=GamePreferences.Language;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+        try{
+            GamePreferences.SetLanguage("zh-CN");float until=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;
+            if(LandOnly||!TargetOnly){
+                var landMeta=JsonUtility.FromJson<Meta>(File.ReadAllText(".tools/group-safety-1007/grouped-land-result.json"));
+                var v=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(landMeta.folder+"/before.json"));var pair=v.players[0].battlefield;int count=0,index=-1;
+                ui.Present(null,1,false,null,null,"");ui.Present(v,1,true,i=>{count++;index=i;},null,"");yield return Frame();Check(Quantity(pair[0].id)==2,"Actual lands not grouped");Click(pair[0].id);yield return Frame();Check(count==0&&pair.All(c=>Quantity(c.id)==1),"Land summary submitted instead of expanding");
+                int expected=ui.OptionIndex("card:"+pair[1].id);Click(pair[1].id);Check(count==1&&index==expected,"Wrong actual land member");
+                var after=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(landMeta.folder+"/resolved.json"));ui.Present(after,1,false,null,null,"");yield return Frame();Check(after.players[0].battlefield.All(c=>Quantity(c.id)==1),"Actual tap state not split");ScreenCapture.CaptureScreenshot(Output+"/land-exact-id.png");yield return Frame();File.WriteAllText(Output+"/land-result.txt","PASS native actual grouped-land input: summary ray expands without submitting; second exact ID ray submits original index; native tapped/untapped update splits and request reset recovers. Only changed land consumer rerun.");if(LandOnly)yield break;
+            }
+            var state=DuelLayoutPresentationValidation.DensityFixture(false);state.players[0].battlefield=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(".tools/battlefield-compact-1005/native-grouping.json")).players[0].battlefield;state.players[1].battlefield=Array.Empty<ForgeCardView>();state.stackItems=Array.Empty<ForgeStackItem>();state.stack=Array.Empty<string>();state.stackCount=0;state.players[0].hand=Array.Empty<ForgeCardView>();state.players[1].hand=Array.Empty<ForgeCardView>();state.request.kind="InputPassPriority";state.request.options=Array.Empty<ForgeOption>();state.request.requestId=900100;state.awaitingInput=true;
+            int calls=0,last=-1;Action<int> submit=i=>{calls++;last=i;};ui.Present(null,1,false,null,null,"");ui.Present(state,1,true,submit,null,"");yield return Frame();
+            var raw=state.players[0].battlefield;var bears=raw.Where(c=>c.name=="Grizzly Bears").ToArray();if(!TargetOnly){foreach(string name in new[]{"Grizzly Bears","Command Tower","Sol Ring","Ghostly Prison","Jace Beleren","Invasion of Zendikar"}){var pair=raw.Where(c=>c.name==name).Take(2).ToArray();Check(Quantity(pair[0].id)==2&&Quantity(pair[1].id)==0,"Native group "+name);}
+            Check(raw.Sum(c=>Quantity(c.id))==raw.Length,"Lost identity quantities");Check(!GameObject.Find("Canvas").GetComponentsInChildren<Transform>().Any(t=>t.name=="StackBack"||t.name=="StackArt"),"Rear art remains");var rings=raw.Where(c=>c.name=="Sol Ring").ToArray();Check(Quantity(rings[2].id)==1,"Remembered gate ignored");
+            Click(bears[0].id);yield return Frame();Check(bears.All(c=>Quantity(c.id)==1)&&calls==0,"Expansion submitted/collapsed");Dismiss(ui,bears[1].id,false);yield return Frame();Check(bears.All(c=>Quantity(c.id)==1),"Inside pointer collapsed");Dismiss(ui,rings[0].id,false);yield return Frame();Check(Quantity(bears[0].id)==2,"Outside pointer did not collapse");Click(bears[0].id);yield return Frame();Dismiss(ui,bears[1].id,true);yield return Frame();Check(Quantity(bears[0].id)==2,"Right dismissal failed");Click(bears[0].id);yield return Frame();state.request.requestId++;ui.Present(state,1,true,submit,null,"");yield return Frame();Check(Quantity(bears[0].id)==2,"New request did not collapse");
+            bears[1].tapped=true;ui.Present(state,1,true,submit,null,"");yield return Frame();Check(bears.All(c=>Quantity(c.id)==1),"Tap split failed");bears[1].tapped=false;ui.Present(state,1,true,submit,null,"");yield return Frame();Check(Quantity(bears[0].id)==2,"Regroup failed");
+            // Copy eligibility and hidden identity are protocol adapters, not effects.
+            foreach(var c in bears){c.copy=true;c.stackablePermanent=false;}ui.Present(state,1,true,submit,null,"");yield return Frame();Check(bears.All(c=>Quantity(c.id)==1),"Clone safety overridden");foreach(var c in bears){c.copy=false;c.stackablePermanent=true;c.faceDown=true;}ui.Present(state,1,true,submit,null,"");yield return Frame();Check(bears.All(c=>Quantity(c.id)==1),"Hidden IDs merged");foreach(var c in bears)c.faceDown=false;File.WriteAllText(Output+"/prefix.txt","PASS six categories/quantities/expansion/dismissal/request-reset/tap-regroup/copy-gate/hidden-IDs");}
+            state.request.previewCards=Array.Empty<ForgeCardView>();state.request.kind="InputSelectTargets";state.request.requestId++;state.request.options=new[]{new ForgeOption{id="card:"+bears[1].id,label="Target"}};ui.Present(state,1,true,submit,null,"");yield return Frame();Check(bears.All(c=>Quantity(c.id)==1),"Legal individual candidate did not split");Click(bears[1].id);Check(calls==1&&last==0,"Wrong candidate index");if(Card(bears[1].id).GetComponent<Button>().interactable)Click(bears[1].id);Check(calls==1,"Duplicate submission");
+            var meta=JsonUtility.FromJson<Meta>(File.ReadAllText(".tools/group-safety-1007/native/attack-two-result.json"));foreach(string label in new[]{"before","effect","pending-after-eot","next-untap","following-untap"}){var v=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(meta.folder+"/"+label+".json"));ui.Present(v,1,false,null,null,"");yield return Frame();var pair=v.players[0].battlefield.Where(c=>!c.land).ToArray();if(label=="before")Check(Quantity(pair[0].id)==2,"Actual initial pair not grouped");else Check(pair.All(c=>!c.stackablePermanent&&Quantity(c.id)==1),"Actual gate overridden "+label);if(label=="pending-after-eot"){ScreenCapture.CaptureScreenshot(Output+"/native-pending.png");yield return Frame();}}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+    }
+}
+#endif

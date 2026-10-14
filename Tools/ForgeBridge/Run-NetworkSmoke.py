@@ -10,10 +10,11 @@ parser.add_argument("--mode", choices=["dedicated", "lan", "mismatch", "multiroo
 parser.add_argument("--build-dir", type=Path)
 parser.add_argument("--best-of", type=int, choices=[1, 3], default=3)
 parser.add_argument("--server-exe", type=Path)
+parser.add_argument("--output-dir", type=Path, help="Separate evidence directory; defaults to the historical smoke path")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[2]
 build = args.build_dir.resolve() if args.build_dir else root / "Builds/ForgeValidation"
-output = root / ".tools/forge-migration" / (args.mode + ("-bo1" if args.best_of == 1 else ""))
+output = args.output_dir.resolve() if args.output_dir else root / ".tools/forge-migration" / (args.mode + ("-bo1" if args.best_of == 1 else ""))
 output.mkdir(parents=True, exist_ok=True)
 roles = ["server", "client1", "client2"] if args.mode == "dedicated" else ["host", "client2"]
 if args.mode == "mismatch":

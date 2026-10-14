@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-06",
+  "scope": "Nine named actual consumers and shared request contracts; no all-API-expression or live networking claim.",
+  "runtimeHash": "a3862b7d74deb7a17f0fa133810d2a6e3d032c8156bc568362e1034c07d79073",
+  "graph": {
+    "project": "D-project-MTGB",
+    "tier": "Verify",
+    "generation": "2026-10-06T00:50:18Z",
+    "coverage": "metadata changed: exact source fallback; upstream .tools excluded; scoped traces PrepareLandChoices and OnlineMatchSession.Poll checked."
+  },
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-VariableBranches.py",
+      "sha256": "cff5fefe5794617e050b5ebc40d0a568fa3de0932539c46f4b00929a0a955a51"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/VariableBranchFixture.java",
+      "sha256": "2e6250b3004665993ccd0608a0dc02cd9729fe7ae2afeddc9f0913e49edf7a25"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/StateBranchFixture.java",
+      "sha256": "fa0187e14f6d59fd8883ff66962beffdb9e7492091569db5381b2041b386a2bf"
+    },
+    {
+      "path": "Assets/Scripts/Editor/VariableBranchPresentationValidation.cs",
+      "sha256": "256fd9fb9670d372a789447e5be501a49e8dd431bbe4ec99700e89006306585e"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.GenericChoices.cs",
+      "sha256": "401de755deb88508841586f1e5aa909d38cd54970f830d8bb42db3712be4a7da"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.LandChoices.cs",
+      "sha256": "9f8c5cd0990c14c16e9ca0646fd789a8b364fdcfcdff48dafee7ed2e6f5f06eb"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Payment.cs",
+      "sha256": "93f5801ef1ebe343edc2b53f241e70c5d168407924555d6a6eed2a1455db6190"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Notices.cs",
+      "sha256": "470490690bb38335de65636365c9b5d72da625376b68c30db537a465c6f931cc"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.BattlefieldView.cs",
+      "sha256": "5ffe8632af43815bf0b79c00c799fe675798f45e219f4e4ce8526e89d9d66481"
+    },
+    {
+      "path": "Assets/Scripts/Networking/OnlineMatchSession.cs",
+      "sha256": "9d6aa557e0f1e91331e3f56833e84edf5af75cf83eb2f520af433d50750d78bf"
+    },
+    {
+      "path": "Assets/Scripts/Networking/OnlineSpectatorView.cs",
+      "sha256": "7d55e2cea79598ac202c1bbfbed6db858c271b81f541072883fc0b2d773f15bd"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/StoreSVarEffect.java",
+      "sha256": "06c255cbd388ece59782b37e6f8f9dd0e0f2aceee5d5978026fc614504122249"
+    },
+    {
+      "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChooseGenericEffect.java",
+      "sha256": "700a739ab79ef52ed7fca748264a25c60415c98fb9025314c2df7e06cbbe6e8c"
+    }
+  ],
+  "types": {
+    "slaughter-single": [
+      "Count"
+    ],
+    "slaughter-delirium": [
+      "Count"
+    ],
+    "drain-creature": [
+      "Targeted"
+    ],
+    "drain-player": [
+      "Calculate"
+    ],
+    "bell-trigger-reset": [
+      "Triggered",
+      "Number"
+    ],
+    "doodle-match": [
+      "Number",
+      "CountSVar"
+    ],
+    "doodle-mismatch": [
+      "Number",
+      "CountSVar"
+    ],
+    "join-forces": [
+      "CountSVar"
+    ],
+    "vermin-repeat": [
+      "Number",
+      "AdditiveForEach"
+    ]
+  },
+  "native": [
+    {
+      "path": ".tools/variable-branches-1006/native/slaughter-single/1791245843413031000/result.json",
+      "sha256": "0a62075cab701973c2f854cd04bb37171110d5b1c6b1263d09cd34ba34e18c1d"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/slaughter-delirium/1791245858214109800/result.json",
+      "sha256": "c8d1b74be9db2cba3658ee0e5628de04b9c522820a6381bc50324fc364a4917a"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/drain-creature/1791245872979981900/result.json",
+      "sha256": "67c80785b8c234a7a0babbc620d71333a6522fcb4df5428e0c4588c0de566ce4"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/drain-player/1791245888646646800/result.json",
+      "sha256": "73e550192d9bd6d76a6572b21d6debc8b1a54b88f6b1c1686ada2cf8a127d96a"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/bell-trigger-reset/1791245904134451800/result.json",
+      "sha256": "5dc472a7a476ecce7310e652408479c5213ce3dc212653c22b6de93b08af0c45"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/doodle-match/1791245922392141100/result.json",
+      "sha256": "4c1429c2cffc014a051b8bdd0ba1a9403f95e8e185096b22e960726b30c73029"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/doodle-mismatch/1791245938745526100/result.json",
+      "sha256": "731c817324b479595f0e751cdbcf17ed6a517b24375790852a538aeb39b4dbb7"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/join-forces/1791245955925739000/result.json",
+      "sha256": "95e649a3cd12862e112fc2eaf103fcdf9b8f8d61fc099c95de3bd90b82ba1609"
+    },
+    {
+      "path": ".tools/variable-branches-1006/native/vermin-repeat/1791245972016559800/result.json",
+      "sha256": "0977ebe5d312cf39379b13c413dd8cfe08ae3a7b9f5629cce00f713a1b2a0132"
+    }
+  ],
+  "ui": {
+    "path": ".tools/variable-branches-1006/ui/20261006T0048367334637Z/result.txt",
+    "sha256": "c35406dc39ca02f5af2964b57a0debac44e264413410c52495528ffb81a893e2"
+  },
+  "projectionAdapter": {
+    "path": ".tools/variable-branches-1006/ui/20261006T0048367334637Z/projection-adapter.txt",
+    "sha256": "ca5226e38c134c132c8571188eee9bb02ea1dfc1601832bf28c85c739a7f44e0"
+  },
+  "contracts": {
+    "Doodle": "ChooseOptions select: identity + native selected/count/min/max/confirm; both seats mandatory min=max=1 without cancel. Source display and View/Return fixed font; GenericChoices consumer.",
+    "Joint payment": "ChooseNumber native selectedValue/plus/confirm under second payer seat -> InputPayMana native ok/cancel; LandChoices/Payment dock.",
+    "Vermin": "dialog numeric enumeration with native life bounds, local draft -> native option; InputConfirm life yes/no compact panel; no guessed payment.",
+    "Sacrifice and X": "Existing native card-picker and X-number consumers; named effect proofs retained, current suite represents shared numeric and mandatory selection contracts; no new exhaustive target UI claim.",
+    "Privacy": "OnlineMatchSession.Poll sends request only to actor; four real envelopes with selected states exercised. GetView JsonUtility empty request DTO is not leaked content. Spectator hides requests/private hands. This is an adapter, no transport recovery claim."
+  },
+  "failures": [
+    "Native original attempts retain fixture/driver failure identities; no product effects changed.",
+    "UI 20261006T0040474326984Z status.json FAIL_TEST_DRIVER: empty nested request DTO mistaken for private content and nested coroutine did not record exception. Source archived; new unique run guards nested iterators.",
+    "UI 20261006T0045088422717Z FAIL life confirmation locale; actual title/loaded locale missing from diagnostic, cause unresolved. Later run records requested/loaded locale and title and passes all three languages."
+  ],
+  "remaining": {
+    "A02": "已归族API的其余真实语义/消费者边界；StoreSVar其他表达式、目标/来源改变、条件/时序/费用/替代/控制组合；七类代表和EachPlayer重复已核销；ChooseSector/ClaimThePrize/Flip分别保留S06/S07真实结果和表现范围",
+    "R03": "投票、方向、其他多个决策者/嵌套控制与等待切换；双方秘密Whack/Doodle、共同付款及三轮生命支付的原生结果和操作座位首验保留，不代表四人组合",
+    "R05": "大数、不可取消、一般数量分配、生命竞价；双方共同付款及重复选择支付生命已核销，不把共同付款当竞价"
+  }
+}

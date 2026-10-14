@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -19,6 +19,7 @@ public sealed class OnlineSideboardCardTile : MonoBehaviour, IPointerClickHandle
     public void SetQuantityControls(bool visible, bool canIncrease)
     {
         if (quantityControls == null) return;
+        quantityControls.transform.Find("QuantityCountBackground/QuantityCount").GetComponent<Text>().text = "×" + Entry.count;
         quantityControls.SetActive(visible);
         countBadge.SetActive(!visible);
         decreaseButton.interactable = visible && Entry.count > 0;

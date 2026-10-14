@@ -10,7 +10,7 @@ using UnityEngine;
 
 [Serializable] public sealed class OnlineRoomListing
 {
-    public string roomId, hostName, format;
+    public string roomId, hostName, format, state;
     public int players, bestOf;
     public bool inMatch, lanHosted, allowCustomContent;
     public int spectators;

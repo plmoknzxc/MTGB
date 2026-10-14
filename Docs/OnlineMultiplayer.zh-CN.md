@@ -18,11 +18,25 @@
 
 ## 构建与启动服务器
 
-1. 在 Unity 菜单执行 `MTGB/构建/Windows 独立服务器`。
+1. 在 Unity 菜单执行 `MTGB/构建/Windows 独立服务器`，或执行 `MTGB/构建/Linux 独立服务器` 并选择 Linux Java 17 运行环境目录（含 `bin/java`）。新安装平台模块后需要重启 Editor。
 2. 启动：`Builds/Server/MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777`。
 3. 客户端在主界面选择“联机对战”，先在连接页输入服务器 IP、UDP 端口、房间号与建房规则。不存在的房间号会按首位玩家填写的生命、BO1/BO3、允许系列与 DIY 开关创建房间；每局先手由服务器重新随机决定。连接成功后整页切换到独立的房间准备页，可选择本局牌组、查看两名玩家状态并准备。BO3 局间会再切换到独立的全屏换备页，主牌与备牌以卡面网格显示，直接拖到另一侧即可移动一张；房间准备页不会常驻显示换备控件。已有房间号会加入并显示房间现有规则。大厅内断开或返回会退出房间并释放席位。
 
 也可以通过命令行构建：
+
+Linux 构建使用 `-buildTarget Linux64 -standaloneBuildSubtarget Server -executeMethod DedicatedServerBuildMenu.BuildFromCommandLine -serverPlatform linux -serverJavaRoot <Linux-JRE-17目录> -serverOutput Builds/LinuxServer/MTGBServer`。使用当前 Forge 类和资源，重新生成 Linux JRE 的资源清单；Windows 运行包不改动。Linux 启动命令为 `./MTGBServer -batchmode -nographics -mtgb-server -port 7777`，部署后要确保它和 `ForgeRuntime/jre/bin/*` 有执行权限。游戏连接用 UDP 7777，房间查询用 TCP 7777，云安全组需要允许两者。
+
+可通过 `-max-matches 1` 限制独立服务器同时进行的对局数（包含待选先手的 BO3 房间）；没有指定时沿用原上限策略。Java 子进程继承 `JAVA_TOOL_OPTIONS`，可由部署服务设置堆内存与处理器上限。每场会话使用独立 Java 用户目录，Linux 与 Windows 的类路径分别使用 `:` 和 `;`。部署与资源占用检查不能代替全机制或多房间容量验证。
+
+独立服务器使用 `Assets/Scenes/DedicatedServer.unity`，不加载客户端主菜单和战场。Forge 运行资源只复制规则引擎、完整卡牌／衍生物脚本、印刷目录、赛制与必要数据、英文引擎提示和平台 Java；不复制冒险模式、音乐皮肤、卡图、制卡源码或客户端多语言资源。输出中的 StreamingAssets 只保留 DeckFormats，发布压缩包还要排除示例牌组和 Unity 调试备份目录。客户端构建沿用原资源。
+
+Linux 可通过 `Tools/Server/mtgb-server.service` 管理服务：程序安装在 `/opt/mtgb/releases/<版本>/`，`/opt/mtgb/current` 指向当前版本，运行数据写入 `/var/lib/mtgb`，日志使用 `journalctl -u mtgb-server`。该模板限制单场对局与服务资源，正式容量以部署后的实测为准。
+
+当前部署服务模板使用 `-port 2323`。客户端连接相同端口，云安全组同时放行 TCP 2323（房间查询）和 UDP 2323（对战）；上面的 7777 是程序默认端口与通用启动示例。
+
+2026-10-12 公网部署检查：TCP 2323 房间查询通过；两位真实客户端经公网 UDP 2323 加入席位并收到初始权威视图通过。完整对局启动未通过，Forge 未发出首个可操作请求。当前 1.58 GiB 主机同时运行其他服务，750／850 MiB 的服务内存回收阈值产生明显回收阻塞；提高 MTGB 内存预算仍未完成启动，随后 SSH 登录超时。此结果不能视为完整联机对局通过。恢复操作和实测原始记录保存在 `.tools/ubuntu-server-deploy/`；本地服务模板保留保守预算，重部署前须复核该主机的实际资源与启动结果。
+
+同日恢复：用户重启实例后，保存的 SSH 密码凭据再次连接成功；实际 `sshd -T` 输出为 `permitrootlogin yes`、`passwordauthentication yes`。Workbench 先前的密码禁用提示不能代替实际配置检查。已停止 MTGB 并恢复 Java 384 MiB 堆上限、服务 750 MiB 回收阈值和 900 MiB 内存硬上限；原有 watchdog、updater、MariaDB 服务处于 active。未再次启动对局；MTGB 的开机启动仍启用，当前进程已停止。
 
 ```powershell
 Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
@@ -89,9 +103,29 @@ Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
 
 ## 联机验证
 
+### Ubuntu 独立服务端（2026-10-12）
+
+构建入口为 `DedicatedServerBuildMenu.BuildFromCommandLine`，参数 `-serverPlatform linux -serverJavaRoot <Linux Java 17 目录> -serverOutput <输出路径>`，使用 Linux Dedicated Server 子目标与 `DedicatedServer.unity`。发布包包含 Unity Linux 可执行程序、Forge 规则资源与 Linux JRE，不包含卡图、录屏、验证工具和 Windows JRE。服务模板见 `Tools/Server/mtgb-server.service`；当前部署端口为 2323，TCP 房间查询与 UDP 对局传输分别监听。
+
+只有 `UNITY_SERVER` 构建使用精简目录读取：保留全部印次与非展示字段，跳过规则展示文本及背景描述的解码和实例化。普通客户端继续使用原目录。服务端 Java 启动附加 `-Dmtgb.bridge.lazyCatalog=true`，通过经过校验的 `catalog.jsonl` 精确解析注册卡组及授权辅助牌组，再由 Forge 原生延迟加载卡牌；不改变规则脚本。原生延迟索引也会完整解析全部脚本，因此打包时用 `ForgeCardNameIndex` 在真实 Forge 初始化环境生成 `mtgb-name-index.bin`，并逐项比较原生名称／牌面／占位名称到脚本的映射。服务端直接读取这个受运行清单哈希保护的索引，普通加载路径保持原行为；索引版本、脚本数量、文件路径、重复键及尾部数据不符则拒绝启动。按名称查找未注册牌仍通过原生数据库加载，全卡名选择先调用 `ensureAllCardsLoaded()`。通信协议保持原版本，客户端无需因这项服务端启动优化重新构建。
+
+会话启动超时及桥接失败先结束本局 Java 进程，再写诊断与发送终局。销毁会话不再同步写入可能阻塞的 stdin 或等待引擎退出钩子。资源预算只作用于 MTGB 的 systemd 控制组，不能通过取消内存限制把压力转移到同机其他服务。
+
+本地验证：97,784 个印次除展示字段外逐项相同；384 MiB Java 堆下原生开局、注册历险／双 X／双面牌印次、操作及认输退出通过；注册卡组外按名称加载和全卡名枚举通过；真实 60 秒启动超时后，进程在 1 秒等待内确认退出。这些检查限定为启动、目录及清理合同，不代表重新验证全部卡牌机制。Linux 远端证据另行记录。
+
+#### 2026-10-13：Linux 05 内存修复与公网复测
+
+`UNITY_SERVER` 内部的原生消息解析、视图深复制和回放存储改用仅序列化公开字段的 `ServerSnapshotJson`，避免这些重复操作触发 Unity 对递归卡牌组件的序列化类型展开。网络消息格式、视图哈希、规则资源及普通客户端路径保持原实现。实际新构建的嵌套组件、隐藏手牌、复制隔离和回放往返共 15 项检查通过。
+
+部署目录为 `/opt/mtgb/releases/20261013-linux-05`，`/opt/mtgb/current` 指向此版本，旧 Linux 04 在增量上传前删除。压缩包约 186 MiB，解包约 410 MiB；新增上传约 37 MiB，其余已核验相同的运行文件复用。服务预算仍为 Java 堆 384 MiB、systemd MemoryHigh 750 MiB、MemoryMax 900 MiB，端口仍为 TCP／UDP 2323。
+
+使用桌面最新版客户端的独立测试副本，仅为内置冒烟驱动补上现有先后手提交和诊断日志；客户端正常服务、提交、UI 选项与传输代码保持原文件。两个真实进程经本机 UDP 转发访问公网服务器，同一服务端进程连续完成两场 BO3、共 4 局。检查包括双方调度后六张手牌、对手隐藏手牌、待选项重连、实际选项提交、认输和换备。总内存峰值 758,218,752 字节（约 723 MiB），结束后约 567 MiB，内存事件 high／max／oom／oom_kill 全为 0，交换内存为 0；原有三个服务及其进程保持运行。
+
+原失败记录保留：Linux 04 的第二局超时与内存压力；Linux 05 前两次在调度阶段看到一方七张、一方六张，触发旧驱动开局断言，尚未单独确定瞬时快照与引擎时序原因。之后两次完整冒烟通过不能删除或覆盖此前失败，内存修复结论限于上述短局和单个同时对局；未验证长期复杂对局、并发容量和全部卡牌机制。原始记录见 `.tools/ubuntu-server-deploy/linux-05-final.json` 及其引用的报告。
+
 `MTGB/验证/联机/权威与权限` 检查握手兼容性、权威端启动配置、牌组校验、席位隔离与输入拒绝。Windows 双客户端回归使用 `Tools/ForgeBridge/Run-NetworkSmoke.py`，具体构建与运行方式见 [ForgeBridge](../Tools/ForgeBridge/README.zh-CN.md)。
 
-`MTGB/验证/项目整体` 检查官方目录、牌组保存重载、真实 Forge 会话和进程隔离。规则机制与界面交互通过对应专项验证入口复核。
+`MTGB/验证/基础运行检查` 检查官方目录、牌组保存重载、真实 Forge 会话和进程隔离。规则机制与界面交互通过对应专项验证入口复核。
 
 ## 安全边界
 
@@ -102,3 +136,9 @@ Unity.exe -batchmode -quit -projectPath D:\project\MTGB `
 ### 制卡基础更新（2026-09-05）
 
 房间 DIY 开关依据 schema v8 的每卡 content_kind，由 Data Editor 定义；不再根据数据库文件名推断。多个官方系列库可正常混合使用。内容哈希包含最终生效卡牌的分类；覆盖来源路径本身不参与哈希。
+
+### 大厅首次创建／加入修复（2026-10-13）
+
+首次生成大厅时，页面刷新早于联机服务创建；读取空服务的席位会打断初始化和状态事件订阅。服务器已接受建房／加入，客户端仍停留原页面。现使用未连接席位0完成首次刷新，保留随后正常创建服务及订阅。右上仅按实际连接显示“已连接 / 未连接”；服务器目录探测成功使用“可访问”文案。
+
+官方 Windows Release 的两个独立客户端已通过真实公网建房、目录查询／点击加入、双方房间页面与退出状态检查，另检查连接超时后按钮恢复；原单客户端失败流程重跑通过。仅核对这些大厅流程，不等同全局联机或规则机制通过，也未改动服务器。证据：[本批记录](../.tools/lobby-create-1013/README.zh-CN.md)。

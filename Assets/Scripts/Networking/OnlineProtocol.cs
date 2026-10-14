@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public static class OnlineProtocol
 {
-    public const int Version = 17;
+    // v19 hashes the complete field snapshot without Unity's recursive DTO scan.
+    public const int Version = 19;
     public const string MessageName = "mtgb.protocol.v15";
 
     public const string Hello = "hello";
@@ -25,6 +26,7 @@ public static class OnlineProtocol
     public const string SyncConfirmed = "sync-confirmed";
     public const string Concede = "concede";
     public const string MatchEnded = "match-ended";
+    public const string LeaveReview = "leave-review";
     public const string ReplayChunk = "replay-chunk";
     public const string Error = "error";
     public const string ReconnectRejected = "reconnect-rejected";
@@ -38,6 +40,7 @@ public sealed class OnlineEnvelope
     public int version = OnlineProtocol.Version;
     public string type;
     public string payload;
+    public bool compressed;
 }
 
 [Serializable]

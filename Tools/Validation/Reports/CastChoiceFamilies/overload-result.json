@@ -1,0 +1,9 @@
+{
+  "case": "overload",
+  "result": "PASS overload native choice/payment/two-seat stack/effects/priority",
+  "timeUtc": "2026-10-05T21:32:20.393345+00:00",
+  "testSha256": "107049b41edab1e0bdd1345f9e7a490a0524dec29a27fca0581ff6520b0e7878",
+  "fixtureSha256": "081e00a24fedfdc05c717184a2b2575c11c6c51b28429a176af1d52c30064549",
+  "runtimeManifest": "0fba42a96913a18c1b0761611a120b2a6e25145993b99ec400cdd9cdbc88cf03",
+  "traceSha256": "a959c7ca88733b0c7310f4f1de9e788ced2f54f216b8af08de87787d35eb8c5d"
+}

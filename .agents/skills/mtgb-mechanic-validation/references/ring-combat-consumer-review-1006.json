@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/RingCombatConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "28aadfa61128da27502467eef50093acc68d1fa602b7a6bf1522c19c21b4808d"
+  },
+  "runtimeHash": "0d629cb9ad15244a2f72f7432b5a2252628c495d4568f8f641fb006fa80c5202",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/Test-RingCombat.py",
+      "sha256": "2f77ae3ee914f6d2dfba35978e8a96784e7bb4e2da92b2ae57d85ab2ecd7ecfb"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-RingBearerChange.py",
+      "sha256": "4bf8db4c43b512487cde255db99a8b1f4427f5789d846572acceded36f07d63e"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/RoyalStateFixture.java",
+      "sha256": "09d4cfbdbaf1ab92d749fc7731414f837f441e943d10e2a669f277528f10b60e"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "007ae1a8457807e3c2f18614103fe1e06c2a9bbf69788a50c7fd478caae7e85b"
+    },
+    {
+      "path": "Assets/Scripts/Networking/ForgeWire.cs",
+      "sha256": "ce9e96b037351d799b022969659384396167835fc7b8f3917ca4c50445a253b1"
+    },
+    {
+      "path": "Assets/Scripts/UI/RingBearerIcon.cs",
+      "sha256": "f3ead4cca1652f4774fed94f5e76a17355ce8a1aa26afa6f6c62a7d0b40e4ece"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Arena.cs",
+      "sha256": "e383fea83a48adc41713e93059b7fd8bf2d25c144c8aaeba2105bcbaa4437356"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.AbilityFace.cs",
+      "sha256": "83b3b2176c9d1a64b5b2ae150494b911be28dcb385409d47474e393e4aa04b35"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Emblems.cs",
+      "sha256": "51ff0ce9a7a774c7e0529465279cb6ca60c90a54dc4088d117b48c15dc54fa59"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.CardSelection.cs",
+      "sha256": "89aa0e312d067dfae18bc477ba28ea4270664f8f91c2ad293a28e6c7a96087b2"
+    },
+    {
+      "path": "Assets/Scripts/Editor/RingCombatPresentationValidation.cs",
+      "sha256": "2c6996c3720514538699b0af4f8c6b2f69f7a4bf1fe34358da5ab34002503834"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/ring-combat-1006/native/ring-level1-block-restriction/1791264024810734900/result.json",
+      "sha256": "21e9ce6563ddbf998ca64e24effffb0941c9fb401d6f35a7ecaccf40a127e60d"
+    },
+    {
+      "path": ".tools/ring-combat-1006/native/ring-level2-loot/1791264038719054800/result.json",
+      "sha256": "fcca0cb10dcb4d9a512c0b0b6f2f4bf13481a21cea748783b6603809e7d47f68"
+    },
+    {
+      "path": ".tools/ring-combat-1006/native/ring-level3-sacrifice/1791264054447059400/result.json",
+      "sha256": "8898f7b0c13d8de6b875d4e261305ce6afeabd3eaec49c8dd8a4f7de84a2a891"
+    },
+    {
+      "path": ".tools/ring-combat-1006/native/ring-level4-life-loss/1791264070960863500/result.json",
+      "sha256": "0c202ab1039f47beaeccd6574c642cac3b4d6695fbd10914124d7381f96597cb"
+    },
+    {
+      "path": ".tools/ring-combat-1006/native/ring-bearer-leaves/1791263885089041700/result.json",
+      "sha256": "4e3889aeb393dc86f08b3b1e93555fdb68436533ec8e3bd2e5ba06002b3cb427"
+    },
+    {
+      "path": ".tools/ring-combat-1006/native/ring-bearer-control/1791263922903595600/result.json",
+      "sha256": "943050f6daf01c4965509c7c297449855157bdb54b8a5685bb8ad92ddc4d2d1f"
+    },
+    {
+      "path": ".tools/ring-combat-1006/change-native/ring-bearer-change/1791264493055884200/result.json",
+      "sha256": "a7c3af89a30ed150cb6a43fa6c2f42ba33f367d989e2d49c482cf6327972d1ff"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/ring-combat-1006/ui/20261006T0543549359709Z/result.txt",
+      "sha256": "6cb878d672deb5813b54712bbab5d962eceaef9ffb7fe6b8e462f0c7d38f68b1"
+    },
+    {
+      "path": ".tools/ring-combat-1006/ui/20261006T0543549359709Z/input-hashes.tsv",
+      "sha256": "05169cb271790d11ed8987c8dba01b17418a3400711ae46fe1294df65b4ad512"
+    },
+    {
+      "path": ".tools/ring-combat-1006/ui/20261006T0543549359709Z/producer-hashes.tsv",
+      "sha256": "b183140f572019452530bd8aafe7437951bba1b6d8b163d85a52242fb6847b28"
+    }
+  ],
+  "driverArtifacts": [
+    {
+      "path": ".tools/ring-combat-1006/attempt2/driver.py",
+      "sha256": "da8c640f5b45a451d3265947df23a8c314f3bfb10442e2bb4947e7a97a3e39fb"
+    },
+    {
+      "path": ".tools/ring-combat-1006/attempt3/driver.py",
+      "sha256": "a2110b0e71d9bb1f85184a8ddf3b7a937bf562bf77e13de17353cfb4d67d8424"
+    },
+    {
+      "path": ".tools/ring-combat-1006/native-first.py",
+      "sha256": "ec979e954bfe45103593ed5096c62e7e1add167b6c5f0311705434a66cc9b6d1"
+    },
+    {
+      "path": ".tools/ring-combat-1006/bearer-change-current.py",
+      "sha256": "4bf8db4c43b512487cde255db99a8b1f4427f5789d846572acceded36f07d63e"
+    },
+    {
+      "path": ".tools/ring-combat-1006/current-attempt1/regression-driver.py",
+      "sha256": "b651ce84e440ca2ca9454226d8a40186dffe58539a1d5761d9757787705f411b"
+    },
+    {
+      "path": ".tools/ring-combat-1006/current-regression-current.py",
+      "sha256": "bc0559ebb3df40c8619a417b1565e7057184a971f304812bea035fb15b005932"
+    }
+  ],
+  "regressions": [
+    {
+      "path": ".tools/ring-combat-1006/current/results.json",
+      "sha256": "73cad83c5d2c1969a308525d038087c7ed85554dd55260989c94f528646417c0"
+    },
+    {
+      "path": ".tools/ring-combat-1006/surviving-blocker-trace.json",
+      "sha256": "f0dc7f50b914c85a59ac71f75620b7484249538f6c30be58ae49b65f94b32915"
+    }
+  ],
+  "remaining": "R26 face-down,R31 multiplayer/extra/control combat,R47 observed count glyph clip; no network/full PASS"
+}

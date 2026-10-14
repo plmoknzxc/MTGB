@@ -27,22 +27,26 @@ public sealed class GameSettingsPanel : MonoBehaviour
     void Build()
     {
         var box=new GameObject("SettingsPanel",typeof(RectTransform),typeof(Image));box.transform.SetParent(transform,false);
-        var r=(RectTransform)box.transform;r.anchorMin=r.anchorMax=r.pivot=new Vector2(.5f,.5f);r.sizeDelta=new Vector2(820,600);
+        float compactOffset=GamePreferences.LanguageSelectionEnabled ? 0 : 68;
+        var r=(RectTransform)box.transform;r.anchorMin=r.anchorMax=r.pivot=new Vector2(.5f,.5f);r.sizeDelta=new Vector2(820,600-compactOffset*2);
         box.GetComponent<Image>().color=MenuVisualTheme.Panel;
-        Label(box.transform,"游戏设置",28,new Vector2(0,244),new Vector2(730,50));
-        Label(box.transform,"语言",21,new Vector2(0,175),new Vector2(730,40));
-        Button(box.transform,"简体中文",-245,112,()=>GamePreferences.SetLanguage("zh-CN"));
-        Button(box.transform,"日本語",0,112,()=>GamePreferences.SetLanguage("ja-JP"));
-        Button(box.transform,"English",245,112,()=>GamePreferences.SetLanguage("en-US"));
-        Label(box.transform,"文字大小",21,new Vector2(0,36),new Vector2(730,40));
-        Button(box.transform,"小",-245,-24,()=>GamePreferences.SetScale(.85f));
-        Button(box.transform,"标准",0,-24,()=>GamePreferences.SetScale(1));
-        Button(box.transform,"大",245,-24,()=>GamePreferences.SetScale(1.3f));
-        preview=Label(box.transform,"",20,new Vector2(0,-96),new Vector2(730,48));
+        Label(box.transform,"游戏设置",28,new Vector2(0,244-compactOffset),new Vector2(730,64));
+        if(GamePreferences.LanguageSelectionEnabled)
+        {
+            Label(box.transform,"语言",21,new Vector2(0,175),new Vector2(730,40));
+            Button(box.transform,"简体中文",-245,112,()=>GamePreferences.SetLanguage("zh-CN"));
+            Button(box.transform,"日本語",0,112,()=>GamePreferences.SetLanguage("ja-JP"));
+            Button(box.transform,"English",245,112,()=>GamePreferences.SetLanguage("en-US"));
+        }
+        Label(box.transform,"文字大小",21,new Vector2(0,36+compactOffset),new Vector2(730,40));
+        Button(box.transform,"小",-245,-24+compactOffset,()=>GamePreferences.SetScale(.85f));
+        Button(box.transform,"标准",0,-24+compactOffset,()=>GamePreferences.SetScale(1));
+        Button(box.transform,"大",245,-24+compactOffset,()=>GamePreferences.SetScale(1.3f));
+        preview=Label(box.transform,"",20,new Vector2(0,-96+compactOffset),new Vector2(730,48));
         var autoSave = ReplayWidgets.AutoSaveToggle(box.transform);
-        ((RectTransform)autoSave.transform).anchoredPosition = new Vector2(0,-160);
-        Button(box.transform,"完成",245,-238,()=>gameObject.SetActive(false));
-        concedeButton=Button(box.transform,"认输",-245,-238,ConfirmConcede);
+        ((RectTransform)autoSave.transform).anchoredPosition = new Vector2(0,-160+compactOffset);
+        Button(box.transform,"完成",245,-242+compactOffset,()=>gameObject.SetActive(false));
+        concedeButton=Button(box.transform,"认输",-245,-242+compactOffset,ConfirmConcede);
     }
     void ConfirmConcede()
     {

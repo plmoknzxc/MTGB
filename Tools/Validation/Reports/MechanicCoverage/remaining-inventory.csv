@@ -1,0 +1,2901 @@
+﻿原始条目,分类,原始状态,审查方向,脚本引用卡数,声明的场景数量
+Delayed triggers,机制／效果条目,需重测,机制/执行分支复核,448,2
+Perpetually,机制／效果条目,需重测,机制/执行分支复核,239,2
+Conjure,机制／效果条目,需重测,机制/执行分支复核,166,2
+Morph,机制／效果条目,需重测,机制/执行分支复核,153,4
+Seek,机制／效果条目,需重测,机制/执行分支复核,108,2
+Suspend,机制／效果条目,需重测,机制/执行分支复核,72,4
+Spellbook,机制／效果条目,需重测,机制/执行分支复核,62,2
+Infect,机制／效果条目,需重测,机制/执行分支复核,50,3
+The Ring Tempts You,机制／效果条目,需重测,机制/执行分支复核,49,1
+Disguise,机制／效果条目,需重测,机制/执行分支复核,48,1
+Venture into the Dungeon,机制／效果条目,需重测,机制/执行分支复核,45,1
+Draft,机制／效果条目,需重测,机制/执行分支复核,42,2
+Manifest Dread,机制／效果条目,需重测,机制/执行分支复核,38,1
+Earthbend,机制／效果条目,未登记效果测试,机制/执行分支复核,36,0
+Incubate,机制／效果条目,未登记效果测试,机制/执行分支复核,33,0
+Manifest,机制／效果条目,需重测,机制/执行分支复核,32,1
+Firebending,机制／效果条目,需重测,机制/执行分支复核,27,1
+Waterbend,机制／效果条目,需重测,机制/执行分支复核,27,3
+Initiative,机制／效果条目,需重测,机制/执行分支复核,23,1
+Airbend,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Parameter:DB,脚本参数,未登记效果测试,结构归类,21403,0
+Parameter:Mode,脚本参数,未登记效果测试,结构归类,20125,0
+Parameter:SpellDescription,脚本参数,未登记效果测试,结构归类,17462,0
+Parameter:Execute,脚本参数,未登记效果测试,结构归类,15174,0
+Parameter:TriggerDescription,脚本参数,未登记效果测试,结构归类,15034,0
+Parameter:ValidCard,脚本参数,未登记效果测试,结构归类,13498,0
+Parameter:Defined,脚本参数,未登记效果测试,结构归类,12848,0
+Parameter:ValidTgts,脚本参数,未登记效果测试,结构归类,12392,0
+Parameter:Destination,脚本参数,未登记效果测试,结构归类,12151,0
+Parameter:Origin,脚本参数,未登记效果测试,结构归类,11271,0
+Parameter:Cost,脚本参数,未登记效果测试,结构归类,10220,0
+Parameter:AB,脚本参数,未登记效果测试,结构归类,9713,0
+Parameter:SubAbility,脚本参数,未登记效果测试,结构归类,9303,0
+Parameter:Description,脚本参数,未登记效果测试,结构归类,9216,0
+Parameter:TriggerZones,脚本参数,未登记效果测试,结构归类,8403,0
+Parameter:SP,脚本参数,未登记效果测试,结构归类,7605,0
+Trigger:ChangesZone,触发事件,需重测,机制/执行分支复核,7122,1
+Parameter:TgtPrompt,脚本参数,未登记效果测试,结构归类,6425,0
+API:ChangeZone,引擎操作,需重测,机制/执行分支复核,5547,74
+Parameter:Count,脚本参数,未登记效果测试,结构归类,5448,0
+API:Pump,引擎操作,需重测,机制/执行分支复核,4552,29
+Static:Continuous,持续异能类型,未登记效果测试,机制/执行分支复核,4480,0
+Cost:Tap,费用类型,需重测,机制/执行分支复核,4463,5
+Parameter:Affected,脚本参数,未登记效果测试,结构归类,3970,0
+API:Draw,引擎操作,需重测,机制/执行分支复核,3638,42
+Flying,机制／效果条目,未登记效果测试,机制/执行分支复核,3575,0
+Parameter:CounterType,脚本参数,未登记效果测试,结构归类,3520,0
+Parameter:TokenScript,脚本参数,未登记效果测试,结构归类,3425,0
+API:Token,引擎操作,需重测,机制/执行分支复核,3406,17
+Parameter:CounterNum,脚本参数,未登记效果测试,结构归类,3234,0
+Parameter:NumCards,脚本参数,未登记效果测试,结构归类,3190,0
+API:PutCounter,引擎操作,需重测,机制/执行分支复核,3184,32
+Parameter:NumAtt,脚本参数,未登记效果测试,结构归类,3177,0
+Parameter:NumDmg,脚本参数,未登记效果测试,结构归类,3037,0
+Parameter:ValidPlayer,脚本参数,未登记效果测试,结构归类,2975,0
+API:Cleanup,引擎操作,需重测,机制/执行分支复核,2899,14
+Parameter:Phase,脚本参数,未登记效果测试,结构归类,2798,0
+API:DealDamage,引擎操作,需重测,机制/执行分支复核,2656,37
+Parameter:ClearRemembered,脚本参数,未登记效果测试,结构归类,2649,0
+Parameter:LifeAmount,脚本参数,未登记效果测试,结构归类,2622,0
+Parameter:KW,脚本参数,未登记效果测试,结构归类,2448,0
+Parameter:ValidCards,脚本参数,未登记效果测试,结构归类,2448,0
+Parameter:AffectedDefined,脚本参数,未登记效果测试,结构归类,2411,0
+Parameter:TokenOwner,脚本参数,未登记效果测试,结构归类,2359,0
+Parameter:Amount,脚本参数,未登记效果测试,结构归类,2330,0
+Parameter:ChangeType,脚本参数,未登记效果测试,结构归类,2303,0
+Trigger:Phase,触发事件,需重测,机制/执行分支复核,2268,2
+Cost:Sac,费用类型,未登记效果测试,机制/执行分支复核,2266,0
+API:Mana,引擎操作,需重测,机制/执行分支复核,2238,72
+Parameter:Produced,脚本参数,未登记效果测试,结构归类,2238,0
+Parameter:NumDef,脚本参数,未登记效果测试,结构归类,2173,0
+Parameter:ChangeNum,脚本参数,未登记效果测试,结构归类,2132,0
+Parameter:Event,脚本参数,未登记效果测试,结构归类,2112,0
+Parameter:AddPower,脚本参数,未登记效果测试,结构归类,1951,0
+Parameter:AddKeyword,脚本参数,未登记效果测试,结构归类,1881,0
+Parameter:ValidTarget,脚本参数,未登记效果测试,结构归类,1822,0
+Parameter:AILogic,脚本参数,未登记效果测试,结构归类,1808,0
+API:Effect,引擎操作,需重测,机制/执行分支复核,1797,10
+API:GainLife,引擎操作,需重测,机制/执行分支复核,1770,11
+Parameter:StackDescription,脚本参数,未登记效果测试,结构归类,1733,0
+Parameter:Choices,脚本参数,未登记效果测试,结构归类,1713,0
+Discard,机制／效果条目,需重测,机制/执行分支复核,1687,1
+Parameter:TargetMin,脚本参数,未登记效果测试,结构归类,1683,0
+Parameter:TargetMax,脚本参数,未登记效果测试,结构归类,1675,0
+Parameter:Duration,脚本参数,未登记效果测试,结构归类,1666,0
+Parameter:ValidSource,脚本参数,未登记效果测试,结构归类,1612,0
+Trigger:Attacks,触发事件,未登记效果测试,机制/执行分支复核,1601,0
+Parameter:ReplaceWith,脚本参数,未登记效果测试,结构归类,1566,0
+Parameter:AddToughness,脚本参数,未登记效果测试,结构归类,1534,0
+Parameter:OptionalDecider,脚本参数,未登记效果测试,结构归类,1501,0
+API:Destroy,引擎操作,需重测,机制/执行分支复核,1479,12
+Destroy,机制／效果条目,未登记效果测试,机制/执行分支复核,1476,0
+API:Tap,引擎操作,需重测,机制/执行分支复核,1474,1
+Tap,机制／效果条目,需重测,机制/执行分支复核,1472,8
+Parameter:RememberObjects,脚本参数,未登记效果测试,结构归类,1464,0
+Parameter:ValidActivatingPlayer,脚本参数,未登记效果测试,结构归类,1382,0
+Trigger:SpellCast,触发事件,需重测,机制/执行分支复核,1370,1
+Parameter:ConditionPresent,脚本参数,未登记效果测试,结构归类,1317,0
+Enchant,机制／效果条目,未登记效果测试,机制/执行分支复核,1269,0
+Parameter:StaticAbilities,脚本参数,未登记效果测试,结构归类,1266,0
+Trample,机制／效果条目,需重测,机制/执行分支复核,1233,16
+Parameter:IsPresent,脚本参数,未登记效果测试,结构归类,1203,0
+Parameter:RememberChanged,脚本参数,未登记效果测试,结构归类,1174,0
+API:LoseLife,引擎操作,需重测,机制/执行分支复核,1152,5
+Parameter:Type,脚本参数,未登记效果测试,结构归类,1120,0
+Parameter:Optional,脚本参数,需重测,结构归类,1099,8
+API:Discard,引擎操作,需重测,机制/执行分支复核,1070,6
+Parameter:IsCurse,脚本参数,未登记效果测试,结构归类,1043,0
+API:PumpAll,引擎操作,需重测,机制/执行分支复核,989,3
+Parameter:TokenAmount,脚本参数,未登记效果测试,结构归类,986,0
+Parameter:ConditionDefined,脚本参数,未登记效果测试,结构归类,984,0
+Parameter:CombatDamage,脚本参数,未登记效果测试,结构归类,982,0
+Parameter:CheckSVar,脚本参数,未登记效果测试,结构归类,981,0
+Replacement:Moved,替代事件,需重测,机制/执行分支复核,971,4
+Parameter:DigNum,脚本参数,未登记效果测试,结构归类,964,0
+API:Animate,引擎操作,需重测,机制/执行分支复核,959,7
+API:Dig,引擎操作,需重测,机制/执行分支复核,952,14
+Parameter:AffectedZone,脚本参数,未登记效果测试,结构归类,949,0
+Parameter:ETB,脚本参数,未登记效果测试,结构归类,947,0
+Parameter:Secondary,脚本参数,未登记效果测试,结构归类,920,0
+Parameter:ReplacementResult,脚本参数,未登记效果测试,结构归类,914,0
+Vigilance,机制／效果条目,未登记效果测试,机制/执行分支复核,900,0
+Trigger:DamageDone,触发事件,未登记效果测试,机制/执行分支复核,870,0
+Parameter:EffectZone,脚本参数,未登记效果测试,结构归类,862,0
+Haste,机制／效果条目,需重测,机制/执行分支复核,850,7
+API:Sacrifice,引擎操作,需重测,机制/执行分支复核,849,7
+Sacrifice,机制／效果条目,未登记效果测试,机制/执行分支复核,842,0
+Parameter:ValidSA,脚本参数,未登记效果测试,结构归类,829,0
+API:Charm,引擎操作,需重测,机制/执行分支复核,811,5
+ScriptMode:TgtChoose,其他脚本模式,未登记效果测试,结构归类,796,0
+Duration:Permanent,持续期限,未登记效果测试,结构归类,791,0
+Parameter:ActiveZones,脚本参数,未登记效果测试,结构归类,747,0
+ScriptMode:Continuous,其他脚本模式,未登记效果测试,结构归类,742,0
+Parameter:ConditionCompare,脚本参数,未登记效果测试,结构归类,701,0
+Cost:SubCounter,费用类型,未登记效果测试,机制/执行分支复核,689,0
+Parameter:UnlessCost,脚本参数,未登记效果测试,结构归类,683,0
+Parameter:DestinationZone,脚本参数,未登记效果测试,结构归类,669,0
+Parameter:Mandatory,脚本参数,未登记效果测试,结构归类,653,0
+Flash,机制／效果条目,未登记效果测试,机制/执行分支复核,645,0
+Parameter:Hidden,脚本参数,未登记效果测试,结构归类,636,0
+Equip,机制／效果条目,未登记效果测试,机制/执行分支复核,635,0
+Parameter:MayPlay,脚本参数,未登记效果测试,结构归类,628,0
+Cost:Discard,费用类型,未登记效果测试,机制/执行分支复核,622,0
+Parameter:ValidAttacker,脚本参数,未登记效果测试,结构归类,612,0
+Parameter:ConditionCheckSVar,脚本参数,未登记效果测试,结构归类,607,0
+Mill,机制／效果条目,未登记效果测试,机制/执行分支复核,596,0
+API:Mill,引擎操作,需重测,机制/执行分支复核,588,3
+API:ChangeZoneAll,引擎操作,需重测,机制/执行分支复核,586,1
+Parameter:TargetType,脚本参数,未登记效果测试,结构归类,572,0
+Parameter:UnlessPayer,脚本参数,未登记效果测试,结构归类,560,0
+First strike,机制／效果条目,需重测,机制/执行分支复核,538,1
+Parameter:Types,脚本参数,未登记效果测试,结构归类,534,0
+Parameter:SorcerySpeed,脚本参数,未登记效果测试,结构归类,533,0
+Parameter:Tapped,脚本参数,未登记效果测试,结构归类,532,0
+ScriptMode:Phase,其他脚本模式,未登记效果测试,结构归类,530,0
+Parameter:SacValid,脚本参数,未登记效果测试,结构归类,529,0
+Parameter:SVarCompare,脚本参数,未登记效果测试,结构归类,526,0
+Static:ReduceCost,持续异能类型,需重测,机制/执行分支复核,521,144
+API:Counter,引擎操作,需重测,机制/执行分支复核,519,7
+Counter,机制／效果条目,需重测,机制/执行分支复核,518,25
+Menace,机制／效果条目,需重测,机制/执行分支复核,503,1
+Parameter:Triggers,脚本参数,未登记效果测试,结构归类,493,0
+Reach,机制／效果条目,未登记效果测试,机制/执行分支复核,493,0
+Lifelink,机制／效果条目,需重测,机制/执行分支复核,490,2
+API:Untap,引擎操作,未登记效果测试,机制/执行分支复核,478,0
+Untap,机制／效果条目,需重测,机制/执行分支复核,478,8
+Parameter:ExileOnMoved,脚本参数,未登记效果测试,结构归类,471,0
+Parameter:Remembered,脚本参数,未登记效果测试,结构归类,469,0
+Parameter:Condition,脚本参数,未登记效果测试,结构归类,464,0
+Parameter:ConditionSVarCompare,脚本参数,未登记效果测试,结构归类,460,0
+Parameter:LibraryPosition,脚本参数,未登记效果测试,结构归类,453,0
+API:Scry,引擎操作,需重测,机制/执行分支复核,450,17
+Parameter:SetPower,脚本参数,未登记效果测试,结构归类,450,0
+Parameter:Power,脚本参数,未登记效果测试,结构归类,449,0
+API:DelayedTrigger,引擎操作,需重测,机制/执行分支复核,448,4
+Scry,机制／效果条目,未登记效果测试,机制/执行分支复核,445,0
+Parameter:Toughness,脚本参数,未登记效果测试,结构归类,440,0
+Parameter:ReplacementEffects,脚本参数,未登记效果测试,结构归类,437,0
+Parameter:ScryNum,脚本参数,未登记效果测试,结构归类,437,0
+Deathtouch,机制／效果条目,需重测,机制/执行分支复核,428,3
+Parameter:Activator,脚本参数,未登记效果测试,结构归类,428,0
+Parameter:ForgetOnMoved,脚本参数,未登记效果测试,结构归类,426,0
+API:DamageAll,引擎操作,需重测,机制/执行分支复核,406,3
+Parameter:ChangeValid,脚本参数,未登记效果测试,结构归类,396,0
+Parameter:SetToughness,脚本参数,未登记效果测试,结构归类,389,0
+Parameter:PresentCompare,脚本参数,未登记效果测试,结构归类,386,0
+API:ChooseCard,引擎操作,需重测,机制/执行分支复核,382,6
+Parameter:RepeatSubAbility,脚本参数,未登记效果测试,结构归类,381,0
+Parameter:Layer,脚本参数,未登记效果测试,结构归类,378,0
+Parameter:ValidBlocker,脚本参数,未登记效果测试,结构归类,378,0
+Parameter:ActivationZone,脚本参数,未登记效果测试,结构归类,377,0
+Parameter:ChangeTypeDesc,脚本参数,未登记效果测试,结构归类,368,0
+Parameter:Planeswalker,脚本参数,未登记效果测试,结构归类,368,0
+API:CopyPermanent,引擎操作,需重测,机制/执行分支复核,364,10
+Parameter:ValidDescription,脚本参数,未登记效果测试,结构归类,362,0
+Static:CantBlockBy,持续异能类型,未登记效果测试,机制/执行分支复核,362,0
+Parameter:AddAbility,脚本参数,未登记效果测试,结构归类,360,0
+Cost:AddCounter,费用类型,未登记效果测试,机制/执行分支复核,353,0
+Parameter:ValidTgtsDesc,脚本参数,未登记效果测试,结构归类,350,0
+Parameter:Valid,脚本参数,未登记效果测试,结构归类,349,0
+Parameter:Keywords,脚本参数,未登记效果测试,结构归类,344,0
+API:DestroyAll,引擎操作,需重测,机制/执行分支复核,340,4
+Parameter:GainControl,脚本参数,未登记效果测试,结构归类,338,0
+API:RepeatEach,引擎操作,需重测,机制/执行分支复核,329,2
+Defender,机制／效果条目,未登记效果测试,机制/执行分支复核,324,0
+Protection,机制／效果条目,需重测,机制/执行分支复核,324,2
+Parameter:AddType,脚本参数,未登记效果测试,结构归类,321,0
+API:ImmediateTrigger,引擎操作,未登记效果测试,机制/执行分支复核,319,0
+API:Play,引擎操作,需重测,机制/执行分支复核,319,5
+API:GainControl,引擎操作,需重测,机制/执行分支复核,318,5
+Play,机制／效果条目,未登记效果测试,机制/执行分支复核,318,0
+Parameter:Num,脚本参数,未登记效果测试,结构归类,317,0
+Parameter:TriggerCount,脚本参数,未登记效果测试,结构归类,312,0
+Parameter:Shuffle,脚本参数,未登记效果测试,结构归类,310,0
+Cycling,机制／效果条目,需重测,机制/执行分支复核,309,1
+Cost:PayLife,费用类型,需重测,机制/执行分支复核,302,1
+API:PutCounterAll,引擎操作,需重测,机制/执行分支复核,301,3
+Parameter:ChoiceTitle,脚本参数,未登记效果测试,结构归类,297,0
+Parameter:ActivationLimit,脚本参数,未登记效果测试,结构归类,288,0
+Parameter:Ultimate,脚本参数,未登记效果测试,结构归类,287,0
+Parameter:Reveal,脚本参数,未登记效果测试,结构归类,286,0
+Parameter:DefinedPlayer,脚本参数,未登记效果测试,结构归类,284,0
+API:SetState,引擎操作,需重测,机制/执行分支复核,282,8
+Parameter:CharacteristicDefining,脚本参数,未登记效果测试,结构归类,279,0
+Parameter:Static,脚本参数,未登记效果测试,结构归类,277,0
+Parameter:WithoutManaCost,脚本参数,未登记效果测试,结构归类,277,0
+Parameter:PrecostDesc,脚本参数,未登记效果测试,结构归类,274,0
+Parameter:Name,脚本参数,未登记效果测试,结构归类,271,0
+API:Regenerate,引擎操作,需重测,机制/执行分支复核,270,4
+Regenerate,机制／效果条目,未登记效果测试,机制/执行分支复核,269,0
+Parameter:SVar,脚本参数,未登记效果测试,结构归类,265,0
+Ward,机制／效果条目,未登记效果测试,机制/执行分支复核,260,0
+Parameter:Zone,脚本参数,未登记效果测试,结构归类,257,0
+Parameter:TokenTapped,脚本参数,未登记效果测试,结构归类,256,0
+ScriptMode:CantBlockBy,其他脚本模式,未登记效果测试,结构归类,252,0
+Parameter:AddTrigger,脚本参数,未登记效果测试,结构归类,250,0
+API:CopySpellAbility,引擎操作,需重测,机制/执行分支复核,244,6
+API:Attach,引擎操作,未登记效果测试,机制/执行分支复核,243,0
+Attach,机制／效果条目,未登记效果测试,机制/执行分支复核,243,0
+Parameter:TriggeredCard,脚本参数,未登记效果测试,结构归类,240,0
+Duration:Perpetual,持续期限,未登记效果测试,结构归类,239,0
+Kicker,机制／效果条目,需重测,机制/执行分支复核,239,5
+Parameter:ClearChosenCard,脚本参数,未登记效果测试,结构归类,238,0
+Parameter:PlayerCountOpponents,脚本参数,未登记效果测试,结构归类,235,0
+Parameter:RepeatPlayers,脚本参数,未登记效果测试,结构归类,232,0
+API:Surveil,引擎操作,需重测,机制/执行分支复核,231,2
+Cost:ExileFromGrave,费用类型,未登记效果测试,机制/执行分支复核,230,0
+Surveil,机制／效果条目,需重测,机制/执行分支复核,229,2
+Cost:tapXType,费用类型,未登记效果测试,机制/执行分支复核,228,0
+Trigger:AttackersDeclared,触发事件,未登记效果测试,机制/执行分支复核,228,0
+ScriptMode:Transform,其他脚本模式,未登记效果测试,结构归类,227,0
+Parameter:Chooser,脚本参数,未登记效果测试,结构归类,226,0
+Parameter:Controller,脚本参数,未登记效果测试,结构归类,226,0
+Flashback,机制／效果条目,需重测,机制/执行分支复核,223,5
+Parameter:ChoiceZone,脚本参数,未登记效果测试,结构归类,218,0
+Parameter:RememberRevealed,脚本参数,未登记效果测试,结构归类,217,0
+Parameter:Targeted,脚本参数,未登记效果测试,结构归类,217,0
+Parameter:TgtZone,脚本参数,未登记效果测试,结构归类,216,0
+Parameter:CharmNum,脚本参数,未登记效果测试,结构归类,213,0
+Parameter:ShuffleNonMandatory,脚本参数,未登记效果测试,结构归类,213,0
+ScriptMode:ChangesZone,其他脚本模式,未登记效果测试,结构归类,212,0
+Parameter:ValidStepTurnToController,脚本参数,未登记效果测试,结构归类,210,0
+Replacement:DamageDone,替代事件,需重测,机制/执行分支复核,210,13
+Parameter:DestinationZone2,脚本参数,未登记效果测试,结构归类,209,0
+Parameter:RestRandomOrder,脚本参数,未登记效果测试,结构归类,209,0
+Trigger:DamageDoneOnce,触发事件,未登记效果测试,机制/执行分支复核,205,0
+Parameter:DamageSource,脚本参数,未登记效果测试,结构归类,202,0
+Parameter:ClearImprinted,脚本参数,未登记效果测试,结构归类,201,0
+Parameter:MayChooseTarget,脚本参数,未登记效果测试,结构归类,199,0
+Parameter:PlayerTurn,脚本参数,未登记效果测试,结构归类,199,0
+API:RemoveCounter,引擎操作,未登记效果测试,机制/执行分支复核,198,0
+Indestructible,机制／效果条目,需重测,机制/执行分支复核,198,1
+Parameter:Prevent,脚本参数,未登记效果测试,结构归类,196,0
+Parameter:SacCost,脚本参数,未登记效果测试,结构归类,196,0
+Crew,机制／效果条目,需重测,机制/执行分支复核,195,1
+AbilityLabel:Landfall,异能词／待核对文本标签,未登记效果测试,结构归类,194,0
+Hexproof,机制／效果条目,未登记效果测试,机制/执行分支复核,194,0
+Parameter:Number,脚本参数,未登记效果测试,结构归类,194,0
+Parameter:ReplaceCount,脚本参数,未登记效果测试,结构归类,194,0
+Double strike,机制／效果条目,需重测,机制/执行分支复核,193,2
+Parameter:RestrictValid,脚本参数,未登记效果测试,结构归类,192,0
+Parameter:ValidCreature,脚本参数,未登记效果测试,结构归类,190,0
+Parameter:AtEOT,脚本参数,需重测,结构归类,187,2
+ScriptMode:SpellCast,其他脚本模式,未登记效果测试,结构归类,187,0
+API:MakeCard,引擎操作,需重测,机制/执行分支复核,186,3
+Parameter:RemoveCreatureTypes,脚本参数,未登记效果测试,结构归类,186,0
+Parameter:AddSVar,脚本参数,未登记效果测试,结构归类,181,0
+API:ChooseType,引擎操作,需重测,机制/执行分支复核,178,13
+API:DigUntil,引擎操作,需重测,机制/执行分支复核,172,1
+Parameter:Caster,脚本参数,未登记效果测试,结构归类,171,0
+Parameter:Colors,脚本参数,未登记效果测试,结构归类,171,0
+Parameter:AttackingPlayer,脚本参数,未登记效果测试,结构归类,169,0
+Parameter:LoseControl,脚本参数,未登记效果测试,结构归类,169,0
+Parameter:RememberSacrificed,脚本参数,未登记效果测试,结构归类,169,0
+API:Clone,引擎操作,未登记效果测试,机制/执行分支复核,168,0
+Parameter:Conjure,脚本参数,未登记效果测试,结构归类,166,0
+Parameter:RevealedDestination,脚本参数,未登记效果测试,结构归类,164,0
+Parameter:ValidPlayers,脚本参数,未登记效果测试,结构归类,164,0
+Parameter:UnlessSwitched,脚本参数,未登记效果测试,结构归类,163,0
+Parameter:ValidZone,脚本参数,未登记效果测试,结构归类,163,0
+Parameter:VarName,脚本参数,未登记效果测试,结构归类,162,0
+Parameter:PresentZone,脚本参数,未登记效果测试,结构归类,160,0
+API:PeekAndReveal,引擎操作,需重测,机制/执行分支复核,158,11
+API:ReplaceEffect,引擎操作,需重测,机制/执行分支复核,158,7
+Replacement:Untap,替代事件,未登记效果测试,机制/执行分支复核,158,0
+Trigger:ChaosEnsues,触发事件,未登记效果测试,机制/执行分支复核,158,0
+Parameter:VarValue,脚本参数,未登记效果测试,结构归类,157,0
+Landwalk,机制／效果条目,未登记效果测试,机制/执行分支复核,154,0
+API:GenericChoice,引擎操作,需重测,机制/执行分支复核,153,3
+Parameter:MinCharmNum,脚本参数,未登记效果测试,结构归类,153,0
+Parameter:OverwriteColors,脚本参数,未登记效果测试,结构归类,153,0
+Parameter:PumpZone,脚本参数,未登记效果测试,结构归类,153,0
+Static:CantBlock,持续异能类型,未登记效果测试,机制/执行分支复核,151,0
+API:Fight,引擎操作,需重测,机制/执行分支复核,150,5
+Fight,机制／效果条目,未登记效果测试,机制/执行分支复核,150,0
+Parameter:ActivationPhases,脚本参数,未登记效果测试,结构归类,150,0
+Static:AlternativeCost,持续异能类型,未登记效果测试,机制/执行分支复核,148,0
+Parameter:FoundDestination,脚本参数,未登记效果测试,结构归类,147,0
+Parameter:RememberDiscarded,脚本参数,未登记效果测试,结构归类,146,0
+Parameter:SelectPrompt,脚本参数,未登记效果测试,结构归类,146,0
+Trigger:Drawn,触发事件,未登记效果测试,机制/执行分支复核,146,0
+Parameter:CostDesc,脚本参数,未登记效果测试,结构归类,143,0
+Parameter:WithCountersType,脚本参数,未登记效果测试,结构归类,143,0
+API:Investigate,引擎操作,需重测,机制/执行分支复核,142,2
+Investigate,机制／效果条目,未登记效果测试,机制/执行分支复核,142,0
+Duration:UntilYourNextTurn,持续期限,未登记效果测试,结构归类,141,0
+Reveal,机制／效果条目,未登记效果测试,机制/执行分支复核,139,0
+Parameter:NoReveal,脚本参数,需重测,结构归类,138,4
+Parameter:RememberTokens,脚本参数,未登记效果测试,结构归类,138,0
+Parameter:NoRegen,脚本参数,未登记效果测试,结构归类,137,0
+API:AnimateAll,引擎操作,需重测,机制/执行分支复核,133,1
+API:ChooseColor,引擎操作,需重测,机制/执行分支复核,133,10
+Devoid,机制／效果条目,未登记效果测试,机制/执行分支复核,133,0
+Parameter:Sacrificed,脚本参数,未登记效果测试,结构归类,132,0
+RollDice,机制／效果条目,需重测,机制/执行分支复核,132,2
+API:RollDice,引擎操作,需重测,机制/执行分支复核,131,31
+API:SacrificeAll,引擎操作,需重测,机制/执行分支复核,131,2
+Parameter:DividedAsYouChoose,脚本参数,未登记效果测试,结构归类,131,0
+Duration:UntilHostLeavesPlay,持续期限,未登记效果测试,结构归类,129,0
+Parameter:PreventionEffect,脚本参数,需重测,结构归类,129,7
+Trigger:Blocks,触发事件,未登记效果测试,机制/执行分支复核,128,0
+Parameter:AtRandom,脚本参数,未登记效果测试,结构归类,127,0
+Trigger:AttackerBlocked,触发事件,未登记效果测试,机制/执行分支复核,127,0
+API:UntapAll,引擎操作,需重测,机制/执行分支复核,126,2
+Trigger:TurnFaceUp,触发事件,未登记效果测试,机制/执行分支复核,126,0
+API:AlterAttribute,引擎操作,需重测,机制/执行分支复核,123,7
+Parameter:Attributes,脚本参数,需重测,结构归类,123,6
+Parameter:ForceRevealToController,脚本参数,未登记效果测试,结构归类,123,0
+Parameter:IsCombat,脚本参数,未登记效果测试,结构归类,122,0
+Trigger:ChangesZoneAll,触发事件,未登记效果测试,机制/执行分支复核,122,0
+API:ChoosePlayer,引擎操作,需重测,机制/执行分支复核,121,9
+Static:CantAttack,持续异能类型,未登记效果测试,机制/执行分支复核,120,0
+Convoke,机制／效果条目,需重测,机制/执行分支复核,118,8
+Parameter:ValidAttackers,脚本参数,未登记效果测试,结构归类,118,0
+Cost:PayEnergy,费用类型,未登记效果测试,机制/执行分支复核,117,0
+Trigger:BecomesTarget,触发事件,未登记效果测试,机制/执行分支复核,117,0
+API:PreventDamage,引擎操作,需重测,机制/执行分支复核,115,2
+Parameter:PlayerCountPlayers,脚本参数,未登记效果测试,结构归类,115,0
+Parameter:ActivatorThisTurnCast,脚本参数,未登记效果测试,结构归类,114,0
+ScriptMode:DamageDone,其他脚本模式,未登记效果测试,结构归类,114,0
+Trigger:Sacrificed,触发事件,未登记效果测试,机制/执行分支复核,114,0
+API:Branch,引擎操作,需重测,机制/执行分支复核,113,3
+Parameter:BranchConditionSVar,脚本参数,未登记效果测试,结构归类,113,0
+Parameter:TrueSubAbility,脚本参数,未登记效果测试,结构归类,113,0
+Trigger:Taps,触发事件,未登记效果测试,机制/执行分支复核,113,0
+Parameter:RememberMilled,脚本参数,未登记效果测试,结构归类,110,0
+Replacement:Counter,替代事件,未登记效果测试,机制/执行分支复核,110,0
+Parameter:Untap,脚本参数,未登记效果测试,结构归类,109,0
+API:Seek,引擎操作,需重测,机制/执行分支复核,108,2
+Parameter:MayLookAt,脚本参数,未登记效果测试,结构归类,106,0
+ScriptMode:Hand,其他脚本模式,未登记效果测试,结构归类,106,0
+Duration:UntilTheEndOfYourNextTurn,持续期限,未登记效果测试,结构归类,105,0
+Parameter:DefinedCards,脚本参数,未登记效果测试,结构归类,104,0
+Parameter:PeekAmount,脚本参数,未登记效果测试,结构归类,104,0
+Parameter:TargetsValid,脚本参数,未登记效果测试,结构归类,104,0
+Static:MustAttack,持续异能类型,未登记效果测试,机制/执行分支复核,104,0
+Parameter:RemoveCardTypes,脚本参数,未登记效果测试,结构归类,103,0
+Parameter:RememberTargets,脚本参数,未登记效果测试,结构归类,102,0
+Prowess,机制／效果条目,未登记效果测试,机制/执行分支复核,102,0
+Parameter:AddKWs,脚本参数,未登记效果测试,结构归类,101,0
+TypeCycling,机制／效果条目,未登记效果测试,机制/执行分支复核,101,0
+Parameter:RemoveAllAbilities,脚本参数,未登记效果测试,结构归类,100,0
+Trigger:LifeGained,触发事件,未登记效果测试,机制/执行分支复核,99,0
+API:NameCard,引擎操作,需重测,机制/执行分支复核,98,26
+Parameter:AITgts,脚本参数,未登记效果测试,结构归类,98,0
+Parameter:AttachedTo,脚本参数,未登记效果测试,结构归类,98,0
+API:Proliferate,引擎操作,未登记效果测试,机制/执行分支复核,97,0
+Parameter:DiscardValid,脚本参数,未登记效果测试,结构归类,97,0
+Parameter:FalseSubAbility,脚本参数,未登记效果测试,结构归类,97,0
+Parameter:Imprint,脚本参数,未登记效果测试,结构归类,97,0
+Proliferate,机制／效果条目,未登记效果测试,机制/执行分支复核,97,0
+Static:CantBeCast,持续异能类型,需重测,机制/执行分支复核,97,1
+Parameter:AddTypes,脚本参数,未登记效果测试,结构归类,95,0
+Parameter:RememberFound,脚本参数,未登记效果测试,结构归类,95,0
+Parameter:TargetUnique,脚本参数,未登记效果测试,结构归类,94,0
+Parameter:ThisTurn,脚本参数,未登记效果测试,结构归类,92,0
+Static:RaiseCost,持续异能类型,需重测,机制/执行分支复核,91,145
+Parameter:NoResolvingCheck,脚本参数,未登记效果测试,结构归类,90,0
+Parameter:DamageMap,脚本参数,未登记效果测试,结构归类,89,0
+ScriptMode:Attacks,其他脚本模式,未登记效果测试,结构归类,89,0
+Cost:Return,费用类型,未登记效果测试,机制/执行分支复核,88,0
+Parameter:ParentTargeted,脚本参数,未登记效果测试,结构归类,88,0
+Parameter:TokenAttacking,脚本参数,未登记效果测试,结构归类,88,0
+Parameter:NewController,脚本参数,未登记效果测试,结构归类,87,0
+Parameter:Object,脚本参数,未登记效果测试,结构归类,86,0
+API:Reveal,引擎操作,需重测,机制/执行分支复核,85,12
+Parameter:BranchConditionSVarCompare,脚本参数,未登记效果测试,结构归类,84,0
+Parameter:LibraryPosition2,脚本参数,未登记效果测试,结构归类,84,0
+Trigger:SetInMotion,触发事件,未登记效果测试,机制/执行分支复核,84,0
+Affinity,机制／效果条目,需重测,机制/执行分支复核,83,3
+Parameter:PlayerCountPropertyYou,脚本参数,未登记效果测试,结构归类,83,0
+API:FlipCoin,引擎操作,需重测,机制/执行分支复核,82,6
+Cumulative upkeep,机制／效果条目,需重测,机制/执行分支复核,82,8
+Parameter:ExileFaceDown,脚本参数,未登记效果测试,结构归类,82,0
+ScriptMode:RevealYouChoose,其他脚本模式,未登记效果测试,结构归类,81,0
+API:RevealHand,引擎操作,需重测,机制/执行分支复核,80,1
+Parameter:RememberLKI,脚本参数,未登记效果测试,结构归类,80,0
+Parameter:Image,脚本参数,未登记效果测试,结构归类,79,0
+Shroud,机制／效果条目,未登记效果测试,机制/执行分支复核,79,0
+Cost:Exile,费用类型,未登记效果测试,机制/执行分支复核,78,0
+Exile,机制／效果条目,未登记效果测试,机制/执行分支复核,78,0
+Parameter:SetColor,脚本参数,未登记效果测试,结构归类,78,0
+Parameter:WinSubAbility,脚本参数,未登记效果测试,结构归类,78,0
+Partner,机制／效果条目,未登记效果测试,机制/执行分支复核,78,0
+AbilityLabel:Threshold,异能词／待核对文本标签,未登记效果测试,结构归类,77,0
+Parameter:RevealedLibraryPosition,脚本参数,未登记效果测试,结构归类,77,0
+Trigger:Cycled,触发事件,未登记效果测试,机制/执行分支复核,77,0
+Parameter:NumTurns,脚本参数,未登记效果测试,结构归类,76,0
+Parameter:Sides,脚本参数,未登记效果测试,结构归类,76,0
+Trigger:Discarded,触发事件,未登记效果测试,机制/执行分支复核,76,0
+Parameter:Abilities,脚本参数,未登记效果测试,结构归类,75,0
+Parameter:TargetedPlayer,脚本参数,未登记效果测试,结构归类,75,0
+Parameter:TargetsWithDefinedController,脚本参数,未登记效果测试,结构归类,75,0
+Parameter:TokenPower,脚本参数,未登记效果测试,结构归类,75,0
+Parameter:Transformed,脚本参数,未登记效果测试,结构归类,75,0
+Parameter:RememberChosen,脚本参数,未登记效果测试,结构归类,74,0
+Prepared,机制／效果条目,未登记效果测试,机制/执行分支复核,74,0
+API:TapAll,引擎操作,未登记效果测试,机制/执行分支复核,73,0
+Parameter:TokenToughness,脚本参数,未登记效果测试,结构归类,73,0
+API:Amass,引擎操作,需重测,机制/执行分支复核,72,2
+Amass,机制／效果条目,未登记效果测试,机制/执行分支复核,72,0
+Duration:UntilHostLeavesPlayOrEOT,持续期限,未登记效果测试,结构归类,72,0
+Parameter:Target,脚本参数,未登记效果测试,结构归类,72,0
+Parameter:ValidCause,脚本参数,未登记效果测试,结构归类,72,0
+ScriptMode:Always,其他脚本模式,未登记效果测试,结构归类,72,0
+Threshold,机制／效果条目,需重测,机制/执行分支复核,71,1
+API:Goad,引擎操作,需重测,机制/执行分支复核,69,2
+Parameter:PumpKeywords,脚本参数,未登记效果测试,结构归类,69,0
+API:StoreSVar,引擎操作,需重测,机制/执行分支复核,68,11
+Goad,机制／效果条目,未登记效果测试,机制/执行分支复核,68,0
+Parameter:Expression,脚本参数,未登记效果测试,结构归类,68,0
+Parameter:Max,脚本参数,未登记效果测试,结构归类,68,0
+Parameter:TargetsForEachPlayer,脚本参数,未登记效果测试,结构归类,68,0
+API:ChooseSource,引擎操作,需重测,机制/执行分支复核,67,1
+API:Shuffle,引擎操作,需重测,机制/执行分支复核,67,1
+Parameter:ImprintCards,脚本参数,未登记效果测试,结构归类,67,0
+API:DamageResolve,引擎操作,未登记效果测试,机制/执行分支复核,66,0
+ScriptMode:MustAttack,其他脚本模式,未登记效果测试,结构归类,66,0
+Shuffle,机制／效果条目,未登记效果测试,机制/执行分支复核,66,0
+API:AddTurn,引擎操作,未登记效果测试,机制/执行分支复核,65,0
+Parameter:ForgetOtherRemembered,脚本参数,未登记效果测试,结构归类,65,0
+API:BecomeMonarch,引擎操作,需重测,机制/执行分支复核,64,5
+Parameter:DefinedName,脚本参数,未登记效果测试,结构归类,64,0
+Parameter:ResultSubAbilities,脚本参数,未登记效果测试,结构归类,64,0
+Trigger:TapsForMana,触发事件,未登记效果测试,机制/执行分支复核,64,0
+Changeling,机制／效果条目,未登记效果测试,机制/执行分支复核,63,0
+Madness,机制／效果条目,未登记效果测试,机制/执行分支复核,63,0
+Parameter:RevealValid,脚本参数,未登记效果测试,结构归类,63,0
+ScriptMode:Random,其他脚本模式,未登记效果测试,结构归类,63,0
+Trigger:AttackerBlockedByCreature,触发事件,未登记效果测试,机制/执行分支复核,63,0
+Parameter:AddStaticAbility,脚本参数,未登记效果测试,结构归类,62,0
+Parameter:AttackedTarget,脚本参数,未登记效果测试,结构归类,62,0
+Parameter:Gains,脚本参数,未登记效果测试,结构归类,62,0
+Parameter:OriginAlternative,脚本参数,未登记效果测试,结构归类,62,0
+Parameter:RememberMade,脚本参数,未登记效果测试,结构归类,62,0
+Parameter:Spellbook,脚本参数,未登记效果测试,结构归类,62,0
+ScriptMode:ReduceCost,其他脚本模式,未登记效果测试,结构归类,62,0
+Trigger:Always,触发事件,未登记效果测试,机制/执行分支复核,62,0
+Unearth,机制／效果条目,未登记效果测试,机制/执行分支复核,62,0
+Parameter:AnyNumber,脚本参数,未登记效果测试,结构归类,61,0
+Parameter:ConditionDescription,脚本参数,未登记效果测试,结构归类,61,0
+Parameter:Alone,脚本参数,未登记效果测试,结构归类,60,0
+Parameter:MayPlayWithoutManaCost,脚本参数,未登记效果测试,结构归类,60,0
+Parameter:SetMaxHandSize,脚本参数,未登记效果测试,结构归类,60,0
+API:Repeat,引擎操作,需重测,机制/执行分支复核,59,4
+Parameter:ReplaceDyingDefined,脚本参数,未登记效果测试,结构归类,59,0
+API:AddPhase,引擎操作,需重测,机制/执行分支复核,58,2
+Foretell,机制／效果条目,未登记效果测试,机制/执行分支复核,58,0
+Parameter:AdditionalDescription,脚本参数,未登记效果测试,结构归类,58,0
+Parameter:DamageTarget,脚本参数,未登记效果测试,结构归类,58,0
+Parameter:ExtraPhase,脚本参数,未登记效果测试,结构归类,58,0
+Parameter:MayPlayLimit,脚本参数,未登记效果测试,结构归类,58,0
+Parameter:NoPeek,脚本参数,未登记效果测试,结构归类,58,0
+Parameter:RevealRandomOrder,脚本参数,未登记效果测试,结构归类,58,0
+Parameter:SacMessage,脚本参数,未登记效果测试,结构归类,58,0
+"Static:CantAttack,CantBlock",持续异能类型,未登记效果测试,机制/执行分支复核,58,0
+API:ChooseNumber,引擎操作,需重测,机制/执行分支复核,57,7
+API:Phases,引擎操作,需重测,机制/执行分支复核,57,12
+Parameter:Attacked,脚本参数,未登记效果测试,结构归类,57,0
+Parameter:NextTurn,脚本参数,未登记效果测试,结构归类,57,0
+Parameter:RemoveLandTypes,脚本参数,未登记效果测试,结构归类,57,0
+Trigger:PlaneswalkedTo,触发事件,未登记效果测试,机制/执行分支复核,57,0
+Parameter:RepeatCards,脚本参数,未登记效果测试,结构归类,56,0
+Parameter:WithCountersAmount,脚本参数,未登记效果测试,结构归类,56,0
+Static:CastWithFlash,持续异能类型,未登记效果测试,机制/执行分支复核,56,0
+Cost:Reveal,费用类型,需重测,机制/执行分支复核,55,3
+Fear,机制／效果条目,未登记效果测试,机制/执行分支复核,55,0
+Parameter:StaticEffect,脚本参数,未登记效果测试,结构归类,55,0
+Parameter:AddKeywords,脚本参数,未登记效果测试,结构归类,54,0
+API:MultiplyCounter,引擎操作,未登记效果测试,机制/执行分支复核,53,0
+API:Protection,引擎操作,未登记效果测试,机制/执行分支复核,53,0
+Parameter:Random,脚本参数,未登记效果测试,结构归类,53,0
+AbilityLabel:Delirium,异能词／待核对文本标签,未登记效果测试,结构归类,52,0
+Cascade,机制／效果条目,未登记效果测试,机制/执行分支复核,52,0
+Cost:ExileFromHand,费用类型,未登记效果测试,机制/执行分支复核,52,0
+Echo,机制／效果条目,需重测,机制/执行分支复核,52,3
+Parameter:AddHiddenKeyword,脚本参数,未登记效果测试,结构归类,52,0
+Parameter:Attacking,脚本参数,未登记效果测试,结构归类,52,0
+Parameter:ConditionZone,脚本参数,未登记效果测试,结构归类,52,0
+Parameter:RememberDestroyed,脚本参数,未登记效果测试,结构归类,52,0
+Parameter:ResultSVar,脚本参数,未登记效果测试,结构归类,52,0
+Parameter:ValidSpell,脚本参数,未登记效果测试,结构归类,52,0
+Partner with,机制／效果条目,未登记效果测试,机制/执行分支复核,52,0
+API:Connive,引擎操作,需重测,机制/执行分支复核,51,6
+AbilityLabel:Domain,异能词／待核对文本标签,未登记效果测试,结构归类,51,0
+Connive,机制／效果条目,未登记效果测试,机制/执行分支复核,51,0
+Cost:Draw,费用类型,未登记效果测试,机制/执行分支复核,51,0
+Duration:UntilEndOfTurn,持续期限,未登记效果测试,结构归类,50,0
+Parameter:CopyCard,脚本参数,未登记效果测试,结构归类,50,0
+Parameter:EffectOwner,脚本参数,未登记效果测试,结构归类,50,0
+Parameter:RememberedLKI,脚本参数,未登记效果测试,结构归类,50,0
+API:RingTemptsYou,引擎操作,需重测,机制/执行分支复核,49,8
+Parameter:AllValid,脚本参数,未登记效果测试,结构归类,49,0
+Parameter:LoseSubAbility,脚本参数,未登记效果测试,结构归类,49,0
+Trigger:DamageDealtOnce,触发事件,未登记效果测试,机制/执行分支复核,49,0
+API:Debuff,引擎操作,未登记效果测试,机制/执行分支复核,48,0
+API:TapOrUntap,引擎操作,未登记效果测试,机制/执行分支复核,48,0
+Parameter:AdjustLandPlays,脚本参数,未登记效果测试,结构归类,48,0
+Parameter:ChangeZoneTable,脚本参数,未登记效果测试,结构归类,48,0
+Parameter:DestinationAlternative,脚本参数,未登记效果测试,结构归类,48,0
+Parameter:ForgetChanged,脚本参数,未登记效果测试,结构归类,48,0
+Parameter:ReduceCost,脚本参数,未登记效果测试,结构归类,48,0
+API:ManaReflected,引擎操作,需重测,机制/执行分支复核,47,13
+Duration:UntilEndOfCombat,持续期限,未登记效果测试,结构归类,47,0
+Ninjutsu,机制／效果条目,需重测,机制/执行分支复核,47,1
+Parameter:AINoRecursiveCheck,脚本参数,未登记效果测试,结构归类,47,0
+Parameter:ColorOrType,脚本参数,未登记效果测试,结构归类,47,0
+Parameter:ReflectProperty,脚本参数,未登记效果测试,结构归类,47,0
+Trigger:CounterAddedOnce,触发事件,未登记效果测试,机制/执行分支复核,47,0
+API:LosesGame,引擎操作,未登记效果测试,机制/执行分支复核,46,0
+Parameter:ClearNamedCard,脚本参数,未登记效果测试,结构归类,46,0
+Parameter:CloneTarget,脚本参数,未登记效果测试,结构归类,46,0
+Parameter:RandomOrder,脚本参数,未登记效果测试,结构归类,46,0
+Parameter:Stackable,脚本参数,未登记效果测试,结构归类,46,0
+Parameter:TriggeredSpellAbility,脚本参数,未登记效果测试,结构归类,46,0
+Start your engines,机制／效果条目,未登记效果测试,机制/执行分支复核,46,0
+Toxic,机制／效果条目,未登记效果测试,机制/执行分支复核,46,0
+API:SetLife,引擎操作,需重测,机制/执行分支复核,45,4
+API:Venture,引擎操作,需重测,机制/执行分支复核,45,20
+AbilityLabel:Heroic,异能词／待核对文本标签,未登记效果测试,结构归类,45,0
+Parameter:RememberDamaged,脚本参数,未登记效果测试,结构归类,45,0
+Parameter:UnlessDefender,脚本参数,未登记效果测试,结构归类,45,0
+Parameter:ValidLKI,脚本参数,未登记效果测试,结构归类,45,0
+Trigger:CrankContraption,触发事件,未登记效果测试,机制/执行分支复核,45,0
+Parameter:Activation,脚本参数,未登记效果测试,结构归类,44,0
+Shadow,机制／效果条目,未登记效果测试,机制/执行分支复核,44,0
+Trigger:AbilityCast,触发事件,未登记效果测试,机制/执行分支复核,44,0
+API:ChangeTargets,引擎操作,需重测,机制/执行分支复核,43,3
+API:Explore,引擎操作,需重测,机制/执行分支复核,43,3
+API:WinsGame,引擎操作,需重测,机制/执行分支复核,43,1
+Bestow,机制／效果条目,未登记效果测试,机制/执行分支复核,43,0
+Parameter:MayPlayIgnoreType,脚本参数,未登记效果测试,结构归类,43,0
+Parameter:NonLegendary,脚本参数,未登记效果测试,结构归类,43,0
+Parameter:OneOff,脚本参数,未登记效果测试,结构归类,43,0
+Parameter:TriggerRemembered,脚本参数,未登记效果测试,结构归类,43,0
+Parameter:UseImprinted,脚本参数,未登记效果测试,结构归类,43,0
+Parameter:VarType,脚本参数,未登记效果测试,结构归类,43,0
+API:Draft,引擎操作,需重测,机制/执行分支复核,42,2
+Explore,机制／效果条目,需重测,机制/执行分支复核,42,3
+Parameter:ManaConversion,脚本参数,未登记效果测试,结构归类,42,0
+Parameter:MinAmount,脚本参数,未登记效果测试,结构归类,42,0
+Parameter:TriggerController,脚本参数,未登记效果测试,结构归类,42,0
+Static:MinMaxBlocker,持续异能类型,未登记效果测试,机制/执行分支复核,42,0
+Exalted,机制／效果条目,未登记效果测试,机制/执行分支复核,41,0
+Parameter:Exhaust,脚本参数,未登记效果测试,结构归类,41,0
+Parameter:NoLooking,脚本参数,未登记效果测试,结构归类,41,0
+Parameter:PresentDefined,脚本参数,未登记效果测试,结构归类,41,0
+Storm,机制／效果条目,需重测,机制/执行分支复核,41,1
+AbilityLabel:Max speed,异能词／待核对文本标签,未登记效果测试,结构归类,40,0
+Buyback,机制／效果条目,需重测,机制/执行分支复核,40,2
+Max Speed,机制／效果条目,未登记效果测试,机制/执行分支复核,40,0
+Parameter:UnlessResolveSubs,脚本参数,未登记效果测试,结构归类,40,0
+Static:OptionalCost,持续异能类型,未登记效果测试,机制/执行分支复核,40,0
+Trigger:LandPlayed,触发事件,未登记效果测试,机制/执行分支复核,40,0
+Parameter:ClearChosenPlayer,脚本参数,未登记效果测试,结构归类,39,0
+Parameter:DiscardCost,脚本参数,未登记效果测试,结构归类,39,0
+Parameter:LibraryPositionAlternative,脚本参数,未登记效果测试,结构归类,39,0
+Parameter:RevealOptional,脚本参数,未登记效果测试,结构归类,39,0
+API:ManifestDread,引擎操作,需重测,机制/执行分支复核,38,4
+API:ReplaceDamage,引擎操作,需重测,机制/执行分支复核,38,7
+Bushido,机制／效果条目,未登记效果测试,机制/执行分支复核,38,0
+Parameter:ActivationFirstCombat,脚本参数,未登记效果测试,结构归类,38,0
+Parameter:ShowChoice,脚本参数,未登记效果测试,结构归类,38,0
+Warp,机制／效果条目,未登记效果测试,机制/执行分支复核,38,0
+API:Poison,引擎操作,未登记效果测试,机制/执行分支复核,37,0
+Escape,机制／效果条目,需重测,机制/执行分支复核,37,3
+Evoke,机制／效果条目,需重测,机制/执行分支复核,37,3
+Parameter:ControlledByPlayer,脚本参数,需重测,结构归类,37,1
+Parameter:PowerUp,脚本参数,未登记效果测试,结构归类,37,0
+Rebound,机制／效果条目,需重测,机制/执行分支复核,37,1
+Replacement:Draw,替代事件,需重测,机制/执行分支复核,37,18
+ScriptMode:CantBeCast,其他脚本模式,未登记效果测试,结构归类,37,0
+Static:Panharmonicon,持续异能类型,未登记效果测试,机制/执行分支复核,37,0
+Trigger:AttackerUnblocked,触发事件,未登记效果测试,机制/执行分支复核,37,0
+API:Earthbend,引擎操作,未登记效果测试,机制/执行分支复核,36,0
+API:ReplaceToken,引擎操作,需重测,机制/执行分支复核,36,4
+AbilityLabel:Raid,异能词／待核对文本标签,未登记效果测试,结构归类,36,0
+Cost:Exert,费用类型,需重测,机制/执行分支复核,36,8
+Daybound,机制／效果条目,未登记效果测试,机制/执行分支复核,36,0
+Exert,机制／效果条目,需重测,机制/执行分支复核,36,14
+Nightbound,机制／效果条目,未登记效果测试,机制/执行分支复核,36,0
+Parameter:AfterPhase,脚本参数,未登记效果测试,结构归类,36,0
+Parameter:AlternativeDecider,脚本参数,未登记效果测试,结构归类,36,0
+Parameter:Monstrosity,脚本参数,未登记效果测试,结构归类,36,0
+Parameter:ReplaceGraveyard,脚本参数,未登记效果测试,结构归类,36,0
+API:Discover,引擎操作,需重测,机制/执行分支复核,35,9
+API:Empower,引擎操作,需重测,机制/执行分支复核,35,4
+API:ExchangeControl,引擎操作,需重测,机制/执行分支复核,35,4
+AbilityLabel:Constellation,异能词／待核对文本标签,未登记效果测试,结构归类,35,0
+Cost:RemoveAnyCounter,费用类型,未登记效果测试,机制/执行分支复核,35,0
+Discover,机制／效果条目,未登记效果测试,机制/执行分支复核,35,0
+Empower,机制／效果条目,需重测,机制/执行分支复核,35,5
+Parameter:TargetsWithSameController,脚本参数,未登记效果测试,结构归类,35,0
+Parameter:ValidAttackersAmount,脚本参数,未登记效果测试,结构归类,35,0
+Station,机制／效果条目,未登记效果测试,机制/执行分支复核,35,0
+API:Fog,引擎操作,需重测,机制/执行分支复核,34,1
+API:ReplaceCounter,引擎操作,需重测,机制/执行分支复核,34,6
+API:Vote,引擎操作,未登记效果测试,机制/执行分支复核,34,0
+Delirium,机制／效果条目,需重测,机制/执行分支复核,34,2
+Mutate,机制／效果条目,未登记效果测试,机制/执行分支复核,34,0
+Parameter:ListTitle,脚本参数,未登记效果测试,结构归类,34,0
+Parameter:OpponentTurn,脚本参数,未登记效果测试,结构归类,34,0
+Parameter:PumpDuration,脚本参数,未登记效果测试,结构归类,34,0
+Parameter:ValidMode,脚本参数,未登记效果测试,结构归类,34,0
+Plot,机制／效果条目,未登记效果测试,机制/执行分支复核,34,0
+ScriptMode:CantAttack,其他脚本模式,未登记效果测试,结构归类,34,0
+Static:CantBeActivated,持续异能类型,未登记效果测试,机制/执行分支复核,34,0
+Vote,机制／效果条目,未登记效果测试,机制/执行分支复核,34,0
+Wither,机制／效果条目,需重测,机制/执行分支复核,34,2
+API:Incubate,引擎操作,未登记效果测试,机制/执行分支复核,33,0
+Flanking,机制／效果条目,未登记效果测试,机制/执行分支复核,33,0
+Parameter:Min,脚本参数,未登记效果测试,结构归类,33,0
+Parameter:ResolvedLimit,脚本参数,未登记效果测试,结构归类,33,0
+Parameter:ValidToken,脚本参数,未登记效果测试,结构归类,33,0
+Parameter:WerewolfUntransformCondition,脚本参数,未登记效果测试,结构归类,33,0
+Replacement:CreateToken,替代事件,需重测,机制/执行分支复核,33,3
+Saddle,机制／效果条目,未登记效果测试,机制/执行分支复核,33,0
+API:Manifest,引擎操作,未登记效果测试,机制/执行分支复核,32,0
+API:MoveCounter,引擎操作,未登记效果测试,机制/执行分支复核,32,0
+API:RearrangeTopOfLibrary,引擎操作,需重测,机制/执行分支复核,32,4
+API:TwoPiles,引擎操作,需重测,机制/执行分支复核,32,22
+Choose a Background,机制／效果条目,未登记效果测试,机制/执行分支复核,32,0
+Disturb,机制／效果条目,未登记效果测试,机制/执行分支复核,32,0
+Entwine,机制／效果条目,需重测,机制/执行分支复核,32,2
+Parameter:Announce,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:FirstTime,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:GameActivationLimit,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:KWChoice,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:NumCopies,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:RememberPeeked,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:RepeatSVarCompare,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:UseAllOriginZones,脚本参数,未登记效果测试,结构归类,32,0
+Parameter:WerewolfTransformCondition,脚本参数,未登记效果测试,结构归类,32,0
+Static:CanAttackDefender,持续异能类型,未登记效果测试,机制/执行分支复核,32,0
+Trigger:AttackersDeclaredOneTarget,触发事件,未登记效果测试,机制/执行分支复核,32,0
+Trigger:Mutates,触发事件,未登记效果测试,机制/执行分支复核,32,0
+API:Planeswalk,引擎操作,未登记效果测试,机制/执行分支复核,31,0
+AbilityLabel:Magecraft,异能词／待核对文本标签,未登记效果测试,结构归类,31,0
+Horsemanship,机制／效果条目,未登记效果测试,机制/执行分支复核,31,0
+Intimidate,机制／效果条目,未登记效果测试,机制/执行分支复核,31,0
+Megamorph,机制／效果条目,未登记效果测试,机制/执行分支复核,31,0
+Parameter:ChosenPile,脚本参数,未登记效果测试,结构归类,31,0
+Parameter:PhaseCount,脚本参数,未登记效果测试,结构归类,31,0
+Parameter:RememberDrawn,脚本参数,未登记效果测试,结构归类,31,0
+Replacement:AddCounter,替代事件,需重测,机制/执行分支复核,31,6
+Trigger:SpellCastOrCopy,触发事件,未登记效果测试,机制/执行分支复核,31,0
+Ascend,机制／效果条目,需重测,机制/执行分支复核,30,2
+Delve,机制／效果条目,需重测,机制/执行分支复核,30,4
+Parameter:CanBlockAmount,脚本参数,未登记效果测试,结构归类,30,0
+Parameter:ForgetOnCast,脚本参数,未登记效果测试,结构归类,30,0
+Parameter:Imprinted,脚本参数,未登记效果测试,结构归类,30,0
+Parameter:Revolt,脚本参数,未登记效果测试,结构归类,30,0
+Parameter:TargetingPlayer,脚本参数,未登记效果测试,结构归类,30,0
+Parameter:WithMayLook,脚本参数,未登记效果测试,结构归类,30,0
+Planeswalk,机制／效果条目,未登记效果测试,机制/执行分支复核,30,0
+Splice,机制／效果条目,未登记效果测试,机制/执行分支复核,30,0
+Trigger:Transformed,触发事件,未登记效果测试,机制/执行分支复核,30,0
+Trigger:Untaps,触发事件,未登记效果测试,机制/执行分支复核,30,0
+API:Clash,引擎操作,需重测,机制/执行分支复核,29,5
+API:EachDamage,引擎操作,未登记效果测试,机制/执行分支复核,29,0
+Clash,机制／效果条目,未登记效果测试,机制/执行分支复核,29,0
+Duration:UntilUntaps,持续期限,未登记效果测试,结构归类,29,0
+Parameter:RemoveType,脚本参数,未登记效果测试,结构归类,29,0
+Parameter:Separator,脚本参数,未登记效果测试,结构归类,29,0
+API:RemoveFromCombat,引擎操作,需重测,机制/执行分支复核,28,3
+Banding,机制／效果条目,需重测,机制/执行分支复核,28,5
+Encore,机制／效果条目,未登记效果测试,机制/执行分支复核,28,0
+Overload,机制／效果条目,需重测,机制/执行分支复核,28,2
+Parameter:ForgetOtherTargets,脚本参数,未登记效果测试,结构归类,28,0
+Parameter:Look,脚本参数,未登记效果测试,结构归类,28,0
+Parameter:MayPlayAltManaCost,脚本参数,未登记效果测试,结构归类,28,0
+Parameter:MayPlayIgnoreColor,脚本参数,未登记效果测试,结构归类,28,0
+Parameter:ModeCost,脚本参数,未登记效果测试,结构归类,28,0
+Parameter:RepeatCheckSVar,脚本参数,未登记效果测试,结构归类,28,0
+Parameter:TargetValidTargeting,脚本参数,未登记效果测试,结构归类,28,0
+Sneak,机制／效果条目,未登记效果测试,机制/执行分支复核,28,0
+Static:OptionalAttackCost,持续异能类型,需重测,机制/执行分支复核,28,3
+API:PermanentCreature,引擎操作,需重测,机制/执行分支复核,27,2
+AbilityLabel:Alliance,异能词／待核对文本标签,未登记效果测试,结构归类,27,0
+Aftermath,机制／效果条目,未登记效果测试,机制/执行分支复核,27,0
+Doctor's companion,机制／效果条目,未登记效果测试,机制/执行分支复核,27,0
+Duration:AsLongAsControl,持续期限,未登记效果测试,结构归类,27,0
+Gift,机制／效果条目,需重测,机制/执行分支复核,27,2
+Improvise,机制／效果条目,需重测,机制/执行分支复核,27,6
+Parameter:AlwaysReplace,脚本参数,未登记效果测试,结构归类,27,0
+Parameter:ChoiceRestriction,脚本参数,未登记效果测试,结构归类,27,0
+Parameter:ConditionPlayerTurn,脚本参数,未登记效果测试,结构归类,27,0
+Parameter:GiftDescription,脚本参数,未登记效果测试,结构归类,27,0
+Parameter:MustAttack,脚本参数,未登记效果测试,结构归类,27,0
+Parameter:Populate,脚本参数,未登记效果测试,结构归类,27,0
+Parameter:Value,脚本参数,未登记效果测试,结构归类,27,0
+Persist,机制／效果条目,未登记效果测试,机制/执行分支复核,27,0
+Soulshift,机制／效果条目,未登记效果测试,机制/执行分支复核,27,0
+Static:CantTarget,持续异能类型,未登记效果测试,机制/执行分支复核,27,0
+API:MustBlock,引擎操作,需重测,机制/执行分支复核,26,3
+Backup,机制／效果条目,未登记效果测试,机制/执行分支复核,26,0
+Cost:Waterbend,费用类型,未登记效果测试,机制/执行分支复核,26,0
+Evolve,机制／效果条目,未登记效果测试,机制/执行分支复核,26,0
+Exploit,机制／效果条目,未登记效果测试,机制/执行分支复核,26,0
+Level up,机制／效果条目,需重测,机制/执行分支复核,26,1
+Myriad,机制／效果条目,未登记效果测试,机制/执行分支复核,26,0
+Parameter:AddSVars,脚本参数,未登记效果测试,结构归类,26,0
+Parameter:ChoiceAmount,脚本参数,未登记效果测试,结构归类,26,0
+Parameter:Upto,脚本参数,未登记效果测试,结构归类,26,0
+ScriptMode:AssignNoCombatDamage,其他脚本模式,未登记效果测试,结构归类,26,0
+Split second,机制／效果条目,未登记效果测试,机制/执行分支复核,26,0
+Static:CantAttackUnless,持续异能类型,未登记效果测试,机制/执行分支复核,26,0
+Trigger:UnlockDoor,触发事件,未登记效果测试,机制/执行分支复核,26,0
+AbilityLabel:Enrage,异能词／待核对文本标签,未登记效果测试,结构归类,25,0
+Blight,机制／效果条目,未登记效果测试,机制/执行分支复核,25,0
+Parameter:Adapt,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:CheckDefinedPlayer,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:ConditionManaSpent,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:ConditionPhases,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:GainsAbilitiesOf,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:MayPlayDontGrantZonePermissions,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:NoShuffle,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:Player,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:RememberRemoved,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:TempRemember,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:ThisDoor,脚本参数,未登记效果测试,结构归类,25,0
+Parameter:ValidCounterType,脚本参数,未登记效果测试,结构归类,25,0
+ScriptMode:Defined,其他脚本模式,未登记效果测试,结构归类,25,0
+Soulbond,机制／效果条目,未登记效果测试,机制/执行分支复核,25,0
+Trigger:Exploited,触发事件,未登记效果测试,机制/执行分支复核,25,0
+Bloodthirst,机制／效果条目,未登记效果测试,机制/执行分支复核,24,0
+Craft,机制／效果条目,未登记效果测试,机制/执行分支复核,24,0
+Devour,机制／效果条目,未登记效果测试,机制/执行分支复核,24,0
+Modular,机制／效果条目,未登记效果测试,机制/执行分支复核,24,0
+Parameter:Bolster,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:Boon,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:EachFromSource,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:ExcessSVar,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:GainThisAbility,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:RememberAmount,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:RemoveKeywords,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:RevealDefined,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:Skip,脚本参数,未登记效果测试,结构归类,24,0
+Parameter:UnchosenPile,脚本参数,未登记效果测试,结构归类,24,0
+Replicate,机制／效果条目,需重测,机制/执行分支复核,24,1
+ScriptMode:CanAttackDefender,其他脚本模式,未登记效果测试,结构归类,24,0
+Trigger:Scry,触发事件,未登记效果测试,机制/执行分支复核,24,0
+API:AssembleContraption,引擎操作,需重测,机制/执行分支复核,23,4
+API:Learn,引擎操作,需重测,机制/执行分支复核,23,5
+API:ReplaceMana,引擎操作,需重测,机制/执行分支复核,23,2
+API:TakeInitiative,引擎操作,需重测,机制/执行分支复核,23,10
+AbilityLabel:Imprint,异能词／待核对文本标签,未登记效果测试,结构归类,23,0
+AbilityLabel:Metalcraft,异能词／待核对文本标签,未登记效果测试,结构归类,23,0
+Collect Evidence,机制／效果条目,需重测,机制/执行分支复核,23,1
+Learn,机制／效果条目,未登记效果测试,机制/执行分支复核,23,0
+Parameter:CanRepeatModes,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:ChooseCounter,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:ForgetObjects,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:PersistentMana,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:PlayerCountRemembered,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:Relative,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:Secretly,脚本参数,需重测,结构归类,23,1
+Parameter:Trigger,脚本参数,未登记效果测试,结构归类,23,0
+Parameter:ValidResult,脚本参数,未登记效果测试,结构归类,23,0
+ScriptMode:TurnFaceUp,其他脚本模式,未登记效果测试,结构归类,23,0
+Undying,机制／效果条目,未登记效果测试,机制/执行分支复核,23,0
+API:Radiation,引擎操作,未登记效果测试,机制/执行分支复核,22,0
+Bargain,机制／效果条目,需重测,机制/执行分支复核,22,2
+Cost:CollectEvidence,费用类型,未登记效果测试,机制/执行分支复核,22,0
+Dash,机制／效果条目,需重测,机制/执行分支复核,22,2
+Duration:UntilTheEndOfYourNextUntap,持续期限,未登记效果测试,结构归类,22,0
+Offspring,机制／效果条目,需重测,机制/执行分支复核,22,2
+Parameter:AddAllCreatureTypes,脚本参数,未登记效果测试,结构归类,22,0
+Parameter:Delirium,脚本参数,未登记效果测试,结构归类,22,0
+Parameter:FaceDown,脚本参数,未登记效果测试,结构归类,22,0
+Parameter:ImprintFound,脚本参数,未登记效果测试,结构归类,22,0
+Parameter:SetChosenNumber,脚本参数,未登记效果测试,结构归类,22,0
+Parameter:TriggeredTarget,脚本参数,未登记效果测试,结构归类,22,0
+"Static:CantAttack,CantBlock,CantBeActivated",持续异能类型,未登记效果测试,机制/执行分支复核,22,0
+Trigger:DiscardedAll,触发事件,未登记效果测试,机制/执行分支复核,22,0
+AbilityLabel:Battalion,异能词／待核对文本标签,未登记效果测试,结构归类,21,0
+Blitz,机制／效果条目,未登记效果测试,机制/执行分支复核,21,0
+Parameter:DifferentNames,脚本参数,未登记效果测试,结构归类,21,0
+Parameter:DungeonsCompleted,脚本参数,未登记效果测试,结构归类,21,0
+Parameter:MaxRepeat,脚本参数,未登记效果测试,结构归类,21,0
+Parameter:PresentPlayer,脚本参数,未登记效果测试,结构归类,21,0
+Parameter:StartingWith,脚本参数,未登记效果测试,结构归类,21,0
+Prototype,机制／效果条目,需重测,机制/执行分支复核,21,3
+Reconfigure,机制／效果条目,未登记效果测试,机制/执行分支复核,21,0
+Renown,机制／效果条目,未登记效果测试,机制/执行分支复核,21,0
+Replacement:BeginPhase,替代事件,未登记效果测试,机制/执行分支复核,21,0
+Replacement:GainLife,替代事件,未登记效果测试,机制/执行分支复核,21,0
+Retrace,机制／效果条目,未登记效果测试,机制/执行分支复核,21,0
+ScriptMode:ManaConvert,其他脚本模式,未登记效果测试,结构归类,21,0
+Spree,机制／效果条目,需重测,机制/执行分支复核,21,5
+Trigger:CommitCrime,触发事件,未登记效果测试,机制/执行分支复核,21,0
+Vanishing,机制／效果条目,未登记效果测试,机制/执行分支复核,21,0
+API:Abandon,引擎操作,未登记效果测试,机制/执行分支复核,20,0
+API:Intensify,引擎操作,需重测,机制/执行分支复核,20,2
+API:OpenAttraction,引擎操作,需重测,机制/执行分支复核,20,4
+API:ReplaceSplitDamage,引擎操作,需重测,机制/执行分支复核,20,1
+Abandon,机制／效果条目,未登记效果测试,机制/执行分支复核,20,0
+Cost:Blight,费用类型,未登记效果测试,机制/执行分支复核,20,0
+Living Weapon,机制／效果条目,未登记效果测试,机制/执行分支复核,20,0
+Mentor,机制／效果条目,未登记效果测试,机制/执行分支复核,20,0
+Miracle,机制／效果条目,未登记效果测试,机制/执行分支复核,20,0
+OpenAttraction,机制／效果条目,需重测,机制/执行分支复核,20,3
+Parameter:DefinedDamagers,脚本参数,未登记效果测试,结构归类,20,0
+Parameter:DiscardValidDesc,脚本参数,未登记效果测试,结构归类,20,0
+Parameter:ForgetImprinted,脚本参数,未登记效果测试,结构归类,20,0
+Parameter:RaiseCost,脚本参数,未登记效果测试,结构归类,20,0
+ScriptMode:Flip,其他脚本模式,未登记效果测试,结构归类,20,0
+ScriptMode:RaiseCost,其他脚本模式,未登记效果测试,结构归类,20,0
+Starting intensity,机制／效果条目,需重测,机制/执行分支复核,20,2
+Static:CantGainLife,持续异能类型,未登记效果测试,机制/执行分支复核,20,0
+Static:CombatDamageToughness,持续异能类型,未登记效果测试,机制/执行分支复核,20,0
+Strive,机制／效果条目,未登记效果测试,机制/执行分支复核,20,0
+Trigger:LifeLost,触发事件,未登记效果测试,机制/执行分支复核,20,0
+API:RemoveCounterAll,引擎操作,未登记效果测试,机制/执行分支复核,19,0
+AbilityLabel:Inspired,异能词／待核对文本标签,未登记效果测试,结构归类,19,0
+AbilityLabel:Morbid,异能词／待核对文本标签,未登记效果测试,结构归类,19,0
+Annihilator,机制／效果条目,未登记效果测试,机制/执行分支复核,19,0
+Casualty,机制／效果条目,需重测,机制/执行分支复核,19,4
+Job select,机制／效果条目,未登记效果测试,机制/执行分支复核,19,0
+Multikicker,机制／效果条目,需重测,机制/执行分支复核,19,2
+Parameter:Boast,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:Color,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:CounterTypes,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:ForgetPlayed,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:ImprintChosen,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:LowPriority,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:NoteCards,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:NoteCardsFor,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:RememberDrafted,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:RememberTapped,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:Support,脚本参数,未登记效果测试,结构归类,19,0
+Parameter:ValidObject,脚本参数,未登记效果测试,结构归类,19,0
+ScriptMode:CantRegenerate,其他脚本模式,未登记效果测试,结构归类,19,0
+ScriptMode:MustBlock,其他脚本模式,未登记效果测试,结构归类,19,0
+Specialize,机制／效果条目,未登记效果测试,机制/执行分支复核,19,0
+Trigger:BecomeMonstrous,触发事件,未登记效果测试,机制/执行分支复核,19,0
+Trigger:CounterAdded,触发事件,未登记效果测试,机制/执行分支复核,19,0
+Trigger:RolledDie,触发事件,未登记效果测试,机制/执行分支复核,19,0
+AbilityLabel:Survival,异能词／待核对文本标签,未登记效果测试,结构归类,18,0
+Cost:DamageYou,费用类型,未登记效果测试,机制/执行分支复核,18,0
+Cost:ExileAnyGrave,费用类型,未登记效果测试,机制/执行分支复核,18,0
+Cost:Untap,费用类型,未登记效果测试,机制/执行分支复核,18,0
+Double team,机制／效果条目,未登记效果测试,机制/执行分支复核,18,0
+Extort,机制／效果条目,未登记效果测试,机制/执行分支复核,18,0
+Fading,机制／效果条目,未登记效果测试,机制/执行分支复核,18,0
+Parameter:ForgetCounter,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:Goad,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:IsPresent2,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:MaxRollsPerTurn,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:MayPlayPlayer,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:Placer,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:RememberPlayed,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:Replacements,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:Source,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:TargetedController,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:TriggerAmount,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:TriggeredAttacker,脚本参数,未登记效果测试,结构归类,18,0
+Parameter:UntapType,脚本参数,未登记效果测试,结构归类,18,0
+Replacement:GameLoss,替代事件,未登记效果测试,机制/执行分支复核,18,0
+Skulk,机制／效果条目,未登记效果测试,机制/执行分支复核,18,0
+AbilityLabel:Converge,异能词／待核对文本标签,未登记效果测试,结构归类,17,0
+AbilityLabel:Eerie,异能词／待核对文本标签,未登记效果测试,结构归类,17,0
+Assist,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+Fuse,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+Mayhem,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+Parameter:DefinedDesc,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:GainsAbilitiesOfZones,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:ImprintRevealed,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:IsSingleTarget,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:NewName,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:RememberSVarAmount,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:RemoveKeyword,脚本参数,未登记效果测试,结构归类,17,0
+Parameter:TriggerObjectsAttackers,脚本参数,未登记效果测试,结构归类,17,0
+Phasing,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+Scavenge,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+ScriptMode:CastWithFlash,其他脚本模式,未登记效果测试,结构归类,17,0
+ScriptMode:DamageDealtOnce,其他脚本模式,未登记效果测试,结构归类,17,0
+ScriptMode:DamageDoneOnce,其他脚本模式,未登记效果测试,结构归类,17,0
+Teamwork,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+Trigger:FullyUnlock,触发事件,未登记效果测试,机制/执行分支复核,17,0
+Umbra armor,机制／效果条目,未登记效果测试,机制/执行分支复核,17,0
+API:SkipPhase,引擎操作,未登记效果测试,机制/执行分支复核,16,0
+AbilityLabel:Corrupted,异能词／待核对文本标签,未登记效果测试,结构归类,16,0
+AbilityLabel:Hellbent,异能词／待核对文本标签,未登记效果测试,结构归类,16,0
+AbilityLabel:Vivid,异能词／待核对文本标签,未登记效果测试,结构归类,16,0
+Cost:ExiledMoveToGrave,费用类型,未登记效果测试,机制/执行分支复核,16,0
+Embalm,机制／效果条目,未登记效果测试,机制/执行分支复核,16,0
+Fabricate,机制／效果条目,未登记效果测试,机制/执行分支复核,16,0
+Mobilize,机制／效果条目,未登记效果测试,机制/执行分支复核,16,0
+Parameter:CardChoices,脚本参数,未登记效果测试,结构归类,16,0
+Parameter:Discarded,脚本参数,未登记效果测试,结构归类,16,0
+Parameter:NumLimitEachTurn,脚本参数,未登记效果测试,结构归类,16,0
+Parameter:SharedKeywordsZone,脚本参数,未登记效果测试,结构归类,16,0
+Parameter:SharedRestrictions,脚本参数,未登记效果测试,结构归类,16,0
+Parameter:ThisDefinedAndTgts,脚本参数,未登记效果测试,结构归类,16,0
+Parameter:UntapUpTo,脚本参数,未登记效果测试,结构归类,16,0
+Trigger:Surveil,触发事件,未登记效果测试,机制/执行分支复核,16,0
+AbilityLabel:Coven,异能词／待核对文本标签,未登记效果测试,结构归类,15,0
+AbilityLabel:To solve,异能词／待核对文本标签,未登记效果测试,结构归类,15,0
+Awaken,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+Cipher,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+Dredge,机制／效果条目,需重测,机制/执行分支复核,15,3
+Duration:UntilYourNextEndStep,持续期限,未登记效果测试,结构归类,15,0
+Emerge,机制／效果条目,需重测,机制/执行分支复核,15,3
+Enlist,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+For Mirrodin,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+Hideaway,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+More Than Meets the Eye,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+Parameter:AddTriggers,脚本参数,未登记效果测试,结构归类,15,0
+Parameter:ImprintTokens,脚本参数,未登记效果测试,结构归类,15,0
+Parameter:RememberManifested,脚本参数,未登记效果测试,结构归类,15,0
+Parameter:SetChosenMode,脚本参数,未登记效果测试,结构归类,15,0
+Parameter:SkipReorder,脚本参数,未登记效果测试,结构归类,15,0
+Parameter:UnlessType,脚本参数,未登记效果测试,结构归类,15,0
+Rampage,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+Riot,机制／效果条目,需重测,机制/执行分支复核,15,2
+ScriptMode:CantPreventDamage,其他脚本模式,未登记效果测试,结构归类,15,0
+Solved,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+Squad,机制／效果条目,需重测,机制/执行分支复核,15,2
+Static:UntapOtherPlayer,持续异能类型,未登记效果测试,机制/执行分支复核,15,0
+Sunburst,机制／效果条目,未登记效果测试,机制/执行分支复核,15,0
+API:DayTime,引擎操作,需重测,机制/执行分支复核,14,3
+AbilityLabel:Rally,异能词／待核对文本标签,未登记效果测试,结构归类,14,0
+Battle cry,机制／效果条目,未登记效果测试,机制/执行分支复核,14,0
+Conspire,机制／效果条目,需重测,机制/执行分支复核,14,2
+Duration:AsLongAsInPlay,持续期限,未登记效果测试,结构归类,14,0
+Duration:EndOfTurn,持续期限,未登记效果测试,结构归类,14,0
+Hidden agenda,机制／效果条目,未登记效果测试,机制/执行分支复核,14,0
+Jump-start,机制／效果条目,未登记效果测试,机制/执行分支复核,14,0
+Parameter:CheckSecondSVar,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:ChooseFromList,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:DefinedAttacker,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:ManaFrom,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:MaxTotalTargetCMC,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:RememberCounteredCMC,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:RemoveEnchantmentTypes,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:RemoveThisAbility,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:ReplaceType,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:TriggeredPlayer,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:TriggersWhenSpent,脚本参数,未登记效果测试,结构归类,14,0
+Parameter:VoteTiedAbility,脚本参数,未登记效果测试,结构归类,14,0
+Static:AssignCombatDamageAsUnblocked,持续异能类型,未登记效果测试,机制/执行分支复核,14,0
+Static:ManaConvert,持续异能类型,未登记效果测试,机制/执行分支复核,14,0
+Transmute,机制／效果条目,未登记效果测试,机制/执行分支复核,14,0
+Unleash,机制／效果条目,未登记效果测试,机制/执行分支复核,14,0
+API:Airbend,引擎操作,未登记效果测试,机制/执行分支复核,13,0
+API:Detain,引擎操作,需重测,机制/执行分支复核,13,2
+API:SkipTurn,引擎操作,未登记效果测试,机制/执行分支复核,13,0
+API:VillainousChoice,引擎操作,需重测,机制/执行分支复核,13,2
+AbilityLabel:Infusion,异能词／待核对文本标签,未登记效果测试,结构归类,13,0
+AbilityLabel:Lieutenant,异能词／待核对文本标签,未登记效果测试,结构归类,13,0
+AbilityLabel:Repartee,异能词／待核对文本标签,未登记效果测试,结构归类,13,0
+Afflict,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Blessing,机制／效果条目,需重测,机制/执行分支复核,13,2
+Detain,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Freerunning,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Graft,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Living metal,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Melee,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+Parameter:AddColor,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:AlwaysRemember,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:ClassLevel,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:ClearNotedCardsFor,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:CounterType2,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:Exiled,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:FallbackAbility,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:FollowedBy,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:LockTokenScript,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:OnlyFirstSpell,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:RememberCards,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:RememberControlled,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:RememberPumped,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:RememberPut,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:RevertCost,脚本参数,未登记效果测试,结构归类,13,0
+Parameter:StoreVoteNum,脚本参数,未登记效果测试,结构归类,13,0
+ScriptMode:AttackersDeclared,其他脚本模式,未登记效果测试,结构归类,13,0
+ScriptMode:CantBeActivated,其他脚本模式,未登记效果测试,结构归类,13,0
+ScriptMode:ClassLevelGained,其他脚本模式,未登记效果测试,结构归类,13,0
+Training,机制／效果条目,未登记效果测试,机制/执行分支复核,13,0
+API:ChangeText,引擎操作,需重测,机制/执行分支复核,12,1
+API:ChaosEnsues,引擎操作,未登记效果测试,机制/执行分支复核,12,0
+API:DigMultiple,引擎操作,需重测,机制/执行分支复核,12,5
+API:Endure,引擎操作,需重测,机制/执行分支复核,12,2
+AbilityLabel:Celebration,异能词／待核对文本标签,未登记效果测试,结构归类,12,0
+AbilityLabel:Kinship,异能词／待核对文本标签,未登记效果测试,结构归类,12,0
+AbilityLabel:Revolt,异能词／待核对文本标签,未登记效果测试,结构归类,12,0
+AbilityLabel:Valiant,异能词／待核对文本标签,未登记效果测试,结构归类,12,0
+AbilityLabel:Will of the Council,异能词／待核对文本标签,未登记效果测试,结构归类,12,0
+Champion,机制／效果条目,未登记效果测试,机制/执行分支复核,12,0
+Endure,机制／效果条目,未登记效果测试,机制/执行分支复核,12,0
+Eternalize,机制／效果条目,未登记效果测试,机制/执行分支复核,12,0
+Harmonize,机制／效果条目,未登记效果测试,机制/执行分支复核,12,0
+Outlast,机制／效果条目,未登记效果测试,机制/执行分支复核,12,0
+Parameter:AIManaPref,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:AllCounters,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:ChooseAnyNumber,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:ChooseFromDefined,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:DamageAmount,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:EffectOnly,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:Forecast,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:LifeTotal,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:NonBasicSpell,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:RememberCountered,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:Reorder,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:Result,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:ShowCurrentCard,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:ValidAfterStack,脚本参数,未登记效果测试,结构归类,12,0
+Parameter:WithTotalCMC,脚本参数,未登记效果测试,结构归类,12,0
+Ravenous,机制／效果条目,未登记效果测试,机制/执行分支复核,12,0
+ScriptMode:RevealDiscardAll,其他脚本模式,未登记效果测试,结构归类,12,0
+Trigger:ManaExpend,触发事件,未登记效果测试,机制/执行分支复核,12,0
+API:AddOrRemoveCounter,引擎操作,未登记效果测试,机制/执行分支复核,11,0
+API:Cloak,引擎操作,未登记效果测试,机制/执行分支复核,11,0
+AbilityLabel:Flurry,异能词／待核对文本标签,未登记效果测试,结构归类,11,0
+AbilityLabel:Opus,异能词／待核对文本标签,未登记效果测试,结构归类,11,0
+AbilityLabel:Solved,异能词／待核对文本标签,未登记效果测试,结构归类,11,0
+AbilityLabel:Void,异能词／待核对文本标签,未登记效果测试,结构归类,11,0
+Afterlife,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Behold,机制／效果条目,需重测,机制/执行分支复核,11,3
+Cloak,机制／效果条目,需重测,机制/执行分支复核,11,1
+Cost:Behold,费用类型,需重测,机制/执行分支复核,11,2
+Demonstrate,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Parameter:AllDefined,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:AlreadyRevealed,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:CanBlockAny,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:ChoiceDesc,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:CopyForEachCanTarget,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:CounterAmount,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:DefinedKW,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:ExecuteMode,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:FaceDownSetType,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:ForgetChosen,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:NoCall,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:NoPrevention,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:RepeatPresent,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:RevealNumber,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:RollInMain1,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:SetCreatureTypes,脚本参数,未登记效果测试,结构归类,11,0
+Parameter:sVars,脚本参数,未登记效果测试,结构归类,11,0
+Prowl,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Read ahead,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Reinforce,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Replacement:ProduceMana,替代事件,需重测,机制/执行分支复核,11,1
+ScriptMode:BecomesTarget,其他脚本模式,未登记效果测试,结构归类,11,0
+ScriptMode:LandPlayed,其他脚本模式,未登记效果测试,结构归类,11,0
+ScriptMode:TurnFaceDown,其他脚本模式,未登记效果测试,结构归类,11,0
+Spectacle,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Static:CantPlayLand,持续异能类型,未登记效果测试,机制/执行分支复核,11,0
+Static:CantPreventDamage,持续异能类型,需重测,机制/执行分支复核,11,1
+Static:IgnoreLegendRule,持续异能类型,未登记效果测试,机制/执行分支复核,11,0
+Static:TapPowerValue,持续异能类型,未登记效果测试,机制/执行分支复核,11,0
+Surge,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Tribute,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+Trigger:Attached,触发事件,未登记效果测试,机制/执行分支复核,11,0
+Trigger:CounterRemoved,触发事件,未登记效果测试,机制/执行分支复核,11,0
+Trigger:Specializes,触发事件,未登记效果测试,机制/执行分支复核,11,0
+Web-slinging,机制／效果条目,未登记效果测试,机制/执行分支复核,11,0
+API:GainControlVariant,引擎操作,未登记效果测试,机制/执行分支复核,10,0
+API:ProtectionAll,引擎操作,未登记效果测试,机制/执行分支复核,10,0
+API:Recruit,引擎操作,需重测,机制/执行分支复核,10,4
+API:TimeTravel,引擎操作,未登记效果测试,机制/执行分支复核,10,0
+AbilityLabel:Ferocious,异能词／待核对文本标签,未登记效果测试,结构归类,10,0
+Companion,机制／效果条目,未登记效果测试,机制/执行分支复核,10,0
+Cost:Mana,费用类型,未登记效果测试,机制/执行分支复核,10,0
+Haunt,机制／效果条目,未登记效果测试,机制/执行分支复核,10,0
+Increment,机制／效果条目,未登记效果测试,机制/执行分支复核,10,0
+Parameter:ChangeController,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:Choser,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:ClearChosenColor,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:DayTime,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:Exclude,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:FaceDownPower,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:FaceDownToughness,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:HasCreatureInPlay,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:IfDesc,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:IsDamage,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:PlayerCountRegisteredOpponents,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:Radiance,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:RepeatDefined,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:Revealed,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:Step,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:TargetsAtRandom,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:UnlessAI,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:Valiant,脚本参数,未登记效果测试,结构归类,10,0
+Parameter:ValidCardsDesc,脚本参数,未登记效果测试,结构归类,10,0
+Recruit,机制／效果条目,未登记效果测试,机制/执行分支复核,10,0
+ScriptMode:CantBlock,其他脚本模式,未登记效果测试,结构归类,10,0
+ScriptMode:Drawn,其他脚本模式,未登记效果测试,结构归类,10,0
+Static:CantSacrifice,持续异能类型,未登记效果测试,机制/执行分支复核,10,0
+Static:IgnoreLandwalk,持续异能类型,未登记效果测试,机制/执行分支复核,10,0
+Time Travel,机制／效果条目,未登记效果测试,机制/执行分支复核,10,0
+Trigger:DayTimeChanges,触发事件,未登记效果测试,机制/执行分支复核,10,0
+API:ChangeCombatants,引擎操作,需重测,机制/执行分支复核,9,2
+API:ControlPlayer,引擎操作,需重测,机制/执行分支复核,9,5
+API:EndTurn,引擎操作,未登记效果测试,机制/执行分支复核,9,0
+AbilityLabel:Addendum,异能词／待核对文本标签,未登记效果测试,结构归类,9,0
+AbilityLabel:Paradox,异能词／待核对文本标签,未登记效果测试,结构归类,9,0
+Amplify,机制／效果条目,未登记效果测试,机制/执行分支复核,9,0
+Cost:Mill,费用类型,未登记效果测试,机制/执行分支复核,9,0
+Cost:Unattach,费用类型,未登记效果测试,机制/执行分支复核,9,0
+Dethrone,机制／效果条目,未登记效果测试,机制/执行分支复核,9,0
+Duration:UntilYourNextUpkeep,持续期限,未登记效果测试,结构归类,9,0
+Escalate,机制／效果条目,需重测,机制/执行分支复核,9,2
+Ingest,机制／效果条目,未登记效果测试,机制/执行分支复核,9,0
+Parameter:AddReplacementEffect,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:AnnounceTitle,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:ChangeColorWord,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:ChoiceOptional,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:ChooseEach,脚本参数,需重测,结构归类,9,1
+Parameter:ChooseOrder,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:ConditionNotPresent,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:CopyFromChosenName,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:DelayedTriggerDefinedPlayer,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:ExcessSVarCondition,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:Hellbent,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:MaxAttackers,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:PlayerChoices,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:PromptToSkipOptionalAbility,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:RaiseMaxHandSize,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:RevealAllValid,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:TargetControls,脚本参数,未登记效果测试,结构归类,9,0
+Parameter:ValidTypes,脚本参数,未登记效果测试,结构归类,9,0
+Provoke,机制／效果条目,未登记效果测试,机制/执行分支复核,9,0
+Replacement:LifeReduced,替代事件,未登记效果测试,机制/执行分支复核,9,0
+ScriptMode:Taps,其他脚本模式,未登记效果测试,结构归类,9,0
+Static:CantBlockUnless,持续异能类型,未登记效果测试,机制/执行分支复核,9,0
+Storied,机制／效果条目,需重测,机制/执行分支复核,9,2
+Trigger:DamageAll,触发事件,未登记效果测试,机制/执行分支复核,9,0
+Trigger:PlaneswalkedFrom,触发事件,未登记效果测试,机制/执行分支复核,9,0
+Trigger:RingTemptsYou,触发事件,未登记效果测试,机制/执行分支复核,9,0
+API:ExchangeLife,引擎操作,需重测,机制/执行分支复核,8,4
+API:Heist,引擎操作,未登记效果测试,机制/执行分支复核,8,0
+API:Unattach,引擎操作,需重测,机制/执行分支复核,8,1
+AbilityLabel:Chroma,异能词／待核对文本标签,未登记效果测试,结构归类,8,0
+AbilityLabel:Disappear,异能词／待核对文本标签,未登记效果测试,结构归类,8,0
+AbilityLabel:Pack tactics,异能词／待核对文本标签,未登记效果测试,结构归类,8,0
+AbilityLabel:Radiance,异能词／待核对文本标签,未登记效果测试,结构归类,8,0
+AbilityLabel:Undergrowth,异能词／待核对文本标签,未登记效果测试,结构归类,8,0
+EnduringStory,机制／效果条目,需重测,机制/执行分支复核,8,2
+Parameter:Activate,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:AddAbilities,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ChangeTypeWord,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ConditionOptionalPaid,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ConditionPlayerContains,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ConditionPlayerDefined,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:FirstCombat,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:Fizzle,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:HeadsSubAbility,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:InstantSpeed,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:InvalidTypes,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:LeaveBattlefield,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:LockInText,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:MinChoiceAmount,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:MinMana,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:MinTurn,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:NoMoveRevealed,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:OrColors,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:PhaseInOrOut,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:Phases,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:PlayCost,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:RememberOriginalTokens,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:RemoveTypes,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:RepeatOptionalForEachPlayer,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:RepeatOptionalMessage,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ST,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:TargetsWithDifferentControllers,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidBlocked,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidCrew,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidDefender,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidKeyword,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidLoseReason,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidOriginalController,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:ValidSAonCard,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:XColor,脚本参数,未登记效果测试,结构归类,8,0
+Parameter:XMax,脚本参数,未登记效果测试,结构归类,8,0
+Replacement:TurnFaceUp,替代事件,未登记效果测试,机制/执行分支复核,8,0
+ScriptMode:LifeGained,其他脚本模式,未登记效果测试,结构归类,8,0
+Static:AttackRestrict,持续异能类型,未登记效果测试,机制/执行分支复核,8,0
+Static:CantAttach,持续异能类型,未登记效果测试,机制/执行分支复核,8,0
+Static:CantPutCounter,持续异能类型,未登记效果测试,机制/执行分支复核,8,0
+Static:DisableTriggers,持续异能类型,未登记效果测试,机制/执行分支复核,8,0
+Static:MustBlock,持续异能类型,未登记效果测试,机制/执行分支复核,8,0
+Trigger:CounterPlayerAddedAll,触发事件,未登记效果测试,机制/执行分支复核,8,0
+Trigger:TurnBegin,触发事件,未登记效果测试,机制/执行分支复核,8,0
+API:Meld,引擎操作,需重测,机制/执行分支复核,7,18
+AbilityLabel:Eminence,异能词／待核对文本标签,未登记效果测试,结构归类,7,0
+AbilityLabel:Parley,异能词／待核对文本标签,未登记效果测试,结构归类,7,0
+AbilityLabel:Tempting offer,异能词／待核对文本标签,未登记效果测试,结构归类,7,0
+Compleated,机制／效果条目,未登记效果测试,机制/执行分支复核,7,0
+Cost:ExileFromTop,费用类型,未登记效果测试,机制/执行分支复核,7,0
+Meld,机制／效果条目,需重测,机制/执行分支复核,7,18
+Parameter:AILifeThreshold,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:Adamant,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:AtEOTTrig,脚本参数,需重测,结构归类,7,1
+Parameter:ChoicePrompt,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:ClearRememberedBeforeLoop,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:Discard,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:ExiledWith,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:ForCost,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:Modifier,脚本参数,需重测,结构归类,7,1
+Parameter:NotFirstCardInDrawStep,脚本参数,需重测,结构归类,7,2
+Parameter:PreventionSubAbility,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:Primary,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:RememberAttached,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:RememberDiscardingPlayers,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:RepeatOptional,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:ShieldEffectTarget,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:SourceZone,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:TargetedObjects,脚本参数,未登记效果测试,结构归类,7,0
+Parameter:ValidCards2,脚本参数,未登记效果测试,结构归类,7,0
+Recover,机制／效果条目,未登记效果测试,机制/执行分支复核,7,0
+ScriptMode:CantGainLife,其他脚本模式,未登记效果测试,结构归类,7,0
+ScriptMode:CantPlayLand,其他脚本模式,未登记效果测试,结构归类,7,0
+ScriptMode:LookYouChoose,其他脚本模式,未登记效果测试,结构归类,7,0
+ScriptMode:TapsForMana,其他脚本模式,未登记效果测试,结构归类,7,0
+Static:CantDraw,持续异能类型,需重测,机制/执行分支复核,7,2
+Tiered,机制／效果条目,未登记效果测试,机制/执行分支复核,7,0
+Trigger:Crewed,触发事件,未登记效果测试,机制/执行分支复核,7,0
+Trigger:FlippedCoin,触发事件,未登记效果测试,机制/执行分支复核,7,0
+Trigger:LosesGame,触发事件,未登记效果测试,机制/执行分支复核,7,0
+Trigger:RolledDieOnce,触发事件,未登记效果测试,机制/执行分支复核,7,0
+API:Blight,引擎操作,需重测,机制/执行分支复核,6,4
+API:ChooseEvenOdd,引擎操作,需重测,机制/执行分支复核,6,2
+API:ControlSpell,引擎操作,需重测,机制/执行分支复核,6,5
+AbilityLabel:Fathomless descent,异能词／待核对文本标签,未登记效果测试,结构归类,6,0
+Bands with other,机制／效果条目,需重测,机制/执行分支复核,6,1
+Impending,机制／效果条目,未登记效果测试,机制/执行分支复核,6,0
+Offering,机制／效果条目,需重测,机制/执行分支复核,6,3
+Parameter:AdditionalDesc,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:AddsKeywords,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:AddsKeywordsValid,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:AlternateCost,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:AnnounceType,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Attacker,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:CantHaveKeyword,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:CheckOnTriggeredCard,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:CounterNum2,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:DeclaresBlockers,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:DestAltSVar,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Enchanted,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ExcessDamage,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ExtraTurnDelayedTrigger,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ExtraTurnDelayedTriggerExecute,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Flipper,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ForgetOnPhasedIn,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:GainsAbilitiesOfDefined,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:HiddenKeywords,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ImprintOnHost,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Incorporate,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ManaType,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Metalcraft,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Move,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:Names,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:RandomCopied,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:RememberNewCard,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:RememberNumber,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:RemoveSubTypes,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:SetName,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:TopCardOfLibraryIs,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:TriggeredDefendingPlayer,脚本参数,未登记效果测试,结构归类,6,0
+Parameter:ValidActivator,脚本参数,未登记效果测试,结构归类,6,0
+Ripple,机制／效果条目,未登记效果测试,机制/执行分支复核,6,0
+ScriptMode:ChangesController,其他脚本模式,未登记效果测试,结构归类,6,0
+ScriptMode:ChangesZoneAll,其他脚本模式,未登记效果测试,结构归类,6,0
+Static:UnspentMana,持续异能类型,未登记效果测试,机制/执行分支复核,6,0
+Trigger:ChangesController,触发事件,未登记效果测试,机制/执行分支复核,6,0
+Trigger:Proliferate,触发事件,未登记效果测试,机制/执行分支复核,6,0
+Trigger:SpellAbilityCast,触发事件,未登记效果测试,机制/执行分支复核,6,0
+Trigger:SpellCopy,触发事件,未登记效果测试,机制/执行分支复核,6,0
+Undaunted,机制／效果条目,未登记效果测试,机制/执行分支复核,6,0
+API:AssignGroup,引擎操作,需重测,机制/执行分支复核,5,3
+API:BecomesBlocked,引擎操作,需重测,机制/执行分支复核,5,2
+API:BlankLine,引擎操作,未登记效果测试,机制/执行分支复核,5,0
+API:ChooseDirection,引擎操作,未登记效果测试,机制/执行分支复核,5,0
+API:DrainMana,引擎操作,需重测,机制/执行分支复核,5,5
+AbilityLabel:Fateful hour,异能词／待核对文本标签,未登记效果测试,结构归类,5,0
+AbilityLabel:Formidable,异能词／待核对文本标签,未登记效果测试,结构归类,5,0
+AbilityLabel:Join forces,异能词／待核对文本标签,未登记效果测试,结构归类,5,0
+AbilityLabel:Secret council,异能词／待核对文本标签,未登记效果测试,结构归类,5,0
+AbilityLabel:Will of the Planeswalkers,异能词／待核对文本标签,未登记效果测试,结构归类,5,0
+Cost:BeholdExile,费用类型,需重测,机制/执行分支复核,5,2
+Cost:PutCardToLibFromGrave,费用类型,未登记效果测试,机制/执行分支复核,5,0
+Duration:UntilUnattached,持续期限,未登记效果测试,结构归类,5,0
+Epic,机制／效果条目,未登记效果测试,机制/执行分支复核,5,0
+Paradigm,机制／效果条目,未登记效果测试,机制/执行分支复核,5,0
+Parameter:AIPhyrexianPayment,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:AITgtOwnCards,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ActivationAfterBlockers,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:AddColors,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:AddStaticAbilities,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:AttachedToPlayer,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ChangeValidDesc,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ChosenSVar,脚本参数,需重测,结构归类,5,2
+Parameter:ConditionManaNotSpent,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ConditionPresent2,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:CreatureEvalThreshold,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:DefinedBlocker,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:DefinedMagnet,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:EachExistingCounter,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ExileWithCounters,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:FirstCardInDrawStep,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:FlipUntilYouLose,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ForReveal,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:GainsValidAbilities,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:IgnoreGeneric,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ImprintPlayed,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ManaNotSpent,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:MaxBlockers,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:MayPlayWithFlash,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:MayShuffle,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:OptionQuestion,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:OptionalAbilityPrompt,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:OtherSVar,脚本参数,需重测,结构归类,5,2
+Parameter:Paid,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:Pawprint,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:PlayerCountRememberedController,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:PrimaryPrompt,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:RandomNum,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ReduceColor,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:RememberAmass,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:RepeatCompare,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:RepeatTypesFrom,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:SacEachValid,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:SpellbookName,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:TailsSubAbility,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:TargetRestriction,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:TargetingPlayerControls,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:TargetsWithSameCardType,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:TargetsWithSharedCardType,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:Threshold,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:ValidEntity,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:VoteCard,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:WontPhaseInNormal,脚本参数,未登记效果测试,结构归类,5,0
+Parameter:XMin,脚本参数,未登记效果测试,结构归类,5,0
+Replacement:BeginTurn,替代事件,未登记效果测试,机制/执行分支复核,5,0
+Replacement:Destroy,替代事件,未登记效果测试,机制/执行分支复核,5,0
+Replacement:GameWin,替代事件,未登记效果测试,机制/执行分支复核,5,0
+Replacement:LoseMana,替代事件,未登记效果测试,机制/执行分支复核,5,0
+ScriptMode:AssignCombatDamageAsUnblocked,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:AttackerUnblocked,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:Blocks,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:CantAttackUnless,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:CantSacrifice,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:CantTarget,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:CombatDamageToughness,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:Gain,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:PlaneswalkedTo,其他脚本模式,未登记效果测试,结构归类,5,0
+ScriptMode:Untaps,其他脚本模式,未登记效果测试,结构归类,5,0
+Trigger:BecomesCrewed,触发事件,未登记效果测试,机制/执行分支复核,5,0
+Trigger:Exerted,触发事件,未登记效果测试,机制/执行分支复核,5,0
+Trigger:Explores,触发事件,未登记效果测试,机制/执行分支复核,5,0
+Trigger:NewGame,触发事件,未登记效果测试,机制/执行分支复核,5,0
+Trigger:PlanarDice,触发事件,未登记效果测试,机制/执行分支复核,5,0
+API:Balance,引擎操作,需重测,机制/执行分支复核,4,4
+API:GainOwnership,引擎操作,需重测,机制/执行分支复核,4,2
+API:LookAt,引擎操作,需重测,机制/执行分支复核,4,5
+API:UnlockDoor,引擎操作,需重测,机制/执行分支复核,4,1
+AbilityLabel:Spell mastery,异能词／待核对文本标签,未登记效果测试,结构归类,4,0
+AbilityLabel:Sweep,异能词／待核对文本标签,未登记效果测试,结构归类,4,0
+AbilityLabel:Visit,异能词／待核对文本标签,未登记效果测试,结构归类,4,0
+Cost:ExileFromStack,费用类型,需重测,机制/执行分支复核,4,4
+Cost:PutCardToLibFromHand,费用类型,未登记效果测试,机制/执行分支复核,4,0
+Cost:RevealChosen,费用类型,需重测,机制/执行分支复核,4,4
+Parameter:AIExpectAmount,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:AddsCounters,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:AddsKeywordsUntil,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:AttachAfter,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:Blessing,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ChoiceTitleAppend,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ChosenCard,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ClearChosenType,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ConditionActivationLimit,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ConditionLifeAmount,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ConditionLifeTotal,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:DigZone,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:DivideShield,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:Equipped,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ExcludeChosen,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ExcludeDestination,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ExcludedDestinations,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ExtraPhaseDelayedTrigger,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ExtraPhaseDelayedTriggerExcute,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ExtraTurn,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:FirstAttack,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ForgetDefined,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ForgetRemembered,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:HasXManaCost,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:IgnoreEffectCost,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ImprintMade,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:MaxControlled,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:MaxFromEffect,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:Multiplier,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:NeverCastIfLifeBelow,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:NewCounterAmount,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:NextRoom,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:NoPutDesc,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:OptionalFoundMove,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:OrString,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RegenerationAbility,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RememberAffected,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RememberCloneOrigin,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RememberExchanged,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RememberForCounter,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RemoveArtifactTypes,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RepeatTargeted,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ResolvingCheck,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RevealTitle,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:RoomName,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:SearchOwnLibrary,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:SpellTargeted,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:TargetsWithSameCreatureType,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:Times,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:TokenBlocking,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:TriggeredBlocker,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:TriggeredCardController,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:Twice,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:UnblockCreaturesBlockedOnlyBy,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:UseDifferenceBetweenRolls,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ValidAttachment,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ValidSpellAbility,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:ValidSupportedCopy,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:VoteMessage,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:VoteSubAbility,脚本参数,未登记效果测试,结构归类,4,0
+Parameter:Won,脚本参数,未登记效果测试,结构归类,4,0
+Replacement:RollDice,替代事件,未登记效果测试,机制/执行分支复核,4,0
+Replacement:Transform,替代事件,未登记效果测试,机制/执行分支复核,4,0
+ScriptMode:AbilityCast,其他脚本模式,未登记效果测试,结构归类,4,0
+ScriptMode:AttackerBlockedByCreature,其他脚本模式,未登记效果测试,结构归类,4,0
+"ScriptMode:CantAttack,CantBlock,CantBeActivated",其他脚本模式,未登记效果测试,结构归类,4,0
+ScriptMode:CantChangeLife,其他脚本模式,未登记效果测试,结构归类,4,0
+ScriptMode:CantPhaseIn,其他脚本模式,未登记效果测试,结构归类,4,0
+ScriptMode:NumLoyaltyAct,其他脚本模式,未登记效果测试,结构归类,4,0
+ScriptMode:SpellAbilityCast,其他脚本模式,未登记效果测试,结构归类,4,0
+Static:ActivateAbilityAsIfHaste,持续异能类型,未登记效果测试,机制/执行分支复核,4,0
+Static:AttackRequirement,持续异能类型,未登记效果测试,机制/执行分支复核,4,0
+Static:BlockRestrict,持续异能类型,未登记效果测试,机制/执行分支复核,4,0
+Static:CanBlockIfShadow,持续异能类型,未登记效果测试,机制/执行分支复核,4,0
+Static:NoCleanupDamage,持续异能类型,未登记效果测试,机制/执行分支复核,4,0
+Trigger:AbilityTriggered,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:BecomeMonarch,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:BecomesTargetOnce,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:Clashed,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:Countered,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:DungeonCompleted,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:PayCumulativeUpkeep,触发事件,需重测,机制/执行分支复核,4,7
+Trigger:PhaseIn,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:SearchedLibrary,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:Shuffled,触发事件,未登记效果测试,机制/执行分支复核,4,0
+Trigger:Unattached,触发事件,未登记效果测试,机制/执行分支复核,4,0
+API:BidLife,引擎操作,需重测,机制/执行分支复核,3,3
+API:Block,引擎操作,需重测,机制/执行分支复核,3,1
+API:ExchangeLifeVariant,引擎操作,需重测,机制/执行分支复核,3,3
+API:Regeneration,引擎操作,需重测,机制/执行分支复核,3,5
+API:ReverseTurnOrder,引擎操作,未登记效果测试,机制/执行分支复核,3,0
+API:Subgame,引擎操作,未登记效果测试,机制/执行分支复核,3,0
+AbilityLabel:Adamant,异能词／待核对文本标签,未登记效果测试,结构归类,3,0
+AbilityLabel:Enchanted Threshold,异能词／待核对文本标签,未登记效果测试,结构归类,3,0
+AbilityLabel:Jump,异能词／待核对文本标签,未登记效果测试,结构归类,3,0
+AbilityLabel:Split,异能词／待核对文本标签,未登记效果测试,结构归类,3,0
+AbilityLabel:Tail Spikes,异能词／待核对文本标签,未登记效果测试,结构归类,3,0
+Cost:GainLife,费用类型,未登记效果测试,机制/执行分支复核,3,0
+Cost:untapYType,费用类型,未登记效果测试,机制/执行分支复核,3,0
+Gravestorm,机制／效果条目,未登记效果测试,机制/执行分支复核,3,0
+Parameter:AIBidMax,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:AIMinTgts,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:AIXMax,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:AdditionalOptionalVote,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:AddsNoCounter,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:AllTargeted,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:AmountFromVotes,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:BidSubAbility,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:BoonAmount,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Chance,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ChangeNumDesc,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ChangeSingleTarget,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ChooseOnlyOne,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ChosenMap,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ConditionFirstCombat,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ConditionGameTypes,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ConditionTargetValidTargeting,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ConniveNum,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:CounterNumPerDefined,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:DefenderNotNearestToYouInChosenDirection,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:DefinedAssembler,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:DefinedPiles,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:DefinedTarget,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Destroy,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:DrawLimit,脚本参数,需重测,结构归类,3,2
+Parameter:EachBasicType,脚本参数,需重测,结构归类,3,1
+Parameter:EachToItself,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:EvenOddResults,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Exactly,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ExiledWithEffectSource,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:FoundLibraryPosition,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Highest,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:IntoPlayTapped,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:List,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ManaRestriction,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ManaSpent,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:MayPlayText,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:MinLimit,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:MinTotalCMC,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Note,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:OnlySorcerySpeed,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:OppHasCreatureInPlay,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:OptionalPrompt,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:OtherwiseSubAbility,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:PlayerCount,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:PlayerCountDefinedRegistered,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:PlayerCountOther,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:PresentCompare2,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:QuasiLibrarySearch,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:RandomKeyword,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Redistribute,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Regeneration,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:RememberCopies,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:RememberEach,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:RememberPlayers,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:RememberSearched,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:RemoveConditionSVar,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ReplaceAmount,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ReplaceColor,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ReplaceMana,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ReplacedSource,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Searched,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:StrictAmount,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Tapper,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TapperController,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TargetsWithDifferentCMC,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TokenCard,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TriggerObjectsCards,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TriggeredCounterMap,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TriggeredSource,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:TwoColors,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:Unimprint,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:ValidChoices,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:WithCounters,脚本参数,未登记效果测试,结构归类,3,0
+Parameter:WithDifferentPowers,脚本参数,需重测,结构归类,3,1
+Parameter:WithTotalPower,脚本参数,需重测,结构归类,3,1
+Replacement:Attached,替代事件,未登记效果测试,机制/执行分支复核,3,0
+ScriptMode:NoCleanupDamage,其他脚本模式,未登记效果测试,结构归类,3,0
+ScriptMode:Panharmonicon,其他脚本模式,未登记效果测试,结构归类,3,0
+ScriptMode:Sacrificed,其他脚本模式,未登记效果测试,结构归类,3,0
+Static:Activations,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Static:CanAttackIfHaste,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Static:CantBeCopied,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Static:CantPayLife,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Static:IgnoreHexproof,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Static:ManaRestriction,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Static:MustTarget,持续异能类型,未登记效果测试,机制/执行分支复核,3,0
+Trigger:AttackerBlockedOnce,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:ConjureAll,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:Connives,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:CounterAddedAll,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:CounterRemovedOnce,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:Destroyed,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:Enlisted,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:ExcessDamage,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:Exiled,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:MilledAll,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:SeekAll,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:TokenCreated,触发事件,未登记效果测试,机制/执行分支复核,3,0
+Trigger:Vote,触发事件,未登记效果测试,机制/执行分支复核,3,0
+API:ActivateAbility,引擎操作,未登记效果测试,机制/执行分支复核,2,0
+API:ChangeSpeed,引擎操作,需重测,机制/执行分支复核,2,6
+API:ChangeX,引擎操作,需重测,机制/执行分支复核,2,4
+API:ExchangePower,引擎操作,需重测,机制/执行分支复核,2,1
+API:ExchangeTextBox,引擎操作,需重测,机制/执行分支复核,2,1
+API:FlipOntoBattlefield,引擎操作,需重测,机制/执行分支复核,2,15
+API:GameDrawn,引擎操作,未登记效果测试,机制/执行分支复核,2,0
+API:HealDamage,引擎操作,需重测,机制/执行分支复核,2,2
+API:LosePerpetual,引擎操作,未登记效果测试,机制/执行分支复核,2,0
+API:RemoveFromMatch,引擎操作,需重测,机制/执行分支复核,2,2
+API:ReorderZone,引擎操作,需重测,机制/执行分支复核,2,1
+API:SetInMotion,引擎操作,未登记效果测试,机制/执行分支复核,2,0
+API:SwitchBlock,引擎操作,未登记效果测试,机制/执行分支复核,2,0
+API:TaporUntapAll,引擎操作,未登记效果测试,机制/执行分支复核,2,0
+AbilityLabel:Antimagic Cone,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Bewitching Whispers,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Body Thief,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Cure Wounds,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Dispel Magic,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Fear Ray,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Federation,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Fight the Current,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Find a Crossing,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Gentle Repose,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Go to Sleep,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Homunculus Servant,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Natural Recovery,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+AbilityLabel:Whispers of the Grave,异能词／待核对文本标签,未登记效果测试,结构归类,2,0
+Cost:ChooseCreatureType,费用类型,未登记效果测试,机制/执行分支复核,2,0
+Cost:RevealOrChoose,费用类型,未登记效果测试,机制/执行分支复核,2,0
+Duration:UntilTargetedUntaps,持续期限,未登记效果测试,结构归类,2,0
+Duration:UntilTheEndOfTargetedNextTurn,持续期限,未登记效果测试,结构归类,2,0
+Fortify,机制／效果条目,未登记效果测试,机制/执行分支复核,2,0
+Parameter:AICheckSVar,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AISVarCompare,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AITgtsStrict,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:APlayerHasMoreLifeThanEachOther,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Additional,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AdditionalActivationZone,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AllCards,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AllowRepeats,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AnnounceMax,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AnySupportedCard,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AtEOTCondition,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:AtEOTDesc,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:BlockAllDefined,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:CanTargetOtherCondition,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:CardsInGraveyardGE,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:CheckThirdSVar,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ChoiceNum,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ChooseType2,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ClearCoinFlips,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ClearTriggered,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:CloneZone,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:CombatMana,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ConditionTargetsSingleTarget,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Convoked,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:CounterTypePerDefined,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DamageDesc,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DefinedContraption,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DefinedExiler,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DestZone2Optional,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DestroyPermanent,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DividedRandomly,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:DraftNum,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Each,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:EachVote,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ExcludedOrigins,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Filter,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:FirstTimeCrewed,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:FirstUpkeepThisGame,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Foretold,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:FromBottom,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:FromDesc,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:GainsAbilitiesLimitPerTurn,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:GainsTriggerAbsOf,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Guess,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:HasColorCreatureInPlay,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:IgnoreFreeze,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ImprintedLKI,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Log,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ManaAbility,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:MaxControlledGlobally,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:MaxTotalTargetPower,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:MustHaveInHand,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Natural,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:NextTurnForEachPlayer,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:NumCardsDesc,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:NumPhases,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:OptionPrompt,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:OrOtherConditionSVarCompare,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:OrderDuplicates,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:PlayReduceCost,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:PlayerCountNonActive,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:PresentPlayer2,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:PresentZone2,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RandomChange,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RandomTarget,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Reassemble,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ReduceAmount,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberAbandoned,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberClasher,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberCostMana,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberGoaded,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberMoved,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberMovedToZone,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberResult,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberRevealedPlayer,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberSource,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RememberUntapped,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RemoveNonManaAbilities,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RemovePhase,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ReplaceGraveyardValid,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ReplacedCardLKI,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:RolledToVisitAttractions,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:SecondaryType,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:SetChosenPlayer,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:SetLoyalty,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:SharedKeywords,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ShowCardToActivator,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ShuffleChangedPile,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ShuffleFromEffect,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:SkipUntap,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:SpellbookAmount,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:Start,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:StartBidding,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:StartingLife,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:StaticCommandCheckSVar,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:StaticCommandSVarCompare,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetRelativeToSource,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetedByTarget,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetedObjectsDistinct,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetsWithControllerProperty,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetsWithDifferentNames,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetsWithRelatedProperty,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TargetsWithSharedTypes,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ThisTargetedPlayer,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ToEachOther,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TokenColors,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TokenRemembered,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TokenTypes,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TriggerObjectsCurrentCastSpells,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TriggeredCardLKI,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TriggeredExploited,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TriggeredOwnAbility,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TriggeredPlayersTargets,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:TypesFromDefined,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:UntapExactly,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:UpcomingTurn,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ValidCauser,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ValidDestination,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ValidExplorer,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ValidMessage,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ValidSides,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:VotePlayer,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:WhileKeyword,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:WithCounter,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:WithCounterNum,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:XAnnounceTitle,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:ZoneRegardless,脚本参数,未登记效果测试,结构归类,2,0
+Parameter:cmcGT,脚本参数,未登记效果测试,结构归类,2,0
+Poisonous,机制／效果条目,未登记效果测试,机制/执行分支复核,2,0
+Replacement:DrawCards,替代事件,未登记效果测试,机制/执行分支复核,2,0
+Replacement:Explore,替代事件,未登记效果测试,机制/执行分支复核,2,0
+Replacement:Mill,替代事件,未登记效果测试,机制/执行分支复核,2,0
+Replacement:Planeswalk,替代事件,未登记效果测试,机制/执行分支复核,2,0
+Replacement:RemoveCounter,替代事件,未登记效果测试,机制/执行分支复核,2,0
+Replacement:Scry,替代事件,未登记效果测试,机制/执行分支复核,2,0
+ScriptMode:AlternativeCost,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:AttackerBlocked,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:AttackersDeclaredOneTarget,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:CantBlockUnless,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:CantLoseLife,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:CantPhaseOut,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:CantPutCounter,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:CounterRemoved,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:Discarded,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:IgnoreLegendRule,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:LockOrUnlock,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:MinMaxBlocker,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:RolledDie,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:Toughness,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:Unlock,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:UntapOtherPlayer,其他脚本模式,未登记效果测试,结构归类,2,0
+ScriptMode:YouChoose,其他脚本模式,未登记效果测试,结构归类,2,0
+Set in Motion,机制／效果条目,未登记效果测试,机制/执行分支复核,2,0
+"Static:CantAttack,CantBlock,CantCrew,CantBeActivated",持续异能类型,未登记效果测试,机制/执行分支复核,2,0
+Static:CantPhaseIn,持续异能类型,未登记效果测试,机制/执行分支复核,2,0
+"Static:Continuous,CantAttack,CantBlock,CantBeActivated",持续异能类型,未登记效果测试,机制/执行分支复核,2,0
+Static:CountersRemain,持续异能类型,未登记效果测试,机制/执行分支复核,2,0
+Static:NumLoyaltyAct,持续异能类型,未登记效果测试,机制/执行分支复核,2,0
+Static:PlayerMustAttack,持续异能类型,未登记效果测试,机制/执行分支复核,2,0
+Trigger:AbilityResolves,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:BecomeRenowned,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:BecomesPlotted,触发事件,需重测,机制/执行分支复核,2,1
+Trigger:CollectEvidence,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:CounterTypeAddedAll,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:Discover,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:Evolved,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:FacesDilemma,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:Investigated,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:LifeLostAll,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:Milled,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:MilledOnce,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:PhaseOut,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:Saddled,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:TapAll,触发事件,未登记效果测试,机制/执行分支复核,2,0
+Trigger:TokenCreatedOnce,触发事件,未登记效果测试,机制/执行分支复核,2,0
+API:AdvanceCrank,引擎操作,需重测,机制/执行分支复核,1,4
+API:Camouflage,引擎操作,未登记效果测试,机制/执行分支复核,1,0
+API:ChooseSector,引擎操作,未登记效果测试,机制/执行分支复核,1,0
+API:ClaimThePrize,引擎操作,未登记效果测试,机制/执行分支复核,1,0
+API:EndCombatPhase,引擎操作,需重测,机制/执行分支复核,1,11
+API:ExchangeControlVariant,引擎操作,需重测,机制/执行分支复核,1,3
+API:ExchangeZone,引擎操作,未登记效果测试,机制/执行分支复核,1,0
+API:MultiplePiles,引擎操作,需重测,机制/执行分支复核,1,3
+API:PermanentNoncreature,引擎操作,需重测,机制/执行分支复核,1,2
+API:RemoveFromGame,引擎操作,需重测,机制/执行分支复核,1,2
+API:RestartGame,引擎操作,需重测,机制/执行分支复核,1,2
+API:RollPlanarDice,引擎操作,未登记效果测试,机制/执行分支复核,1,0
+API:RunChaos,引擎操作,未登记效果测试,机制/执行分支复核,1,0
+AbilityLabel:AV Bead,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Aberrant Tinkering,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ability,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Acid Breath,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Advanced Species,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Aegis of the Emperor,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Aerial Blast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Aerospark,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Aim For the Cursed Amulet,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Aim For the Wyvern,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Allies,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Allure of Slaanesh,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ambitious,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Animal May-Ham,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Animate Chains,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Arcane Life-support,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Archery,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Architect of Deception,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Armor of Shrieking Souls,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Arrest,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Attack,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Avian Telepathy,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Avoidance,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bad Breath,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bad Wolf,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bardic Inspiration,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Battle Cannon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Beacon of Hope,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bear Form,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Befriend Them,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Benediction of the Omnissiah,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Berserk,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Berzerker,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Betrayal,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Binding Contract,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bio-Plasmic Scream,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bio-plasmic Barrage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Blade of Magnus,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Blessing of Light,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Blitzball Captain,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Blood Chalice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bloody Mary,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Blue Magic,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Boast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Boil,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bolas,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Boomerang,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Brand-new Sky,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Brave Heart,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Brave the Stench,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Break Their Chains,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Breathe Flame,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bribe the Guards,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Brimstone,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bring Down,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Brood Telepathy,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Brotherhood,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Buffet,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Bull Rush,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Burning Chains,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Buy Information,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Byzantium Radiation,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Caan,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Call for Aid,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ceaseless Tempest,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ceremorphosis,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Chain,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Chainsword,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Chaos,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Chaos Control,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Charge Them,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Check Map,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cheer,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Children of the Cult,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cold Breath,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cold Snap,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Command Protocols,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Command Section,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Communication Bead,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Conceal,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Concealed Position,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cone of Cold,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Confounding Clouds,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Consume Anomaly,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Continue the Pilgrimage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Corrupted Metalcraft,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Coruscating Flames,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cosmic Awareness,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cosmo Memory,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Crash Land,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Crash Landing,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Create Undead,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Crescent Fang,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Crushing Teeth,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cure Cancer,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Curse of the Walking Pox,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Cybernetic Senses,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Daemon Sword,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dance,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Darkforce Inversion,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Darkness,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dash Attack,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Date Night,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Deal with the Black Guardian,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Death Frenzy,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Death Ray,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Decimate,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Density Control,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Designed Only for Killing,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Destroy the Relic,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Detonate,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Devastating Charge,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Devour Intellect,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Devourer of Souls,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Diamond Dust,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Disarm,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Disintegration Ray,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Displacement,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dissolve,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Distract,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Distract the Guard,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Distract the Horde,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Divine Intervention,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Do Homework,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dominate Monster,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Double,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Double Overdrive,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Drag Below,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dragonfire Dive,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Drain Life,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dualcast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dynastic Advisor,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dynastic Codes,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Dynastic Command Node,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:ED-E My Love,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Each opponent faces a villainous choice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Echo of the First Murder,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Echo of the Lost,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ecliptic Growl,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Electric Thunder,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Embiggen Fist,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Enclave,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Endless Swarm,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Engulf,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Enmitic Exterminator,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Enthrall,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Enthralling Performance,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Eternity Gate,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Eukrasia,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Executioner Round,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Exile Cannon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Expedient,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Explosive,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fabricator Claw Array,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fallen Warrior,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Family gathering,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fancy Lads Snack Cakes,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fast Healing,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fear Gas,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Feed,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Feeder Mandibles,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fend Them Off,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fierce Punch,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fight Crime,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Find Another Way,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Find Cards,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fire,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fire Breath,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fire a Warning Shot,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Fire of Tzeentch,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:First Contact,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Flare Star,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Flash Kick,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Flesh Flayer,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Flesh Hooks,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Flurry of Blows,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Focus Beam,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Foil Their Scheme,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Foot Toss,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:For Auld Lang Syne,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Form a Party,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Frenzied Rampage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Friends,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Full Party,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gather Your Courage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gathered Swarm,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gatling Blaster,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gelato,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Genius Industrialist,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gestalt Mode,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ghost,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gift of Tiamat,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gigaflare,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Glory of Battle,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Goblin Formula,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Golden Rule,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gotta Go Fast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Grand Strategist,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Grant an Advantage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Grav-cannon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gungnir,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Gust of Wind,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hall of Sorrow,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Harbinger of Despair,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Healing Tears,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Heavenly Strike,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Heavenward Howl,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Heavy Power Hammer,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Heavy Rock Cutter,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Heckle,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hero Worship,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hide,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hire a Mercenary,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:History Teacher,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hive Mind,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Horrific Symbiosis,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:How Civil of You,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hundred Hand Slap,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hunters for Hire,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hyperfang Round,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hyperphase Threshers,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Hypertoxic Miasma,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Immune,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Impossible Girl,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Impound,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Infesting Spores,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Inquisition Agents,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Insatiable Hunger,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Intangibility,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Interfere,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Interrogate Them,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Intimidate Them,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Into the TARDIS,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Invasion Beams,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Investigative Journalism,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Invoke Duplicity,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Iron Muscle,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Item,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Jast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Jecht Beam,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Jenova Cells,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Journey On,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Judgment Bolt,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Jump Kick,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Keen Senses,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Keen Sight,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Kerplunk,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Kill,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Kinfall,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Landship,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Leading from the Front,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Leap Strike,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Learn Their Secrets,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Legal Justice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Legion,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Let the World Burn,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lethal Voice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Life Drain,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lift the Curse,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Light Party,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lightning,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lightning Breath,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lightning Kick,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lizard Formula,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Locus of Slaanesh,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Look Around,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Look to the Stars,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lord of Chaos,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lord of Torment,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lord of the Pyrrhian Legions,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Low Gravity,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lucky Slots,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lunge,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Lure the Unwary,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Magic,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Make Camp,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Make Friends,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Make Them Pay,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Make a Retreat,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mark of Chaos Ascendant,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Martyrdom,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mary,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mash,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Master Tactician,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Matter Absorption,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Medicus Ministorum,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Meet in Reverse,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mega Flare,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mesmerize,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Midnight Entity,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mind Swap,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mold Earth,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Molting Exoskeleton,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mug,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Multi-threat Eliminator,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:My First Friend,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:My Will Be Done,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Mystic Arcanum,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:NCR,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Natural Shelter,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Negative,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Negative Energy Cone,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Net,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Neurotraumal Rod,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:No Mercy,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Oblivion,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Observe,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:One for My Baby,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pact Boon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pain,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Parallel Universe,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Particle Beam,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pass Go,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pasta,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Patrol Night,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Peaceful Coexistence,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Perfect Illumination,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Phaeron,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Phalanx Commander,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pheromone Trail,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Photographic Reflexes,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pick a Perk,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pizza,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Plasma Incinerator,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Play Games,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Poison Breath,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Polymorphine,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Praesidium Protectiva,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Praise Him,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pray,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pray for Protection,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Primarch of the Death Guard,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Prime Bead,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Prince of Chaos,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Prismatic Gallery,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Probing Telepathy,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Proclamator Hailer,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Project Image,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Protect,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Protection Fighting Style,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Protector,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Pry It Open,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Psionic Spells,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Psychic Abomination,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Psychic Blades,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Psychic Defense,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Puff Piece,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:RadAway,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Radar Sense,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Raise,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rapacious Hunger,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rapid-fire Battle Cannon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rat Tail,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Reckless Behavior,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Red-Eye,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rejuvenation,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Release Juno,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Repair,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Repair Barge,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Reveal,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Revelation,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Reverberating Summons,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rising Flames,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rites of Banishment,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rogue Trader,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rolling Attack,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ronso Rage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rosarius,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rot Fly,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rough Divide,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Rouse the Party,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Royal Guard,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ruinous Ascension,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Run and Hide,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sage Project,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sanctified Rules of Combat,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sarcophagus,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Scavenge the Dead,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Science Teacher,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Search the Body,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sec,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:See a Show,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Seismic Takedown,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Selfie Shot,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sell Contraband,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sensational Save,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sense the Good,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Set Off Traps,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Share Intelligence,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Shooting Star,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Shoryuken,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Shrieking Gargoyles,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Siege Monster,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sigil of Corruption,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sixty-Six Seconds,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Skilled Outrider,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Skyswarm,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Slipstream,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Smash It,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Smash Relics,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Smash the Chest,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sneak Attack,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Solar Beam,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Song of Rest,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Song of the Ood,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sonic Attack,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sonic Blast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sonic Blaster,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sonic Boom,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sonic Booster,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sonic Wings,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sorcerous Elixir,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sorcerous Inspiration,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sort Inventory,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Spawn Termagants,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sphere of the Void Dragon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Spiked Retribution,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Spinning Piledriver,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Spoilers,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Spore Chimney,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stagger,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stall for Time,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stand and Fight,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Standoff,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Starfall,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Starscourge,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Start a Brawl,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Steal Its Eyes,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stew,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Still Point in Time,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stimpak,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stowage,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Strange new worlds,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Strategic Coordinator,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Street Justice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Strike a Deal,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Stun,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Subterranean Assault,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Summon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Sumo Spirit,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Super Nova,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Suppressing Fire,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Survey the Realm,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Suspended Animation,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Symphony of Pain,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Synapse Creature,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Synaptic Disintegrator,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Take the Elevator,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Target opponent faces a villainous choice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Targeting Relay,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Team TARDIS,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Technopathy,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Teleport,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Temporal Foresight,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Terror from the Deep,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:That Could Actually Be Dangerous,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Thay,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Allagan Eye,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Betrayer,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Goose Laid an Egg,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Goose is Loose,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Last Centurion,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Nuka-Cola Challenge,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Seven-fold Chant,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:The Will of the Hive Mind,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Then target opponent faces a villainous choice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Those Who Came Before,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Threaten the Merchant,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Three Autostubs,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Throw,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Throw Wide the Gates,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Time Compression,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Timey-Wimey,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Titanic,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Tools,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Top of the Food Chain,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Toxic Spores,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Trace Aether,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Tragic Backstory,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Trance,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Transdimensional Scout,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Treasure Hunter,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Trick Arrows,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Triple,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Turn People into Dinosaurs,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Two-Headed Coin,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Two-Weapon Fighting,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Typhoid Mary,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ugin,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ultimate End,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Ultimate Jecht Shot,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Unbreakable Skin,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Undying Vengeance,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Unearthly Power,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Unlock Ability,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Unquestionable Wisdom,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Unreliable Visions,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Unrivaled Lethality,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Use the Relic,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Vanguard Species,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Veil of Time,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Venom Blast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Vibro-Shock Gauntlets,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Vicious Mockery,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Wark,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Warp Blast,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Warp Vortex,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Water Always Wins,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Wave Cannon,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Weird Insight,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Whirlwind,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Wild Card,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Wild Magic Surge,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Win Prize Tickets,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Wings of Light,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Woman Who Walked the Earth,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Wraith Form,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Xenos Cunning,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:You can never leave,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:Zantetsuken,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+AbilityLabel:then faces a villainous choice,异能词／待核对文本标签,未登记效果测试,结构归类,1,0
+Absorb,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Aura swap,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Beam me up,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+ClaimThePrize,机制／效果条目,需重测,机制/执行分支复核,1,2
+Cost:ChooseCard,费用类型,未登记效果测试,机制/执行分支复核,1,0
+Cost:ExileCtrlOrGrave,费用类型,未登记效果测试,机制/执行分支复核,1,0
+Cost:ExileSameGrave,费用类型,未登记效果测试,机制/执行分支复核,1,0
+Cost:PutCardToLibFromBattlefield,费用类型,未登记效果测试,机制/执行分支复核,1,0
+Cost:RevealFromExile,费用类型,未登记效果测试,机制/执行分支复核,1,0
+Cost:RollDice,费用类型,未登记效果测试,机制/执行分支复核,1,0
+Decayed,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Double agenda,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Duration:NextThisTurn,持续期限,未登记效果测试,结构归类,1,0
+Duration:ThisTurnAndNextTurn,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilAnimatedFaceup,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilEndOfCombatYourNextTurn,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilFacedown,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilHostLeavesPlayOrEndOfCombat,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilNextEndStep,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilStateBasedActionChecked,持续期限,未登记效果测试,结构归类,1,0
+Duration:UntilTheEndOfYourNextUpkeep,持续期限,未登记效果测试,结构归类,1,0
+Parameter:AIActivateLast,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AIRespondsToOwnAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:APlayerHasMostCardsInHand,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AbilityCount,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ActivationGameTypes,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ActivatorThisTurnCastEach,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ActivePhases,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AddNames,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AddTriggersFrom,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AdditionalVillainousChoice,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AdditionalVote,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AfterReplacement,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Again,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AiChoiceLogic,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AllCounterTypes,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AllSuffixKeywords,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AltChoiceForEach,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AlwaysCastIfLifeBelow,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AmountByChosenMap,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AmountDesc,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AtLeastOneInstance,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:AttackDifferentPlayers,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:BasePower,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:BecomeStartingPlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:BeforeFirstPostCombatMainEnd,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:BeginTurn,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Blocking,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Booster,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CalcKeywordN,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CantChooseSubAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CantCopy,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CantFizzle,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CardsInHandGE,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CardsInHandLE,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CastFaceDown,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CauseIsSource,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChangeColorWordsTo,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChangeLater,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CheckFourthSVar,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChoicesDesc,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChooseAmount,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChooseDifferent,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChooseFromDefinedCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChooseNoted,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChooseNumberSubAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChooseSubAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChosenMapIndex,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ChosenZone,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Clone,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Collected,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ColorsFrom,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Combat,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ConditionChosenColor,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ConditionNoDifferentColors,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ConditionOpponentTurn,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ConditionWouldDestroy,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ConditionYouCastThisTurn,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ControlAndNot,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ControlOpponentsSearchingLibrary,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ControlVote,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ControllerUntaps,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CounterMapValues,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:CounterNumShared,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Crewed,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Cycling,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DeclaresAttackers,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Defender,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DefendingPlayerPoisoned,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DefinedLandwalk,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DescriptionFromChosenName,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DestAltSVarCompare,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DestinationChoice,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DifferentCMC,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DifferentPower,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DifferentResults,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DiscardMessage,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DivideEvenly,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DividedUpTo,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DividerOnResolution,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DoesntHaveThisAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DontNotify,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DontPlaneswalkAway,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:DrainMana,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:EachDifferentPower,脚本参数,需重测,结构归类,1,1
+Parameter:Embalm,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Emerged,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:EnduringStory,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ExcessDamageCondition,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ExcludeZone,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ExileOnLost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ExiledCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:FirstExtraCardDrawnThisTurn,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:FirstForetell,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:FirstTimeSaddled,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:FirstUpkeep,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForColor,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForEachColorPair,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForEachPlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForEachShard,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForbiddenNewTypes,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForceReveal,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ForetoldCost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:FoundSearchingLibrary,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:FromDraftNotes,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:GainTextAbilities,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:GainTextOf,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:GameStage,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:GuessCorrect,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:GuessWrong,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Guesser,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:HasColorInGraveyard,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:IgnoreLower,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ImprintLast,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ImprintRememberedNoCleanup,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ImprintRest,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ImprintSacrificed,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:IncludeAllComponentCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:IncludeSideboard,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:IncludeSpellsOnStack,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:InvertValidCause,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:InvertValidSource,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:KeepName,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:KeepRemembered,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:KeepSecret,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:KeywordDefined,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:LeftRightPile,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:LethalDamageByPower,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:LogMessage,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:LoseLifeMap,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Lowest,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ManaAmount,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ManaCost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MatchedAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MaxNum,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MaxRevealed,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MaxRollsResults,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MayPlaySnowIgnoreColor,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MinCreaturesBelowThreshold,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Monarch,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:MostPrevalentInDefinedZone,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NeverCastIfLifeAbove,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NewState,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NewTime,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoColoredMana,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoLonger,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoMoveFound,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoRedirection,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoRegenValid,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoRepetition,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoSchemes,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NonZero,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoneFoundDestination,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoneFoundLibraryPosition,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NotFirstLand,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NotLowest,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NotPlayerTurn,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NotThisAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoteCounterDefined,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoteDoubles,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NoteNumber,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Notify,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NumManaSourcesNextTurn,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:NumRandomChoices,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:OnlyFirst,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:OnlyNewKind,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:OnlySourceAbs,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:OptionalNoDestination,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:OriginalHost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:OtherBidder,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Piles,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayRaiseCost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedActivePlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedNonTriggeredTarget,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedRememberedOwner,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedTriggeredAttackedTargetAndYou,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedTriggeredCardOwner,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedTriggeredPlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountDefinedTriggeredSourceController,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountHasLost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountPropertywithAtLeast1MoreLandsThanYou,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountPropertywithAtLeast2MoreLandsThanYou,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountRememberedOwner,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PlayerCountRememberedPlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PutOnDefined,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:PutOnEachOther,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RaiseTo,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomChosen,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomCompare,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomCompareSVar,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomKWNum,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomNumTargets,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomTargetRestriction,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RandomType,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RearrangePlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RelativeTarget,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RelativeToSource,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Remember,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberAllObjects,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberAltered,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberAnimated,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberCloaked,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberCounteredSA,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberDifference,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberDiscovered,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberDrainedMana,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberHighest,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberHighestPlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberInvestigatingPlayers,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberKept,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberLoser,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberOwnLoss,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberRedirectedExcess,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberRemovedCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberRemovedFromCombat,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberSpell,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberSplicedOntoCounteredSpell,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberValids,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberVotedObjects,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RememberingAttacker,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RemoveChoices,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RemoveCost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RemoveFromCombat,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RemoveFromInventory,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RepeatNum,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RepeatOptionalDecider,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RepeatSpellAbilities,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReplaceDyingCondition,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReplaceDyingExiledWith,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReplaceIlluMask,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReplaceOnly,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReplacedCard,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RerollResults,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RestrictFromValid,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RestrictFromZone,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReturnAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ReturnValid,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RevealFirst,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RevealToAll,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:RevealType,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SecondSVarCompare,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShareLandType,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SharedKeywordsDefined,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShowCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShowMessage,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShowMilledCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShowSacrificedCards,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShuffleBySelfControlled,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ShuffleCondition,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SnowSpentForCardsColor,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SoulBond,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SourceCanOnlyTarget,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SourceController,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SpecifyCounter,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Spell,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SplitAmount,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:StaticEffectCheckSVar,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:StaticEffectSVarCompare,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:StoreResults,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:SubsForEach,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TapCreaturesForMana,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TargetRelativeToCause,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TargetsWithEqualToughness,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TargetsWithoutSameCreatureType,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Teamwork,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ToBottom,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ToVisitYourAttractions,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TransferActivator,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggerCountMax,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggerObjectsSources,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggerObjectsSpellAbilityTargets,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggeredActivator,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggeredDevoured,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggeredObject,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggeredPlayersAttackedTarget,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggeredPlayersDefenders,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TriggeredPlayersOpponentVotedDiff,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TypeLimit,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:TypeList,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Unique,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:UniqueType,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:UnlessColor,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:UnlessValidTarget,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:UnmatchedAbility,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:UseHighestRoll,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:UseOriginalHost,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidAmountEach,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidAttacked,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidAttackerRelative,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidAttackingPlayer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidBlockerAmount,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidBlockerRelative,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidCardToTarget,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidCrewAmount,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidDefenders,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidDefined,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidDevoured,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidEnlisted,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidExchange,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidExplored,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidNewFace,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidObjectToSource,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidRoll,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidSaddled,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidTrigger,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:ValidTurned,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:VarKey,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:WithCountersPlacer,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:WithDifferentNames,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:WithNotedCounters,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:WithTotalCardTypes,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:XAlternative,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Zone1,脚本参数,未登记效果测试,结构归类,1,0
+Parameter:Zone2,脚本参数,未登记效果测试,结构归类,1,0
+Reflect,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Replacement:AssembleContraption,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:Cascade,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:Connive,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:CopySpell,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:Learn,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:PayLife,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:Proliferate,替代事件,未登记效果测试,机制/执行分支复核,1,0
+Replacement:RollPlanarDice,替代事件,未登记效果测试,机制/执行分支复核,1,0
+ScriptMode:Abandoned,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:AbilityResolves,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Adapt,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:AttackRestrict,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:AttackVigilance,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:BecomeMonarch,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:BlockRestrict,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:CanAdapt,其他脚本模式,未登记效果测试,结构归类,1,0
+"ScriptMode:CantAttack,CantBlock",其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:CantBecomeMonarch,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:CounterAdded,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:CounterAddedOnce,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:CounterTypeAddedAll,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:DamageAll,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Decrease,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:DiscardedAll,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Exchange,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:IgnoreHexproof,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:IgnoreShroud,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Increase,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:LifeLost,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:LosesGame,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:PlaneswalkedFrom,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Power,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:RevealTgtChoose,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:RolledDieOnce,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:SacrificedOnce,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Shuffled,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:TurnBegin,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:Unspecialize,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:UnspentMana,其他脚本模式,未登记效果测试,结构归类,1,0
+ScriptMode:VisitAttraction,其他脚本模式,未登记效果测试,结构归类,1,0
+Space sculptor,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Static:BlockTapped,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CanBlockIfReach,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+"Static:CantAttack,CantBlock,CantCrew",持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+"Static:CantAttack,CantBlock,CantTransform",持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantBeBeamedUp,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantBeSuspected,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantChangeDayTime,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantChangeLife,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantDiscard,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantExile,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantGainControl,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantTransform,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CantVenture,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:ColorlessDamageSource,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:CombatDamageNegatePower,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+"Static:Continuous,CantPlayLand,CantBeCast",持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:Devotion,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:FlipCoinDoubler,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:FlipCoinMod,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:GainLifeRadiation,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:IgnorePlaneswalkerZeroLoyaltyRule,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:InfectDamage,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:ManaBurn,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:MaxCounter,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:PhaseReversed,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:PlotZone,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:SetCost,持续异能类型,需重测,机制/执行分支复核,1,141
+Static:SurveilNum,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:TurnReversed,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Static:WitherDamage,持续异能类型,未登记效果测试,机制/执行分支复核,1,0
+Transfigure,机制／效果条目,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Abandoned,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:AttackerUnblockedOnce,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:BecomesSaddled,触发事件,需重测,机制/执行分支复核,1,1
+Trigger:BlockersDeclared,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:CaseSolved,触发事件,需重测,机制/执行分支复核,1,1
+Trigger:Championed,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:ClaimPrize,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:DamagePreventedOnce,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Devoured,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:ElementalBend,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:ExcessDamageAll,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Fight,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:FightOnce,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:FlippedCoinOnce,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Forage,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Foretell,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:GiveGift,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:ManaAdded,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:ManifestDread,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Mentored,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:PayEcho,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:PayLife,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:PhaseOutAll,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:SacrificedOnce,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:SpellAbilityCopy,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Stationed,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:Trains,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:UntapAll,触发事件,未登记效果测试,机制/执行分支复核,1,0
+Trigger:VisitAttraction,触发事件,未登记效果测试,机制/执行分支复核,1,0
++1/+1 counters,机制／效果条目,需重测,机制/执行分支复核,0,1
+Activate,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Adapt,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Adventure,机制／效果条目,需重测,机制/执行分支复核,0,2
+Alternative life payments,机制／效果条目,需重测,机制/执行分支复核,0,1
+Amass Orcs,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Amass Zombies,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Assemble,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Attack defenders,机制／效果条目,需重测,机制/执行分支复核,0,1
+Attraction,机制／效果条目,需重测,机制/执行分支复核,0,4
+AuxiliaryDeck,机制／效果条目,需重测,机制/执行分支复核,0,2
+BO3,机制／效果条目,需重测,机制/执行分支复核,0,2
+Battle,机制／效果条目,需重测,机制/执行分支复核,0,1
+Boast,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Bolster,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Cast,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Cleave,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Commander tax,机制／效果条目,需重测,机制/执行分支复核,0,3
+Continuous effects,机制／效果条目,需重测,机制/执行分支复核,0,2
+Contraption,机制／效果条目,需重测,机制/执行分支复核,0,4
+Convert,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Copy,机制／效果条目,需重测,机制/执行分支复核,0,1
+Cost:AddCounterYou,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:AddMana,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:ChooseColor,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:Enlist,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:FlipCoin,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:GainControl,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:PayShards,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Cost:PutCardToLibFromSameGrave,费用类型,需重测,机制/执行分支复核,0,7
+Cost:Sacrifice,费用类型,需重测,机制/执行分支复核,0,3
+Cost:Teamwork,费用类型,未登记效果测试,机制/执行分支复核,0,0
+Create,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Daybound and Nightbound,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Double,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Emblems,机制／效果条目,需重测,机制/执行分支复核,0,1
+Empower Jace,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Exchange,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Exhaust,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Exile return,机制／效果条目,需重测,机制/执行分支复核,0,1
+Extra starting hands,机制／效果条目,需重测,机制/执行分支复核,0,3
+Face a Villainous Choice,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Fateseal,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Fetch lands,机制／效果条目,需重测,机制/执行分支复核,0,3
+Forage,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Forecast,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Frenzy,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Granted abilities,机制／效果条目,需重测,机制/执行分支复核,0,1
+Graveyard return,机制／效果条目,需重测,机制/执行分支复核,0,1
+Hand reveal,机制／效果条目,需重测,机制/执行分支复核,0,1
+Harness,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Heal,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Heartwood,机制／效果条目,需重测,机制/执行分支复核,0,1
+Hybrid mana costs,机制／效果条目,需重测,机制/执行分支复核,0,18
+Impulse draw,机制／效果条目,需重测,机制/执行分支复核,0,3
+Infinity,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Keyword:StartYourEngines,机制／效果条目,需重测,机制/执行分支复核,0,6
+Library ordering,机制／效果条目,需重测,机制/执行分支复核,0,8
+Library search,机制／效果条目,需重测,机制/执行分支复核,0,16
+Look at library,机制／效果条目,需重测,机制/执行分支复核,0,1
+Mana abilities,机制／效果条目,需重测,机制/执行分支复核,0,2
+Mana payment,机制／效果条目,需重测,机制/执行分支复核,0,1
+ManaAdded,机制／效果条目,需重测,机制/执行分支复核,0,1
+Modal double-faced cards,机制／效果条目,需重测,机制/执行分支复核,0,2
+Modal spells,机制／效果条目,需重测,机制/执行分支复核,0,1
+Modified power and toughness,机制／效果条目,需重测,机制/执行分支复核,0,1
+Monstrosity,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Omen,机制／效果条目,需重测,机制/执行分支复核,0,1
+Open an Attraction,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Phyrexian mana costs,机制／效果条目,需重测,机制/执行分支复核,0,39
+Pile division,机制／效果条目,需重测,机制/执行分支复核,0,11
+Populate,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Power-up,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Prepare,机制／效果条目,需重测,机制/执行分支复核,0,3
+Replacement:AssignDealDamage,替代事件,未登记效果测试,机制/执行分支复核,0,0
+Replacement:DealtDamage,替代事件,未登记效果测试,机制/执行分支复核,0,0
+Replacement:DeclareBlocker,替代事件,未登记效果测试,机制/执行分支复核,0,0
+Replacement:PlanarDiceResult,替代事件,未登记效果测试,机制/执行分支复核,0,0
+Replacement:SetInMotion,替代事件,未登记效果测试,机制/执行分支复核,0,0
+Replacement:Tap,替代事件,未登记效果测试,机制/执行分支复核,0,0
+Restricted mana spending,机制／效果条目,需重测,机制/执行分支复核,0,36
+Roll to Visit Your Attractions,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Search,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Snow mana costs,机制／效果条目,需重测,机制/执行分支复核,0,9
+Stack targeting,机制／效果条目,需重测,机制/执行分支复核,0,3
+Static:AssignNoCombatDamage,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:AttackVigilance,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:CanAdapt,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:CantBecomeMonarch,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:CantCrew,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:CantLoseLife,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:CantPhaseOut,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:CantRegenerate,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Static:IgnoreShroud,持续异能类型,未登记效果测试,机制/执行分支复核,0,0
+Support,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Suspect,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Tap and Untap,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+The Initiative,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+The Ring,机制／效果条目,需重测,机制/执行分支复核,0,2
+Transform,机制／效果条目,需重测,机制/执行分支复核,0,1
+Trigger ordering,机制／效果条目,需重测,机制/执行分支复核,0,2
+Trigger:Adapt,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:Airbend,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:ClassLevelGained,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:DamageDoneOnceByController,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:Earthbend,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:Firebend,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:Immediate,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:RoomEntered,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:TakesInitiative,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Trigger:Waterbend,触发事件,未登记效果测试,机制/执行分支复核,0,0
+Triple,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Two-brid mana costs,机制／效果条目,需重测,机制/执行分支复核,0,8
+Unlock,机制／效果条目,需重测,机制/执行分支复核,0,1
+Venture into Undercity,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+Visit,机制／效果条目,未登记效果测试,机制/执行分支复核,0,0
+X costs,机制／效果条目,需重测,机制/执行分支复核,0,17

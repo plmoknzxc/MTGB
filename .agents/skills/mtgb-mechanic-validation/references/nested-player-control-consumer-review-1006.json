@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "audit": {
+    "path": "Docs/NestedPlayerControlConsumerAudit-2026-10-06.zh-CN.md",
+    "sha256": "3385419e79811775a8bc5c9b17d3bdc29228305c2de4e5598fee016ee4ff91e3"
+  },
+  "runtimeHash": "b3c1f7604b168fa54075d81674a745ba185d4581a9742ed46e06408bc55f8bed",
+  "sources": [
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
+      "sha256": "007ae1a8457807e3c2f18614103fe1e06c2a9bbf69788a50c7fd478caae7e85b"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeLibraryKnowledge.java",
+      "sha256": "4c5e04a7d81a35d1d58d1d0d196c4f0702dc603a081c138e65fd1f74d9ed38ed"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.PlayerControl.cs",
+      "sha256": "4375f3e66c5a5aad71afbee1e16961741682de762b25702e6a807bea2653ea78"
+    },
+    {
+      "path": "Assets/Scripts/UI/ForgeBattlefieldController.Payment.cs",
+      "sha256": "93f5801ef1ebe343edc2b53f241e70c5d168407924555d6a6eed2a1455db6190"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/RoyalStateFixture.java",
+      "sha256": "09d4cfbdbaf1ab92d749fc7731414f837f441e943d10e2a669f277528f10b60e"
+    }
+  ],
+  "native": [
+    {
+      "path": ".tools/nested-control-1006/native/mutual-next-turn/1791271603608279100/result.json",
+      "sha256": "f233e28ae0419e5a932462bf9b4340c9376c5b98875876aea22b2c9bddd9b2bc"
+    },
+    {
+      "path": ".tools/nested-control-1006/native/nested-word/1791271723099882300/result.json",
+      "sha256": "43fedbaeab36686a2b826aeb25c7b8aabbeb17e85d3dbed0682d3162722014e0"
+    }
+  ],
+  "driverArtifacts": [
+    {
+      "path": ".tools/nested-control-1006/attempt1/driver.py",
+      "sha256": "54025acdb40f41ad7e469a710c911d69e532e98852ce090ca683db438265f57a"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-NestedPlayerControl.py",
+      "sha256": "aefec7e5f6828a470c02af41422f67f822d904d49a0abb1e12ab73d045bc8460"
+    }
+  ],
+  "ui": [
+    {
+      "path": ".tools/nested-control-1006/ui/20261006T0739272895430Z/result.txt",
+      "sha256": "2c3caf424e56ed9323c56c072cb924a4b65d8afbc67ac8eabcb8189a2cb308a8"
+    },
+    {
+      "path": ".tools/nested-control-1006/ui/20261006T0739272895430Z/input-hashes.tsv",
+      "sha256": "2596e5b4dd557e547d9a7fbdac7f01dfe0d5c7c4c25ec5a96f49704944cec478"
+    },
+    {
+      "path": ".tools/nested-control-1006/ui/20261006T0739272895430Z/producer-hashes.tsv",
+      "sha256": "81b1db9c2f90051e6f8ca5594749b43008fcee92fe47c0d7c53b0588f6e4358b"
+    }
+  ],
+  "trace": {
+    "path": ".tools/nested-control-1006/contract-trace-review.json",
+    "sha256": "fce1669997a1531c2a7e0329b9350b673eda6d13b14c177e91735920873fa1f6"
+  },
+  "remaining": "控制者离场、多方/其他嵌套选择/替代/战斗、归还时等待支付或选择的异步时序；不重复被控制者实际施放控制咒语的相互下一回合及Word强制Opt支付/结算嵌套、准确操作席位/初始隐私/正常归还; true async network remains R02; no production changes/whole-project current PASS."
+}

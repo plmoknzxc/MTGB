@@ -5,11 +5,15 @@ using System.Collections.Generic;
 public sealed class DeckDefinition
 {
     public string name = "New Deck";
+    // Local file identity, never included in the network deck payload.
+    [NonSerialized] public string sourcePath;
     public string format = "standard";
     public string banlist = "current";
     public List<DeckEntry> commanders = new List<DeckEntry>();
     public List<DeckEntry> cards = new List<DeckEntry>();
     public List<DeckEntry> sideboard = new List<DeckEntry>();
+    public List<DeckEntry> attractions = new List<DeckEntry>();
+    public List<DeckEntry> contraptions = new List<DeckEntry>();
 }
 
 [Serializable]

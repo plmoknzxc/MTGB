@@ -1,0 +1,12 @@
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T1500257447792Z
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T1608152246914Z
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T1803262632535Z
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T1909350814941Z
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T2035312710288Z
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T2153131061846Z
+D:\project\MTGB\.tools\mechanic-coverage\unity\20261003T2301340600683Z
+D:\project\MTGB\.tools\mechanic-coverage\runs\20261003T184531144704Z
+D:\project\MTGB\.tools\mechanic-coverage\runs\20261003T201142171080Z
+D:\project\MTGB\.tools\mechanic-coverage\runs\20261003T213214342756Z
+D:\project\MTGB\.tools\mechanic-coverage\runs\20261003T224150142656Z
+D:\project\MTGB\.tools\mechanic-coverage\runs\20261003T235625846979Z

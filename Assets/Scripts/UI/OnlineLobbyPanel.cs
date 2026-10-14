@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -32,6 +33,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private RectTransform mainDeckDropArea;
     private RectTransform sideboardDropArea;
     private Toggle customContentToggle;
+    private Toggle anteToggle;
+    private Text anteStateText;
     private Text customContentStateText;
     private Text connectionBadgeText;
     private Text connectionStatusText;
@@ -66,6 +69,25 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private bool suppressDeckSelection;
     private bool ready;
     private bool closing;
+    private string deckDirectoryRevision;
+    private float nextDeckScan;
+
+    private void Update(){if(Time.unscaledTime<nextDeckScan)return;nextDeckScan=Time.unscaledTime+1;
+        string revision=DeckRepository.DirectoryRevision();if(revision==deckDirectoryRevision)return;
+        ReloadDeckChoices();RefreshDeckSummary();Refresh();}
+    private void OnApplicationFocus(bool focused){if(focused)nextDeckScan=0;}
+
+    private Canvas battlefieldLobbyCanvas;
+    internal static bool HasBattlefieldLobby => FindFirstObjectByType<OnlineLobbyPanel>()?.battlefieldLobbyCanvas != null;
+    internal static void OpenSideboarding()
+    {
+        // Stay on the current scene while editing the match's deck. Loading the
+        // main menu rebuilt its full menus and catalog just to show this panel.
+        var canvas=ReplayWidgets.Canvas("SideboardingCanvas",700);
+        var panel=Create(canvas.transform);
+        panel.battlefieldLobbyCanvas=canvas;
+        Show(null,null);
+    }
 
     public static OnlineLobbyPanel Show(MainMenuController owner, DeckDefinition deck)
     {
@@ -81,7 +103,11 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         panel.owner?.SetOnlineLobbyVisible(true);
         OnlineClientProfile profile = OnlineClientProfileStore.Load(
             OnlineClientProfileStore.ResolveCurrentProfileId());
-        panel.selectedDeck = CloneDeck(profile.deck ?? deck);
+        var seriesReview = OnlineMatchService.Instance?.EndReview;
+        panel.selectedDeck = CloneDeck(seriesReview?.series?.finished == false && seriesReview.ownDeck != null ? seriesReview.ownDeck : OnlineMatchService.Instance?.LocalRegisteredDeck ?? profile.deck ?? deck);
+        // Create can refresh before Show supplies the deck. Recapture the current
+        // series pool after loading it, including any match-only removals.
+        panel.sideboardGameNumber = -1;
         panel.ReloadDeckChoices();
         panel.ready = false;
         panel.closing = false;
@@ -90,7 +116,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         panel.Subscribe();
         panel.creatingRoom=false;
         panel.Refresh();
-        panel.RefreshBrowser();
+        if(OnlineMatchService.Instance?.HasJoinedLobby!=true)panel.RefreshBrowser();
         panel.PlayEnterTransition();
         return panel;
     }
@@ -199,12 +225,16 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         panel.customContentToggle = AddToggle(roomCard.transform, "CustomToggle", "允许 DIY 卡牌",
             "开启后，允许使用在数据编辑器中标记为 DIY 的卡牌。", new Vector2(0f, 63f),
             new Vector2(780f, 72f), font, out panel.customContentStateText);
+        panel.anteToggle = AddToggle(roomCard.transform,"AnteToggle","赌注（仅本场比赛）",
+            "归属变化影响 BO3 后续局，不修改保存的牌组或收藏。",new Vector2(0f,-46f),
+            new Vector2(780f,72f),font,out panel.anteStateText);
+        panel.anteToggle.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
 
         AddPanel(roomCard.transform, "Divider", new Vector2(0f, 8f), new Vector2(780f, 2f),
             ObsidianArenaTheme.LineSoft);
         AddText(roomCard.transform, "RulesHelp",
             "主牌至少 60 张 · 备牌最多 15 张 · 非基本牌合计最多 4 张\n每局重新随机先后手；BO3 局间可在主牌与备牌间一换一。",
-            new Vector2(0f, -92f), new Vector2(780f, 110f), 18, font,
+            new Vector2(0f, -142f), new Vector2(780f, 72f), 18, font,
             TextAnchor.MiddleLeft, MutedTextColor);
         Image connectionStatusPanel = AddPanel(roomCard.transform, "ConnectionStatusPanel",
             new Vector2(0f, -230f), new Vector2(780f, 78f), ObsidianArenaTheme.Field);
@@ -429,6 +459,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
 
     private void ReloadDeckChoices()
     {
+        deckDirectoryRevision=DeckRepository.DirectoryRevision();
         availableDecks.Clear();
         IReadOnlyList<DeckDefinition> savedDecks = DeckRepository.LoadAll();
         for (int i = 0; i < savedDecks.Count; i++)
@@ -436,8 +467,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             if (savedDecks[i] != null) availableDecks.Add(CloneDeck(savedDecks[i]));
         }
 
-        if (selectedDeck != null && availableDecks.FindIndex(item => SameDeckName(item, selectedDeck)) < 0)
-            availableDecks.Insert(0, CloneDeck(selectedDeck));
+        bool locked=ready || OnlineMatchService.Instance?.LobbyState?.series?.betweenGames==true;
+        if(!locked){var saved=availableDecks.Find(item=>SameDeckName(item,selectedDeck));selectedDeck=CloneDeck(saved??(availableDecks.Count>0?availableDecks[0]:null));}
 
         if (deckDropdown == null) return;
         suppressDeckSelection = true;
@@ -568,6 +599,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             minimumMainDeckSize = 60,
             maximumSideboardSize = 15,
             allowCustomContent = customContentToggle != null && customContentToggle.isOn,
+            useAnte = anteToggle != null && anteToggle.isOn,
             allowedSetCodes = new List<string>()
         };
     }
@@ -578,7 +610,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         if (service == null || !service.HasJoinedLobby || selectedDeck == null) return;
         if (!ready)
         {
-            OnlineClientProfileStore.SaveDeck(profileInput.text, selectedDeck);
+            if (service.LobbyState?.series == null || service.LobbyState.series.finished || service.LobbyState.series.gameNumber <= 1) OnlineClientProfileStore.SaveDeck(profileInput.text, selectedDeck);
             service.SubmitDeck(selectedDeck);
         }
         ready = !ready;
@@ -633,7 +665,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         portInput.SetTextWithoutNotify(profile.port.ToString());
         nameInput.SetTextWithoutNotify(profile.displayName);
         roomInput.SetTextWithoutNotify(profile.roomId);
-        if (profile.deck != null) selectedDeck = CloneDeck(profile.deck);
+        bool betweenGames=OnlineMatchService.Instance?.LobbyState?.series?.betweenGames==true;
+        if(!betweenGames || selectedDeck==null)selectedDeck=CloneDeck(OnlineMatchService.Instance?.LocalRegisteredDeck ?? profile.deck ?? selectedDeck);
         ReloadDeckChoices();
         ready = false;
         Refresh();
@@ -655,7 +688,6 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         bool online = service != null && service.IsOnline;
         bool disconnecting = service != null && service.IsDisconnecting;
         bool canStartConnection = !online && !disconnecting;
-        bool host = service != null && service.IsHost;
         OnlineLobbyState lobby = service?.LobbyState;
         OnlineSeriesState series = lobby?.series;
         bool betweenGames = joinedRoom && !service.IsSpectator && series != null && series.betweenGames && !series.finished;
@@ -663,6 +695,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         bool allPlayersReady = lobby?.players != null
             && lobby.players.Exists(p=>p.seat==1) && lobby.players.Exists(p=>p.seat==2)
             && lobby.players.TrueForAll(player => player.seat>2 || (player.connected && player.hasDeck && player.ready));
+        if(!allPlayersReady)sideboardStartRequested=-1;
 
         SetPageVisible(connectionPageGroup, !joinedRoom && creatingRoom);
         SetPageVisible(browserPageGroup, !joinedRoom && !creatingRoom);
@@ -717,24 +750,33 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
 
         SetConnectionFieldsInteractable(canStartConnection);
         SetRoomSettingsInteractable(canStartConnection);
-        RefreshConnectionBadge(joinedRoom, online, host, disconnecting);
+        RefreshConnectionBadge(connected);
         RefreshDeckSummary();
 
         if (lobby?.config != null) ApplyAuthoritativeRoomConfig(lobby.config);
         UpdateCustomContentLabel();
         RefreshRoomSummary(lobby);
         RefreshSideboardControls(series);
+        if(betweenGames&&roomHost&&allPlayersReady&&lobby.playDrawChooserSeat==0&&sideboardStartRequested!=series.gameNumber){
+            sideboardStartRequested=series.gameNumber;service.RequestStartMatch();
+        }
         RefreshSpectatorControls(service);
         RefreshMatchPreparation(service, betweenGames);
-
+        // Create refreshes the panel before Show creates the service and subscribes.
+        RefreshPlayerSeats(lobby, service?.LocalSeat ?? 0);
+    }
+    private void RefreshPlayerSeats(OnlineLobbyState lobby,int localSeat)
+    {
         for (int seat = 1; seat <= 2; seat++)
         {
             OnlineLobbyPlayer player = lobby?.players?.Find(item => item != null && item.seat == seat && item.connected);
+            var nameBinding=seatNames[seat-1].GetComponent<PreferenceText>()??seatNames[seat-1].gameObject.AddComponent<PreferenceText>();
+            nameBinding.Literal=player!=null;
             seatNames[seat - 1].text = player == null ? "等待玩家加入" : player.displayName;
-            string role = lobby != null && lobby.hostSeat == seat ? "房主" : "玩家";
-            if (player != null && service.LocalSeat == seat) role += " · 你";
+            string role = GamePreferences.T(lobby != null && lobby.hostSeat == seat ? "房主" : "玩家");
+            if (player != null && localSeat == seat) role += " · "+GamePreferences.T("你");
             seatStates[seat - 1].text = player == null ? "空位 · 等待连接" :
-                role + "   /   " + (player.ready ? "已准备" : player.hasDeck ? "牌组已提交 · 未准备" : "正在选择牌组");
+                role + "   /   " + GamePreferences.T(player.ready ? "已准备" : player.hasDeck ? "牌组已提交 · 未准备" : "正在选择牌组");
             seatStates[seat - 1].color = player != null && player.ready
                 ? new Color(.42f, .8f, .7f) : MenuVisualTheme.Muted;
         }
@@ -755,36 +797,14 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         if (formatDropdown != null) formatDropdown.interactable = interactable;
         if (cardFormatDropdown != null) cardFormatDropdown.interactable = interactable;
         if (customContentToggle != null) customContentToggle.interactable = interactable;
+        if (anteToggle != null) anteToggle.interactable = interactable;
     }
 
-    private void RefreshConnectionBadge(bool connected, bool online, bool host, bool disconnecting)
+    private void RefreshConnectionBadge(bool connected)
     {
         if (connectionBadgeText == null) return;
-        if (disconnecting)
-        {
-            connectionBadgeText.text = "● 正在退出房间";
-            connectionBadgeText.color = ObsidianArenaTheme.Warning;
-        }
-        else if (!online)
-        {
-            connectionBadgeText.text = "● 未连接";
-            connectionBadgeText.color = MutedTextColor;
-        }
-        else if (host)
-        {
-            connectionBadgeText.text = "● 主机在线";
-            connectionBadgeText.color = ObsidianArenaTheme.Blue;
-        }
-        else if (connected)
-        {
-            connectionBadgeText.text = "● 已加入房间";
-            connectionBadgeText.color = ObsidianArenaTheme.Success;
-        }
-        else
-        {
-            connectionBadgeText.text = "● 正在连接";
-            connectionBadgeText.color = ObsidianArenaTheme.Warning;
-        }
+        connectionBadgeText.text = connected ? "● 已连接" : "● 未连接";
+        connectionBadgeText.color = connected ? ObsidianArenaTheme.Success : MutedTextColor;
     }
 
     private void RefreshDeckSummary()
@@ -872,20 +892,20 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         }
     }
 
+    private int sideboardStartRequested=-1;
     private void RefreshSideboardCardGrids()
     {
         string signature = JsonUtility.ToJson(selectedDeck);
         if (signature == sideboardGridSignature) return;
         sideboardGridSignature = signature;
-        ClearGrid(mainDeckContent);
-        ClearGrid(sideboardContent);
         IReadOnlyList<CardDefinition> cardDatabase = CardDatabaseRepository.LoadAll();
         PopulateSideboardGrid(mainDeckContent, selectedDeck?.cards, false, cardDatabase, "主牌为空");
         PopulateSideboardGrid(sideboardContent, selectedDeck?.sideboard, true, cardDatabase, "备牌为空");
         foreach (var content in new[] { mainDeckContent, sideboardContent })
         {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+            if(content==null)continue;
             var scroll = content.GetComponentInParent<ScrollRect>();
+            if(scroll==null)continue;
             scroll.StopMovement();
             if (resetSideboardScroll) content.anchoredPosition = Vector2.zero;
         }
@@ -901,6 +921,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     {
         if (parent == null) return;
         bool createdAny = false;
+        var existing=parent.GetComponentsInChildren<OnlineSideboardCardTile>(true).Where(t=>t.gameObject.activeSelf&&t.transform.parent==parent).ToDictionary(t=>t.name);
         if (entries != null)
         {
             for (int i = 0; i < entries.Count; i++)
@@ -908,10 +929,17 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
                 DeckEntry entry = entries[i];
                 CardDefinition card = DeckRepository.ResolveCard(entry, cardDatabase);
                 if (entry == null || entry.count <= 0 || card == null) continue;
-                CreateSideboardCardTile(parent, entry, card, isSideboard);
+                string name=$"{(isSideboard ? "Sideboard" : "MainDeck")}_{entry.PrintingKey}";
+                if(existing.TryGetValue(name,out var tile)) {
+                    existing.Remove(name);tile.Configure(this,entry,card,tile.CardSprite,isSideboard);
+                    tile.transform.Find("CountBadge/Count").GetComponent<Text>().text=$"×{entry.count}";
+                    tile.transform.SetAsLastSibling();
+                }else CreateSideboardCardTile(parent, entry, card, isSideboard);
                 createdAny = true;
             }
         }
+        foreach(var tile in existing.Values){tile.gameObject.SetActive(false);Destroy(tile.gameObject);}
+        foreach(Transform child in parent)if(child.name=="Empty"){child.gameObject.SetActive(false);Destroy(child.gameObject);}
         if (createdAny) return;
 
         Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -936,8 +964,11 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         rect.sizeDelta = grid != null ? grid.cellSize : new Vector2(112f, 157f);
 
         Image face = tileObject.GetComponent<Image>();
-        Sprite sprite = null;
-        if (CardImageLibrary.TryLoadFullCard(card, out Sprite loaded)) sprite = loaded;
+        // Reuse the art already displayed in the other zone when moving a printing.
+        Sprite sprite = GetComponentsInChildren<OnlineSideboardCardTile>()
+            .FirstOrDefault(t => SamePrinting(t.Entry, entry) && t.CardSprite != null)?.CardSprite;
+        if(sprite==null&&CardImageLibrary.TryReuseFullCard(card,out var reused))sprite=reused;
+        if (sprite == null && CardImageLibrary.TryLoadFullCard(card, out Sprite loaded)) sprite = loaded;
         face.sprite = sprite;
         face.color = sprite == null ? ObsidianArenaTheme.SurfaceRaised : Color.white;
         face.preserveAspect = false;
@@ -983,6 +1014,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         lifeInput?.SetTextWithoutNotify(config.startingLife.ToString());
         cardFormatDropdown?.SetValueWithoutNotify(Mathf.Max(0, Array.IndexOf(DeckFormatLegality.OnlineKeys, config.formatId ?? "none")));
         customContentToggle?.SetIsOnWithoutNotify(config.allowCustomContent);
+        anteToggle?.SetIsOnWithoutNotify(config.useAnte);
+        UpdateAnteLabel();
         formatDropdown?.SetValueWithoutNotify(config.bestOf == 3 ? 1 : 0);
     }
 
@@ -997,11 +1030,25 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
 
     private void RefreshLanguage()
     {
+        UpdateAnteLabel();
         SetLocalizedOptions(formatDropdown, new[] { "BO1 · 一局胜负", "BO3 · 三局两胜" });
         var names = new string[DeckFormatLegality.OnlineKeys.Length];
         for (int i = 0; i < names.Length; i++) names[i] = DeckFormatLegality.FormatName(DeckFormatLegality.OnlineKeys[i]);
         SetLocalizedOptions(cardFormatDropdown, names);
         Refresh();
+    }
+    private void UpdateAnteLabel()
+    {
+        if(anteToggle==null)return;
+        string language=GamePreferences.Language;
+        void Set(string path,string zh,string en,string ja) {
+            var label=anteToggle.transform.Find(path).GetComponent<Text>();
+            var binding=label.GetComponent<PreferenceText>()??label.gameObject.AddComponent<PreferenceText>();binding.Literal=true;
+            label.text=language=="zh-CN"?zh:language=="ja-JP"?ja:en;
+        }
+        Set("Label","赌注（仅本场比赛）","Ante (this match only)","アンティ（このマッチのみ）");
+        Set("Description","归属变化影响 BO3 后续局，不修改保存的牌组或收藏。","Ownership changes carry into later BO3 games; saved decks and collection stay unchanged.","所有権の変更はBO3の次ゲームに引き継ぎます。保存デッキとコレクションは変更しません。");
+        Set("State",anteToggle.isOn?"已允许":"已禁用",anteToggle.isOn?"Enabled":"Disabled",anteToggle.isOn?"有効":"無効");
     }
     private static void SetLocalizedOptions(Dropdown dropdown, string[] names)
     {
@@ -1069,6 +1116,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
 
     private static bool SameDeckName(DeckDefinition left, DeckDefinition right)
     {
+        if(!string.IsNullOrEmpty(left?.sourcePath)&&!string.IsNullOrEmpty(right?.sourcePath))return string.Equals(left.sourcePath,right.sourcePath,StringComparison.OrdinalIgnoreCase);
         return left != null && right != null
             && string.Equals(left.name, right.name, StringComparison.OrdinalIgnoreCase);
     }
@@ -1412,6 +1460,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
 
     private static DeckDefinition CloneDeck(DeckDefinition source)
     {
-        return source == null ? null : JsonUtility.FromJson<DeckDefinition>(JsonUtility.ToJson(source));
+        if(source==null)return null;
+        var clone=JsonUtility.FromJson<DeckDefinition>(JsonUtility.ToJson(source));clone.sourcePath=source.sourcePath;return clone;
     }
 }

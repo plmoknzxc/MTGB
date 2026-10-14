@@ -1,0 +1,1239 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-11",
+  "scope": "当前goal完成普通1v1。指挥官/生产四人、完整子游戏、Planechase、Vanguard、Archenemy、征召笔记/密谋牌后置，原编号/断言/证据保留scope-exclusions.json；游乐设施和装置辅助牌组继续接入，普通共用规则和BO3仍保留。",
+  "batches": [
+    {
+      "id": "E01",
+      "title": "消费者分类与证据依赖",
+      "packages": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "R49"
+      ],
+      "focus": "A01.01有界接入差异筛查：保留共享复用，确认是否仍有新请求/权限/隐藏信息/LKI身份/恢复分支；不逐卡重跑，补测数量未确定。"
+    },
+    {
+      "id": "E02",
+      "title": "权限、请求恢复与轮序",
+      "packages": [
+        "R02",
+        "R37"
+      ],
+      "focus": "当前剩余R02.04与R37.03均由用户后置；本批无当前执行门槛。外部机器/容量交用户自行测试，旧本地UTP/权限/恢复证明和原编号保留；不自动重跑支付/轮序/语言UI。"
+    }
+  ],
+  "sharedChecks": [
+    {
+      "id": "C01",
+      "ownerBatch": "E02",
+      "title": "操作权限与请求版本",
+      "reuseWhen": "同一桥接处理分支、操作/可见席位与请求版本消费合同；记录具体消费者及证据身份。",
+      "newProofWhen": "新路由/字段/消费者，控制权切换或隐藏信息策略变化；真实网络延迟/乱序/重连须有联网证据。"
+    },
+    {
+      "id": "C02",
+      "ownerBatch": "E02",
+      "title": "支付取消与资源恢复",
+      "reuseWhen": "相同支付阶段、资源类型和撤销实现；引用已有实际部分支付后取消的证据。",
+      "newProofWhen": "弃牌/牺牲/放逐/横置/生命等原生资源或不可撤销节点不同、多段/嵌套选择；不同原生取消语义分别断言。"
+    },
+    {
+      "id": "C03",
+      "ownerBatch": "E01",
+      "title": "选项数量、身份与确认",
+      "reuseWhen": "同一控件和提交分支、操作/可见席位、身份类型、数量/顺序、确认/取消门槛及窗口生命周期相同；核对新原生输入，仅实例/数值变化可引用已有真实点击证据，无需每个规则case重放。",
+      "newProofWhen": "零候选/失效目标/分配/排序等合同不同、新直接提交路径或窗口生命周期；相同控件不代替不同规则结果。"
+    },
+    {
+      "id": "C04",
+      "ownerBatch": "E01",
+      "title": "私有与已知区域信息",
+      "reuseWhen": "相同原生可见性、知识记忆与浏览消费者；引用具体席位/区域/期限的证明。",
+      "newProofWhen": "暗置私有身份、窃取候选、多方控制或知识清除生命周期不同；只读预览不能证明选择权限。"
+    },
+    {
+      "id": "C05",
+      "ownerBatch": "E01",
+      "title": "语言、字号与图片布局",
+      "reuseWhen": "同一文字/图片消费者、控件与资源/格式路径；新规则仅改变数值/实例且实际请求合同相同，可引用已有三语言证据，不为每个case重复三语言点击。",
+      "newProofWhen": "新文案/格式、字体/卡图资源、布局尺寸或消费者；受影响语言及长文本/首次呈现/切换边界补验。"
+    },
+    {
+      "id": "C06",
+      "ownerBatch": "E01",
+      "title": "折叠、展开与只读浏览",
+      "reuseWhen": "相同对象分组/身份与共用浏览消费者；数量压力和布局样本保留适配器身份。",
+      "newProofWhen": "对象状态/控制者/附着/生命周期影响分组或新的选择路径；独立对象身份与实际规则结果分别证明。"
+    }
+  ],
+  "optionalOptimizations": [
+    {
+      "id": "automatic-dependency-merging",
+      "scope": "自动逐任务失效计算与历史证据合并",
+      "requiredForGoalCompletion": false,
+      "requiredAlternative": "A06逐批可追溯的依赖、证据、复用条件和影响判断；未知依赖保守扩大回归；不修改自动报告的失效状态。"
+    }
+  ],
+  "recommendedBlocks": [
+    {
+      "id": "N01",
+      "priority": 1,
+      "owner": "A01.01",
+      "title": "普通横置／重置共享夹具（本轮完成）",
+      "inputIds": [
+        "api-flow-TapAll",
+        "api-flow-TapOrUntap",
+        "api-flow-TapOrUntapAll",
+        "api-flow-Untap"
+      ],
+      "scope": "4个不同原结果记录，按既有minimum核对真实来源与旧证明；混合横置状态/准确对象/事件及下一请求可共用开局，二选UI代表取一次。已证明的断言直接核销引用，不为了凑4组重新运行。",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/tap-flows-1010/audit.json",
+        "sha256": "a035d10a0af632eb67a28bbc8630b7536c6579ad7958b21c04eef3d310055fa3"
+      }
+    },
+    {
+      "id": "N02",
+      "priority": 2,
+      "owner": "A01.01",
+      "title": "指示物增减、移动与批量清除",
+      "inputIds": [
+        "api-state-RemoveCounterAll",
+        "api-choice-RemoveCounter",
+        "api-choice-MoveCounter",
+        "api-choice-AddOrRemoveCounter",
+        "api-choice-TimeTravel"
+      ],
+      "scope": "5个原消费者记录，优先复用已完成R21及增殖/雪境/退款证明，只补不同实际增减移动与时间指示物结果。生成器或无来源分支先明确可达缺口，不造任意效果；普通1v1控制/数量/对象UI按合同共用。",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/counter-addflags-1010/audit.json",
+        "sha256": "b704647c34cc1c476857cc2b4d76cd3dc5be796d42c361e768db90073209ec87"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N03",
+      "priority": 3,
+      "owners": [
+        "R02.02",
+        "R02.03"
+      ],
+      "title": "双人真实联网时序与恢复合并准备",
+      "scope": "两项共用环境与原生等待流程；部分付款、宽限、旧/重复编号、手动/AUTO竞争各保留准确结果。网络错误不重做已经通过的卡牌规则或三语言展示。",
+      "status": "COMPLETED_BOUNDED_ITEMS",
+      "completionEvidence": {
+        "path": ".tools/network-boundaries-1010/audit.json",
+        "sha256": "9f61b1376f11debfc5854d2e3e0528faf88e8777387254d08b06055d88fa090a"
+      },
+      "completedOn": "2026-10-11"
+    },
+    {
+      "id": "N04",
+      "priority": 4,
+      "owner": "A01.01",
+      "title": "再生与销毁共享同一战斗流程",
+      "inputIds": [
+        "api-flow-Regenerate",
+        "api-flow-Regeneration"
+      ],
+      "scope": "2个原API消费者的盾消耗/自然到期与直接替代差异，保留普通1v1；旧伤害/战斗UI不重复。",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/regeneration-flows-1011/audit.json",
+        "sha256": "dc375a0bcf2d92a18af10dce2149c84fd6f76c6a8b66984206c1fdf664c5365a"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N05",
+      "priority": 5,
+      "owner": "A01.01",
+      "title": "批量消灭／牺牲与记忆子效果",
+      "inputIds": [
+        "api-result-DestroyAll",
+        "api-result-SacrificeAll"
+      ],
+      "scope": "先对齐N04及旧证明，只补准确批量API派发、不可消灭/不可牺牲对象过滤、实际移区ID及记忆LKI/子效果；可复用支付/可选确认/多对象投影不另跑。普通1v1代表，原生产来源/最低断言保留，不制造未可达参数。",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/mass-results-1011/audit.json",
+        "sha256": "2e0bd5c6ed92a69422be53fc97dae671b815ce94e63d8a4f4cff7261333ccb05"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N06",
+      "priority": 6,
+      "owner": "A01.01",
+      "title": "当前对象、战斗与附着状态共享夹具",
+      "inputIds": [
+        "api-state-Detain",
+        "api-state-HealDamage",
+        "api-flow-RemoveFromCombat",
+        "api-flow-Unattach"
+      ],
+      "scope": "先对齐N04/N05及旧战斗/替代/装备证明；拘留原三禁止与自然到期、Wolverine/Pyramids两实际清伤时机、移出战斗原blocked/显式unblock/伤害与记忆、Disarm直接卸装备各保留准确原最低结果。支付/目标/普通展示按合同引用；不同规则入口不因共用控件删除。",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/current-object-flows-1011/audit.json",
+        "sha256": "017f1f29f4aea88e871dfd599df34f12f674246784720f961e345179b710e35b"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N07",
+      "priority": 7,
+      "owner": "A01.01",
+      "title": "强制阻挡、成为被阻挡与战斗关系",
+      "inputIds": [
+        "api-flow-MustBlock",
+        "api-flow-ChangeCombatants",
+        "api-flow-BecomesBlocked",
+        "api-flow-Block"
+      ],
+      "scope": "先对齐R03/N06和旧战斗/排队触发结果，再保留原最低断言补各自实际生产入口；强制阻挡合法性/选择者/到期、改攻击/阻挡关系及排队触发的防御者、无真实阻挡者成为被阻挡的触发/践踏伤害、效果插入真实阻挡关系及恰一次事件。普通1v1/旅法防御者共享夹具，指挥官专属分支后置；共用目标/实体/支付/战斗UI按精确合同引用，不能按控件删除不同规则入口。",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/combat-relations-1011/audit.json",
+        "sha256": "d4f1e9f1598243e9feba1d4e3523f11f5b879b9b81207b064f4fe4831cfda512"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N08",
+      "priority": 8,
+      "owner": "A01.01",
+      "title": "生命设定、生命与攻防交换",
+      "inputIds": [
+        "api-result-SetLife",
+        "api-result-ExchangeLife",
+        "api-result-ExchangeLifeVariant",
+        "api-result-ExchangePower"
+      ],
+      "scope": "Original SetLife fixed plus optional0/2 redistribution, legal saved multiset under CantGainLife/CantLoseLife, duplicate40 values consumed once each. ExchangeLife unequal/two targets, one-target actual own-loss draw and cleanup, prohibitions no half exchange, Archive real doubled gain and post-exchange difference token. Actual LifeLostAll downstream Ob counter/exact top exile for fixed, exchange and variant. Life/PT power and toughness use modified net snapshot, set new base and retain ordinary bonuses, natural bonus expiry/repeated exchange, CantChangeLife guard and actual source bounce no-op. Serene Master actual blocked creature net exchange with different modifiers, exact shared end-combat expiry and real4/6 damage on surviving creatures. Original Prankster perpetual reciprocal base record and real recipient zone/recast reuse R39 proof without rerun.",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/life-power-flows-1011/audit.json",
+        "sha256": "c851a72df4124147f40db81260252a763ee0c9d692f776e635665387ff160a74"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N09",
+      "priority": 9,
+      "owner": "A01.01",
+      "title": "囤兵、续战、探查与探察",
+      "inputIds": [
+        "api-result-Amass",
+        "api-result-Endure",
+        "api-result-Investigate",
+        "api-result-Explore"
+      ],
+      "scope": "Amass actual no-Army token/counter doubling, exact one of two Armies, remembered power mills original eight IDs, Zombie retains type/adds Orc and invisible effect removed on leave. Endure actual counter and Spirit choices under Doubling Season, source-gone fallback produces exact two3/3 Spirits without confirmation. Investigate optional accepted/declined by original opponent, no declined token/event plus exact loss, repeated Num own events distinct from token doubling, original Clue real sacrifice/payment/draw and memory cleanup. Explore actual public land identity/known hand, empty top still counter and no invented reveal, original gone creature still explores without counter; historical kept/milled nonland/public top/draw lifetime proof retained.",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/token-explore-flows-1011/audit.json",
+        "sha256": "21473383269504845601305a45c52fb576eaf6ed3ac7eb06b1cc6e7d3ab41e8a"
+      },
+      "remainingInputIds": []
+    },
+    {
+      "id": "N10",
+      "priority": 10,
+      "owner": "A01.01",
+      "title": "刺探、筹谋、显化惧象与温习",
+      "inputIds": [
+        "api-result-ManifestDread",
+        "api-result-Learn",
+        "api-result-Surveil",
+        "api-result-Connive"
+      ],
+      "scope": "Learn original minimum complete: real Lesson/discard/decline/Phoenix replacement and real Mindslaver-controlled permission, exact IDs/resources/zone/order/private reveal/next request. Manifest distinct tops/private face and Cage prohibition completed partial evidence. Original Surveil split/order/first-repeat/empty/static+2 accept-decline; original Connive multiple order/nonland-land/current-object/third-draw timing/Leader replacement/no-discard; Manifest one-zero watcher and actual Priest replacement event/result, reused original distinct/private/Cage.",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/selection-results-tail-1011/audit.json",
+        "sha256": "5f3aef3281f97c1244986491eaad7d1d74b8219b5ac4ace9aeb35f7fbcc133bd"
+      },
+      "completedInputIds": [
+        "api-result-Learn",
+        "api-result-Surveil",
+        "api-result-Connive",
+        "api-result-ManifestDread"
+      ],
+      "remainingInputIds": [],
+      "partialCompletionEvidence": [
+        {
+          "path": ".tools/selection-results-1011/audit.json",
+          "sha256": "255d86ea106630d2e083675c7812231818d40641a4efa33673df8200525ebd6f"
+        }
+      ]
+    },
+    {
+      "id": "N11",
+      "priority": 11,
+      "owner": "A01.01",
+      "title": "条件分支、修改X与旧方向证明归并",
+      "inputIds": [
+        "api-state-Branch",
+        "api-state-ChangeX",
+        "api-flow-ChooseDirection"
+      ],
+      "scope": "Original Branch minimum: real Anticognition exact7/8 grave threshold, original creature stack target, extra2 accepted/refused and actual true-child Scry order. Original ChangeX minimum: real XX Hangarback announced2->effective4 via Unbound,0->0 natural SBA death,Glava2->5 and optional decline2;original mana4/0 remains unchanged and same stack ID updates. Original ChooseDirection minimum reconciled to existing five native four-seat ordered/simultaneous/empty left-right flows and three lifecycle results, original enum/recipient order and actor/view evidence retained; no reruns.",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/branch-x-flows-1011/audit.json",
+        "sha256": "17966bac75baa9203be8c39718bcc0db7fd15b0decf1fea5ee589861c5e6fdb5"
+      },
+      "completedInputIds": [
+        "api-state-Branch",
+        "api-state-ChangeX",
+        "api-flow-ChooseDirection"
+      ],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N12",
+      "priority": 12,
+      "owner": "A01.01",
+      "title": "私有查看与跃离身份／返回／限制",
+      "inputIds": [
+        "api-flow-LookAt",
+        "api-result-Phases"
+      ],
+      "scope": "Original LookAt and Phases minimums: actual receiver-specific hand/top/face-down, empty chain, repeated/reverse-seat look and old object leaving;original permanent/attachments retain IDs/zone/timestamps with no zone events, normal return, Oubliette held across real next untap then tapped return, CantPhaseOut actual expiry, CantPhaseIn blocked toggle and source leave, AllValid toggle and real AnyNumber0/2. Bridge-only authorized face projection fixed; current actual Poll/165 Unity checks prove exact localized original identity artwork, private receiver/waiter, original ray ordinal/duplicates, original phased tiles disappear/return.",
+      "status": "COMPLETED_BOUNDED_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/look-phase-flows-1011/audit.json",
+        "sha256": "9696d40df786e76807c3b04ee8a5bba7eddd908b9077c8c0888db578016df683"
+      },
+      "completedInputIds": [
+        "api-flow-LookAt",
+        "api-result-Phases"
+      ],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N13",
+      "priority": 13,
+      "owner": "A01.01",
+      "title": "奇偶选择／直接展示手牌／原来源记忆清理",
+      "inputIds": [
+        "api-flow-ChooseEvenOdd",
+        "api-result-Reveal",
+        "api-result-Cleanup"
+      ],
+      "scope": "Native Odd/Even enum before real zone reset and exact both-player MV0/even/odd exile; direct RevealEffect AnyNumber2/0, Optional accept/decline, empty/filter skip, random opposing actor/two receivers, announcedX3 exact clamped2 opponent hand, RevealAllValid2 and real chosen perpetual children, RevealDefined land extra draw/nonland damage; exact IDs/paid mana/known hand/private remaining draw/next priority.196 current Poll/rays/duplicate/receiver and localized parity at1.3 checks independent.",
+      "status": "COMPLETED_BOUNDED_INPUTS_WITH_PARTIAL_CLEANUP",
+      "completionEvidence": {
+        "path": ".tools/selection-memory-flows-1011/audit.json",
+        "sha256": "bace17466fc2d535ef12bf959df55333b40629111099270907d502cc84e5937c"
+      },
+      "completedInputIds": [
+        "api-flow-ChooseEvenOdd",
+        "api-result-Reveal"
+      ],
+      "remainingInputIds": [
+        "api-result-Cleanup"
+      ]
+    },
+    {
+      "id": "N14",
+      "priority": 14,
+      "owner": "A01.01",
+      "title": "玩家选择／控制权交换与原来源字段清理",
+      "inputIds": [
+        "api-flow-ChoosePlayer",
+        "api-result-ExchangeControl",
+        "api-result-Cleanup"
+      ],
+      "scope": "ChoosePlayer actual optional acceptance/decline, remembered two-player damage and source removal, secret native/view suppression and actual revealing exile, random previous-player exclusion/no-candidate tap cleanup, generated Siege protector and two real tokens. ExchangeControl original pair ownership/timestamps, missing member response, optional decline and active CantGainControl all-or-nothing guard. Selective remembered players repeat, chosen color repeat and reverse activator pool, preclear random named identities matching X0 twice/X1 once, real coin tails/damage and zero-damage repeated final heads. Actual payment/source identities and next priority; current Poll/receiver/original ordinal ray consumers and affected three-locale text independent.",
+      "status": "COMPLETED_BOUNDED_INPUTS_WITH_PARTIAL_CLEANUP",
+      "completionEvidence": {
+        "path": ".tools/player-control-memory-flows-1011/audit.json",
+        "sha256": "fc7a42ce8c050ea0431e843f56b2f889295f3f9d86d8454db191e0cc03a6d4ae"
+      },
+      "completedInputIds": [
+        "api-flow-ChoosePlayer",
+        "api-result-ExchangeControl"
+      ],
+      "remainingInputIds": [
+        "api-result-Cleanup"
+      ]
+    },
+    {
+      "id": "N15",
+      "priority": 15,
+      "owner": "A01.01",
+      "title": "清理类别／延迟触发／清理前记录",
+      "inputIds": [
+        "api-result-Cleanup",
+        "type-state-selector-deltas"
+      ],
+      "scope": "Actual same-source Bear/Cat both players and Land/Nonland repeated combat clear fields while source stays, random eighty original land type assignments, selective delayed trigger removal on source leave/control exchange retaining unrelated source and no stale trigger after real recast. Actual native preclear Faerie card log and eight-action Whimsy repeated remembered/card/player logs preserve identities after clearing; real payment observed before random untap. Old Knowledge Vault exact imprinted-condition return/clear result reused at original runtime. Current type selectors fix wrong ability-card routing, actual Poll/search/page/original ordinal/other-seat/duplicate checks.",
+      "status": "PARTIAL_ENGINE_FIELDS_COMPLETE_LOG_DELIVERY_MISSING",
+      "completionEvidence": {
+        "path": ".tools/cleanup-tail-flows-1011/audit.json",
+        "sha256": "d76360bb450ca7254bc3df342bd99be51e1c5917f2de9e220ee8ae525e91cb8c"
+      },
+      "completedInputIds": [],
+      "remainingInputIds": [
+        "api-result-Cleanup",
+        "type-state-selector-deltas"
+      ]
+    },
+    {
+      "id": "N16",
+      "priority": 16,
+      "owner": "A01.01",
+      "title": "清理前结果日志接入现有通知",
+      "inputIds": [
+        "api-result-Cleanup"
+      ],
+      "scope": "Complete original bounded api-result-Cleanup by combining N13/N14/N15 native field/child/repeat/imprint/delayed proofs with native preclear log delivery: Faerie one card result, Whimsy five remembered/card/player results; both public views same native IDs/order/source. Exact native results/request sequences unchanged, existing mixed result queue/deadline/dedup across both seats and three locales1.3; six actual native player-value nickname adapters and exact plural/empty formatter checks. No history button/new decision.",
+      "status": "COMPLETE_ORIGINAL_BOUNDED_INPUT",
+      "completionEvidence": {
+        "path": ".tools/cleanup-log-delivery-1011/audit.json",
+        "sha256": "bcdb071bdb6e4b5fff007cf61ba21aa1d5ea1cee1e3efb73f27ea0e13b71c3c1"
+      },
+      "completedInputIds": [
+        "api-result-Cleanup"
+      ],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N17",
+      "priority": 17,
+      "owner": "A01.01",
+      "title": "颜色与类别选择原结果和值选择接入",
+      "inputIds": [
+        "color-candidate-count-deltas",
+        "type-state-selector-deltas"
+      ],
+      "scope": "N17颜色原输入完整：私有手牌零色静默、单色候选低于上限准确0..1、两/三色候选0..2选0/2、排蓝1..1、任选1/全部5、纯随机无UI及原生保存/防护结果；13真实完整/冻结前缀流程25末态，15完成付费28mana。类型部分：定义类别Note去重/空候选自动、两自然章节ChooseNoted排除旧类及实际counter、Volo准确原顶抓1、Type2双方基本地永久转换与Vision临时转换/自然到期。两确切地类别问句复用值列表/既有类别词汇，5基本类别完整显示与18类别最后项可达。",
+      "status": "PARTIAL_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/selector-flows-1011/audit.json",
+        "sha256": "6183353d8bb2db2327ee0f884b00e397b6d2035c8b51f9aa0090181b3a7d5339"
+      },
+      "completedInputIds": [
+        "color-candidate-count-deltas"
+      ],
+      "remainingInputIds": [
+        "type-state-selector-deltas"
+      ]
+    },
+    {
+      "id": "N18",
+      "priority": 18,
+      "owner": "A01.01",
+      "title": "类别选择剩余原结果及制作/空候选修复",
+      "inputIds": [
+        "type-state-selector-deltas"
+      ],
+      "scope": "N18类别选择补证：Shared真实制作两原件/交集Artifact与Creature/进场横置/存类别/免费一次再正常4费；MostPrevalent只取对手牌库Bear/Cat并列、Note与清理、实际战斗死亡加1及可选零目标；AtRandom取对手真实全牌集合Bear/Giant、对应原牌消灭与另一原牌保留、纯地空类别无虚构问句且正常续行；Secretly真实三token、内部Human不进公共CardView/无提前通知、真实牺牲揭示后对手通知/三counter/4伤害/临时死触自然到期。6完整/准确旧FAIL结果流程19末态，11完成费用操作25mana、146独立检查；81局部UI检查。",
+      "status": "PARTIAL_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/type-state-tail-1011/audit.json",
+        "sha256": "2d5378911c30e248e13ec8ea7e9dcff97b20319a4ab207b1fe0a062ae69a2a48"
+      },
+      "completedInputIds": [],
+      "remainingInputIds": [
+        "type-state-selector-deltas"
+      ]
+    },
+    {
+      "id": "N19",
+      "priority": 19,
+      "owner": "A01.01",
+      "title": "翻面与盖牌守卫及旧类别状态证明归并",
+      "inputIds": [
+        "type-state-selector-deltas"
+      ],
+      "scope": "原type-state-selector-deltas非特化SetState最低差异完成：真实复制翻面仅一次、两原SVar消费清理；Cloudshift同ID重入旧触发不改新对象；RevealFirst合法生物拒绝/接受、非生物过滤及公开原ID，直接/合变非永久组件翻正拒绝；Cyberman实际类型/攻防覆盖与翻正还原，含DFC合变不能盖牌；真实夜间入场ETB翻背面；Choices准确两原盖牌择一翻正。8真实完整/准确FAIL恢复流程24末态19费用38mana、524独立检查。普通Transform/Flip/Morph与Specialize支持/状态投影复用原R20/S02准确证明；N17/N18类别差异合并，不重跑旧成功。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/state-guards-1011/audit.json",
+        "sha256": "f52d09785910224aea7d89a5c627194ceb686f418e00841aa039e488e42fa57e"
+      },
+      "completedInputIds": [
+        "type-state-selector-deltas"
+      ],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N20",
+      "priority": 20,
+      "owner": "A01.01",
+      "title": "多组控制权交换、堆叠咒语控制与朋友敌人分组",
+      "inputIds": [
+        "api-result-ExchangeControlVariant",
+        "api-result-ControlSpell",
+        "api-result-AssignGroup"
+      ],
+      "scope": "原api-result-ExchangeControlVariant/ControlSpell/AssignGroup最低输入闭合：Cultural Exchange异大小2/3候选选2/1/0且第二组严格同数，原对象/控制权与真实共有控制时间戳；Aethersnatch窃取瞬间原stack/ability/card编号保留、实际操作者转移并改选目标产生准确3伤，窃取生物新控制者进场；Perplexing交换接受拒绝与真实响应先移走来源、原咒语仍由原操作者结算；Pirs Whim三组友敌组合准确原地横置/真实洗牌与原神器牺牲，每玩家一次分组、子记忆仅本组/不泄漏。11实际完整或raw FAIL独立恢复流程11末态14已付操作48mana、1207独立检查与207相关UI。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/control-group-flows-1011/audit.json",
+        "sha256": "67eceec4a01c9aa8e130b51ac802c93c9272776cc640b6a18d0d988c3fea873e"
+      },
+      "completedInputIds": [
+        "api-result-ExchangeControlVariant",
+        "api-result-ControlSpell",
+        "api-result-AssignGroup"
+      ],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N21",
+      "priority": 21,
+      "owner": "A01.01",
+      "title": "均衡舍弃牺牲、互斗原身份与比拼公开顶牌",
+      "inputIds": [
+        "api-result-Balance",
+        "api-choice-Fight",
+        "api-choice-Clash"
+      ],
+      "scope": "均衡四真实付费分支的原计数/舍弃牺牲/替代及触发时点；互斗真实非战斗同步伤害、替代变化/原双对象/可选拒绝/自然可达自身互斗及Fight事件；比点赢/平/对手赢/单空/双空、原公开顶牌/双方置顶置底/原事件与子结果。当前桥单牌留顶保留已有公开知识，私有/置底/洗牌不泄露；三语言1.3准确原控制提交及完整结果文字。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/balance-fight-clash-1011/audit.json",
+        "sha256": "6d7ce50495da94de86f73f13f7665bdd84cbb516ab5f9a27cddbec5e29e18e19"
+      },
+      "completedInputIds": [
+        "api-result-Balance",
+        "api-choice-Fight",
+        "api-choice-Clash"
+      ],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N22",
+      "priority": 22,
+      "owner": "A01.01",
+      "title": "分类检视、清空法术力与掷落结果",
+      "inputIds": [
+        "digmultiple-category-results",
+        "digmultiple-rest-order",
+        "drain-clear-retained-and-all-players",
+        "drain-remembered-delayed-number",
+        "drain-transfer-source-and-spending",
+        "flip-empty-and-real-outcomes"
+      ],
+      "scope": "N22 closes only six existing A01 original minimum inputs: DigMultiple category overlap/empty retry/extra destinations/ChangeLater/sequential privacy and actual remaining-card bottom order; Drain retained and all-player pool removal, remembered delayed count, original mana provenance/restrictions/actual spending; Flip empty/nonflip/miss/exact hit/destroy/damage/tap/prevention child outcomes and restored next input.21 completed native flows/37 staged endpoints/27 paid78mana;2paid6mana original defect failures separate. No new goal IDs or all-producer/full-current-runtime PASS.",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/dig-drain-flip-1011/audit.json",
+        "sha256": "7170c8abb80601878f6fb9785c79f8fbc0a1f5c07e5639024b673363bd89eb06"
+      },
+      "completedInputIds": [
+        "digmultiple-category-results",
+        "digmultiple-rest-order",
+        "drain-clear-retained-and-all-players",
+        "drain-remembered-delayed-number",
+        "drain-transfer-source-and-spending",
+        "flip-empty-and-real-outcomes"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N23",
+      "priority": 23,
+      "owner": "A01.01",
+      "title": "法术力限制、生命周期和产费替代尾段",
+      "inputIds": [
+        "combat-pool-first-end-before-extra",
+        "conditional-no-counter-not-permanent",
+        "early-end-combat-pool-cleanup",
+        "lose-mana-color-conversion-provenance",
+        "mana-burn-cleared-only",
+        "nonartifact-ban-allows-ability-cost",
+        "piracy-extra-restriction-and-source-permission",
+        "production-replacement-type-amount-choice",
+        "restricted-mana-colored-two-hybrid-arm",
+        "restricted-static-operation-flags",
+        "static-retention-color-all-expiry"
+      ],
+      "scope": "N23原11个最低输入完成：静态操作限制、非神器限制对异能、Boseiju条件不可反击、双色单边和Piracy来源许可；提前结束/额外战斗的法术力清空、Horizon/Omnath/Ozai转换、Yurlok仅实际清空燃烧及保留效果到期；原七个命名产费替代来源的类型/数量/顺序/选择。23冻结完整流程或前缀、127完整端点、45成功付款86mana。旧已成功结果独立复用，驱动原失败不改写。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/primitive-api-tail-1011/audit.json",
+        "sha256": "c5add4a3fe6020c326404673bef94bacd0c2ce54cdcfaf2be67c54ffb8b20ef9"
+      },
+      "completedInputIds": [
+        "combat-pool-first-end-before-extra",
+        "conditional-no-counter-not-permanent",
+        "early-end-combat-pool-cleanup",
+        "lose-mana-color-conversion-provenance",
+        "mana-burn-cleared-only",
+        "nonartifact-ban-allows-ability-cost",
+        "piracy-extra-restriction-and-source-permission",
+        "production-replacement-type-amount-choice",
+        "restricted-mana-colored-two-hybrid-arm",
+        "restricted-static-operation-flags",
+        "static-retention-color-all-expiry"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N24",
+      "priority": 24,
+      "owner": "A01.01",
+      "title": "特征基线、待机御火与取消费用",
+      "inputIds": [
+        "cda-effective-baseline",
+        "cda-non-pt-baseline",
+        "other-public-hidden-restrictions",
+        "api-state-PermanentNoncreature",
+        "suspend-special-action-last-counter",
+        "firebending-own-attacks-and-live-amount",
+        "ordinary-snapshot-pending-spell-history",
+        "mana-trigger-versus-local-snapshot",
+        "restricted-snow-mana-snapshot-identity",
+        "queue-ownership-and-during-payment-writers"
+      ],
+      "scope": "N24原10输入最低范围：CDA攻防/原生类型颜色基线、公开不能阻挡及非生物永久物替代入场；待机实际特殊动作/末指示物/可选施放/目标/费用/控制权与御火自身攻击/实时数量；普通费用取消的堆叠历史、法术力触发/隐藏状态、雪境限制单位及队列归属。成功旧结算与未变控件复用，原FAIL前缀与独立适配器各自保留。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/characteristics-keywords-payments-1011/audit.json",
+        "sha256": "a6ec3ca9c3c2d1e4e08a27e85d7a87bde1c2a9a05dceacbb7496e324e54fd9c3"
+      },
+      "completedInputIds": [
+        "cda-effective-baseline",
+        "cda-non-pt-baseline",
+        "other-public-hidden-restrictions",
+        "api-state-PermanentNoncreature",
+        "suspend-special-action-last-counter",
+        "firebending-own-attacks-and-live-amount",
+        "ordinary-snapshot-pending-spell-history",
+        "mana-trigger-versus-local-snapshot",
+        "restricted-snow-mana-snapshot-identity",
+        "queue-ownership-and-during-payment-writers"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N25",
+      "priority": 25,
+      "owner": "A01.01",
+      "title": "重复保存值、秘密选择与卡名",
+      "inputIds": [
+        "stored-minus-times-repeat-results",
+        "repeat-stop-and-reset-consumers",
+        "reveal-chosen-payloads",
+        "reveal-type-sacrifice-tax",
+        "reveal-player-tax",
+        "legacy-no-admittance-payload",
+        "name-set-and-additional-names"
+      ],
+      "scope": "N25原7输入：Chaos倍率筹码、Spark非零骰值保存/匹配禁用、Strategy有限额外重复；Eureka/Hypergenesis整轮拒绝及同宿主重置、Delina高低停止与临时复制期限、Helm真实磨入/生物/X/空库/替代去向；四个秘密选择独立结果及两种费用取消；No Admittance伤害/Jace、覆写/附加/选择卡名及原始状态。独立断言共享真实流程，原FAIL前缀/适配器/UI各自保留。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/repeat-reveal-names-1011/audit.json",
+        "sha256": "981e18fd63c7c17e288302825a63da663da59bb9d2ac107278fc71f4773379c4"
+      },
+      "completedInputIds": [
+        "stored-minus-times-repeat-results",
+        "repeat-stop-and-reset-consumers",
+        "reveal-chosen-payloads",
+        "reveal-type-sacrifice-tax",
+        "reveal-player-tax",
+        "legacy-no-admittance-payload",
+        "name-set-and-additional-names"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N26",
+      "priority": 26,
+      "owner": "A01.01",
+      "title": "层与文本、房间和咒语书、复制原证明对齐",
+      "inputIds": [
+        "incubate-token-counter-transform",
+        "copy-spell-and-token-replacement-delta",
+        "shared-copy-layer-mapping",
+        "api-choice-AnimateAll",
+        "api-choice-ExchangeTextBox",
+        "change-text-word-flow",
+        "makecard-random-spellbook-exhaustion",
+        "room-effect-face-selection"
+      ],
+      "scope": "N26关闭7原A01输入：AnimateAll组筛选/继承产费/普通boost/实际到期；ExchangeWords与预先改词、后续Green→Red实际目标和触发、新对象/来源离场；MakeCard X0/X14随机咒语书重复抽取；房间0/1/2锁定候选、门身份与完整后续交互；复制替代真实非空Remembered及旧复制层原结果逐字段复用。保留原FAIL与其有效前缀，各阶段独立登记。",
+      "status": "COMPLETED_ORIGINAL_INPUT_WITH_PARTIAL_GAPS",
+      "completionEvidence": {
+        "path": ".tools/layers-spellbook-reconcile-1011/audit.json",
+        "sha256": "dad0f2634a959e1ddc05496498bc9c99281ea08a0ea1a7296ab5ef26ffedb34b"
+      },
+      "completedInputIds": [
+        "api-choice-AnimateAll",
+        "api-choice-ExchangeTextBox",
+        "change-text-word-flow",
+        "copy-spell-and-token-replacement-delta",
+        "makecard-random-spellbook-exhaustion",
+        "room-effect-face-selection",
+        "shared-copy-layer-mapping"
+      ],
+      "partialInputIds": [
+        "incubate-token-counter-transform"
+      ],
+      "remainingInputIds": [
+        "incubate-token-counter-transform"
+      ]
+    },
+    {
+      "id": "N27",
+      "priority": 27,
+      "owner": "A01.01",
+      "title": "实际ChooseCard父链及双方选择约束",
+      "inputIds": [
+        "api-choice-ChooseCard"
+      ],
+      "scope": "N27完成原api-choice-ChooseCard最低输入：力量总和含负值/零选择与停止、不同力量刷新及真实回合结束、逐力量分组、基本地类别、双方自己的冒险团、秘密控制/非控制选择及集体展示。复用R36原搜寻权限/取消证明。修正集体行动只选择自己控制的生物，并补选择提示三语翻译。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/mechanic-tail-review-1011/audit.json",
+        "sha256": "905596a27df933b049b325e87b3b1af93824ccff6b9c081f4891f1756924242e"
+      },
+      "completedInputIds": [
+        "api-choice-ChooseCard"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N28",
+      "priority": 27,
+      "owner": "A01.01",
+      "title": "原属性生命周期及真实事件消费者",
+      "inputIds": [
+        "api-choice-AlterAttribute",
+        "name-predicate-selector-deltas"
+      ],
+      "scope": "原AlterAttribute最低输入的普通1v1部分：驾驭、谋划、侦结、疑犯、乘驾真实付费/撤销/自然期限，三个真实事件消费者保留Card及Player身份；Prepared源牌/副本/效果三ID、施放一次消耗及清理，取消/控制权/离场沿用旧实际证据。补齐公开属性字段、状态分组、蓝色状态标记及详情。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/attribute-selector-tail-1011/audit.json",
+        "sha256": "13d69ae29faf4b91aecc1111f60d7d7cea4aa9cd3fb0c6b067688b30a0bcf4de"
+      },
+      "completedInputIds": [
+        "api-choice-AlterAttribute"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": [
+        "name-predicate-selector-deltas"
+      ]
+    },
+    {
+      "id": "N29",
+      "priority": 28,
+      "owner": "A01.01",
+      "title": "原名称条件/计算费用/列表耗尽",
+      "inputIds": [
+        "name-predicate-selector-deltas"
+      ],
+      "scope": "原NameCard名称条件最低输入完成：保留34原分组，静态合法候选与旧13个名称效果/defined-split-empty原证明单列复用。新真实非基本地/AND/OR、传奇及计算MV、实际Equipped/Imprinted费用、固定随机逗号牌名、M1/2/3与X3、Nissa X12全11候选排除/耗尽、Garth同宿主六次选择及最后选择/重置/空列表。13完整或准确冻结前缀、29末态、18实付80mana及10零mana费用操作；204相关UI/27状态，三正式语言1.3、原ordinal/射线/等待/过期/重复/清除。修原Garth耗尽后继续复制旧名字的Play子分支，新增唯一39th native override；原55856运行文件字节不变。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/name-predicate-tail-1011/audit.json",
+        "sha256": "83d9591fd691517a939d2537ee29dfbbd170acdcd583e45f7e0f2a81e95cd180"
+      },
+      "completedInputIds": [
+        "name-predicate-selector-deltas"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N30",
+      "priority": 29,
+      "owner": "A01.01",
+      "title": "原景点领奖阈值与辅助开牌增量",
+      "inputIds": [
+        "claim-prize-threshold-payload",
+        "open-and-visit-attractions"
+      ],
+      "scope": "原景点领奖阈值输入完成：4真实历史14末态、14实付共56mana；同来源低于/达到6 Luck、正常1及奖励2 Treasure、准确Junkyard/补开一个/空辅助牌库、Gamer事件Card与Player及目标消灭、静态奖励先于普通触发队列。开景点2/不足1/空0为另一原输入部分证据。原FAIL及有效前缀保留，未支付后续操作不计。262相关UI检查含169原交互沿用与93展示差异；修英文确认及长名/提示布局。",
+      "status": "COMPLETED_ORIGINAL_INPUT_WITH_PARTIAL_GAPS",
+      "completionEvidence": {
+        "path": ".tools/payload-tail-1011/audit.json",
+        "sha256": "0ec2447d48ae70c9800c2deee3e148147f0d6ce5df50ed396ece6b59c26cf916"
+      },
+      "completedInputIds": [
+        "claim-prize-threshold-payload"
+      ],
+      "partialInputIds": [
+        "open-and-visit-attractions"
+      ],
+      "remainingInputIds": [
+        "open-and-visit-attractions"
+      ]
+    },
+    {
+      "id": "N31",
+      "priority": 30,
+      "owner": "A01.01",
+      "title": "融合原件身份与复用原件预览",
+      "inputIds": [
+        "meld-linked-native-objects"
+      ],
+      "scope": "N31完成原meld-linked-native-objects普通1v1最低输入与S01.02融合展示：真实原件链接/单场上对象、原件选择、正常离场/重定向/库顶库底及坟墓场排序、攻击米斯拉、克撒7→9忠诚、缺伙伴/非自身所有/衍生物/实际Clone/禁止部分放逐、合成特征LKI及单次死亡触发；现有详情按钮打开两原件只读列表、完整融合图和真实拆分清理。",
+      "status": "COMPLETED_ORIGINAL_INPUT_AND_PRESENTATION",
+      "completionEvidence": {
+        "path": ".tools/meld-tail-1011/closure-audit.json",
+        "sha256": "838eefc4f8e56a1a760a7518d1a69b7f3a4f3e5bf47c2f910c8e7e92374f6395"
+      },
+      "completedInputIds": [
+        "meld-linked-native-objects"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N32",
+      "priority": 31,
+      "owner": "A01.01",
+      "title": "真实AWOL当前物理对象移除",
+      "inputIds": [
+        "api-state-RemoveFromGame"
+      ],
+      "scope": "N32原api-state-RemoveFromGame最低输入：真实AWOL对准确攻击生物付3，先放逐后从所有原生区域移除；真实Unsummon付1响应使目标回手，AWOL不再放逐/移除，双方公开数量/身份及下一优先权一致。修复只在RemoveFromGameEffect读取当前物理对象后ceaseToExist。",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/removed-object-1011/audit.json",
+        "sha256": "96c93a7af158a26cce530f7d19cb875cbe766e6183d39904b070b96d6341c0c9"
+      },
+      "completedInputIds": [
+        "api-state-RemoveFromGame"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N33",
+      "priority": 32,
+      "owner": "S07.02",
+      "title": "原生翻牌公开结果与正确命中高亮",
+      "inputIds": [
+        "native-flip-simulation-feedback"
+      ],
+      "scope": "原S07.02原生随机翻牌反馈：复用必选位置选牌与非阻塞通知，当前桥接捕获准确次数/位置/命中物理ID，双方公开；命中牌已离场仍保留结果，场上命中牌细蓝框，重叠/展开仅标正确成员，通知到期清除并能继续原下一优先权。",
+      "status": "COMPLETED_ORIGINAL_PRESENTATION",
+      "completionEvidence": {
+        "path": ".tools/flip-feedback-1011/closure-audit.json",
+        "sha256": "d529afb97a2a764f045e5f07e8374d7456091ea070358d75c409b1ab399b4ee7"
+      },
+      "completedInputIds": [],
+      "partialInputIds": [],
+      "remainingInputIds": []
+    },
+    {
+      "id": "N34",
+      "priority": 33,
+      "owner": "A01.01",
+      "title": "卡恩真实同局重开与共享状态清理",
+      "inputIds": [
+        "karn-same-game-reset",
+        "restart-and-child-shared-mutable-state"
+      ],
+      "scope": "N34完成原卡恩同局重开及共享可变状态最低输入的普通1v1部分：真实三类放逐/忠诚支付、临时复制与延迟牺牲、真实1/1蓝色蛙修改恢复；同Game/同session重新调度、发动者先手、双方隐藏手牌与生命/指示物/日夜/君主/魔戒/Command清理。原生重开事件递增视图revision、清知识/旧选择缓存，Unity清旧详情/区域窗口/分页/通知并提供双方短通知和原下一输入。",
+      "status": "COMPLETED_CURRENT_SCOPE_ORIGINAL_INPUTS",
+      "completionEvidence": {
+        "path": ".tools/restart-series-1011/audit.json",
+        "sha256": "823514e6a7680f10d01fe45596ef8d98ddc5fb2c5679080007932701dec3d07e"
+      },
+      "completedInputIds": [
+        "karn-same-game-reset",
+        "restart-and-child-shared-mutable-state"
+      ],
+      "partialInputIds": [],
+      "remainingInputIds": [],
+      "excludedOriginalPortion": {
+        "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+        "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+      }
+    },
+    {
+      "id": "N35",
+      "priority": 34,
+      "owner": "S08.02",
+      "title": "现有BO3真实换备与双局绑定",
+      "status": "COMPLETED_CURRENT_SCOPE_ORIGINAL_ITEM",
+      "completionEvidence": {
+        "path": ".tools/bo3-sideboard-1011/audit.json",
+        "sha256": "08e055953212201bd2a04a02c29a148187f1aafb561a501ea4c5fec3a8bbdbf1"
+      },
+      "scope": "S08.02 current BO3 lifecycle: real standard native game1 win, actual quantity/drag/reset/exact pool and printing rejection/readiness wire; read-only actual main/side witness in game2; real second win finishes series, initial/rematch/loser chooser/ready cancel/private ownDeck/old-match and hash rejection; actual process exit7 abort produces no score, actual normal retry opening. 原S08卡恩部分复用N34真实原生重开、共享清理和相关202UI检查；旧实际平局与终局绑定按逐字BO3消费者及已审查协议差异引用。",
+      "closedItems": [
+        "S08.02"
+      ],
+      "closedPackages": [
+        "S08"
+      ],
+      "excludedOriginalPortion": {
+        "path": ".agents/skills/mtgb-mechanic-validation/references/scope-exclusions.json",
+        "sha256": "c57b41d5a0a2341f6cddd5a5ee90b8e63c42383a40553a0b73493c68580c8415"
+      }
+    },
+    {
+      "id": "N36",
+      "priority": 35,
+      "owner": "A01.01",
+      "title": "特化死亡链与四原payload组牌面归类",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/payload-reconciliation-1012/audit.json",
+        "sha256": "8ea946d42c0ce2845daf3d1a908608340b88fc793b6b55b961430497ae157d49"
+      },
+      "scope": "N36补齐原specialize-independent-face-payloads内五形态共用死亡链与Lukamina蓝色Specializes结果：实际Terminate两次及蓝色特化，共3完成付费操作/7mana；准确同物理ID、死亡触发当前坟墓场对象、Unspecialize/RememberChanged条件横置返回、新时间戳及4/4→2/2；蓝色目标横置跨自然对手重置步保持、来源离场后的下一对手重置解除。39准确离线断言、35当前Unity真实请求/目标/确认/恢复及纹理检查。白色已付3的变形前缀独立保留，后继宿主由准确白色状态启动，不声称同宿主连续证明。",
+      "closedItems": [],
+      "closedPackages": [],
+      "partialInputIds": [
+        "specialize-independent-face-payloads"
+      ]
+    },
+    {
+      "id": "N37",
+      "priority": 36,
+      "owner": "A01.01",
+      "title": "特化11原牌面结果与任意颜色费用候选",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/specialize-payload-batch-1012/audit.json",
+        "sha256": "c40b1c939ee440b5221c82f159d409bfc2390ef4a463b0e9e291fb71122c5d57"
+      },
+      "scope": "N37补齐原特化组11个独立牌面入口：Vhal五种实际移除4个Study后的分配指示物/挖掘4/复活/伤害/Seek；Jaheira五种可选消灭及独立指示物/占卜2/失去3生命/下一生物一次性永久强化/获得4生命；Laezel蓝色随机对手牌库生物生成、记忆清理、永久任意颜色支付及实际全红支付绿色生物。保留Vhal五结果原FAIL前缀，Jaheira独立宿主只补尾段，非同局连续证据。共16实际付费操作/45mana，42Unity真实请求、十牌面纹理、点击/支付/私有及清理检查。",
+      "closedItems": [],
+      "closedPackages": [],
+      "partialInputIds": [
+        "specialize-independent-face-payloads"
+      ]
+    },
+    {
+      "id": "N38",
+      "priority": 37,
+      "owner": "A01.01",
+      "title": "特化13原根结果、蓝色后继修复及免费施放展示",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/specialize-more-1012/audit.json",
+        "sha256": "d3172cf6db0c0e8baa5200a4d77139a879166aea6a745319f0158b89389eccad"
+      },
+      "scope": "N38补齐原特化组13个原根（Karlach五形态的返回/独立结果、Klement三形态）。保留实际成功前缀，只补缺失后继：Karlach蓝色返回永久不能阻挡、Seek原牌免费施放/0mana及自然期限清理；Klement系命恩赐只作用下一生物，第二生物不继承、原牌回手再施放不保留指示物。共13完成真实操作：12有mana操作合计43mana、1次免费Opt。修复蓝色同名DBEffect覆盖及缺MayPlay许可；系命心形与已知关键字图标大小写适配；共用施放选择标题/整段印刷文本/免费许可三语言与首屏可见性。",
+      "closedItems": [],
+      "closedPackages": [],
+      "partialInputIds": [
+        "specialize-independent-face-payloads"
+      ]
+    },
+    {
+      "id": "N39",
+      "priority": 38,
+      "owner": "A01.01",
+      "title": "特化剩余21原根结果和52根原组闭合",
+      "status": "CLOSED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/specialize-final-1012/audit.json",
+        "sha256": "5d0495f589542f834030bb5811f3ff822694fdd0c961877a2c112f4433c59cbf"
+      },
+      "scope": "N39补齐特化原组剩余21根：Gut四色复制数量/攻防/关键词及自然自身END牺牲；Laezel四色Seek原牌/总CMC<=3复活/两士兵/全区永久强化；Lukamina红Wolf、SarevokSeek原牌和两新副本、Rasaad实际ETB放逐/白色改1/1无异能/来源离场原牌返回保留；Viconia五色真实关联放逐/两类独立目标/副本永久效果及全红付绿色费用、黑色实际ETB；Wyll五色真实牺牲/高低CMC期限/回手/对手5生命支付与拒绝/非零重置额外战斗/永久8/8践踏。35完成付费操作77mana；仅文案修复尾段再3操作4mana。 蓝色TriggerDescription误抄白色且实际请求可见，按正确蓝Oracle修正文案，所有执行参数原样；UI共用消费者对已公开精进牌面用自己的印刷规则而非原正面，准确形态后缀/连续已选目标保持ID，原两句提示本地化及长段固定字体滚动。三语言1.3与修改后原选项点击分别补验。",
+      "closedItems": [],
+      "closedPackages": [],
+      "completedInputIds": [
+        "specialize-independent-face-payloads"
+      ],
+      "partialInputIds": []
+    },
+    {
+      "id": "N40",
+      "priority": 39,
+      "owner": "A01.01",
+      "title": "原生成链实际结果及赠礼条件修复",
+      "status": "PARTIAL_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/payload-tail-1012/audit.json",
+        "sha256": "b4b7a2d0fc171e814fe6c046101576a43be7c6f552f2debc65606e32cdbf2c54"
+      },
+      "scope": "N40原21根生成链补齐9根原生结果，复用莱埃泽尔蓝色1根：承诺/拒绝赠礼、TokenCard手牌/坟墓场真实存活及返回/死亡、弃牌/牺牲产牌、双方七牌归属/永久任意类型支付与全红施放、随机副本及实际Elesh Norn双ETB。14完成代表操作46mana；旧拒绝赠礼5mana复测单列不重复核销。",
+      "closedItems": [],
+      "closedPackages": [],
+      "completedInputIds": [],
+      "partialInputIds": [
+        "makecard-special-and-chained-payload-ownership"
+      ]
+    },
+    {
+      "id": "N41",
+      "priority": 40,
+      "owner": "A01.01",
+      "title": "原21生成链剩11根结果与公开卡图闭合",
+      "status": "CLOSED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/booster-copy-tail-1012/audit.json",
+        "sha256": "8f0ec6163c349a84d3644a0e6113054e7428e13a0124f8f325daacb43bc6ed19"
+      },
+      "scope": "N41补齐原生成链剩11根：9根新结果＋Nissa/Svega2根旧结果复用。实际复制品及来源离场/自然到期、Vess两分支、传记章节、先锋头像永久物与免费咒语两臂、Time Sidewalk真实注册起手；Nissa11准确忠诚额外+1离线补断言。Booster整包公开保留原编号/印次，修复None卡预览只有名字无卡图；赠礼方法三语言且费用等于正常基础费用。5代表已付操作11mana，旧Nissa38mana不重跑。",
+      "closedItems": [],
+      "closedPackages": [],
+      "completedInputIds": [
+        "makecard-special-and-chained-payload-ownership"
+      ],
+      "partialInputIds": []
+    },
+    {
+      "id": "N42",
+      "priority": 41,
+      "owner": "A01.01",
+      "title": "两处原生成延迟消费者与准确旧声明复用",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/generated-delayed-tail-1012/audit.json",
+        "sha256": "fd9e868a28b2dea3e8ce3b237b20a1487ce478b7476e4fdc3fb4eb86716cd444"
+      },
+      "scope": "N42补齐两处原生生成延迟消费者：朽坏攻击后战斗结束牺牲、MayFlashSac非正常时机施放后清理步骤牺牲。3真实流程、6完成付费咒语/12mana、12终点；正常施放不登记延迟，同物理牌回手再正常重入由时间戳隔离旧触发。7条原生成声明准确复用旧复制/返回/自然到期结果，不重新施放。共用延迟详情/堆叠补清理步骤与精确生成正文三语言漏译，68成功前缀＋47差异尾部展示检查。",
+      "closedItems": [],
+      "closedPackages": [],
+      "completedInputIds": [],
+      "partialInputIds": [
+        "generated-and-event-payloads"
+      ]
+    },
+    {
+      "id": "N43",
+      "priority": 42,
+      "owner": "A01.01",
+      "title": "移出比赛两来源本局结果与跨局/通知实际缺口",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/match-removal-1012/audit.json",
+        "sha256": "1a52fcc1fdded3d72b1568a3c96bf5cef883a7d4ee9b1264bf752dce1b912e9c"
+      },
+      "scope": "N43原RemoveFromMatch两实际来源补齐本局结果：Blacker Lotus真实选择蓝色并横置，原牌从区域消失、Match记录原PaperCard、可收集标志的原生lostOwnership记录、四点法术力自然阶段清空；Look at Me, I'm the DCI真实支付7，按非基本牌名移除双方手牌/牌库/战场/坟墓场/放逐/已注册备牌中的7原牌，两Blood Artist不触发死亡。2实际操作，1付费咒语7mana、1法术力异能产生4mana；67离线核对检查。",
+      "closedItems": [],
+      "closedPackages": [],
+      "completedInputIds": [],
+      "partialInputIds": [
+        "api-choice-RemoveFromMatch"
+      ]
+    },
+    {
+      "id": "N44",
+      "priority": 43,
+      "owner": "A01.01",
+      "title": "独立选择三消费者与九旧命名父链增量",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/choice-payload-tail-1012/audit.json",
+        "sha256": "1515406b4190132098c909318bec752a6cd7d6ee008e40e8030f0d78bbe5882f"
+      },
+      "scope": "N44独立选择三真实消费者：Caged Sun所选蓝色只给己方对应生物+1/+1，并由原Island法术力异能增产至2U、自然阶段清池；Addle真实支付2并选蓝色，仅弃对手公开Opt、保留Lightning Bolt，占栈保存值被子消费者使用后随入墓新对象清理；Belbe’s Portal真实支付5选Elf、再支付3横置，只让原Elf从手进场而保留Bear。3流程6末态、5实际操作（4付费16mana）；101冻结原生核对检查。59实际Poll/颜色类别与对手公开手牌射线、确认和双方恢复检查；9准确旧NameCard父链反向绑定已有生成结果，114检查，无引擎重跑。共用类别词表只补Army中文“军队”，当前真实选择控件加载/原ordinal点击通过，其他词条及英日字段不变。",
+      "closedItems": [],
+      "closedPackages": [],
+      "completedInputIds": [],
+      "partialInputIds": [
+        "independent-choice-payloads"
+      ]
+    },
+    {
+      "id": "N45",
+      "priority": 44,
+      "owner": "S06.02",
+      "title": "公开分区投影与战场标识",
+      "status": "COMPLETED_CURRENT_SCOPE_ORIGINAL_ITEM",
+      "completionEvidence": {
+        "path": ".tools/sector-display-1012/audit.json",
+        "sha256": "a513504770d047f11235c783178b4d3800b19fd5874971aa1da5c520d332970f"
+      },
+      "closedItems": [
+        "S06.02"
+      ],
+      "closedPackages": [
+        "S06"
+      ]
+    },
+    {
+      "id": "N46",
+      "priority": 45,
+      "owner": "A01.01",
+      "title": "比赛内移除与BO3有效卡池",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/series-removal-1012/audit.json",
+        "sha256": "984a2e17cb84cf04e41ded11dd1c66461d38aedaa1ae256dbd06c1cf049e174d"
+      },
+      "completedInputIds": [
+        "api-choice-RemoveFromMatch"
+      ],
+      "closedItems": [],
+      "closedPackages": []
+    },
+    {
+      "id": "N47",
+      "priority": 46,
+      "owner": "A01.01",
+      "title": "赌注模式与本场BO3归属交换",
+      "status": "COMPLETED_ORIGINAL_INPUT",
+      "completionEvidence": {
+        "path": ".tools/series-ownership-1012/audit.json",
+        "sha256": "189d0d9c51cb7584184a70284a55b388b4a784bacb2e5af2ab0bbb7b82c1d7e8"
+      },
+      "completedInputIds": [
+        "api-state-GainOwnership"
+      ],
+      "closedItems": [],
+      "closedPackages": []
+    },
+    {
+      "id": "N48-scope",
+      "priority": 47,
+      "owner": "A01.01",
+      "title": "普通1v1范围明确与特殊模式后置",
+      "status": "SCOPE_DECISION_RECORDED_NOT_EFFECT_PASS",
+      "excludedInputIds": [
+        "a04-paliano-draft-note-entry",
+        "a04-sovereigns-realm-basic-land-setup",
+        "a04-sovereigns-realm-starting-hand-setup",
+        "planar-action-transition-chaos",
+        "scheme-set-abandon-lifecycle",
+        "variable-vanguard-conspiracy-entry"
+      ],
+      "completedInputIds": [],
+      "remainingInputIds": [
+        "assemble-sprocket-crank",
+        "generated-and-event-payloads",
+        "incubate-token-counter-transform",
+        "independent-choice-payloads",
+        "open-and-visit-attractions"
+      ],
+      "authority": "用户对 call_6f501f69b89c4c37a90feed4b0dd8798 的明确回复：特殊模式后置，先完成普通 1v1。问题明确包含Planechase、Vanguard、Archenemy、征召笔记/密谋牌；游乐设施与装置仍按普通1v1接入。",
+      "scopeDecisionEvidence": {
+        "path": ".tools/ordinary-scope-1012/audit.json",
+        "sha256": "211c8234e473bdc1049e29749e322541dde047459c1f4f94251269add493475e"
+      }
+    },
+    {
+      "id": "N48-entry",
+      "priority": 48,
+      "owners": [
+        "A01.01",
+        "S04.02",
+        "S05.02"
+      ],
+      "title": "普通1v1辅助牌组正式注册",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "partialInputIds": [
+        "assemble-sprocket-crank",
+        "open-and-visit-attractions"
+      ],
+      "completionEvidence": {
+        "path": ".tools/auxiliary-entry-1012/audit.json",
+        "sha256": "91db41211966b331f9b2d348bb1187b10b040abdc3e03a7125d93488d08954aa"
+      },
+      "remainingScope": "A01当前5组仍未闭合，6模式组后置未验证；整体当前5事项。S04/S05仍缺卡组编辑辅助入口、公开Junkyard/组别/当前CRANK/lights展示、真实点击与三语言；原造访/自然维持/再组装/控制切换/耗尽结果仍须补差异。"
+    },
+    {
+      "id": "N48-editor",
+      "owners": [
+        "A01.01",
+        "S04.02",
+        "S05.02"
+      ],
+      "title": "普通1v1辅助牌组编辑入口",
+      "status": "PARTIAL_ORIGINAL_INPUT_PROGRESS",
+      "completionEvidence": {
+        "path": ".tools/auxiliary-entry-1012/editor-audit.json",
+        "sha256": "46bdf8cd0987bd6a97acb118c75c785292b670acb9d5533739ac990ce4d2cac0"
+      },
+      "remainingScope": "战场公开Junkyard/组别/当前CRANK/灯号展示及点击；原自然维持、造访、再组装、控制切换、耗尽等边界；新辅助牌BO3归属/移除区域来源组合仍待审查。"
+    },
+    {
+      "id": "N49",
+      "owner": "A01.01",
+      "title": "装置生命周期与公开组别",
+      "status": "COMPLETED_ORIGINAL_INPUT_AND_PRESENTATION",
+      "completionEvidence": {
+        "path": ".tools/auxiliary-lifecycle-1012/closure-audit.json",
+        "sha256": "29b9058f85c186a3aae8c487d35cd4f7e6412a0fe6008d6ad4428169a0760b0e"
+      },
+      "completedInputIds": [
+        "assemble-sprocket-crank"
+      ],
+      "closedItems": [
+        "S05.02"
+      ],
+      "closedPackages": [
+        "S05"
+      ]
+    },
+    {
+      "id": "N50",
+      "owner": "A01.01",
+      "title": "普通游乐设施造访和精确灯号",
+      "status": "COMPLETED_ORIGINAL_INPUT_AND_CURRENT_PRESENTATION",
+      "completionEvidence": {
+        "path": ".tools/attraction-visit-1012/closure-audit.json",
+        "sha256": "3b8cb0ac40606248500fe98566269a7dd40f7f077280f562bfce45abae9cb655"
+      },
+      "completedInputIds": [
+        "open-and-visit-attractions"
+      ],
+      "closedItems": [
+        "S04.02"
+      ],
+      "closedPackages": [
+        "S04"
+      ]
+    },
+    {
+      "id": "N62",
+      "owner": "A01.01",
+      "title": "集中合同核对，停止逐卡核销排期",
+      "status": "COMPLETED_BOUNDED_INTEGRATION_REUSE",
+      "inputIds": [
+        "independent-choice-payloads",
+        "generated-and-event-payloads"
+      ],
+      "review": {
+        "path": ".tools/workload-contract-review-1012/review.json",
+        "sha256": "42c20ec8588951835edaebccc5fd850951afa188835edc664f2e0c20089ecf70"
+      },
+      "notPerCardCompletionGate": true,
+      "completionEvidence": {
+        "path": ".tools/redundant-work-disposition-1012/audit.json",
+        "sha256": "07d27969cfa7840dabce542104f54765e25b00fde52b6ea7e131961a37a99bb8"
+      },
+      "scope": "N64取消两类无具体接入差异的整链/逐卡追加验证，复用已有真实生成施放、授权期限、牺牲后新目标、LKI及延迟恢复证据。A01普通1v1接入范围闭合，当前待办0；六特殊模式原组及原后置事项保持未验证。0新运行、0新增整牌PASS，70原卡结果身份和552/41首验不变。"
+    },
+    {
+      "id": "N64",
+      "owner": "A01.01",
+      "title": "取消无项目接入差异的整链验证",
+      "status": "COMPLETED_BOUNDED_INTEGRATION_REUSE",
+      "scope": "N64取消两类无具体接入差异的整链/逐卡追加验证，复用已有真实生成施放、授权期限、牺牲后新目标、LKI及延迟恢复证据。A01普通1v1接入范围闭合，当前待办0；六特殊模式原组及原后置事项保持未验证。0新运行、0新增整牌PASS，70原卡结果身份和552/41首验不变。",
+      "completionEvidence": {
+        "path": ".tools/redundant-work-disposition-1012/audit.json",
+        "sha256": "07d27969cfa7840dabce542104f54765e25b00fde52b6ea7e131961a37a99bb8"
+      }
+    },
+    {
+      "id": "N65",
+      "owner": "A01.01",
+      "title": "有界接入差异筛查，保留已验证共同合同",
+      "scope": "Screen the retained choice/generated inventory for project-facing request shape, actor/visibility, source/LKI identity, authorization and next-request recovery differences. Batch same contracts; do not inspect every full native effect chain or replay every card.",
+      "status": "PLANNED_BOUNDED_INTEGRATION_DELTA_SCREEN",
+      "reviewEvidence": {
+        "path": ".tools/redundant-work-disposition-1012/closure-clarification.json",
+        "sha256": "5d84205de2de81047d8233381b60613b070b7f2f2d2d13f8475e0e34e1f282c0"
+      }
+    }
+  ]
+}

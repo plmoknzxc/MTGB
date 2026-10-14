@@ -197,7 +197,9 @@ public sealed class OnlineMessageGuard
         int cards = 0;
         if (!ValidateDeckEntries(deck.commanders, ref entries, ref cards, out error)
             || !ValidateDeckEntries(deck.cards, ref entries, ref cards, out error)
-            || !ValidateDeckEntries(deck.sideboard, ref entries, ref cards, out error)) return false;
+            || !ValidateDeckEntries(deck.sideboard, ref entries, ref cards, out error)
+            || !ValidateDeckEntries(deck.attractions, ref entries, ref cards, out error)
+            || !ValidateDeckEntries(deck.contraptions, ref entries, ref cards, out error)) return false;
         if (entries > MaxDeckEntries || cards > MaxDeckCards)
         {
             error = "牌组项目或卡牌总数超过限制。";

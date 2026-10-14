@@ -40,6 +40,7 @@ public static class ReplayWidgets
         var label = Label(rect, value, 0, 0, w - 16, 48, 20, TextAnchor.MiddleCenter);
         label.resizeTextForBestFit = true; label.resizeTextMinSize = 14; label.resizeTextMaxSize = 26;
         label.horizontalOverflow = HorizontalWrapMode.Overflow;
+        IntegratedUiUtility.StyleButton(button,primary ? MenuVisualTheme.Primary : MenuVisualTheme.Raised);
         return button;
     }
     public static InputField Input(Transform parent, string value, float x, float y, float w)
