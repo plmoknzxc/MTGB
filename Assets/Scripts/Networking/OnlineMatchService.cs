@@ -182,6 +182,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         double now = Time.realtimeSinceStartupAsDouble;
         TickEndReplay(now);
+        TickServerReplayArchives();
         if (lobbyConnectDeadline > 0 && !IsInMatch)
         {
             if (HasJoinedLobby) lobbyConnectDeadline = 0;
@@ -218,10 +219,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             if(roomDirectory!=null) {
                 if(now>=nextDirectorySnapshot) {
-                    directorySnapshot=JsonUtility.ToJson(new OnlineRoomDirectory { instanceId=roomDirectory.InstanceId,rooms=roomRegistry.Rooms.Where(r=>!r.IsEmpty).Select(r=>new OnlineRoomListing {
-                        roomId=r.roomId,hostName=r.members.TryGetValue(r.hostSeat,out var hostMember)?hostMember.displayName:"房主",
-                        players=r.members.Values.Count(m=>!m.IsSpectator),spectators=r.members.Values.Count(m=>m.IsSpectator),lanHosted=IsHost,allowCustomContent=r.config.allowCustomContent,format=r.config.formatId,bestOf=r.config.bestOf,inMatch=r.SpectatorOnly,state=r.DirectoryState
-                    }).ToArray() });nextDirectorySnapshot=now+.2;
+                    directorySnapshot=JsonUtility.ToJson(new OnlineRoomDirectory { instanceId=roomDirectory.InstanceId,rooms=roomRegistry.Rooms.Where(r=>!r.IsEmpty).Select(r=>OnlineRoomListing.FromRoom(r,IsHost)).ToArray() });nextDirectorySnapshot=now+.2;
                 }
                 roomDirectory.Pump(directorySnapshot);
             }
@@ -256,6 +254,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         bool started = networkManager.StartServer();
         if (!started) Shutdown();
         if(started&&!StartRoomDirectory(port)){Shutdown();return false;}
+        if(started)InitializeServerReplayArchive();
         SetStatus(started ? $"独立服务器正在监听 UDP {port}。" : "无法启动独立服务器。");
         return started;
     }
@@ -291,6 +290,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             currentProfileId, "127.0.0.1", listenPort, displayName, currentRoomId);
         bool started = networkManager.StartHost();
         if(started&&!StartRoomDirectory(listenPort)){Shutdown();return false;}
+        if(started)InitializeServerReplayArchive();
         if (!started)
         {
             connectedToLanHost = false;
@@ -869,11 +869,16 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         }
     }
 
-    private void HandleDeck(ulong clientId, OnlineDeckMessage message)
+    private readonly Dictionary<ulong,long> companionDeckChecks=new();
+    private readonly Dictionary<ulong,OnlineReadyMessage> companionPendingReady=new();
+    private long companionDeckCheckSequence;
+    private async void HandleDeck(ulong clientId, OnlineDeckMessage message)
     {
         if (!TryGetMember(clientId, out OnlineRoomState room, out OnlineRoomMember member) || room.match != null || member.IsSpectator) return;
+        long check=++companionDeckCheckSequence;companionDeckChecks[clientId]=check;companionPendingReady.Remove(clientId);
         if (!ValidateDeck(message?.deck, SeriesValidationConfig(room,member), out string error))
         {
+            companionDeckChecks.Remove(clientId);
             Send(clientId, OnlineProtocol.Error, new OnlineErrorMessage { code = "invalid-deck", message = error });
             return;
         }
@@ -881,13 +886,28 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             && member.registeredDeck != null
             && !ValidateSideboardChange(member.registeredDeck, message.deck, SeriesValidationConfig(room,member), out error))
         {
+            companionDeckChecks.Remove(clientId);
             Send(clientId, OnlineProtocol.Error, new OnlineErrorMessage { code = "invalid-sideboard", message = error });
             return;
         }
+        member.ready=false;
+        if(DeckCompanion.Has(message.deck)){
+            BroadcastLobby(room);
+            DeckCompanionInspector.Result result;
+            try{result=await DeckCompanionInspector.Inspect(message.deck);}catch(Exception){result=new DeckCompanionInspector.Result{error="engine"};}
+            if(this==null||!companionDeckChecks.TryGetValue(clientId,out long latest)||latest!=check)return;
+            if(!TryGetMember(clientId,out var currentRoom,out var currentMember)||currentRoom!=room||currentMember!=member||room.match!=null){companionDeckChecks.Remove(clientId);companionPendingReady.Remove(clientId);return;}
+            if(result.error!=null||!result.Allows(message.deck)){
+                companionDeckChecks.Remove(clientId);companionPendingReady.Remove(clientId);
+                Send(clientId,OnlineProtocol.Error,new OnlineErrorMessage{code="invalid-companion",message=DeckCompanionInspector.Status(result,false)});BroadcastLobby(room);return;
+            }
+        }
+        companionDeckChecks.Remove(clientId);
         member.deck = CloneDeck(message.deck);
         if (room.series?.finished == true) { member.registeredDeck = null; member.seriesOriginalDeck = null; member.seriesDeckChanged = false; }
         member.ready = false;
         BroadcastLobby(room);
+        if(companionPendingReady.TryGetValue(clientId,out var queued)){companionPendingReady.Remove(clientId);HandleReady(clientId,queued);}
     }
 
     public void SetSpectator(bool spectator)
@@ -916,6 +936,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private void HandleReady(ulong clientId, OnlineReadyMessage message)
     {
         if (!TryGetMember(clientId, out OnlineRoomState room, out OnlineRoomMember member) || room.match != null || member.IsSpectator) return;
+        if(companionDeckChecks.ContainsKey(clientId)){companionPendingReady[clientId]=message;return;}
         member.ready = message?.ready == true && member.deck != null;
         if (!member.ready) room.playDrawChooserSeat = 0;
         BroadcastLobby(room);
@@ -1255,17 +1276,16 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             personal.ownDeck = member.IsSpectator ? null : CloneDeck(member.deck);
             Send(member.clientId, OnlineProtocol.MatchEnded, personal);
         }
-        if (!aborted)
+        try
         {
-          try
-          {
             var players = Enumerable.Range(1, 2).Select(seat => room.members.TryGetValue(seat, out var member)
                 ? member.displayName : "Player " + seat).ToArray();
             var replay = room.match.CompleteReplay(players, replayGame, room.series.bestOf, winnerSeat, ended.reason);
-            StartCoroutine(SendCompletedReplay(replay, room.members.Values.Where(m => m.connected && !m.IsSpectator).Select(m => m.clientId).ToArray()));
-          }
-          catch (Exception error) { Debug.LogWarning("录像生成失败：" + error.Message); }
+            if(replay.frames.Count>0)
+                StartCoroutine(SendCompletedReplay(replay, aborted ? Array.Empty<ulong>() : room.members.Values.Where(m => m.connected && !m.IsSpectator).Select(m => m.clientId).ToArray()));
+            else Debug.LogWarning("对局尚无可回放画面，未生成录像："+replay.matchId);
         }
+        catch (Exception error) { Debug.LogWarning("录像生成失败：" + error.Message); }
         try
         {
             System.IO.File.AppendAllText(System.IO.Path.Combine(Application.persistentDataPath, "ForgeMatchHistory.jsonl"),
@@ -1539,6 +1559,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         { error = "当前 Forge 联机支持主牌/备牌构筑，尚未适配指挥官牌组。"; return false; }
         IReadOnlyList<CardDefinition> cards = CardDatabaseRepository.LoadAll();
         string format = string.IsNullOrEmpty(config?.formatId) ? "none" : config.formatId;
+        if(!DeckCompanion.ValidateReference(deck,cards,out error))return false;
         bool authorizedPool=config?.authorizedSeriesPool!=null&&HaveSameCardPool(config.authorizedSeriesPool,deck)
             &&HaveSameEntries(config.authorizedSeriesPool.commanders,deck.commanders);
         if (!DeckAuxiliary.Validate(deck, cards, out error,authorizedPool ? config.authorizedSeriesPool : null)) return false;
@@ -1705,6 +1726,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             allowCustomContent = source?.allowCustomContent == true,
             useAnte = source?.useAnte == true
         };
+        result.useAnte &= OnlineRoomConfig.AllowsAnte(result.formatId, result.allowCustomContent);
         if (source?.allowedSetCodes == null) return result;
         for (int i = 0; i < source.allowedSetCodes.Count && result.allowedSetCodes.Count < 64; i++)
         {
@@ -1740,6 +1762,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     }
     private void Shutdown()
     {
+        ArchiveOpenServerMatches();
+        FlushServerReplayArchives();
         declinedReviewReplays.Clear();
         roomDirectory?.Dispose();roomDirectory=null;
         ClearReplayReceivers();

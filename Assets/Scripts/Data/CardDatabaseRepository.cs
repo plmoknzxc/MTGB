@@ -12,9 +12,21 @@ public static class CardDatabaseRepository
     public static IReadOnlyList<string> LoadWarnings => loadWarnings;
     private static bool loaded;
     private static Dictionary<string,CardDefinition> printingIndex;
+    private sealed class SnapshotIndex { public int Count; public Dictionary<string,CardDefinition> Cards; }
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<IReadOnlyList<CardDefinition>,SnapshotIndex> snapshotIndexes=new();
+    // Call after replacing an owned catalog snapshot. Its entries remain immutable
+    // until the next registration; the weak key does not retain closed menus.
+    internal static void RegisterPrintingSnapshot(IReadOnlyList<CardDefinition> source)
+    {
+        var index=new Dictionary<string,CardDefinition>(StringComparer.OrdinalIgnoreCase);
+        foreach(var item in source)if(item!=null){string key=item.setCode+"/"+item.CollectorNumber;if(!index.ContainsKey(key))index.Add(key,item);}
+        snapshotIndexes.Remove(source);snapshotIndexes.Add(source,new SnapshotIndex{Count=source.Count,Cards=index});
+    }
     internal static bool TryResolveSharedPrinting(IReadOnlyList<CardDefinition> source,string key,out CardDefinition card)
     {
-        card=null;if(!loaded||!ReferenceEquals(source,LoadedCards))return false;
+        card=null;
+        if(source!=null&&snapshotIndexes.TryGetValue(source,out var snapshot)&&snapshot.Count==source.Count){snapshot.Cards.TryGetValue(key,out card);if(card?.forgeAmbiguous==true)card=null;return true;}
+        if(!loaded||!ReferenceEquals(source,LoadedCards))return false;
         if(printingIndex==null){
             printingIndex=new Dictionary<string,CardDefinition>(StringComparer.OrdinalIgnoreCase);
             foreach(var item in LoadedCards)if(item!=null){string printing=item.setCode+"/"+item.CollectorNumber;if(!printingIndex.ContainsKey(printing))printingIndex.Add(printing,item);}

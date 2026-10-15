@@ -130,7 +130,10 @@ public static class ForgeBuildMenu
         }
         Directory.CreateDirectory(Path.Combine(root, "Decks"));
         foreach (string name in new[] { "Starter.mdk", "Forge-Validation.mdk", "README.md" })
-            File.Copy(Path.Combine(DeckRepository.DeckRoot, name), Path.Combine(root, "Decks", name), true);
+        {
+            string source = Path.Combine(DeckRepository.DeckRoot, name);
+            if (File.Exists(source)) File.Copy(source, Path.Combine(root, "Decks", name), true);
+        }
     }
     private static bool IncludeServerResource(string path)
         => path == "assets/res/languages/en-US.properties" || ServerResourceFolders.Any(folder => path.StartsWith("assets/res/" + folder + "/", StringComparison.Ordinal));

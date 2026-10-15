@@ -72,8 +72,8 @@ public static class RoomBrowserValidation
         Check(Field<System.Collections.Generic.List<OnlineRoomListing>>(panel,"browserRooms").Any(r=>r.roomId=="周末摩登"),"Server room not listed");
         Check(Field<System.Collections.Generic.List<OnlineRoomListing>>(panel,"browserRooms").Count==2,"LAN/direct query duplicated rooms");
         Check(!OnlineMatchService.Instance.IsOnline,"Refresh started game transport");
-        var badges=panel.GetComponentsInChildren<Text>().Where(t=>t.name=="DiyBadge").Select(t=>t.text).ToArray();
-        Check(badges.Contains("DIY 允许")&&badges.Contains("DIY 禁用"),"Missing DIY list badges");
+        var badges=panel.GetComponentsInChildren<Text>().Where(t=>t.name=="Permissions").Select(t=>t.text).ToArray();
+        Check(badges.Any(t=>t.Contains("DIY 允许"))&&badges.Any(t=>t.Contains("DIY 禁用")),"Missing DIY list badges");
         ScreenCapture.CaptureScreenshot(Output+"/browser.png");yield return new WaitForSecondsRealtime(.25f);
         Call(panel,"BeginRoomCreation",true);yield return new WaitForSecondsRealtime(1);
         Check(Field<bool>(panel,"creatingRoom"),"Verified server did not open settings");

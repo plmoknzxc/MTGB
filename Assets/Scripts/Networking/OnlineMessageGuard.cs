@@ -195,6 +195,10 @@ public sealed class OnlineMessageGuard
         }
         int entries = 0;
         int cards = 0;
+        if(DeckCompanion.Has(deck)){
+            int referenceEntries=0,referenceCards=0;
+            if(!ValidateDeckEntries(new List<DeckEntry>{deck.companion},ref referenceEntries,ref referenceCards,out error))return false;
+        }
         if (!ValidateDeckEntries(deck.commanders, ref entries, ref cards, out error)
             || !ValidateDeckEntries(deck.cards, ref entries, ref cards, out error)
             || !ValidateDeckEntries(deck.sideboard, ref entries, ref cards, out error)

@@ -115,21 +115,31 @@ public sealed partial class OnlineLobbyPanel
         browserEmpty.gameObject.SetActive(browserRooms.Count==0);
         browserEmpty.text=browsing?"正在搜索房间…":"暂无房间";
         browserEmpty.GetComponent<PreferenceText>().Apply();
-        roomList.sizeDelta=new Vector2(1080,Mathf.Max(540,browserRooms.Count*100+20));
+        roomList.sizeDelta=new Vector2(1080,Mathf.Max(540,browserRooms.Count*166+20));
         if(browserRooms.Count==0)return;
         for(int i=0;i<browserRooms.Count;i++) {
-            var room=browserRooms[i];var row=AddPanel(roomList,"Room_"+i,new Vector2(0,-58-i*100),new Vector2(1048,88),PanelColor);row.rectTransform.anchorMin=row.rectTransform.anchorMax=new Vector2(.5f,1);
-            var badge=AddText(row.transform,"SourceBadge",room.source,new Vector2(290,0),new Vector2(100,34),16,browserFont,TextAnchor.MiddleCenter,room.lanHosted?new Color(.46f,.76f,.7f):new Color(.79f,.68f,.93f));
-            AddText(row.transform,"DiyBadge",room.allowCustomContent?"DIY 允许":"DIY 禁用",new Vector2(150,18),new Vector2(150,30),15,browserFont,TextAnchor.MiddleCenter,MutedTextColor);
-            var title=AddText(row.transform,"RoomName",room.roomId,new Vector2(-224,18),new Vector2(548,30),22,browserFont,TextAnchor.MiddleLeft,TextColor);title.supportRichText=false;
+            var room=browserRooms[i];var row=AddPanel(roomList,"Room_"+i,new Vector2(0,-87-i*166),new Vector2(1048,154),PanelColor);row.rectTransform.anchorMin=row.rectTransform.anchorMax=new Vector2(.5f,1);
+            AddText(row.transform,"SourceBadge",room.source,new Vector2(420,43),new Vector2(156,32),16,browserFont,TextAnchor.MiddleCenter,room.lanHosted?new Color(.46f,.76f,.7f):new Color(.79f,.68f,.93f));
+            var titleViewport=new GameObject("RoomTitleViewport",typeof(RectTransform),typeof(RectMask2D)).transform;titleViewport.SetParent(row.transform,false);Place((RectTransform)titleViewport,new Vector2(-100,52),new Vector2(792,40));
+            var title=AddText(titleViewport.transform,"RoomName",room.roomId,Vector2.zero,new Vector2(792,40),20,browserFont,TextAnchor.MiddleLeft,TextColor);title.supportRichText=false;title.horizontalOverflow=HorizontalWrapMode.Overflow;
+            var titleBinding=title.gameObject.AddComponent<PreferenceText>();titleBinding.Literal=true;titleBinding.FitSingleLineHeight=true;
+            string life=room.startingLife>0?DeckCompanion.Text("初始生命 ","Starting life ","初期ライフ ")+room.startingLife:DeckCompanion.Text("生命未提供","Life unavailable","ライフ情報なし");
+            string format=RoomFormatLabel(room.format);
+            AddText(row.transform,"Rules",life+" · "+format+" · BO"+room.bestOf,new Vector2(-100,13),new Vector2(792,30),16,browserFont,TextAnchor.MiddleLeft,TextColor);
+            string diy=DeckCompanion.Text("DIY ","DIY ","DIY ")+PermissionLabel(room.allowCustomContent);
+            string ante=room.rulesVersion>0?DeckCompanion.Text("赌注 ","Ante ","アンティ ")+PermissionLabel(room.useAnte):DeckCompanion.Text("赌注未提供","Ante unavailable","アンティ情報なし");
+            string seats=DeckCompanion.Text("玩家 ","Players ","プレイヤー ")+room.players+"/2 · "+DeckCompanion.Text("观战 ","Spectators ","観戦 ")+room.spectators;
+            AddText(row.transform,"Permissions",diy+" · "+ante+" · "+seats,new Vector2(-100,-20),new Vector2(792,30),15,browserFont,TextAnchor.MiddleLeft,MutedTextColor);
             string roomState=room.state=="sideboarding"?"局间换备":room.state=="review"?"已结束 · 查看战场":room.inMatch?"对局中":"等待开局";
-            var detail=AddText(row.transform,"Detail",$"{room.hostName} · {DeckFormatLegality.FormatName(room.format)} · BO{room.bestOf} · {room.players}/2 · {roomState} · 观战 {room.spectators}",new Vector2(-174,-20),new Vector2(648,28),16,browserFont,TextAnchor.MiddleLeft,MutedTextColor);detail.supportRichText=false;
-            var join=AddButton(row.transform,"Join",room.inMatch||room.players>=2?"观战":"加入",new Vector2(423,0),new Vector2(150,46),browserFont,AccentColor);join.interactable=true;
+            var detail=AddText(row.transform,"Detail",room.hostName+" · "+GamePreferences.T(roomState),new Vector2(-100,-53),new Vector2(792,28),14,browserFont,TextAnchor.MiddleLeft,MutedTextColor);detail.supportRichText=false;
+            detail.gameObject.AddComponent<PreferenceText>().Literal=true;
+            var join=AddButton(row.transform,"Join",room.inMatch||room.players>=2?"观战":"加入",new Vector2(420,-16),new Vector2(156,48),browserFont,AccentColor);join.interactable=true;
             join.onClick.AddListener(()=>JoinListedRoom(room));
         }
         ApplyRoomPalette(roomList);
         BindBrowserText(roomList);
     }
+    private static string PermissionLabel(bool allowed)=>allowed?DeckCompanion.Text("允许","allowed","有効"):DeckCompanion.Text("禁用","disabled","無効");
     private static void BindBrowserText(Transform root)
     {
         foreach(var label in root.GetComponentsInChildren<Text>(true))

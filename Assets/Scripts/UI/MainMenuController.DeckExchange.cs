@@ -13,6 +13,10 @@ public sealed partial class MainMenuController
     int exchangeGeneration;
     Coroutine importDebounce;
     Button deleteDeckButton;
+    readonly System.Collections.Generic.Queue<(Image image,CardDefinition card)> pickerArtPending=new();
+    readonly System.Collections.Generic.Dictionary<Image,CardDefinition> pickerArtRequests=new();
+    readonly System.Collections.Generic.HashSet<Transform> pickerVisible=new();
+    Coroutine pickerArtLoader;
 
     private void CreateDeckExchangeToolbar()
     {
@@ -89,6 +93,8 @@ public sealed partial class MainMenuController
     void CloseDeckExchange()
     {
         exchangeGeneration++;
+        pickerArtPending.Clear();
+        if(pickerArtLoader!=null){StopCoroutine(pickerArtLoader);pickerArtLoader=null;}
         if(importDebounce!=null){StopCoroutine(importDebounce);importDebounce=null;}
         if(exchangeDialog!=null){exchangeDialog.SetActive(false);Destroy(exchangeDialog);exchangeDialog=null;}
     }
@@ -102,6 +108,81 @@ public sealed partial class MainMenuController
         var heading=AddText(panel.transform,"Heading",title,25,Color.white,TextAnchor.MiddleLeft);
         Place(heading.rectTransform,new Vector2(0,size.y*.5f-38),new Vector2(size.x-60,40));
         return (RectTransform)panel.transform;
+    }
+    // Pickers retain their modal surface and controls across tab/page changes.
+    RectTransform PickerPanel(string name,string title,Vector2 size)
+    {
+        pickerArtPending.Clear();pickerVisible.Clear();
+        if(exchangeDialog==null || exchangeDialog.name!=name){var created=ExchangePanel(title,size);exchangeDialog.name=name;PreferenceText.SetSize(created.Find("Heading").GetComponent<Text>(),25);return created;}
+        var panel=(RectTransform)exchangeDialog.transform.Find("Panel");
+        panel.Find("Heading").GetComponent<Text>().text=title;
+        return panel;
+    }
+    void FinishPicker(Transform panel)
+    {
+        foreach(Transform child in panel)if(child.name!="Heading")child.gameObject.SetActive(pickerVisible.Contains(child));
+    }
+    Text PickerText(Transform panel,string name,string value,int size,Color color,TextAnchor alignment)
+    {
+        var old=panel.Find(name);var text=old!=null?old.GetComponent<Text>():AddText(panel,name,value,size,color,alignment);
+        pickerVisible.Add(text.transform);text.gameObject.SetActive(true);text.text=value;text.color=color;text.alignment=alignment;
+        text.resizeTextForBestFit=false;PreferenceText.SetSize(text,size);return text;
+    }
+    TMPro.TextMeshProUGUI PickerRuleText(Transform panel,string name,string value,int size,Color color)
+    {
+        var old=panel.Find(name);
+        var text=old!=null?old.GetComponent<TMPro.TextMeshProUGUI>():CardSymbolText.Create(panel,name,size,color);
+        pickerVisible.Add(text.transform);text.gameObject.SetActive(true);
+        text.text=CardSymbolText.Format(value);text.color=color;text.alignment=TMPro.TextAlignmentOptions.Center;
+        text.enableAutoSizing=false;PreferenceText.SetSize(text,size);
+        text.GetComponent<PreferenceText>().Literal=true;
+        return text;
+    }
+    Image PickerImage(Transform panel,string name,Color color)
+    {
+        var old=panel.Find(name);var image=old!=null?old.GetComponent<Image>():AddImage(panel,name,color);
+        pickerVisible.Add(image.transform);image.gameObject.SetActive(true);image.color=color;return image;
+    }
+    void PickerArt(Image image,CardDefinition card)
+    {
+        pickerArtRequests.Remove(image);
+        if(card!=null && CardImageLibrary.TryReuseFullCard(card,out var cached)){image.sprite=cached;image.color=Color.white;return;}
+        else{image.sprite=null;image.color=MenuVisualTheme.Ink;}
+        if(card==null)return;
+        pickerArtRequests[image]=card;
+        pickerArtPending.Enqueue((image,card));
+        if(pickerArtLoader==null)pickerArtLoader=StartCoroutine(LoadPickerArt());
+    }
+    IEnumerator LoadPickerArt()
+    {
+        yield return null;
+        while(pickerArtPending.Count>0){
+            var item=pickerArtPending.Dequeue();
+            // Obsolete requests never delay the current page or overwrite a cache hit.
+            if(ReferenceEquals(item.image,null)||!pickerArtRequests.TryGetValue(item.image,out var wanted)||!ReferenceEquals(wanted,item.card))continue;
+            if(item.image==null||!item.image.gameObject.activeInHierarchy){pickerArtRequests.Remove(item.image);continue;}
+            item.image.sprite=LoadCardSprite(item.card);item.image.color=Color.white;
+            pickerArtRequests.Remove(item.image);
+            if(item.image.sprite!=null&&item.image.transform.parent.GetComponent<MainMenuCardTile>()!=null){
+                var fallback=item.image.transform.parent.Find("FallbackText");if(fallback!=null)fallback.gameObject.SetActive(false);
+            }
+            // Decode at most one current, uncached portrait per frame.
+            yield return null;
+        }
+        pickerArtLoader=null;
+    }
+    Button PickerButton(Transform panel,string name,string label,Vector2 position,Vector2 size,Action action,bool interactable=true)
+    {
+        var old=panel.Find(name);var button=old!=null?old.GetComponent<Button>():AuxiliaryButton(panel,name,label,position,size,action);
+        Place((RectTransform)button.transform,position,size);
+        pickerVisible.Add(button.transform);button.gameObject.SetActive(true);
+        var colors=button.colors;colors.fadeDuration=0;button.colors=colors;
+        button.interactable=interactable;button.onClick.RemoveAllListeners();button.onClick.AddListener(()=>action());
+        button.GetComponent<Image>().color=MenuVisualTheme.Raised;
+        var text=button.GetComponentInChildren<Text>();text.text=GamePreferences.T(label);PreferenceText.SetSize(text,20);
+        DisabledButtonVisual.Bind(button);
+        text.canvasRenderer.SetAlpha(interactable?1:.38f);
+        return button;
     }
     InputField ExchangeInput(Transform parent,string name,Vector2 pos,Vector2 size,bool multiline=false)
     {

@@ -10,10 +10,35 @@ public sealed partial class ForgeBattlefieldController
     private static string SeriesPresentationKey(OnlineSeriesState series)=>series==null?"":series.bestOf+"/"+series.player1Wins+"/"+series.player2Wins;
     private static string PlayerSummary(ForgePlayerView player,OnlineSeriesState series)
     {
-        string hand=TapPaymentText("手牌 ","Hand ","手札 ")+player.handCount;
-        if(series?.bestOf!=3)return hand;
-        int wins=player.seat==1?series.player1Wins:series.player2Wins;
-        return hand+TapPaymentText(" · 胜 "," · Wins "," · 勝利 ")+wins;
+        return TapPaymentText("手牌 ","Hand ","手札 ")+player.handCount;
+    }
+    private void PresentPlayerSummary(string plate,ForgePlayerView player,OnlineSeriesState series)
+    {
+        int slots=series?.bestOf==3?2:series?.bestOf==5?3:0;
+        bool showWins=slots>0;
+        var hand=SceneText(plate+"/Sub");
+        float handWidth=showWins?144-slots*16:148;
+        hand.rectTransform.anchoredPosition=new Vector2(-99+handWidth*.5f,-21);
+        hand.rectTransform.sizeDelta=new Vector2(handWidth,30);
+        hand.alignment=TextAnchor.MiddleCenter;
+        PreferenceText.SetSize(hand,16);hand.horizontalOverflow=HorizontalWrapMode.Overflow;
+        var row=Node(plate).Find("SeriesWins") as RectTransform;
+        if(row==null) {
+            row=Rect(Node(plate),"SeriesWins",new Vector2(22,-21),new Vector2(48,20));
+            for(int i=0;i<3;i++) {
+                var diamond=Panel(row,"Win_"+i,new Vector2(-16+i*16,0),new Vector2(9,9),Paper);
+                diamond.localRotation=Quaternion.Euler(0,0,45);
+                diamond.GetComponent<Image>().raycastTarget=false;
+            }
+        }
+        row.gameObject.SetActive(showWins);
+        row.sizeDelta=new Vector2(slots*16,20);row.anchoredPosition=new Vector2(46-slots*8,-21);
+        int wins=Mathf.Clamp(player.seat==1?series?.player1Wins??0:series?.player2Wins??0,0,slots);
+        for(int i=0;i<3;i++) {
+            var diamond=(RectTransform)row.Find("Win_"+i);diamond.gameObject.SetActive(i<slots);
+            diamond.anchoredPosition=new Vector2((i-(slots-1)*.5f)*16,0);
+            diamond.GetComponent<Image>().color=i<wins?new Color(.96f,.79f,.43f):new Color(.34f,.41f,.46f);
+        }
     }
     private void PresentPlayerLife(string plate)
     {
@@ -84,10 +109,17 @@ public sealed partial class ForgeBattlefieldController
         if(changed){visiblePhaseKey=key;phaseVisibleUntil=Time.unscaledTime+.24f;}
         for(int i=0;i<5;i++){
             var bar=track.Find("Phase_"+i) as RectTransform;if(bar==null)bar=Panel(track,"Phase_"+i,new Vector2(-70+i*35,0),new Vector2(28,5),Paper);
-            Color target=i<current?new Color(.71f,.73f,.67f):i==current?new Color(.91f,.76f,.48f):new Color(.45f,.53f,.54f,.47f);
+            Color target=i<current?new Color(.71f,.73f,.67f):new Color(.45f,.53f,.54f,.47f);
             var fade=bar.GetComponent<ForgePhaseBarFade>()??bar.gameObject.AddComponent<ForgePhaseBarFade>();fade.SetTarget(target);
             bar.GetComponent<Image>().raycastTarget=false;
         }
+        var cursor=track.Find("CurrentPhase") as RectTransform;
+        var destination=new Vector2(-70+current*35,0);
+        if(cursor==null) {
+            cursor=Panel(track,"CurrentPhase",destination,new Vector2(28,5),new Color(.91f,.76f,.48f));
+            cursor.GetComponent<Image>().raycastTarget=false;
+        } else if(changed)ForgeUiMotion.On(cursor).MoveTo(destination,new Vector2(28,5),seconds:.24f);
+        cursor.SetAsLastSibling();
     }
     private void PresentPlayerCounters(ForgePlayerView player,bool own)
     {

@@ -35,6 +35,7 @@ public static class OnlineSeriesDeckChanges
             var entries = Entries(result[gain.seat-1],gain.section);var entry = Find(entries,gain.entry.PrintingKey);
             if(entry==null)entries.Add(gain.entry);else entry.count++;
         }
+        foreach(var deck in result)DeckCompanion.ClearMissing(deck);
         return result;
     }
 
@@ -57,6 +58,7 @@ public static class OnlineSeriesDeckChanges
             entry.count--;
             Prune(result);
         }
+        DeckCompanion.ClearMissing(result);
         return result;
     }
 

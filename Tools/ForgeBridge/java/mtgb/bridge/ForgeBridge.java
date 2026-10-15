@@ -32,6 +32,8 @@ public final class ForgeBridge {
     static String SESSION;
     static final ExecutorService EDT = Executors.newSingleThreadExecutor(r -> new Thread(r, "mtgb-ui"));
     static Game game;
+    static boolean inspectingCompanions;
+    static final JsonArray legalCompanionPrintings=new JsonArray();
     static final List<Gui> guis = new ArrayList<>();
     static final List<Gui> controlGuis = new CopyOnWriteArrayList<>();
     static final BridgeLibraryKnowledge libraryKnowledge=new BridgeLibraryKnowledge();
@@ -250,6 +252,20 @@ public final class ForgeBridge {
         }
         @Override public <T extends GameEntity> T chooseSingleEntityForEffect(forge.util.collect.FCollectionView<T> values,
             DelayedReveal reveal,forge.game.spellability.SpellAbility ability,String title,boolean optional,Player targeted,Map<String,Object> params) {
+            if(ability!=null&&ability.getApi()==forge.game.ability.ApiType.CompanionChoose){
+                if(inspectingCompanions){for(T value:values)if(value instanceof Card c)legalCompanionPrintings.add(ForgeCatalog.key((forge.item.PaperCard)c.getPaperCard()));return null;}
+                JsonObject deck=config.getAsJsonArray("decks").get(guiFor(this).seat-1).getAsJsonObject();
+                // Old wire fixtures retain their optional native chooser. New
+                // deck payloads explicitly designate a printing, or no companion.
+                if(deck.has("companion")){
+                    JsonElement marked=deck.get("companion");if(marked==null||marked.isJsonNull())return null;
+                    JsonObject entry=marked.getAsJsonObject();
+                    if(!entry.has("setCode")||entry.get("setCode").isJsonNull()||entry.get("setCode").getAsString().isBlank())return null;
+                    String key=entry.get("setCode").getAsString()+"/"+entry.get("collectorNumber").getAsString();
+                    for(T value:values)if(value instanceof Card c&&ForgeCatalog.key((forge.item.PaperCard)c.getPaperCard()).equalsIgnoreCase(key))return value;
+                    throw new IllegalArgumentException("Designated companion is not legal for this deck");
+                }
+            }
             Gui gui=guiFor(this);Map<Integer,Card> previous=new HashMap<>(gui.choiceObjects);
             var previousSource=gui.sourceChoiceAbility;
             if(ability!=null&&ability.getApi()==forge.game.ability.ApiType.ChooseSource){
@@ -2294,7 +2310,10 @@ public final class ForgeBridge {
                             || new HashSet<>(order).size()!=order.size() || !available.containsAll(order))error="invalid-order";
                     }catch(RuntimeException malformed){error="invalid-order";}
                 }
-                else if(p.kind.equals("InputAttack") && id.startsWith("attack:") && o.has("order") && !o.get("order").isJsonNull()) {
+                // JsonUtility serializes a null array as []. An empty optional
+                // group is the ordinary single offered attack action.
+                else if(p.kind.equals("InputAttack") && id.startsWith("attack:") && o.has("order") && !o.get("order").isJsonNull()
+                    && (!o.get("order").isJsonArray() || o.getAsJsonArray("order").size()>0)) {
                     try {
                         // One response assigns a group through the exact offered native actions.
                         // This is UI multiselect, independent of Forge's banding mechanic.
@@ -2438,7 +2457,7 @@ public final class ForgeBridge {
                 String line; while((line=reader.readLine())!=null) receive(JsonParser.parseString(line).getAsJsonObject());
                 System.exit(0);
             } catch(Throwable e) { fatal(e); }
-        },"mtgb-wire"); input.setDaemon(true); input.start();
+        },"mtgb-wire"); input.setDaemon(true); if(!config.has("inspectCompanions"))input.start();
         FModel.initialize(null,prefs -> {
             prefs.setPref(FPref.UI_LANGUAGE,"en-US"); prefs.setPref(FPref.PLAYER_NAME,"Proof");
             prefs.setPref(FPref.DECKGEN_CARDBASED,false); prefs.setPref(FPref.LOAD_CARD_SCRIPTS_LAZILY,Boolean.getBoolean("mtgb.bridge.lazyCatalog"));
@@ -2473,6 +2492,22 @@ public final class ForgeBridge {
             Gui handler=new Gui(i+1); handler.controller=(PlayerControllerHuman)game.getPlayers().get(i).getController();
             handler.controller.setGui((IGuiGame)Proxy.newProxyInstance(IGuiGame.class.getClassLoader(),new Class<?>[]{IGuiGame.class},handler));
             guis.add(handler);
+        }
+        if(config.has("inspectCompanions")){
+            inspectingCompanions=true;
+            Player player=game.getPlayers().get(0);
+            for(var section:List.of(forge.deck.DeckSection.Main,forge.deck.DeckSection.Sideboard)){
+                var zone=player.getZone(section==forge.deck.DeckSection.Main?ZoneType.Library:ZoneType.Sideboard);
+                for(var entry:players.get(0).getDeck().getOrCreate(section))for(int i=0;i<entry.getValue();i++){
+                    // The editor projects commanders into the starting deck to
+                    // check companion restrictions. Fixed-size formats cannot
+                    // accommodate Yorion's additional twenty starting cards.
+                    if(section==forge.deck.DeckSection.Sideboard&&config.has("commanderCompanionCheck")&&config.get("commanderCompanionCheck").getAsBoolean()&&entry.getKey().getName().equals("Yorion, Sky Nomad"))continue;
+                    Card card=Card.fromPaperCard(entry.getKey(),player);card.setZone(zone);zone.add(card);
+                }
+            }
+            player.assignCompanion(game,player.getController());
+            JsonObject result=new JsonObject();result.add("legal",legalCompanionPrintings);WIRE.println(JSON.toJson(result));System.exit(0);
         }
         game.getAction().invoke(() -> {
             // Forge's own worker exception handler can itself fail in headless mode.

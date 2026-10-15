@@ -111,10 +111,21 @@ public sealed partial class ForgeBattlefieldController
     private void PlacePlayerMana(RectTransform row,int playerSeat,float width,float height)
     {
         row.SetSiblingIndex(Node("CornerCluster").GetSiblingIndex());
-        row.anchorMin=row.anchorMax=Vector2.zero;row.pivot=new Vector2(.5f,.5f);
-        float offset=(height-34)*.5f;
-        // The player information column is outside both land and hand lanes.
-        row.anchoredPosition=new Vector2(24+width*.5f,playerSeat==seat?248-offset:surface.rect.height-248+offset);
+        row.anchorMin=row.anchorMax=new Vector2(.5f,.5f);row.pivot=new Vector2(.5f,.5f);
+        // Dedicated gutter on the midline side of each land lane. Align with
+        // the main field's left edge; marker lanes stay in the information column.
+        float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));
+        float left=68-tableWidth*.5f,y=playerSeat==seat?-222:222;
+        string markers=playerSeat==seat?"YourEmblem:":"OpponentEmblem:";
+        // A full state column can extend beyond the plate. Include the actual
+        // marker and quantity/shadow bounds in this row's vertical band.
+        foreach(var pair in arenaCards.Where(p=>retainedCards.Contains(p.Key)&&p.Key.StartsWith(markers,StringComparison.Ordinal))) {
+            var card=pair.Value.root;var footprint=DenseFieldViewport.LayoutFootprint(card,0);
+            var min=(Vector2)surface.InverseTransformPoint(card.TransformPoint(new Vector3(footprint.xMin,footprint.yMin,0)));
+            var max=(Vector2)surface.InverseTransformPoint(card.TransformPoint(new Vector3(footprint.xMax,footprint.yMax,0)));
+            if(min.y<y+height*.5f+8&&max.y>y-height*.5f-8)left=Mathf.Max(left,max.x+16);
+        }
+        row.anchoredPosition=new Vector2(left+width*.5f,y);
         row.sizeDelta=new Vector2(width,height);
     }
     private void UpdateManaPoolPulse()

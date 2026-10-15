@@ -14,8 +14,17 @@ using UnityEngine;
     public int players, bestOf;
     public bool inMatch, lanHosted, allowCustomContent;
     public int spectators;
+    public int startingLife, rulesVersion;
+    public bool useAnte;
     [NonSerialized] public string address, source, serverId;
     [NonSerialized] public int port;
+    public static OnlineRoomListing FromRoom(OnlineRoomState room,bool lanHosted)=>new OnlineRoomListing{
+        roomId=room.roomId,hostName=room.members.TryGetValue(room.hostSeat,out var host)?host.displayName:"房主",
+        players=room.members.Values.Count(m=>!m.IsSpectator),spectators=room.members.Values.Count(m=>m.IsSpectator),
+        lanHosted=lanHosted,allowCustomContent=room.config.allowCustomContent,format=room.config.formatId,
+        bestOf=room.config.bestOf,inMatch=room.SpectatorOnly,state=room.DirectoryState,
+        startingLife=room.config.startingLife,useAnte=room.config.useAnte,rulesVersion=1
+    };
 }
 [Serializable] public sealed class OnlineRoomDirectory
 {

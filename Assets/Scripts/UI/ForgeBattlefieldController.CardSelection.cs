@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public sealed partial class ForgeBattlefieldController
 {
     private RectTransform cardSelectionOverlay;
+    private bool cardSelectionReadOnly;
     private int selectionPage;
     private float selectionPageFooter;
     private string selectionLayoutKey;
@@ -219,6 +220,7 @@ public sealed partial class ForgeBattlefieldController
     private void RenderCardSelection(ForgeRequest request, string reviewTitle = null)
     {
         bool readOnly = reviewTitle != null;
+        cardSelectionReadOnly = readOnly;
         if(!readOnly && request.kind=="ChoosePile"){RenderPileSelection(request);return;}
         var selectedHand=SelectionHand;
         var previews=(request.previewCards??Array.Empty<ForgeCardView>()).Concat(readOnly||selectedHand==null?Array.Empty<ForgeCardView>():VisibleHand(selectedHand)).ToArray();
@@ -532,6 +534,16 @@ public sealed partial class ForgeBattlefieldController
             var previous=Button(panel,"PreviousPage","‹",new Vector2(-width/2+34,footerY),new Vector2(42,42),()=>{selectionPage--;RenderCardSelection(request,reviewTitle);},Ink);previous.interactable=selectionPage>0;
             Label(panel,"Page",(selectionPage+1)+" / "+pageCount,new Vector2(-width/2+110,footerY),new Vector2(95,36),16,Paper);
             var next=Button(panel,"NextPage","›",new Vector2(width/2-34,footerY),new Vector2(42,42),()=>{selectionPage++;RenderCardSelection(request,reviewTitle);},Ink);next.interactable=selectionPage+1<pageCount;
+        }
+    }
+    private void DisableCardSelectionChoices()
+    {
+        if(cardSelectionOverlay==null)return;
+        foreach(var button in cardSelectionOverlay.GetComponentsInChildren<Button>())
+        {
+            // Closing, paging and inspecting a browser never sends a rule action.
+            // Casting an offered card does, so it must still be locked in flight.
+            if(!cardSelectionReadOnly || button.name=="CastComponentCard")button.interactable=false;
         }
     }
     private void RefreshLongSelectionInstruction()

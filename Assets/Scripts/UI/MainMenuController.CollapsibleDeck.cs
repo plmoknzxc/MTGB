@@ -62,15 +62,17 @@ public sealed partial class MainMenuController
         float w=deckLayoutRoot.rect.width,h=deckLayoutRoot.rect.height;
         float right=w*.745f,normalLeft=right-expandedDeckWidth,left=Mathf.Lerp(normalLeft,60,d);
         DeckRegion(deckArea,left,h*.01f,right-left,h*.89f);
-        DeckRegion(mainDeckCountText.rectTransform,left+10,h*.86f,right-left-20,h*.04f);
+        float headerHeight=LayoutDeckHeader(right-left-20,h*.04f);
+        DeckRegion(mainDeckCountText.rectTransform,left+10,h*.9f-headerHeight,right-left-20,headerHeight);
         float bottom=Mathf.Lerp(h*.315f,h*.055f,s);
-        DeckRegion(mainArea,left+10,bottom,right-left-20,h*.855f-bottom);
+        DeckRegion(mainArea,left+10,bottom,right-left-20,h*.9f-headerHeight-6-bottom);
         // Slide the sideboard out intact, rather than scaling its cards during the transition.
         DeckRegion(sideArea,left+10,h*.01f-s*h*.28f,right-left-20,h*.26f);
         sideAreaGroup.alpha=1-s;sideAreaGroup.blocksRaycasts=sideAreaGroup.interactable=!sideboardCollapsed;
         DeckRegion(sideboardCountText.rectTransform,left+10,Mathf.Lerp(h*.275f,h*.013f,s),right-left-68,h*.035f);
         sideHeadingGroup.alpha=1-s;
-        DeckRegion((RectTransform)sideboardCollapseButton.transform,(left+right)*.5f-24,Mathf.Lerp(h*.275f-5,h*.01f,s),48,42);
+        sideHeadingGroup.blocksRaycasts=sideHeadingGroup.interactable=!sideboardCollapsed;
+        DeckRegion((RectTransform)sideboardCollapseButton.transform,right-58,Mathf.Lerp(h*.275f-5,h*.01f,s),48,42);
         sideboardCollapseButton.GetComponentInChildren<Text>().rectTransform.localRotation=Quaternion.Euler(0,0,sideboardCollapsed?-90:90);
         DeckRegion((RectTransform)detailsCollapseButton.transform,Mathf.Lerp(normalLeft-48,6,d),h*.455f-46,42,92);
         detailsCollapseButton.GetComponentInChildren<Text>().text=detailsCollapsed?"›":"‹";

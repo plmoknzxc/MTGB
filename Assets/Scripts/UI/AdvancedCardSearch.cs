@@ -11,6 +11,7 @@ public sealed class AdvancedCardSearch
     public string Query = "", Name = "", Rules = "", Type = "", Mana = "", Value = "", Power = "", Toughness = "", Loyalty = "", Sets = "", Artist = "", From = "", To = "";
     public int Colors, Identity, ColorMode, IdentityMode = 3, Rarity, Layout, Format, Status, Source, Sort;
     public bool Unique;
+    public bool CommanderFit, CompanionFit;
     public int Games = 1;
     public static readonly string[] Rarities = { "", "common", "uncommon", "rare", "mythic", "special", "bonus" };
     public static readonly string[] Layouts = { "", "normal", "transform", "modal_dfc", "adventure", "split", "flip", "meld", "saga", "class" };

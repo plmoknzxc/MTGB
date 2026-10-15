@@ -11,6 +11,7 @@ public sealed partial class ForgeBattlefieldController
     private RectTransform ownHand, otherHand, stackContent;
     private Button advanceButton, endTurnButton, undoManaButton;
     private RectTransform mulliganChoices;
+    private Button exitSpectatorButton;
     private bool IsMulliganChoice => view?.awaitingInput==true && (view.request.kind.Contains("Mulligan") || view.request.kind=="InputChooseStartingHand");
 
     private Transform Node(string path)
@@ -47,6 +48,8 @@ public sealed partial class ForgeBattlefieldController
         var panel = Panel(surface, "ForgeChoices", new Vector2(-60, 20), new Vector2(300, 290), Ink);
         promptText = Label(panel, "Prompt", "", new Vector2(0, 112), new Vector2(276, 70), 16, Gold);
         actionRoot = Scroll(panel, "Choices", new Vector2(0, -30), new Vector2(286, 220));
+        // Build can precede the opening projection. A real request reveals it.
+        panel.gameObject.SetActive(false);
         previewRoot = Rect(Node("InspectPanel"), "ForgeZoneContents", Vector2.zero, new Vector2(262, 530));
         connectionText = SceneText("CornerCluster/ControlRow/RoundText");
         phaseText = SceneText("CornerCluster/ControlRow/PhaseText");
@@ -67,9 +70,34 @@ public sealed partial class ForgeBattlefieldController
         // No rule-backed timer/settings or exile payload is currently supplied. Do not show fake state.
         Node("CornerCluster/ControlRow/DecisionTimerWidget").gameObject.SetActive(false);
         integrated = true;
+        PresentSpectatorExit();
+    }
+    private void PresentSpectatorExit()
+    {
+        bool spectating=service?.IsSpectator==true;
+        if(exitSpectatorButton==null&&spectating){
+            exitSpectatorButton=Button(Node("GearBox"),"ExitSpectator",TapPaymentText("退出观战","Leave spectating","観戦を終了"),new Vector2(110,0),new Vector2(152,44),()=>{
+                if(service?.IsSpectator!=true)return;
+                service.Disconnect();enabled=false;UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+            },Ink);
+            PreferenceText.SetSize(exitSpectatorButton.GetComponentInChildren<Text>(),19);
+            SetOverlayLayer((RectTransform)exitSpectatorButton.transform,1,true);
+        }
+        if(exitSpectatorButton==null)return;
+        exitSpectatorButton.gameObject.SetActive(spectating);
+        var label=exitSpectatorButton.GetComponentInChildren<Text>();
+        label.text=TapPaymentText("退出观战","Leave spectating","観戦を終了");
+        label.horizontalOverflow=HorizontalWrapMode.Overflow;
+        float width=Mathf.Max(152,Mathf.Ceil(label.preferredWidth)+24);
+        var rect=(RectTransform)exitSpectatorButton.transform;
+        rect.sizeDelta=new Vector2(width,44);
+        // Reserve the existing 220px view/return/results slot beside settings.
+        rect.anchoredPosition=new Vector2(276+width*.5f,0);
+        label.rectTransform.sizeDelta=new Vector2(width-16,40);
     }
     private void PresentIntegrated(string status)
     {
+        PresentSpectatorExit();
         PresentControlMode();
         BeginZoneMotion();
         BeginArenaPresentation();
@@ -98,6 +126,7 @@ public sealed partial class ForgeBattlefieldController
             SetText(plate + "/Life", p.life.ToString());
             SetText(plate + "/Sub", PlayerSummary(p,service?.LobbyState?.series));
             PresentPlayerLife(plate);
+            PresentPlayerSummary(plate,p,service?.LobbyState?.series);
             var avatar = SceneButton(plate);
             // Authored zone piles can overlap the plate. The target surface must remain reachable.
             avatar.transform.SetAsLastSibling();
@@ -130,6 +159,7 @@ public sealed partial class ForgeBattlefieldController
         BindIntegratedAction(advanceButton, "ok", "确认", "Label");
         StyleAdvanceButton();
         advanceButton.gameObject.SetActive(!IsMulliganChoice && CompletedSingleCardOption(view?.request)<0 && OptionIndex("ok")>=0 && view?.request?.kind.Contains("PayMana")!=true);
+        RefreshPriorityAdvanceVisibility();
         if(view?.request?.selectionPurpose=="optionalReplacement")advanceButton.gameObject.SetActive(false);
         endTurnButton.gameObject.SetActive(false);
         PresentManaPaymentActions();
@@ -357,8 +387,10 @@ public sealed partial class ForgeBattlefieldController
         SceneText("InspectPanel/Name").supportRichText=true;
         SetText("InspectPanel/Name", definition != null && !card.faceDown && !card.backFace && !IsPreparedSpell(card) ? GamePreferences.CardName(definition) : card.name);
         SceneText("InspectPanel/TypeLine").supportRichText=true;
+        // Live land text expands subtype mana abilities and omits printed
+        // reminders. Compare it only when native types or traits really changed.
         SetText("InspectPanel/TypeLine", card.faceDown ? "面朝下" : publicCopy ? copiedType : card.hasCurrentLandState || (!string.IsNullOrEmpty(card.currentType) && card.originalType!=card.currentType) ? ChangedTypeText(card.originalType,card.currentType) : card.backFace || IsPreparedSpell(card) || card.token ? card.currentType : GamePreferences.CardType(definition));
-        SetText("InspectPanel/Rules", publicCopy && card.hasCopyAbilityChanges ? CopyRulesText(card,copiedDefinition,copiedFeature) : card.hasAbilityChanges ? LocalizedChangedRules(card,card.originalAbilityText,card.currentAbilityText) : card.hasCurrentLandState || card.originalRules!=null && card.currentRules!=card.originalRules ? LocalizedChangedRules(card,card.originalRules,card.currentRules) : publicCopy ? copiedRules : card.backFace || IsPreparedSpell(card) || card.token ? PrintedRuleText(card,card.currentRules?.Replace("\\n", "\n")) : GamePreferences.CardRules(definition));
+        SetText("InspectPanel/Rules", publicCopy && card.hasCopyAbilityChanges ? CopyRulesText(card,copiedDefinition,copiedFeature) : card.hasAbilityChanges ? LocalizedChangedRules(card,card.originalAbilityText,card.currentAbilityText) : card.hasCurrentLandState && card.landTypesChanged || !card.hasCurrentLandState && card.originalRules!=null && card.currentRules!=card.originalRules ? LocalizedChangedRules(card,card.originalRules,card.currentRules) : publicCopy ? copiedRules : card.backFace || IsPreparedSpell(card) || card.token ? PrintedRuleText(card,card.currentRules?.Replace("\\n", "\n")) : GamePreferences.CardRules(definition));
         if(specialized && !card.hasAbilityChanges && card.currentRules==card.originalRules) {
             var nativeFace=new CardFeatureDefinition { cardName=card.name,description=(card.currentRules??"").Replace("\\n","\n") };
             SetText("InspectPanel/Rules",GamePreferences.FeatureRules(nativeFace));
@@ -579,7 +611,7 @@ public sealed partial class ForgeBattlefieldController
         rules.font=GamePreferences.TmpFont!=null?GamePreferences.TmpFont:TMPro.TMP_Settings.defaultFontAsset;
         rules.lineSpacing=4;rules.alignment=TMPro.TextAlignmentOptions.TopLeft;
         rules.richText=true;rules.text=CardSymbolText.Format(backing.text);rules.enableAutoSizing=false;rules.fontStyle=TMPro.FontStyles.Normal;
-        rules.tintAllSprites=!inspectOriginalState&&(card.hasAbilityChanges||card.hasCurrentLandState);
+        rules.tintAllSprites=!inspectOriginalState&&(card.hasAbilityChanges||card.hasCurrentLandState&&card.landTypesChanged);
         (rules.GetComponent<PreferenceText>()??rules.gameObject.AddComponent<PreferenceText>()).SetBaseSize(18);
         rules.rectTransform.anchorMin=rules.rectTransform.anchorMax=rules.rectTransform.pivot=new Vector2(0,1);
         rules.rectTransform.anchoredPosition=Vector2.zero;

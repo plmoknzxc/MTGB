@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -125,7 +126,8 @@ public sealed partial class MainMenuController : MonoBehaviour
         None,
         Collection,
         MainDeck,
-        Sideboard
+        Sideboard,
+        Commander
     }
 
     private void Awake()
@@ -139,6 +141,9 @@ public sealed partial class MainMenuController : MonoBehaviour
         CreateDeckCollapseControls();
         CreateDeckExchangeToolbar();
         CreateAuxiliaryDeckEntry();
+        CreateCompanionDeckEntry();
+        CreateDeckSortControls();
+        CreateDeckFormatControl();
         RegisterListeners();
         ShowStartScreen();
         loadingStatus = AddText(startScreenGroup.transform, "LoadingStatus", "正在准备卡牌…", 20,
@@ -347,10 +352,19 @@ public sealed partial class MainMenuController : MonoBehaviour
         var timer = System.Diagnostics.Stopwatch.StartNew();
         try
         {
+            var searchMetadata=CardSearchMetadata.LoadAsync();
+            var editorRules=DeckEditorRules.LoadAsync();
             var loadedCards = await CardDatabaseRepository.LoadAllAsync(forceReload, loadingCancellation.Token,
                 null);
+            var pickerCatalog = await Task.Run(()=>PickerCatalog(loadedCards),loadingCancellation.Token);
             if (this == null) return;
             ApplyLoadedData(loadedCards);
+            companionCandidates=pickerCatalog.companions;
+            attractionCandidates=pickerCatalog.attractions;
+            contraptionCandidates=pickerCatalog.contraptions;
+            try{await searchMetadata;}catch(Exception error){Debug.LogWarning("Deck mana-value metadata: "+error.Message);}
+            try{await editorRules;}catch(Exception error){Debug.LogWarning("Deck construction metadata: "+error.Message);}
+            if(this==null)return;
             dataReady = true;
 
             loadingStatus.gameObject.SetActive(false);
@@ -382,6 +396,8 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         cards.Clear();
         cards.AddRange(loadedCards);
+        CardDatabaseRepository.RegisterPrintingSnapshot(cards);
+        companionCandidates=null;attractionCandidates=null;contraptionCandidates=null;
         cachedCollectionQuery = null;
 
         decks.Clear();
@@ -450,6 +466,10 @@ public sealed partial class MainMenuController : MonoBehaviour
     private void RefreshLocalizedDetails()
     {
         RefreshAuxiliaryDeckLocale();
+        RefreshCompanionEntry();
+        RefreshCommanderEntry();
+        RefreshDeckSortControls();
+        RefreshDeckFormatControl();
         bool repaintArtwork=artworkLanguage!=GamePreferences.Language;
         artworkLanguage=GamePreferences.Language;
         if(repaintArtwork)detailTokenArtCard=null;
@@ -482,8 +502,10 @@ public sealed partial class MainMenuController : MonoBehaviour
             if(fallback!=null) fallback.text=GamePreferences.CardName(tile.Card)+"\n"+tile.Card.manaCost;
             var overlay=tile.transform.Find("FallbackOverlay")?.GetComponent<Text>();
             if(overlay!=null) overlay.text=GamePreferences.CardName(tile.Card)+"\n"+GamePreferences.CardType(tile.Card);
+            AddDeckRole(tile);
             if(tile.Zone!=MainMenuCardTileZone.Collection) ApplyLegality(tile);
         }
+        if(repaintArtwork&&IsDeckBuilderVisible()){cachedCollectionQuery=null;RefreshCollectionGrid();}
     }
 
     private void CreateCollectionSearchToolbar()
@@ -542,7 +564,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             advancedSearch = next; advancedPredicate = compiled;
             collectionContentFilter = next.Source; cachedCollectionQuery = null;
             ApplyCollectionQuery(next.Query);
-        });
+        }, constructionHasCommander, constructionCompanion >= 0);
     }
 
     private void CloseAdvancedSearch()
@@ -574,6 +596,12 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void RefreshCollectionGrid()
     {
+        if(!GamePreferences.Ready){
+            cachedCollectionQuery=null;
+            if(constructionFilterRefresh==null)constructionFilterRefresh=StartCoroutine(RefreshConstructionCollection());
+            return;
+        }
+        if(constructionFilterRefresh!=null){StopCoroutine(constructionFilterRefresh);constructionFilterRefresh=null;}
         if (collectionLoad != null) { StopCoroutine(collectionLoad); collectionLoad = null; }
         ClearHighlightedTileInZone(MainMenuCardTileZone.Collection);
         ClearChildren(collectionContent);
@@ -583,7 +611,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         {
             filteredCollection.Clear();
             for (int i = 0; i < cards.Count; i++)
-                if (MatchesCollectionFilter(cards[i], collectionQuery, collectionContentFilter) && (advancedPredicate == null || advancedPredicate(cards[i]))) filteredCollection.Add(cards[i]);
+                if (MatchesConstructionFilter(cards[i]) && MatchesCollectionFilter(cards[i], collectionQuery, collectionContentFilter) && (advancedPredicate == null || advancedPredicate(cards[i]))) filteredCollection.Add(cards[i]);
             advancedSearch.Order(filteredCollection);
             cachedCollectionQuery = collectionQuery;
             cachedCollectionFilter = collectionContentFilter;
@@ -674,32 +702,36 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void RefreshDeckGrids()
     {
+        DeckCompanion.ClearMissing(currentDeck);
+        RefreshConstructionFilters();
         ClearHighlightedTileInZone(MainMenuCardTileZone.MainDeck);
         ClearHighlightedTileInZone(MainMenuCardTileZone.Sideboard);
-        ClearChildren(mainDeckContent);
-        ClearChildren(sideboardContent);
+        ClearHighlightedTileInZone(MainMenuCardTileZone.Commander);
+        BeginDeckTileReuse();
 
-        int mainCount = DeckRepository.GetTotalCount(currentDeck, false);
-        int sideboardCount = DeckRepository.GetTotalCount(currentDeck, true);
-        SetText(mainDeckCountText, $"主牌  {mainCount}");
-        SetText(sideboardCountText, $"备牌  {sideboardCount}");
+        RefreshMainDeckHeading();
+        RefreshSecondaryDeckHeading();
 
         if (deckNameInput != null && currentDeck != null) deckNameInput.text = currentDeck.name;
         PopulateDeckGrid(mainDeckContent, currentDeck?.cards, MainMenuCardTileZone.MainDeck);
-        PopulateDeckGrid(sideboardContent, currentDeck?.sideboard, MainMenuCardTileZone.Sideboard);
+        PopulateCommandZone();
+        PopulateDeckGrid(sideboardContent, SecondaryDeckEntries, MainMenuCardTileZone.Sideboard);
+        FinishDeckTileReuse();
         if (quantityTile != null && quantityZone == MainMenuCardTileZone.Collection && quantityTile.QuantityControlsVisible)
             quantityTile.SetQuantityControls(true, CountCardCopies(quantityCard, false),
                 DeckRepository.GetAllowedCopiesToAdd(currentDeck, quantityCard) > 0);
         RefreshDeckLegality();
+        RefreshCompanionEntry();
+        RefreshDeckSortControls();
+        RefreshCommanderEntry();
     }
 
     private void PopulateDeckGrid(RectTransform parent, List<DeckEntry> entries, MainMenuCardTileZone zone)
     {
         if (parent == null || entries == null) return;
 
-        for (int i = 0; i < entries.Count; i++)
+        foreach (DeckEntry entry in DeckDisplayEntries(entries))
         {
-            DeckEntry entry = entries[i];
             CardDefinition card = DeckRepository.ResolveCard(entry, cards);
             if (card == null) continue;
             CreateCardTile(parent, card, entry.count, zone);
@@ -709,6 +741,7 @@ public sealed partial class MainMenuController : MonoBehaviour
     private void CreateCardTile(RectTransform parent, CardDefinition card, int count, MainMenuCardTileZone zone)
     {
         if (parent == null || card == null) return;
+        if(TryReuseDeckTile(card,count,zone))return;
 
         GridLayoutGroup grid = parent.GetComponent<GridLayoutGroup>();
         Vector2 size = grid != null ? grid.cellSize : new Vector2(126f, 176f);
@@ -730,6 +763,8 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         Image face = AddImage(tileObject.transform, "CardFace", Color.white);
         Stretch(face.rectTransform, 4f, 4f, 4f, 4f);
+        // Deck tiles must have their local artwork before the first paint.
+        // Collection pages already create a bounded number of tiles per frame.
         face.sprite = LoadCardSprite(card);
         face.preserveAspect = true;
 
@@ -739,12 +774,6 @@ public sealed partial class MainMenuController : MonoBehaviour
             Text fallback = AddText(tileObject.transform, "FallbackText", $"{GamePreferences.CardName(card)}\n{card.manaCost}", 13, Color.white, TextAnchor.MiddleCenter);
             Stretch(fallback.rectTransform, 8f, 8f, 8f, 8f);
         }
-        else if (!CardImageLibrary.TryLoadFullCard(card, out _))
-        {
-            Text overlay = AddText(tileObject.transform, "FallbackOverlay", $"{GamePreferences.CardName(card)}\n{GamePreferences.CardType(card)}", 11, new Color(0.04f, 0.04f, 0.04f, 0.95f), TextAnchor.UpperCenter);
-            Stretch(overlay.rectTransform, 10f, 10f, 10f, size.y * 0.58f);
-        }
-
         GameObject countBadge = null;
         if (count > 0)
         {
@@ -758,12 +787,14 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         MainMenuCardTile tile = tileObject.GetComponent<MainMenuCardTile>();
         tile.Configure(this, card, zone);
+        AddDeckRole(tile);
         CreateQuantityControls(tile, size, countBadge);
+        tile.SetCount(count);
         if (zone != MainMenuCardTileZone.Collection) ApplyLegality(tile);
         if (ReferenceEquals(quantityCard, card) && quantityZone == zone)
         {
             quantityTile = tile;
-            tile.SetQuantityControls(true, CountCardCopies(card, zone == MainMenuCardTileZone.Sideboard),
+            tile.SetQuantityControls(true, CountTileCopies(card, zone),
                 DeckRepository.GetAllowedCopiesToAdd(currentDeck, card) > 0);
             SetHighlightedTile(tile);
         }
@@ -927,6 +958,10 @@ public sealed partial class MainMenuController : MonoBehaviour
             return;
         }
         bool sideboard = tile.Zone == MainMenuCardTileZone.Sideboard;
+        if(tile.Zone==MainMenuCardTileZone.Commander){
+            if(delta<0)MoveCommanderOut(tile.Card,true);else RequestCommandZone(tile.Card,false);
+            return;
+        }
         int before = CountCardCopies(tile.Card, sideboard);
         if (delta > 0) DeckRepository.AddCard(currentDeck, tile.Card, 1, sideboard);
         else DeckRepository.RemoveCard(currentDeck, tile.Card, 1, sideboard);
@@ -934,6 +969,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (after == before) return;
         MarkDeckDirty();
         selectedCard = tile.Card;
+        if(IsCommandZoneEditor&&sideboard){RefreshDeckGrids();RefreshSelectedCardInfo();return;}
         SetStatus($"{tile.Card.cardName} {(delta > 0 ? "+1" : "-1")} {(sideboard ? "sideboard" : "main deck")}.");
         MainMenuCardTileZone deckZone = sideboard ? MainMenuCardTileZone.Sideboard : MainMenuCardTileZone.MainDeck;
         RectTransform deckContent = sideboard ? sideboardContent : mainDeckContent;
@@ -946,7 +982,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         {
             CreateCardTile(deckContent, tile.Card, after, deckZone);
             Transform added = deckContent.GetChild(deckContent.childCount - 1);
-            List<DeckEntry> entries = sideboard ? currentDeck.sideboard : currentDeck.cards;
+            List<DeckEntry> entries = sideboard ? SecondaryDeckEntries : currentDeck.cards;
             int index = entries.FindIndex(entry => EntryMatchesCard(entry, tile.Card));
             if (index >= 0) added.SetSiblingIndex(index);
         }
@@ -961,8 +997,10 @@ public sealed partial class MainMenuController : MonoBehaviour
             }
         }
         RefreshVisibleCardQuantities(tile.Card);
-        SetText(mainDeckCountText, $"主牌  {DeckRepository.GetTotalCount(currentDeck, false)}");
-        SetText(sideboardCountText, $"备牌  {DeckRepository.GetTotalCount(currentDeck, true)}");
+        if(deckViewSort!=DeckViewSort.Original)ReorderDeckTiles(deckContent,sideboard?SecondaryDeckEntries:currentDeck.cards);
+        RefreshMainDeckHeading();
+        RefreshSecondaryDeckHeading();
+        RefreshConstructionFilters();RefreshCompanionEntry();
         RefreshDeckLegality();
     }
 
@@ -987,7 +1025,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             {
                 MainMenuCardTile tile = parent.GetChild(i).GetComponent<MainMenuCardTile>();
                 if (tile == null || !tile.gameObject.activeSelf || !ReferenceEquals(tile.Card, card)) continue;
-                int count = CountCardCopies(card, tile.Zone == MainMenuCardTileZone.Sideboard);
+                int count = CountTileCopies(card, tile.Zone);
                 tile.SetCount(count);
                 tile.SetQuantityControls(tile.QuantityControlsVisible, count, canIncrease);
             }
@@ -1009,7 +1047,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (!closing)
         {
             quantityZone = tile.Zone;
-            tile.SetQuantityControls(true, CountCardCopies(tile.Card, tile.Zone == MainMenuCardTileZone.Sideboard),
+            tile.SetQuantityControls(true, CountTileCopies(tile.Card, tile.Zone),
                 DeckRepository.GetAllowedCopiesToAdd(currentDeck, tile.Card) > 0);
         }
         SetStatusTextOnly($"Selected {tile.Card.cardName}.");
@@ -1065,7 +1103,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void ReorderDraggedCard(MainMenuCardTile source, PointerEventData pointer)
     {
-        var entries = source.Zone == MainMenuCardTileZone.MainDeck ? currentDeck.cards : currentDeck.sideboard;
+        var entries = source.Zone == MainMenuCardTileZone.Commander ? currentDeck.commanders : source.Zone == MainMenuCardTileZone.MainDeck ? currentDeck.cards : SecondaryDeckEntries;
         var content = source.Zone == MainMenuCardTileZone.MainDeck ? mainDeckContent : sideboardContent;
         int from = entries.FindIndex(e => DeckRepository.ResolveCard(e, cards) == source.Card);
         if (from < 0) return;
@@ -1079,7 +1117,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             float d = (center - pointer.position).sqrMagnitude;
             if (d < distance) { distance = d; nearest = tile; nearestPoint = center; }
         }
-        if (nearest == null || nearest == source) return;
+        if (nearest == null || nearest == source || nearest.Zone != source.Zone) return;
         int insertion = entries.FindIndex(e => DeckRepository.ResolveCard(e, cards) == nearest.Card);
         if (insertion < 0) return;
         if (pointer.position.x >= nearestPoint.x) insertion++;
@@ -1087,7 +1125,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (from == insertion) return;
         var entry = entries[from]; entries.RemoveAt(from); entries.Insert(insertion, entry);
         // Reuse the existing tiles: only their order changes, avoiding image reload/flicker.
-        source.transform.SetSiblingIndex(insertion);
+        source.transform.SetSiblingIndex(insertion+(source.Zone==MainMenuCardTileZone.Sideboard?CommandPrefixCount():0));
         LayoutRebuilder.MarkLayoutForRebuild(content);
         MarkDeckDirty();
         SetStatusTextOnly("已调整卡牌顺序，保存后保留。");
@@ -1099,6 +1137,13 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (sourceZone == MainMenuCardTileZone.Collection && DeckAuxiliary.IsAuxiliary(card)
             && (targetZone == MainMenuDropZone.MainDeck || targetZone == MainMenuDropZone.Sideboard))
         { selectedCard = card; AddSelectedAuxiliary(); return; }
+
+        if(IsCommandZoneEditor&&targetZone==MainMenuDropZone.Commander){RequestCommandZone(card,sourceZone==MainMenuCardTileZone.MainDeck);return;}
+        if(sourceZone==MainMenuCardTileZone.Commander){
+            if(targetZone==MainMenuDropZone.Sideboard){var entry=currentDeck.commanders.FirstOrDefault(e=>EntryMatchesCard(e,card));if(entry!=null)DeckCommander.Remove(currentDeck,entry);MarkDeckDirty();RefreshDeckGrids();}
+            else if(targetZone==MainMenuDropZone.MainDeck||targetZone==MainMenuDropZone.Collection)MoveCommanderOut(card,targetZone==MainMenuDropZone.MainDeck);
+            return;
+        }
 
         int count = GetDragCopyCount(card, sourceZone);
         if (count <= 0)
@@ -1130,8 +1175,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             case MainMenuCardTileZone.MainDeck:
                 if (targetZone == MainMenuDropZone.Sideboard)
                 {
-                    DeckRepository.RemoveCard(currentDeck, card, count, false);
-                    DeckRepository.AddCard(currentDeck, card, count, true);
+                    MoveDeckCopies(card,count,false);
                     changed = true;
                     message = $"Moved {count} {card.cardName} to sideboard.";
                 }
@@ -1145,8 +1189,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             case MainMenuCardTileZone.Sideboard:
                 if (targetZone == MainMenuDropZone.MainDeck)
                 {
-                    DeckRepository.RemoveCard(currentDeck, card, count, true);
-                    DeckRepository.AddCard(currentDeck, card, count, false);
+                    MoveDeckCopies(card,count,true);
                     changed = true;
                     message = $"Moved {count} {card.cardName} to main deck.";
                 }
@@ -1180,7 +1223,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             return allowed == int.MaxValue ? requested : Mathf.Min(requested, allowed);
         }
 
-        int available = CountCardCopies(card, sourceZone == MainMenuCardTileZone.Sideboard);
+        int available = CountTileCopies(card, sourceZone);
         if (available <= 0) return 0;
         return Mathf.Min(requested, available);
     }
@@ -1188,7 +1231,7 @@ public sealed partial class MainMenuController : MonoBehaviour
     private int CountCardCopies(CardDefinition card, bool sideboard)
     {
         if (card == null || currentDeck == null) return 0;
-        List<DeckEntry> entries = sideboard ? currentDeck.sideboard : currentDeck.cards;
+        List<DeckEntry> entries = sideboard ? SecondaryDeckEntries : currentDeck.cards;
         if (entries == null) return 0;
 
         for (int i = 0; i < entries.Count; i++)
@@ -1285,6 +1328,10 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private MainMenuDropZone GetDropZone(PointerEventData eventData)
     {
+        if(IsCommandZoneEditor&&IsPointerOverContentShell(sideboardContent,eventData)){
+            if(commandZoneDrop!=null&&RectTransformUtility.RectangleContainsScreenPoint(commandZoneDrop,eventData.position,eventData.pressEventCamera))return MainMenuDropZone.Commander;
+            foreach(var tile in sideboardContent.GetComponentsInChildren<MainMenuCardTile>())if(tile.Zone==MainMenuCardTileZone.Commander&&RectTransformUtility.RectangleContainsScreenPoint((RectTransform)tile.transform,eventData.position,eventData.pressEventCamera))return MainMenuDropZone.Commander;
+        }
         if (IsPointerOverContentShell(mainDeckContent, eventData)) return MainMenuDropZone.MainDeck;
         if (IsPointerOverContentShell(sideboardContent, eventData)) return MainMenuDropZone.Sideboard;
         if (IsPointerOverContentShell(collectionContent, eventData)) return MainMenuDropZone.Collection;
@@ -1333,6 +1380,9 @@ public sealed partial class MainMenuController : MonoBehaviour
     private string BuildDragHint(MainMenuCardTile tile, MainMenuDropZone dropZone)
     {
         if (tile == null || tile.Card == null) return string.Empty;
+        if(IsCommandZoneEditor && (dropZone==MainMenuDropZone.Commander||tile.Zone==MainMenuCardTileZone.Commander))
+            return dropZone==MainMenuDropZone.Commander?DeckCompanion.Text("放入统帅区即指定为主将；共同主将须符合规则。","Drop into the command zone to designate a commander; pairs must be legal.","統率領域へ置くと統率者に指定されます。組み合わせは適正である必要があります。"):
+                DeckCompanion.Text("移出统帅区即取消主将指定。","Moving out of the command zone removes its designation.","統率領域から移すと統率者の指定を解除します。");
 
         int count = GetDragCopyCount(tile.Card, tile.Zone);
         string cardName = tile.Card.cardName;
@@ -1583,9 +1633,9 @@ public sealed partial class MainMenuController : MonoBehaviour
         unsavedChangesMessageText = AddText(panel.transform, "Message", string.Empty, 18, MenuVisualTheme.Paper, TextAnchor.UpperLeft);
         Place(unsavedChangesMessageText.rectTransform, new Vector2(0f, 24f), new Vector2(480f, 54f));
 
-        CreateDialogButton(panel.transform, "SaveButton", "保存", new Vector2(-176f, -78f), MenuVisualTheme.Primary, ConfirmSaveAndContinue);
-        CreateDialogButton(panel.transform, "DiscardButton", "放弃", new Vector2(0f, -78f), ObsidianArenaTheme.RedDeep, ConfirmDiscardAndContinue);
-        CreateDialogButton(panel.transform, "CancelButton", "取消", new Vector2(176f, -78f), MenuVisualTheme.Panel, CancelUnsavedDialog);
+        FrameDialogButton(CreateDialogButton(panel.transform, "SaveButton", "保存", new Vector2(-176f, -78f), MenuVisualTheme.Primary, ConfirmSaveAndContinue));
+        FrameDialogButton(CreateDialogButton(panel.transform, "DiscardButton", "放弃", new Vector2(0f, -78f), ObsidianArenaTheme.RedDeep, ConfirmDiscardAndContinue));
+        FrameDialogButton(CreateDialogButton(panel.transform, "CancelButton", "取消", new Vector2(176f, -78f), MenuVisualTheme.Raised, CancelUnsavedDialog));
 
         SetUnsavedChangesDialogVisible(false);
     }
@@ -1609,6 +1659,24 @@ public sealed partial class MainMenuController : MonoBehaviour
         Text text = AddText(go.transform, "Text", label, 20, Color.white, TextAnchor.MiddleCenter);
         Stretch(text.rectTransform, 0f, 0f, 0f, 0f);
         return button;
+    }
+
+    // Solid inner edges remain visible at fractional Canvas scale factors.
+    private static void FrameDialogButton(Button button)
+    {
+        var outline = button.GetComponent<Outline>();
+        if (outline != null) outline.enabled = false;
+        for (int i = 0; i < 4; i++)
+        {
+            var edge = AddImage(button.transform, "FrameEdge" + i, new Color(.46f, .58f, .73f, 1));
+            edge.raycastTarget = false;
+            var r = edge.rectTransform;
+            r.anchorMin = i == 0 ? new Vector2(0, 1) : i == 3 ? new Vector2(1, 0) : Vector2.zero;
+            r.anchorMax = i == 1 ? new Vector2(1, 0) : i == 2 ? new Vector2(0, 1) : Vector2.one;
+            r.pivot = i == 0 ? new Vector2(.5f, 1) : i == 1 ? new Vector2(.5f, 0) : i == 2 ? new Vector2(0, .5f) : new Vector2(1, .5f);
+            r.anchoredPosition = Vector2.zero;
+            r.sizeDelta = i < 2 ? new Vector2(0, 2) : new Vector2(2, 0);
+        }
     }
 
     private void SetStatusTextOnly(string message)
@@ -1900,6 +1968,9 @@ public sealed partial class MainMenuController : MonoBehaviour
         text.raycastTarget = false;
         text.horizontalOverflow = HorizontalWrapMode.Wrap;
         text.verticalOverflow = VerticalWrapMode.Truncate;
+        // Apply the saved font and scale before the first visible frame rather
+        // than waiting for the periodic scene preference binding.
+        PreferenceText.SetSize(text, fontSize);
         return text;
     }
 
@@ -1938,6 +2009,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             commanders = CloneEntries(source.commanders),
             cards = CloneEntries(source.cards),
             sideboard = CloneEntries(source.sideboard),
+            companion = DeckCompanion.Copy(source.companion),
             attractions = CloneEntries(source.attractions),
             contraptions = CloneEntries(source.contraptions)
         };

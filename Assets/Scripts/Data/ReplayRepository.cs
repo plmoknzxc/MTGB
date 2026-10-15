@@ -18,6 +18,8 @@ using Newtonsoft.Json;
     public int version = 1, gameNumber = 1, bestOf = 1, winnerSeat;
     public string matchId, startedUtc, reason;
     public string[] players;
+    // Optional header field; older recordings omit it. Full playback still validates the timeline.
+    public double previewDuration = -1;
     public List<ReplayFrame> frames = new List<ReplayFrame>();
     public double Duration => frames.Count == 0 ? 0 : frames[frames.Count - 1].time;
 }
@@ -47,7 +49,7 @@ public sealed class MatchReplayRecorder
     }
 }
 
-public static class ReplayRepository
+public static partial class ReplayRepository
 {
     public const string Extension = ".mtgbr";
     public const int MaxFileBytes = 64 * 1024 * 1024;
@@ -89,6 +91,8 @@ public static class ReplayRepository
     internal static string SaveReceived(byte[] bytes,MatchReplay replay,string directory)
         => SaveBytes(bytes,DefaultName(replay),directory,false);
     internal static void NotifyChanged()=>Changed?.Invoke();
+    internal static string SaveEncodedArchive(byte[] bytes,string name,string directory)
+        => SaveBytes(bytes,name,directory,false);
     private static string SaveBytes(byte[] bytes, string name, string root,bool notify=true)
     {
         name = (name ?? "").Trim();
@@ -120,6 +124,7 @@ public static class ReplayRepository
     public static byte[] Encode(MatchReplay replay)
     {
         Validate(replay);
+        replay.previewDuration=replay.Duration;
         using var output = new MemoryStream();
         output.Write(Magic, 0, Magic.Length);
         using(var compressedLimit=new ReplayLimitStream(output,MaxFileBytes-Magic.Length))

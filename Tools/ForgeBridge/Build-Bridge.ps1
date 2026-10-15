@@ -42,3 +42,5 @@ $runtimeHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([
 Write-Output "Forge runtime built: $runtime"
 & python -X utf8 "$PSScriptRoot/Package-Runtime.py"
 if ($LASTEXITCODE) { throw 'Portable Forge runtime packaging failed.' }
+& python -X utf8 "$PSScriptRoot/Build-DeckEditorRules.py"
+if ($LASTEXITCODE) { throw 'Editor construction facet export failed.' }

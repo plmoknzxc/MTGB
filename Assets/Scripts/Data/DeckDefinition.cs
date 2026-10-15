@@ -12,6 +12,8 @@ public sealed class DeckDefinition
     public List<DeckEntry> commanders = new List<DeckEntry>();
     public List<DeckEntry> cards = new List<DeckEntry>();
     public List<DeckEntry> sideboard = new List<DeckEntry>();
+    // A designation referencing one existing sideboard card, not another copy.
+    public DeckEntry companion;
     public List<DeckEntry> attractions = new List<DeckEntry>();
     public List<DeckEntry> contraptions = new List<DeckEntry>();
 }

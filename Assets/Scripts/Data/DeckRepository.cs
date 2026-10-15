@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -249,13 +250,15 @@ public static class DeckRepository
 
         entry.count -= count;
         Normalize(deck);
+        DeckCompanion.ClearMissing(deck);
     }
 
     public static int GetAllowedCopiesToAdd(DeckDefinition deck, CardDefinition card)
     {
         if (deck == null || card == null) return 0;
         if (IsUnlimitedCopies(card)) return int.MaxValue;
-        return Mathf.Max(0, card.forgeDeckLimit - CountCopies(deck, card));
+        int limit=DeckCommander.IsFormat(deck.format)&&card.forgeDeckLimit==4?1:card.forgeDeckLimit;
+        return Mathf.Max(0, limit - CountCopies(deck, card));
     }
 
     public static bool EnforceCopyLimits(DeckDefinition deck, IReadOnlyList<CardDefinition> cards)
@@ -334,6 +337,7 @@ public static class DeckRepository
     {
         var deck = new DeckDefinition { name = Path.GetFileNameWithoutExtension(path) };
         List<DeckEntry> target = deck.cards;
+        var companions=new List<DeckEntry>();
         bool ignoreSection = false;
 
         string[] lines = content.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
@@ -367,6 +371,10 @@ public static class DeckRepository
                     target = deck.commanders;
                     ignoreSection = false;
                 }
+                else if (line.Equals("#companion",StringComparison.OrdinalIgnoreCase))
+                {
+                    target=companions;ignoreSection=false;
+                }
                 else if (IsMainDeckHeader(line))
                 {
                     target = deck.cards;
@@ -394,6 +402,8 @@ public static class DeckRepository
             AddLineEntry(target, line);
         }
 
+        if(companions.Count>1||companions.Any(e=>e.count!=1))throw new FormatException("行侣分区只能指定一张牌。");
+        if(companions.Count==1){deck.companion=DeckCompanion.Copy(companions[0]);if(!deck.sideboard.Any(e=>e.PrintingKey==deck.companion.PrintingKey))deck.sideboard.Add(DeckCompanion.Copy(deck.companion));}
         return deck;
     }
 
@@ -412,6 +422,7 @@ public static class DeckRepository
             AppendDeckLines(lines, deck.commanders);
         }
 
+        if(DeckCompanion.Has(deck)){lines.Add("#companion");AppendDeckLines(lines,new List<DeckEntry>{deck.companion});}
         lines.Add("#main");
         AppendDeckLines(lines, deck.cards);
         lines.Add("!side");

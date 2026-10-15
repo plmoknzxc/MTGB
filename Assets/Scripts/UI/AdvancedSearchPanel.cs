@@ -13,18 +13,26 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     Button apply;
     GameObject setPicker;
     Action<AdvancedCardSearch> submit;
+    bool commanderAvailable,companionAvailable;
     readonly List<Action> read = new List<Action>();
-    public static void Show(Canvas canvas, Dropdown dropdownTemplate, AdvancedCardSearch state, Action<AdvancedCardSearch> submit)
+    readonly List<Action> colorLabels = new List<Action>();
+    void OnEnable() { GamePreferences.Changed += RefreshColorLabels; }
+    void OnDisable() { GamePreferences.Changed -= RefreshColorLabels; }
+    void RefreshColorLabels() { foreach (var refresh in colorLabels) refresh(); }
+    public static void Show(Canvas canvas, Dropdown dropdownTemplate, AdvancedCardSearch state, Action<AdvancedCardSearch> submit, bool commanderAvailable = false, bool companionAvailable = false)
     {
         if (!Application.isPlaying) return;
         var overlay = ReplayWidgets.Panel(canvas.transform, "AdvancedSearch", 0, 0, 0, 0, new Color(0, 0, 0, .8f));
         overlay.gameObject.hideFlags = HideFlags.DontSaveInEditor;
         overlay.anchorMin = Vector2.zero; overlay.anchorMax = Vector2.one; overlay.offsetMin = overlay.offsetMax = Vector2.zero;
         var view = overlay.gameObject.AddComponent<AdvancedSearchPanel>();
-        view.template = dropdownTemplate; view.submit = submit; view.Build(state.Copy());
+        view.template = dropdownTemplate; view.submit = submit;
+        view.commanderAvailable=commanderAvailable;view.companionAvailable=companionAvailable;
+        view.Build(state.Copy());
     }
     void Build(AdvancedCardSearch state)
     {
+        colorLabels.Clear();
         draft = state;
         var panel = ReplayWidgets.Panel(transform, "SearchPanel", 0, 0, 1120, 940, MenuVisualTheme.Panel);
         ReplayWidgets.Label(panel, "高级搜索", 0, 424, 1032, 48, 28);
@@ -45,6 +53,9 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
         Field(0, 0, "卡名", draft.Name, v => draft.Name = v);
         Field(1, 0, "效果文本", draft.Rules, v => draft.Rules = v);
         Field(0, 1, "类别与副类别", draft.Type, v => draft.Type = v, false);
+        Heading(1, 1, DeckCompanion.Text("牌组适配（可关闭）","Deck fit (optional)","デッキ適合（任意）"));
+        ConstructionToggle("CommanderFit",DeckCompanion.Text("主将适配","Commander fit","統率者適合"),130,draft.CommanderFit,commanderAvailable,v=>draft.CommanderFit=v);
+        ConstructionToggle("CompanionFit",DeckCompanion.Text("行侣适配","Companion fit","相棒適合"),390,draft.CompanionFit,companionAvailable,v=>draft.CompanionFit=v);
         ColorRow(0, 2, "颜色", draft.Colors, v => draft.Colors = v);
         ColorRow(1, 2, "颜色标识", draft.Identity, v => draft.Identity = v);
         string[] modes = { "包含任意所选颜色", "包含全部所选颜色", "恰好这些颜色", "仅使用所选颜色（含无色）" };
@@ -104,6 +115,22 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     }
     void Update() { if (Input.GetKeyDown(KeyCode.Escape)) { if(setPicker!=null){Destroy(setPicker);return;} if(!GetComponentsInChildren<SearchInsertionMenu>().Any(m => m.IsOpen)) Destroy(gameObject); } }
     static float X(int col) => col == 0 ? -260 : 260;
+    void ConstructionToggle(string name,string label,float x,bool selected,bool available,Action<bool> assign)
+    {
+        var rect=ReplayWidgets.Rect(content,name,x,-182,236,52);
+        rect.anchorMin=rect.anchorMax=new Vector2(.5f,1);
+        rect.gameObject.AddComponent<Image>().color=Color.clear;
+        var toggle=rect.gameObject.AddComponent<Toggle>();
+        var box=ReplayWidgets.Panel(rect,"Box",-102,0,28,28,MenuVisualTheme.Ink);
+        ObsidianArenaTheme.EnsureOutline(box.GetComponent<Image>(),MenuVisualTheme.Muted,Vector2.one);
+        var check=ReplayWidgets.Panel(box,"Check",0,0,16,16,MenuVisualTheme.Accent);
+        var text=ReplayWidgets.Label(rect,label,20,0,192,52,17);
+        text.GetComponent<PreferenceText>().Literal=true;
+        text.color=available?MenuVisualTheme.Paper:MenuVisualTheme.Muted;
+        toggle.targetGraphic=box.GetComponent<Image>();toggle.graphic=check.GetComponent<Image>();
+        toggle.SetIsOnWithoutNotify(selected&&available);toggle.interactable=available;
+        read.Add(()=>assign(toggle.isOn&&available));
+    }
     void PlatformRow(int row)
     {
         Heading(0,row,"平台");
@@ -194,8 +221,18 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
                 Refresh();
             });
             ((RectTransform)button.transform).anchorMin = ((RectTransform)button.transform).anchorMax = new Vector2(.5f, 1);
+            var label=button.GetComponentInChildren<Text>();
+            label.resizeTextForBestFit=false;
+            label.GetComponent<PreferenceText>().Literal=true;
+            PreferenceText.SetSize(label,20);
             buttons[i] = button;
         }
+        void RefreshLabels() {
+            string[] captions=GamePreferences.Language=="ja-JP"?new[]{"白","青","黒","赤","緑","無色"}
+                :GamePreferences.Language=="en-US"?names:new[]{"白","蓝","黑","红","绿","无色"};
+            for(int i=0;i<6;i++)buttons[i].GetComponentInChildren<Text>().text=captions[i];
+        }
+        colorLabels.Add(RefreshLabels);RefreshLabels();
         void Refresh() { for (int i = 0; i < 6; i++) buttons[i].GetComponent<Image>().color = (mask & (1 << i)) != 0 ? MenuVisualTheme.Primary : MenuVisualTheme.Raised; }
         Refresh(); read.Add(() => assign(mask));
     }

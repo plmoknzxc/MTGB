@@ -46,6 +46,20 @@ public sealed partial class ForgeBattlefieldController
         if(service!=null)service.ControlMode=next;else previewControlMode=next;
         automaticRequest=0;
         renderedKey=null;PresentControlMode();
+        RefreshPriorityAdvanceVisibility();
+    }
+    // The button and the automatic submitter must agree before the first frame
+    // of a new request. Re-evaluate the current mode, never cache a planned pass.
+    private int AutomaticPriorityOption()
+    {
+        if(view?.request?.kind!="InputPassPriority")return -1;
+        int option=ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,false);
+        return option>=0&&!view.request.options[option].disabled?option:-1;
+    }
+    private void RefreshPriorityAdvanceVisibility()
+    {
+        if(advanceButton==null || view?.request?.kind!="InputPassPriority")return;
+        advanceButton.gameObject.SetActive(!submitted&&OptionIndex("ok")>=0&&AutomaticPriorityOption()<0);
     }
     private void UpdateAutomaticControl()
     {
@@ -58,7 +72,7 @@ public sealed partial class ForgeBattlefieldController
         if(automaticRequest!=requestId){automaticRequest=requestId;automaticReadyAt=Time.unscaledTime+.06f;}
         if(Time.unscaledTime<automaticReadyAt || view.request.kind=="InputPassPriority"&&Time.unscaledTime<phaseVisibleUntil)return;
         long context=view.request.contextId>0?view.request.contextId:requestId;
-        int option=ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,attemptedPaymentContext==context);
+        int option=view.request.kind=="InputPassPriority"?AutomaticPriorityOption():ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,attemptedPaymentContext==context);
         if(option<0)return;
         if(view.request.kind.Contains("PayMana"))attemptedPaymentContext=context;
         Choose(option,requestId);

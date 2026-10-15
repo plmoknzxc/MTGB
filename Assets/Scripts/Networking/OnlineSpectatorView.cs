@@ -23,7 +23,13 @@ public static class OnlineSpectatorView
                 players=(view.players??Array.Empty<ForgePlayerView>()).Select(p=>new ForgePlayerView {
                     seat=p.seat,controllingSeat=p.controllingSeat,targetId=p.targetId,life=p.life,handCount=p.handCount,libraryCount=p.libraryCount,
                     libraryTop=p.libraryTopPublic?PublicCard(p.libraryTop):null,libraryTopPublic=p.libraryTopPublic,
-                    redMana=p.redMana,manaPool=p.manaPool,graveyard=p.graveyard,exileCount=p.exileCount,
+                    redMana=p.redMana,manaPool=p.manaPool?.ToArray(),snowManaPool=p.snowManaPool?.ToArray(),
+                    manaPoolEntries=p.manaPoolEntries?.Select(e=>new ForgeManaPoolEntry {
+                        id=e.id,symbol=e.symbol,count=e.count,snow=e.snow,restricted=e.restricted,
+                        // A player's visible source name can come from their
+                        // private hand. Observers need buckets, not that identity.
+                        sourceName=""
+                    }).ToArray(),graveyard=p.graveyard,exileCount=p.exileCount,
                     counters=p.counters,speed=p.speed,ringTemptedCount=p.ringTemptedCount,ringBearerId=p.ringBearerId,completedDungeons=p.completedDungeons,
                     graveyardCards=(p.graveyardCards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     exileCards=(p.exileCards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),

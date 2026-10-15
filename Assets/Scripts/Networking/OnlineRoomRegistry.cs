@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public sealed class OnlineRoomConfig
 {
+    public static bool AllowsAnte(string formatId, bool allowCustomContent)
+        => allowCustomContent && string.Equals(formatId, "none", StringComparison.Ordinal);
     public int startingLife = 20;
     public int firstPlayerSeat;
     public int bestOf = 1;

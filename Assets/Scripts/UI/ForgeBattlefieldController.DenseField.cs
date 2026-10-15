@@ -23,18 +23,18 @@ public sealed partial class ForgeBattlefieldController
     {
         if(denseFieldRows.TryGetValue(row,out var scroll)&&scroll!=null)scroll.gameObject.SetActive(visible);
     }
-    // Pack only populated regions from the midline towards the hand. All three
+    // Pack populated regions from each hand towards the midline. All three
     // own independent horizontal offsets and use their measured full card bounds.
     private void ArrangeSupportRegions(bool own)
     {
         string prefix=own?"Your":"Opponent";
-        float edge=28;
-        foreach(string kind in new[]{"Battles","Planeswalkers","Support"}) {
+        float edge=Mathf.Min(370,surface.rect.height*.5f-140);
+        foreach(string kind in new[]{"Support","Planeswalkers","Battles"}) {
             if(!denseFieldRows.TryGetValue(prefix+kind,out var lane) || lane==null || !lane.gameObject.activeSelf)continue;
             var rect=(RectTransform)lane.transform;
-            float center=edge+rect.rect.height*.5f;
+            float center=edge-rect.rect.height*.5f;
             rect.anchoredPosition=new Vector2(rect.anchoredPosition.x,own?-center:center);
-            edge+=rect.rect.height+16;
+            edge-=rect.rect.height+16;
         }
     }
     // Each overflow region owns its scroll. Original card IDs and grouping rules

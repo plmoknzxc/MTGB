@@ -26,14 +26,6 @@ public sealed class DeckCardDetailsView
     private readonly GameObject artContent;
     private readonly System.Action<CardDefinition, Transform> openArt;
     private readonly System.Func<CardDefinition,RectTransform,DeckKeywordGlossary.Entry,bool,bool> relatedHover;
-    // Commander formats are temporarily omitted from the deck format picker. Keep
-    // DeckFormatLegality's supported formats intact so existing decks still load.
-    private static readonly string[] FormatOptions = { "standard", "pioneer", "modern-group", "legacy", "vintage", "pauper", "historic", "timeless" };
-    private readonly List<UnityEngine.UI.Button> formatButtons = new List<UnityEngine.UI.Button>();
-    private readonly List<string> formatButtonKeys = new List<string>();
-    private readonly UnityEngine.UI.Button modernButton;
-    private readonly UnityEngine.UI.Button commanderButton;
-    private GameObject formatMenuOverlay;
     private readonly List<UnityEngine.UI.Button> languageButtons = new List<UnityEngine.UI.Button>();
     private readonly List<UnityEngine.UI.Button> sizeButtons = new List<UnityEngine.UI.Button>();
     private readonly UnityEngine.UI.Dropdown banlistDropdown;
@@ -121,34 +113,6 @@ public sealed class DeckCardDetailsView
         CreateSettingsRow("文字大小", new[] { "小", "标准", "大" },
             new[] { "0.85", "1", "1.3" }, value => GamePreferences.SetScale(float.Parse(value, System.Globalization.CultureInfo.InvariantCulture)), sizeButtons);
         ReplayWidgets.AutoSaveToggle(settingsContent.transform);
-        var formatTitle = Label(settingsContent.transform, "FormatHeading", 18, Paper);
-        formatTitle.text = "当前赛制";
-        formatTitle.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 29;
-        for (int row = 0; row < FormatOptions.Length; row += 2)
-        {
-            var holder = CreateButtonRow(settingsContent.transform, "FormatRow" + row);
-            for (int column = 0; column < 2 && row + column < FormatOptions.Length; column++)
-            {
-                string key = FormatOptions[row + column];
-                if (key == "modern-group")
-                {
-                    modernButton = CreateSettingsButton(holder.transform, FormatLabel(key),
-                        () => OpenFormatChoices(modernButton, new[] { "modern", "premodern" }, formatChanged));
-                }
-                else if (key == "commander-group")
-                {
-                    commanderButton = CreateSettingsButton(holder.transform, FormatLabel(key),
-                        () => OpenFormatChoices(commanderButton, new[] { "commander", "duelcommander", "brawl" }, formatChanged));
-                }
-                else
-                {
-                    var button = CreateSettingsButton(holder.transform, FormatLabel(key), () => SelectFormat(key, formatChanged));
-                    formatButtons.Add(button);
-                    formatButtonKeys.Add(key);
-                }
-            }
-        }
-        RefreshFormatOptions();
         var banlistTitle = Label(settingsContent.transform, "BanlistHeading", 18, Paper);
         banlistTitle.text = "赛制规则 · 日期";
         banlistTitle.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 29;
@@ -206,7 +170,6 @@ public sealed class DeckCardDetailsView
 
     private void SelectTab(int tab)
     {
-        CloseFormatChoices();
         selectedTab = tab;
         foreach (Transform child in content)
             if (child.gameObject.name != "DetailActions" && child.gameObject != settingsContent && child.gameObject != artContent && child.gameObject != legacyText)
@@ -232,11 +195,9 @@ public sealed class DeckCardDetailsView
         if (displayedLanguageRevision != GamePreferences.Revision)
         {
             displayedLanguageRevision = GamePreferences.Revision;
-            RefreshFormatOptions();
             RefreshBanlistOptions();
         }
         else if (banlistDropdown != null && displayedFormat != GamePreferences.DeckFormat) RefreshBanlistOptions();
-        SyncFormatSelection();
         string[] languages = { "zh-CN", "ja-JP", "en-US" };
         for (int i = 0; i < languageButtons.Count; i++)
             languageButtons[i].GetComponent<UnityEngine.UI.Image>().color = GamePreferences.Language == languages[i]
@@ -245,9 +206,6 @@ public sealed class DeckCardDetailsView
         for (int i = 0; i < sizeButtons.Count; i++)
             sizeButtons[i].GetComponent<UnityEngine.UI.Image>().color = i == selectedSize ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
     }
-
-    private static bool IsCommanderFormat(string key) => key == "commander" || key == "duelcommander" || key == "brawl";
-    private static bool IsModernFormat(string key) => key == "modern" || key == "premodern";
 
     private UnityEngine.UI.Dropdown CreateDropdown(UnityEngine.UI.Dropdown template, string name)
     {
@@ -258,121 +216,13 @@ public sealed class DeckCardDetailsView
         return dropdown;
     }
 
-    private static string FormatLabel(string key)
+    public void RefreshLegalitySettings()
     {
-        switch (key)
-        {
-            case "standard": return GamePreferences.T("标准赛");
-            case "pioneer": return GamePreferences.T("先驱");
-            case "modern-group": return GamePreferences.T("摩登") + " ▾";
-            case "modern": return GamePreferences.T("摩登");
-            case "premodern": return GamePreferences.T("前摩登");
-            case "legacy": return GamePreferences.T("薪传");
-            case "vintage": return GamePreferences.T("特选");
-            case "pauper": return GamePreferences.T("纯铁");
-            case "commander-group": return GamePreferences.T("指挥官") + " ▾";
-            case "commander": return GamePreferences.T("官禁");
-            case "duelcommander": return GamePreferences.T("法禁");
-            case "brawl": return GamePreferences.T("争锋");
-            case "historic": return GamePreferences.T("史迹");
-            case "timeless": return GamePreferences.T("永恒");
-            default: return key;
-        }
-    }
-
-    private void RefreshFormatOptions()
-    {
-        CloseFormatChoices();
-        for (int i = 0; i < formatButtons.Count; i++)
-            formatButtons[i].GetComponentInChildren<UnityEngine.UI.Text>().text = FormatLabel(formatButtonKeys[i]);
-        if (modernButton != null) modernButton.GetComponentInChildren<UnityEngine.UI.Text>().text = FormatLabel("modern-group");
-        if (commanderButton != null) commanderButton.GetComponentInChildren<UnityEngine.UI.Text>().text = FormatLabel("commander-group");
-        SyncFormatSelection();
-    }
-
-    private void SyncFormatSelection()
-    {
-        string selected = GamePreferences.DeckFormat;
-        for (int i = 0; i < formatButtons.Count; i++)
-            formatButtons[i].GetComponent<UnityEngine.UI.Image>().color = selected == formatButtonKeys[i]
-                ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
-        if (modernButton != null)
-            modernButton.GetComponent<UnityEngine.UI.Image>().color = IsModernFormat(selected)
-                ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
-        if (commanderButton != null)
-            commanderButton.GetComponent<UnityEngine.UI.Image>().color = IsCommanderFormat(selected)
-                ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
-    }
-
-    private void OpenFormatChoices(UnityEngine.UI.Button trigger, string[] keys, System.Action formatChanged)
-    {
-        if (formatMenuOverlay != null) { CloseFormatChoices(); return; }
-        var canvas = trigger.GetComponentInParent<Canvas>().rootCanvas;
-        formatMenuOverlay = new GameObject("FormatChoicesOverlay", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(CanvasGroup));
-        formatMenuOverlay.transform.SetParent(canvas.transform, false);
-        var visibility = formatMenuOverlay.GetComponent<CanvasGroup>();
-        visibility.alpha = 0;
-        visibility.interactable = visibility.blocksRaycasts = false;
-        var overlayRect = (RectTransform)formatMenuOverlay.transform;
-        overlayRect.anchorMin = Vector2.zero; overlayRect.anchorMax = Vector2.one;
-        overlayRect.offsetMin = overlayRect.offsetMax = Vector2.zero;
-        formatMenuOverlay.GetComponent<UnityEngine.UI.Image>().color = Color.clear;
-        formatMenuOverlay.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(CloseFormatChoices);
-
-        var panel = new GameObject("FormatChoices", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.VerticalLayoutGroup));
-        panel.transform.SetParent(formatMenuOverlay.transform, false);
-        panel.GetComponent<UnityEngine.UI.Image>().color = MenuVisualTheme.Panel;
-        var layout = panel.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
-        layout.padding = new RectOffset(5, 5, 5, 5);
-        layout.spacing = 3;
-        layout.childControlWidth = layout.childControlHeight = true;
-        layout.childForceExpandWidth = layout.childForceExpandHeight = true;
-        foreach (string key in keys)
-        {
-            string choice = key;
-            var button = CreateSettingsButton(panel.transform, FormatLabel(key), () =>
-            {
-                CloseFormatChoices();
-                SelectFormat(choice, formatChanged);
-            });
-            button.GetComponent<UnityEngine.UI.Image>().color = GamePreferences.DeckFormat == key
-                ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
-        }
-        var triggerRect = (RectTransform)trigger.transform;
-        var corners = new Vector3[4];
-        triggerRect.GetWorldCorners(corners);
-        Vector3 lower = overlayRect.InverseTransformPoint(corners[0]);
-        Vector3 upper = overlayRect.InverseTransformPoint(corners[2]);
-        float height = keys.Length * 42 + (keys.Length - 1) * 3 + 10;
-        var panelRect = (RectTransform)panel.transform;
-        panelRect.anchorMin = panelRect.anchorMax = new Vector2(.5f, .5f);
-        panelRect.pivot = new Vector2(0, 1);
-        panelRect.sizeDelta = new Vector2(upper.x - lower.x, height);
-        float top = lower.y - 4;
-        if (top - height < overlayRect.rect.yMin + 8) top = upper.y + height + 4;
-        panelRect.anchoredPosition = new Vector2(lower.x, top);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
-        Canvas.ForceUpdateCanvases();
-        visibility.alpha = 1;
-        visibility.interactable = visibility.blocksRaycasts = true;
-    }
-
-    private void CloseFormatChoices()
-    {
-        if (formatMenuOverlay == null) return;
-        Object.Destroy(formatMenuOverlay);
-        formatMenuOverlay = null;
-    }
-
-    private void SelectFormat(string key, System.Action formatChanged)
-    {
-        GamePreferences.SetDeckFormat(key);
         RefreshBanlistOptions();
-        formatChanged?.Invoke();
         RefreshSettings();
     }
 
-    public void Dispose() { GamePreferences.Changed -= RefreshSettings; CloseFormatChoices(); }
+    public void Dispose() { GamePreferences.Changed -= RefreshSettings; }
 
     private void RefreshBanlistOptions()
     {

@@ -26,6 +26,8 @@ public sealed class DropdownChevron : MaskableGraphic
 
     static void StylePopup(Dropdown dropdown)
     {
+        ClipCaption(dropdown.captionText);
+        SingleLine(dropdown.itemText);
         if(dropdown.template==null)return;
         var template=dropdown.template;
         template.anchorMin=new Vector2(0,0);template.anchorMax=new Vector2(1,0);
@@ -38,6 +40,10 @@ public sealed class DropdownChevron : MaskableGraphic
         shadow.effectColor=new Color(0,0,0,.75f);shadow.effectDistance=new Vector2(4,-5);
         foreach(var toggle in template.GetComponentsInChildren<Toggle>(true))
         {
+            // Fixed-height rows must clip long names instead of wrapping into
+            // the next option. The full option text/value remains unchanged.
+            if(toggle.GetComponent<RectMask2D>()==null)toggle.gameObject.AddComponent<RectMask2D>();
+            foreach(var text in toggle.GetComponentsInChildren<Text>(true))SingleLine(text);
             var image=toggle.targetGraphic as Image;
             if(image!=null)image.color=Color.white;
             var colors=toggle.colors;
@@ -48,9 +54,43 @@ public sealed class DropdownChevron : MaskableGraphic
             colors.fadeDuration=.08f;toggle.colors=colors;
             if(toggle.graphic!=null)toggle.graphic.color=MenuVisualTheme.Accent;
         }
-        if(dropdown.captionText!=null)dropdown.captionText.horizontalOverflow=HorizontalWrapMode.Wrap;
-        if(dropdown.itemText!=null)
-        {dropdown.itemText.horizontalOverflow=HorizontalWrapMode.Wrap;dropdown.itemText.verticalOverflow=VerticalWrapMode.Truncate;}
+    }
+
+    static void SingleLine(Text text)
+    {
+        if(text==null)return;
+        text.horizontalOverflow=HorizontalWrapMode.Overflow;
+        text.verticalOverflow=VerticalWrapMode.Truncate;
+        // Popup rows are reparented outside the Dropdown when cloned, so the
+        // preference binder cannot infer that they still contain literal values.
+        var binding=text.GetComponent<PreferenceText>()??text.gameObject.AddComponent<PreferenceText>();
+        binding.Literal=true;binding.KeepVerticalBounds=true;binding.FitSingleLineHeight=true;binding.Apply();
+    }
+
+    static void ClipCaption(Text text)
+    {
+        if(text==null)return;
+        SingleLine(text);
+        var rect=text.rectTransform;
+        var clip=rect.parent.name=="DropdownCaptionClip"?rect.parent as RectTransform:null;
+        if(clip==null)
+        {
+            clip=new GameObject("DropdownCaptionClip",typeof(RectTransform),typeof(RectMask2D)).GetComponent<RectTransform>();
+            clip.SetParent(rect.parent,false);
+            clip.SetSiblingIndex(rect.GetSiblingIndex());
+            clip.anchorMin=rect.anchorMin;clip.anchorMax=rect.anchorMax;clip.pivot=rect.pivot;
+            clip.sizeDelta=rect.sizeDelta;clip.anchoredPosition=rect.anchoredPosition;
+            rect.SetParent(clip,false);
+        }
+        else if(rect.anchorMin!=Vector2.zero||rect.anchorMax!=Vector2.one||rect.offsetMin!=Vector2.zero||rect.offsetMax!=Vector2.zero)
+        {
+            // Theme/layout refreshes still address the original Text reference.
+            // Apply their new insets to the clipping frame, without nesting them.
+            clip.anchorMin=rect.anchorMin;clip.anchorMax=rect.anchorMax;clip.pivot=rect.pivot;
+            clip.sizeDelta=rect.sizeDelta;clip.anchoredPosition=rect.anchoredPosition;
+        }
+        rect.anchorMin=Vector2.zero;rect.anchorMax=Vector2.one;
+        rect.offsetMin=rect.offsetMax=Vector2.zero;
     }
 
     protected override void OnPopulateMesh(VertexHelper mesh)

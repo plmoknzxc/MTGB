@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -229,6 +229,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             "归属变化影响 BO3 后续局，不修改保存的牌组或收藏。",new Vector2(0f,-46f),
             new Vector2(780f,72f),font,out panel.anteStateText);
         panel.anteToggle.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
+        panel.cardFormatDropdown.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
 
         AddPanel(roomCard.transform, "Divider", new Vector2(0f, 8f), new Vector2(780f, 2f),
             ObsidianArenaTheme.LineSoft);
@@ -568,6 +569,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         destinationEntry.count++;
         entry.count--;
         if (entry.count <= 0) source.Remove(entry);
+        DeckCompanion.ClearMissing(selectedDeck);
         RefreshDeckSummary();
         RefreshSideboardControls(series);
     }
@@ -599,7 +601,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             minimumMainDeckSize = 60,
             maximumSideboardSize = 15,
             allowCustomContent = customContentToggle != null && customContentToggle.isOn,
-            useAnte = anteToggle != null && anteToggle.isOn,
+            useAnte = anteToggle != null && anteToggle.isOn && OnlineRoomConfig.AllowsAnte(
+                DeckFormatLegality.OnlineKeys[cardFormatDropdown.value],customContentToggle != null && customContentToggle.isOn),
             allowedSetCodes = new List<string>()
         };
     }
@@ -678,7 +681,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         Refresh();
     }
 
-    private void OnCustomContentChanged(bool value) => UpdateCustomContentLabel();
+    private void OnCustomContentChanged(bool value) { UpdateCustomContentLabel(); UpdateAnteLabel(); }
 
     private void Refresh()
     {
@@ -797,7 +800,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         if (formatDropdown != null) formatDropdown.interactable = interactable;
         if (cardFormatDropdown != null) cardFormatDropdown.interactable = interactable;
         if (customContentToggle != null) customContentToggle.interactable = interactable;
-        if (anteToggle != null) anteToggle.interactable = interactable;
+        UpdateAnteLabel();
     }
 
     private void RefreshConnectionBadge(bool connected)
@@ -835,9 +838,9 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             if (config == null) roomRulesText.text = string.Empty;
             else
             {
-                string format = GamePreferences.T(DeckFormatLegality.FormatName(config.formatId));
-                roomRulesText.text = string.Format(GamePreferences.T("BO{0} · {1} 点生命\n{2} · DIY {3}"),
-                    config.bestOf, config.startingLife, format, GamePreferences.T(config.allowCustomContent ? "允许" : "禁用"));
+                string format = RoomFormatLabel(config.formatId);
+                roomRulesText.text = "BO"+config.bestOf+" · "+DeckCompanion.Text("初始生命 ","Starting life ","初期ライフ ")+config.startingLife
+                    +"\n"+format+" · DIY "+PermissionLabel(config.allowCustomContent)+" · "+DeckCompanion.Text("赌注 ","Ante ","アンティ ")+PermissionLabel(config.useAnte);
             }
         }
 
@@ -890,6 +893,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
                 ? $"第 {series.gameNumber} 局"
                 : string.Empty;
         }
+        RefreshSideboardCompanion(series);
     }
 
     private int sideboardStartRequested=-1;
@@ -994,6 +998,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         var tile = tileObject.GetComponent<OnlineSideboardCardTile>();
         tile.Configure(this, entry, card, sprite, isSideboard);
         BuildSideboardQuantityControls(tile, countBadge.gameObject, rect.sizeDelta);
+        BuildSideboardCompanionControl(tileObject.transform,entry,card,isSideboard,rect.sizeDelta);
     }
 
     private static void ClearGrid(RectTransform parent)
@@ -1033,13 +1038,22 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         UpdateAnteLabel();
         SetLocalizedOptions(formatDropdown, new[] { "BO1 · 一局胜负", "BO3 · 三局两胜" });
         var names = new string[DeckFormatLegality.OnlineKeys.Length];
-        for (int i = 0; i < names.Length; i++) names[i] = DeckFormatLegality.FormatName(DeckFormatLegality.OnlineKeys[i]);
+        for (int i = 0; i < names.Length; i++) names[i] = RoomFormatLabel(DeckFormatLegality.OnlineKeys[i]);
         SetLocalizedOptions(cardFormatDropdown, names);
         Refresh();
+        if(roomList!=null)DrawBrowserRooms();
     }
+    private static string RoomFormatLabel(string key) => key=="none"
+        ? DeckCompanion.Text("自由／自定义","Free / Custom","自由／カスタム")
+        : GamePreferences.T(DeckFormatLegality.FormatName(key));
+
     private void UpdateAnteLabel()
     {
         if(anteToggle==null)return;
+        bool allowed=cardFormatDropdown!=null && cardFormatDropdown.value<DeckFormatLegality.OnlineKeys.Length
+            && OnlineRoomConfig.AllowsAnte(DeckFormatLegality.OnlineKeys[cardFormatDropdown.value],customContentToggle?.isOn==true);
+        if(!allowed)anteToggle.SetIsOnWithoutNotify(false);
+        anteToggle.interactable=allowed&&cardFormatDropdown.interactable;
         string language=GamePreferences.Language;
         void Set(string path,string zh,string en,string ja) {
             var label=anteToggle.transform.Find(path).GetComponent<Text>();
@@ -1047,7 +1061,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             label.text=language=="zh-CN"?zh:language=="ja-JP"?ja:en;
         }
         Set("Label","赌注（仅本场比赛）","Ante (this match only)","アンティ（このマッチのみ）");
-        Set("Description","归属变化影响 BO3 后续局，不修改保存的牌组或收藏。","Ownership changes carry into later BO3 games; saved decks and collection stay unchanged.","所有権の変更はBO3の次ゲームに引き継ぎます。保存デッキとコレクションは変更しません。");
+        if(allowed)Set("Description","归属变化影响 BO3 后续局，不修改保存的牌组或收藏。","Ownership changes carry into later BO3 games; saved decks and collection stay unchanged.","所有権の変更はBO3の次ゲームに引き継ぎます。保存デッキとコレクションは変更しません。");
+        else Set("Description","仅自由／自定义赛制且允许 DIY 时可开启。","Requires a free/custom format and DIY enabled.","自由／カスタム形式でDIYを許可した場合のみ有効にできます。");
         Set("State",anteToggle.isOn?"已允许":"已禁用",anteToggle.isOn?"Enabled":"Disabled",anteToggle.isOn?"有効":"無効");
     }
     private static void SetLocalizedOptions(Dropdown dropdown, string[] names)

@@ -73,7 +73,7 @@ public sealed partial class ForgeBattlefieldController
             var outline=Node(plate).GetComponent<Outline>();
             if(outline!=null)outline.effectColor=new Color(.3f,.4f,.48f,.5f);
             Node(plate+"/Avatar").gameObject.SetActive(true);Node(plate+"/FactionBar").gameObject.SetActive(false);
-            ArenaPlace(plate+"/Avatar",new Vector2(.5f,.5f),new Vector2(-128,0),new Vector2(70,70));
+            ArenaPlace(plate+"/Avatar",new Vector2(.5f,.5f),new Vector2(-135,0),new Vector2(66,66));
             var portrait=Node(plate+"/Avatar").GetComponent<Image>();
             portrait.sprite=IntegratedUiUtility.RoundedRect(70,70,35);
             portrait.color=own?new Color(.12f,.26f,.34f):new Color(.29f,.22f,.16f);
@@ -86,7 +86,7 @@ public sealed partial class ForgeBattlefieldController
             portraitRim.effectColor=portraitMark.color;portraitRim.effectDistance=new Vector2(1,-1);
             foreach(var text in Node(plate).GetComponentsInChildren<Text>())
                 if(text.text=="LIFE")text.gameObject.SetActive(false);
-            ArenaPlace(plate+"/Name",new Vector2(.5f,.5f),new Vector2(-25,18),new Vector2(128,26));
+            ArenaPlace(plate+"/Name",new Vector2(.5f,.5f),new Vector2(-25,18),new Vector2(148,42));
             ArenaPlace(plate+"/Life",new Vector2(.5f,.5f),new Vector2(91,0),new Vector2(80,68));
             ArenaPlace(plate+"/Sub",new Vector2(.5f,.5f),new Vector2(-18,-17),new Vector2(142,28));
             ArenaTextSize(plate+"/Name",19);SceneText(plate+"/Name").alignment=TextAnchor.MiddleLeft;

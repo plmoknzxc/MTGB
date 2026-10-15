@@ -9,6 +9,8 @@ public sealed class PreferenceText : MonoBehaviour
     // Ordinary text keeps the locale font by default.
     public bool KeepFont;
     public bool Literal;
+    public bool KeepVerticalBounds;
+    public bool FitSingleLineHeight;
     Text text;
     TMP_Text tmp;
     string source,last;
@@ -71,9 +73,18 @@ public sealed class PreferenceText : MonoBehaviour
             text.fontSize=Mathf.RoundToInt(baseSize*GamePreferences.TextScale);
             // Best-fit labels must retain their vertical bounds after localization
             // or font scaling, otherwise long ability text grows over adjacent UI.
-            if(text.resizeTextForBestFit)text.verticalOverflow=VerticalWrapMode.Truncate;
+            if(text.resizeTextForBestFit || KeepVerticalBounds)text.verticalOverflow=VerticalWrapMode.Truncate;
             else if(!userText || inputText)text.verticalOverflow=VerticalWrapMode.Overflow;
             if(!KeepFont && GamePreferences.Font!=null)text.font=GamePreferences.Font;
+            if(FitSingleLineHeight){
+                // Font line metrics can exceed a fixed dropdown row even when the
+                // visible glyphs look small. Fit vertically without shrinking long names.
+                var settings=text.GetGenerationSettings(new Vector2(10000,0));settings.resizeTextForBestFit=false;
+                float line=text.cachedTextGeneratorForLayout.GetPreferredHeight("Mg",settings)/text.pixelsPerUnit;
+                float height=text.rectTransform.rect.height;
+                int fit=height>0&&line>0?Mathf.Max(1,Mathf.FloorToInt(text.fontSize*Mathf.Min(1,(height-.5f)/line))):text.fontSize;
+                text.resizeTextForBestFit=true;text.resizeTextMinSize=text.resizeTextMaxSize=fit;
+            }
         }
         else {tmp.fontSize=baseSize*GamePreferences.TextScale;if(!KeepFont && GamePreferences.TmpFont!=null) tmp.font=GamePreferences.TmpFont;}
     }

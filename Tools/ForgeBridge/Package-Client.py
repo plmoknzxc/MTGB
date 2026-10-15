@@ -136,7 +136,9 @@ def player_files(player, decks=()):
             if 'DoNotShip' in str(relative) or 'source' in relative.parts:
                 continue
             files.append((path, relative.as_posix()))
-    files.append((ROOT / 'Decks/Starter.mdk', 'Decks/Starter.mdk'))
+    starter = ROOT / 'Decks/Starter.mdk'
+    if starter.is_file():
+        files.append((starter, 'Decks/Starter.mdk'))
     for deck in decks:
         deck = deck.resolve()
         if not deck.is_file() or deck.suffix.lower() != '.mdk':

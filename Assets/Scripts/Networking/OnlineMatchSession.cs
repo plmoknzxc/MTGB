@@ -134,6 +134,7 @@ public sealed class OnlineMatchSession : IDisposable
                     // GUI callbacks may replace an input after the server queued its response.
                     // Forge rejected it without executing it and republishes the current request.
                     if (message.error == "stale-request") continue;
+                    diagnostics.Enqueue("Rejected envelope: " + line);
                     Failure = "Forge 拒绝已通过服务器校验的输入，本局异常终止。"; changed = true; break;
                 }
                 if (message.type == "ended")

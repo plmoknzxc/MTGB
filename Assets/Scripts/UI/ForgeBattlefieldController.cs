@@ -128,7 +128,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if(!restarted && integrated && state?.inputPending==true && view!=null && seat==localSeat) {
             canAct=false;submitted=true;
             DisableIntegratedChoices();
-            if(cardSelectionOverlay!=null)foreach(var button in cardSelectionOverlay.GetComponentsInChildren<Button>())button.interactable=false;
+            DisableCardSelectionChoices();
             return;
         }
         // Retain the current surface while its response is in flight. The next
@@ -398,7 +398,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         RememberCastingOrigin(view.request.options[index]);
         RememberLandChoice(view.request.options[index]);
         submitted=true;
-        if(cardSelectionOverlay!=null)foreach(var button in cardSelectionOverlay.GetComponentsInChildren<Button>())button.interactable=false;
+        DisableCardSelectionChoices();
         if(landChoiceMenu!=null)landChoiceMenu.gameObject.SetActive(false);
         if(choiceDismiss!=null)choiceDismiss.gameObject.SetActive(false);
         SuspendTargeting();

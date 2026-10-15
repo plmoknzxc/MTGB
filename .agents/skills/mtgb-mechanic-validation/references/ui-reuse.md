@@ -1,3 +1,5 @@
+2026-10-15 行侣入口夹具反例：重建弹窗后等结束帧完成画布注册再射线；以生产 Show／SetPageVisible 的初始化为准，直接 Create 夹具同时激活目标页面并在绑定已登记牌组后重置 sideboardGameNumber，确认非空基线后测试撤销。CanvasGroup 的 alpha／blocksRaycasts 不替代 GameObject 激活。英文／日文长名按实际 preferredHeight 和按钮间距补差异，保留已通过原生、数据和接收入口前缀，只重试失败 UI。依据 [本批记录](../../../../Docs/CompanionDeckSupport.2026-10-15.zh-CN.md)。
+
 2026-10-12 N54预览反例：检查任意RawImage非空会被场上卡图误满足，实际复制牌窗口仍只有英文名字。预览验收定位准确ChoiceCard_ID/Artwork的Image.sprite及texture，保留旧按钮/权限成功前缀和视觉FAIL，只补当前原生卡面metadata与同控件射线；截图复核仍必要。确认尚未注册到区域集合的复制牌时，桥接缓存原回调卡参数而非猜名字/客户端印次，finally恢复，真实原生预览与操作接收方分别核对。依据[本轮审计](../../../../.tools/name-consumer-delta-1012/audit.json)。
 
 2026-10-11 Balance/Fight/Clash反例：公开展示后原单牌willPutCardOnTop走继承PlayerControllerHuman，而不是已有Scry/Surveil桥入口；Library→Library更新时间戳也不代表应丢失原已知卡。复用arranged知识生命周期，分别核对双方公开留顶、私有只给原接收者、置底隐藏下一未知顶、洗牌清理；只补桥适配器，不为新hash重跑五个已完成付费Clash。原native付费结果/当前adapter分列，不能凭两个独立私有查看授予观众公开权限。

@@ -42,9 +42,11 @@ public sealed partial class OnlineMatchService
     private IEnumerator SendCompletedReplay(MatchReplay replay, ulong[] recipients)
     {
         Task<byte[]> encode = Task.Run(() => ReplayRepository.Encode(replay));
+        QueueServerReplayArchive(replay,encode);
         while (!encode.IsCompleted) yield return null;
         if (encode.IsFaulted) { Debug.LogWarning("录像生成失败：" + encode.Exception.GetBaseException().Message); yield break; }
         byte[] bytes = encode.Result;
+        if(recipients.Length==0)yield break;
         int count = (bytes.Length + ReplayChunkBytes - 1) / ReplayChunkBytes;
         for (int index = 0; index < count && IsOnline; index++)
         {

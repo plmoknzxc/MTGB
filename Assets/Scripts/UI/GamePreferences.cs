@@ -296,6 +296,11 @@ public sealed class GamePreferences : MonoBehaviour
             });
         }
         if(!native)return source;
+        // Fixed-symbol productions from basic land subtypes have no printed
+        // paragraph to bind. Preserve costs and symbols verbatim.
+        var mana=Regex.Match(source,@"^(?<cost>(?:\{[^{}]+\}\s*[,，]?\s*)*:\s*)?Add (?<symbols>(?:\{[^{}]+\}\s*)+)\.?$");
+        if(mana.Success && Language!="en-US")
+            return mana.Groups["cost"].Value+(Language=="ja-JP"?mana.Groups["symbols"].Value.Trim()+"を加える。":"加"+mana.Groups["symbols"].Value.Trim()+"。");
         var identity=Regex.Match(source,@"^(.+) \(([0-9]+)\)$");
         if(identity.Success)return CardFaceName(identity.Groups[1].Value)+" ("+identity.Groups[2].Value+")";
         string name=CardFaceName(source);

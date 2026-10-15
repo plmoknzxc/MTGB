@@ -84,6 +84,7 @@ public sealed partial class ForgeBattlefieldController
         if (cardSelectionOverlay != null) cardSelectionOverlay.gameObject.SetActive(false);
         if (endDetail != null) Destroy(endDetail.gameObject);
         selectionLayoutKey = null;
+        cardSelectionReadOnly=false;
     }
 
     private void ShowReviewCards(string title, ForgeCardView[] cards)

@@ -6,7 +6,8 @@ public enum MainMenuCardTileZone
 {
     Collection,
     MainDeck,
-    Sideboard
+    Sideboard,
+    Commander
 }
 
 public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -41,6 +42,7 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
     public void SetCount(int count)
     {
         if (countBadgeText != null) countBadgeText.text = "x" + count;
+        if (countBadge != null) countBadge.SetActive(count > 1 && !QuantityControlsVisible);
     }
 
     public void SetQuantityControls(bool visible, int count, bool canIncrease)
@@ -50,7 +52,7 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
         decreaseButton.interactable = count > 0;
         increaseButton.interactable = canIncrease;
         quantityControls.SetActive(visible);
-        if (countBadge != null) countBadge.SetActive(!visible);
+        if (countBadge != null) countBadge.SetActive(!visible && count > 1);
     }
 
     public void Configure(MainMenuController owner, CardDefinition cardDefinition, MainMenuCardTileZone tileZone)

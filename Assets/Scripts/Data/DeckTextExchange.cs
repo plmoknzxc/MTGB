@@ -76,7 +76,6 @@ public sealed class DeckTextExchange
             if(line.StartsWith("#")){if(native)result.Errors.Add($"第 {i+1} 行：不支持的分区 {line}");continue;}
             bool sb=line.StartsWith("SB:",StringComparison.OrdinalIgnoreCase);if(sb)line=line.Substring(3).Trim();
             if(!explicitSections && !sb && gap){section=1;gap=false;}
-            if(section==3){result.Errors.Add($"第 {i+1} 行：当前卡组未支持同伴标记，不能无损导入。");continue;}
             var match=Regex.Match(line,@"^(\d+)(?:[xX])?\s+(.+)$");
             if(!match.Success || !int.TryParse(match.Groups[1].Value,out int count) || count<1 || count>1000)
             {result.Errors.Add($"第 {i+1} 行：需要“数量 卡名”或“数量 系列/编号”。");continue;}
@@ -122,12 +121,18 @@ public sealed class DeckTextExchange
                 }
             }
             if(card==null){result.Errors.Add($"第 {i+1} 行：找不到或无法唯一识别 {token}");continue;}
+            if(section==3){
+                if(count!=1||DeckCompanion.Has(deck)||!DeckCompanion.IsCompanion(card))result.Errors.Add($"第 {i+1} 行：行侣分区必须是一张具有行侣异能的牌。");
+                else deck.companion=new DeckEntry{setCode=card.setCode,collectorNumber=card.CollectorNumber,cardId=card.cardID,count=1};
+                continue;
+            }
             total+=count;if(total>1000){result.Errors.Add("卡组总张数超过 1000，未导入。");break;}
             var entries=sb || section==1?deck.sideboard:section==2?deck.commanders:deck.cards;
             var entry=entries.FirstOrDefault(e=>e.PrintingKey.Equals(card.PrintingKey,StringComparison.OrdinalIgnoreCase));
             if(entry==null){entry=new DeckEntry{setCode=card.setCode,collectorNumber=card.CollectorNumber,cardId=card.cardID,count=0};entries.Add(entry);}
             entry.count+=count;
         }
+        if(DeckCompanion.Has(deck)&&!deck.sideboard.Any(e=>e.PrintingKey==deck.companion.PrintingKey))deck.sideboard.Add(DeckCompanion.Copy(deck.companion));
         if(total==0 && result.Errors.Count==0)result.Errors.Add("未找到卡牌条目。");
         // Preserve quantities, including draft/casual lists. Format legality belongs to match validation.
         if(result.Errors.Count==0)result.Deck=deck;
@@ -140,7 +145,7 @@ public sealed class DeckTextExchange
             case "deck":case "main":case "mainboard":case "maindeck":case "#main":case "デッキ":case "牌组":case "套牌":case "主牌":section=0;return true;
             case "sideboard":case "side":case "!side":case "#side":case "备牌":case "サイドボード":section=1;return true;
             case "commander":case "#commander":case "!commander":case "指挥官":case "統率者":section=2;return true;
-            case "companion":case "同伴":case "相棒":section=3;return true;
+            case "companion":case "#companion":case "行侣":case "同伴":case "相棒":section=3;return true;
             default:section=0;return false;
         }
     }
@@ -148,6 +153,7 @@ public sealed class DeckTextExchange
     {
         if(deck==null)throw new ArgumentException("没有卡组。");
         if(format==Format.MTGB)return DeckRepository.SerializeLineDeck(deck);
+        if(format==Format.MO&&DeckCompanion.Has(deck))throw new ArgumentException("MO 纯文本不能保留行侣指定，请使用 MTGA 或 MTGB 格式。");
         if(format==Format.MO && deck.commanders.Count>0)throw new ArgumentException("MO 纯文本不能保留当前卡组的指挥官标记，请使用 MTGA 或 MTGB 格式。");
         var lines=new List<string>();
         void Add(IEnumerable<DeckEntry> entries)
@@ -159,6 +165,7 @@ public sealed class DeckTextExchange
                 lines.Add(entry.count+" "+card.cardName+(format==Format.MTGA?" ("+card.setCode+") "+card.CollectorNumber:""));
             }
         }
+        if(format==Format.MTGA&&DeckCompanion.Has(deck)){lines.Add("Companion");Add(new[]{deck.companion});lines.Add("");}
         if(format==Format.MTGA && deck.commanders.Count>0){lines.Add("Commander");Add(deck.commanders);lines.Add("");}
         if(format==Format.MTGA)lines.Add("Deck");Add(deck.cards);
         if(deck.sideboard.Count>0){lines.Add("");if(format==Format.MTGA)lines.Add("Sideboard");Add(deck.sideboard);}
