@@ -20,7 +20,7 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 - 改进录像列表预览速度；独立服务器自动保存有有效画面的正常结束、中止及正常停止时的对局录像。
 - 修正付费时区域浏览关闭、开局空黑框、地异能提示、宣攻编号和观战退出；法术力池避开地牌，观战显示双方公开法术力。
 
-近期说明：[卡组搜索与稳定标签](Docs/DeckSearchAndStableLabels.2026-10-15.zh-CN.md)、[统帅区与构筑条件](Docs/DeckConstructionFilters.2026-10-15.zh-CN.md)、[房间与观战](Docs/RoomDirectoryAndSpectators.2026-10-15.zh-CN.md)、[服务器录像](Docs/ServerReplayArchiveAndAnte.2026-10-15.zh-CN.md)。
+近期说明：[合并更新与发布](Docs/Release.2026-10-15.zh-CN.md)、[卡组搜索与稳定标签](Docs/DeckSearchAndStableLabels.2026-10-15.zh-CN.md)、[统帅区与构筑条件](Docs/DeckConstructionFilters.2026-10-15.zh-CN.md)、[房间与观战](Docs/RoomDirectoryAndSpectators.2026-10-15.zh-CN.md)、[服务器录像](Docs/ServerReplayArchiveAndAnte.2026-10-15.zh-CN.md)。
 
 ### 2026-10-14
 
