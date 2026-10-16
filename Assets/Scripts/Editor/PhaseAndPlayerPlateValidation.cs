@@ -19,19 +19,20 @@ public sealed class PhaseAndPlayerPlateValidation
     static void Prop(object o,string n,object v)=>o.GetType().GetProperty(n).SetValue(o,v);
     static object Call(object o,string n,params object[] args)=>o.GetType().GetMethod(n,Hidden).Invoke(o,args);
     readonly List<string> steps=new();readonly List<string> failures=new();
-    string output;ForgeBattlefieldController ui;OnlineMatchService owner;int submitted;long sequence=20000;bool supplement;
+    string output;ForgeBattlefieldController ui;OnlineMatchService owner;int submitted;long sequence=20000;bool supplement,priorityOnly;
     void Check(bool ok,string why){steps.Add((ok?"PASS ":"FAIL ")+why);if(!ok)failures.Add(why);}
     public static void Run(string output){
         Start(output,false);
     }
     public static void RunSupplement(string output)=>Start(output,true);
-    static void Start(string output,bool supplement){
+    public static void RunPriority(string output)=>Start(output,false,true);
+    static void Start(string output,bool supplement,bool priorityOnly=false){
         if(!Application.isPlaying)throw new Exception("Play mode required");
         var go=new GameObject("PhasePlateValidation");UnityEngine.Object.DontDestroyOnLoad(go);
-        var r=new PhaseAndPlayerPlateValidation{output=output,supplement=supplement,ui=go.AddComponent<ForgeBattlefieldController>()};r.ui.enabled=false;Directory.CreateDirectory(output);r.ui.StartCoroutine(r.Guard());
+        var r=new PhaseAndPlayerPlateValidation{output=output,supplement=supplement,priorityOnly=priorityOnly,ui=go.AddComponent<ForgeBattlefieldController>()};r.ui.enabled=false;Directory.CreateDirectory(output);r.ui.StartCoroutine(r.Guard());
     }
     IEnumerator Guard(){
-        File.WriteAllText(output+"/result.txt","RUNNING");var e=supplement?Supplement():Exercise();
+        File.WriteAllText(output+"/result.txt","RUNNING");var e=priorityOnly?PriorityAutomation():supplement?Supplement():Exercise();
         while(true){object next;try{if(!e.MoveNext())break;next=e.Current;}catch(Exception ex){failures.Add(ex.ToString());break;}yield return next;}
         (e as IDisposable)?.Dispose();File.WriteAllLines(output+"/steps.txt",steps);
         File.WriteAllText(output+"/result.txt",failures.Count==0?"PASS "+steps.Count(s=>s.StartsWith("PASS "))+" bounded UI/automatic-control checks":string.Join("\n",failures.Prepend("FAIL")));
@@ -46,6 +47,32 @@ public sealed class PhaseAndPlayerPlateValidation
     void Present(ForgeSeatView v){Prop(owner,"ForgeView",new OnlinePlayerViewState{forge=v});ui.Present(v,1,true,i=>submitted++,null,"");}
     static Rect Bounds(RectTransform r,Transform space){var c=new Vector3[4];r.GetWorldCorners(c);var p=c.Select(x=>space.InverseTransformPoint(x)).ToArray();return Rect.MinMaxRect(p.Min(x=>x.x),p.Min(x=>x.y),p.Max(x=>x.x),p.Max(x=>x.y));}
     static void Click(Button b){var r=(RectTransform)b.transform;var p=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,r.TransformPoint(r.rect.center))};var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(p,hits);if(hits.Count==0||!hits[0].gameObject.transform.IsChildOf(b.transform))throw new Exception("Blocked mode button");ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,p,ExecuteEvents.pointerClickHandler);}
+    IEnumerator PriorityAutomation(){
+        while(!GamePreferences.Ready)yield return null;
+        owner=OnlineMatchService.EnsureInstance();if(owner.IsOnline||owner.IsInMatch)throw new Exception("Isolated test required");
+        var oldView=owner.ForgeView;int oldSeat=owner.LocalSeat;var oldMode=owner.ControlMode;bool oldEnabled=owner.enabled;
+        try{
+            owner.enabled=false;Prop(owner,"LocalSeat",1);Set(ui,"service",owner);owner.ControlMode=ForgeControlMode.Auto;
+            foreach(string phase in new[]{"UPKEEP","DRAW","COMBAT_BEGIN","DECLARE_ATTACKERS","COMBAT_END","END_OF_TURN"})foreach(int turn in new[]{1,2}){
+                var v=Priority(phase,turn,true);int before=submitted;Present(v);
+                Check(Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto retains Next with an available action: "+turn+" "+phase);
+                Call(ui,"UpdateAutomaticControl");Set(ui,"automaticReadyAt",0f);Set(ui,"phaseVisibleUntil",0f);Call(ui,"UpdateAutomaticControl");
+                Check(submitted==before,"Auto sends no pass with available action: "+turn+" "+phase);
+            }
+            Present(Priority("DRAW",2));int prior=submitted;Call(ui,"UpdateAutomaticControl");Set(ui,"automaticReadyAt",0f);Set(ui,"phaseVisibleUntil",0f);
+            Check(!Field<Button>(ui,"advanceButton").gameObject.activeSelf,"No-action automatic priority hides Next");
+            Call(ui,"UpdateAutomaticControl");Check(submitted==prior+1,"No-action automatic priority submits once");Call(ui,"UpdateAutomaticControl");Check(submitted==prior+1,"Automatic pass is not duplicated");
+            Present(Priority("UPKEEP",2));prior=submitted;Call(ui,"UpdateAutomaticControl");
+            Click(Field<Button>(ui,"controlModeButton"));Click(Field<Button>(ui,"controlModeButton"));
+            Check(owner.ControlMode==ForgeControlMode.On&&Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto to Manual restores Next through actual button clicks");
+            Set(ui,"automaticReadyAt",0f);Set(ui,"phaseVisibleUntil",0f);Call(ui,"UpdateAutomaticControl");Check(submitted==prior,"Manual cancels a previously scheduled automatic pass");
+            owner.ControlMode=ForgeControlMode.Auto;var changed=Priority("UPKEEP",2);Present(changed);Call(ui,"UpdateAutomaticControl");changed.canRespond=true;Present(changed);
+            Set(ui,"automaticReadyAt",0f);Set(ui,"phaseVisibleUntil",0f);Call(ui,"UpdateAutomaticControl");Check(submitted==prior&&Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Newly available action in same request prevents pending pass");
+            owner.ControlMode=ForgeControlMode.Off;Present(Priority("DRAW",2,true));Call(ui,"UpdateAutomaticControl");Set(ui,"automaticReadyAt",0f);Set(ui,"phaseVisibleUntil",0f);Call(ui,"UpdateAutomaticControl");Check(submitted==prior+1,"Explicit Skip still passes an available action");
+            owner.ControlMode=ForgeControlMode.Auto;Present(Priority("UPKEEP",2,true));Canvas.ForceUpdateCanvases();yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(output+"/automatic-action-stops.png");yield return new WaitForEndOfFrame();
+        }finally{Set(ui,"service",null);Prop(owner,"ForgeView",oldView);Prop(owner,"LocalSeat",oldSeat);owner.ControlMode=oldMode;owner.enabled=oldEnabled;}
+    }
     IEnumerator Supplement(){
         while(!GamePreferences.Ready)yield return null;
         owner=OnlineMatchService.EnsureInstance();if(owner.IsOnline||owner.IsInMatch)throw new Exception("Isolated test required");
@@ -53,7 +80,7 @@ public sealed class PhaseAndPlayerPlateValidation
         try{
             owner.enabled=false;Prop(owner,"LocalSeat",1);Set(ui,"service",owner);
             Prop(owner,"LobbyState",new OnlineLobbyState{players=new List<OnlineLobbyPlayer>{new OnlineLobbyPlayer{seat=1,displayName="林间旅人"},new OnlineLobbyPlayer{seat=2,displayName="旅する者"}},series=new OnlineSeriesState{bestOf=3,player1Wins=1,player2Wins=2}});
-            owner.ControlMode=ForgeControlMode.Auto;Present(Priority("COMBAT_BEGIN",1,true));Check(!Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto skips own empty combat even with another possible response");
+            owner.ControlMode=ForgeControlMode.Auto;Present(Priority("COMBAT_BEGIN",1,true));Check(Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto retains own empty combat with an available response");
             var attackers=Priority("COMBAT_BEGIN",1,true);attackers.hasLegalAttackers=true;Present(attackers);Check(Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto retains combat with legal attackers and actions");
             Present(Priority("DRAW"));Call(ui,"UpdateAutomaticControl");Click(Field<Button>(ui,"controlModeButton"));Click(Field<Button>(ui,"controlModeButton"));
             Check(owner.ControlMode==ForgeControlMode.On&&Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto→Skip→Manual physical clicks restore Next immediately");yield return new WaitForSecondsRealtime(.3f);Call(ui,"UpdateAutomaticControl");Check(submitted==0,"Auto→Manual stops before scheduled submit");

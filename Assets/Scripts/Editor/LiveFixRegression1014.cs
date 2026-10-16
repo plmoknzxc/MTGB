@@ -25,7 +25,7 @@ public static class LiveFixRegression1014
         var status=(string)typeof(ForgeBattlefieldController).GetMethod("KeywordDetailLabel",Hidden).Invoke(null,new object[]{"Chapter:3:Animate1,Animate2,Tutor","Urza's Saga"});
         Check(!status.Contains("Animate")&&!status.Contains("Chapter:"),"Saga status hides native script identifiers");
         request.request.kind="InputPassPriority";request.turnSeat=1;request.phase="COMBAT_BEGIN";request.canRespond=true;request.attackStateKnown=true;request.hasLegalAttackers=false;
-        Check(ForgeControlPolicy.AutomaticOption(request,1,ForgeControlMode.Auto,false)==0,"Auto skips empty own combat even with an instant available");
+        Check(ForgeControlPolicy.AutomaticOption(request,1,ForgeControlMode.Auto,false)==-1,"Auto retains available response even without attackers");
         Check(ForgeControlPolicy.AutomaticOption(request,1,ForgeControlMode.On,false)==-1,"Manual combat remains manual");
         request.hasLegalAttackers=true;Check(ForgeControlPolicy.AutomaticOption(request,1,ForgeControlMode.Auto,false)==-1,"Auto retains combat when native attacker exists");
         request.hasLegalAttackers=false;request.attackStateKnown=false;Check(ForgeControlPolicy.AutomaticOption(request,1,ForgeControlMode.Auto,false)==-1,"Legacy unknown attack availability is conservative");
