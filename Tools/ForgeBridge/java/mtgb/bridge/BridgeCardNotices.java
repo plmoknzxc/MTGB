@@ -86,16 +86,19 @@ public final class BridgeCardNotices {
     @Subscribe public void moved(GameEventCardChangeZone event) {
         if(event.card()==null||event.from()==null||event.to()==null)return;
         ZoneType from=event.from().zoneType(),to=event.to().zoneType();
-        if(from==to||from==ZoneType.None||!(to==ZoneType.Graveyard||to==ZoneType.Exile||to==ZoneType.Hand))return;
+        if(from==to||from==ZoneType.None||!(to==ZoneType.Graveyard||to==ZoneType.Exile||to==ZoneType.Hand||to==ZoneType.Library&&!from.isHidden()))return;
         Card card=ForgeBridge.game.getCardsInGame().stream().filter(c->c.getId()==event.card().getId()).findFirst().orElse(null);
         if(card==null)return;
         synchronized(ForgeBridge.class) {
             SpellAbility ability=cause();
             // The stack already shows the cast spell / cycling source. Notify
             // the fetched, milled, exiled or other separately moved objects.
-            if(from==ZoneType.Stack||ForgeBridge.game.costPaymentStack.peek()!=null&&ability!=null&&!ability.isManaAbility()&&card.getId()==ability.getHostCard().getId())return;
+            if(from==ZoneType.Stack&&(ability==null||card.getId()==ability.getHostCard().getId())
+                ||ForgeBridge.game.costPaymentStack.peek()!=null&&ability!=null&&!ability.isManaAbility()&&card.getId()==ability.getHostCard().getId())return;
             // A hidden library draw is not a revealed move into the hand.
             boolean publicOrigin=!from.isHidden()&&!event.card().isFaceDown();
+            // Entering a hidden library must not reveal a face-down object.
+            if(to==ZoneType.Library&&!publicOrigin)return;
             boolean seenByOpponent=ForgeBridge.guis.stream().anyMatch(g->g.controller.getPlayer()!=card.getOwner()
                 &&ForgeBridge.libraryKnowledge.hand(card.getOwner(),g.seat,g.controller.getPlayer()).stream()
                     .anyMatch(v->v instanceof Map<?,?> m&&Objects.equals(m.get("id"),card.getId())));

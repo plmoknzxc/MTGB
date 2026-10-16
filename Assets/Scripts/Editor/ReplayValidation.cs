@@ -30,11 +30,11 @@ public static class ReplayValidation
             session.Poll(); Check(session.Failure == null, session.Failure);
             if (session.GetView(1).outcome.isFinished)
             {
-                var replay = session.CompleteReplay(new[] { "录像测试 · 玩家一", "录像测试 · 玩家二" }, 2, 3, 2, "Concession");
-                Check(replay.frames.Count > 3 && replay.Duration > 0, "Missing recorded states");
-                var bytes = ReplayRepository.Encode(replay);
+                using var replay = session.CompleteReplay(new[] { "录像测试 · 玩家一", "录像测试 · 玩家二" }, 2, 3, 2, "Concession");
+                Check(replay.FrameCount > 3 && replay.Duration > 0, "Missing recorded states");
+                var bytes = replay.Encode();
                 var copy = ReplayRepository.Decode(bytes);
-                Check(copy.frames.Count == replay.frames.Count && copy.gameNumber == 2 && copy.bestOf == 3, "Roundtrip metadata");
+                Check(copy.frames.Count == replay.FrameCount && copy.gameNumber == 2 && copy.bestOf == 3, "Roundtrip metadata");
                 Check(copy.frames[0].views[0].awaitingInput || copy.frames[0].views[1].awaitingInput, "Recorded request was mutated");
                 Check(ReplayRepository.FrameAt(copy, -1) == 0 && ReplayRepository.FrameAt(copy, double.MaxValue) == copy.frames.Count - 1, "Timeline boundaries");
                 string root = Path.GetFullPath(Path.Combine(".tools", "replay-validation", Guid.NewGuid().ToString("N")));

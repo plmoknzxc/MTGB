@@ -122,7 +122,7 @@ Selected {0}.	已选择 {0}。	Selected {0}.	{0} を選択しました。
 等待玩家加入…	Waiting for players…	参加者を待っています…
 尚未选择牌组	No deck selected	デッキ未選択
 选择牌组并准备	Choose a deck and get ready	デッキを選んで準備
-提交牌组并准备	Submit deck / Ready	デッキを送信して準備完了
+提交牌组并准备	Submit deck / Ready	デッキ提出・準備
 取消准备	Cancel ready	準備を取り消す
 准备开始新比赛	Ready for a new match	新しい対戦の準備完了
 开始比赛	Start match	対戦開始
@@ -459,3 +459,8 @@ Noted number: {0}	记录值：{0}	Noted number: {0}	記録した数：{0}
 {0}'s boon	{0}的赐福	{0}'s boon	{0}の恩恵
 When you cast your next creature spell, it perpetually gets +X/+0, where X is the noted number.	当你施放下一个生物咒语时，它永久得 +X/+0，X 为记录值。	When you cast your next creature spell, it perpetually gets +X/+0, where X is the noted number.	あなたが次のクリーチャー呪文を唱えたとき、それは永久に＋X/＋0の修整を受ける。Xは記録した数である。
 The next instant or sorcery spell you cast this turn costs {X} less to cast, where X is the noted number.	本回合中，你施放的下一个瞬间或法术咒语的费用减少 {X}，X 为记录值。	The next instant or sorcery spell you cast this turn costs {X} less to cast, where X is the noted number.	このターンにあなたが次に唱えるインスタントやソーサリー呪文を唱えるためのコストは{X}少なくなる。Xは記録した数である。
+Select another target permanent	选择另一个目标永久物。	Select another target permanent	これ以外のパーマネント１つを対象に選ぶ。
+Select target player	选择目标牌手。	Select target player	プレイヤー１人を対象に選ぶ。
+Select target land card in a graveyard	选择一个坟墓场中的目标地牌。	Select target land card in a graveyard	墓地にある土地・カード１枚を対象に選ぶ。
+Select up to {0} cards from your library	从你的牌库中选择至多{0}张牌。	Select up to {0} cards from your library	あなたのライブラリーから最大{0}枚のカードを選ぶ。
+Select another creature or an artifact to sacrifice ({0} left)	选择另一个生物或一个神器来牺牲（还剩{0}个）。	Select another creature or an artifact to sacrifice ({0} left)	生け贄に捧げる、これ以外のクリーチャー１体かアーティファクト１つを選ぶ（残り{0}）。

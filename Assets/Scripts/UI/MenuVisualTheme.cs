@@ -376,12 +376,13 @@ public static class MenuVisualTheme
         Place(prep, "DeckDropdown", 0, 148, 648, 56);
         Place(prep, "SelectedDeckSummary", 0, 36, 648, 112);
         Place(prep, "DeckValue", 0, 0, 600, 82);
-        Place(prep, "PreparationInfo", 0, -111, 648, 116);
+        Place(prep, "PreparationInfo", 0, -127, 648, 174);
         var info = Find(prep, "PreparationInfo");
-        Place(info, "Title", 0, 27, 604, 28);
-        Place(info, "Body", 0, -22, 604, 54);
+        Place(info, "Title", 0, 55, 604, 32);
+        Place(info, "Body", 0, -22, 604, 98);
         Text(info, "Title", "准备与开局", 18);
         Text(info, "Body", "双方提交牌组并准备后，由房主开始比赛。\nBO3 每局结束后可调整备牌。", 17);
+        info.Find("Body").GetComponent<UnityEngine.UI.Text>().alignment=TextAnchor.UpperLeft;
         Place(prep, "ReadyButton", -170, -260, 308, 58);
         Place(prep, "StartMatchButton", 170, -260, 308, 58);
         Place(prep, "ReadyHelp", 0, -317, 648, 38);

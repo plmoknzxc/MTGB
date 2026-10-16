@@ -9,7 +9,7 @@ public sealed partial class ForgeBattlefieldController
     private RectTransform targetOrigin;
     private ForgeTargetArrow targetArrow;
     private Sprite castingSprite;
-    private ForgeCardView castingPreparedSpell;
+    private ForgeCardView castingPreparedSpell, castingSource;
     private long targetingRequest, castingRequest;
     private int castingCardId=-1;
     private CanvasGroup castingHandGroup, castingDestinationGroup;
@@ -19,8 +19,9 @@ public sealed partial class ForgeBattlefieldController
     private bool IsTargeting => integrated && canAct && !submitted && !IsCardPickerRequest && view?.awaitingInput==true
         && (view.request.kind=="InputSelectTargets" || view.request.kind=="SelectStackTarget");
     private bool HasCastingPrompt => integrated && view?.awaitingInput==true
-        && ((view.request.kind=="InputSelectTargets" || view.request.kind=="SelectStackTarget") || (castingSprite!=null || castingPreparedSpell!=null) && view.request.kind.Contains("PayMana"));
-    private bool IsPayingPreview => integrated && canAct && !submitted && (castingSprite!=null || castingPreparedSpell!=null)
+        && ((view.request.kind=="InputSelectTargets" || view.request.kind=="SelectStackTarget")
+            || castingSource!=null && (view.request.kind.Contains("PayMana") || view.request.sourceCardId==castingCardId && view.request.kind!="InputPassPriority"));
+    private bool IsPayingPreview => integrated && canAct && !submitted && castingSource!=null
         && view?.awaitingInput==true && view.request.kind.Contains("PayMana");
     private Vector2 CastingDock => new Vector2(surface.rect.width*.5f-179-
         ((view?.stackCount??0)>0?((RectTransform)Node("StackColumn")).rect.width+20:0),surface.rect.height*.5f-357.5f);
@@ -52,6 +53,7 @@ public sealed partial class ForgeBattlefieldController
         // Lands resolve their mana actions in place; only a spell/ability needs a casting preview.
         if(source==null || source.land || source.zone!="Exile" && source.zone!="Graveyard" && preparedSource==null && !view.players.Any(p=>(p.hand??System.Array.Empty<ForgeCardView>()).Any(c=>c.id==source.id)))return;
         ResetCastingVisual();
+        castingSource=source;
         if(IsPreparedSpell(source))castingPreparedSpell=source;
         if(IsSpecializedFace(source))TryBattlefieldArt(source,out castingSprite);
         else if(catalog.TryGetValue(source.printingKey ?? "",out var definition) && !source.faceDown)
@@ -75,6 +77,7 @@ public sealed partial class ForgeBattlefieldController
         targetOrigin.Find("ConfirmTarget").gameObject.SetActive(false);targetOrigin.Find("ResetTarget").gameObject.SetActive(false);
         PresentAbilityFace(targetOrigin,null,null,null,false);
         PresentPreparedSpellFace(targetOrigin,castingPreparedSpell,new Vector2(240,335));
+        if(castingPreparedSpell==null)PresentComponentFace(targetOrigin,castingSource);
         Clear(targetOrigin.Find("PaymentChoices"));
         ForgeUiMotion.On(targetOrigin).MoveTo(CastingDock,new Vector2(240,335),seconds:.42f,lift:42);
     }
@@ -83,6 +86,7 @@ public sealed partial class ForgeBattlefieldController
         castingHandGroup=item.root.GetComponent<CanvasGroup>();
         if(castingHandGroup==null)castingHandGroup=item.root.gameObject.AddComponent<CanvasGroup>();
         castingHandGroup.alpha=0;castingHandGroup.blocksRaycasts=false;
+        item.pointer.SetHandFanExposure(false);
         item.pointer.ResetHover();
     }
     private void PresentTargeting()
@@ -92,7 +96,7 @@ public sealed partial class ForgeBattlefieldController
             EnsureCastingPreview();
             targetingRequest=requestId;
             Sprite sourceSprite=castingSprite;
-            var source=!string.IsNullOrEmpty(view.request.sourceCard?.name)?view.request.sourceCard:castingPreparedSpell;
+            var source=!string.IsNullOrEmpty(view.request.sourceCard?.name)?view.request.sourceCard:castingPreparedSpell??castingSource;
             if(IsSpecializedFace(source))TryBattlefieldArt(source,out sourceSprite);
             else if(source!=null && catalog.TryGetValue(source.printingKey??"",out var definition))CardImageLibrary.TryLoadFullCard(definition,source.backFace?1:0,out sourceSprite);
             targetOrigin.GetComponent<Image>().sprite=sourceSprite;
@@ -103,7 +107,7 @@ public sealed partial class ForgeBattlefieldController
             if(!ability)PresentComponentFace(targetOrigin,source);
             targetOrigin.GetComponent<CanvasGroup>().interactable=canAct && !submitted;
             targetOrigin.GetComponent<CanvasGroup>().blocksRaycasts=canAct && !submitted;
-            targetOrigin.Find("Hint").gameObject.SetActive(!IsManaPaymentDecision);
+            targetOrigin.Find("Hint").gameObject.SetActive(IsTargeting || view.request.kind.Contains("PayMana")&&!IsManaPaymentDecision);
             var hint=targetOrigin.Find("Hint").GetComponent<Text>();
             hint.text=(view.request.kind=="InputSelectTargets" || view.request.kind=="SelectStackTarget")?"选择高亮目标":"支付费用";
             hint.GetComponent<PreferenceText>().Apply();
@@ -187,8 +191,9 @@ public sealed partial class ForgeBattlefieldController
         if(castingHandGroup!=null){castingHandGroup.alpha=1;castingHandGroup.blocksRaycasts=true;}
         if(castingDestinationGroup!=null){castingDestinationGroup.alpha=1;castingDestinationGroup.blocksRaycasts=true;}
         castingHandGroup=castingDestinationGroup=null;castingDestination=null;
-        castingCardId=-1;castingSprite=null;castingPreparedSpell=null;returningCast=false;
+        castingCardId=-1;castingSprite=null;castingPreparedSpell=castingSource=null;returningCast=false;
         HideTargeting();
+        if(handNavigation!=null&&handFanSlots.Count>0)ApplyHandFanOffset(handNavigation.Offset,false);
     }
     private void UpdateTargeting()
     {

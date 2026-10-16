@@ -15,6 +15,7 @@ public sealed partial class ForgeBattlefieldController
         public string groupKey;
         public int representedCount;
         public bool faceDown;
+        public ForgeCardView card;
     }
     private readonly Dictionary<string,ArenaCard> arenaCards=new Dictionary<string,ArenaCard>();
     private readonly HashSet<string> retainedCards=new HashSet<string>();
@@ -170,6 +171,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void LayoutArenaRow(RectTransform parent,ForgeCardView[] cards,string row)
     {
+        if(row=="Hand"){LayoutPlayableHand(parent,cards);return;}
         bool hand=row=="Hand", lands=row.Contains("Lands"), support=row.Contains("Support") || row.Contains("Planeswalkers") || row.Contains("Battles"), own=row.StartsWith("Your");
         var groups=ArenaVisualGroups(cards,row);
         // Support categories keep the same lane at low and high density. Walkers
@@ -263,6 +265,7 @@ public sealed partial class ForgeBattlefieldController
             item.pointer=item.root.gameObject.AddComponent<ForgeBattlefieldCardPointer>();arenaCards.Add(key,item);
         }
         if(item.root.parent!=parent)item.root.SetParent(parent,false);
+        item.card=card;
         bool denseParent=parent.parent!=null&&parent.parent.name.StartsWith("Dense_",StringComparison.Ordinal);
         item.root.anchorMin=item.root.anchorMax=new Vector2(.5f,denseParent?1:.5f);
         item.root.sizeDelta=size;item.face.sizeDelta=size;
@@ -335,9 +338,6 @@ public sealed partial class ForgeBattlefieldController
             if(hand && card.zone is "Graveyard" or "Exile" or "Command") {
                 PresentPreparedSpellFace(face,card,new Vector2(240,335));
                 var spellFace=face.Find("PreparedSpellFace");if(spellFace!=null)spellFace.localScale=Vector3.one*((size.x-5)/240);
-                var zone=Panel(item.face,"PlayableZone",new Vector2(-size.x*.5f+17,size.y*.5f-17),new Vector2(27,25),card.zone=="Graveyard"?new Color(.31f,.22f,.4f):new Color(.17f,.31f,.38f));
-                zone.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(27,25,5);
-                Label(zone,"Label",card.zone=="Command"?TapPaymentText("命","C","統"):card.zone=="Graveyard"?"墓":"放",Vector2.zero,new Vector2(25,23),14,Paper);
             }
             if(hand)PresentComponentFace(face,card);
             if(!hand && art!=null && card.tapped)
@@ -445,8 +445,12 @@ public sealed partial class ForgeBattlefieldController
             if(count>1) {expandedGroups.Add(groupKey);groupExpandedFrame=Time.frameCount;PresentIntegrated(connectionText.text);}
             else if(actionable)Choose(option,captured);
         };
-        item.button.onClick.AddListener(()=>choose());
-        item.pointer.Configure(()=> {if(!hand && !IsDeclaringAttack && !IsBlockingChoice)InspectIntegrated(card);},LeaveInspectCard,choose,hand && actionable && view?.request?.kind=="InputPassPriority");
+        bool dragToPlay=hand&&view?.request?.kind=="InputPassPriority";
+        item.button.onClick.AddListener(()=> {if(!dragToPlay)choose();});
+        item.pointer.Configure(()=> {
+            if(hand){Node("InspectPanel").gameObject.SetActive(false);inspectedCardId=0;}
+            else if(!IsDeclaringAttack && !IsBlockingChoice)InspectIntegrated(card);
+        },()=> {if(!hand)LeaveInspectCard();},choose,hand && actionable && view?.request?.kind=="InputPassPriority");
         if(IsBlockingChoice)item.pointer.ConfigureCombat(!hand&&BlockCandidate(card.id)?p=>BeginBlock(card.id,captured):null,UpdateBlockArrow,p=>DropBlock(p,captured));
         else item.pointer.ConfigureCombat(!hand && CanSelectAttacker(card.id)?p=>BeginAttackSelection(card.id,captured):null,
             UpdateAttackArrowAt,p=>TryChooseAttackAt(p,captured));

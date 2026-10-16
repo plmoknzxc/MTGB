@@ -154,10 +154,20 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        // Archive open recordings before OnlineMatchSession's quit handler
+        // disposes its workers and temporary frame streams.
+        Application.quitting+=Shutdown;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.quitting+=Shutdown;
+#endif
     }
 
     private void OnDestroy()
     {
+        Application.quitting-=Shutdown;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.quitting-=Shutdown;
+#endif
         ClearReplayReceivers();
         Shutdown();
         if (shuttingDownManager != null)
@@ -1150,7 +1160,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         }
         foreach (OnlineRoomMember recipient in room.members.Values.Where(item => item.connected))
         {
-            OnlinePlayerViewState view = room.match.GetView(recipient.seat);
+            OnlinePlayerViewState view = room.match.GetViewForTransport(recipient.seat);
             Send(recipient.clientId, OnlineProtocol.StateUpdate, new OnlineStateUpdateMessage
             {
                 requestId = recipient.clientId == clientId ? message.requestId : 0,
@@ -1158,10 +1168,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 view = view
             });
         }
-        string viewHash = room.match.GetView(member.seat)?.viewHash ?? string.Empty;
+        string viewHash = room.match.GetViewForTransport(member.seat)?.viewHash ?? string.Empty;
         SetRoomStatus(room,
             $"玩家 {member.seat} 已应用动作 seq={room.match.AppliedSequence} type={action.type} hash={ShortHash(viewHash)}。");
-        MatchOutcome outcome = room.match.GetView(1).outcome;
+        MatchOutcome outcome = room.match.Outcome;
         if (outcome.isFinished) EndRoomMatch(room, outcome.winnerPlayerId, outcome.message);
     }
 
@@ -1281,9 +1291,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             var players = Enumerable.Range(1, 2).Select(seat => room.members.TryGetValue(seat, out var member)
                 ? member.displayName : "Player " + seat).ToArray();
             var replay = room.match.CompleteReplay(players, replayGame, room.series.bestOf, winnerSeat, ended.reason);
-            if(replay.frames.Count>0)
+            if(replay.FrameCount>0)
                 StartCoroutine(SendCompletedReplay(replay, aborted ? Array.Empty<ulong>() : room.members.Values.Where(m => m.connected && !m.IsSpectator).Select(m => m.clientId).ToArray()));
-            else Debug.LogWarning("对局尚无可回放画面，未生成录像："+replay.matchId);
+            else {replay.Dispose();Debug.LogWarning("对局尚无可回放画面，未生成录像："+replay.Metadata.matchId);}
         }
         catch (Exception error) { Debug.LogWarning("录像生成失败：" + error.Message); }
         try
@@ -1320,12 +1330,12 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             if (room.match.Failure != null) { EndRoomMatch(room, 0, room.match.Failure, true); continue; }
             foreach (OnlineRoomMember recipient in room.members.Values.Where(item => item.connected))
             {
-                var view = room.match.GetView(recipient.seat);
+                var view = room.match.GetViewForTransport(recipient.seat);
                 Send(recipient.clientId, OnlineProtocol.StateUpdate, new OnlineStateUpdateMessage {
                     view = view, result = GameActionResult.Accepted(view.appliedSequence, view.viewHash)
                 });
             }
-            MatchOutcome outcome = room.match.GetView(1).outcome;
+            MatchOutcome outcome = room.match.Outcome;
             if (outcome.isFinished) EndRoomMatch(room, outcome.winnerPlayerId, outcome.message);
         }
     }

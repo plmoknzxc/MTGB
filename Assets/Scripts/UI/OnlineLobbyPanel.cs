@@ -1044,7 +1044,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         if(roomList!=null)DrawBrowserRooms();
     }
     private static string RoomFormatLabel(string key) => key=="none"
-        ? DeckCompanion.Text("自由／自定义","Free / Custom","自由／カスタム")
+        ? "N/A"
         : GamePreferences.T(DeckFormatLegality.FormatName(key));
 
     private void UpdateAnteLabel()
@@ -1062,8 +1062,19 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         }
         Set("Label","赌注（仅本场比赛）","Ante (this match only)","アンティ（このマッチのみ）");
         if(allowed)Set("Description","归属变化影响 BO3 后续局，不修改保存的牌组或收藏。","Ownership changes carry into later BO3 games; saved decks and collection stay unchanged.","所有権の変更はBO3の次ゲームに引き継ぎます。保存デッキとコレクションは変更しません。");
-        else Set("Description","仅自由／自定义赛制且允许 DIY 时可开启。","Requires a free/custom format and DIY enabled.","自由／カスタム形式でDIYを許可した場合のみ有効にできます。");
+        else Set("Description","仅 N/A 赛制且允许 DIY 时可开启。","Requires N/A format and DIY enabled.","N/A形式でDIYを許可した場合のみ有効にできます。");
         Set("State",anteToggle.isOn?"已允许":"已禁用",anteToggle.isOn?"Enabled":"Disabled",anteToggle.isOn?"有効":"無効");
+        RefreshAnteAvailabilityVisual();
+    }
+    private void RefreshAnteAvailabilityVisual()
+    {
+        if(anteToggle==null)return;
+        bool available=anteToggle.IsInteractable();
+        var background=anteToggle.transform.Find("Background")?.GetComponent<Image>();
+        if(background==null)return;
+        background.color=available?new Color(.10f,.16f,.23f):new Color(.12f,.12f,.13f);
+        ObsidianArenaTheme.EnsureOutline(background,available?new Color(.65f,.70f,.78f):new Color(.38f,.38f,.40f),new Vector2(2,-2));
+        if(anteToggle.graphic!=null)anteToggle.graphic.color=available?LobbyGold:new Color(.45f,.45f,.47f);
     }
     private static void SetLocalizedOptions(Dropdown dropdown, string[] names)
     {
@@ -1361,6 +1372,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         dropdown.itemText = itemText;
         dropdown.options.Clear();
         dropdown.AddOptions(options ?? new List<string>());
+        DropdownChevron.Apply(dropdown);
         template.SetActive(false);
         return dropdown;
     }

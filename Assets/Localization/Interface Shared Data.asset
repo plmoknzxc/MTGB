@@ -11648,6 +11648,26 @@ MonoBehaviour:
     m_Key: "\u65E0\u6CD5\u8BC6\u522B\u7684\u5370\u6B21"
     m_Metadata:
       m_Items: []
+  - m_Id: 8571631590612992
+    m_Key: Select another target permanent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8578796187459584
+    m_Key: Select target player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8584456350375936
+    m_Key: Select target land card in a graveyard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8584456404901888
+    m_Key: Select up to {0} cards from your library
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8584456404901889
+    m_Key: Select another creature or an artifact to sacrifice ({0} left)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

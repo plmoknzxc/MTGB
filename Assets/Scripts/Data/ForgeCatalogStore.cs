@@ -31,8 +31,9 @@ public static class ForgeCatalogStore
         if (!File.Exists(path)) throw new FileNotFoundException("缺少预生成卡牌数据库，请重新生成或安装完整游戏资源。", path);
         var file = new FileInfo(path);
         if (file.Length > 512L * 1024 * 1024) throw new InvalidDataException("卡牌数据库过大。");
-        byte[] data = File.ReadAllBytes(path);
-        using (var stream = new MemoryStream(data, false))
+        byte[] data = authorityOnly ? File.ReadAllBytes(path) : null;
+        using (Stream stream = authorityOnly ? new MemoryStream(data, false)
+            : new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 65536, FileOptions.SequentialScan))
         using (var reader = new BinaryReader(stream, Encoding.UTF8))
         {
             ReadHeader(reader, catalogHash);
@@ -41,6 +42,7 @@ public static class ForgeCatalogStore
             var strings = new string[stringCount];
             var offsets = authorityOnly ? new int[stringCount] : null;
             var lengths = authorityOnly ? new int[stringCount] : null;
+            byte[] stringBuffer = authorityOnly ? null : new byte[4096];
             if (stringCount < 2) throw new InvalidDataException("卡牌字符串表无效。");
             strings[0] = null; strings[1] = string.Empty;
             for (int i = 2; i < stringCount; i++)
@@ -53,7 +55,7 @@ public static class ForgeCatalogStore
                     offsets[i] = checked((int)stream.Position); lengths[i] = length;
                     stream.Position += length;
                 }
-                else strings[i] = ReadString(reader);
+                else strings[i] = ReadString(reader, ref stringBuffer);
             }
             string S(bool required = true)
             {
@@ -78,21 +80,39 @@ public static class ForgeCatalogStore
                     forgeArtIndex = reader.ReadInt32(), forgeAmbiguous = reader.ReadBoolean(),
                     forgeDeckLimit = reader.ReadInt32(), forgeSplitType = S(), oracleID = S(),
                     setCode = S(), collectorNumberText = S(), cardTypes = (CardType)reader.ReadInt32(),
-                    supertypes = (CardSupertype)reader.ReadInt32(), subtypes = S(), description = S(!authorityOnly), manaCost = S(),
+                    supertypes = (CardSupertype)reader.ReadInt32(), subtypes = S(), description = S(), manaCost = S(),
                     attack = reader.ReadInt32(), defence = reader.ReadInt32(), loyalty = reader.ReadInt32(),
                     battleDefense = reader.ReadInt32(), flavorText = S(!authorityOnly), sourceDatabasePath = sourcePath
                 };
                 int faces = Count(reader, 64);
                 if (faces == 0) throw new InvalidDataException("卡牌缺少牌面。");
-                c.features.Capacity = faces;
+                if (authorityOnly)
+                {
+                    // Construction checks use the canonical root fields. Only
+                    // companion recognition needs rules text; Forge owns faces.
+                    if (!DeckCompanion.IsCompanion(c)) c.description = null;
+                    c.features = null;
+                }
+                else c.features.Capacity = faces;
                 for (int f = 0; f < faces; f++)
                 {
+                    int faceIndex = reader.ReadInt32(), featureIndex = reader.ReadInt32();
+                    var role = (CardFeatureRole)reader.ReadInt32();
+                    string name = S(!authorityOnly);
+                    var types = (CardType)reader.ReadInt32();
+                    var supertypes = (CardSupertype)reader.ReadInt32();
+                    string subtypes = S(!authorityOnly), description = S(!authorityOnly), manaCost = S(!authorityOnly);
+                    int attack = reader.ReadInt32(), defence = reader.ReadInt32(), loyalty = reader.ReadInt32(), battleDefense = reader.ReadInt32();
+                    string power = S(!authorityOnly), toughness = S(!authorityOnly);
+                    // Consume and validate every index even for omitted faces.
+                    if (authorityOnly) continue;
                     var face = new CardFeatureDefinition
                     {
-                        faceIndex = reader.ReadInt32(), featureIndex = reader.ReadInt32(), role = (CardFeatureRole)reader.ReadInt32(),
-                        cardName = S(), cardTypes = (CardType)reader.ReadInt32(), supertypes = (CardSupertype)reader.ReadInt32(),
-                        subtypes = S(), description = S(!authorityOnly), manaCost = S(), attack = reader.ReadInt32(), defence = reader.ReadInt32(),
-                        loyalty = reader.ReadInt32(), battleDefense = reader.ReadInt32(), powerExpression = S(), toughnessExpression = S()
+                        faceIndex = faceIndex, featureIndex = featureIndex, role = role,
+                        cardName = name, cardTypes = types, supertypes = supertypes,
+                        subtypes = subtypes, description = description, manaCost = manaCost,
+                        attack = attack, defence = defence, loyalty = loyalty, battleDefense = battleDefense,
+                        powerExpression = power, toughnessExpression = toughness
                     };
                     if (!string.IsNullOrEmpty(face.description))
                         face.ruleEntries.Add(new CardRuleEntryDefinition { text = face.description });
@@ -129,6 +149,20 @@ public static class ForgeCatalogStore
         byte[] bytes = reader.ReadBytes(length);
         if (bytes.Length != length) throw new EndOfStreamException("卡牌数据库被截断。");
         return Encoding.UTF8.GetString(bytes);
+    }
+
+    static string ReadString(BinaryReader reader, ref byte[] buffer)
+    {
+        int length = Count(reader, 1024 * 1024);
+        if (length > buffer.Length) Array.Resize(ref buffer, length);
+        int read = 0;
+        while (read < length)
+        {
+            int part = reader.Read(buffer, read, length - read);
+            if (part == 0) throw new EndOfStreamException("卡牌数据库被截断。");
+            read += part;
+        }
+        return Encoding.UTF8.GetString(buffer, 0, length);
     }
 
 #if UNITY_EDITOR

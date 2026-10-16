@@ -43,7 +43,8 @@ public sealed class DropdownChevron : MaskableGraphic
             // Fixed-height rows must clip long names instead of wrapping into
             // the next option. The full option text/value remains unchanged.
             if(toggle.GetComponent<RectMask2D>()==null)toggle.gameObject.AddComponent<RectMask2D>();
-            foreach(var text in toggle.GetComponentsInChildren<Text>(true))SingleLine(text);
+            foreach(var text in toggle.GetComponentsInChildren<Text>(true)) {SingleLine(text);text.color=new Color(.94f,.95f,.97f,1);}
+            toggle.transition=Selectable.Transition.ColorTint;
             var image=toggle.targetGraphic as Image;
             if(image!=null)image.color=Color.white;
             var colors=toggle.colors;

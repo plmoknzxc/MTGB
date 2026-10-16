@@ -318,6 +318,12 @@ public final class ForgeBridge {
             try {return super.vote(ability,prompt,options,votes,forPlayer,optional);}
             finally {gui.votingPlayer=previous;gui.votingAbility=previousAbility;}
         }
+        @Override public List<forge.game.spellability.SpellAbility> orderSimultaneousSa(List<forge.game.spellability.SpellAbility> abilities) {
+            Gui gui=guiFor(this);var previous=new HashMap<>(gui.abilityTextSources);
+            for(var ability:abilities)gui.abilityTextSources.put(ability.getId(),ability);
+            try{return super.orderSimultaneousSa(abilities);}
+            finally{gui.abilityTextSources.clear();gui.abilityTextSources.putAll(previous);}
+        }
         @Override public <T extends GameEntity> List<T> chooseEntitiesForEffect(forge.util.collect.FCollectionView<T> values,int min,int max,
             DelayedReveal reveal,forge.game.spellability.SpellAbility ability,String title,Player targeted,Map<String,Object> params) {
             Gui gui=guiFor(this);Map<Integer,Card> previous=new HashMap<>(gui.choiceObjects);
@@ -484,6 +490,7 @@ public final class ForgeBridge {
         Object ability;
         Object castingFace;
         String faceKind, modeCost, cardName, rulesText;
+        Object rulesSource;
         boolean selected, disabled;
         int order;
         transient Runnable action;
@@ -496,7 +503,8 @@ public final class ForgeBridge {
         boolean secretVote;
         String kind, message;
         Object sourceCard,replacementAffectedCard;
-        String abilityText, abilityKind;
+        String abilityText, abilityKind, rulesText;
+        Object rulesSource;
         List<Option> options;
         List<Object> previewCards=new ArrayList<>();
         List<Object> orderedAbilities=new ArrayList<>();
@@ -631,6 +639,7 @@ public final class ForgeBridge {
         forge.game.spellability.SpellAbility votingAbility;
         void publish(Pending request){request.gui=this;ForgeBridge.publish(request);}
         final Map<Integer,forge.game.spellability.SpellAbility> castingAbilities=new HashMap<>();
+        final Map<Integer,forge.game.spellability.SpellAbility> abilityTextSources=new HashMap<>();
         // Native choices can contain newly created objects that are not in any zone yet.
         // Keep their actual identity only for the lifetime of the choosing callback.
         final Map<Integer,Card> choiceObjects=new HashMap<>();
@@ -771,7 +780,12 @@ public final class ForgeBridge {
         }
         String abilityLabel(Object value) {
             var ability=(forge.game.spellability.SpellAbilityView)value;
-            return ability.getHostCard().getCurrentState().getName()+" — "+ability.getDescription();
+            return ability.getHostCard().getCurrentState().getName()+" — "+abilityDescription(ability);
+        }
+        String abilityDescription(forge.game.spellability.SpellAbilityView view) {
+            String text=view.getDescription();var nativeAbility=abilityTextSources.get(view.getId());
+            if((text==null||text.isBlank())&&nativeAbility!=null)text=BridgeAbilityText.rules(nativeAbility).replace("CARDNAME",view.getHostCard().getCurrentState().getName());
+            return text==null?"":text;
         }
         final Map<String,forge.card.ICardFace> dungeonFaces=new HashMap<>();
         boolean dungeonFacesLoaded;
@@ -1011,7 +1025,9 @@ public final class ForgeBridge {
         }
         Object abilityPreview(Object value,int id) {
             var ability=(forge.game.spellability.SpellAbilityView)value;
-            return Map.of("id",id,"kind","ability","description",ability.getDescription(),"source",choiceCard(ability.getHostCard()));
+            var entry=new LinkedHashMap<String,Object>();entry.put("id",id);entry.put("kind","ability");
+            entry.put("description",abilityDescription(ability));entry.put("source",choiceCard(ability.getHostCard()));
+            BridgeAbilityText.project(entry,abilityTextSources.get(ability.getId()));return entry;
         }
         Object selectStackTarget(String title,List<?> values,boolean index) {
             final List<?> originalValues=values;
@@ -1044,6 +1060,7 @@ public final class ForgeBridge {
                 if(targeting!=null) {
                     request.sourceCardId=targeting.getHostCard().getId();request.sourceCard=card(targeting.getHostCard());
                     request.abilityText=targeting.getDescription();
+                    request.rulesText=BridgeAbilityText.rules(targeting);request.rulesSource=BridgeAbilityText.source(targeting);
                     if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=targeting.getStackDescription();
                     request.abilityKind=targeting.isTrigger()?"trigger":targeting.isSpell()?"spell":"ability";
                 }
@@ -1115,7 +1132,7 @@ public final class ForgeBridge {
         void applyCastingFace(Option option,Object value) {
             if(!(value instanceof forge.game.spellability.SpellAbilityView av))return;
             var sa=castingAbilities.get(av.getId());if(sa==null)return;
-            option.rulesText=sa.hasParam("SpellDescription")?sa.getParam("SpellDescription"):sa.getDescription();
+            option.rulesText=BridgeAbilityText.rules(sa);option.rulesSource=BridgeAbilityText.source(sa);
             var host=sa.getHostCard();var state=sa.getCardState();if(state==null)return;
             boolean evokeChoice=sa.isSpell()&&host.hasKeyword(forge.game.keyword.Keyword.EVOKE);
             if(!sa.isSpell())return;
@@ -1574,6 +1591,7 @@ public final class ForgeBridge {
                     request.sourceCardId=ability.getHostCard().getId();
                     request.sourceCard=card(ability.getHostCard());
                     request.abilityText=ability.getDescription();
+                    request.rulesText=BridgeAbilityText.rules(ability);request.rulesSource=BridgeAbilityText.source(ability);
                     if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=ability.isTrigger()?ability.getTrigger().toString():ability.getStackDescription();
                     if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=g.message;
                     request.abilityKind=ability.isTrigger()?"trigger":ability.isSpell()?"spell":"ability";
@@ -1722,7 +1740,7 @@ public final class ForgeBridge {
                 stack.add(description);
                 Map<String,Object> entry=new LinkedHashMap<>();
                 entry.put("id",item.getId());entry.put("description",description);
-                if(!source.isFaceDown()){var ability=item.getSpellAbility();entry.put("rulesText",ability.hasParam("SpellDescription")?ability.getParam("SpellDescription"):ability.getDescription());}
+                BridgeAbilityText.project(entry,item.getSpellAbility());
                 entry.put("kind",item.getSpellAbility().isSpell()?"spell":item.getSpellAbility().isTrigger()?"trigger":"ability");
                 entry.put("copied",item.getSpellAbility().isCopied());
                 entry.put("controllerSeat",game.getRegisteredPlayers().indexOf(item.getActivatingPlayer())+1);

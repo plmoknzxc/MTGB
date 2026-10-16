@@ -42,6 +42,8 @@ public static class OnlineSpectatorView
                 stackItems=(view.stackItems??Array.Empty<ForgeStackItem>()).Select(s=>new ForgeStackItem {
                     id=s.id,controllerSeat=s.controllerSeat,kind=s.kind,copied=s.copied,
                     description=s.source?.faceDown==true?"Face-down spell":s.description,
+                    rulesText=s.source?.faceDown==true?null:s.rulesText,
+                    rulesSource=s.source?.faceDown==true?null:PublicCard(s.rulesSource),
                     hasXValue=s.source?.faceDown!=true&&s.hasXValue,xValue=s.source?.faceDown==true?0:s.xValue,
                     source=PublicCard(s.source)
                 }).ToArray(),

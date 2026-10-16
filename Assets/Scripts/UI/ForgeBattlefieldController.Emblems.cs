@@ -140,7 +140,10 @@ public sealed partial class ForgeBattlefieldController
     private static string GeneratedDepartureRules(ForgeCardView source,string rules)
     {
         if(source==null||source.faceDown||string.IsNullOrEmpty(source.name))return null;
+        if(NativeMessageText.TryTranslate(rules,out var generated))return generated;
         string name=GamePreferences.CardFaceName(source.name);
+        if(rules=="Return exiled permanent to the battlefield.")
+            return TapPaymentText("将被放逐的永久物移回战场。",rules,"追放されているパーマネントを戦場に戻す。");
         if(rules=="At the beginning of the next cleanup step, sacrifice "+source.name+".")
             return TapPaymentText("在下一个清理步骤开始时，牺牲"+name+"。",rules,"次のクリンナップ・ステップの開始時に、"+name+"を生け贄に捧げる。");
         if(rules=="At end of combat, sacrifice "+source.name+".")

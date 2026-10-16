@@ -1,13 +1,13 @@
 {
-  "date": "20261014",
+  "date": "20261016",
   "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
   "forgeArchive": "forge-4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676.zip",
   "forgeArchiveSHA256": "2f060fbe00f7e28c052aeb935ad9723eeafda71c4ef7eeb2619cdde496810190",
   "forgeArchiveBytes": 272502705,
-  "overlayArchive": "mtgb-forge-source-overlay-20261014.zip",
-  "overlaySHA256": "1470ed7ed54127174d0ed7ee8192162b4c40089d0cf05f673892e90bc6672ce9",
-  "overlayBytes": 15887063,
-  "nativePatchesSHA256": "3142469fe0f9f41bfcd0af2bce070c9d5b0d9e6fabeb8a3eb6620266c0f4a133",
+  "overlayArchive": "mtgb-forge-source-overlay-20261016.zip",
+  "overlaySHA256": "4ed19c8e37107e7db86bf0307b7f930d24e8843343abfa59c2f85527537a9fa9",
+  "overlayBytes": 15944304,
+  "nativePatchesSHA256": "2fac584ea51eacdf261f50dede3477cfe10ba896b0969d16790a2fd1f0f5e453",
   "overlayFiles": [
     {
       "path": "Tools/ForgeBridge/Apply-NativePatches.py",
@@ -51,7 +51,11 @@
     },
     {
       "path": "Tools/ForgeBridge/Build-Bridge.ps1",
-      "sha256": "5d6a27d6ce0320210c116af60c134e1fd0e4cbf79c1e51135afb5108487ff989"
+      "sha256": "7d40703e37c1cbc3d10b85dab1dcbd30ecf43cc420d4089d31281795a0447ff3"
+    },
+    {
+      "path": "Tools/ForgeBridge/Build-DeckEditorRules.py",
+      "sha256": "eabe2425c7c15a691886ed2ff420dad0464df35b7eae93be7b2b810acf264b55"
     },
     {
       "path": "Tools/ForgeBridge/Build-KeywordGlossary.py",
@@ -226,12 +230,16 @@
       "sha256": "24c0dab38d9f38662323d70ddc02e51b24d7a9055b31c66a8f222fe756a4311b"
     },
     {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeAbilityText.java",
+      "sha256": "0889fb587558615f78eee3eb59e9ecc1b5077d412c62dd05d242e4a912a66c62"
+    },
+    {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeAllocation.java",
       "sha256": "f66276b2effa527deb57f3bbf70a081ae595b4d8b156173c80d7c7bb818cf36f"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeCardNotices.java",
-      "sha256": "5a1cb875dfe92e8050107902831eacf332b7b0fac716433ac147d1346d41413b"
+      "sha256": "7b4409b3cf1167f074cc954b28fbbf168ec2891b5601f26889ed3ced97f31968"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeCleanupNotices.java",
@@ -254,8 +262,16 @@
       "sha256": "34c606d412e9cf72d1a53341bcd9392feb26d2a09bbd1ee74a8025407c615418"
     },
     {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/CommanderDeckInspector.java",
+      "sha256": "fac7876f215b2daeb456797fe2eb36c22ba7c6536e1ee0b5aa8927a5bb68d422"
+    },
+    {
+      "path": "Tools/ForgeBridge/java/mtgb/bridge/DeckEditorCatalog.java",
+      "sha256": "a7edc1aff0741da1c67fca815a688e62f2a859b8151d6de1fe4f899af2e3cb14"
+    },
+    {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "sha256": "94aa70bbc60d9541e2e400908eb10d8fd35d2e479d46ddcb37594754a2ac6e5d"
+      "sha256": "b9fd75a71fe810d1e9d64e6493bb9537c31bc920e1fc762cdfd9ff86549d8f02"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeCardCostPreview.java",
@@ -355,11 +371,11 @@
     },
     {
       "path": "Tools/ForgeBridge/NativePatches.json",
-      "sha256": "3142469fe0f9f41bfcd0af2bce070c9d5b0d9e6fabeb8a3eb6620266c0f4a133"
+      "sha256": "2fac584ea51eacdf261f50dede3477cfe10ba896b0969d16790a2fd1f0f5e453"
     },
     {
       "path": "Tools/ForgeBridge/Package-Client.py",
-      "sha256": "fbc30ed2e41059f862732e2560ef82e36379f56ee786822ab98e4238b1ff122f"
+      "sha256": "5ff84a0a75b44f534267ff41350955b74ff3d3f2912abe3a173fedb7e5d68a98"
     },
     {
       "path": "Tools/ForgeBridge/Package-Runtime.py",
@@ -391,7 +407,7 @@
     },
     {
       "path": "Tools/ForgeBridge/README.zh-CN.md",
-      "sha256": "1f5a56e0872c50f5739295d4f6d7b57e6bbd272dab4090d825338c0617e422e3"
+      "sha256": "006e923d4c20f8947521a0338a6905c442e3c9ef0b43e5775195a1f1ac0029c6"
     },
     {
       "path": "Tools/ForgeBridge/Repair-JapaneseModalFooters.py",
@@ -438,6 +454,10 @@
       "sha256": "6679ea857dc31181b5520f76614967238f97e42df967fbe64e9a9d521009ff28"
     },
     {
+      "path": "Tools/ForgeBridge/Run-DedicatedServer.sh",
+      "sha256": "4cfad2f33db7b6d45918f2b7bc00e9f194d16dfc6ce5fa4d59e243f929f8fbb9"
+    },
+    {
       "path": "Tools/ForgeBridge/Run-NetworkBoundaries.py",
       "sha256": "2162e474f5ced2d646c9fefe89a73dff5de7be5981af3217391a8fe8a3212aca"
     },
@@ -452,6 +472,10 @@
     {
       "path": "Tools/ForgeBridge/Run-TemplateCardDemo.py",
       "sha256": "0e68eda1c4e3fbf27e2f6e0bffa21fa727f3a9aa35cad2a260b376ac8a957ae3"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-AbilityText.py",
+      "sha256": "ec4fa2947c964f8159fa8397fff97d958015250779a10853d8c043f438d88e98"
     },
     {
       "path": "Tools/ForgeBridge/Test-AdvancedInteractions.py",
@@ -476,6 +500,10 @@
     {
       "path": "Tools/ForgeBridge/Test-AttackDefenders.py",
       "sha256": "0e49c7bfa309b5ded410037c03a3a7f09024210951ab58de9eddc4cc892c4039"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-AttackWireBoundary.py",
+      "sha256": "46f3155755d688d095a78af857be9dd9e595e130a73871c4335bcd2975573aa4"
     },
     {
       "path": "Tools/ForgeBridge/Test-AttractionPayloadDeltas.py",
@@ -558,6 +586,10 @@
       "sha256": "fa9b4f73c2469e6cadd3dfb2b2db3d0a7de7c83d7fec276f6e777c9f72f381e7"
     },
     {
+      "path": "Tools/ForgeBridge/Test-CatalogLoading.py",
+      "sha256": "4c5cbdf31ffe838fbf408cd17afc2b0d47c644f76af4100ac42f06b82762a1fe"
+    },
+    {
       "path": "Tools/ForgeBridge/Test-ChooseCardDeltas.py",
       "sha256": "8ef53629c4d8fb6d4ec6bdcdaeb91781ac5ddb3bb906784b93922361b26f8875"
     },
@@ -606,8 +638,16 @@
       "sha256": "49306241722317ea2d5d20540f9de15b5a5898d2cc51375bd883e396ce328cc8"
     },
     {
+      "path": "Tools/ForgeBridge/Test-CommanderDeckInspector.py",
+      "sha256": "c15a7be1512a5701d4b026437f2b2e67979859d56bdf0a9f50b249d35cd35027"
+    },
+    {
       "path": "Tools/ForgeBridge/Test-CommonMechanics.py",
       "sha256": "85fc034351c83f7f32597c103734eccb19fa7b970643f95b01c649c1e65e97e4"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-CompanionDeckIntegration.py",
+      "sha256": "95b8e836ec8a1a81134e8be457eeb249508eb59fc203edad125340da3e9a2164"
     },
     {
       "path": "Tools/ForgeBridge/Test-ComponentCardFace.py",
@@ -676,6 +716,10 @@
     {
       "path": "Tools/ForgeBridge/Test-DamageDraw.py",
       "sha256": "330c6266c5a6509a4ad97d63f7236c708f8ac0412b69b0d4c2e0fb97e60161bb"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-DeckEditorRules.py",
+      "sha256": "3aab96b3c8d551e14d853f6ec745dbc94d2fff93eaba7edbd06f5b640d88085b"
     },
     {
       "path": "Tools/ForgeBridge/Test-DelayedExpiry.py",
@@ -820,6 +864,10 @@
     {
       "path": "Tools/ForgeBridge/Test-LandAbilities.py",
       "sha256": "1729db1ce2e34a8565476437d4118254f7c6f4f15eb28f4fa008a1267c3ac3f6"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-LandDetailBoundary.py",
+      "sha256": "9efdb673c5da189e50bcad461b35b9c0f2c0e67c926666e210caf11f7c157df8"
     },
     {
       "path": "Tools/ForgeBridge/Test-LandTypes.py",
@@ -1282,6 +1330,10 @@
       "sha256": "25b5c3dcc4c0aaea8dca72530a7e8c00a2c8f6c6cec511664ca5fcc1394edced"
     },
     {
+      "path": "Tools/ForgeBridge/tests/AbilityTextFixture.java",
+      "sha256": "daa476e4c90b53399da7d8aab57ae1e5b0ed57107bb4576f2808ea10fddde64a"
+    },
+    {
       "path": "Tools/ForgeBridge/tests/AdvancedInteractionFixture.java",
       "sha256": "29856501cb3a47e3014f1d1a2353997c37eaa38d3ecb040e91bac72814a4c930"
     },
@@ -1340,6 +1392,10 @@
     {
       "path": "Tools/ForgeBridge/tests/CastChoiceFamilyFixture.java",
       "sha256": "081e00a24fedfdc05c717184a2b2575c11c6c51b28429a176af1d52c30064549"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/CatalogLoadingFixture.java",
+      "sha256": "cec7e7daa8c394d7658f83767552c3ef2d2f361cb1f3e86d01b064540a4ad8df"
     },
     {
       "path": "Tools/ForgeBridge/tests/ChooseCardDeltaFixture.java",
@@ -1516,6 +1572,10 @@
     {
       "path": "Tools/ForgeBridge/tests/KnowledgeLifecycleFixture.java",
       "sha256": "bd122991df05e752070520177663662b04f0aa3a12dfea71489bdf98dd22fb17"
+    },
+    {
+      "path": "Tools/ForgeBridge/tests/LandDetailBoundaryFixture.java",
+      "sha256": "ec3ee4206af71d0c6cfc44a660d63c6c8b51611ee10c355b692d1580b029043c"
     },
     {
       "path": "Tools/ForgeBridge/tests/LandTypeFixture.java",
@@ -6770,6 +6830,14 @@
       "sha256": "35772eff4c8bd8c954c4e26bd6cdd982d25b90d6377a607944f30475914b6d27"
     },
     {
+      "path": "ThirdParty/Forge/native-patches/forge/card/CardDb.java",
+      "sha256": "d49bc628649f5a099501e46dcb4dffa022cbda30aa2fbbd8e99d50efbf6587c7"
+    },
+    {
+      "path": "ThirdParty/Forge/native-patches/forge/card/CardEdition.java",
+      "sha256": "417a7908bfffbb21d03f58a5a920a35639632cd36e49da82635eef55b5bd56c5"
+    },
+    {
       "path": "ThirdParty/Forge/native-patches/forge/CardStorageReader.java",
       "sha256": "2c7ca4783cc28a1148b47502700c4a11fcf0acc20c33cccca79433263e3d1ab3"
     },
@@ -6943,17 +7011,17 @@
     },
     {
       "path": "ThirdParty/Forge/origins.json",
-      "sha256": "f4f3ae01a8a4776424b79035824b0349fae0e84e56642a85370ca95f6b3e043f"
+      "sha256": "568bee206c12f9edfdaa1f37f3252e37b081128f7f3e9f7d2505cba71f1f75fd"
     },
     {
       "path": "ThirdParty/Forge/README.md",
-      "sha256": "67ec47b90474ec9fe28b7b6907092a467b3f64a1b2451a307cfec5229f87966e"
+      "sha256": "16ccbc1945b2906fde6926cfdd4779623b38a6bccb482fdb0dc70f1a5ee1b175"
     },
     {
       "path": "Tools/Validation/TestNativePatches.py",
       "sha256": "d9825e136f4f6e922a917ad95436c6bea204115d4e0533f476567a662b4b2f77"
     }
   ],
-  "release": "https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261014",
+  "release": "https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261016",
   "modificationNotice": "MTGB native fixes and headless Java bridge; original copyright preserved."
 }

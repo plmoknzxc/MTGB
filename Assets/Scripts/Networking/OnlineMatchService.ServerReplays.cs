@@ -45,7 +45,8 @@ public sealed partial class OnlineMatchService
             try {
                 string[] players=Enumerable.Range(1,2).Select(seat=>room.members.TryGetValue(seat,out var member)?member.displayName:"Player "+seat).ToArray();
                 var replay=room.match.CompleteReplay(players,room.series?.gameNumber??1,room.series?.bestOf??1,0,"服务器停止，保存未完成对局。");
-                if(replay.frames.Count>0)QueueServerReplayArchive(replay,Task.Run(()=>ReplayRepository.Encode(replay)));
+                if(replay.FrameCount>0)QueueServerReplayArchive(replay.Metadata,Task.Run(()=>{using(replay)return replay.Encode();}));
+                else replay.Dispose();
             } catch(Exception error) { Debug.LogError("服务器停止时无法生成录像："+error.Message); }
         }
     }

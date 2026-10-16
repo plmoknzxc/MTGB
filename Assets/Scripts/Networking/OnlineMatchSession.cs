@@ -43,7 +43,7 @@ public sealed class OnlineMatchSession : IDisposable
     private bool disposed, inputPending;
     private readonly Stopwatch startup = Stopwatch.StartNew();
     private readonly MatchReplayRecorder replay;
-    public MatchReplay CompleteReplay(string[] players, int game, int bestOf, int winner, string reason)
+    public RecordedMatchReplay CompleteReplay(string[] players, int game, int bestOf, int winner, string reason)
     {
         replay.Record(startup.Elapsed.TotalSeconds, views[0].forge, views[1].forge);
         return replay.Complete(players, game, bestOf, winner, reason);
@@ -86,9 +86,7 @@ public sealed class OnlineMatchSession : IDisposable
                 WorkingDirectory = assets, UseShellExecute = false, CreateNoWindow = true,
                 RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true
             }};
-#if UNITY_SERVER
             process.StartInfo.Arguments = "-Dmtgb.bridge.lazyCatalog=true " + process.StartInfo.Arguments;
-#endif
             Utf8ProcessIO.Configure(process.StartInfo);
             process.StartInfo.EnvironmentVariables["APPDATA"] = directory;
             process.StartInfo.EnvironmentVariables["LOCALAPPDATA"] = directory;
@@ -113,6 +111,11 @@ public sealed class OnlineMatchSession : IDisposable
         if (seat != 1 && seat != 2) return null;
         return ServerSnapshotJson.Copy(views[seat - 1]);
     }
+    // Only synchronous serialization may borrow an authority-owned view.
+    // Public GetView keeps its independent-copy contract for all other callers.
+    internal OnlinePlayerViewState GetViewForTransport(int seat)
+        => seat>2?OnlineSpectatorView.Create(views[0],seat):seat==1||seat==2?views[seat-1]:null;
+    internal MatchOutcome Outcome=>views[0].outcome;
 
     public ForgeMatchRemoval[] MatchRemovals { get; private set; } = Array.Empty<ForgeMatchRemoval>();
     public ForgeMatchOwnership[] MatchOwnership { get; private set; } = Array.Empty<ForgeMatchOwnership>();
@@ -251,6 +254,9 @@ public sealed class OnlineMatchSession : IDisposable
         if (disposed) return;
         disposed = true;
         activeSessions.Remove(this);
+        try{replay.Dispose();}
+        catch(IOException error){UnityEngine.Debug.LogWarning("无法清理录像临时文件："+error.Message);}
+        catch(UnauthorizedAccessException error){UnityEngine.Debug.LogWarning("无法清理录像临时文件："+error.Message);}
         if (process != null)
         {
             // Disposal must not wait on a stalled stdin pipe or engine shutdown hook.

@@ -19,7 +19,7 @@ public static class OnlineEnvelopeCodec
         using (var output = new MemoryStream())
         {
             using (var zip = new GZipStream(output, CompressionLevel.Fastest, true)) zip.Write(bytes, 0, bytes.Length);
-            string packed = Convert.ToBase64String(output.ToArray());
+            string packed = Convert.ToBase64String(output.GetBuffer(),0,checked((int)output.Length));
             if (packed.Length < envelope.payload.Length)
             {
                 envelope.payload = packed;
@@ -44,7 +44,7 @@ public static class OnlineEnvelopeCodec
                 if (output.Length + count > MaxDecodedBytes) throw new InvalidDataException("Decoded network projection exceeds limit.");
                 output.Write(buffer, 0, count);
             }
-            envelope.payload = Utf8.GetString(output.ToArray());
+            envelope.payload = Utf8.GetString(output.GetBuffer(),0,checked((int)output.Length));
             envelope.compressed = false;
         }
     }

@@ -62,23 +62,35 @@ public sealed partial class ForgeBattlefieldController
         string[] Lines(string value)=>(value??"").Replace("\\n","\n").Split('\n',StringSplitOptions.RemoveEmptyEntries).Select(s=>s.Trim()).Where(s=>s.Length>0).ToArray();
         string Key(string value) {
             value=(value??"").Replace("CARDNAME",canonical).Replace("\\n","\n");
+            // The pinned Forge Oracle line misspells this card's own name.
+            // Its live trigger and localized faces use Boggart Trawler.
+            if(canonical=="Boggart Trawler")value=Regex.Replace(value,@"\bGoblin Trawler\b",canonical);
             value=Regex.Replace(value.Trim(),@"^-\s+","");
             if(!string.IsNullOrEmpty(source.name)&&source.name!=canonical)
                 value=Regex.Replace(value,@"(?<![\p{L}\p{N}])"+Regex.Escape(source.name)+@"(?![\p{L}\p{N}])",_=>canonical);
+            // Forge's generated trigger text uses "enters" while older Oracle
+            // rows use "enters the battlefield" (or "enters battlefield").
+            // Normalize only this equivalent phrase; keep conditions intact.
+            value=Regex.Replace(value,@"\benters (?:the )?battlefield\b","enters");
             return Regex.Replace(value,@"\s+"," ").Trim();
         }
         var native=Lines(feature?.description??definition?.description);
         string translated=feature!=null?GamePreferences.FeatureRules(feature):GamePreferences.CardRules(definition);
+        if(canonical=="Boggart Trawler")translated=Regex.Replace(translated??"",@"\bGoblin Trawler\b",canonical);
         var localized=Lines(translated);
         string match=Key(paragraph);
         // Chapters can grant a quoted activation. Its live ability is the
         // quoted text, rather than the entire printed chapter sentence.
         string QuoteKey(string value)=>Key(value).Replace('"','\'').TrimEnd('.');
         for(int i=0;i<native.Length&&i<localized.Length;i++) {
-            var granted=Regex.Match(native[i],@"\bgains? \""(.+)\""\.?$");
-            if(!granted.Success||QuoteKey(granted.Groups[1].Value)!=QuoteKey(paragraph))continue;
-            var localQuote=Regex.Match(localized[i],"[“「『\"](.+)[”」』\"]。?$");
-            if(localQuote.Success)return localQuote.Groups[1].Value;
+            var granted=Regex.Match(native[i],@"\b(?:gains?|has|have) \""(.+)\""\.?$");
+            if(!granted.Success)continue;
+            string CostlessQuote(string text)=>Regex.Replace(text,@"^(?:(?:\{[^{}]+\}\s*[,，]?\s*)+|[+−-]?\d+)\s*[:：]\s*","");
+            string quoted=granted.Groups[1].Value;
+            bool costless=CostlessQuote(quoted)!=quoted&&QuoteKey(CostlessQuote(quoted))==QuoteKey(paragraph);
+            if(QuoteKey(quoted)!=QuoteKey(paragraph)&&!costless)continue;
+            var localQuote=Regex.Match(localized[i],"[“「『\"](.+)[”」』\"](?:[。.]|を(?:持つ|得る)[。.]?)?$");
+            if(localQuote.Success)return costless?CostlessQuote(localQuote.Groups[1].Value):localQuote.Groups[1].Value;
         }
         var alternative=Regex.Match(paragraph.Trim(),@"^(.*?)\s+\((If .+ rather than pay this spell's mana cost\.)\)\s*$",RegexOptions.Singleline);
         if(alternative.Success){
@@ -136,13 +148,26 @@ public sealed partial class ForgeBattlefieldController
     private string AbilityRecipeText(ForgeCardView source,string effect,string fallback)
     {
         if(source==null||source.faceDown)return fallback;
-        var recipes=(view?.stackItems??Array.Empty<ForgeStackItem>()).Concat(view?.request?.orderedAbilities??Array.Empty<ForgeStackItem>())
-            .Where(s=>s?.source?.id==source.id&&s.description==effect).Select(s=>s.rulesText)
-            .Concat((view?.request?.options??Array.Empty<ForgeOption>()).Where(o=>o?.card?.id==source.id&&o.label==effect).Select(o=>o.rulesText))
-            .Where(s=>!string.IsNullOrWhiteSpace(s)).Distinct().ToArray();
+        var recipes=AbilityRecipes(source,effect);
         if(recipes.Length!=1)return fallback;
-        string recipe=recipes[0];string localized=PrintedRuleText(source,recipe);
-        if(localized==recipe){recipe=Regex.Replace(recipe,@"^(?:\{[^{}]+\}\s*[,，]?\s*)+[:：]\s*","");localized=PrintedRuleText(source,recipe);}
+        string recipe=recipes[0].text;var origin=recipes[0].origin;
+        string localized=PrintedRuleText(origin,recipe);
+        if(localized==recipe){recipe=Regex.Replace(recipe,@"^(?:\{[^{}]+\}\s*[,，]?\s*)+[:：]\s*","");localized=PrintedRuleText(origin,recipe);}
         return localized!=recipe?localized:fallback;
+    }
+    private (string text,ForgeCardView origin)[] AbilityRecipes(ForgeCardView source,string effect)
+    {
+        // JsonUtility materializes absent nested DTOs as empty objects. Legacy
+        // snapshots must still bind to their real physical source, not that DTO.
+        ForgeCardView Origin(ForgeCardView candidate)=>candidate!=null&&(candidate.faceDown||!string.IsNullOrEmpty(candidate.name)&&!string.IsNullOrEmpty(candidate.printingKey))?candidate:source;
+        var recipes=(view?.stackItems??Array.Empty<ForgeStackItem>()).Concat(view?.request?.orderedAbilities??Array.Empty<ForgeStackItem>())
+            .Concat((view?.request?.options??Array.Empty<ForgeOption>()).Where(o=>o?.ability!=null).Select(o=>o.ability))
+            .Where(s=>s?.source?.id==source.id&&s.description==effect).Select(s=>(text:s.rulesText,origin:Origin(s.rulesSource)))
+            .Concat((view?.request?.options??Array.Empty<ForgeOption>()).Where(o=>o?.card?.id==source.id&&o.label==effect).Select(o=>(text:o.rulesText,origin:Origin(o.rulesSource))))
+            .Concat(view?.request?.sourceCard?.id==source.id&&view.request.abilityText==effect
+                ?new[]{(text:view.request.rulesText,origin:Origin(view.request.rulesSource))}:Array.Empty<(string text,ForgeCardView origin)>())
+            .Where(s=>!string.IsNullOrWhiteSpace(s.text)&&s.origin!=null&&!s.origin.faceDown)
+            .GroupBy(s=>(s.text,s.origin.printingKey,s.origin.name,s.origin.originalRules)).Select(g=>g.First()).ToArray();
+        return recipes;
     }
 }

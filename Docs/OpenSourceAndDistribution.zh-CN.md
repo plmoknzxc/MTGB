@@ -2,23 +2,23 @@
 
 ## 许可范围
 
-MTGB 自有 Unity／客户端源码与文档采用 MIT。`Tools/ForgeBridge`、`Tools/ForgeProof` 和 `ThirdParty/Forge` 的 Java 桥接、原生修改与 Forge 衍生材料采用 GNU GPL v3，并保留上游许可／版权。根 MIT 许可不覆盖这些例外，也不覆盖第三方字体、卡牌资料、卡图、商标或 Unity 运行库。
+MTGB 自有 Unity 客户端／服务端源码与文档采用 MIT。`Tools/ForgeBridge`、`Tools/ForgeProof` 和 `ThirdParty/Forge` 的 Java 桥接、原生修改与 Forge 衍生材料采用 GNU GPL v3，并保留上游许可／版权。根 MIT 许可不覆盖这些例外，也不覆盖第三方字体、卡牌资料、卡图、商标或 Unity 运行库。
 
 Forge 原仓库：<https://github.com/Card-Forge/forge>；固定提交：`4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676`。本地构建入口先取得该提交，再按 `Tools/ForgeBridge/NativePatches.json` 校验、应用修改和编译；桥接源码、补丁定义、验证夹具和构建脚本均在公共仓库中。
 
 ## 当前版本对应源码
 
-[Forge 对应源码下载](https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261014) 提供：
+[Forge 对应源码下载](https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261016) 提供：
 
 - `forge-4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676.zip`：固定上游提交的完整源码，SHA256 `2f060fbe00f7e28c052aeb935ad9723eeafda71c4ef7eeb2619cdde496810190`。
-- `mtgb-forge-source-overlay-20261014.zip`：当前 Java 桥接、实际修改的 Java 源码、补丁定义、构建脚本和来源记录。精确清单在 `ThirdParty/Forge/source-manifest.json`。
-- 自有 Unity 源码在本仓库。原始本机验证日志和大体积输入位于未上传的 `.tools`；公开测试脚本、夹具、报告及文档保留各自的实际验证范围，缺少本机附件不视为新增测试通过。
+- `mtgb-forge-source-overlay-20261016.zip`：当前 Java 桥接、实际修改的 Java 源码、补丁定义、构建脚本和来源记录。精确清单在 `ThirdParty/Forge/source-manifest.json`。旧 20261014 下载保留其原版本身份。
+- 自有 Unity 客户端和专用服务端源码在本仓库，按各自构建入口交付。原始本机验证日志和大体积输入位于未上传的 `.tools`；公开测试脚本、夹具、报告及文档保留各自的实际验证范围，缺少本机附件不视为新增测试通过。
 
-从干净仓库重建：安装 Unity 6000.3.22f1、Java 17、Maven、Python 3.11+、PowerShell 7，执行 `pwsh -File Tools/ForgeBridge/Build-Bridge.ps1 -BuildUpstream`。该流程取得固定 Forge 源码／Maven 依赖并应用公开补丁。原生 Java 的源码哈希校验允许 Git 的 LF／CRLF 检出转换，任何实际内容修改仍被拒绝；公开上游归档的 45 份 Java 与 9 份原卡脚本分别核对。Unity 卡牌重绘所需的开源模板字体和许可已纳入项目，见[字体目录说明](../Assets/Resources/UI/CardTemplates/Fonts/README.md)。
+从干净仓库重建：安装 Unity 6000.3.22f1、Java 17、Maven、Python 3.11+、PowerShell 7，执行 `pwsh -File Tools/ForgeBridge/Build-Bridge.ps1 -BuildUpstream`。该流程取得固定 Forge 源码／Maven 依赖并应用公开补丁。原生 Java 的源码哈希校验允许 Git 的 LF／CRLF 检出转换，任何实际内容修改仍被拒绝；公开上游归档的 47 份 Java 与 9 份原卡脚本分别核对。Unity 卡牌重绘所需的开源模板字体和许可已纳入项目，见[字体目录说明](../Assets/Resources/UI/CardTemplates/Fonts/README.md)。
 
 ## 分发程序时
 
-当前精简客户端／服务端没有内嵌完整 Forge 源码 ZIP。分发这些二进制时，应一并提供 Forge 的 GPL 文本／原通知、明确的对应源码位置，以及与该构建一致的 Java 修改、构建脚本和依赖许可。修改 Forge 后应刷新源码清单与对应源码下载，不能继续把旧源码包指认为新二进制的源码。
+2026-10-16 已交付的客户端合并更新包与 Linux14／Linux15 服务端包含 `ForgeRuntime/source/`，携带固定 Forge 完整源码及相应修改；更早的精简包可能只附源码下载说明。分发任何二进制时，应一并提供 Forge 的 GPL 文本／原通知、明确的对应源码位置，以及与该构建一致的 Java 修改、构建脚本和依赖许可。修改 Forge 后应刷新源码清单与对应源码下载，不能继续把旧源码包指认为新二进制的源码。常规 Unity 构建入口不等于自动完成发行源码封装，应按实际交付内容核对。
 
 Temurin JRE 和 Maven／Unity 依赖继续遵循各自的许可证；JRE 原许可及 Classpath Exception 位于运行包 `jre/legal`，二进制来源记录在 `ForgeRuntime/source/origins.json`。重分发者需按实际 JRE／依赖版本提供其要求的对应源码和通知；本页不将上游网页链接等同于所有二进制发行要求已自动满足。
 

@@ -22,6 +22,14 @@ public sealed partial class ForgeBattlefieldController
     }
     private string AbilityEffectText(ForgeCardView source,string effect)
     {
+        using var diagnostics=BattleTextDiagnostics.DeferIntermediate();
+        string Complete(string text){
+            if(GamePreferences.Language!="en-US"&&BattleTextDiagnostics.HasEnglishProse(text)){
+                var recipes=source==null?System.Array.Empty<(string text,ForgeCardView origin)>():AbilityRecipes(source,effect);
+                BattleTextDiagnostics.Record("ability",effect,text,source,true,recipes.Length==1?recipes[0].text:null,recipes.Length==1?recipes[0].origin:null);
+            }
+            return text;
+        }
         string prefix=source?.name+" ("+source?.id+") - ";
         string effectText=effect!=null&&effect.StartsWith(prefix,System.StringComparison.Ordinal)?effect.Substring(prefix.Length):effect??"";
         effectText=System.Text.RegularExpressions.Regex.Replace(effectText,@"\s*\[Zone Changer: [^\r\n]*\]\s*$","");
@@ -43,6 +51,14 @@ public sealed partial class ForgeBattlefieldController
         if(source!=null&&effectText.EndsWith(addedSuffix,System.StringComparison.Ordinal)) {
             effectText=effectText.Substring(0,effectText.Length-addedSuffix.Length);
             addedContext="\n["+TapPaymentText("添加来源：","Added once: ","追加元：")+GamePreferences.CardFaceName(source.name)+" ("+source.id+")]";
+        }
+        // Attack triggers append their triggering source after the targets.
+        // Separate that exact public source before matching either paragraph.
+        string ownAttackerContext="";
+        string ownAttackerSuffix=" [Attacker: "+source?.name+" ("+source?.id+")]";
+        if(source!=null&&!source.faceDown&&effectText.EndsWith(ownAttackerSuffix,System.StringComparison.Ordinal)) {
+            effectText=effectText.Substring(0,effectText.Length-ownAttackerSuffix.Length);
+            ownAttackerContext="\n["+TapPaymentText("攻击者：","Attacker: ","攻撃クリーチャー：")+GamePreferences.CardFaceName(source.name)+" ("+source.id+")]";
         }
         // WrappedAbility and SpellAbilityEffect append targets after the printed
         // paragraph. Match the rule separately, then retain the actual targets.
@@ -114,13 +130,8 @@ public sealed partial class ForgeBattlefieldController
         var departureContext=System.Text.RegularExpressions.Regex.Match(paragraph,@"\s+(\(\[[^\r\n]*\]\))$");
         string departureRule=departureContext.Success?paragraph.Substring(0,departureContext.Index):paragraph;
         string generatedDeparture=GeneratedDepartureRules(source,departureRule);
-        if(generatedDeparture!=null)paragraph=generatedDeparture+(departureContext.Success?"\n"+departureContext.Groups[1].Value:"");
-        string decayedAttacker=" [Attacker: "+source?.name+" ("+source?.id+")]";
-        if(source!=null&&(source.keywords??System.Array.Empty<string>()).Contains("DECAYED")
-            &&paragraph.EndsWith(decayedAttacker,System.StringComparison.Ordinal)) {
-            string decayedRule=GeneratedDepartureRules(source,paragraph.Substring(0,paragraph.Length-decayedAttacker.Length));
-            if(decayedRule!=null)paragraph=decayedRule+"\n["+TapPaymentText("攻击者：","Attacker: ","攻撃クリーチャー：")+GamePreferences.CardFaceName(source.name)+" ("+source.id+")]";
-        }
+        if(generatedDeparture!=null)paragraph=generatedDeparture+(departureContext.Success?"\n"+
+            System.Text.RegularExpressions.Regex.Replace(departureContext.Groups[1].Value,@"([^\[\],]+?) \((\d+)\)",m=>GamePreferences.CardFaceName(m.Groups[1].Value.Trim())+" ("+m.Groups[2].Value+")"):"");
         if(IsPublicRuleHelper(source)) {
             // Keep the native damage event separate from the exact rules paragraph.
             // It distinguishes multiple triggers that share the same helper card.
@@ -168,8 +179,9 @@ public sealed partial class ForgeBattlefieldController
         paragraph+=specializedContext;
         paragraph+=addedContext;
         paragraph+=attackerContext;
+        paragraph+=ownAttackerContext;
         paragraph+=producedContext;
-        if(!targets.Success)return paragraph;
+        if(!targets.Success||System.Text.RegularExpressions.Regex.IsMatch(targets.Groups[1].Value,@"^[\s\[\]{}(),]*$"))return Complete(paragraph);
         string names=System.Text.RegularExpressions.Regex.Replace(targets.Groups[1].Value,@"([^\[\],]+?) \((\d+)\)",m=>GamePreferences.CardFaceName(m.Groups[1].Value.Trim())+" ("+m.Groups[2].Value+")");
         // Card.toString also emits "name - type stats" without an object ID.
         // Match only public objects present in this seat's snapshot.
@@ -178,8 +190,9 @@ public sealed partial class ForgeBattlefieldController
         foreach(var card in publicTargets.OrderByDescending(c=>c.name.Length))names=names.Replace(card.name+" - ",GamePreferences.CardFaceName(card.name)+" - ");
         names=System.Text.RegularExpressions.Regex.Replace(names,@"(?<= - )(?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*",m=>string.Join(" ",m.Value.Split(' ').Select(GamePreferences.T)));
         names=System.Text.RegularExpressions.Regex.Replace(names,@"Face-down card (?=\([A-Z]?[0-9]+\))",TapPaymentText("盖牌 ","Face-down card ","裏向きのカード "));
-        names=System.Text.RegularExpressions.Regex.Replace(names,@"(?<=\[)Player (\d+)(?=\])",m=>TapPaymentText("玩家 ","Player ","プレイヤー ")+m.Groups[1].Value);
-        return paragraph+"\n"+TapPaymentText("目标：","Targets: ","対象：")+names;
+        names=System.Text.RegularExpressions.Regex.Replace(names,@"[\[\]{}]","");
+        names=System.Text.RegularExpressions.Regex.Replace(names,@"\bPlayer (\d+)\b",m=>PlayerDisplayName(int.Parse(m.Groups[1].Value)));
+        return Complete(paragraph+"\n"+TapPaymentText("目标：","Targets: ","対象：")+names);
     }
     private static string RegenerationSourceName(ForgeCardView source)
     {
@@ -225,8 +238,8 @@ public sealed partial class ForgeBattlefieldController
         face.Find("Name").GetComponent<Text>().text=AbilitySourceName(source);
         var effectLabel=(face.Find("Effect")??face.Find("EffectClip/Effect")).GetComponent<Text>();
         string rendered=GamePreferences.T(AbilityEffectText(source,effect));
-        bool changed=effectLabel.text!=rendered;
-        effectLabel.text=rendered;
+        bool changed=effectLabel.text!=PlayerNamesRichText(rendered);
+        SetNamedPlayerText(effectLabel,rendered);
         {
             var name=face.Find("Name").GetComponent<Text>();var text=effectLabel;
             name.resizeTextForBestFit=false;text.resizeTextForBestFit=false;

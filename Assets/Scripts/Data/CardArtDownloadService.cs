@@ -106,6 +106,7 @@ public sealed class CardArtDownloadService
             if (entered) slots.Release();
             pending.Remove(card.PrintingKey);
         }
+        CardImageLibrary.InvalidateMissingImages();
         Downloaded?.Invoke(card.PrintingKey);
     }
 

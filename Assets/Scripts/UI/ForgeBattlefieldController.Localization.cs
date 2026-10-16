@@ -11,6 +11,7 @@ public sealed partial class ForgeBattlefieldController
     {
         if(CompletedSingleCardOption(view?.request)>=0)return "";
         if(string.IsNullOrEmpty(message))return message;
+        message=string.Join("\n",message.Replace("\r","").Split('\n').Select(TargetInstructionText));
         string auxiliary=AuxiliaryPrompt(message);if(auxiliary!=null)return auxiliary;
         if(view?.request?.kind=="InputSelectEntitiesFromList") {
             message=Regex.Replace(message,@"(?m)^(?:Choose a creature(?: with a different power| with -?[0-9]+ power)?|Secretly choose a creature you (?:control|don't control)|Choose (?:a|an) (?:Cleric|Rogue|Warrior|Wizard|Plains|Island|Swamp|Mountain|Forest))\r?$",match=> {
@@ -135,6 +136,35 @@ public sealed partial class ForgeBattlefieldController
             }
         }
         return GamePreferences.NativeText(string.Join("\n",lines));
+    }
+    // TargetRestrictions builds these prompts from lowercase core types.
+    // Translate that exact grammar; custom restrictions remain intact.
+    private string TargetInstructionText(string text)
+    {
+        var library=Regex.Match(text??"",@"^Select up to (\d+) cards from your library$");
+        if(library.Success)return string.Format(System.Globalization.CultureInfo.InvariantCulture,
+            GamePreferences.T("Select up to {0} cards from your library"),library.Groups[1].Value);
+        if(text=="Select any target")return TapPaymentText("选择任意一个目标。",text,"対象１つを選ぶ。");
+        var target=Regex.Match(text??"",@"^Select target ([a-z ,/]+)$");
+        if(!target.Success)return text;
+        var words=Regex.Split(target.Groups[1].Value,@"( and/or | or |, )");
+        var translated=new System.Collections.Generic.List<string>();
+        foreach(string word in words) {
+            string local=word switch {
+                "artifact"=>TapPaymentText("神器",word,"アーティファクト"),"battle"=>TapPaymentText("战役",word,"バトル"),
+                "card"=>TapPaymentText("牌",word,"カード"),"creature"=>TapPaymentText("生物",word,"クリーチャー"),
+                "enchantment"=>TapPaymentText("结界",word,"エンチャント"),"instant"=>TapPaymentText("瞬间",word,"インスタント"),
+                "kindred"=>TapPaymentText("亲缘",word,"同族"),"land"=>TapPaymentText("地",word,"土地"),
+                "opponent"=>TapPaymentText("对手",word,"対戦相手"),"permanent"=>TapPaymentText("永久物",word,"パーマネント"),
+                "planeswalker"=>TapPaymentText("鹏洛客",word,"プレインズウォーカー"),"player"=>TapPaymentText("牌手",word,"プレイヤー"),
+                "sorcery"=>TapPaymentText("法术",word,"ソーサリー"),"spell"=>TapPaymentText("咒语",word,"呪文"),
+                " or "=>TapPaymentText("或",word,"または")," and/or "=>TapPaymentText("和／或",word,"や"),", "=>TapPaymentText("、",word,"、"),_=>null
+            };
+            if(local==null)return text;
+            translated.Add(local);
+        }
+        string types=string.Concat(translated);
+        return TapPaymentText("选择目标"+types+"。",text,types+"を対象に選ぶ。");
     }
     // Forge generates payment prose from CostParts, rather than the printed
     // rule (including alternate costs). Translate that exact clause through

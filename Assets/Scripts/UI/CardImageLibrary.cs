@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public static class CardImageLibrary
+public static partial class CardImageLibrary
 {
     public const string FolderName = "CardImages";
     public const string AlternateFolderName = "卡图";
@@ -19,6 +19,7 @@ public static class CardImageLibrary
         public Sprite Sprite;
         public long LastWriteTicks;
         public long Length;
+        public long Bytes,LastUse;
     }
 
     public static string ExternalRoot => Path.Combine(PrintingKeyUtility.ApplicationRoot, FolderName);
@@ -65,7 +66,26 @@ public static class CardImageLibrary
         if(loaded&&key!=null){DisplayedFullCards[key]=sprite;DisplayedFrames[key]=Time.frameCount;}
         return loaded;
     }
-    private static bool TryLoadFullCardCore(CardDefinition card,int faceIndex,out Sprite sprite)
+    public static bool TryLoadThumbnail(CardDefinition card,out Sprite sprite)
+        => TryLoadFullCardCore(card,0,out sprite,true);
+
+    private static bool TryLoadFullCardCore(CardDefinition card,int faceIndex,out Sprite sprite,bool thumbnail=false)
+    {
+        sprite=null;
+        if(card==null)return false;
+        string key=DisplayKey(card,faceIndex)+"/"+thumbnail;
+        if(IsKnownMissingImage(key))return false;
+        int revision=System.Threading.Volatile.Read(ref imageRevision);
+        if(TryResolveFullCard(card,faceIndex,out sprite,thumbnail)) {
+            MissingImages.Remove(key);
+            MissingImages.Remove(DisplayKey(card,faceIndex)+"/"+!thumbnail);
+            return true;
+        }
+        RememberMissingImage(key,revision);
+        return false;
+    }
+
+    private static bool TryResolveFullCard(CardDefinition card,int faceIndex,out Sprite sprite,bool thumbnail)
     {
         sprite = null;
         string preferred = CardArtPreferences.Get(card);
@@ -74,51 +94,57 @@ public static class CardImageLibrary
         bool localized=GamePreferences.Language=="zh-CN" || GamePreferences.Language=="ja-JP";
         if(localized && card!=null && !card.customContent)
         {
-            if(string.IsNullOrEmpty(preferred) && TryLoadLocalized(card,faceIndex,out sprite))return true;
+            if(string.IsNullOrEmpty(preferred) && TryLoadLocalized(card,faceIndex,out sprite,thumbnail))return true;
             var versions=CardArtVersions.GetVersions(card);
             if(!string.IsNullOrEmpty(preferred))
                 foreach(var version in versions)
-                    if(version.PrintingKey==preferred && TryLoadLocalized(version,faceIndex,out sprite))return true;
-            if(TryLoadLocalized(card,faceIndex,out sprite))return true;
+                    if(version.PrintingKey==preferred && TryLoadLocalized(version,faceIndex,out sprite,thumbnail))return true;
+            if(TryLoadLocalized(card,faceIndex,out sprite,thumbnail))return true;
             foreach(var version in versions)
-                if(version.PrintingKey!=card.PrintingKey && TryLoadLocalized(version,faceIndex,out sprite))return true;
+                if(version.PrintingKey!=card.PrintingKey && TryLoadLocalized(version,faceIndex,out sprite,thumbnail))return true;
         }
         if (!string.IsNullOrEmpty(preferred))
             foreach (var version in CardArtVersions.GetVersions(card))
-                if (version.PrintingKey == preferred && TryLoadExact(version, faceIndex, out sprite)) return true;
-        if (CardArtImportService.TryGetPath(card, faceIndex, out string customPath)) sprite = LoadSprite(customPath);
+                if (version.PrintingKey == preferred && TryLoadExact(version, faceIndex, out sprite,thumbnail)) return true;
+        if (CardArtImportService.TryGetPath(card, faceIndex, out string customPath)) sprite = LoadSprite(customPath,thumbnail);
         if (sprite != null) return true;
         if(faceIndex==1&&MeldCardArt.TryLoad(card,out sprite))return true;
-        if (TryFindImagePath(card, faceIndex, out string path, false)) sprite = LoadSprite(path);
+        if (TryFindImagePath(card, faceIndex, out string path, false)) sprite = LoadSprite(path,thumbnail);
         if (sprite != null) return true;
         foreach (var version in CardArtVersions.GetVersions(card))
         {
             if (version.PrintingKey == card.PrintingKey || !TryFindImagePath(version, faceIndex, out path, false)) continue;
-            sprite = LoadSprite(path);
+            sprite = LoadSprite(path,thumbnail);
             if (sprite != null) return true;
         }
         return false;
     }
 
-    private static bool TryLoadLocalized(CardDefinition card,int faceIndex,out Sprite sprite)
+    private static bool TryLoadLocalized(CardDefinition card,int faceIndex,out Sprite sprite,bool thumbnail=false)
     {
         sprite=null;
         if(!PrintingKeyUtility.TryGetPrinting(card,out string setCode,out string collectorNumber))return false;
         foreach(string root in EnumerateRoots())
+        {
+            if(!ImageDirectoryExists(Path.Combine(root,GamePreferences.Language,setCode)))continue;
             foreach(string extension in Extensions)
             {
                 string path=PrintingKeyUtility.BuildImagePath(Path.Combine(root,GamePreferences.Language),setCode,collectorNumber,faceIndex,extension);
                 if(!File.Exists(path))continue;
-                sprite=LoadSprite(path);
+                sprite=LoadSprite(path,thumbnail);
                 if(sprite!=null)return true;
             }
+        }
         return false;
     }
 
     public static bool TryLoadExact(CardDefinition card, int faceIndex, out Sprite sprite)
+        => TryLoadExact(card,faceIndex,out sprite,false);
+
+    private static bool TryLoadExact(CardDefinition card,int faceIndex,out Sprite sprite,bool thumbnail)
     {
         sprite = null;
-        if (TryFindImagePath(card, faceIndex, out string path)) sprite = LoadSprite(path);
+        if (TryFindImagePath(card, faceIndex, out string path)) sprite = LoadSprite(path,thumbnail);
         return sprite != null;
     }
 
@@ -220,36 +246,39 @@ public static class CardImageLibrary
 
     public static void ClearCache()
     {
-        foreach (CacheEntry entry in Cache.Values)
+        foreach (CacheEntry entry in System.Linq.Enumerable.Concat(Cache.Values,ThumbnailCache.Values))
         {
             if (entry.Sprite == null) continue;
             Texture2D texture = entry.Sprite.texture;
             UnityEngine.Object.Destroy(entry.Sprite);
             if (texture != null) UnityEngine.Object.Destroy(texture);
         }
-        Cache.Clear();
+        Cache.Clear();ThumbnailCache.Clear();fullBytes=thumbnailBytes=0;
+        ResetMissingImages();
         DisplayedFullCards.Clear();
         DisplayedFrames.Clear();
         FailedFiles.Clear();
         cardBackSprite = null;
     }
 
-    private static Sprite LoadSprite(string path)
+    private static Sprite LoadSprite(string path,bool thumbnail=false)
     {
+        var cache=thumbnail?ThumbnailCache:Cache;
         var info = new FileInfo(path);
         string fullPath = info.FullName;
-        if (Cache.TryGetValue(fullPath, out CacheEntry cached)
+        if (cache.TryGetValue(fullPath, out CacheEntry cached)
             && cached.LastWriteTicks == info.LastWriteTimeUtc.Ticks
             && cached.Length == info.Length
             && cached.Sprite != null)
         {
+            cached.LastUse=++cacheClock;
             return cached.Sprite;
         }
 
         try
         {
             byte[] bytes = File.ReadAllBytes(fullPath);
-            var texture = new Texture2D(2, 2, TextureFormat.RGBA32, true)
+            var texture = new Texture2D(2, 2, TextureFormat.RGBA32, !thumbnail)
             {
                 name = $"CardImage_{info.Directory?.Name}_{Path.GetFileNameWithoutExtension(info.Name)}",
                 filterMode = FilterMode.Trilinear,
@@ -264,24 +293,28 @@ public static class CardImageLibrary
                 WarnFailed(fullPath, "unsupported or invalid image data");
                 return null;
             }
+            if(thumbnail)texture=MakeThumbnail(texture);
             // Filter from downsampled levels when full-resolution card scans appear as small tiles.
-            texture.Apply(updateMipmaps: true, makeNoLongerReadable: true);
+            if(texture.isReadable)texture.Apply(updateMipmaps: true, makeNoLongerReadable: true);
 
             Sprite loaded = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
             loaded.name = texture.name;
 
             if (cached?.Sprite != null)
             {
+                if(thumbnail)thumbnailBytes-=cached.Bytes;else fullBytes-=cached.Bytes;
                 Texture2D oldTexture = cached.Sprite.texture;
                 UnityEngine.Object.Destroy(cached.Sprite);
                 if (oldTexture != null) UnityEngine.Object.Destroy(oldTexture);
             }
 
-            Cache[fullPath] = new CacheEntry
+            long size=UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(texture);
+            if(thumbnail)thumbnailBytes+=size;else fullBytes+=size;
+            cache[fullPath] = new CacheEntry
             {
                 Sprite = loaded,
                 LastWriteTicks = info.LastWriteTimeUtc.Ticks,
-                Length = info.Length
+                Length = info.Length,Bytes=size,LastUse=++cacheClock
             };
             FailedFiles.Remove(fullPath);
             return loaded;
@@ -307,6 +340,7 @@ public static class CardImageLibrary
 
         foreach (string root in EnumerateLanguageRoots())
         {
+            if(!ImageDirectoryExists(Path.Combine(root,setCode)))continue;
             for (int i = 0; i < Extensions.Length; i++)
             {
                 string candidate = PrintingKeyUtility.BuildImagePath(
@@ -336,9 +370,7 @@ public static class CardImageLibrary
 
     private static IEnumerable<string> EnumerateRoots()
     {
-        yield return ExternalRoot;
-        yield return AlternateExternalRoot;
-        if (!string.Equals(ExternalRoot, PersistentRoot, StringComparison.OrdinalIgnoreCase)) yield return PersistentRoot;
+        foreach(string root in ImageRoots())if(ImageDirectoryExists(root))yield return root;
     }
 
     private static void EnsureDirectory(string path)

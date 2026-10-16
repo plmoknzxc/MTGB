@@ -19,6 +19,11 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
     private int mulligans;
     private bool openingVerified;
     private int packetQueueCapacity;
+    private int memoryActionLimit;
+    private long pendingSequence=-1;
+    private double submittedAt;
+    private long initialWorkingSet;
+    private readonly System.Collections.Generic.List<double> responseMs=new();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Boot()
@@ -45,6 +50,8 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         OnlineClientProfileStore.SaveReconnectToken(profile, string.Empty, room);
         ushort port = ushort.Parse(OnlineClientProfileStore.ReadArgument("-forge-port") ?? "17877");
         bestOf = int.Parse(OnlineClientProfileStore.ReadArgument("-forge-bestof") ?? "3");
+        memoryActionLimit=Mathf.Clamp(int.Parse(OnlineClientProfileStore.ReadArgument("-forge-memory-actions")??"0"),0,10000);
+        if(memoryActionLimit>0){bestOf=1;deadline=Time.realtimeSinceStartupAsDouble+600;service.ControlMode=ForgeControlMode.On;}
         var config = new OnlineRoomConfig { bestOf = bestOf };
         if (role == "server") service.StartDedicatedServer(port);
         else if (role == "host") service.StartLanHost(port, role, profile, room, config);
@@ -57,6 +64,12 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         }
         if (role != "server")
         {
+            if(memoryActionLimit>0) {
+                deck=new DeckDefinition{name="Network memory regression"};
+                foreach(var card in CardDatabaseRepository.LoadAll().Where(c=>c.cardName=="Forest"&&!c.forgeAmbiguous).Take(2))
+                    deck.cards.Add(new DeckEntry{setCode=card.setCode,collectorNumber=card.CollectorNumber,count=250});
+                return;
+            }
             deck = DeckRepository.Load(Path.Combine(DeckRepository.DeckRoot, "Forge-Validation.mdk"));
             var land = deck.cards.Find(entry => entry.count == 36);
             if (land == null) throw new InvalidDataException("Validation deck needs its 36-land entry.");
@@ -81,7 +94,7 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         {
             int requiredWins = bestOf / 2 + 1;
             Complete(games == requiredWins && message.series.player2Wins == requiredWins && (bestOf == 1 || sideboardChanged)
-                && (role == "host" || reconnectVerified), "BO" + bestOf + ", registered-pool sideboarding when applicable and pending-choice reconnect.");
+                && (memoryActionLimit>0 || role == "host" || reconnectVerified), memoryActionLimit>0?"Native network long-match memory regression.":"BO" + bestOf + ", registered-pool sideboarding when applicable and pending-choice reconnect.");
         }
     }
     private void Update()
@@ -93,7 +106,7 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         double now = Time.realtimeSinceStartupAsDouble;
         if (now > deadline) { Complete(false, "Network smoke timed out."); return; }
         if (role == "server" || now < nextAction) return;
-        nextAction = now + 0.15;
+        nextAction = now + (memoryActionLimit>0?.03:.15);
         if (!service.HasJoinedLobby) return;
         if (!service.IsInMatch)
         {
@@ -107,6 +120,9 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
             return;
         }
         var view = service.ForgeView?.forge;
+        if(memoryActionLimit>0 && pendingSequence>=0 && service.ForgeView.appliedSequence>pendingSequence && view?.inputPending!=true) {
+            responseMs.Add((now-submittedAt)*1000);pendingSequence=-1;
+        }
         if (view?.players != null)
             foreach (var player in view.players)
                 if (player.seat != service.LocalSeat && player.hand?.Length > 0) { Complete(false, "Hidden hand leaked."); return; }
@@ -115,13 +131,14 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
             if (mulligans != 1 || view.players.Any(p => p.handCount != 6))
             { Complete(false, "Expected both players to start with six cards after mulligan."); return; }
             openingVerified = true;
+            initialWorkingSet=System.Diagnostics.Process.GetCurrentProcess().WorkingSet64;
             Debug.Log("Forge smoke: both seats completed London mulligan and started with six cards.");
         }
-        if (service.LocalSeat == 1 && openingVerified && actions >= 5 && service.InteractionState == OnlineClientInteractionState.Idle)
+        if (service.LocalSeat == 1 && openingVerified && actions >= (memoryActionLimit>0?memoryActionLimit:5) && service.InteractionState == OnlineClientInteractionState.Idle)
         { service.Concede(); actions = -100; return; }
         if (view?.awaitingInput != true || service.InteractionState != OnlineClientInteractionState.Idle) return;
         var request = view.request;
-        if (role != "host" && !reconnectStarted)
+        if (memoryActionLimit==0 && role != "host" && !reconnectStarted)
         {
             reconnectStarted = true; reconnectChoice = request.requestId;
             reconnectViewHash = service.ForgeView.viewHash;
@@ -141,16 +158,26 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         if (takeMulligan) index = Array.FindIndex(request.options, option => option.id == "cancel");
         if (request.kind == "InputLondonMulligan" && index < 0)
             index = Array.FindIndex(request.options, option => option.id.StartsWith("card:") && !option.label.StartsWith("[已选回牌库底]"));
+        if(memoryActionLimit>0 && !takeMulligan) {
+            index=Array.FindIndex(request.options,o=>!o.disabled&&(o.id=="ok"||o.id=="confirm-cards"||o.id=="confirm-order"));
+            if(index<0)index=Array.FindIndex(request.options,o=>!o.disabled&&!o.selected);
+        }
         var battlefield = FindFirstObjectByType<ForgeBattlefieldController>();
         if (battlefield == null || !battlefield.TrySubmitPresentedOption(index < 0 ? 0 : index, request.requestId)) return;
+        if(memoryActionLimit>0){pendingSequence=service.ForgeView.appliedSequence;submittedAt=now;}
         if (takeMulligan) mulligans++;
         actions++;
     }
     private void Complete(bool success, string detail)
     {
+        double P95(System.Collections.Generic.IEnumerable<double> samples){var sorted=samples.OrderBy(x=>x).ToArray();return sorted.Length==0?0:sorted[(int)((sorted.Length-1)*.95)];}
+        double early=P95(responseMs.Take(100)),late=P95(responseMs.Skip(Math.Max(0,responseMs.Count-100)));
+        if(memoryActionLimit>0 && (responseMs.Count<memoryActionLimit-5 || late>Math.Max(1000,early*3))) {success=false;detail+=" Insufficient samples or rising late-game latency.";}
         if (!string.IsNullOrWhiteSpace(report))
             File.WriteAllText(report, JsonUtility.ToJson(new Result { success = success, games = games,
-                detail = detail, packetQueueCapacity = packetQueueCapacity }, true));
+                detail = detail, packetQueueCapacity = packetQueueCapacity, responseSamples=responseMs.Count,
+                earlyP95Ms=early,lateP95Ms=late,initialWorkingSet=initialWorkingSet,
+                finalWorkingSet=System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 }, true));
         enabled = false;
         StartCoroutine(QuitAfterDelivery(success));
     }
@@ -160,5 +187,8 @@ public sealed class ForgeNetworkSmoke : MonoBehaviour
         yield return new WaitForSecondsRealtime(2);
         service?.Disconnect(); Application.Quit(success ? 0 : 1);
     }
-    [Serializable] private sealed class Result { public bool success; public int games; public string detail; public int packetQueueCapacity; }
+    [Serializable] private sealed class Result {
+        public bool success; public int games; public string detail; public int packetQueueCapacity,responseSamples;
+        public double earlyP95Ms,lateP95Ms;public long initialWorkingSet,finalWorkingSet;
+    }
 }

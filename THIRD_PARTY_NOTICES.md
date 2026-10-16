@@ -1,10 +1,10 @@
 # Licenses and third-party material
 
-The root MIT license covers MTGB-authored Unity/client source code and documentation. It does not relicense third-party software, Forge-derived code, card data, fonts, artwork, trademarks or Unity itself.
+The root MIT license covers MTGB-authored Unity client/server source code and documentation. It does not relicense third-party software, Forge-derived code, card data, fonts, artwork, trademarks or Unity itself.
 
 | Component | License / source |
 |---|---|
-| MTGB-authored Unity/client source | [MIT](LICENSE) |
+| MTGB-authored Unity client/server source | [MIT](LICENSE) |
 | Forge, MTGB Java bridge/proof tools, native modifications | GNU GPL v3, see the local LICENSE files in `Tools/ForgeBridge`, `Tools/ForgeProof` and `ThirdParty/Forge` |
 | Noto CJK fonts and derived SDF assets | SIL Open Font License 1.1; [bundled notice](Assets/Fonts/Noto-OFL.txt) |
 | Card-template Source Han Serif/Sans, EB Garamond, renamed LXGW symbol subset | OFL 1.1; [font sources, copyright and notices](Assets/Resources/UI/CardTemplates/Fonts/README.md) |

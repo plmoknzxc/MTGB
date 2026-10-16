@@ -62,6 +62,7 @@ public static class CardArtImportService
             else File.Move(temporary, target);
         }
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
+        CardImageLibrary.InvalidateMissingImages();
         Changed?.Invoke(card.PrintingKey, faceIndex);
         return target;
     }
@@ -71,6 +72,7 @@ public static class CardArtImportService
         string path = GetPath(card, faceIndex);
         if (!File.Exists(path)) return false;
         File.Delete(path);
+        CardImageLibrary.InvalidateMissingImages();
         Changed?.Invoke(card.PrintingKey, faceIndex);
         return true;
     }

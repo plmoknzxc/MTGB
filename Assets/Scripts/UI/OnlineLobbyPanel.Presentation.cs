@@ -23,13 +23,13 @@ public sealed partial class OnlineLobbyPanel
         });
         Place((RectTransform)leaveRoomButton.transform,new Vector2(-170,-338),new Vector2(308,50));
         Place((RectTransform)summary.Find("PlayersLabel"),new Vector2(0,78),new Vector2(648,36));
-        var players=summary.Find("PlayersPanel");Place((RectTransform)players,new Vector2(0,-40),new Vector2(648,152));
+        var players=summary.Find("PlayersPanel");Place((RectTransform)players,new Vector2(0,-36),new Vector2(648,168));
         for(int i=0;i<2;i++){
-            var seat=players.Find("Seat"+(i+1));Place((RectTransform)seat,new Vector2(0,i==0?40:-40),new Vector2(648,72));
+            var seat=players.Find("Seat"+(i+1));Place((RectTransform)seat,new Vector2(0,i==0?46:-46),new Vector2(648,72));
             Place(seatNames[i].rectTransform,new Vector2(18,16),new Vector2(500,36));PreferenceText.SetSize(seatNames[i],19);
             Place(seatStates[i].rectTransform,new Vector2(18,-20),new Vector2(500,26));PreferenceText.SetSize(seatStates[i],14);
         }
-        var observers=AddPanel(summary,"SpectatorList",new Vector2(0,-192),new Vector2(648,120),LobbyField);
+        var observers=AddPanel(summary,"SpectatorList",new Vector2(0,-198),new Vector2(648,108),LobbyField);
         AddText(observers.transform,"SpectatorHeading",DeckCompanion.Text("观战席","Spectators","観戦席"),new Vector2(-160,36),new Vector2(284,34),18,browserFont,TextAnchor.MiddleLeft,LobbyPaper);
         spectatorCount=AddText(observers.transform,"SpectatorCount","0",new Vector2(234,36),new Vector2(136,34),16,browserFont,TextAnchor.MiddleRight,LobbyGold);
         var viewport=AddPanel(observers.transform,"SpectatorViewport",new Vector2(0,-19),new Vector2(604,60),Color.clear);
@@ -87,7 +87,7 @@ public sealed partial class OnlineLobbyPanel
             string name=image.name;
             bool plain=name=="PlayersPanel"||name=="SpectatorViewport"||name=="StatusPanel";
             image.color=name=="HeaderBand"||plain?Color.clear:
-                name=="SpectatorList"?LobbyField:
+                name=="SpectatorList"||name=="PreparationInfo"?LobbyField:
                 name.Contains("Input")||name.Contains("Dropdown")||name=="RoomListViewport"||name.StartsWith("Seat")||name=="SelectedDeckSummary"?LobbyField:LobbySurface;
             if(image.transform==root)image.color=PageColor;
             var edge=image.GetComponent<Outline>();
@@ -123,6 +123,7 @@ public sealed partial class OnlineLobbyPanel
         }
         foreach(var toggle in root.GetComponentsInChildren<Toggle>(true))
         {
+            if(toggle.GetComponentInParent<Dropdown>()!=null)continue;
             // Keep the outline readable even when the option is disabled.
             // A Selectable tint would also multiply the outline into the dark fill.
             toggle.transition=Selectable.Transition.None;
@@ -134,6 +135,27 @@ public sealed partial class OnlineLobbyPanel
             colors.disabledColor=new Color(.19f,.22f,.27f);
             toggle.colors=colors;
             if(toggle.graphic!=null)toggle.graphic.color=new Color(.97f,.82f,.52f);
+        }
+        // Popup rows are selection controls, not the room's checkbox style.
+        foreach(var dropdown in root.GetComponentsInChildren<Dropdown>(true))DropdownChevron.Apply(dropdown);
+        root.GetComponent<OnlineLobbyPanel>()?.RefreshAnteAvailabilityVisual();
+        foreach(var image in root.GetComponentsInChildren<Image>(true))
+            if(image.name=="PreparationInfo"||image.name=="Seat1"||image.name=="Seat2")EnsureRoomFrame(image);
+    }
+
+    private static void EnsureRoomFrame(Image image)
+    {
+        var outline=image.GetComponent<Outline>();if(outline!=null)outline.enabled=false;
+        for(int side=0;side<4;side++) {
+            string name="RoomFrame"+side;
+            var edge=image.transform.Find(name) as RectTransform;
+            if(edge==null){edge=new GameObject(name,typeof(RectTransform),typeof(Image)).GetComponent<RectTransform>();edge.SetParent(image.transform,false);}
+            bool horizontal=side<2,far=side%2==0;
+            edge.anchorMin=horizontal?new Vector2(0,far?1:0):new Vector2(far?0:1,0);
+            edge.anchorMax=horizontal?new Vector2(1,far?1:0):new Vector2(far?0:1,1);
+            edge.pivot=horizontal?new Vector2(.5f,far?1:0):new Vector2(far?0:1,.5f);
+            edge.sizeDelta=horizontal?new Vector2(0,1.5f):new Vector2(1.5f,0);edge.anchoredPosition=Vector2.zero;
+            var graphic=edge.GetComponent<Image>();graphic.color=new Color(.36f,.39f,.45f);graphic.raycastTarget=false;edge.SetAsLastSibling();
         }
     }
 }

@@ -26,6 +26,7 @@ public sealed partial class ForgeBattlefieldController
         }
         text.font=GamePreferences.TmpFont??TMP_Settings.defaultFontAsset;
         text.fontSize=source.fontSize;text.color=source.color;text.enableAutoSizing=false;
+        text.richText=sourcePreference.Literal&&source.supportRichText;
         var preference=text.GetComponent<PreferenceText>();if(preference==null)preference=text.gameObject.AddComponent<PreferenceText>();
         preference.SetBaseSize(source.fontSize/GamePreferences.TextScale);
         text.alignment=source.alignment==TextAnchor.UpperLeft?TextAlignmentOptions.TopLeft:TextAlignmentOptions.Center;

@@ -20,6 +20,8 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private bool canAct, submitted;
     private long requestId;
     private string renderedKey;
+    private (string hash, OnlineClientInteractionState interaction, bool connected, int preferences,
+        int bestOf, int ownWins, int otherWins, string players) renderedInputs;
     private string boardPreferenceKey;
     private bool? componentFaceMode;
     private Action<int> submit;
@@ -101,9 +103,12 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             SceneManager.LoadScene("Main");
             return;
         }
-        string key = (service.ForgeView?.viewHash ?? "") + service.InteractionState + service.IsConnected + GamePreferences.Revision + "/" + SeriesPresentationKey(service.LobbyState?.series)+"/"+PlayerNamesKey();
-        if (key == renderedKey) {UpdateAutomaticControl();return;}
-        renderedKey = key;
+        var series=service.LobbyState?.series;
+        var inputs=(service.ForgeView?.viewHash ?? "", service.InteractionState, service.IsConnected,
+            GamePreferences.Revision, series?.bestOf??0, series?.player1Wins??0, series?.player2Wins??0, PlayerNamesKey());
+        if (renderedKey!=null && inputs==renderedInputs) {UpdateAutomaticControl();return;}
+        renderedInputs=inputs;
+        renderedKey=string.Empty; // null remains the explicit interaction invalidation marker.
         Present(service.ForgeView?.forge, service.IsSpectator ? 1 : service.LocalSeat,
             !service.IsSpectator && service.IsConnected && service.InteractionState == OnlineClientInteractionState.Idle,
             service.SubmitForgeOption, service.IsSpectator ? (Action)null : service.Concede,
@@ -306,7 +311,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         var button = frame.gameObject.AddComponent<Button>(); button.targetGraphic=frame.GetComponent<Image>();
         // Non-selectable cards still support inspection. Choose checks the authoritative offered option.
         long captured = requestId;
-        button.onClick.AddListener(()=>Choose(option,captured));
+        button.onClick.AddListener(()=> {if(!hand||view?.request?.kind!="InputPassPriority")Choose(option,captured);});
         var pointer = frame.gameObject.AddComponent<ForgeBattlefieldCardPointer>();
         pointer.Configure(()=>Inspect(card),()=>Clear(previewRoot),()=>Choose(option,captured),hand && playable);
     }

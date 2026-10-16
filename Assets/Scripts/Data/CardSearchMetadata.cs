@@ -28,9 +28,25 @@ public static class CardSearchMetadata
             entries = await Task.Run(() =>
             {
                 var result = new Dictionary<string, Entry>(StringComparer.OrdinalIgnoreCase);
+                // Scope the pool to this read. Entries keep their shared strings;
+                // the temporary index must not keep a discarded catalog alive.
+                var labels = new Dictionary<string, string>(StringComparer.Ordinal);
+                string Share(string value)
+                {
+                    if (value == null) return null;
+                    if (value.Length == 0) return string.Empty;
+                    if (labels.TryGetValue(value, out var shared)) return shared;
+                    labels.Add(value, value);
+                    return value;
+                }
                 foreach (string line in File.ReadLines(path))
                 {
                     var entry = JsonUtility.FromJson<Entry>(line);
+                    entry.name = Share(entry.name);
+                    entry.rarity = Share(entry.rarity);
+                    entry.setName = Share(entry.setName);
+                    entry.artist = Share(entry.artist);
+                    entry.layout = Share(entry.layout);
                     result.Add(entry.key, entry);
                 }
                 return result;

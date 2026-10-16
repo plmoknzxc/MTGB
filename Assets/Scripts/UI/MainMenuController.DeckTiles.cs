@@ -26,7 +26,7 @@ public sealed partial class MainMenuController
         if(face!=null){
             // A reload can invalidate sprites while their tile survives. Reuse
             // only current art; otherwise replace it before the next paint.
-            bool full=CardImageLibrary.TryLoadFullCard(card,out var art);
+            bool full=CardImageLibrary.TryLoadThumbnail(card,out var art);
             face.sprite=full?art:CardVisualStyle.LoadFrame(card);
             face.color=face.sprite!=null?Color.white:GetFallbackColor(card);
             foreach(string name in new[]{"FallbackText","FallbackOverlay"}){var label=tile.transform.Find(name);if(label!=null)label.gameObject.SetActive(!full);}

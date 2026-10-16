@@ -13,8 +13,8 @@ public sealed partial class MainMenuController
     private readonly System.Random deckSortRandom=new System.Random();
     private readonly Dictionary<DeckEntry,int> deckShuffleOrder=new Dictionary<DeckEntry,int>();
     private DeckDefinition shuffledDeck;
-    private Button deckCostSort,deckTypeSort,deckShuffle;
-    private (float,float,int,string,string,string,string,string,int,int,int) deckHeaderLayoutKey;
+    private Button deckCurve,deckCostSort,deckTypeSort,deckShuffle;
+    private (float,float,int,string,string,string,string,string,string,int,int,int) deckHeaderLayoutKey;
     private float deckHeaderLayoutHeight;
 
     private void CreateDeckSortControls()
@@ -25,6 +25,7 @@ public sealed partial class MainMenuController
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=new Vector2(1,.5f);rect.pivot=new Vector2(1,.5f);rect.sizeDelta=new Vector2(80,38);
             PreferenceText.SetSize(button.GetComponentInChildren<Text>(),16);return button;
         }
+        deckCurve=Add("DeckCurve",ShowDeckCurve);
         deckCostSort=Add("DeckSortCost",()=>SetDeckViewSort(DeckViewSort.Cost));
         deckTypeSort=Add("DeckSortType",()=>SetDeckViewSort(DeckViewSort.Type));
         deckShuffle=Add("DeckShuffle",()=>SetDeckViewSort(DeckViewSort.Shuffle));
@@ -37,24 +38,26 @@ public sealed partial class MainMenuController
             var label=button.GetComponentInChildren<Text>();var binding=label.GetComponent<PreferenceText>();binding.Literal=true;label.text=value;
             button.GetComponent<Image>().color=active?MenuVisualTheme.Primary:MenuVisualTheme.Raised;
         }
+        Label(deckCurve,DeckCompanion.Text("查看曲线","Mana curve","マナカーブ"),false);
         Label(deckCostSort,DeckCompanion.Text("按费用","Mana value","マナ総量"),deckViewSort==DeckViewSort.Cost);
         Label(deckTypeSort,DeckCompanion.Text("按类型","Card type","タイプ"),deckViewSort==DeckViewSort.Type);
         Label(deckShuffle,DeckCompanion.Text("打乱","Shuffle","混ぜる"),deckViewSort==DeckViewSort.Shuffle&&ReferenceEquals(shuffledDeck,currentDeck));
     }
     // The count/format stay together; sorting stays at the right edge. A narrow
-    // panel gets a second row, with the card viewport reserving its full height.
+    // panel wraps the controls, with the card viewport reserving their full height.
     private float LayoutDeckHeader(float width,float minimumRowHeight)
     {
         if(mainDeckCountText==null||deckFormatDropdown==null||deckCostSort==null)return minimumRowHeight;
         float gap=Mathf.Clamp(width*.012f,6,12);
-        var cost=deckCostSort.GetComponentInChildren<Text>();var type=deckTypeSort.GetComponentInChildren<Text>();var shuffle=deckShuffle.GetComponentInChildren<Text>();
-        var key=(width,minimumRowHeight,GamePreferences.Revision,mainDeckCountText.text,deckFormatDropdown.captionText.text,cost.text,type.text,shuffle.text,mainDeckCountText.fontSize,deckFormatDropdown.captionText.fontSize,cost.fontSize);
+        var curve=deckCurve.GetComponentInChildren<Text>();var cost=deckCostSort.GetComponentInChildren<Text>();var type=deckTypeSort.GetComponentInChildren<Text>();var shuffle=deckShuffle.GetComponentInChildren<Text>();
+        var key=(width,minimumRowHeight,GamePreferences.Revision,mainDeckCountText.text,deckFormatDropdown.captionText.text,curve.text,cost.text,type.text,shuffle.text,mainDeckCountText.fontSize,deckFormatDropdown.captionText.fontSize,cost.fontSize);
         if(key==deckHeaderLayoutKey)return deckHeaderLayoutHeight;
         float rowHeight=Mathf.Ceil(Mathf.Max(minimumRowHeight,38,mainDeckCountText.fontSize*1.25f+6,cost.fontSize*1.25f+6,deckFormatDropdown.captionText.fontSize*1.25f+6));
         float costWidth=Mathf.Ceil(Mathf.Max(60,cost.preferredWidth+20));
         float typeWidth=Mathf.Ceil(Mathf.Max(60,type.preferredWidth+20));
         float shuffleWidth=Mathf.Ceil(Mathf.Max(56,shuffle.preferredWidth+20));
-        float sortingWidth=costWidth+typeWidth+shuffleWidth+gap*2;
+        float curveWidth=Mathf.Ceil(Mathf.Max(72,curve.preferredWidth+20));
+        float sortingWidth=curveWidth+costWidth+typeWidth+shuffleWidth+gap*3;
         float countWidth=Mathf.Ceil(mainDeckCountText.preferredWidth);
         float formatWidth=Mathf.Ceil(Mathf.Max(96,deckFormatDropdown.captionText.preferredWidth+46));
         bool secondRow=countWidth+gap*2+formatWidth+sortingWidth+8>width;
@@ -72,9 +75,28 @@ public sealed partial class MainMenuController
         Position((RectTransform)deckShuffle.transform,true,-8,sortY,shuffleWidth);
         Position((RectTransform)deckTypeSort.transform,true,-8-shuffleWidth-gap,sortY,typeWidth);
         Position((RectTransform)deckCostSort.transform,true,-8-shuffleWidth-gap-typeWidth-gap,sortY,costWidth);
+        Position((RectTransform)deckCurve.transform,true,-8-shuffleWidth-gap-typeWidth-gap-costWidth-gap,sortY,curveWidth);
+        int controlRows=1;
+        if(secondRow&&sortingWidth>width-16){
+            var controls=new[]{(deckCurve,curveWidth),(deckCostSort,costWidth),(deckTypeSort,typeWidth),(deckShuffle,shuffleWidth)};
+            int start=0;
+            while(start<controls.Length){
+                int end=start;float rowWidth=controls[start].Item2;
+                while(end+1<controls.Length&&rowWidth+gap+controls[end+1].Item2<=width-16)rowWidth+=gap+controls[++end].Item2;
+                float x=-8-rowWidth;
+                for(int i=start;i<=end;i++){
+                    x+=controls[i].Item2;
+                    Position((RectTransform)controls[i].Item1.transform,true,x,sortY-(controlRows-1)*(rowHeight+gap),controls[i].Item2);
+                    x+=gap;
+                }
+                start=end+1;
+                if(start<controls.Length)controlRows++;
+            }
+        }
         FitDeckFormatPopup(width,formatWidth);
         deckHeaderLayoutKey=key;
-        return deckHeaderLayoutHeight=rowHeight*(secondRow?2:1)+(secondRow?gap:0);
+        int rows=secondRow?1+controlRows:1;
+        return deckHeaderLayoutHeight=rowHeight*rows+gap*(rows-1);
     }
     private void SetDeckViewSort(DeckViewSort mode)
     {

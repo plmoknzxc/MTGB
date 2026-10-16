@@ -39,7 +39,7 @@ public sealed class GamePreferences : MonoBehaviour
     }
     public static string DeckFormat
     {
-        get { string value = PlayerPrefs.GetString("Deck.Format", "standard"); return value == "none" ? "standard" : value; }
+        get { return PlayerPrefs.GetString("Deck.Format", "standard"); }
     }
     public static string DeckBanlist
     {
@@ -92,10 +92,13 @@ public sealed class GamePreferences : MonoBehaviour
         if(locale!=null) LocalizationSettings.SelectedLocale=locale;
         LocalizationSettings.SelectedLocaleChanged += OnLocale;
         OnLocale(LocalizationSettings.SelectedLocale);
-        while(true) { BindScene(); yield return new WaitForSecondsRealtime(.5f); }
+        var interval=new WaitForSecondsRealtime(.5f);
+        while(true) { BindNewUi(); yield return interval; }
     }
 
-    void OnDestroy() { LocalizationSettings.SelectedLocaleChanged-=OnLocale; }
+    void OnDestroy() { LocalizationSettings.SelectedLocaleChanged-=OnLocale; BattleTextDiagnostics.FlushOnExit(); }
+    void OnApplicationQuit() { BattleTextDiagnostics.FlushOnExit(); }
+    void LateUpdate(){CardImageLibrary.TrimCache();BattleTextDiagnostics.Tick();}
 
     async void OnLocale(Locale locale)
     {
@@ -282,11 +285,13 @@ public sealed class GamePreferences : MonoBehaviour
     {
         var exact=table?.GetEntry(source); if(!string.IsNullOrEmpty(exact?.LocalizedValue)) return exact.LocalizedValue;
         if(aliases.TryGetValue(source,out var localized))return localized;
+        if(native&&NativeMessageText.TryTranslate(source,out var structured))return structured;
         foreach(var format in formats)
         {
             Match match;
             try {match=format.Item1.Match(source);}catch(RegexMatchTimeoutException){continue;}
             if(!match.Success)continue;
+            if(native&&NativeMessageText.UnsafeArguments(match))continue;
             // A single replacement pass preserves literal mana braces in args;
             // repeated placeholders must refer to the same captured value.
             return Regex.Replace(format.Item2,@"\{([0-7])\}",token=>{
@@ -304,7 +309,7 @@ public sealed class GamePreferences : MonoBehaviour
         var identity=Regex.Match(source,@"^(.+) \(([0-9]+)\)$");
         if(identity.Success)return CardFaceName(identity.Groups[1].Value)+" ("+identity.Groups[2].Value+")";
         string name=CardFaceName(source);
-        if(Ready&&Language!="en-US"&&name==source&&Regex.IsMatch(Regex.Replace(source,@"\{[^}]*\}|<[^>]*>",""),@"[A-Za-z]{2,}"))untranslatedNative.Add(source);
+        if(Ready&&Language!="en-US"&&name==source&&Regex.IsMatch(Regex.Replace(source,@"\{[^}]*\}|<[^>]*>",""),@"[A-Za-z]{2,}"))RememberUntranslated(source);
         return name;
     }
     // Display boundary only: request predicates and response IDs remain native.
@@ -331,11 +336,24 @@ public sealed class GamePreferences : MonoBehaviour
                 }
                 lines[i]=translated;
                 if(Ready&&Language!="en-US"&&translated==line&&Regex.IsMatch(line,@"[A-Za-z]{2,}"))
-                    untranslatedNative.Add(line);
+                    RememberUntranslated(line);
             }
             value=string.Join("\n",lines);
         }
-        return DisplayCardIdentities(value);
+        value=DisplayCardIdentities(value);
+        BattleTextDiagnostics.Record("native",source,value);
+        return value;
+    }
+    static void RememberUntranslated(string source)
+    {
+        if(untranslatedNative.Count>=512)untranslatedNative.Clear();
+        if(source.Length>2048)source=source.Substring(0,2048);
+        untranslatedNative.Add(source);
+    }
+    internal static bool IsCardIdentity(string value)
+    {
+        string name=Regex.Replace(value??"",@" \([0-9]+\)$","");
+        return cards.ContainsKey(name);
     }
     static Dictionary<string,string[]> identityCatalog;
     static HashSet<string> identityNames;
@@ -366,7 +384,8 @@ public sealed class GamePreferences : MonoBehaviour
     }
     public static string CardName(CardDefinition card) => Field(card,1,card?.cardName ?? "");
     public static string CardType(CardDefinition card) => Field(card,2,card?.GetTypeLine() ?? "");
-    public static string CardRules(CardDefinition card) => DisplayRules(Field(card,3,card?.description ?? ""),card!=null&&card.cardTypes.Has(global::CardType.Planeswalker));
+    public static string CardRules(CardDefinition card) => LocalizedRules(card?.cardName,card?.description,card?.PrintingKey,
+        DisplayRules(Field(card,3,card?.description ?? ""),card!=null&&card.cardTypes.Has(global::CardType.Planeswalker)));
     public static string FeatureName(CardFeatureDefinition feature) => Field(feature?.cardName, 1, feature?.cardName ?? "");
     public static string CardFaceName(string canonicalName)
     {
@@ -377,7 +396,14 @@ public sealed class GamePreferences : MonoBehaviour
         string display=DisplayCardIdentities(localized);identityNames.Add(display);return display;
     }
     public static string FeatureType(CardFeatureDefinition feature, string fallback) => Field(feature?.cardName, 2, fallback);
-    public static string FeatureRules(CardFeatureDefinition feature) => DisplayRules(Field(feature?.cardName, 3, feature?.description ?? ""),feature!=null&&feature.cardTypes.Has(global::CardType.Planeswalker));
+    public static string FeatureRules(CardFeatureDefinition feature) => LocalizedRules(feature?.cardName,feature?.description,null,
+        DisplayRules(Field(feature?.cardName, 3, feature?.description ?? ""),feature!=null&&feature.cardTypes.Has(global::CardType.Planeswalker)));
+    static string LocalizedRules(string name,string source,string printing,string display)
+    {
+        if(Ready&&Language!="en-US"&&BattleTextDiagnostics.HasEnglishProse(display))
+            BattleTextDiagnostics.Record("catalog-rules",source,display,new ForgeCardView{name=name,printingKey=printing});
+        return display;
+    }
     static string DisplayRules(string rules,bool planeswalker) => !planeswalker ? rules :
         Regex.Replace(rules,@"(?:^|[\r\n\u3000])(?:忠誠度|忠诚值|Loyalty)\s*[:：]\s*[0-9０-９]+\s*$",string.Empty,RegexOptions.IgnoreCase);
     static string Field(CardDefinition card,int column,string fallback) => Field(card?.cardName,column,fallback);
@@ -420,6 +446,26 @@ public sealed class GamePreferences : MonoBehaviour
             }
             foreach(var text in canvas.GetComponentsInChildren<TMP_Text>(true))
                 (text.GetComponent<PreferenceText>() ?? text.gameObject.AddComponent<PreferenceText>()).Apply();
+        }
+    }
+    private static void BindNewUi()
+    {
+        // Registered graphics belong to their nearest canvas. Discover new
+        // visible labels without rescanning hidden hierarchies or reapplying
+        // every unchanged font, dropdown layout and button twice each second.
+        foreach(var canvas in FindObjectsByType<Canvas>(FindObjectsSortMode.None))
+        {
+            var graphics=GraphicRegistry.GetGraphicsForCanvas(canvas);
+            for(int i=0;i<graphics.Count;i++)
+            {
+                var graphic=graphics[i];
+                if(graphic==null||graphic is not Text&&graphic is not TMP_Text
+                    ||graphic.GetComponent<PreferenceText>()!=null)continue;
+                if(graphic.transform.parent!=null&&graphic.transform.parent.GetComponent<PlayerNameMarquee>()!=null)continue;
+                graphic.gameObject.AddComponent<PreferenceText>().Apply();
+                var dropdown=graphic.GetComponentInParent<Dropdown>();if(dropdown!=null)DropdownChevron.Apply(dropdown);
+                var button=graphic.GetComponentInParent<Button>();if(button!=null)DisabledButtonVisual.Bind(button);
+            }
         }
     }
 }

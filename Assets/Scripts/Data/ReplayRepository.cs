@@ -24,31 +24,6 @@ using Newtonsoft.Json;
     public double Duration => frames.Count == 0 ? 0 : frames[frames.Count - 1].time;
 }
 
-// Records resolved views, so playback does not execute old card scripts again.
-public sealed class MatchReplayRecorder
-{
-    private readonly MatchReplay data;
-    private double firstTime = -1;
-    public MatchReplayRecorder(string id)
-    {
-        data = new MatchReplay { matchId = id, startedUtc = DateTime.UtcNow.ToString("O") };
-    }
-    public void Record(double seconds, ForgeSeatView first, ForgeSeatView second)
-    {
-        if (first?.players == null || second?.players == null) return;
-        if (firstTime < 0) firstTime = seconds;
-        // Views are subsequently cleared when a response is submitted. Own a deep copy.
-        var frame = new ReplayFrame { time = Math.Max(0, seconds - firstTime), views = new[] { first, second } };
-        data.frames.Add(ServerSnapshotJson.Copy(frame));
-    }
-    public MatchReplay Complete(string[] players, int game, int bestOf, int winner, string reason)
-    {
-        data.players = players; data.gameNumber = game; data.bestOf = bestOf;
-        data.winnerSeat = winner; data.reason = reason;
-        return data;
-    }
-}
-
 public static partial class ReplayRepository
 {
     public const string Extension = ".mtgbr";
@@ -132,6 +107,35 @@ public static partial class ReplayRepository
         using(var jsonLimit=new ReplayLimitStream(gzip,MaxJsonBytes))
         using(var writer=new StreamWriter(jsonLimit,new UTF8Encoding(false),32768,true))ServerSnapshotJson.WriteTo(writer,replay);
         if (output.Length > MaxFileBytes) throw new InvalidDataException("录像文件过大。");
+        return output.ToArray();
+    }
+    internal static byte[] EncodeRecording(MatchReplay metadata,string framesPath,int frameCount)
+    {
+        if(metadata==null||metadata.version!=1||string.IsNullOrWhiteSpace(metadata.matchId)
+            ||!DateTime.TryParse(metadata.startedUtc,CultureInfo.InvariantCulture,DateTimeStyles.RoundtripKind,out _)
+            ||metadata.players==null||metadata.players.Length!=2||metadata.winnerSeat<0||metadata.winnerSeat>2
+            ||frameCount<1||frameCount>100000)throw new InvalidDataException("录像缺失内容或版本不受支持。");
+        using var output = new MemoryStream();
+        output.Write(Magic,0,Magic.Length);
+        using(var compressedLimit=new ReplayLimitStream(output,MaxFileBytes-Magic.Length))
+        using(var gzip=new GZipStream(compressedLimit,System.IO.Compression.CompressionLevel.Fastest,true))
+        using(var jsonLimit=new ReplayLimitStream(gzip,MaxJsonBytes))
+        using(var text=new StreamWriter(jsonLimit,new UTF8Encoding(false),32768,true))
+        using(var writer=new JsonTextWriter(text){CloseOutput=false})
+        using(var input=File.OpenRead(framesPath))
+        using(var framesZip=new GZipStream(input,CompressionMode.Decompress))
+        using(var framesLimit=new ReplayLimitStream(framesZip,MaxJsonBytes))
+        using(var frames=new StreamReader(framesLimit,Encoding.UTF8,true,32768))
+        {
+            var header=Newtonsoft.Json.Linq.JObject.Parse(ServerSnapshotJson.Serialize(metadata));
+            writer.WriteStartObject();
+            foreach(var property in header.Properties())if(property.Name!="frames")property.WriteTo(writer);
+            writer.WritePropertyName("frames");writer.WriteStartArray();
+            int read=0;string line;
+            while((line=frames.ReadLine())!=null){writer.WriteRawValue(line);read++;}
+            if(read!=frameCount)throw new InvalidDataException("录像临时文件不完整。");
+            writer.WriteEndArray();writer.WriteEndObject();
+        }
         return output.ToArray();
     }
     public static MatchReplay Decode(byte[] bytes)

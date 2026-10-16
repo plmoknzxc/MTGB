@@ -81,7 +81,8 @@ public sealed partial class ForgeBattlefieldController
         choiceHintPanel.gameObject.SetActive(true);
         float width=Mathf.Min(644,surface.rect.width-48);
         manaPaymentPrompt.fontSize=20*GamePreferences.TextScale;
-        manaPaymentPrompt.text=CardSymbolText.Format(message);
+        manaPaymentPrompt.richText=true;
+        manaPaymentPrompt.text=CardSymbolText.Format(PlayerNamesRichText(message));
         float height=Mathf.Max(44,manaPaymentPrompt.GetPreferredValues(manaPaymentPrompt.text,width-32,Mathf.Infinity).y+6);
         choiceHintPanel.sizeDelta=new Vector2(width,height+24);
         manaPaymentPrompt.rectTransform.sizeDelta=new Vector2(width-32,height);

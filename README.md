@@ -1,10 +1,10 @@
 # MTGB
 
-MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目，当前主要面向 Windows 双人对局。
+MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目，当前主要面向 Windows 双人对局。本仓库同时维护 Unity 客户端和专用服务端源码，共用网络协议与 Forge 桥接，分别构建、交付。
 
 ## 当前功能
 
-- **组卡与搜索**：按具体印刷版本浏览卡牌，保存主牌、备牌、行侣及辅助牌组；支持费用／类别排序和打乱，以及卡名、效果文本、颜色、费用、系列、合法性和平台筛选。指挥官卡组编辑支持统帅区、共同主将及可选的主将／行侣适配搜索，当前不开放指挥官对局。
+- **组卡与搜索**：按具体印刷版本浏览卡牌，保存主牌、备牌、行侣及辅助牌组；支持主牌费用曲线与类型张数统计、费用／类别排序和打乱，以及卡名、效果文本、颜色、费用、系列、合法性和平台筛选。指挥官卡组编辑支持统帅区、共同主将及可选的主将／行侣适配搜索，当前不开放指挥官对局。
 - **卡牌详情**：提供简体中文、日文和英文界面与卡牌资料，显示多面牌、关键词说明、关联衍生物及地城、魔戒等机制辅助图。
 - **联机对局**：支持局域网房主、独立服务器、BO1／BO3、局间换备和断线重连；每位玩家只接收其有权查看的状态。
 - **战场交互**：展示手牌、永久物、堆叠、指示物、徽记和延迟效果，支持费用、目标、攻击／阻挡等选择，以及墓地和放逐区查看。
@@ -12,15 +12,19 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 
 项目仍在开发。卡牌目录可浏览不代表全部卡牌及组合都已验证，复杂交互和视觉表现持续补充；DIY 编辑接口、离线 AI 和多人 Commander 尚未完成。
 
-## 近期更新（2026-10-15）
+## 近期更新（2026-10-16）
 
+- 合并客户端与服务端的录像、快照、卡库加载和卡图缓存优化；原性能数据保留各自受测构建与场景范围。
+- Linux 专用服务端排除 App UI 的运行程序集和原生插件，已部署 Linux15；客户端与编辑器继续使用各自原有配置。
+- 补全动态异能的原文来源关联、跨句提示处理和有界漏译记录，支持保存输入重放；未知文本继续保留，不将样本验证当作全卡池翻译完成。
+- 卡组编辑新增主牌费用曲线与类型张数统计，修正加减后收起控件的数量角标；手牌支持分区扇形、横向浏览、当前牌面上浮及拖回取消。
 - 卡组编辑支持行侣和统帅区，直接拖入主将；主将颜色与行侣条件可通过高级搜索开关叠加，关闭后可继续浏览全卡池，牌组内合法性提示独立保留。
 - 主牌数量、赛制下拉和排序自适应排列；修正缩略图等待、单张数量角标、字号跳变与选择器闪动。颜色筛选随中文／英文／日文显示，切换语言保留选择。
-- 房间列表展示生命、赛制、DIY、赌注和 BO 设置，调整席位及观战名单；赌注仅在自由／自定义且允许 DIY 时可开启。
+- 房间列表展示生命、赛制、DIY、赌注和 BO 设置，调整席位及观战名单；赌注仅在 N/A 且允许 DIY 时可开启。
 - 改进录像列表预览速度；独立服务器自动保存有有效画面的正常结束、中止及正常停止时的对局录像。
 - 修正付费时区域浏览关闭、开局空黑框、地异能提示、宣攻编号和观战退出；法术力池避开地牌，观战显示双方公开法术力。
 
-近期说明：[合并更新与发布](Docs/Release.2026-10-15.zh-CN.md)、[卡组搜索与稳定标签](Docs/DeckSearchAndStableLabels.2026-10-15.zh-CN.md)、[统帅区与构筑条件](Docs/DeckConstructionFilters.2026-10-15.zh-CN.md)、[房间与观战](Docs/RoomDirectoryAndSpectators.2026-10-15.zh-CN.md)、[服务器录像](Docs/ServerReplayArchiveAndAnte.2026-10-15.zh-CN.md)。
+近期说明：[合并更新与发布](Docs/Release.2026-10-16.zh-CN.md)、[内存与读取优化](Docs/MemoryAndLatencyOptimization.2026-10-16.zh-CN.md)、[动态文本修复](Docs/BattleTextLocalizationDiagnosis.2026-10-16.zh-CN.md)、[费用曲线](Docs/DeckCurve.2026-10-16.zh-CN.md)、[卡组搜索与稳定标签](Docs/DeckSearchAndStableLabels.2026-10-15.zh-CN.md)、[统帅区与构筑条件](Docs/DeckConstructionFilters.2026-10-15.zh-CN.md)、[房间与观战](Docs/RoomDirectoryAndSpectators.2026-10-15.zh-CN.md)、[服务器录像](Docs/ServerReplayArchiveAndAnte.2026-10-15.zh-CN.md)。
 
 ### 2026-10-14
 
@@ -34,7 +38,7 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 
 ## 开源与第三方许可
 
-自有 Unity／客户端代码采用 [MIT](LICENSE)，Forge 桥接及原生修改采用 GPLv3；字体、卡牌资料、卡图和 Unity 的许可保持独立。完整 Forge 对应源码通过[源码下载页](https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261014)提供。
+自有 Unity 客户端／服务端代码采用 [MIT](LICENSE)，Forge 桥接及原生修改采用 GPLv3；字体、卡牌资料、卡图和 Unity 的许可保持独立。完整 Forge 对应源码通过[源码下载页](https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261016)提供。
 
 参阅[第三方声明](THIRD_PARTY_NOTICES.md)和[源码交付／发行边界](Docs/OpenSourceAndDistribution.zh-CN.md)。重绘模板已换用附带许可的开源字体；旧模板字体已移除，并由导入、构建及 CI 校验阻止重新引入。
 
@@ -48,13 +52,31 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 4. 执行 `MTGB/构建/Windows 客户端（开发版）`，客户端输出到 `Builds/ForgeValidation`。
 5. 启动客户端，在组卡界面新建或导入 `.mdk` 牌组，再从大厅创建或加入房间。
 
-独立服务器通过 `MTGB/构建/Windows 独立服务器` 构建，启动命令：
+### 客户端与服务端的划分
+
+源码放在同一个 Unity 项目中，修改共享协议与对局逻辑时可以一并提交。构建结果分别发布，服务端无需客户端更新包。
+
+| 产物 | Unity 构建菜单 | 默认输出 |
+| --- | --- | --- |
+| Windows 客户端 | `MTGB/构建/Windows 客户端（开发版）` | `Builds/ForgeValidation` |
+| Windows 专用服务端 | `MTGB/构建/Windows 独立服务器` | `Builds/Server` |
+| Linux 专用服务端 | `MTGB/构建/Linux 独立服务器` | `Builds/LinuxServer` |
+
+专用服务端使用 `Assets/Scenes/DedicatedServer.unity` 和 Unity Server 构建目标；Linux 构建需提供包含 `bin/java` 的 Linux Java 17 运行环境。Windows 服务端启动命令：
 
 ```powershell
 Builds/Server/MTGBServer.exe -batchmode -nographics -mtgb-server -port 7777
 ```
 
-Windows 构建包含 Java 和固定 Forge 资源；当前精简构建的对应源码单独提供。卡图包另行放置在程序旁的 `CardImages`；运行包、构建产物、本地卡图包、受限字体、恢复场景、凭据和个人录像不提交到 Git。重绘模板的开源字体与许可已随项目提供，见[字体说明](Assets/Resources/UI/CardTemplates/Fonts/README.md)。
+Linux 服务端从其构建目录启动：
+
+```sh
+sh ./run-server.sh -port 7777
+```
+
+当前客户端合并更新与服务端部署分别见[更新包记录](Docs/Release.2026-10-16.zh-CN.md)和[Linux15 发布记录](Docs/ServerAppUIRemoval.2026-10-16.zh-CN.md)。服务器凭据、私有配置、运行日志和玩家录像不放入公开仓库。
+
+Windows 构建包含 Java 和固定 Forge 资源；本次发布包附带 Forge 对应源码，源码下载页也提供独立副本。卡图包另行放置在程序旁的 `CardImages`；运行包、构建产物、本地卡图包、受限字体、恢复场景、凭据和个人录像不提交到 Git。重绘模板的开源字体与许可已随项目提供，见[字体说明](Assets/Resources/UI/CardTemplates/Fonts/README.md)。
 
 ## 项目资料
 

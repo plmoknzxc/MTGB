@@ -86,17 +86,27 @@ public static class DedicatedServerBuildMenu
             locationPathName = fullOutput,
             target = target,
             subtarget = (int)StandaloneBuildSubtarget.Server,
+            // App UI supplies this constraint on all of its runtime assemblies.
+            extraScriptingDefines = new[] { "APP_UI_EDITOR_ONLY" },
             options = BuildOptions.None
         };
+        var appUiPlugins = PluginImporter.GetImporters(target)
+            .Where(plugin => plugin.assetPath.StartsWith("Packages/com.unity.dt.app-ui/", StringComparison.Ordinal)).ToArray();
         var addressables = AddressableAssetSettingsDefaultObject.Settings;
         var previousAddressables = addressables.BuildAddressablesWithPlayerBuild;
         BuildReport report;
         try
         {
+            // Native App UI plugins are preloaded independently of managed references.
+            foreach (var plugin in appUiPlugins) plugin.SetIncludeInBuildDelegate(_ => false);
             addressables.BuildAddressablesWithPlayerBuild = AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer;
             report = BuildPipeline.BuildPlayer(options);
         }
-        finally { addressables.BuildAddressablesWithPlayerBuild = previousAddressables; }
+        finally
+        {
+            foreach (var plugin in appUiPlugins) plugin.SetIncludeInBuildDelegate(null);
+            addressables.BuildAddressablesWithPlayerBuild = previousAddressables;
+        }
         if (report.summary.result != BuildResult.Succeeded)
         {
             throw new InvalidOperationException($"Dedicated server build failed: {report.summary.result}");
@@ -116,6 +126,8 @@ public static class DedicatedServerBuildMenu
             }
         }
         ForgeBuildMenu.CopyRuntimeTo(Path.GetDirectoryName(fullOutput), target == BuildTarget.StandaloneLinux64 ? linuxJavaRoot : null, dedicatedServer: true);
+        if (target == BuildTarget.StandaloneLinux64)
+            File.Copy("Tools/ForgeBridge/Run-DedicatedServer.sh", Path.Combine(Path.GetDirectoryName(fullOutput), "run-server.sh"), true);
         Debug.Log($"MTGB dedicated server built: {fullOutput}\nRun: {Path.GetFileName(fullOutput)} -batchmode -nographics -mtgb-server -port 7777");
     }
 

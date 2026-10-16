@@ -805,6 +805,40 @@
           "after": "        // A selectable cost remains a draft until OK. Fixed costs never create\n        // this input and retain their original direct payment path.\n        var cost = sa == null ? null : sa.getHostCard().getGame().costPaymentStack.peek();\n        if (cost != null && (!(cost.cost() instanceof forge.game.cost.CostPartMana) || sa.isOffering() || sa.isEmerge())) {\n            this.showMessage();\n        } else if (hasAllTargets()) {\n            selectButtonOK();\n        } else {\n            this.showMessage();\n        }"
         }
       ]
+    },
+    {
+      "id": "lazy-card-edition-name-index",
+      "source": ".tools/forge-proof/upstream/forge-core/src/main/java/forge/card/CardEdition.java",
+      "sourceSha256": "a3ce937b97364577be3d1f4a0df5d9cd8571ea5435d156cb440348f673dfd674",
+      "javaPath": "forge/card/CardEdition.java",
+      "reason": "Index only series containing each native case-insensitive edition name. Share the index across common and variant databases, preserve original iteration order, and invalidate it when custom editions are added.",
+      "changes": [
+        {
+          "before": "        private boolean lock = false; //Lock once custom content has been added.",
+          "after": "        private boolean lock = false; //Lock once custom content has been added.\n        private Map<String, List<CardEdition>> editionsByCardName;\n        private Map<CardEdition, Integer> editionPositions;\n\n        public synchronized List<CardEdition> getEditionsContaining(final List<String> names) {\n            if (editionsByCardName == null) {\n                Map<String, List<CardEdition>> index = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);\n                Map<CardEdition, Integer> positions = new IdentityHashMap<>();\n                for (CardEdition edition : this) {\n                    positions.put(edition, positions.size());\n                    for (EditionEntry entry : edition.getAllCardsInSet()) {\n                        List<CardEdition> matches = index.computeIfAbsent(entry.name(), key -> new ArrayList<>());\n                        if (matches.isEmpty() || matches.get(matches.size() - 1) != edition) {\n                            matches.add(edition);\n                        }\n                    }\n                }\n                editionPositions = positions;\n                editionsByCardName = index;\n            }\n            Set<CardEdition> candidates = new TreeSet<>(Comparator.comparingInt(editionPositions::get));\n            for (String name : names) {\n                candidates.addAll(editionsByCardName.getOrDefault(name, Collections.emptyList()));\n            }\n            return new ArrayList<>(candidates);\n        }"
+        },
+        {
+          "before": "            else map.put(item.getCode(), item);",
+          "after": "            else {\n                map.put(item.getCode(), item);\n                editionsByCardName = null;\n                editionPositions = null;\n            }"
+        },
+        {
+          "before": "        public void add(CardEdition item) {",
+          "after": "        public synchronized void add(CardEdition item) {"
+        }
+      ]
+    },
+    {
+      "id": "lazy-card-relevant-editions-only",
+      "source": ".tools/forge-proof/upstream/forge-core/src/main/java/forge/card/CardDb.java",
+      "sourceSha256": "c05311c4df222bc9a77ae1c4c83759f08f8878652cbd3530d2f627abf3fbf76e",
+      "javaPath": "forge/card/CardDb.java",
+      "reason": "Avoid scanning every edition for every lazy card load. Use all the exact names that addFromSetByAnyName probes, retaining its native filtering, printing identity, art order and unique-print selection.",
+      "changes": [
+        {
+          "before": "            // look for all possible editions\n            for (CardEdition e : editions) {",
+          "after": "            // Probe only editions containing one of the native names, in original order.\n            List<String> names = new ArrayList<>();\n            names.add(cr.getName());\n            if (!cardName.equalsIgnoreCase(cr.getName())) names.add(cardName);\n            if (cr.hasFunctionalVariants() && cr.getSupportedFunctionalVariants() != null) {\n                for (String variantName : cr.getSupportedFunctionalVariants()) {\n                    String flavorName = cr.getDisplayNameForVariant(variantName);\n                    if (flavorName != null) names.add(flavorName);\n                }\n            }\n            for (CardEdition e : editions.getEditionsContaining(names)) {"
+        }
+      ]
     }
   ],
   "assetPatches": [

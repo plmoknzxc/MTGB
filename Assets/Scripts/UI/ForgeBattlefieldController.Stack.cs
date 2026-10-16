@@ -28,7 +28,12 @@ public sealed partial class ForgeBattlefieldController
         InspectIntegrated(item.source);
         inspectedCardId=0; // Stack ability details must not be replaced by its source land.
         if(item.entry!=null && item.entry.kind!="spell") {
-            SetText("InspectPanel/Rules",AbilityEffectText(item.source,item.entry.description));
+            string rules=AbilityEffectText(item.source,item.entry.description);
+            if((item.entry.targets?.Length??0)>0) {
+                string targetLine="\n"+TapPaymentText("目标：","Targets: ","対象：");
+                int at=rules.LastIndexOf(targetLine,StringComparison.Ordinal);if(at>=0)rules=rules.Substring(0,at);
+            }
+            SetText("InspectPanel/Rules",PlayerNamesRichText(rules));
             LayoutInspectPanel(item.source,item.tile);
         }
         if(HasSpellChoices(item.entry)) {

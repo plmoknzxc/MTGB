@@ -1,5 +1,10 @@
+# Keep the packaged Linux launcher executable by /bin/sh after Windows checkout.
+/Tools/ForgeBridge/Run-DedicatedServer.sh text eol=lf
 # Preserve the exact bytes of the published, hashed native source snapshot.
 /ThirdParty/Forge/native-patches/** -text
+# These new snapshots retain upstream CRLF and whitespace in their hashed bytes.
+/ThirdParty/Forge/native-patches/forge/card/CardDb.java whitespace=-blank-at-eol,cr-at-eol
+/ThirdParty/Forge/native-patches/forge/card/CardEdition.java whitespace=-blank-at-eol,cr-at-eol
 # Preserve font/license bytes pinned by open-fonts.json across Windows checkouts.
 /Assets/Resources/UI/CardTemplates/Fonts/*.otf -text
 /Assets/Resources/UI/CardTemplates/Fonts/*.ttf -text
@@ -9,3 +14,4 @@
 # Unity writes blank importer fields with a trailing space.
 /Assets/Resources/UI/CardTemplates/Fonts/*.meta whitespace=-blank-at-eol
 /Assets/Scripts/Editor/OpenFontPresentationValidation.cs.meta whitespace=-blank-at-eol
+/Assets/Scripts/Diagnostics.meta whitespace=-blank-at-eol

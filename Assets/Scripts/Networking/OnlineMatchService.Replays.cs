@@ -39,9 +39,10 @@ public sealed partial class OnlineMatchService
         replaySaveChoices.Remove(id);declinedReviewReplays.Remove(id);
         if(EndReview?.matchId==id){EndReplayStatus=reason+"，可以继续查看或离开";endReplayChoice=false;}
     }
-    private IEnumerator SendCompletedReplay(MatchReplay replay, ulong[] recipients)
+    private IEnumerator SendCompletedReplay(RecordedMatchReplay recording, ulong[] recipients)
     {
-        Task<byte[]> encode = Task.Run(() => ReplayRepository.Encode(replay));
+        var replay=recording.Metadata;
+        Task<byte[]> encode = Task.Run(() => {using(recording)return recording.Encode();});
         QueueServerReplayArchive(replay,encode);
         while (!encode.IsCompleted) yield return null;
         if (encode.IsFaulted) { Debug.LogWarning("录像生成失败：" + encode.Exception.GetBaseException().Message); yield break; }

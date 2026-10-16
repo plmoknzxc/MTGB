@@ -122,7 +122,7 @@ public sealed partial class ForgeBattlefieldController
             bool own = p.seat == seat;
             string plate = own ? "PlayerPlate" : "OpponentPlate";
             var playerLabel=SceneText(plate+"/Name");
-            SetNamedPlayerText(playerLabel,PlayerDisplayName(p.seat));
+            SetNamedPlayerText(playerLabel,PlayerDisplayName(p.seat),p.seat);
             SetText(plate + "/Life", p.life.ToString());
             SetText(plate + "/Sub", PlayerSummary(p,service?.LobbyState?.series));
             PresentPlayerLife(plate);
@@ -638,7 +638,7 @@ public sealed partial class ForgeBattlefieldController
         float nameHeight=Mathf.Max(34,Mathf.Ceil(nameLabel.preferredHeight)+4);
         float footerHeight=string.IsNullOrEmpty(SceneText("InspectPanel/Footer").text)?0:28;
         Node("InspectPanel/Footer").gameObject.SetActive(footerHeight>0);
-        float targetHeight=(inspectedStackTargets?.Length??0)>0?224:0;
+        float targetHeight=StackTargetDetailsHeight();
         float componentHeight=HasMeldComponents(card)?Mathf.Max(32,Mathf.Ceil(Node("InspectPanel/MeldComponents").GetComponentInChildren<Text>().preferredHeight)+6):0;
         float fixedHeight=16+nameHeight+costHeight+artHeight+12+componentHeight+(componentHeight>0?8:0)+typeHeight+12+footerHeight+16+targetHeight;
         float available=Mathf.Min((surface.rect.height-24)/detailScale,720);

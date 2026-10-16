@@ -11,8 +11,8 @@ using UnityEngine;
 // Most are packaged with Forge; community/Commander snapshots live in StreamingAssets.
 public sealed class DeckFormatLegality
 {
-    public static readonly string[] Keys = { "standard", "pioneer", "modern", "premodern", "legacy", "vintage", "pauper", "commander", "duelcommander", "brawl", "historic", "timeless" };
-    public static readonly string[] Names = { "标准", "先驱", "摩登", "前摩登", "薪传", "特选", "纯铁", "指挥官·官禁", "指挥官·法禁", "争锋", "史迹", "永恒" };
+    public static readonly string[] Keys = { "standard", "pioneer", "modern", "premodern", "legacy", "vintage", "pauper", "commander", "duelcommander", "brawl", "historic", "timeless", "none" };
+    public static readonly string[] Names = { "标准", "先驱", "摩登", "前摩登", "薪传", "特选", "纯铁", "指挥官·官禁", "指挥官·法禁", "争锋", "史迹", "永恒", "N/A" };
     public const string Current = "current";
     public const string NoBanlist = "none";
     public static readonly string[] OnlineKeys = { "standard", "pioneer", "modern", "premodern", "legacy", "vintage", "pauper", "historic", "timeless", "none" };
@@ -25,6 +25,7 @@ public sealed class DeckFormatLegality
     // Authority-side preparation is cached; reads format rules, never hashes runtime resources.
     public void PrepareForValidation(string format, IReadOnlyList<CardDefinition> catalog)
     {
+        if (format == "none") return;
         if (!ReferenceEquals(indexedCatalog, catalog) || indexedCatalogCount != catalog.Count)
         {
             nameSets.Clear();
@@ -93,6 +94,7 @@ public sealed class DeckFormatLegality
     public string Get(CardDefinition card, string format, string banlist)
     {
         if (card == null || string.IsNullOrWhiteSpace(card.cardName)) return "unknown";
+        if (format == "none") return "legal";
         if (!snapshots.TryGetValue(Key(format, banlist), out var rule)) return "unknown";
         string name = card.cardName;
         if (banlist != NoBanlist)
@@ -121,6 +123,7 @@ public sealed class DeckFormatLegality
         Error = null;
         try
         {
+            if (format == "none") yield break;
             if (catalog == null) { Error = "卡牌目录尚未加载。"; yield break; }
             if (!ReferenceEquals(indexedCatalog, catalog) || indexedCatalogCount != catalog.Count)
             {

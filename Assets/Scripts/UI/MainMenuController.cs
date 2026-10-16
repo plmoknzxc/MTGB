@@ -230,7 +230,8 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void CloseQuantityControls()
     {
-        if (quantityTile != null) quantityTile.SetQuantityControls(false, 0, false);
+        if (quantityTile != null)
+            quantityTile.SetQuantityControls(false, CountTileCopies(quantityTile.Card, quantityTile.Zone), false);
         quantityTile = null;
         quantityCard = null;
     }
@@ -765,7 +766,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         Stretch(face.rectTransform, 4f, 4f, 4f, 4f);
         // Deck tiles must have their local artwork before the first paint.
         // Collection pages already create a bounded number of tiles per frame.
-        face.sprite = LoadCardSprite(card);
+        face.sprite = LoadCardSprite(card,true);
         face.preserveAspect = true;
 
         if (face.sprite == null)
@@ -1040,8 +1041,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         SetHighlightedTile(tile);
         RefreshSelectedCardInfo();
         bool closing = quantityTile == tile && tile.QuantityControlsVisible;
-        if (quantityTile != null)
-            quantityTile.SetQuantityControls(false, 0, false);
+        CloseQuantityControls();
         quantityTile = closing ? null : tile;
         quantityCard = closing ? null : tile.Card;
         if (!closing)
@@ -1273,7 +1273,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         group.interactable = false;
 
         Image image = dragGhost.GetComponent<Image>();
-        image.sprite = LoadCardSprite(tile.Card);
+        image.sprite = LoadCardSprite(tile.Card,true);
         image.color = image.sprite == null ? GetFallbackColor(tile.Card) : Color.white;
         image.preserveAspect = true;
         image.raycastTarget = false;
@@ -1842,7 +1842,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         {
             var face = tile.transform.Find("CardFace")?.GetComponent<UnityEngine.UI.Image>();
             if (face == null) continue;
-            face.sprite = LoadCardSprite(tile.Card);
+            face.sprite = LoadCardSprite(tile.Card,true);
             if (face.sprite != null) face.color = Color.white;
             foreach (string name in new[] { "FallbackText", "FallbackOverlay" })
             {
@@ -1883,8 +1883,9 @@ public sealed partial class MainMenuController : MonoBehaviour
         Debug.Log(message);
     }
 
-    private static Sprite LoadCardSprite(CardDefinition card)
+    private static Sprite LoadCardSprite(CardDefinition card,bool thumbnail=false)
     {
+        if(thumbnail)return CardImageLibrary.TryLoadThumbnail(card,out Sprite small)?small:CardVisualStyle.LoadFrame(card);
         if (CardImageLibrary.TryLoadFullCard(card, out Sprite fullCard)) return fullCard;
         return CardVisualStyle.LoadFrame(card);
     }

@@ -349,7 +349,7 @@ public sealed partial class ForgeBattlefieldController
             // The permission must be visible before the scrollable rules text.
             var summary=Regex.Match(description,"^"+Regex.Escape(source.name??"")+@" - (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*(?: -?\d+\s*/\s*-?\d+)?$");
             if(summary.Success){description=PrintedRuleText(source,(source.currentRules??source.originalRules??"").Replace("\\n","\n"));cost=source.manaCost;}
-            description=(permission.Length>0?permission+"\n":"")+AbilityEffectText(source,description);
+            description=(permission.Length>0?permission+"\n":"")+AbilityRecipeText(source,option.label,AbilityEffectText(source,description));
         }
         float top=size.y/2;
         var heading=Label(face,"Mode",title,new Vector2(0,top-19),new Vector2(size.x-18,28),20,Color.white);heading.raycastTarget=false;
@@ -392,7 +392,7 @@ public sealed partial class ForgeBattlefieldController
         if(casting){var type=Label(effect,"Type",VisibleCardType(source),new Vector2(0,effectHeight*.5f-12),new Vector2(size.x-30,20),11,new Color(.16f,.2f,.21f));type.resizeTextForBestFit=true;type.resizeTextMinSize=9;type.resizeTextMaxSize=11;}
         var effectContent=Scroll(effect,"TextScroll",new Vector2(0,-typeHeight*.5f),new Vector2(size.x-28,effectHeight-12-typeHeight));
         var body=Label(effectContent,"Effect",PrintedRuleText(source,description),Vector2.zero,new Vector2(size.x-38,effectHeight-14-typeHeight),casting?12:15,new Color(.055f,.075f,.085f));
-        body.alignment=TextAnchor.UpperLeft;body.supportRichText=false;body.raycastTarget=false;
+        body.alignment=TextAnchor.UpperLeft;SetNamedPlayerText(body,PrintedRuleText(source,description));body.raycastTarget=false;
         if(grouping){PreferenceText.SetSize(body,15);body.resizeTextForBestFit=false;}
         float textHeight=Mathf.Max(effectHeight-14-typeHeight,body.preferredHeight+4);
         body.rectTransform.anchorMin=body.rectTransform.anchorMax=body.rectTransform.pivot=new Vector2(.5f,1);
