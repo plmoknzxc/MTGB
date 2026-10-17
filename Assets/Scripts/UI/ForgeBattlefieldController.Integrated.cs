@@ -70,6 +70,7 @@ public sealed partial class ForgeBattlefieldController
         // No rule-backed timer/settings or exile payload is currently supplied. Do not show fake state.
         Node("CornerCluster/ControlRow/DecisionTimerWidget").gameObject.SetActive(false);
         integrated = true;
+        PresentControlMode();
         PresentSpectatorExit();
     }
     private void PresentSpectatorExit()
@@ -102,7 +103,6 @@ public sealed partial class ForgeBattlefieldController
         BeginZoneMotion();
         BeginArenaPresentation();
         Clear(actionRoot);
-        foreach(var card in otherHandCards)if(card!=null)card.gameObject.SetActive(false);
         connectionText.text = status;
         phaseText.text = view == null || view.turn == 0 ? "起手选择" : Phase(view.phase);
         SetText("CornerCluster/ControlRow/TurnChip/TurnNumber", (view?.turn ?? 0).ToString());
@@ -197,6 +197,7 @@ public sealed partial class ForgeBattlefieldController
         // Hand cards rise above the board, but must not cover the priority mode.
         // Modal presenters below still place their blockers above both.
         if(controlModeButton!=null)controlModeButton.transform.SetAsLastSibling();
+        if(pauseNextPhaseButton!=null)pauseNextPhaseButton.transform.SetAsLastSibling();
         PresentTargeting();
         PresentTargetChoiceActions();
         if(IsTargeting)advanceButton.gameObject.SetActive(false);
@@ -222,6 +223,7 @@ public sealed partial class ForgeBattlefieldController
         PresentCardSelection();
         PresentChoiceHint();
         PresentStackList();
+        CompleteSelectedAttackDeclaration();
         if(Node("InspectPanel").gameObject.activeSelf && inspectedCardId!=0) {
             var latest=(view?.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>(p.battlefield??Array.Empty<ForgeCardView>()).Concat(p.emblems??Array.Empty<ForgeCardView>()).Concat(VisibleEffectMarkers(p))).Concat(view?.globalEffects??Array.Empty<ForgeCardView>()).FirstOrDefault(c=>c.id==inspectedCardId);
             if(latest!=null){int revision=inspectHoverRevision;InspectIntegrated(latest);inspectHoverRevision=revision;}
@@ -263,6 +265,7 @@ public sealed partial class ForgeBattlefieldController
     {
         if(landChoiceMenu!=null)foreach(var button in landChoiceMenu.GetComponentsInChildren<Button>())button.interactable=false;
         if(handChoiceActions!=null)foreach(var button in handChoiceActions.GetComponentsInChildren<Button>())button.interactable=false;
+        if(attackBatchActions!=null)foreach(var button in attackBatchActions.GetComponentsInChildren<Button>())button.interactable=false;
         if(targetChoiceActions!=null)foreach(var button in targetChoiceActions.GetComponentsInChildren<Button>())button.interactable=false;
         foreach(var button in manaPoolButtons)if(button!=null){button.interactable=false;button.GetComponent<Image>().raycastTarget=false;}
         foreach (var b in ownHand.GetComponentsInChildren<Button>()) b.interactable = false;
@@ -339,7 +342,9 @@ public sealed partial class ForgeBattlefieldController
             "Basic"=>"基本", "Land"=>"地", "Creature"=>"生物", "Enchantment"=>"结界", "Artifact"=>"神器", "Legendary"=>"传奇", "Snow"=>"雪境", _=>LandTypeLabel(m.Value)
         });
     }
-    private void InspectIntegrated(ForgeCardView card)
+    private bool inspectDualFace;
+    private void InspectIntegrated(ForgeCardView card)=>InspectIntegratedCore(card,true);
+    private void InspectIntegratedCore(ForgeCardView card,bool showBothFaces)
     {
         inspectedStackTargets=null;
         if(detailCardId!=card.id){detailCardId=card.id;inspectOriginalState=false;}
@@ -347,6 +352,7 @@ public sealed partial class ForgeBattlefieldController
         inspectHoverRevision++;
         inspectedCardId=card.zone is "Battlefield" or "Command"?card.id:0;
         Node("InspectPanel").gameObject.SetActive(true);
+        SetOverlayLayer((RectTransform)Node("InspectPanel"),InspectLayerOffset,true);
         Node("InspectPanel").SetAsLastSibling();
         // Reference 02:17: inspect beside the card, not in a fixed left sidebar.
         var inspected=arenaCards.Values.FirstOrDefault(c=>c.root.name=="Card_"+card.id)?.face;
@@ -364,6 +370,8 @@ public sealed partial class ForgeBattlefieldController
         Clear(previewRoot);
         catalog.TryGetValue(card.printingKey ?? "", out var definition);
         if (card.faceDown) definition = null;
+        inspectDualFace=showBothFaces&&!card.faceDown&&!card.copy&&!card.merged
+            &&definition?.features?.Any(f=>f!=null&&f.faceIndex==1)==true&&definition.forgeSplitType is "Modal" or "Transform" or "Meld";
         // Permanent copies keep a physical print separate from their current
         // characteristics. Stack copies retain the existing chosen-X cost path.
         bool publicCopy=(card.copy||card.merged)&&!card.faceDown&&card.zone=="Battlefield";
@@ -465,6 +473,8 @@ public sealed partial class ForgeBattlefieldController
             rules.text=string.Join(" · ",attributeStates.Select(s=>ColoredDetail(s,ChangedBlue)))+"\n\n"+rules.text;
         }
         if(HasPreparedSpell(card))statuses.Add(TapPaymentText("已备法","Prepared","準備済み")+" · "+GamePreferences.CardFaceName(card.preparedSpell.name));
+        if(ShouldShowSpentMana(card))statuses.Add(TapPaymentText("施放时已支付：","Mana spent to cast: ","唱えるために支払ったマナ：")+card.spentMana);
+        if(card.qualificationRequired>0)statuses.Add((card.qualificationKind=="sacrificedThisTurn"?TapPaymentText("本回合已牺牲永久物：","Permanents sacrificed this turn: ","このターン生け贄に捧げたパーマネント："):TapPaymentText("达成进度：","Progress: ","達成状況："))+card.qualificationCount+" / "+card.qualificationRequired);
         if(statuses.Count>0&&!inspectOriginalState) {
             var text=SceneText("InspectPanel/Rules");
             text.text+=(string.IsNullOrWhiteSpace(text.text)?"":"\n\n")+TapPaymentText("当前状态：","Current state: ","現在の状態：")+string.Join(" · ",statuses);
@@ -476,6 +486,8 @@ public sealed partial class ForgeBattlefieldController
         if(!inspectOriginalState) {
             string attachments=AttachmentDescription(card);
             if(attachments.Length>0)SceneText("InspectPanel/Rules").text+="\n\n"+attachments;
+            string exile=TemporaryExileDescription(card);
+            if(exile.Length>0)SceneText("InspectPanel/Rules").text+="\n\n"+exile;
         }
         SceneText("InspectPanel/Footer").supportRichText=true;
         bool displayCreature=card.creature;
@@ -509,6 +521,20 @@ public sealed partial class ForgeBattlefieldController
         string auxiliaryDetail=inspectOriginalState?"":AuxiliaryDetail(card);
         if(auxiliaryDetail.Length>0)SceneText("InspectPanel/Rules").text=auxiliaryDetail+"\n\n"+SceneText("InspectPanel/Rules").text;
         art.sprite = sprite; art.color = sprite == null ? Ink : Color.white; art.preserveAspect = true;
+        var reverse=Node("InspectPanel").Find("ReverseArt") as RectTransform;
+        if(reverse==null&&inspectDualFace)reverse=Panel(Node("InspectPanel"),"ReverseArt",Vector2.zero,new Vector2(240,320),Ink);
+        if(reverse!=null) {
+            reverse.gameObject.SetActive(inspectDualFace);
+            if(inspectDualFace) {
+                CardImageLibrary.TryLoadFullCard(definition,0,out var front);
+                CardImageLibrary.TryLoadFullCard(definition,1,out var back);
+                sprite=front;art.sprite=front;art.color=front==null?Ink:Color.white;
+                var backImage=reverse.GetComponent<Image>();backImage.sprite=back;backImage.color=back==null?Ink:Color.white;backImage.preserveAspect=true;backImage.raycastTarget=false;
+                var label=reverse.Find("MissingArt") as RectTransform;
+                if(label==null)label=Label(reverse,"MissingArt","缺失卡图",Vector2.zero,new Vector2(180,40),18,Paper).rectTransform;
+                label.gameObject.SetActive(back==null);
+            }
+        }
         var chosenFace=art.transform.Find("ChosenSpellFace");if(chosenFace!=null)chosenFace.gameObject.SetActive(false);
         var resolvedCost=art.transform.Find("ResolvedManaCost");if(resolvedCost!=null)resolvedCost.gameObject.SetActive(false);
         var missing=art.transform.Find("MissingArt");
@@ -596,7 +622,7 @@ public sealed partial class ForgeBattlefieldController
     private void LayoutInspectPanel(ForgeCardView card,RectTransform inspected)
     {
         var panel=(RectTransform)Node("InspectPanel");
-        const float width=300,inner=268;
+        float width=inspectDualFace?548:300,inner=width-32;
         // Enlarge the entire detail together, including artwork, symbols and
         // preference-sized text. Position it using its displayed bounds.
         float detailScale=Mathf.Min(1.2f,(surface.rect.width-24)/width);
@@ -670,8 +696,14 @@ public sealed partial class ForgeBattlefieldController
         Place("CostRow",costHeight);
         var art=(RectTransform)Node("InspectPanel/Art");
         art.anchorMin=art.anchorMax=new Vector2(.5f,1);art.pivot=new Vector2(.5f,.5f);
-        art.anchoredPosition=new Vector2(0,-y-artHeight*.5f);
-        art.sizeDelta=card.room?new Vector2(artHeight,inner):new Vector2(inner,artHeight);
+        float artWidth=inspectDualFace?(inner-12)*.5f:inner;
+        art.anchoredPosition=new Vector2(inspectDualFace?-(artWidth+12)*.5f:0,-y-artHeight*.5f);
+        art.sizeDelta=card.room?new Vector2(artHeight,inner):new Vector2(artWidth,artHeight);
+        if(inspectDualFace) {
+            var reverse=(RectTransform)Node("InspectPanel/ReverseArt");
+            reverse.anchorMin=reverse.anchorMax=new Vector2(.5f,1);reverse.pivot=new Vector2(.5f,.5f);
+            reverse.anchoredPosition=new Vector2((artWidth+12)*.5f,-y-artHeight*.5f);reverse.sizeDelta=new Vector2(artWidth,artHeight);
+        }
         art.localRotation=Quaternion.Euler(0,0,card.room?-90:0);y+=artHeight+12;
         if(componentHeight>0){Place("MeldComponents",componentHeight);y+=8;}
         Place("TypeLine",typeHeight);y+=12;Place("Rules",rulesHeight);Place("Footer",footerHeight);

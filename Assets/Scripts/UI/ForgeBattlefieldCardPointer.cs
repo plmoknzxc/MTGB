@@ -63,6 +63,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private Rect dragSourceBounds;
     private Action activePlay;
     public void ConfigurePlayRegion(RectTransform region)=>playRegion=region;
+    public void DisableActions(){draggable=false;play=null;ConfigureCombat(null,null,null);}
     public void ResetHover()
     {
         hovering=false;detailShown=false;

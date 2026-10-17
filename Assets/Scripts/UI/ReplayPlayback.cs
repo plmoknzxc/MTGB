@@ -89,7 +89,7 @@ public sealed class ReplayPlayback : MonoBehaviour
         int frame = ReplayRepository.FrameAt(Replay, Position);
         if (!seek && frame == lastFrame) return;
         lastFrame = frame;
-        board.PresentReplay(Replay.frames[frame].views[Seat - 1], Seat, Replay.players, seek);
+        board.PresentReplay(Replay.frames[frame].views[Seat - 1], Seat, Replay.players, seek,Replay.frames[frame].views[2-Seat]);
         if (!Exporting) stateText.text = Replay.players[Seat - 1] + " · " + GamePreferences.T("观看录像");
     }
     private void Exit()

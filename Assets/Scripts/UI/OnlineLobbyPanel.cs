@@ -1202,6 +1202,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         text.text = value;
         text.horizontalOverflow = HorizontalWrapMode.Wrap;
         text.verticalOverflow = VerticalWrapMode.Truncate;
+        PreferenceText.SetSize(text, fontSize);
         return text;
     }
 

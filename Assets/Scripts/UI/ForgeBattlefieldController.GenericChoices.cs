@@ -64,6 +64,12 @@ public sealed partial class ForgeBattlefieldController
             var measure=new TextGenerationSettings{font=GamePreferences.Font,fontSize=Mathf.RoundToInt(18*GamePreferences.TextScale),
                 generationExtents=new Vector2(textWidth,0),scaleFactor=1,richText=false,lineSpacing=1,
                 verticalOverflow=VerticalWrapMode.Overflow,horizontalOverflow=HorizontalWrapMode.Wrap};
+            if(symbols==null&&!playerVote) {
+                string prefix=request.sourceCard?.name+" — ";
+                label=!string.IsNullOrEmpty(request.sourceCard?.name)&&label.StartsWith(prefix,StringComparison.Ordinal)
+                    ?GamePreferences.CardFaceName(request.sourceCard.name)+" — "+NamedAbilityEffectText(request.sourceCard,label.Substring(prefix.Length))
+                    :GamePreferences.NativeText(label);
+            }
             string buttonLabel=(option.selected?"●  ":"○  ")+label;
             float rowHeight=Mathf.Max(48,new TextGenerator().GetPreferredHeight(buttonLabel,measure)+18);
             var button=Button(content,"GenericOption_"+index,buttonLabel,

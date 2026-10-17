@@ -156,6 +156,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         boardPreferenceKey=preferenceKey;
         requestId = state?.awaitingInput == true ? state.request.requestId : 0;
         submitted = false;
+        ObserveNextPhasePause(state,localSeat);
         PresentNotices();
         if(pickerUpdate){SetText("PriorityPill/Text","等待你完成选择");PresentCardSelection();PresentTargetChoiceActions();RefreshBattlefieldViewControls();return;}
         if (integrated) { PresentIntegrated(status);RefreshBattlefieldViewControls(); return; }
@@ -182,7 +183,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             root.gameObject.AddComponent<GraphicRaycaster>();
     }
 
-    private const int NoticeLayerOffset = 10, DragArrowLayerOffset = 20;
+    private const int NoticeLayerOffset = 10, DragArrowLayerOffset = 20, DecisionLayerOffset = 25, InspectLayerOffset = 30;
 
     private void Build()
     {
@@ -403,9 +404,12 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         RememberCastingOrigin(view.request.options[index]);
         RememberLandChoice(view.request.options[index]);
         submitted=true;
+        PreviewStackTargetChoice(view.request.options[index]);
         DisableCardSelectionChoices();
-        if(landChoiceMenu!=null)landChoiceMenu.gameObject.SetActive(false);
-        if(choiceDismiss!=null)choiceDismiss.gameObject.SetActive(false);
+        // Keep the current choice visible until an authoritative snapshot replaces
+        // it. Numeric +/- and optional-cost toggles are incremental requests;
+        // hiding their surface on every submission makes the whole UI blink.
+        // DisableIntegratedChoices and the submitted guard prevent repeat input.
         SuspendTargeting();
         if(integrated)SetText("PriorityPill/Text","正在提交操作…");
         if (integrated) DisableIntegratedChoices();
@@ -438,6 +442,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             }
             return TapPaymentText($"支付费用 {cost}\n地牌产费／取消支付",$"Pay {cost}\nTap lands or cancel.",$"コスト {cost} を支払う\n土地をタップ／キャンセル");
         }
+        if((req.kind is "InputSelectTargets" or "SelectStackTarget") && (req.options??Array.Empty<ForgeOption>()).Any(o=>o.id.StartsWith("stack:",StringComparison.Ordinal)))return TapPaymentText("选择目标 · 在选择窗口中选择","Choose a target in the selection window","選択ウィンドウで対象を選択");
         if(req.kind.Contains("Targets"))return "选择目标 · 点击高亮卡牌/头像\n也可从待施放牌拖出箭头";
         if(req.kind=="InputPassPriority")return v.stackCount>0?"你有优先权 · 可以响应\n双方连续让过后，结算堆叠顶项":"你有优先权\n可以行动，或让过优先权";
         return RequestTitle(req.kind);
@@ -583,5 +588,5 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private static void TopLabel(RectTransform parent,string name,string text,float y,float width,float height)
     {var t=Label(parent,name,text,Vector2.zero,new Vector2(width,height),18,Paper);t.rectTransform.anchorMin=t.rectTransform.anchorMax=new Vector2(.5f,1);t.rectTransform.pivot=new Vector2(.5f,1);t.rectTransform.anchoredPosition=new Vector2(0,-y);}
     private static void Clear(Transform root)
-    {if(root==null)return;foreach(Transform child in root){child.gameObject.SetActive(false);Destroy(child.gameObject);}}
+    {if(root==null)return;foreach(var child in root.Cast<Transform>().ToArray()){child.gameObject.SetActive(false);child.SetParent(null,false);Destroy(child.gameObject);}}
 }

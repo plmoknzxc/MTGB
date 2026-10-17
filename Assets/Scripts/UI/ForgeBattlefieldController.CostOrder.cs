@@ -35,6 +35,7 @@ public sealed partial class ForgeBattlefieldController
     {
         if(landChoiceMenu==null)landChoiceMenu=Panel(surface,"CardAbilityChoices",Vector2.zero,Vector2.zero,Ink);
         landChoiceMenu.SetParent(surface,false);
+        SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);
         landChoiceMenu.anchorMin=landChoiceMenu.anchorMax=landChoiceMenu.pivot=new Vector2(.5f,.5f);
         float width=Mathf.Min(620,surface.rect.width-48),height=Mathf.Min(430,surface.rect.height-48);
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;

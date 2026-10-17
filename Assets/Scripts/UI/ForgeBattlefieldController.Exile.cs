@@ -1,30 +1,42 @@
-using System;
+﻿using System;
 using System.Linq;
 using UnityEngine;
 
 public sealed partial class ForgeBattlefieldController
 {
-    private readonly System.Collections.Generic.Dictionary<string,RectTransform> playableHandRegions=new();
-    private readonly ForgeBattlefieldCardPointer.HandHitLayout playableHandHits=new(true);
+    private sealed class HandFanState {
+        public readonly bool opponent;
+        public HandFanState(bool opponent){this.opponent=opponent;hits=new ForgeBattlefieldCardPointer.HandHitLayout(!opponent);}
+        public readonly System.Collections.Generic.Dictionary<string,RectTransform> regions=new();
+        public readonly System.Collections.Generic.List<HandFanSlot> slots=new();
+        public readonly ForgeBattlefieldCardPointer.HandHitLayout hits;
+        public ForgeHandFanNavigation navigation;
+        public UnityEngine.UI.Button previous,next;
+        public float available,radius,radians,travel;
+    }
     private sealed class HandFanSlot {public ArenaCard item;public RectTransform region;public float x,opacity;}
-    private readonly System.Collections.Generic.List<HandFanSlot> handFanSlots=new();
-    private ForgeHandFanNavigation handNavigation;
-    private UnityEngine.UI.Button handPrevious,handNext;
-    private float handFanAvailable,handFanRadius,handFanRadians;
-    private void ApplyHandFanOffset(float offset,bool snap)
+    private readonly HandFanState ownFan=new(false),opponentFan=new(true);
+    private ForgeHandFanNavigation handNavigation=>ownFan.navigation;
+    private System.Collections.Generic.List<HandFanSlot> handFanSlots=>ownFan.slots;
+    private void ApplyHandFanOffset(float offset,bool snap)=>ApplyHandFanOffset(ownFan,offset,snap);
+    private void ApplyHandFanOffset(HandFanState fan,float offset,bool snap)
     {
-        foreach(var group in handFanSlots.GroupBy(s=>s.region)) {
+        foreach(var group in fan.slots.GroupBy(s=>s.region)) {
             var min=new Vector2(float.PositiveInfinity,float.PositiveInfinity);var max=-min;
             foreach(var slot in group) {
-                float x=slot.x+offset;
-                float theta=handFanRadius>0?Mathf.Asin(Mathf.Clamp(x/handFanRadius,-Mathf.Sin(18*Mathf.Deg2Rad),Mathf.Sin(18*Mathf.Deg2Rad))):0;
-                float rotation=-theta*Mathf.Rad2Deg;var position=new Vector2(64+x,46+1.2f*handFanRadius*(Mathf.Cos(theta)-Mathf.Cos(handFanRadians)));
+                float x=slot.x+(fan.opponent?-offset:offset);
+                float theta=fan.radius>0?Mathf.Asin(Mathf.Clamp(x/fan.radius,-Mathf.Sin(18*Mathf.Deg2Rad),Mathf.Sin(18*Mathf.Deg2Rad))):0;
+                float rotation=-theta*Mathf.Rad2Deg;var position=new Vector2(64+x,46+1.2f*fan.radius*(Mathf.Cos(theta)-Mathf.Cos(fan.radians)));
+                // Rotate the opponent fan around the same reserved centre. Mirroring
+                // the +64px inset itself shifts that fan into the player plate.
+                if(fan.opponent){position=new Vector2(128-position.x,-position.y);rotation+=180;}
                 slot.item.pointer.SetHandFanPose(position,rotation,snap);
                 var size=slot.item.root.rect.size;float c=Mathf.Abs(Mathf.Cos(theta)),s=Mathf.Abs(Mathf.Sin(theta));
                 var half=new Vector2(size.x*c+size.y*s,size.x*s+size.y*c)*.5f;
                 min=Vector2.Min(min,position-half);max=Vector2.Max(max,position+half);
-                float edge=Mathf.Min(position.x-half.x-(64-handFanAvailable*.5f),64+handFanAvailable*.5f-position.x-half.x);
-                float exposure=handNavigation.CanPan?Mathf.Clamp01(edge/24):1;
+                float localX=fan.opponent?128-position.x:position.x;
+                float edge=Mathf.Min(localX-half.x-(64-fan.available*.5f),64+fan.available*.5f-localX-half.x);
+                float exposure=fan.navigation.CanPan?Mathf.Clamp01(edge/24):1;
                 if(slot.item.pointer.IsCastingDrag)exposure=1;
                 var visibility=slot.item.root.GetComponent<CanvasGroup>();
                 if(visibility==castingHandGroup)exposure=0;
@@ -33,19 +45,19 @@ public sealed partial class ForgeBattlefieldController
             }
             group.Key.anchoredPosition=(min+max)*.5f;group.Key.sizeDelta=max-min;
         }
-        playableHandHits.Invalidate();
-        if(handNavigation.CanPan){handPrevious.interactable=offset<handFanTravel*.5f-.1f;handNext.interactable=offset>-handFanTravel*.5f+.1f;}
+        fan.hits.Invalidate();
+        if(fan.navigation.CanPan){fan.previous.interactable=offset<fan.travel*.5f-.1f;fan.next.interactable=offset>-fan.travel*.5f+.1f;}
     }
-    private float handFanTravel;
-    private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards)
+    private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards)=>LayoutPlayableHand(parent,cards,ownFan);
+    private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards,HandFanState fan)
     {
-        foreach(var region in playableHandRegions.Values)region.gameObject.SetActive(false);
-        playableHandHits.Clear();
-        handFanSlots.Clear();
+        foreach(var region in fan.regions.Values)region.gameObject.SetActive(false);
+        fan.hits.Clear();
+        fan.slots.Clear();
         string Region(ForgeCardView c)=>string.IsNullOrEmpty(c.zone)?"Hand":c.zone;
         int Order(string zone)=>zone switch {"Hand"=>0,"Graveyard"=>1,"Exile"=>2,"Command"=>3,_=>4};
         var groups=cards.GroupBy(Region).OrderBy(g=>Order(g.Key)).ThenBy(g=>g.Key).ToArray();
-        if(groups.Length==0){if(handNavigation!=null){handNavigation.Configure(parent,0,null);handNavigation.gameObject.SetActive(false);}return;}
+        if(groups.Length==0){if(fan.navigation!=null){fan.navigation.Configure(parent,0,null);fan.navigation.gameObject.SetActive(false);}return;}
         // Leave the player plate and the phase/action dock clear at both ends.
         float available=Mathf.Max(320,Mathf.Min(1240,surface.rect.width-680))-32;
         const float width=182,height=254,gap=88;
@@ -60,42 +72,49 @@ public sealed partial class ForgeBattlefieldController
         bool overflow=total+cornerOverhang>available-16;
         // The edge-fade reserve is needed while browsing, not for a small fan
         // whose full rotated footprint already fits the viewport.
-        handFanAvailable=available;handFanTravel=overflow?Mathf.Max(0,total-(available-inset)):0;
-        if(handNavigation==null){
-            var track=Panel(parent,"HandFanNavigation",new Vector2(64,70),new Vector2(available,140),Color.clear);track.SetAsFirstSibling();
-            handNavigation=track.gameObject.AddComponent<ForgeHandFanNavigation>();
+        fan.available=available;fan.travel=overflow?Mathf.Max(0,total-(available-inset)):0;
+        if(fan.navigation==null){
+            var track=Panel(parent,"HandFanNavigation",new Vector2(64,fan.opponent?-70:70),new Vector2(available,140),Color.clear);track.SetAsFirstSibling();
+            fan.navigation=track.gameObject.AddComponent<ForgeHandFanNavigation>();
             UnityEngine.UI.Button Arrow(string name,float side,int direction){
-                var b=Button(track,name,"",new Vector2(side*(available*.5f-12),48),new Vector2(24,36),()=>handNavigation.MoveBy(direction*handFanAvailable*.65f),Ink);
+                var b=Button(track,name,"",new Vector2(side*(available*.5f-12),48),new Vector2(24,36),()=>fan.navigation.MoveBy(direction*fan.available*.65f),Ink);
                 var glyph=Rect(b.transform,"Chevron",Vector2.zero,new Vector2(20,30)).gameObject.AddComponent<BattlefieldScrollChevron>();glyph.direction=-direction;glyph.color=Paper;glyph.raycastTarget=false;return b;
             }
-            handPrevious=Arrow("Previous",-1,1);handNext=Arrow("Next",1,-1);
+            fan.previous=Arrow("Previous",-1,1);fan.next=Arrow("Next",1,-1);
         }
-        handNavigation.gameObject.SetActive(handFanTravel>.1f);handNavigation.Configure(parent,handFanTravel,o=>ApplyHandFanOffset(o,true));
-        ((RectTransform)handNavigation.transform).sizeDelta=new Vector2(available,140);
-        handPrevious.GetComponent<RectTransform>().anchoredPosition=new Vector2(-available*.5f+12,48);handNext.GetComponent<RectTransform>().anchoredPosition=new Vector2(available*.5f-12,48);
+        fan.navigation.gameObject.SetActive(fan.travel>.1f);fan.navigation.Configure(parent,fan.travel,o=>ApplyHandFanOffset(fan,o,true));
+        ((RectTransform)fan.navigation.transform).sizeDelta=new Vector2(available,140);
+        fan.previous.GetComponent<RectTransform>().anchoredPosition=new Vector2(-available*.5f+12,fan.opponent?-48:48);fan.next.GetComponent<RectTransform>().anchoredPosition=new Vector2(available*.5f-12,fan.opponent?-48:48);
         float x=-total*.5f;int order=0;
         float spread=Mathf.Max(1,((overflow?Mathf.Min(total,available-inset):total)-width)*.5f);
-        handFanRadians=angle*Mathf.Deg2Rad;handFanRadius=angle>0?spread/Mathf.Sin(handFanRadians):0;
+        fan.radians=angle*Mathf.Deg2Rad;fan.radius=angle>0?spread/Mathf.Sin(fan.radians):0;
         foreach(var group in groups) {
             var members=group.ToArray();float span=width+(members.Length-1)*step,center=x+span*.5f;
-            if(!playableHandRegions.TryGetValue(group.Key,out var region)) {
-                region=Rect(parent,"PlayableRegion_"+group.Key,Vector2.zero,Vector2.one);playableHandRegions.Add(group.Key,region);
+            if(!fan.regions.TryGetValue(group.Key,out var region)) {
+                region=Rect(parent,"PlayableRegion_"+group.Key,Vector2.zero,Vector2.one);fan.regions.Add(group.Key,region);
             }
             for(int i=0;i<members.Length;i++) {
                 // Source gaps occupy space on the same arc; they do not restart the fan.
                 float offset=i-(members.Length-1)*.5f,cardX=center+offset*step;
-                var card=members[i];string key="Hand:"+card.id;
-                DrawArenaCard(parent,card,1,key,key,new Vector2(64+cardX,46),new Vector2(width,height),true,0,order++);
+                var card=members[i];string key=(fan.opponent?"OtherFan:":"Hand:")+card.id;
+                var initial=new Vector2(64+cardX,46);
+                DrawArenaCard(parent,card,1,key,key,fan.opponent?new Vector2(128-initial.x,-initial.y):initial,new Vector2(width,height),true,fan.opponent?180:0,order++);
+                if(fan.opponent){
+                    var item=arenaCards[key];item.root.GetComponent<CanvasGroup>().alpha=1;
+                    item.button.onClick.RemoveAllListeners();
+                    if(!card.faceDown)item.button.onClick.AddListener(()=>InspectIntegrated(card));
+                    item.pointer.DisableActions();
+                }
                 arenaCards[key].pointer.ConfigurePlayRegion(region);
-                arenaCards[key].pointer.ConfigureHandNavigation(handNavigation);
-                playableHandHits.Add(arenaCards[key].pointer);
-                handFanSlots.Add(new HandFanSlot{item=arenaCards[key],region=region,x=cardX,opacity=arenaCards[key].root.GetComponent<CanvasGroup>().alpha});
+                arenaCards[key].pointer.ConfigureHandNavigation(fan.navigation);
+                fan.hits.Add(arenaCards[key].pointer);
+                fan.slots.Add(new HandFanSlot{item=arenaCards[key],region=region,x=cardX,opacity=arenaCards[key].root.GetComponent<CanvasGroup>().alpha});
             }
             // Drag cancellation uses the complete resting footprint of this source group.
             region.gameObject.SetActive(true);
             x+=span+gap;
         }
-        ApplyHandFanOffset(handNavigation.Offset,false);
+        ApplyHandFanOffset(fan,fan.navigation.Offset,false);
     }
     private ForgeCardView[] AvailableExileCards() => (view?.playableGraveyard??Array.Empty<ForgeCardView>()).Concat(view?.playableExile??Array.Empty<ForgeCardView>())
         .Concat((view?.playableCommand??Array.Empty<ForgeCardView>()).Where(c=>c.ownerSeat==ActionPlayerSeat))

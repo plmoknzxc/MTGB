@@ -1,7 +1,7 @@
 {
   "provenance": {
     "revision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
-    "fingerprint": "60b125bee4e81e1cf0f829a9ea1e7099b29cf9386a7830fb80f77dc87006b83c",
+    "fingerprint": "ff91324188edd4cc37ccc186af3c2819a4dae93830fb4ec4ebce266936130ba9",
     "cardScripts": 33980,
     "scriptRoots": {
       "cardsfolder": 33980,
@@ -10849,32 +10849,32 @@
   "bridgeUnsupportedBranches": [
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 555,
+      "line": 561,
       "source": "throw new UnsupportedOperationException(\"IGuiBase.\"+n);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 739,
+      "line": 745,
       "source": "throw new UnsupportedOperationException(\"Unadapted ordering: \"+a[0]);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 754,
+      "line": 760,
       "source": "throw new UnsupportedOperationException(\"Unadapted information or control callback: \"+n);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 760,
+      "line": 766,
       "source": "throw new UnsupportedOperationException(\"IGuiGame.\"+n+\" \"+Arrays.toString(a));"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 1470,
+      "line": 1486,
       "source": "if(!supportedInput(inp)) throw new UnsupportedOperationException(\"Unadapted input: \"+kind);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 1471,
+      "line": 1487,
       "source": "if(opts.isEmpty()) throw new UnsupportedOperationException(\"No supported options for \"+kind+\": \"+g.message);"
     },
     {

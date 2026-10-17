@@ -74,13 +74,13 @@ public sealed class CardArtPanel : MonoBehaviour
         {
             close.gameObject.SetActive(false);
             Top(title.rectTransform,12,10,360,46);
-            title.fontSize = 19;
+            PreferenceText.SetSize(title,19);
             title.resizeTextForBestFit = true;
             title.resizeTextMinSize = 13;
             title.resizeTextMaxSize = 19;
             title.verticalOverflow = VerticalWrapMode.Truncate;
             Top(hint.rectTransform,12,62,360,44);
-            hint.fontSize = 14;
+            PreferenceText.SetSize(hint,14);
             hint.horizontalOverflow = HorizontalWrapMode.Wrap;
             grid.anchorMin = Vector2.zero; grid.anchorMax = Vector2.one;
             grid.offsetMin = new Vector2(8,184); grid.offsetMax = new Vector2(-8,-112);
@@ -93,7 +93,7 @@ public sealed class CardArtPanel : MonoBehaviour
             foreach (var button in new[] { clear, apply })
             {
                 var label = button.GetComponentInChildren<Text>();
-                label.fontSize = 16;
+                PreferenceText.SetSize(label,16);
                 label.resizeTextForBestFit = true;
                 label.resizeTextMinSize = 12;
                 label.resizeTextMaxSize = 16;
@@ -105,7 +105,7 @@ public sealed class CardArtPanel : MonoBehaviour
             pageLabel.rectTransform.offsetMin = new Vector2(104,140);
             pageLabel.rectTransform.offsetMax = new Vector2(-104,178);
             pageLabel.alignment = TextAnchor.MiddleCenter;
-            pageLabel.fontSize = 14;
+            PreferenceText.SetSize(pageLabel,14);
             pageLabel.resizeTextForBestFit = true;
             pageLabel.resizeTextMinSize = 12;
             pageLabel.resizeTextMaxSize = 14;
@@ -164,7 +164,7 @@ public sealed class CardArtPanel : MonoBehaviour
             var image=new GameObject("Thumbnail",typeof(RectTransform),typeof(RawImage)).GetComponent<RawImage>();image.transform.SetParent(container,false);image.raycastTarget=false;
             image.rectTransform.anchorMin=Vector2.zero;image.rectTransform.anchorMax=Vector2.one;image.rectTransform.offsetMin=image.rectTransform.offsetMax=Vector2.zero;
             var fit=image.gameObject.AddComponent<AspectRatioFitter>();fit.aspectMode=AspectRatioFitter.AspectMode.FitInParent;fit.aspectRatio=488f/680f;
-            var label=button.GetComponentInChildren<Text>();label.fontSize=embedded?14:15;label.alignment=TextAnchor.MiddleCenter;
+            var label=button.GetComponentInChildren<Text>();PreferenceText.SetSize(label,embedded?14:15);label.alignment=TextAnchor.MiddleCenter;
             label.rectTransform.anchorMin=Vector2.zero;label.rectTransform.anchorMax=new Vector2(1,.15f);label.rectTransform.offsetMin=label.rectTransform.offsetMax=Vector2.zero;
             bool installed=CardImageLibrary.TryLoadExact(version,0,out var sprite);
             label.text=version.PrintingKey+"\n"+(CardArtPreferences.Get(card)==version.PrintingKey?"当前偏好":installed?"已下载":"未下载");
@@ -262,7 +262,7 @@ public sealed class CardArtPanel : MonoBehaviour
 
     private static Text Label(Transform parent,string name,int size)
     {
-        var go=new GameObject(name,typeof(RectTransform),typeof(Text));go.transform.SetParent(parent,false);var text=go.GetComponent<Text>();text.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");text.fontSize=size;text.color=Paper;text.raycastTarget=false;text.supportRichText=false;return text;
+        var go=new GameObject(name,typeof(RectTransform),typeof(Text));go.transform.SetParent(parent,false);var text=go.GetComponent<Text>();text.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");text.fontSize=size;text.color=Paper;text.raycastTarget=false;text.supportRichText=false;PreferenceText.SetSize(text,size);return text;
     }
     private static Button Button(Transform parent,string label,Action click)
     {

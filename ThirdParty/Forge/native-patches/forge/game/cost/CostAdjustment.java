@@ -242,10 +242,10 @@ public class CostAdjustment {
         }
 
         if (sa.isSpell() && sa.isOffering()) {
-            adjustCostByOffering(cost, sa);
+            adjustCostByOffering(cost, sa, test);
         }
         if (sa.isSpell() && sa.isEmerge() && sa.getKeyword() instanceof Emerge emerge) {
-            adjustCostByEmerge(cost, sa, emerge);
+            adjustCostByEmerge(cost, sa, emerge, test);
         }
 
         // Set cost (only used by Trinisphere) is applied last
@@ -259,7 +259,7 @@ public class CostAdjustment {
             }
 
             if (host.hasKeyword(Keyword.DELVE)) {
-                host.clearDelved();
+                if (!test) host.clearDelved();
 
                 final CardZoneTable table = new CardZoneTable();
                 final CardCollection mutableGrave = new CardCollection(activator.getCardsIn(ZoneType.Graveyard));
@@ -380,7 +380,7 @@ public class CostAdjustment {
         }
     }
 
-    private static void adjustCostByOffering(final ManaCostBeingPaid cost, final SpellAbility sa) {
+    private static void adjustCostByOffering(final ManaCostBeingPaid cost, final SpellAbility sa, final boolean test) {
         String offeringType = "";
         for (KeywordInterface inst : sa.getHostCard().getKeywords(Keyword.OFFERING)) {
             final String kw = inst.getOriginal();
@@ -401,10 +401,10 @@ public class CostAdjustment {
         cost.subtractManaCost(toSac.getManaCost());
 
         sa.setSacrificedAsOffering(toSac);
-        toSac.setUsedToPay(true); //stop it from interfering with mana input
+        if (!test) toSac.setUsedToPay(true); //stop it from interfering with mana input
     }
 
-    private static void adjustCostByEmerge(final ManaCostBeingPaid cost, final SpellAbility sa, final Emerge emerge) {
+    private static void adjustCostByEmerge(final ManaCostBeingPaid cost, final SpellAbility sa, final Emerge emerge, final boolean test) {
         String validStr = emerge.getValidType();
         Player p = sa.getActivatingPlayer();
         CardCollectionView canEmerge = CardLists.filter(p.getCardsIn(ZoneType.Battlefield),
@@ -421,11 +421,11 @@ public class CostAdjustment {
         cost.decreaseGenericMana(toSac.getCMC());
 
         sa.setSacrificedAsEmerge(toSac);
-        toSac.setUsedToPay(true); //stop it from interfering with mana input
+        if (!test) toSac.setUsedToPay(true); //stop it from interfering with mana input
     }
     /**
      * Applies applyRaiseCostAbility ability.
-     * 
+     *
      * @param staticAbility
      *            a StaticAbility
      * @param sa
@@ -454,7 +454,7 @@ public class CostAdjustment {
 
     /**
      * Applies applyReduceCostAbility ability.
-     * 
+     *
      * @param staticAbility
      *            a StaticAbility
      * @param sa
@@ -515,7 +515,7 @@ public class CostAdjustment {
             }
         }
         return 0;
-    }    
+    }
 
     private static boolean checkRequirement(final SpellAbility sa, final StaticAbility st) {
         if (!st.checkConditions()) {

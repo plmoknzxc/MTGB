@@ -51,9 +51,9 @@ public sealed partial class MainMenuController
             var outline=child.GetComponent<Outline>();if(outline==null)outline=child.gameObject.AddComponent<Outline>();
             outline.effectDistance=new Vector2(1,-1);outline.effectColor=name=="DeleteDeckButton"?new Color(.9f,.38f,.39f,.9f):new Color(.39f,.52f,.68f,.85f);
             var colors=button.colors;colors.normalColor=Color.white;colors.highlightedColor=new Color(1.3f,1.3f,1.3f);colors.pressedColor=new Color(.7f,.8f,.95f);button.colors=colors;
-            foreach(var text in child.GetComponentsInChildren<Text>()){text.color=Color.white;text.fontSize=19;text.raycastTarget=false;}
+            foreach(var text in child.GetComponentsInChildren<Text>()){text.color=Color.white;PreferenceText.SetSize(text,19);text.raycastTarget=false;}
         }
-        deckDropdown.captionText.fontSize=19;deckDropdown.captionText.horizontalOverflow=HorizontalWrapMode.Wrap;
+        PreferenceText.SetSize(deckDropdown.captionText,19);deckDropdown.captionText.horizontalOverflow=HorizontalWrapMode.Wrap;
         deckDropdown.captionText.verticalOverflow=VerticalWrapMode.Truncate;deckDropdown.captionText.resizeTextForBestFit=true;
         deckDropdown.captionText.resizeTextMinSize=13;deckDropdown.captionText.resizeTextMaxSize=25;
         row.AddComponent<DeckToolbarAutoSize>().Configure();

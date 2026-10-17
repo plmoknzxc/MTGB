@@ -22,9 +22,11 @@ public final class BridgeLibraryKnowledge {
     private final Map<Integer,Map<Integer,Integer>> orderedTops = new HashMap<>();
     // Knowledge from an actual private look follows only this face-down object.
     private final Map<Integer,Map<Integer,String>> battlefieldFaces = new HashMap<>();
+    private final BridgeLibraryPositions positions=new BridgeLibraryPositions();
     synchronized void restarted() {
         known.clear();hands.clear();revealedHands.clear();libraryFaces.clear();departures.clear();
         revealedSideboards.clear();orderedTops.clear();battlefieldFaces.clear();
+        positions.clear();
     }
     private static String faceIdentity(Card card) {
         return card.getGameTimestamp()+":"+card.getLayerTimestamp();
@@ -61,7 +63,8 @@ public final class BridgeLibraryKnowledge {
             if(values.stream().allMatch(v->v instanceof CardView cv&&owner.getCardsIn(ZoneType.Library).stream().anyMatch(c->c.getId()==cv.getId())))
                 orderedTops.computeIfAbsent(seat,k->new HashMap<>()).put(owner.getId(),first.getId());
     }
-    synchronized void arranged(int seat,List<Card> shown,List<Card> top) {
+    synchronized void arranged(int seat,List<Card> shown,List<Card> top,List<Card> bottom) {
+        positions.arranged(seat,shown,top,bottom);
         ordered(seat,new ArrayList<>(CardView.getCollection(top)));
         // Keeping the sole inspected card on top has no hidden permutation.
         if(shown.size()==1&&top.size()==1&&shown.get(0).getId()==top.get(0).getId())
@@ -87,6 +90,7 @@ public final class BridgeLibraryKnowledge {
     private void forget(int playerId) {for(var memory:known.values())memory.remove(playerId);}
     @Subscribe public synchronized void shuffle(GameEventShuffle event) {
         int owner=event.player().getId();forget(owner);
+        positions.forget(owner);
         libraryFaces.remove(owner);departures.remove(owner);
         for(var memory:orderedTops.values())memory.remove(owner);
         for(var memory:hands.values())memory.remove(owner);
@@ -111,6 +115,8 @@ public final class BridgeLibraryKnowledge {
             }
         }
         if(event.zoneType()!=ZoneType.Library)return;
+        positions.changed(ownerId,event.mode()==forge.game.event.EventValueChangeType.Removed&&event.card()!=null?event.card().getId():null,
+            event.mode()==forge.game.event.EventValueChangeType.Added,event.mode()==forge.game.event.EventValueChangeType.ComplexUpdate);
         if(event.card()!=null&&event.mode()==forge.game.event.EventValueChangeType.Removed) {
             var ownerFaces=libraryFaces.get(ownerId);Set<Integer> recipients=new HashSet<>();
             if(ownerFaces!=null){var shown=ownerFaces.remove(event.card().getId());if(shown!=null)recipients.addAll(shown);}
@@ -157,5 +163,13 @@ public final class BridgeLibraryKnowledge {
             // Independent private looks are not authorization for a spectator.
             publicTop &= top.getView().canBeShownTo(ForgeBridge.guis.get(seat-1).controller.getPlayer().getView());
         return Map.of("libraryTop",ForgeBridge.card(top),"libraryTopPublic",publicTop);
+    }
+    synchronized void orderedMove(int seat,List<Card> cards,forge.game.spellability.SpellAbility source){positions.orderedMove(seat,cards,source);}
+    synchronized List<Object> cards(Player owner,int seat,Player viewer){return positions.snapshot(owner,seat,viewer);}
+    @Subscribe public synchronized void moved(forge.game.event.GameEventCardChangeZone event) {
+        if(event.card()==null||event.from()==null||event.to()==null||event.to().zoneType()!=ZoneType.Library
+            ||event.from().zoneType().isHidden()||event.card().isFaceDown())return;
+        for(Player owner:ForgeBridge.game.getPlayers())for(Card card:owner.getCardsIn(ZoneType.Library))
+            if(card.getId()==event.card().getId()){positions.publicPlacement(card);return;}
     }
 }

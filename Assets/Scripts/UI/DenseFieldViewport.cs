@@ -8,7 +8,13 @@ public sealed class DenseFieldViewport : MonoBehaviour
 {
     private ScrollRect scroll;
     private readonly Vector3[] corners=new Vector3[4];
-    private static readonly string[] Adornments={"Visual/Count","Visual/DefenseCounter","Visual/CardShadow"};
+    private static readonly string[] Adornments={"Count","DefenseCounter","CardShadow"};
+    private static bool IsAdornment(Transform child)
+    {
+        if(!child.gameObject.activeSelf)return false;
+        string name=child.name;
+        return System.Array.IndexOf(Adornments,name)>=0||name.StartsWith("TemporaryExile_",System.StringComparison.Ordinal);
+    }
     // Measure the final orientation, not the pointer's animated current pose.
     // Layout and clipping share the same adornments, including badge overhang.
     public static Rect LayoutFootprint(RectTransform card,float rotation)
@@ -20,7 +26,7 @@ public sealed class DenseFieldViewport : MonoBehaviour
         // Rebuilt faces retain inactive old children until end of frame. Find()
         // may return that old namesake; measure every active direct adornment.
         if(visual!=null)foreach(Transform child in visual) {
-            if(child.gameObject.activeSelf&&System.Array.IndexOf(Adornments,"Visual/"+child.name)>=0)parts.Add((RectTransform)child);
+            if(IsAdornment(child))parts.Add((RectTransform)child);
         }
         foreach(var part in parts){part.GetWorldCorners(corners);foreach(var corner in corners){Vector2 point=turn*card.InverseTransformPoint(corner);min=Vector2.Min(min,point);max=Vector2.Max(max,point);}}
         return Rect.MinMaxRect(min.x,min.y,max.x,max.y);
@@ -34,22 +40,24 @@ public sealed class DenseFieldViewport : MonoBehaviour
             var rect=(RectTransform)child;
             float min=float.PositiveInfinity,max=float.NegativeInfinity;
             Extend(rect,ref min,ref max);
-            foreach(string name in Adornments) {
-                var badge=child.Find(name) as RectTransform;
-                if(badge!=null&&badge.gameObject.activeSelf)Extend(badge,ref min,ref max);
-            }
+            ExtendAdornments(rect,ref min,ref max);
             bool complete=min>=scroll.viewport.rect.yMin-.5f&&max<=scroll.viewport.rect.yMax+.5f;
             if(scroll.horizontal) {
                 min=float.PositiveInfinity;max=float.NegativeInfinity;
                 Extend(rect,ref min,ref max,true);
-                foreach(string name in Adornments) {
-                    var badge=child.Find(name) as RectTransform;
-                    if(badge!=null&&badge.gameObject.activeSelf)Extend(badge,ref min,ref max,true);
-                }
+                ExtendAdornments(rect,ref min,ref max,true);
                 complete &= min>=scroll.viewport.rect.xMin-.5f&&max<=scroll.viewport.rect.xMax+.5f;
             }
             var group=child.GetComponent<CanvasGroup>();
             if(group!=null){group.alpha=complete?1:0;group.blocksRaycasts=complete;}
+        }
+    }
+    private void ExtendAdornments(RectTransform card,ref float min,ref float max,bool horizontal=false)
+    {
+        var visual=card.Find("Visual");if(visual==null)return;
+        for(int i=0;i<visual.childCount;i++) {
+            var child=visual.GetChild(i);
+            if(IsAdornment(child))Extend((RectTransform)child,ref min,ref max,horizontal);
         }
     }
     private void Extend(RectTransform rect,ref float min,ref float max,bool horizontal=false)

@@ -92,7 +92,7 @@ public sealed class DeckCardDetailsView
         var sl=Label(settings.transform,"Label",18,Paper);sl.text="设置";sl.alignment=TextAnchor.MiddleCenter;sl.rectTransform.anchorMin=Vector2.zero;sl.rectTransform.anchorMax=Vector2.one;sl.rectTransform.offsetMin=sl.rectTransform.offsetMax=Vector2.zero;
         foreach (var label in new[] { infoLabel, artLabel, sl })
         {
-            label.fontSize = 16;
+            PreferenceText.SetSize(label, 16);
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
             label.rectTransform.offsetMin = new Vector2(8, 4);
             label.rectTransform.offsetMax = new Vector2(-8, -4);

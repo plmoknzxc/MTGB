@@ -69,6 +69,7 @@ public sealed partial class ForgeBattlefieldController
         foreach(string plate in new[]{"PlayerPlate","OpponentPlate"})
         {
             bool own=plate=="PlayerPlate";
+            SetOverlayLayer((RectTransform)Node(plate),1,true);
             var image=Node(plate).GetComponent<Image>();
             image.sprite=IntegratedUiUtility.RoundedRect(268,92,8);image.color=new Color(.045f,.065f,.085f,.97f);
             var outline=Node(plate).GetComponent<Outline>();
@@ -148,7 +149,7 @@ public sealed partial class ForgeBattlefieldController
         if(c.faceDown)return "hidden:"+c.sector+":"+c.detained+":"+c.ringBearer+":"+c.hasStatBaseline+":"+c.basePower+":"+c.baseToughness+":"+string.Join(",",c.grantedKeywords??Array.Empty<string>())+":"+c.id+":"+c.tapped+":"+c.power+":"+c.toughness+":"+c.faceDownKind+":"+string.Join(",",c.exertedBySeats??Array.Empty<int>())+":"+c.exertedThisTurn+":"+c.currentRules+":"+c.damage+":"+c.attacking+":"+c.blocking;
         return string.Join("|",c.contraption,c.sprocket,c.attraction,string.Join(",",c.attractionLights??Array.Empty<int>()),c.functionalVariant,c.sector,c.chosenSector,c.attachedToKind,c.attachedToId,string.Join(",",c.attachedByIds??Array.Empty<int>()),simpleToken?null:c.printingKey,simpleToken?null:c.currentArtPrintingKey,simpleToken?false:c.currentArtBackFace,simpleToken?null:c.effectSourcePrintingKey,simpleToken?null:c.effectSourceName,simpleToken?false:c.effectSourceBackFace,c.genericEffectName,c.ringBearer,c.ownerSeat,c.effectMarker,c.markerKind,c.markerStatus,c.helperArtName,c.stackableSupport,c.stackableStateKnown,c.stackablePermanent,c.protectingPlayerSeat,c.devotion,c.devotionRequired,c.token,c.copy,c.merged,simpleToken?null:c.tokenArtKey,simpleToken?null:c.tokenSourcePrintingKey,c.name,c.zone,c.land,c.creature,c.tapped,string.Join(",",c.exertedBySeats??Array.Empty<int>()),c.exertedThisTurn,c.detained,c.harnessed,c.solved,c.suspected,c.saddled,c.plotted,c.attacking,c.blocking,c.hasStatBaseline,c.basePower,c.baseToughness,c.powerBaseChanged,c.toughnessBaseChanged,c.effectiveBasePower,c.effectiveBaseToughness,c.hasIntensity,c.intensity,c.originalIntensity,c.originalName,c.originalManaCost,c.manaCost,c.originalColors,c.currentColors,c.hasAbilityChanges,c.originalAbilityText,c.currentAbilityText,c.hasCopyAbilityChanges,c.copyOriginalAbilityText,c.copyCurrentAbilityText,string.Join(",",c.originalKeywordDetails??Array.Empty<string>()),string.Join(",",c.currentKeywordDetails??Array.Empty<string>()),string.Join(",",c.grantedKeywords??Array.Empty<string>()),c.power,c.toughness,c.damage,c.defenderKind,c.defenderId,c.loyalty,c.defense,c.backFace,c.stateName,c.room,c.leftRoomUnlocked,c.rightRoomUnlocked,c.hasCurrentLandState,c.landTypesChanged,c.originalType,c.originalRules,c.currentType,c.currentRules,
             string.Join(",",c.basicLandTypes??Array.Empty<string>()),string.Join(";",(c.pendingDepartures??Array.Empty<ForgePendingDeparture>()).Select(d=>d.action+":"+d.phase+":"+d.yourTurn+":"+d.condition)),
-            string.Join(",",(c.counters??Array.Empty<ForgeCardCounter>()).Select(x=>x.kind+":"+x.count)),string.Join(",",c.keywords??Array.Empty<string>()));
+            string.Join(",",(c.counters??Array.Empty<ForgeCardCounter>()).Select(x=>x.kind+":"+x.count)),string.Join(",",c.keywords??Array.Empty<string>()),string.Join(",",c.temporaryExileIds??Array.Empty<int>()),c.spentMana,c.qualificationKind,c.qualificationCount,c.qualificationRequired,c.qualificationEarned);
     }
     private List<ForgeCardView[]> ArenaVisualGroups(ForgeCardView[] cards,string row)
     {
@@ -180,7 +181,7 @@ public sealed partial class ForgeBattlefieldController
         float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));
         float sideWidth=Mathf.Min(500,tableWidth*.38f), gap=28;
         float available=hand?tableWidth:support?sideWidth:tableWidth-sideWidth-gap;
-        float width=hand?182:lands?112:130;
+        float width=hand?182:144;
         // Dense fields wrap rather than hiding permanents behind pagination.
         int columns=hand?Math.Max(1,groups.Count):support?(cards.Any(c=>c.room)?Math.Max(1,Mathf.FloorToInt(sideWidth/180)):Math.Max(1,Math.Min(groups.Count,Mathf.FloorToInt((sideWidth+8)/132)))):Mathf.Clamp(Mathf.FloorToInt((available+8)/(width*.88f+8)),1,6);
         // Artifacts/enchantments share rows, tokens first in reading order.
@@ -214,9 +215,7 @@ public sealed partial class ForgeBattlefieldController
             return;
         }
         if(!hand)SetDenseArenaRowVisible(row,false);
-        if(!hand && !lands && !support && rows>1)width=Mathf.Min(width,100);
-        if(!hand && lands && rows>1)width=Mathf.Min(width,62.5f);
-        if(!hand && !lands && !support && rows>1 && HasTwoLandRows(own))width=Mathf.Min(width,89);
+        if(!hand && !support && rows>1)width=Mathf.Min(width,112);
         if(support)width=Mathf.Min(112,(sideWidth-8*(columns-1))/columns);
         // Battlefield tiles expose illustration and name; full rules remain in hover/hand.
         float height=width*(hand?254f/182f:.88f);
@@ -284,7 +283,7 @@ public sealed partial class ForgeBattlefieldController
         bool playableHand=hand && actionable && !paymentUncertain && view.request.kind=="InputPassPriority";
         bool own=key.StartsWith("Your",StringComparison.Ordinal);
         string appearance=ArenaGroupKey(card)+"/"+size+"/"+count+"/"+actionable+"/"+selected+"/"+paymentUncertain+"/"+playableHand+"/"+attackSelected
-            +"/band:"+string.Join(",",card.attackingBandIds??Array.Empty<int>())
+            +"/exiled:"+string.Join(",",card.temporaryExileIds??Array.Empty<int>())+"/band:"+string.Join(",",card.attackingBandIds??Array.Empty<int>())
             +"/"+card.qualificationKind+":"+card.qualificationCount+":"+card.qualificationRequired+":"+card.qualificationEarned+"/"+GamePreferences.Revision;
         if(item.appearance!=appearance)
         {
@@ -410,6 +409,7 @@ public sealed partial class ForgeBattlefieldController
                     group.fontStyle=FontStyle.Bold;group.verticalOverflow=VerticalWrapMode.Overflow;
                 }
             }
+            if(!hand)PresentTemporaryExile(item.face,card,size);
             if(count>1)
             {
                 float countWidth=Mathf.Max(42,24+count.ToString().Length*13);
@@ -448,9 +448,13 @@ public sealed partial class ForgeBattlefieldController
         bool dragToPlay=hand&&view?.request?.kind=="InputPassPriority";
         item.button.onClick.AddListener(()=> {if(!dragToPlay)choose();});
         item.pointer.Configure(()=> {
-            if(hand){Node("InspectPanel").gameObject.SetActive(false);inspectedCardId=0;}
-            else if(!IsDeclaringAttack && !IsBlockingChoice)InspectIntegrated(card);
-        },()=> {if(!hand)LeaveInspectCard();},choose,hand && actionable && view?.request?.kind=="InputPassPriority");
+            if(hand){
+                bool dual=!card.faceDown&&catalog.TryGetValue(card.printingKey??"",out var d)
+                    &&d.features?.Any(f=>f!=null&&f.faceIndex==1)==true&&d.forgeSplitType is "Modal" or "Transform" or "Meld";
+                if(dual)InspectIntegrated(card);else {Node("InspectPanel").gameObject.SetActive(false);inspectedCardId=0;}
+            }
+            else InspectIntegrated(card);
+        },LeaveInspectCard,choose,hand && actionable && view?.request?.kind=="InputPassPriority");
         if(IsBlockingChoice)item.pointer.ConfigureCombat(!hand&&BlockCandidate(card.id)?p=>BeginBlock(card.id,captured):null,UpdateBlockArrow,p=>DropBlock(p,captured));
         else item.pointer.ConfigureCombat(!hand && CanSelectAttacker(card.id)?p=>BeginAttackSelection(card.id,captured):null,
             UpdateAttackArrowAt,p=>TryChooseAttackAt(p,captured));

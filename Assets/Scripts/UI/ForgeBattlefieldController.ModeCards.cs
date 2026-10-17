@@ -19,7 +19,7 @@ public sealed partial class ForgeBattlefieldController
         bool spree=request.selectionPurpose=="spree" || modes&&options.Any(o=>!string.IsNullOrEmpty(o.modeCost));
         float width=Mathf.Min(surface.rect.width-100,options.Length*254+36),height=Mathf.Min(540,surface.rect.height-80);
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Color.clear;
+        landChoiceMenu.GetComponent<Image>().color=Ink;
         string title=spree?TapPaymentText("追欢","Spree","放題"):modes?TapPaymentText("选择效果","Choose modes","モードを選択"):TapPaymentText("选择施放方式","Choose casting method","唱え方を選択");
         var heading=Label(landChoiceMenu,"Title",title,new Vector2(0,height*.5f-24),new Vector2(width,38),28,Paper);
         heading.fontStyle=FontStyle.Bold;
@@ -34,10 +34,12 @@ public sealed partial class ForgeBattlefieldController
             // generic "Gift something" text is represented by the method heading.
             bool gift=!modes&&!castingCosts&&option.label.StartsWith("Promise Gift",StringComparison.Ordinal);
             string raw=castingCosts?option.modeCost:modes?(string.IsNullOrEmpty(option.modeCost)?"":"+ "+option.modeCost):normal||gift?source?.manaCost:string.IsNullOrEmpty(option.modeCost)?"":"+ "+option.modeCost;
+            string prefix=raw?.StartsWith("+ ",StringComparison.Ordinal)==true?"+ ":"";
+            if(prefix.Length>0)raw=raw.Substring(prefix.Length);
             string nativeCost=raw;raw=PrintedCostText(option.castingFace??source,raw);
             // Retain the existing fallback for old views without a rule baseline.
             if(raw==nativeCost&&raw=="Exile a green card from your hand")raw=TapPaymentText("从手牌中放逐一张绿色牌",raw,"あなたの手札から緑のカード１枚を追放する");
-            return CardSymbolText.Format(raw??"");
+            return CardSymbolText.Format(prefix+(raw??""));
         }
         var costTexts=options.Select(CostText).ToArray();
         var costSizes=costTexts.Select(t=>t.Any(char.IsLetter)?17f:23f).ToArray();
@@ -67,7 +69,7 @@ public sealed partial class ForgeBattlefieldController
             var selection=Label(button.transform,"Selection",option.selected?"✓":"",new Vector2(cardWidth*.5f-18,cardHeight*.5f-18),new Vector2(24,26),18,Gold);selection.gameObject.SetActive(option.selected);
             // Clip away the entire printed rules area instead of placing a smaller
             // opaque rectangle over it. No costs, other modes or flavour can peek out.
-            float faceHeight=cardHeight-8,faceWidth=cardWidth-8,headHeight=faceHeight*.55f;
+            float faceHeight=cardHeight-8,faceWidth=cardWidth-8,headHeight=Mathf.Min(92,faceHeight*.35f);
             var head=Rect(rect,"CardHeader",new Vector2(0,(faceHeight-headHeight)*.5f),new Vector2(faceWidth,headHeight));
             var face=Rect(head,"Artwork",Vector2.zero,new Vector2(faceWidth,headHeight));
             var image=face.gameObject.AddComponent<RawImage>();image.texture=art?.texture;image.color=art==null?Ink:Color.white;image.raycastTarget=false;
@@ -86,12 +88,19 @@ public sealed partial class ForgeBattlefieldController
             float textHeight=Mathf.Max(visibleRulesHeight,text.preferredHeight+6);text.rectTransform.sizeDelta=new Vector2(cardWidth-46,textHeight);rules.sizeDelta=new Vector2(cardWidth-40,textHeight);
             if(textHeight>visibleRulesHeight)AddStackScrollIndicator(rules);
             if(art==null)Label(head,"MissingArt",TapPaymentText("缺失卡图","Missing card art","カード画像なし"),Vector2.zero,new Vector2(cardWidth-20,28),16,Paper);
+            if(!modes||!string.IsNullOrWhiteSpace(costTexts[i])) {
+                var promptFrame=Panel(rect,"CastingPromptFrame",new Vector2(0,cardHeight*.5f+headerHeight*.5f),new Vector2(cardWidth,headerHeight-4),new Color(.3f,.43f,.49f));
+                promptFrame.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(240,96,8);promptFrame.GetComponent<Image>().raycastTarget=false;
+                var promptBackground=Panel(promptFrame,"Background",Vector2.zero,promptFrame.sizeDelta-new Vector2(2,2),Ink);
+                promptBackground.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(238,94,7);promptBackground.GetComponent<Image>().raycastTarget=false;
+            }
             var cost=CardSymbolText.Create(rect,"ExtraCost",costSizes[i],Color.white);IntegratedUiUtility.Place(cost.rectTransform,new Vector2(0,cardHeight*.5f+4+costHeight*.5f),new Vector2(cardWidth,costHeight));cost.alignment=TMPro.TextAlignmentOptions.Center;cost.text=costTexts[i];
             if(!modes) {
                 bool normal=castingCosts?option.faceKind=="normal":option.id=="confirm-cards"||option.id=="reset-cards";
                 string name=normal?TapPaymentText("正常施放","Cast normally","通常の唱え方"):castingCosts?TapPaymentText("呼魂","Evoke","想起"):
                     option.label.StartsWith("Kicker",StringComparison.OrdinalIgnoreCase)?TapPaymentText("增幅","Kicker","キッカー"):
-                    option.label.StartsWith("Promise Gift",StringComparison.Ordinal)?TapPaymentText("承诺赠礼","Promise gift","贈り物を約束"):option.label;
+                    option.label.StartsWith("Promise Gift",StringComparison.Ordinal)?TapPaymentText("承诺赠礼","Promise gift","贈り物を約束"):
+                    DeckKeywordGlossary.All.FirstOrDefault(e=>Regex.IsMatch(option.label??"","^"+Regex.Escape(e.English)+@"(?:\s|[—–-]|$)"))?.Name??GamePreferences.NativeText(option.label);
                 Label(rect,"CastingMethod",name,new Vector2(0,cardHeight*.5f+costHeight+6+methodHeight*.5f),new Vector2(cardWidth,methodHeight),19,Paper);
             }
             // Dim colours, not opacity: a disabled card must still hide anything
@@ -123,7 +132,7 @@ public sealed partial class ForgeBattlefieldController
             var printed=Regex.Split(localized.Replace("\\n","\n"),"[\r\n]+");
             // Cost/reminder lines are represented by the casting-method heading.
             // Keep the printed effects (including conditional kicker text) intact.
-            string effect=string.Join("\n",printed.Where(l=>!Regex.IsMatch(l.Trim(),@"^(?:Kicker\b|Evoke\b|增幅|呼魂|キッカー|想起)")));
+            string effect=string.Join("\n",printed.Where(l=>!Regex.IsMatch(l.Trim(),@"^(?:Kicker\b|Evoke\b|Bargain\b|Offspring\b|增幅|呼魂|加码|繁生|キッカー|想起|協約|新生)")));
             if(option.faceKind=="evoke")effect+="\n"+TapPaymentText("以呼魂施放：进战场时牺牲它。","Cast with evoke: sacrifice it when it enters.","想起で唱えた場合、戦場に出たときにこれを生け贄に捧げる。");
             return effect;
         }

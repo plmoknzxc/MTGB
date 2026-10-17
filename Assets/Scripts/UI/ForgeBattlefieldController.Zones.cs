@@ -173,8 +173,8 @@ public sealed partial class ForgeBattlefieldController
         }
         var player=view?.players?.FirstOrDefault(p=>p.seat==browsedSeat);
         if(player==null){CloseReviewCards();return;}
-        bool hiddenLibrary=browsedZone=="牌库" && (player.seat!=seat||service?.IsSpectator==true||player.reviewLibrary==null);
-        var cards=hiddenLibrary?(player.libraryTop!=null&&!string.IsNullOrEmpty(player.libraryTop.name)?new[]{player.libraryTop}:Array.Empty<ForgeCardView>()):ZoneCards(player,browsedZone);
+        bool library=browsedZone=="牌库";
+        var cards=library?LibraryBrowserCards(player):ZoneCards(player,browsedZone);
         cards=cards.Select(c=>{
             if(!c.faceDown||string.IsNullOrEmpty(c.knownFaceName)||service?.IsSpectator==true)return c;
             var visible=ServerSnapshotJson.Copy(c);
@@ -182,12 +182,13 @@ public sealed partial class ForgeBattlefieldController
             visible.currentRules=c.knownFaceRules;return visible;
         }).ToArray();
         string signature=browsedSeat+"/"+browsedZone+"/"+surface.rect.size+"/"+GamePreferences.Revision+"/"+player.libraryCount+"/"+string.Join("|",cards.Select(ServerSnapshotJson.Serialize))+"/"+string.Join("|",cards.Select(ZoneTargetHint));
+        if(library)signature+="/"+view?.request?.requestId+"/"+canAct+"/"+submitted;
         if(signature==zoneBrowserSignature && cardSelectionOverlay!=null && cardSelectionOverlay.gameObject.activeSelf)return;
         zoneBrowserSignature=signature;
         if(endDetail!=null)Destroy(endDetail.gameObject);
         string title=(player.seat==seat?"你的":"对手的")+(browsedZone=="手牌"?"已知手牌":browsedZone=="坟场"?"坟墓场":browsedZone=="放逐"?"放逐区":browsedZone=="赌注"?"赌注区":"剩余牌库");
         if(browsedZone=="赌注")title=TapPaymentText((player.seat==seat?"你的":"对手的")+"赌注区",(player.seat==seat?"Your":"Opponent's")+" ante",(player.seat==seat?"あなた":"対戦相手")+"のアンティ");
-        RenderCardSelection(new ForgeRequest{kind="BrowseZone",options=Array.Empty<ForgeOption>(),previewCards=cards},title);
+        RenderCardSelection(new ForgeRequest{kind=library?"BrowseLibrary":"BrowseZone",options=Array.Empty<ForgeOption>(),previewCards=cards},title);
         if(browsedZone=="垃圾场"){
             selectionPanel.Find("Title").GetComponent<Text>().text=TapPaymentText((player.seat==seat?"你的":"对手的")+"垃圾场",(player.seat==seat?"Your":"Opponent's")+" scrapyard",(player.seat==seat?"あなた":"対戦相手")+"の廃品置き場");
             selectionPanel.Find("Instruction").GetComponent<Text>().text=AuxiliarySummary(player);
@@ -197,10 +198,32 @@ public sealed partial class ForgeBattlefieldController
             selectionPanel.Find("Instruction").GetComponent<Text>().text=TapPaymentText("仅显示已知手牌；未看过的牌保持隐藏。","Only known hand cards are shown; unseen cards remain hidden.","既知の手札のみ表示します。見ていないカードは非公開です。");
             var empty=selectionPanel.Find("Empty");if(empty!=null)empty.GetComponent<Text>().text=TapPaymentText("没有已知手牌。","No known hand cards.","既知の手札はありません。");
         }
-        if(hiddenLibrary) {
-            selectionPanel.Find("Count").GetComponent<Text>().text=player.libraryCount+" 张";
-            selectionPanel.Find("Instruction").GetComponent<Text>().text=TapPaymentText("仅显示已知的牌库顶，其他牌及其顺序为非公开信息。","Only the known top is shown; the remaining library is private.","既知の一番上のカードを表示しています。他のカードと順番は非公開です。");
-            var empty=selectionPanel.Find("Empty");if(empty!=null)empty.GetComponent<Text>().text=TapPaymentText("通过效果查看牌库时，会显示可查看的卡牌。","Effects show cards you are allowed to view.","効果で見ることができるカードを表示します。");
+        if(library) {
+            selectionPanel.Find("Instruction").GetComponent<Text>().text=LibraryBrowserInstruction;
+            var empty=selectionPanel.Find("Empty");if(empty!=null)empty.GetComponent<Text>().text=TapPaymentText("牌库为空。","Library is empty.","ライブラリーは空です。");
         }
     }
+    private static string LibraryBrowserInstruction=>TapPaymentText("按牌库顶至底排列；未公开的位置显示牌背。","Top to bottom; hidden positions show card backs.","上から下の順。非公開の位置はカード裏面です。");
+    private ForgeCardView[] LibraryBrowserCards(ForgePlayerView player)
+    {
+        int count=Math.Max(0,player.libraryCount);
+        var cards=Enumerable.Range(1,count).Select(position=>new ForgeCardView{
+            id=-position,ownerSeat=player.seat,zone="Library",faceDown=true,name="Face-down card",libraryPosition=position
+        }).ToArray();
+        void Show(int position,ForgeCardView card){
+            if(position<1||position>count||card==null||card.faceDown||string.IsNullOrEmpty(card.name))return;
+            var visible=ServerSnapshotJson.Copy(card);visible.libraryPosition=position;cards[position-1]=visible;
+        }
+        if(player.seat==seat&&service?.IsSpectator!=true&&player.reviewLibrary?.Length==count)
+            for(int i=0;i<count;i++)Show(i+1,player.reviewLibrary[i]);
+        else {
+            if(service?.IsSpectator!=true||player.libraryTopPublic)Show(1,player.libraryTop);
+            foreach(var known in player.libraryCards??Array.Empty<ForgeLibraryPosition>())
+                if(known!=null&&(service?.IsSpectator!=true||known.publicInfo))Show(known.position,known.card);
+        }
+        return cards;
+    }
+    private static string LibraryPositionLabel(int position,int count)=>TapPaymentText(
+        "第 "+position+" 张","#"+position,position+"枚目")+(position==1&&position==count?TapPaymentText(" · 牌库顶／底"," · Top / bottom"," · 一番上／下"):
+        position==1?TapPaymentText(" · 牌库顶"," · Top"," · 一番上"):position==count?TapPaymentText(" · 牌库底"," · Bottom"," · 一番下"):"");
 }

@@ -16,7 +16,7 @@ public sealed partial class ForgeBattlefieldController
         int groups=ArenaVisualGroups((player?.battlefield??Array.Empty<ForgeCardView>()).Where(c=>c.land&&!c.creature).ToArray(),row).Count;
         float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));
         float available=tableWidth-Mathf.Min(500,tableWidth*.38f)-28;
-        int columns=Mathf.Clamp(Mathf.FloorToInt((available+8)/(112*.88f+8)),1,6);
+        int columns=Mathf.Clamp(Mathf.FloorToInt((available+8)/(144*.88f+8)),1,6);
         return groups>columns;
     }
     private void SetDenseArenaRowVisible(string row,bool visible)
@@ -53,7 +53,7 @@ public sealed partial class ForgeBattlefieldController
         int supportRows=0;
         if(support){var player=view?.players?.FirstOrDefault(p=>p.seat==(own?seat:(seat==1?2:1)));var field=player?.battlefield??Array.Empty<ForgeCardView>();
             supportRows=(field.Any(c=>c.battle)?1:0)+(field.Any(c=>c.planeswalker)?1:0)+(field.Any(c=>!c.land&&!c.creature&&!c.battle&&!c.planeswalker)?2:0);}
-        float maximum=support?Mathf.Min(118,supportRows>2?272f/supportRows/1.3f:118):lands?50:HasTwoLandRows(own)?74:100;
+        float maximum=support?Mathf.Min(144*.88f,supportRows>2?272f/supportRows/1.3f:144*.88f):lands?112*.88f:HasTwoLandRows(own)?112*.88f:144*.88f;
         signature+="/"+maximum;
         bool retained=denseWidthSignatures.TryGetValue(row,out var prior)&&prior==signature&&denseCardWidths.ContainsKey(row);
         float cardWidth=retained?denseCardWidths[row]:maximum;

@@ -36,7 +36,7 @@ public sealed partial class MainMenuController
         missing.transform.SetParent(panel, false);
         previewMissingLabel = missing.GetComponent<Text>();
         previewMissingLabel.font = cardInfoText.font;
-        previewMissingLabel.fontSize = 15;
+        PreferenceText.SetSize(previewMissingLabel, 15);
         previewMissingLabel.color = new Color(.73f, .79f, .84f);
         previewMissingLabel.alignment = TextAnchor.MiddleCenter;
         previewMissingLabel.raycastTarget = false;

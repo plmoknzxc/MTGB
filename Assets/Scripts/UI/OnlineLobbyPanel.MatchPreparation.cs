@@ -19,7 +19,7 @@ public sealed partial class OnlineLobbyPanel
         Place((RectTransform)header, new Vector2(160, 432), new Vector2(1300, 64));
         Place(sideboardSeriesText.rectTransform, Vector2.zero, new Vector2(1260, 58));
         sideboardSeriesText.alignment = TextAnchor.MiddleRight;
-        sideboardSeriesText.fontSize = 28;
+        PreferenceText.SetSize(sideboardSeriesText, 28);
         sideboardSeriesText.fontStyle = FontStyle.Bold;
         sideboardSeriesText.color = LobbyPaper;
         sideboardSeriesText.resizeTextForBestFit = false;

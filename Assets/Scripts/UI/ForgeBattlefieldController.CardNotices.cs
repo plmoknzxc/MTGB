@@ -9,11 +9,12 @@ public sealed partial class ForgeBattlefieldController
     private readonly Dictionary<long,RectTransform> cardNoticeWindows=new();
     private readonly Dictionary<long,string> cardNoticeLayouts=new();
     private readonly HashSet<long> dismissedCardNotices=new();
+    private readonly HashSet<long> suppressedCardNotices=new();
     private static bool IsCardNotice(ForgeNotice notice)=>notice.kind is "card-reveal" or "card-move";
     private void ResetCardNotices()
     {
         foreach(var window in cardNoticeWindows.Values)if(window!=null)Destroy(window.gameObject);
-        cardNoticeWindows.Clear();cardNoticeLayouts.Clear();dismissedCardNotices.Clear();
+        cardNoticeWindows.Clear();cardNoticeLayouts.Clear();dismissedCardNotices.Clear();suppressedCardNotices.Clear();
     }
     private static string NoticeZone(string zone)=>zone switch {
         "Library"=>TapPaymentText("牌库","library","ライブラリー"),"Hand"=>TapPaymentText("手牌","hand","手札"),
@@ -40,8 +41,32 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentCardNotices(ForgeNotice[] notes)
     {
+        suppressedCardNotices.IntersectWith(notes.Select(n=>n.id));
         foreach(var note in notes.Where(IsCardNotice).OrderBy(n=>n.id)) {
-            if(dismissedCardNotices.Contains(note.id)||(!cardNoticeWindows.ContainsKey(note.id)&&note.id<=lastNoticeId))continue;
+            // Preserve the record for history/replays. A grouped movement can
+            // grow on a later snapshot, so suppression is not user dismissal.
+            if(note.kind=="card-move"&&note.fromZone=="Battlefield"
+                &&note.toZone is "Exile" or "Hand" or "Graveyard"
+                &&!string.Equals(note.reason,"cost",StringComparison.OrdinalIgnoreCase)
+                &&(note.cards?.Length??0)==1) {
+                suppressedCardNotices.Add(note.id);
+                if(cardNoticeWindows.Remove(note.id,out var hidden)&&hidden!=null)Destroy(hidden.gameObject);
+                cardNoticeLayouts.Remove(note.id);continue;
+            }
+            bool previouslySuppressed=suppressedCardNotices.Remove(note.id);
+            // Older recordings contain ChangeZone's reveal after the already
+            // public return. Suppress only that exact pair; a real intervening
+            // movement of the same card must remain visible.
+            if(note.kind=="card-move"&&note.toZone=="Hand"&&note.fromZone!="Library"
+                &&note.message is "展示卡牌" or "Revealed cards"
+                &&notes.Any(previous=>previous.id<note.id&&previous.kind==note.kind&&string.IsNullOrEmpty(previous.message)
+                    &&previous.fromZone==note.fromZone&&previous.toZone==note.toZone&&previous.reason==note.reason
+                    &&previous.actorSeat==note.actorSeat&&previous.sourceCard?.id==note.sourceCard?.id
+                    &&(previous.cards??Array.Empty<ForgeCardView>()).Select(c=>c.id).OrderBy(id=>id)
+                        .SequenceEqual((note.cards??Array.Empty<ForgeCardView>()).Select(c=>c.id).OrderBy(id=>id))
+                    &&!notes.Any(middle=>middle.id>previous.id&&middle.id<note.id&&IsCardNotice(middle)
+                        &&(middle.cards??Array.Empty<ForgeCardView>()).Any(c=>(note.cards??Array.Empty<ForgeCardView>()).Any(n=>n.id==c.id)))))continue;
+            if(dismissedCardNotices.Contains(note.id)||(!previouslySuppressed&&!cardNoticeWindows.ContainsKey(note.id)&&note.id<=lastNoticeId))continue;
             string key=GamePreferences.Revision+"/"+surface.rect.size+"/"+note.kind+"/"+CardNoticeDescription(note)+"/"+
                 string.Join("|",(note.cards??Array.Empty<ForgeCardView>()).Select(c=>c.id+":"+c.name+":"+c.printingKey+":"+c.faceDown));
             if(cardNoticeLayouts.TryGetValue(note.id,out string previous)&&previous==key)continue;

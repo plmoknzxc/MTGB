@@ -2,11 +2,25 @@ public sealed partial class ForgeBattlefieldController
 {
     // Native generated paragraphs have no independent printed translation row.
     // Exact templates only: unknown rules stay visible rather than losing clauses.
-    private string GeneratedSearchRuleText(string rule) {
-        var search=System.Text.RegularExpressions.Regex.Match(rule??"",@"^Player (\d+) searches their library for a (Plains|Island|Swamp|Mountain|Forest|basic land|land|creature|artifact|enchantment|instant|sorcery) card, reveals it, puts it into their hand, then shuffles\.$");
-        if(search.Success){string actor=PlayerDisplayName(int.Parse(search.Groups[1].Value));string type=search.Groups[2].Value;
-            string localized=type switch{"Plains"=>TapPaymentText("平原","Plains","平地"),"Island"=>TapPaymentText("海岛","Island","島"),"Swamp"=>TapPaymentText("沼泽","Swamp","沼"),"Mountain"=>TapPaymentText("山脉","Mountain","山"),"Forest"=>TapPaymentText("树林","Forest","森"),"basic land"=>TapPaymentText("基本地","basic land","基本土地"),_=>GamePreferences.T(char.ToUpperInvariant(type[0])+type.Substring(1))};
-            return TapPaymentText(actor+"从自己的牌库中搜寻一张"+localized+"牌，展示该牌，将它置于手上，然后洗牌。",rule,actor+"は自分のライブラリーから"+localized+"カード１枚を探し、公開して手札に加え、その後ライブラリーを切り直す。");}
+    private string GeneratedSearchRuleText(string rule,bool playerReferences=false) {
+        var dividedSearch=System.Text.RegularExpressions.Regex.Match(rule??"",@"^Player (?<owner>\d+) searches their library for up to four cards with different names and reveals them\. Player (?<chooser>\d+) chooses two of those cards\. Player \k<owner> puts the chosen cards into their graveyard and the rest into their hand\. Then Player \k<owner> shuffles\.\s*$");
+        if(dividedSearch.Success) {
+            string Name(string group)=>playerReferences?PlayerTextReference(int.Parse(dividedSearch.Groups[group].Value)):PlayerDisplayName(int.Parse(dividedSearch.Groups[group].Value));
+            string owner=Name("owner"),chooser=Name("chooser");
+            return TapPaymentText(owner+"从自己的牌库中搜寻至多四张不同名的牌并展示。\n"+chooser+"选择其中两张。\n"+owner+"将所选牌置入自己的坟墓场，其余牌置于手上，然后洗牌。",rule,
+                owner+"は自分のライブラリーから名前の異なるカードを最大４枚探し、公開する。\n"+chooser+"はそのうち２枚を選ぶ。\n"+owner+"は選ばれたカードを自分の墓地に、残りを手札に加える。その後ライブラリーを切り直す。");
+        }
+        const string typePattern="Plains|Island|Swamp|Mountain|Forest|basic land|land|creature|artifact|enchantment|instant|sorcery";
+        var search=System.Text.RegularExpressions.Regex.Match(rule??"",@"^Player \d+ searches their library for an? (?<type>"+typePattern+@")(?: or (?<other>"+typePattern+@"))? card, (?<reveal>reveals it, )?puts it (?<destination>into their hand|onto the battlefield(?<tapped> tapped)?), then shuffles\.$");
+        if(search.Success){
+            string Type(string type)=>type switch{"Plains"=>TapPaymentText("平原","Plains","平地"),"Island"=>TapPaymentText("海岛","Island","島"),"Swamp"=>TapPaymentText("沼泽","Swamp","沼"),"Mountain"=>TapPaymentText("山脉","Mountain","山"),"Forest"=>TapPaymentText("树林","Forest","森"),"basic land"=>TapPaymentText("基本地","basic land","基本土地"),_=>GamePreferences.T(char.ToUpperInvariant(type[0])+type.Substring(1))};
+            string type=search.Groups["type"].Value,other=search.Groups["other"].Value;
+            string local=Type(type)+(other.Length>0?TapPaymentText("或"," or ","か")+Type(other):"");
+            bool hand=search.Groups["destination"].Value=="into their hand",reveal=search.Groups["reveal"].Success,tapped=search.Groups["tapped"].Success;
+            return TapPaymentText("从你的牌库中搜寻一张"+local+"牌，"+(reveal?"展示该牌，":"")+(hand?"将它置于手上":tapped?"将它横置放进战场":"将它放进战场")+"，然后洗牌。",
+                "Search your library for a "+type+(other.Length>0?" or "+other:"")+" card, "+(reveal?"reveal it, ":"")+(hand?"put it into your hand":"put it onto the battlefield"+(tapped?" tapped":""))+", then shuffle.",
+                "あなたのライブラリーから"+local+"カード１枚を探し、"+(reveal?"公開して":"")+(hand?"手札に加える":(tapped?"タップ状態で":"")+"戦場に出す")+"。その後ライブラリーを切り直す。");
+        }
         return rule;
     }
     private static string GeneratedPublicRuleText(string rule) {

@@ -1,52 +1,94 @@
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public sealed partial class ForgeBattlefieldController
 {
-    private Button controlModeButton;
+    private Button controlModeButton,pauseNextPhaseButton;
     private ForgeControlMode previewControlMode=ForgeControlMode.Auto;
     private long automaticRequest, attemptedPaymentContext;
     private float automaticReadyAt;
     private ForgeControlMode ControlMode=>service!=null?service.ControlMode:previewControlMode;
+    private bool pauseNextPhase;
+    private string pausePhase,pauseMatch;
+    private int pauseTurn,pauseTurnSeat,pauseSeat,pauseRestart;
 
+    private float LayoutControlPill(Button button,string caption,string[] captions,float minimumWidth)
+    {
+        var text=button.GetComponentInChildren<Text>();PreferenceText.SetSize(text,18);
+        text.resizeTextForBestFit=false;text.horizontalOverflow=HorizontalWrapMode.Overflow;text.alignment=TextAnchor.MiddleCenter;
+        float width=minimumWidth;
+        foreach(string value in captions){text.text=value;width=Mathf.Max(width,Mathf.Ceil(text.preferredWidth)+24);}
+        text.text=caption;text.rectTransform.anchoredPosition=Vector2.zero;text.rectTransform.sizeDelta=new Vector2(width-18,37);
+        var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=new Vector2(1,0);rect.pivot=new Vector2(.5f,.5f);rect.sizeDelta=new Vector2(width,41);
+        button.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(width,41,20);
+        return width;
+    }
     private void PresentControlMode()
     {
         if(!integrated)return;
-        if(service?.IsSpectator==true) { if(controlModeButton!=null)controlModeButton.gameObject.SetActive(false); return; }
+        if(service?.IsSpectator==true) {
+            pauseNextPhase=false;
+            if(controlModeButton!=null)controlModeButton.gameObject.SetActive(false);
+            else {var authoredMode=surface.Find("PriorityControlMode");if(authoredMode!=null)authoredMode.gameObject.SetActive(false);}
+            if(pauseNextPhaseButton!=null)pauseNextPhaseButton.gameObject.SetActive(false);
+            return;
+        }
         if(controlModeButton==null) {
             var existing=surface.Find("PriorityControlMode");
             if(existing!=null){
                 controlModeButton=existing.GetComponent<Button>()??existing.gameObject.AddComponent<Button>();
                 controlModeButton.targetGraphic=existing.GetComponent<Image>();
                 controlModeButton.onClick.RemoveAllListeners();controlModeButton.onClick.AddListener(CycleControlMode);
-            }
+            } else controlModeButton=Button(surface,"PriorityControlMode","",Vector2.zero,new Vector2(80,41),CycleControlMode,Ink);
+            var toggle=controlModeButton.transform.Find("Switch");
+            if(toggle!=null){toggle.gameObject.SetActive(false);Destroy(toggle.gameObject);}
         }
-        if(controlModeButton==null) {
-            controlModeButton=Button(surface,"PriorityControlMode","AUTO",Vector2.zero,new Vector2(148,41),CycleControlMode,Ink);
-            var rect=(RectTransform)controlModeButton.transform;
-            rect.anchorMin=rect.anchorMax=new Vector2(1,0);rect.anchoredPosition=new Vector2(-120,58.5f);
-            controlModeButton.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(148,41,20);
-            var track=Panel(rect,"Switch",new Vector2(-50,0),new Vector2(28,16),Ink);track.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(28,16,8);track.GetComponent<Image>().raycastTarget=false;
-            var knob=Panel(track,"Knob",new Vector2(-6,0),new Vector2(12,12),new Color(.88f,.91f,.90f));knob.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(12,12,6);knob.GetComponent<Image>().raycastTarget=false;
-        }
-        var text=controlModeButton.GetComponentInChildren<Text>();text.text=ControlMode==ForgeControlMode.On?TapPaymentText("手动","Manual","手動"):ControlMode==ForgeControlMode.Off?TapPaymentText("略过","Skip","スキップ"):TapPaymentText("自动","Auto","自動");PreferenceText.SetSize(text,14);
-        text.rectTransform.anchoredPosition=new Vector2(16,0);text.rectTransform.sizeDelta=new Vector2(100,35);
-        text.horizontalOverflow=HorizontalWrapMode.Overflow;
-        text.resizeTextForBestFit=false;
+        if(pauseNextPhaseButton==null)pauseNextPhaseButton=Button(surface,"PauseNextPhase","",Vector2.zero,new Vector2(142,41),ToggleNextPhasePause,Ink);
+        controlModeButton.gameObject.SetActive(true);pauseNextPhaseButton.gameObject.SetActive(true);
+        string manual=TapPaymentText("手动","Manual","手動"),auto=TapPaymentText("自动","Auto","自動"),skip=TapPaymentText("略过","Skip","スキップ");
+        float modeWidth=LayoutControlPill(controlModeButton,ControlMode==ForgeControlMode.On?manual:ControlMode==ForgeControlMode.Off?skip:auto,new[]{manual,auto,skip},80);
+        string pause=TapPaymentText("下阶段暂停","Pause next","次で停止"),cancel=TapPaymentText("取消暂停","Cancel pause","停止取消");
+        float pauseWidth=LayoutControlPill(pauseNextPhaseButton,pauseNextPhase?cancel:pause,new[]{pause,cancel},130);
+        ((RectTransform)controlModeButton.transform).anchoredPosition=new Vector2(-46-modeWidth*.5f,58.5f);
+        ((RectTransform)pauseNextPhaseButton.transform).anchoredPosition=new Vector2(-46-modeWidth-10-pauseWidth*.5f,58.5f);
         controlModeButton.GetComponent<Image>().color=new Color(.09f,.153f,.196f);
-        var toggle=controlModeButton.transform.Find("Switch");toggle.GetComponent<Image>().color=ControlMode==ForgeControlMode.Off?new Color(.416f,.475f,.49f):new Color(.16f,.5f,.58f);
-        ForgeUiMotion.On((RectTransform)toggle.Find("Knob")).MoveTo(new Vector2(ControlMode==ForgeControlMode.Off?-6:6,0),new Vector2(12,12),seconds:.15f);
         var outline=controlModeButton.GetComponent<Outline>();if(outline!=null)outline.effectColor=ControlMode==ForgeControlMode.Off?new Color(.57f,.66f,.69f,.55f):new Color(.55f,.87f,.93f,.85f);
+        pauseNextPhaseButton.GetComponent<Image>().color=pauseNextPhase?new Color(.29f,.21f,.10f):new Color(.09f,.153f,.196f);
+        var pauseOutline=pauseNextPhaseButton.GetComponent<Outline>()??pauseNextPhaseButton.gameObject.AddComponent<Outline>();
+        pauseOutline.effectColor=pauseNextPhase?Gold:new Color(.55f,.87f,.93f,.6f);pauseOutline.effectDistance=new Vector2(1,-1);
+        pauseNextPhaseButton.interactable=pauseNextPhase||view!=null&&view.turn>0&&!string.IsNullOrEmpty(view.phase);
         controlModeButton.interactable=true;
+    }
+    private void SetControlMode(ForgeControlMode mode)
+    {
+        if(service!=null)service.ControlMode=mode;else previewControlMode=mode;
+        automaticRequest=0;renderedKey=null;
     }
     private void CycleControlMode()
     {
-        var next=(ForgeControlMode)(((int)ControlMode+1)%3);
-        if(service!=null)service.ControlMode=next;else previewControlMode=next;
-        automaticRequest=0;
+        SetControlMode((ForgeControlMode)(((int)ControlMode+1)%3));
+        PresentControlMode();RefreshPriorityAdvanceVisibility();
+    }
+    private void ToggleNextPhasePause()
+    {
+        if(pauseNextPhase)pauseNextPhase=false;
+        else {
+            if(view==null||view.turn<=0||string.IsNullOrEmpty(view.phase)||service?.IsSpectator==true)return;
+            pauseNextPhase=true;pausePhase=view.phase;pauseTurn=view.turn;pauseTurnSeat=view.turnSeat;
+            pauseSeat=seat;pauseRestart=view.restartRevision;pauseMatch=service?.MatchId;
+        }
         renderedKey=null;PresentControlMode();
-        RefreshPriorityAdvanceVisibility();
+    }
+    private void ObserveNextPhasePause(ForgeSeatView state,int localSeat)
+    {
+        if(!pauseNextPhase)return;
+        if(state==null||localSeat!=pauseSeat||state.restartRevision!=pauseRestart||service?.MatchId!=pauseMatch||service?.IsSpectator==true){pauseNextPhase=false;return;}
+        if(state.inputPending||state.turn<=0||string.IsNullOrEmpty(state.phase))return;
+        if(state.turn==pauseTurn&&state.turnSeat==pauseTurnSeat&&state.phase==pausePhase)return;
+        // Consume the one-shot stop before presenting or automatically answering
+        // any request in the newly observed phase, including opponent priority.
+        pauseNextPhase=false;SetControlMode(ForgeControlMode.On);
     }
     // The button and the automatic submitter must agree before the first frame
     // of a new request. Re-evaluate the current mode, never cache a planned pass.

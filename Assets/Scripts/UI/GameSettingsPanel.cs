@@ -85,7 +85,7 @@ public sealed class GameSettingsPanel : MonoBehaviour
     {
         var go=new GameObject("Label",typeof(RectTransform),typeof(Text));go.transform.SetParent(parent,false);
         var t=go.GetComponent<Text>();t.text=value;t.font=GamePreferences.Font ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");t.fontSize=size;t.color=MenuVisualTheme.Paper;t.alignment=TextAnchor.MiddleLeft;t.raycastTarget=false;
-        t.rectTransform.sizeDelta=dimensions;t.rectTransform.anchoredPosition=position;return t;
+        t.rectTransform.sizeDelta=dimensions;t.rectTransform.anchoredPosition=position;PreferenceText.SetSize(t,size);return t;
     }
     static Button Button(Transform parent,string value,float x,float y,UnityEngine.Events.UnityAction action)
     {

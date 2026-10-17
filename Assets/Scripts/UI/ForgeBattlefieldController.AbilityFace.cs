@@ -20,8 +20,11 @@ public sealed partial class ForgeBattlefieldController
         abilityShape=Sprite.Create(texture,new Rect(0,0,width,height),new Vector2(.5f,.5f),100);
         abilityShape.hideFlags=HideFlags.HideAndDontSave;return abilityShape;
     }
-    private string AbilityEffectText(ForgeCardView source,string effect)
+    private string AbilityEffectText(ForgeCardView source,string effect)=>AbilityEffectTextCore(source,effect,false);
+    private string NamedAbilityEffectText(ForgeCardView source,string effect)=>AbilityEffectTextCore(source,effect,true);
+    private string AbilityEffectTextCore(ForgeCardView source,string effect,bool playerReferences)
     {
+        string PlayerName(int player)=>playerReferences?PlayerTextReference(player):PlayerDisplayName(player);
         using var diagnostics=BattleTextDiagnostics.DeferIntermediate();
         string Complete(string text){
             if(GamePreferences.Language!="en-US"&&BattleTextDiagnostics.HasEnglishProse(text)){
@@ -38,7 +41,6 @@ public sealed partial class ForgeBattlefieldController
         if(eventSuffix.Success) {
             effectText=effectText.Substring(0,eventSuffix.Index);
             eventContext="\n"+TapPaymentText("触发牌：","Triggering card: ","誘発したカード：")+GamePreferences.CardFaceName(eventSuffix.Groups[1].Value)+" ("+eventSuffix.Groups[2].Value+")";
-            if(int.TryParse(eventSuffix.Groups[3].Value,out int actor))eventContext+=" · "+PlayerDisplayName(actor);
         }
         string specializedContext="";
         string specializedSuffix=" [Specialized: "+source?.name+" ("+source?.id+")]";
@@ -165,16 +167,16 @@ public sealed partial class ForgeBattlefieldController
         paragraph=AbilityRecipeText(source,effect,paragraph);
         paragraph+=castContext;
         var libraryLook=System.Text.RegularExpressions.Regex.Match(paragraph,@"^Player (\d+) looks at the top card of their library\. (.+)$");
-        if(libraryLook.Success)paragraph=PlayerDisplayName(int.Parse(libraryLook.Groups[1].Value))
+        if(libraryLook.Success)paragraph=PlayerName(int.Parse(libraryLook.Groups[1].Value))
             +TapPaymentText("检视自己的牌库顶牌。"," looks at the top card of their library.","は自分のライブラリーの一番上のカードを見る。")
             +"\n"+GeneratedPublicRuleText(libraryLook.Groups[2].Value);
-        paragraph=string.Join("\n",paragraph.Replace("\\n","\n").Split('\n').Select(line=>GeneratedPublicRuleText(GeneratedSearchRuleText(line))));
+        paragraph=string.Join("\n",paragraph.Replace("\\n","\n").Split('\n').Select(line=>GeneratedPublicRuleText(GeneratedSearchRuleText(line,playerReferences))));
         paragraph=System.Text.RegularExpressions.Regex.Replace(paragraph,@"Player (\d+) looks at the top card of Player (\d+)'s library\.",m=>TapPaymentText(
-            PlayerDisplayName(int.Parse(m.Groups[1].Value))+"检视"+PlayerDisplayName(int.Parse(m.Groups[2].Value))+"的牌库顶牌。",m.Value,
-            PlayerDisplayName(int.Parse(m.Groups[1].Value))+"は"+PlayerDisplayName(int.Parse(m.Groups[2].Value))+"のライブラリーの一番上のカードを見る。"));
+            PlayerName(int.Parse(m.Groups[1].Value))+"检视"+PlayerName(int.Parse(m.Groups[2].Value))+"的牌库顶牌。",
+            PlayerName(int.Parse(m.Groups[1].Value))+" looks at the top card of "+PlayerName(int.Parse(m.Groups[2].Value))+"'s library.",
+            PlayerName(int.Parse(m.Groups[1].Value))+"は"+PlayerName(int.Parse(m.Groups[2].Value))+"のライブラリーの一番上のカードを見る。"));
         foreach(string generated in new[]{"Draw a card at the beginning of the next turn's upkeep.","Draw a card at the beginning of the next upkeep."})
             paragraph=paragraph.Replace(generated,GeneratedPublicRuleText(generated));
-        if(printedPhase)paragraph+="\n"+TapPaymentText("阶段牌手：","Phase: ","フェイズのプレイヤー：")+PlayerDisplayName(int.Parse(phase.Groups[1].Value));
         paragraph+=eventContext;
         paragraph+=specializedContext;
         paragraph+=addedContext;
@@ -191,7 +193,7 @@ public sealed partial class ForgeBattlefieldController
         names=System.Text.RegularExpressions.Regex.Replace(names,@"(?<= - )(?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*",m=>string.Join(" ",m.Value.Split(' ').Select(GamePreferences.T)));
         names=System.Text.RegularExpressions.Regex.Replace(names,@"Face-down card (?=\([A-Z]?[0-9]+\))",TapPaymentText("盖牌 ","Face-down card ","裏向きのカード "));
         names=System.Text.RegularExpressions.Regex.Replace(names,@"[\[\]{}]","");
-        names=System.Text.RegularExpressions.Regex.Replace(names,@"\bPlayer (\d+)\b",m=>PlayerDisplayName(int.Parse(m.Groups[1].Value)));
+        names=System.Text.RegularExpressions.Regex.Replace(names,@"\bPlayer (\d+)\b",m=>PlayerName(int.Parse(m.Groups[1].Value)));
         return Complete(paragraph+"\n"+TapPaymentText("目标：","Targets: ","対象：")+names);
     }
     private static string RegenerationSourceName(ForgeCardView source)
@@ -237,7 +239,9 @@ public sealed partial class ForgeBattlefieldController
         face.localScale=new Vector3(parent.rect.width/240f,parent.rect.height/335f,1);
         face.Find("Name").GetComponent<Text>().text=AbilitySourceName(source);
         var effectLabel=(face.Find("Effect")??face.Find("EffectClip/Effect")).GetComponent<Text>();
-        string rendered=GamePreferences.T(AbilityEffectText(source,effect));
+        string rendered=GamePreferences.T(NamedAbilityEffectText(source,effect));
+        if(ShouldShowSpentMana(source))
+            rendered=TapPaymentText("实付：","Spent: ","支払済み：")+source.spentMana+"\n"+rendered;
         bool changed=effectLabel.text!=PlayerNamesRichText(rendered);
         SetNamedPlayerText(effectLabel,rendered);
         {

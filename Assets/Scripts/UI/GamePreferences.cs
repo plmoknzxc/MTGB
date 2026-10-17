@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -392,6 +393,7 @@ public sealed class GamePreferences : MonoBehaviour
         string name=canonicalName??"";
         if(!cards.ContainsKey(name))name=Regex.Replace(name,@" \([0-9]+\)$","");
         string localized=Field(name,1,name);
+        if(localized==name&&!cards.ContainsKey(name))localized=DeckTokenLinks.GeneratedTokenName(name)??localized;
         EnsureIdentityNames();identityNames.Add(name);identityNames.Add(localized);
         string display=DisplayCardIdentities(localized);identityNames.Add(display);return display;
     }
@@ -400,8 +402,11 @@ public sealed class GamePreferences : MonoBehaviour
         DisplayRules(Field(feature?.cardName, 3, feature?.description ?? ""),feature!=null&&feature.cardTypes.Has(global::CardType.Planeswalker)));
     static string LocalizedRules(string name,string source,string printing,string display)
     {
-        if(Ready&&Language!="en-US"&&BattleTextDiagnostics.HasEnglishProse(display))
-            BattleTextDiagnostics.Record("catalog-rules",source,display,new ForgeCardView{name=name,printingKey=printing});
+        if(Ready&&Language!="en-US"&&BattleTextDiagnostics.HasEnglishProse(display)) {
+            display=string.Join("\n",display.Replace("\\n","\n").Split('\n').Select(line=>NativeMessageText.TryTranslate(line,out var text)?text:line));
+            if(BattleTextDiagnostics.HasEnglishProse(display))
+                BattleTextDiagnostics.Record("catalog-rules",source,display,new ForgeCardView{name=name,printingKey=printing});
+        }
         return display;
     }
     static string DisplayRules(string rules,bool planeswalker) => !planeswalker ? rules :

@@ -48,7 +48,7 @@ public sealed partial class ForgeBattlefieldController
 
     private void PresentTargetChoiceActions()
     {
-        if (!HasTargetChoice) {
+        if (!HasTargetChoice || HasStackTargetChoices) {
             if (targetChoiceActions != null) targetChoiceActions.gameObject.SetActive(false);
             return;
         }

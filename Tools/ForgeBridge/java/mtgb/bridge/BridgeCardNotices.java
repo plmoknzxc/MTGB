@@ -18,7 +18,7 @@ public final class BridgeCardNotices {
     private record Reveal(long revision,Map<String,Object> note,Set<Object> cards) {}
     private static final Map<ForgeBridge.Gui,Reveal> recentReveals=new IdentityHashMap<>();
     private static final Set<Integer> publiclyRevealed=new HashSet<>();
-    private record Arrival(long revision,ZoneType from,SpellAbility ability) {}
+    private record Arrival(long revision,ZoneType from,SpellAbility ability,Map<ForgeBridge.Gui,Map<String,Object>> moves) {}
     private static final Map<Integer,Arrival> handArrivals=new HashMap<>();
     static void restarted(){recentReveals.clear();publiclyRevealed.clear();handArrivals.clear();}
     @Subscribe public void shuffled(GameEventShuffle event){synchronized(ForgeBridge.class){for(var player:ForgeBridge.game.getPlayers())if(player.getId()==event.player().getId())for(Card card:player.getCardsIn(ZoneType.Library))publiclyRevealed.remove(card.getId());}}
@@ -60,8 +60,15 @@ public final class BridgeCardNotices {
             if(!arrivals.isEmpty()&&arrivals.stream().allMatch(a->a!=null&&a.revision()==ForgeBridge.revision
                     &&a.from()==arrivals.get(0).from()&&a.ability()==cause())) {
                 note.put("kind","card-move");note.put("fromZone",arrivals.get(0).from().name());note.put("toZone","Hand");
+                // A public graveyard return already published its movement.
+                // Reuse only that exact arrival in this revision and recipient;
+                // hidden draws and a later move of the same physical card differ.
+                var existing=arrivals.get(0).moves().get(gui);
+                var recipient=gui;
+                if(existing!=null&&gui.notices.contains(existing)
+                        &&arrivals.stream().allMatch(a->a.moves().get(recipient)==existing))note=existing;
             }
-            append(gui,note);
+            if(!gui.notices.contains(note))append(gui,note);
             // Only explicit delivery to every primary seat establishes public
             // revelation. A private look does not become a spectator notice.
             var matching=new ArrayList<Map<String,Object>>();
@@ -99,14 +106,14 @@ public final class BridgeCardNotices {
             boolean publicOrigin=!from.isHidden()&&!event.card().isFaceDown();
             // Entering a hidden library must not reveal a face-down object.
             if(to==ZoneType.Library&&!publicOrigin)return;
-            boolean seenByOpponent=ForgeBridge.guis.stream().anyMatch(g->g.controller.getPlayer()!=card.getOwner()
-                &&ForgeBridge.libraryKnowledge.hand(card.getOwner(),g.seat,g.controller.getPlayer()).stream()
-                    .anyMatch(v->v instanceof Map<?,?> m&&Objects.equals(m.get("id"),card.getId())));
             if(to==ZoneType.Hand) {
                 handArrivals.entrySet().removeIf(e->e.getValue().revision()!=ForgeBridge.revision);
-                handArrivals.put(card.getId(),new Arrival(ForgeBridge.revision,from,cause()));
+                handArrivals.put(card.getId(),new Arrival(ForgeBridge.revision,from,cause(),new IdentityHashMap<>()));
             }
-            if(to==ZoneType.Hand&&!publicOrigin&&!seenByOpponent)return;
+            // Knowing a card from an earlier private look does not make a later
+            // hidden-zone draw a new reveal. Explicit reveals still arrive via
+            // revealed(), including fetched cards whose movement is saved above.
+            if(to==ZoneType.Hand&&!publicOrigin)return;
             String reason=ForgeBridge.game.costPaymentStack.peek()!=null?"cost":ability!=null?"effect":"rules";
             if(epoch!=ForgeBridge.revision){groups.clear();epoch=ForgeBridge.revision;}
             Group key=new Group(epoch,ability==null?0:ability.getHostCard().getId(),reason,from,to,card.getOwner().getId());
@@ -137,6 +144,7 @@ public final class BridgeCardNotices {
                     byGroup.put(key,note);append(gui,note);
                 }
                 ((List<Object>)note.get("cards")).add(face);
+                if(to==ZoneType.Hand)handArrivals.get(card.getId()).moves().put(gui,note);
             }
         }
     }

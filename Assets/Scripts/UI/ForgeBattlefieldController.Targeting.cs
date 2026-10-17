@@ -91,6 +91,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentTargeting()
     {
+        if(HasStackTargetChoices){HideTargeting();return;}
         if(HasCastingPrompt)
         {
             EnsureCastingPreview();
@@ -204,9 +205,11 @@ public sealed partial class ForgeBattlefieldController
     // Also used by pointer-driven scene validation; never submits a rule action.
     public void UpdateTargetingAt(Vector2 mouse)
     {
+        if(HasStackTargetChoices){if(targetArrow!=null)targetArrow.SetVisible(false);return;}
         if(!IsTargeting || targetArrow==null)return;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,mouse,null,out var endpoint);
         int candidate=TargetOptionAt(mouse);
+        bool pointingAtTarget=candidate>=0;
         if(candidate<0)candidate=System.Array.FindIndex(view.request.options,o=>o.selected);
         if(candidate>=0)
         {
@@ -214,12 +217,14 @@ public sealed partial class ForgeBattlefieldController
             foreach(var card in arenaCards.Values)
                 if(id=="card:"+card.root.name.Substring(5))endpoint=surface.InverseTransformPoint(card.face.position);
             foreach(var entry in stackCards.Values)
-                if(id=="stack:"+entry.entry?.id)endpoint=surface.InverseTransformPoint(entry.tile.TransformPoint(entry.tile.rect.center));
+                // A fan card's centre can be covered by another stack item.
+                // Keep a live pointer on the exposed part the player actually hit.
+                if(id=="stack:"+entry.entry?.id && !pointingAtTarget)endpoint=surface.InverseTransformPoint(entry.tile.TransformPoint(entry.tile.rect.center));
             foreach(var player in view.players)
                 if(id=="player:"+player.targetId)endpoint=surface.InverseTransformPoint(Node(player.seat==seat?"PlayerPlate":"OpponentPlate").position);
         }
         targetArrow.SetEndpoints(targetOrigin.anchoredPosition+new Vector2(-targetOrigin.rect.width*.4f,targetOrigin.rect.height*.2f),endpoint,
-            candidate>=0 && view.request.options[candidate].selected?Gold:candidate>=0?new Color(.2f,.85f,1):new Color(.22f,.55f,.85f),candidate>=0);
+            candidate>=0 && view.request.options[candidate].selected?Gold:candidate>=0?new Color(.2f,.85f,1):new Color(.22f,.55f,.85f),candidate>=0,true);
     }
     private int TargetOptionAt(Vector2 position)
     {
@@ -229,9 +234,11 @@ public sealed partial class ForgeBattlefieldController
         if(hits.Count==0)return -1;
         var button=hits[0].gameObject.GetComponentInParent<Button>();
         if(button==null || !button.interactable)return -1;
+        if(button.name.StartsWith("StackListChoice_")&&int.TryParse(button.name.Substring("StackListChoice_".Length),out int choice))return choice;
         if(button.name.StartsWith("StackListTarget_"))return OptionIndex("stack:"+button.name.Substring("StackListTarget_".Length));
         if(button.name.StartsWith("StackCard_"))
         {
+            if(HasStackTargetChoices)return -1;
             var entry=stackCards.Values.FirstOrDefault(c=>c.tile==button.transform);
             return entry?.entry==null?-1:OptionIndex("stack:"+entry.entry.id);
         }

@@ -53,7 +53,28 @@ public sealed partial class ForgeBattlefieldController
         : view.request.kind=="OrderCards" ? TapPaymentText("依次选择顺序，然后确认。","Choose the order, then confirm.","順番を選んで確認。")
         : IsTapPayment(view.request) ? TapPaymentText($"选择要横置来支付费用的永久物；剩余费用 {view.request.remainingManaCost}。", $"Choose permanents to tap for payment; remaining cost {view.request.remainingManaCost}.", $"支払いのためにタップするパーマネントを選択。残りのコスト {view.request.remainingManaCost}。")
         : view.request.kind=="Surveil"?view.request.maxCount==1?TapPaymentText("选择置顶或入墓。","Choose top or graveyard.","上か墓地を選択。") : TapPaymentText("选择置顶或入墓；同一区域按选择顺序排列。","Choose top or graveyard; order cards in each destination by selection.","上か墓地を選択。同じ領域では選択した順に並びます。")
-        : view.request.kind=="Scry"?view.request.maxCount==1?TapPaymentText("选择置顶或置底。","Choose top or bottom.","上か下を選択。") : TapPaymentText("选择置顶或置底；同一区域先选的牌在上方。","Choose top or bottom; the first card selected in each destination goes on top.","上か下を選択。同じ領域では先に選んだカードが上になります。"):ResolutionChoiceInstruction(view.request.message);
+        : view.request.kind=="Scry"?view.request.maxCount==1?TapPaymentText("选择置顶或置底。","Choose top or bottom.","上か下を選択。") : TapPaymentText("选择置顶或置底；同一区域先选的牌在上方。","Choose top or bottom; the first card selected in each destination goes on top.","上か下を選択。同じ領域では先に選んだカードが上になります。"):ResolutionChoiceInstruction(SelectionMessage(view.request));
+    private static string SelectionMessage(ForgeRequest request)
+    {
+        string message=request.message??"";
+        if(request.kind!="InputSelectTargets"&&request.kind!="SelectStackTarget")return message;
+        int split=message.LastIndexOf("\n\n",StringComparison.Ordinal);
+        if(split<0)return message;
+        string task=message.Substring(split+2).Trim();
+        if(!task.StartsWith("Select ",StringComparison.Ordinal))return message;
+        string clause="Choose "+task.Substring(7).TrimEnd('.');
+        string rule=request.rulesText;
+        if(string.IsNullOrEmpty(rule)&&request.sourceCard!=null) {
+            string prefix=request.sourceCard.name+" ("+request.sourceCard.id+") - ";
+            string context=message.Substring(0,split);
+            if(context.StartsWith(prefix,StringComparison.Ordinal))
+                rule=System.Text.RegularExpressions.Regex.Replace(context.Substring(prefix.Length),@"^(?:\{[^{}]+\}\s*,?\s*)+:\s*","");
+        }
+        // Drop only the repeated native selector, before localization. Keep the
+        // complete effect and any different, narrower or unknown restriction.
+        return rule!=null&&(rule==clause||rule.StartsWith(clause+".",StringComparison.Ordinal))
+            ?message.Substring(0,split):message;
+    }
     private string DiscardSelectionInstruction {
         get {
             int min=view.request.minCount,max=view.request.maxCount;
@@ -199,7 +220,7 @@ public sealed partial class ForgeBattlefieldController
         }
     }
     private bool DirectHandSelection => SelectionHand is ForgePlayerView player && player.handCount<=10;
-    private bool IsCardPickerRequest => view?.awaitingInput==true && view.request!=null && view.request.selectionPurpose!="optionalReplacement" && view.request.selectionPurpose!="roomDoor" &&
+    private bool IsCardPickerRequest => !HasStackTargetChoices && view?.awaitingInput==true && view.request!=null && view.request.selectionPurpose!="optionalReplacement" && view.request.selectionPurpose!="roomDoor" &&
         !DirectHandSelection && !IsManaProductionChoice(view.request) &&
         (view.request.kind=="ChoosePile" || (view.request.previewCards?.Length??0)>0 ||
          (view.request.options??Array.Empty<ForgeOption>()).Any(o=>HasChoiceCard(o) &&
@@ -233,7 +254,7 @@ public sealed partial class ForgeBattlefieldController
             string.Join("|",allCards.OrderBy(c=>c.id).Select(c=>c.id+":"+c.printingKey+":"+c.backFace+":"+c.ownerSeat+":"+c.zone));
         if(!readOnly && key==selectionLayoutKey && selectionPanel!=null) {
             cardSelectionOverlay.gameObject.SetActive(true);
-            cardSelectionOverlay.SetAsLastSibling();
+            cardSelectionOverlay.SetAsLastSibling();SetOverlayLayer(cardSelectionOverlay,DecisionLayerOffset,true);
             selectionPanel.Find("Count").GetComponent<Text>().text=SelectionProgress;
             selectionInstructionText.text=SelectionInstruction;
             RefreshLongSelectionInstruction();
@@ -288,7 +309,7 @@ public sealed partial class ForgeBattlefieldController
             cardSelectionOverlay.anchorMin=Vector2.zero;cardSelectionOverlay.anchorMax=Vector2.one;
             cardSelectionOverlay.offsetMin=cardSelectionOverlay.offsetMax=Vector2.zero;
         }
-        cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();
+        cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();SetOverlayLayer(cardSelectionOverlay,DecisionLayerOffset,true);
         var groups=(request.options??Array.Empty<ForgeOption>()).Where(HasChoiceCard).GroupBy(o=>o.card.id)
             .Select(g=>new {card=g.First().card,options=g.ToArray()}).ToList();
         groups.AddRange(previews.Where(c=>!groups.Any(g=>g.card.id==c.id)).GroupBy(c=>c.id).Select(g=>new {card=g.First(),options=Array.Empty<ForgeOption>()}));
@@ -299,6 +320,7 @@ public sealed partial class ForgeBattlefieldController
         selectionPageFooter=pageCount>1?44:0;
         var visible=groups.Skip(selectionPage*pageSize).Take(pageSize).ToArray();
         string kind=request.kind;
+        bool orderedLibrary=readOnly&&kind=="BrowseLibrary";
         bool destinationChoices=groups.Any(g=>g.options.Length>1);
         bool showDestination=kind=="Scry" || kind=="Surveil";
         bool singleDestination=showDestination&&groups.Count==1;
@@ -318,7 +340,9 @@ public sealed partial class ForgeBattlefieldController
         float rowHeight=artHeight+(singleDestination?28:destinationChoices||showDestination?116:request.selectionPurpose=="removeCounters"?64:28)+targetHintHeight;
         float originHeight=mixedZones?26:0;
         rowHeight+=originHeight;
-        bool castRow=kind=="BrowseZone"&&view?.request?.kind=="InputPassPriority"&&canAct&&!submitted
+        float positionHeight=orderedLibrary?Mathf.Max(28,Mathf.Ceil(24*GamePreferences.TextScale)):0;
+        rowHeight+=positionHeight;
+        bool castRow=(kind=="BrowseZone"||orderedLibrary)&&view?.request?.kind=="InputPassPriority"&&canAct&&!submitted
             &&visible.Any(item=>!item.card.faceDown&&OptionIndex("card:"+item.card.id) is int index&&index>=0&&!view.request.options[index].disabled);
         if(castRow)rowHeight+=40;
         bool legacyCosts=visible.Any(item=>HasLegacyCost(item.card));
@@ -362,7 +386,7 @@ public sealed partial class ForgeBattlefieldController
                 countLabel.rectTransform.sizeDelta=new Vector2(countWidth,Mathf.Max(38,Mathf.Ceil(countLabel.preferredHeight)+4));
             }
         }
-        var prompt=Label(panel,"Instruction",readOnly?TapPaymentText("点击卡牌查看详情","Click a card for details","カードをクリックして詳細を見る"):SelectionInstruction,new Vector2(0,height/2-79),new Vector2(width-48,58),17,Paper);
+        var prompt=Label(panel,"Instruction",orderedLibrary?LibraryBrowserInstruction:readOnly?TapPaymentText("点击卡牌查看详情","Click a card for details","カードをクリックして詳細を見る"):SelectionInstruction,new Vector2(0,height/2-79),new Vector2(width-48,58),17,Paper);
         selectionInstructionText=prompt;selectionInstructionContent=null;
         if(request.selectionPurpose=="chooseSource"){
             (titleLabel.GetComponent<PreferenceText>()??titleLabel.gameObject.AddComponent<PreferenceText>()).SetBaseSize(21);titleLabel.rectTransform.sizeDelta=new Vector2(width-40,44);
@@ -383,7 +407,7 @@ public sealed partial class ForgeBattlefieldController
         float instructionExtra=0;
         // Unknown native descriptions still need a readable, complete fallback.
         bool nativeInstruction=!readOnly&&(SelectionInstruction==request.message||kind=="RevealCards"
-            ||kind=="InputSelectTargets"&&IsSpecializedFace(request.sourceCard));
+            ||kind=="InputSelectTargets"||kind=="SelectStackTarget");
         if(nativeInstruction){prompt.resizeTextForBestFit=false;PreferenceText.SetSize(prompt,17);}
         if(kind=="RevealCards")prompt.rectTransform.sizeDelta=new Vector2(width-62,prompt.rectTransform.sizeDelta.y);
         bool longNativeInstruction=nativeInstruction&&prompt.preferredHeight>58;
@@ -398,8 +422,9 @@ public sealed partial class ForgeBattlefieldController
                 // Reveals include one result line per owner plus the outcome.
                 // Use available screen height before making that result scroll.
                 float instructionRoom=kind=="RevealCards"?Mathf.Max(0,surface.rect.height-36-height-headingExtra)
-                    :Mathf.Max(0,height-186-selectionPageFooter-144-headingExtra);
-                instructionExtra=Mathf.Min(Mathf.Max(0,Mathf.Ceil(prompt.preferredHeight)+4-58),kind=="RevealCards"?160:92,instructionRoom)+headingExtra;
+                    :Mathf.Max(0,surface.rect.height-36-186-selectionPageFooter-144-headingExtra);
+                float instructionLimit=kind=="RevealCards"?160:Mathf.Max(92,surface.rect.height*.3f-58);
+                instructionExtra=Mathf.Min(Mathf.Max(0,Mathf.Ceil(prompt.preferredHeight)+4-58),instructionLimit,instructionRoom)+headingExtra;
             }
             float panelGrowth=Mathf.Min(instructionExtra,Mathf.Max(0,surface.rect.height-36-height));
             height+=panelGrowth;panel.sizeDelta=new Vector2(width,height);
@@ -408,7 +433,7 @@ public sealed partial class ForgeBattlefieldController
             prompt.rectTransform.anchoredPosition+=new Vector2(0,(panelGrowth-instructionExtra-headingExtra)/2);
             prompt.rectTransform.sizeDelta=new Vector2(width-48,58+instructionExtra-headingExtra);
         }
-        if(longNativeInstruction) {
+        if(longNativeInstruction&&prompt.preferredHeight+4>prompt.rectTransform.rect.height) {
             selectionInstructionContent=Scroll(panel,"InstructionScroll",prompt.rectTransform.anchoredPosition,prompt.rectTransform.sizeDelta);
             AddStackScrollIndicator(selectionInstructionContent);
             prompt.rectTransform.SetParent(selectionInstructionContent,false);
@@ -460,6 +485,12 @@ public sealed partial class ForgeBattlefieldController
                 face.onClick.AddListener(()=>ShowReviewDetail(card));
             }
             float y=-artHeight-28-legacyCostHeadroom;
+            if(orderedLibrary) {
+                var position=Label(tile,"LibraryPosition",LibraryPositionLabel(card.libraryPosition,allCards.Length),new Vector2(0,y),new Vector2(artWidth,positionHeight),14,Paper);
+                position.rectTransform.anchorMin=position.rectTransform.anchorMax=new Vector2(.5f,1);
+                position.raycastTarget=false;position.resizeTextForBestFit=false;PreferenceText.SetSize(position,14);
+                y-=positionHeight;
+            }
             if(mixedZones) {
                 var origin=Label(tile,"OriginZone",StackTargetZone(card.zone),new Vector2(0,y),new Vector2(artWidth,24),14,Paper);
                 origin.rectTransform.anchorMin=origin.rectTransform.anchorMax=new Vector2(.5f,1);
@@ -469,7 +500,7 @@ public sealed partial class ForgeBattlefieldController
             // Browsing is read-only except an explicit server-offered cast action.
             // Its availability must not depend on the chosen card renderer.
             int castOption=OptionIndex("card:"+card.id);
-            if(kind=="BrowseZone"&&!card.faceDown&&view?.request?.kind=="InputPassPriority"
+            if((kind=="BrowseZone"||orderedLibrary)&&!card.faceDown&&view?.request?.kind=="InputPassPriority"
                 &&castOption>=0&&!view.request.options[castOption].disabled&&canAct&&!submitted) {
                 long expected=requestId;
                 var cast=Button(tile,"CastComponentCard",TapPaymentText("施放","Cast","唱える"),new Vector2(0,y-6),new Vector2(artWidth,32),()=>{CloseReviewCards();Choose(castOption,expected);},new Color(.18f,.32f,.49f));
@@ -523,7 +554,11 @@ public sealed partial class ForgeBattlefieldController
                     -(mixedZones?originHeight:0)-(showDestination&&!singleDestination?36:0));
             }
         }
-        content.sizeDelta=new Vector2(width-44,Math.Max(height-186-selectionPageFooter,16+Mathf.CeilToInt(visible.Length/(float)columns)*rowHeight));
+        var cardScroll=content.parent.GetComponent<ScrollRect>();
+        float cardViewportHeight=cardScroll.viewport.rect.height;
+        float cardContentHeight=Mathf.Max(cardViewportHeight,16+rows*rowHeight);
+        content.sizeDelta=new Vector2(width-44,cardContentHeight);
+        cardScroll.vertical=cardContentHeight>cardViewportHeight+1;
         if(readOnly) {
             Button(selectionFooter,"CloseReviewCards","关闭",new Vector2(0,-height/2+34+selectionPageFooter),new Vector2(150,44),CloseReviewCards,new Color(.18f,.32f,.49f));
             if(allCards.Length==0)Label(panel,"Empty","暂无卡牌",Vector2.zero,new Vector2(width-48,40),20,Paper);
@@ -620,15 +655,22 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentSelectionGlow(RectTransform tile,RectTransform art,bool chosen)
     {
-        var existing=tile.Find("SelectedGlow");
+        var existing=tile.Find("SelectedGlow") as RectTransform;
         if(existing==null&&chosen) {
             var glow=Rect(tile,"SelectedGlow",Vector2.zero,art.rect.size).gameObject.AddComponent<ForgePlayableGlow>();
-            glow.rectTransform.anchorMin=glow.rectTransform.anchorMax=art.anchorMin;
-            glow.rectTransform.anchoredPosition=art.anchoredPosition;
             glow.selected=true;glow.raycastTarget=false;
-            glow.transform.SetSiblingIndex(art.GetSiblingIndex());existing=glow.transform;
+            existing=glow.rectTransform;
         }
-        if(existing!=null)existing.gameObject.SetActive(chosen);
+        if(existing!=null) {
+            existing.gameObject.SetActive(chosen);
+            if(!chosen)return;
+            existing.anchorMin=existing.anchorMax=art.anchorMin;
+            existing.sizeDelta=art.rect.size;
+            // The shared mesh is centred. Stack cards have a top pivot, while
+            // picker artwork has a centre pivot; align to the actual face centre.
+            existing.anchoredPosition=art.anchoredPosition+art.rect.center;
+            existing.SetAsFirstSibling();
+        }
     }
     private bool IsCrossZoneTargetHeader(ForgeOption option)
     {

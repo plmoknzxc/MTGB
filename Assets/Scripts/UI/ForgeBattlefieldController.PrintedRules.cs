@@ -31,6 +31,27 @@ public sealed partial class ForgeBattlefieldController
     // Only formatting and this source's self-name may differ from its rules.
     private readonly System.Collections.Generic.Dictionary<string,string> printedRuleCache=new();
     private int printedRuleRevision=-1;
+    // Compare a native omission only against its own source paragraph. Never
+    // remove arbitrary parentheses or costs from the text being displayed.
+    private static string WithoutPrintedReminder(string text)
+    {
+        text=text.TrimEnd();
+        while(text.EndsWith(")",StringComparison.Ordinal)||text.EndsWith("）",StringComparison.Ordinal)) {
+            var brackets=new System.Collections.Generic.Stack<char>();int start=-1;
+            for(int i=text.Length-1;i>=0;i--) {
+                char c=text[i];
+                if(c==')'||c=='）')brackets.Push(c);
+                else if(c=='('||c=='（') {
+                    if(brackets.Count==0||brackets.Pop()!=(c=='('?')':'）'))return text;
+                    if(brackets.Count==0){start=i;break;}
+                }
+            }
+            if(start<0)break;
+            text=text.Substring(0,start).TrimEnd();
+        }
+        return text;
+    }
+    private static string WithoutPrintedCost(string text)=>Regex.Replace(text,@"^.*?[:：]\s*","");
     private string PrintedRuleText(ForgeCardView source,string paragraph)
     {
         if(source==null||source.faceDown||string.IsNullOrEmpty(paragraph))return paragraph;
@@ -72,12 +93,20 @@ public sealed partial class ForgeBattlefieldController
             // rows use "enters the battlefield" (or "enters battlefield").
             // Normalize only this equivalent phrase; keep conditions intact.
             value=Regex.Replace(value,@"\benters (?:the )?battlefield\b","enters");
+            // Older native search prompts use "a Island" where the printed
+            // paragraph uses "an Island". This is an article spelling change,
+            // not a different card type or search restriction.
+            value=Regex.Replace(value,@"\bfor an (?=[A-Za-z])","for a ");
             return Regex.Replace(value,@"\s+"," ").Trim();
         }
         var native=Lines(feature?.description??definition?.description);
         string translated=feature!=null?GamePreferences.FeatureRules(feature):GamePreferences.CardRules(definition);
         if(canonical=="Boggart Trawler")translated=Regex.Replace(translated??"",@"\bGoblin Trawler\b",canonical);
-        var localized=Lines(translated);
+        // Some translation rows contain editorial wraps inside a Japanese
+        // sentence. A following grammatical particle continues that sentence;
+        // it is not a new ability paragraph. Keep keyword-only lines separate.
+        string aligned=GamePreferences.Language=="ja-JP"?Regex.Replace((translated??"").Replace("\\n","\n"),@"(?<=[^。！？）)\n])\n(?=[をにがはへともでやの])",""):translated;
+        var localized=Lines(aligned);
         string match=Key(paragraph);
         // Chapters can grant a quoted activation. Its live ability is the
         // quoted text, rather than the entire printed chapter sentence.
@@ -99,14 +128,33 @@ public sealed partial class ForgeBattlefieldController
         }
         // Whole rules do not require identical editorial line breaks.
         if(native.Length>0&&Key(string.Join("\n",native))==match)return translated;
+        var variants=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+        void MatchVariants(string original,string local) {
+            if(Key(original)==match)variants.Add(local);
+            string noReminder=WithoutPrintedReminder(original);
+            if(noReminder!=original&&Key(noReminder)==match)variants.Add(WithoutPrintedReminder(local));
+            string body=WithoutPrintedCost(original);
+            if(body!=original) {
+                if(Key(body)==match)variants.Add(WithoutPrintedCost(local));
+                if(Key(WithoutPrintedReminder(body))==match)variants.Add(WithoutPrintedReminder(WithoutPrintedCost(local)));
+            }
+        }
+        if(native.Length==localized.Length) {
+            for(int i=0;i<native.Length;i++)MatchVariants(native[i],localized[i]);
+            if(variants.Count==1)return variants.Single();
+        }
         if(native.Length!=localized.Length){
-            // Published translations may wrap a multi-sentence paragraph into
-            // several lines. Align intact sentences before giving up on a rule.
-            var english=Regex.Matches(string.Join(" ",native),@"[^.!?\n]+[.!?]?").Cast<Match>().Select(m=>m.Value.Trim()).Where(s=>s.Length>0).ToArray();
-            var local=Regex.Matches(translated,@"[^。！？\n]+[。！？]?").Cast<Match>().Select(m=>m.Value.Trim()).Where(s=>s.Length>0).ToArray();
-            if(english.Length==local.Length){
+            // Reminders can themselves contain sentences, and translations
+            // can wrap inside an activation. Align complete rule sentences,
+            // retaining paragraph boundaries for unpunctuated keyword lines.
+            foreach(bool omitReminder in new[]{true,false}) {
+                var english=native.Select(s=>omitReminder?WithoutPrintedReminder(s):s).SelectMany(line=>Regex.Matches(line,@"[^.!?\n]+[.!?]?").Cast<Match>().Select(m=>m.Value.Trim())).Where(s=>s.Length>0).ToArray();
+                var local=localized.Select(s=>omitReminder?WithoutPrintedReminder(s):s).SelectMany(line=>Regex.Matches(line,@"[^。！？\n]+[。！？]?").Cast<Match>().Select(m=>m.Value.Trim())).Where(s=>s.Length>0).ToArray();
+                if(english.Length!=local.Length||english.Length>128)continue;
+                variants.Clear();
                 for(int first=0;first<english.Length;first++)for(int count=1;count<=english.Length-first;count++)
-                    if(Key(string.Join(" ",english.Skip(first).Take(count)))==match)return string.Join("\n",local.Skip(first).Take(count));
+                    MatchVariants(string.Join("\n",english.Skip(first).Take(count)),string.Join("\n",local.Skip(first).Take(count)));
+                if(variants.Count==1)return variants.Single();
             }
             return paragraph.Contains('\n')?string.Join("\n",Lines(paragraph).Select(line=>PrintedRuleText(source,line))):GamePreferences.NativeText(paragraph);
         }
@@ -130,6 +178,17 @@ public sealed partial class ForgeBattlefieldController
             var localReminder=Regex.Match(localized[i],@"[（(](.+)[）)]$");
             if(!reminder.Success||!localReminder.Success)continue;
             string body=reminder.Groups[1].Value;
+            // Keyword reminders can contain a real delayed/phase trigger.
+            // Match that sentence against this source's own reminder rather
+            // than expecting it to be a separate printed paragraph.
+            string[] Sentences(string value,bool english)=>Regex.Matches(value,english?@"[^.!?]+[.!?]?":@"[^。！？]+[。！？]?")
+                .Cast<Match>().Select(m=>m.Value.Trim()).Where(s=>s.Length>0).ToArray();
+            var reminderNative=Sentences(body,true);
+            var reminderLocal=Sentences(localReminder.Groups[1].Value,GamePreferences.Language=="en-US");
+            if(reminderNative.Length==reminderLocal.Length) {
+                var sentence=Enumerable.Range(0,reminderNative.Length).Where(j=>Key(reminderNative[j])==match).Select(j=>reminderLocal[j]).Distinct().ToArray();
+                if(sentence.Length==1)return sentence[0];
+            }
             string costless=Regex.Replace(body,@"^.*?:\s*","");
             if(Key(body)==match)return localReminder.Groups[1].Value;
             if(Key("("+body+")")==match)return "（"+localReminder.Groups[1].Value+"）";

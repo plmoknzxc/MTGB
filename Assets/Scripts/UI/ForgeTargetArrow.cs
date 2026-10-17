@@ -11,7 +11,7 @@ public sealed class ForgeTargetArrow : MaskableGraphic
     private bool valid;
     private Vector2 desiredFrom, desiredTo;
     private Color desiredColor;
-    private bool initialized, shown=true;
+    private bool initialized, shown=true, direct;
     private float opacity, reveal, ring;
     public void SetVisible(bool visible)
     {
@@ -20,17 +20,20 @@ public sealed class ForgeTargetArrow : MaskableGraphic
     }
     protected override void OnEnable()
     {base.OnEnable();initialized=false;opacity=0;reveal=0;ring=0;}
-    public void SetEndpoints(Vector2 start, Vector2 end, Color tint, bool isValid=false)
+    public void SetEndpoints(Vector2 start, Vector2 end, Color tint, bool isValid=false, bool followPointer=false)
     {
-        desiredFrom=start;desiredTo=end;desiredColor=tint;valid=isValid;
+        desiredFrom=start;desiredTo=end;desiredColor=tint;valid=isValid;direct=followPointer;
         if(!initialized){from=start;to=end;color=tint;initialized=true;}
+        // A drop uses the current pointer. Its visible tip must reach that same
+        // point in this frame, including immediately after the arrow opens.
+        if(direct){from=start;to=end;color=tint;reveal=1;}
         SetVerticesDirty();
     }
     private void LateUpdate()
     {
         float dt=Time.unscaledDeltaTime;
         from=desiredFrom;
-        to=Vector2.Lerp(to,desiredTo,1-Mathf.Exp(-32*dt));
+        to=direct?desiredTo:Vector2.Lerp(to,desiredTo,1-Mathf.Exp(-32*dt));
         color=Color.Lerp(color,desiredColor,1-Mathf.Exp(-20*dt));
         opacity=Mathf.MoveTowards(opacity,shown?1:0,dt/ .14f);
         reveal=Mathf.MoveTowards(reveal,shown?1:0,dt/ .18f);

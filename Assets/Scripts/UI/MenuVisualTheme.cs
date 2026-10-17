@@ -39,7 +39,7 @@ public static class MenuVisualTheme
     {
         var t = Find(root, name)?.GetComponent<Text>();
         if (t == null) return;
-        t.text = value; t.fontSize = size; t.color = Paper;
+        t.text = value; PreferenceText.SetSize(t,size); t.color = Paper;
     }
 
     private static void Background(Transform root, float opacity)
@@ -61,7 +61,7 @@ public static class MenuVisualTheme
         foreach (var t in root.GetComponentsInChildren<Text>(true))
         {
             t.color = t.name.Contains("Help") || t.name == "Kicker" || t.name == "Subtitle" ? Muted : Paper;
-            if (t.name == "Kicker") { t.color = Accent; t.fontSize = 14; }
+            if (t.name == "Kicker") { t.color = Accent; PreferenceText.SetSize(t,14); }
         }
         foreach (var i in root.GetComponentsInChildren<Image>(true))
         {
@@ -117,7 +117,7 @@ public static class MenuVisualTheme
         {
             var button = Find(start, name);
             var label = button.Find("Text") as RectTransform;
-            if (label != null) { Stretch(label, 12); label.offsetMin = new Vector2(24, 12); label.GetComponent<Text>().fontSize = 26; }
+            if (label != null) { Stretch(label, 12); label.offsetMin = new Vector2(24, 12); PreferenceText.SetSize(label.GetComponent<Text>(),26); }
         }
 
     }
@@ -156,7 +156,7 @@ public static class MenuVisualTheme
         dropdown.itemText.verticalOverflow = VerticalWrapMode.Overflow;
         dropdown.itemText.alignment = TextAnchor.MiddleLeft;
         dropdown.itemText.color = Paper;
-        dropdown.itemText.fontSize = 20;
+        PreferenceText.SetSize(dropdown.itemText,20);
         // Stencil masks need opaque pixels even when the mask graphic is hidden.
         var viewport = template.GetComponent<ScrollRect>().viewport;
         viewport.GetComponent<Image>().color = Color.white;

@@ -37,21 +37,36 @@ public sealed partial class ForgeBattlefieldController
         return playerNamesKey;
     }
 
+    // Carry native identity through generated prose without adding visible IDs.
+    private static string PlayerTextReference(int playerSeat)=>"\uE000"+playerSeat+"\uE001";
+
     // The surrounding fixed words have already been localized. A nickname is
     // literal user data, even if it happens to equal a key such as "Ready".
     private string PlayerNamesRichText(string value,int exactSeat=0)
     {
         value=value??"";
-        if(service?.IsSpectator==true||(view?.players?.Length??0)!=2)return SafeDetail(value);
+        bool colors=service?.IsSpectator!=true&&(view?.players?.Length??0)==2;
         string Color(int player)=>player==seat?"#5DB9F5":"#F17C7C";
-        if(exactSeat>0)return ColoredDetail(value,Color(exactSeat));
+        if(exactSeat>0)return colors?ColoredDetail(value,Color(exactSeat)):SafeDetail(value);
+        var references=System.Text.RegularExpressions.Regex.Matches(value,"\uE000([0-9]+)\uE001");
+        if(references.Count>0) {
+            var resolved=new System.Text.StringBuilder();int from=0;
+            foreach(System.Text.RegularExpressions.Match reference in references) {
+                resolved.Append(PlayerNamesRichText(value.Substring(from,reference.Index-from)));
+                int player=int.Parse(reference.Groups[1].Value);
+                resolved.Append(PlayerNamesRichText(PlayerDisplayName(player),player));
+                from=reference.Index+reference.Length;
+            }
+            return resolved.Append(PlayerNamesRichText(value.Substring(from))).ToString();
+        }
+        if(!colors)return SafeDetail(value);
         var names=view.players.Where(p=>p.seat>0).Select(p=>new{p.seat,name=PlayerDisplayName(p.seat)})
             .GroupBy(p=>p.name).Where(g=>g.Count()==1).Select(g=>g.First()).OrderByDescending(p=>p.name.Length).ToArray();
         if(names.Length==0)return SafeDetail(value);
         string pattern=string.Join("|",names.Select(p=>
-            (p.name[0]<128&&char.IsLetterOrDigit(p.name[0])?@"(?<![\p{L}\p{N}_/{])":"")
+            (p.name[0]<128&&char.IsLetterOrDigit(p.name[0])?@"(?<![A-Za-z0-9_/{])":"")
             +System.Text.RegularExpressions.Regex.Escape(p.name)
-            +(p.name[p.name.Length-1]<128&&char.IsLetterOrDigit(p.name[p.name.Length-1])?@"(?![\p{L}\p{N}_/}])":"")));
+            +(p.name[p.name.Length-1]<128&&char.IsLetterOrDigit(p.name[p.name.Length-1])?@"(?![A-Za-z0-9_/}])":"")));
         var result=new System.Text.StringBuilder();int at=0;
         foreach(System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(value,pattern)) {
             result.Append(SafeDetail(value.Substring(at,match.Index-at)));

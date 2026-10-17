@@ -66,6 +66,12 @@ public sealed class PreferenceText : MonoBehaviour
         // Hidden labels can receive layout updates before Unity calls Awake.
         // Bind once here too, retaining the original text/size when later activated.
         if(!EnsureInitialized()) return;
+        // Factories may bind a label before InputField.textComponent is assigned.
+        // Refresh this role before translating later user-entered values.
+        var input=GetComponentInParent<InputField>();
+        var tmpInput=GetComponentInParent<TMP_InputField>();
+        inputText=input!=null&&input.textComponent==text || tmpInput!=null&&tmpInput.textComponent==tmp;
+        userText=inputText || GetComponentInParent<Dropdown>()!=null;
         if(Current!=last) source=Current;
         revision=GamePreferences.Revision;
         last=userText||Literal?source:GamePreferences.T(source ?? ""); Current=last;

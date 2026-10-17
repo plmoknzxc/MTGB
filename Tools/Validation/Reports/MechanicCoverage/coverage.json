@@ -2,7 +2,7 @@
   "scope": "Controlled Forge games using the production bridge. Passing covers only the listed assertions; Unity input/rendering and other cards or edge cases remain unverified.",
   "provenance": {
     "revision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
-    "fingerprint": "60b125bee4e81e1cf0f829a9ea1e7099b29cf9386a7830fb80f77dc87006b83c",
+    "fingerprint": "ff91324188edd4cc37ccc186af3c2819a4dae93830fb4ec4ebce266936130ba9",
     "cardScripts": 33980,
     "scriptRoots": {
       "cardsfolder": 33980,

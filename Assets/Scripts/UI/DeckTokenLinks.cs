@@ -160,6 +160,15 @@ public static class DeckTokenLinks
         return clause;
     }
 
+    // Native token objects append " Token" to a type name; reuse the existing
+    // published subtype translations rather than inventing a second glossary.
+    public static string GeneratedTokenName(string name)
+    {
+        if(GamePreferences.Language=="en-US"||!name.EndsWith(" Token",StringComparison.Ordinal))return null;
+        string type=name.Substring(0,name.Length-6);
+        string translated=GamePreferences.Language=="ja-JP"?TranslateJapanese(type):Translate(type);
+        return translated==type?null:translated+(GamePreferences.Language=="ja-JP"?"・トークン":"衍生物");
+    }
     private static string Translate(string name,bool legacy=false)
     {
         if(localTypes==null)

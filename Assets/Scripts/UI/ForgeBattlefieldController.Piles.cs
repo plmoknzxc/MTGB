@@ -14,7 +14,7 @@ public sealed partial class ForgeBattlefieldController
         string key="pile/"+request.requestId+"/"+surface.rect.size+"/"+GamePreferences.Revision;
         if(pileRequest!=request.requestId){pileRequest=request.requestId;selectedPileIndex=-1;}
         if(selectionLayoutKey==key && selectionPanel!=null) {
-            cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();
+            cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();SetOverlayLayer(cardSelectionOverlay,DecisionLayerOffset,true);
             UpdatePileSelection();return;
         }
         selectionLayoutKey=key;
@@ -23,7 +23,7 @@ public sealed partial class ForgeBattlefieldController
             cardSelectionOverlay.anchorMin=Vector2.zero;cardSelectionOverlay.anchorMax=Vector2.one;
             cardSelectionOverlay.offsetMin=cardSelectionOverlay.offsetMax=Vector2.zero;
         }
-        Clear(cardSelectionOverlay);cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();
+        Clear(cardSelectionOverlay);cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();SetOverlayLayer(cardSelectionOverlay,DecisionLayerOffset,true);
         float width=Mathf.Min(1000,surface.rect.width-40),height=Mathf.Min(690,surface.rect.height-40);
         selectionPanel=Panel(cardSelectionOverlay,"PileSelection",Vector2.zero,new Vector2(width,height),Ink);
         Label(selectionPanel,"Title",TapPaymentText("选择一堆牌","Choose a pile","束を選択"),new Vector2(0,height/2-29),new Vector2(width-40,52),24,Paper);

@@ -77,7 +77,7 @@
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
       "sourceSha256": "c59dd2afb0c2d276e1ce2a88c9a1463c5ff00a93634565ee34a56e5ed35a79b7",
       "javaPath": "forge/game/cost/CostAdjustment.java",
-      "reason": "A validated native RaiseTo minimum is captured after taxes/reductions and before convoke/delve; later Phyrexian life choices must maintain that floor. Applies the static ability requirements, including untapped Trinisphere, rather than matching card names.",
+      "reason": "A validated native RaiseTo minimum is captured after taxes/reductions and before convoke/delve; later Phyrexian life choices must maintain that floor. Applies the static ability requirements, including untapped Trinisphere, rather than matching card names. Predictive test adjustment must not clear live delve history or reserve live offering/emerge material; preview reservations are scoped by the bridge.",
       "changes": [
         {
           "before": "        manaCost.increaseGenericMana(value);\n    }\n\n    /**\n     * Applies applyReduceCostAbility ability.",
@@ -86,6 +86,46 @@
         {
           "before": "                if (c.tap(true, sa, payer)) tapped.add(c);",
           "after": "                if (c.tap(true, sa, payer)) {\n                    tapped.add(c);\n                    sa.setSVar(\"MTGBNonmanaTapped\", sa.getSVar(\"MTGBNonmanaTapped\") + c.getId() + \",\");\n                }"
+        },
+        {
+          "before": "                host.clearDelved();",
+          "after": "                if (!test) host.clearDelved();"
+        },
+        {
+          "before": "            adjustCostByOffering(cost, sa);",
+          "after": "            adjustCostByOffering(cost, sa, test);"
+        },
+        {
+          "before": "            adjustCostByEmerge(cost, sa, emerge);",
+          "after": "            adjustCostByEmerge(cost, sa, emerge, test);"
+        },
+        {
+          "before": "private static void adjustCostByOffering(final ManaCostBeingPaid cost, final SpellAbility sa) {",
+          "after": "private static void adjustCostByOffering(final ManaCostBeingPaid cost, final SpellAbility sa, final boolean test) {"
+        },
+        {
+          "before": "private static void adjustCostByEmerge(final ManaCostBeingPaid cost, final SpellAbility sa, final Emerge emerge) {",
+          "after": "private static void adjustCostByEmerge(final ManaCostBeingPaid cost, final SpellAbility sa, final Emerge emerge, final boolean test) {"
+        },
+        {
+          "before": "        sa.setSacrificedAsOffering(toSac);\n        toSac.setUsedToPay(true);",
+          "after": "        sa.setSacrificedAsOffering(toSac);\n        if (!test) toSac.setUsedToPay(true);"
+        },
+        {
+          "before": "        sa.setSacrificedAsEmerge(toSac);\n        toSac.setUsedToPay(true);",
+          "after": "        sa.setSacrificedAsEmerge(toSac);\n        if (!test) toSac.setUsedToPay(true);"
+        },
+        {
+          "before": "     * Applies applyRaiseCostAbility ability.\n     * \n",
+          "after": "     * Applies applyRaiseCostAbility ability.\n     *\n"
+        },
+        {
+          "before": "     * Applies applyReduceCostAbility ability.\n     * \n",
+          "after": "     * Applies applyReduceCostAbility ability.\n     *\n"
+        },
+        {
+          "before": "        return 0;\n    }    \n\n    private static boolean checkRequirement",
+          "after": "        return 0;\n    }\n\n    private static boolean checkRequirement"
         }
       ]
     },
@@ -576,7 +616,7 @@
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
       "sourceSha256": "1d53cdcb0974825f7fc0310e5def0131e8b8a15ccb30fc009569b4efb62ce255",
       "javaPath": "forge/game/GameAction.java",
-      "reason": "Actual Apex Observatory craft skipped Shared as-enters selection because paid materials were retained only after replacement processing. Move the existing craft-only retention earlier; native cost and material IDs unchanged. Actual Meld split offered no native owner order. Reuse native orderMoveToZoneList, retain transient component DTOs and insert the linked card at its selected relative position. Library and graveyard list directions differ; actual top/bottom and ordered-graveyard results checked.",
+      "reason": "Actual Apex Observatory craft skipped Shared as-enters selection because paid materials were retained only after replacement processing. Move the existing craft-only retention earlier; native cost and material IDs unchanged. Actual Meld split offered no native owner order. Reuse native orderMoveToZoneList, retain transient component DTOs and insert the linked card at its selected relative position. Library and graveyard list directions differ; actual top/bottom and ordered-graveyard results checked. Library knowledge observers receive the exact synchronous move subability; scoped notification context restores after nested events and exceptions without changing move resolution.",
       "changes": [
         {
           "before": "            if (cause != null && cause.isCraft() && toBattlefield) { // retain cards crafted while ETB transformed\n                copied.retainPaidList(cause, \"ExiledCards\");\n            }\n",
@@ -589,6 +629,18 @@
         {
           "before": "                if (unmeldPosition != null && (zoneTo.is(ZoneType.Library) || zoneTo.is(ZoneType.Graveyard))) {\n                    // Ask controller if it wants to be on top or bottom of other meld.\n                    unmeldPosition++;\n                }\n                unmeld = changeZone(null, zoneTo, unmeld, position, cause, params);",
           "after": "                if (zoneTo.is(ZoneType.Library) || zoneTo.is(ZoneType.Graveyard)) {\n                    // The copied primary is already in its destination and has its\n                    // original front face. Let the owner order both physical cards.\n                    final CardCollection parts = new CardCollection();\n                    parts.add(copied);\n                    parts.add(unmeld);\n                    final CardCollectionView ordered = c.getOwner().getController()\n                            .orderMoveToZoneList(parts, zoneTo.getZoneType(), cause);\n                    final int primaryPosition = zoneTo.getCards().indexOf(copied);\n                    if (primaryPosition >= 0) {\n                        // Native choices are bottom-first (top-library choices\n                        // are reversed upstream), but graveyard lists grow upward.\n                        final boolean primaryFirst = ordered.getFirst().equals(copied);\n                        final boolean insertAfter = zoneTo.is(ZoneType.Graveyard)\n                                ? primaryFirst : !primaryFirst;\n                        unmeldPosition = primaryPosition + (insertAfter ? 1 : 0);\n                    }\n                }\n                unmeld = changeZone(null, zoneTo, unmeld, unmeldPosition, cause, params);"
+        },
+        {
+          "before": "    private Card changeZone(final Zone zoneFrom, Zone zoneTo, final Card c, Integer position, SpellAbility cause, Map<AbilityKey, Object> params) {",
+          "after": "    // Expose only the cause of the synchronous move notification, including subabilities.\n    private SpellAbility zoneChangeCause;\n    public SpellAbility getZoneChangeCause() { return zoneChangeCause; }\n    private void fireZoneChange(Card card, Zone from, Zone to, SpellAbility cause) {\n        SpellAbility previous = zoneChangeCause;\n        zoneChangeCause = cause;\n        try { game.fireEvent(new GameEventCardChangeZone(card, from, to)); }\n        finally { zoneChangeCause = previous; }\n    }\n\n    private Card changeZone(final Zone zoneFrom, Zone zoneTo, final Card c, Integer position, SpellAbility cause, Map<AbilityKey, Object> params) {"
+        },
+        {
+          "before": "            game.fireEvent(new GameEventCardChangeZone(c, zoneFrom, zoneTo));",
+          "after": "            fireZoneChange(c, zoneFrom, zoneTo, cause);"
+        },
+        {
+          "before": "        game.fireEvent(new GameEventCardChangeZone(c, zoneFrom, zoneTo));",
+          "after": "        fireZoneChange(c, zoneFrom, zoneTo, cause);"
         }
       ]
     },
@@ -837,6 +889,27 @@
         {
           "before": "            // look for all possible editions\n            for (CardEdition e : editions) {",
           "after": "            // Probe only editions containing one of the native names, in original order.\n            List<String> names = new ArrayList<>();\n            names.add(cr.getName());\n            if (!cardName.equalsIgnoreCase(cr.getName())) names.add(cardName);\n            if (cr.hasFunctionalVariants() && cr.getSupportedFunctionalVariants() != null) {\n                for (String variantName : cr.getSupportedFunctionalVariants()) {\n                    String flavorName = cr.getDisplayNameForVariant(variantName);\n                    if (flavorName != null) names.add(flavorName);\n                }\n            }\n            for (CardEdition e : editions.getEditionsContaining(names)) {"
+        }
+      ]
+    },
+    {
+      "id": "independent-predictive-payment-lists",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/spellability/SpellAbility.java",
+      "sourceSha256": "178ffb6e39ab4dd720964a9ba6e177b76bdd026a36bf9fabaeafb6e518cf267b",
+      "javaPath": "forge/game/spellability/SpellAbility.java",
+      "reason": "Native shallow copies share lazy pipsToReduce and tappedForConvoke suppliers. Cost/controller predictions for one card can overwrite live scratch payment state on a different card. Copy these collections at the existing ability-copy boundary; do not change actual cost choices or rules.",
+      "changes": [
+        {
+          "before": "    private final Supplier<List<String>> pipsToReduce = Suppliers.memoize(ArrayList::new);",
+          "after": "    private Supplier<List<String>> pipsToReduce = Suppliers.memoize(ArrayList::new);"
+        },
+        {
+          "before": "    private final Supplier<CardCollection> tappedForConvoke = Suppliers.memoize(CardCollection::new);",
+          "after": "    private Supplier<CardCollection> tappedForConvoke = Suppliers.memoize(CardCollection::new);"
+        },
+        {
+          "before": "            clone.payingMana = Lists.newArrayList(payingMana);",
+          "after": "            // Prediction and announcement must not share mutable payment lists.\n            clone.pipsToReduce = Suppliers.ofInstance(Lists.newArrayList(pipsToReduce.get()));\n            clone.tappedForConvoke = Suppliers.ofInstance(new CardCollection(tappedForConvoke.get()));\n            clone.payingMana = Lists.newArrayList(payingMana);"
         }
       ]
     }

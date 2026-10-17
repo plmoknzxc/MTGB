@@ -35,6 +35,7 @@ public sealed partial class ForgeBattlefieldController
                 var offered=(view?.request?.options??Array.Empty<ForgeOption>()).Select(x=>x.castingFace)
                     .FirstOrDefault(x=>x!=null&&x.id==card.id&&x.name==feature.cardName);
                 if(offered?.previewManaCost!=null)return offered.previewManaCost;
+                if(feature==secondary&&card.secondaryPreviewManaCost!=null)return card.secondaryPreviewManaCost;
                 if(feature==secondary&&d.forgeSplitType=="Adventure"&&card.adventurePreviewManaCost!=null)return card.adventurePreviewManaCost;
                 if(feature==f&&(!pair||card.name==feature.cardName)&&card.previewManaCost!=null)return card.previewManaCost;
             }

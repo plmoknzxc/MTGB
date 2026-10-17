@@ -11,7 +11,7 @@ description: 在 MTGB 项目盘点机制缺口、复用 Forge 结算与 Unity �
 
 从当前工作区读取 `AGENTS.md`、`Docs/MechanicValidation.zh-CN.md`，接续长期任务时读取 `Docs/MechanicValidationGoal.zh-CN.md` 的目标、验收标准与最新状态。涉及规则资料、翻译、卡图时再完整读取 `Docs/CardDataAuthoring.zh-CN.md`。沿用用户对暂停、语言、本地图和展示样式的决定；盘点或修改 skill 不自动恢复暂停的 goal。
 
-结构发现按项目图工具规则执行；图不可用时记录错误，读取准确源文件，限定结论范围。机制盘点或规则／桥接变更需要刷新覆盖清单时，使用 `python -X utf8 Tools/ForgeBridge/MechanicCoverage.py`，不带 `--run`。纯局部展示修正、skill 文档维护和缓存清理不自动触发全机制清单刷新或效果回归。首次使用及交接读取 [references/verification-method.md](references/verification-method.md) 的证据口径与增量决策；涉及 Unity 展示时再读取 [references/ui-reuse.md](references/ui-reuse.md) 对应的控件、反例和验证入口。用户要求清理本项目缓存或核对磁盘占用时，读取 [references/workspace-maintenance.md](references/workspace-maintenance.md)。
+结构发现按项目图工具规则执行；图不可用时记录错误，读取准确源文件，限定结论范围。机制盘点或规则／桥接变更需要刷新覆盖清单时，使用 `python -X utf8 Tools/ForgeBridge/MechanicCoverage.py`，不带 `--run`。纯局部展示修正、skill 文档维护和缓存清理不自动触发全机制清单刷新或效果回归。首次使用及交接读取 [references/verification-method.md](references/verification-method.md) 的证据口径与增量决策；涉及 Unity 展示时再读取 [references/ui-reuse.md](references/ui-reuse.md) 对应的控件、反例和验证入口。 发布既有优化、合并桌面累计包或覆盖客户端时，读取 [references/release.md](references/release.md) 的身份、累积载荷和部署检查。用户要求清理本项目缓存或核对磁盘占用时，读取 [references/workspace-maintenance.md](references/workspace-maintenance.md)。
 
 ## 每轮开始的磁盘检查
 

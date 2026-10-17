@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,10 +25,10 @@ public sealed partial class ForgeBattlefieldController
     private void ShowStackHover(StackCardVisual item)
     {
         if(item.source==null)return;
-        InspectIntegrated(item.source);
+        InspectIntegratedCore(item.source,item.entry?.kind=="spell");
         inspectedCardId=0; // Stack ability details must not be replaced by its source land.
         if(item.entry!=null && item.entry.kind!="spell") {
-            string rules=AbilityEffectText(item.source,item.entry.description);
+            string rules=NamedAbilityEffectText(item.source,item.entry.description);
             if((item.entry.targets?.Length??0)>0) {
                 string targetLine="\n"+TapPaymentText("目标：","Targets: ","対象：");
                 int at=rules.LastIndexOf(targetLine,StringComparison.Ordinal);if(at>=0)rules=rules.Substring(0,at);
@@ -64,7 +64,7 @@ public sealed partial class ForgeBattlefieldController
         }
         float width=Mathf.Min(surface.rect.width-100,Mathf.Max(540,entries.Length*238+36));
         if(abilityOrder==null)abilityOrder=Panel(surface,"AbilityOrder",Vector2.zero,new Vector2(width,548),Ink);
-        abilityOrder.gameObject.SetActive(true);abilityOrder.SetAsLastSibling();
+        abilityOrder.gameObject.SetActive(true);SetOverlayLayer(abilityOrder,DecisionLayerOffset,true);abilityOrder.SetAsLastSibling();
         string key=string.Join("|",entries.OrderBy(e=>e.id).Select(e=>e.id+":"+e.description+":"+ServerSnapshotJson.Serialize(e.source)))+"/"+width+"/"+replacement+"/"+optional+"/"+GamePreferences.Revision;
         bool rebuild=abilityOrderKey!=key;
         if(rebuild){
@@ -148,16 +148,16 @@ public sealed partial class ForgeBattlefieldController
         var entries=view?.stackItems ?? Array.Empty<ForgeStackItem>();
         var text=view?.stack ?? Array.Empty<string>();
         int count=Math.Max(entries.Length,text.Length);
-        // Open a small fan; a long stack uses the compact fan and overview.
-        bool small=count<=3;
-        float spread=small?Mathf.Max(0,count-1)*52:Mathf.Min((count-1)*22,140);
-        float depth=small?Mathf.Max(0,count-1)*18:Mathf.Min((count-1)*5,36);
-        float angle=small?Mathf.Max(0,count-1)*6:Mathf.Min((count-1)*2.5f,15);
+        // Keep the dock bounded. The independent overview exposes every object.
+        bool choosingStack=IsTargeting&&view.request.kind=="SelectStackTarget";
+        float spread=Mathf.Min(Mathf.Max(0,count-1)*36,120);
+        float depth=Mathf.Min(Mathf.Max(0,count-1)*10,36);
+        float angle=Mathf.Min(Mathf.Max(0,count-1)*3,3);
         float columnWidth=288+spread;
-        float contentHeight=cardHeight+depth+(small?24:54);
+        float contentHeight=cardHeight+depth+86;
         // Requests change the controls, never the stack's battlefield dock.
-        const float stackTop=300;
-        float viewportHeight=Mathf.Min(Mathf.Min(620,Mathf.Max(408,contentHeight)),Mathf.Max(220,surface.rect.height-stackTop-230));
+        const float stackTop=260;
+        float viewportHeight=Mathf.Min(Mathf.Min(430,Mathf.Max(408,contentHeight)),Mathf.Max(220,surface.rect.height-stackTop-270));
         var column=(RectTransform)Node("StackColumn");
         column.sizeDelta=new Vector2(columnWidth,viewportHeight+40);
         ForgeUiMotion.On(column).Cancel();
@@ -179,10 +179,10 @@ public sealed partial class ForgeBattlefieldController
         ((RectTransform)Node("StackColumn/Header")).sizeDelta=new Vector2(280,28);
         SetText("StackColumn/Header","");
         PresentStackControls(column,count,viewport,viewportHeight);
-        string key=string.Join("|",entries.Select(e=>e.id+":"+e.description))+"/"+string.Join("|",text);
+        string key=string.Join("|",entries.Select(e=>e.id+":"+e.description))+"/"+string.Join("|",text)+"/"+viewportHeight+"/"+contentHeight;
         stackContent.anchorMin=stackContent.anchorMax=stackContent.pivot=new Vector2(.5f,1);
         stackContent.sizeDelta=new Vector2(columnWidth-16,Math.Max(viewportHeight,contentHeight));
-        if(key!=stackLayoutKey){scroll.StopMovement();stackContent.anchoredPosition=Vector2.zero;stackLayoutKey=key;}
+        if(key!=stackLayoutKey){scroll.StopMovement();stackContent.anchoredPosition=new Vector2(0,Mathf.Max(0,contentHeight-viewportHeight));stackLayoutKey=key;}
         if(stackScrollbar==null)
         {
             var track=Panel(column,"StackScrollbar",Vector2.zero,new Vector2(6,viewportHeight-16),new Color(.15f,.2f,.24f,.8f));
@@ -204,7 +204,7 @@ public sealed partial class ForgeBattlefieldController
             retained.Add(id);
             bool created=!stackCards.TryGetValue(id,out var item);
             float fraction=count>1?i/(float)(count-1):0;
-            Vector2 position=new Vector2(spread*.5f-fraction*spread,-(small?1-fraction:fraction)*depth-8);
+            Vector2 position=new Vector2(spread*.5f-fraction*spread,-(1-fraction)*depth-44);
             if(created)
             {
                 item=new StackCardVisual();
@@ -224,7 +224,7 @@ public sealed partial class ForgeBattlefieldController
                 item.fallback.raycastTarget=false;
                 var button=item.tile.gameObject.AddComponent<Button>();button.targetGraphic=item.image;button.transition=Selectable.Transition.None;
                 var captured=item;button.onClick.AddListener(()=>{
-                    if(IsTargeting && captured.entry!=null){Choose(OptionIndex("stack:"+captured.entry.id),requestId);return;}
+                    if(IsTargeting && !HasStackTargetChoices && captured.entry!=null){Choose(OptionIndex("stack:"+captured.entry.id),requestId);return;}
                 });
                 item.tile.gameObject.AddComponent<ForgeBattlefieldCardPointer>().Configure(()=>{
                     hoveredStack=captured;ShowStackHover(captured);
@@ -239,10 +239,12 @@ public sealed partial class ForgeBattlefieldController
             bool ability=item.entry!=null && item.entry.kind!="spell";
             item.rim.sprite=ability?AbilityShape():null;
             item.row.Find("Shadow").GetComponent<Image>().sprite=ability?AbilityShape():null;
-            ForgeUiMotion.On(item.row).MoveTo(position,item.row.sizeDelta,angle:fraction*angle,seconds:.26f);
+            ForgeUiMotion.On(item.row).MoveTo(position,item.row.sizeDelta,angle:fraction*angle,seconds:choosingStack?0:.26f);
             int targetOption=item.entry!=null?OptionIndex("stack:"+item.entry.id):-1;
-            bool targetSelected=targetOption>=0 && view.request.options[targetOption].selected;
-            item.rim.color=targetSelected?Gold:IsTargeting && targetOption>=0?new Color(.1f,.9f,1):i==0?new Color(.67f,.76f,.8f,.85f):new Color(.28f,.36f,.42f,.8f);
+            bool targetLegal=targetOption>=0&&!view.request.options[targetOption].disabled;
+            bool targetSelected=item.entry!=null&&StackTargetSelected("stack:"+item.entry.id);
+            item.tile.GetComponent<Button>().interactable=!HasStackTargetChoices&&(!IsTargeting||targetLegal);
+            item.rim.color=targetSelected?Gold:IsTargeting && targetLegal?new Color(.1f,.9f,1):i==0?new Color(.67f,.76f,.8f,.85f):new Color(.28f,.36f,.42f,.8f);
             string printing=source!=null && !source.faceDown?source.printingKey:"";
             string artKey=printing+"/"+source?.backFace+"/"+GamePreferences.Language;
             if(IsSpecializedFace(source))artKey+="/"+source.stateName+"/"+source.name;
@@ -256,6 +258,7 @@ public sealed partial class ForgeBattlefieldController
             item.fallback.text=source?.name ?? (i<text.Length?text[i]:"堆叠");
             item.fallback.gameObject.SetActive(item.image.sprite==null && !ability);
             PresentAbilityFace(item.tile,source,item.entry?.description,item.entry?.kind,ability);
+            PresentSpentMana(item.row,source,new Vector2(0,-cardHeight-18),cardWidth);
             Sprite chosenArt=item.image.sprite;
             if(chosenArt==null&&HasSpellChoices(item.entry))TryBattlefieldArt(source,out chosenArt);
             PresentPreparedSpellFace(item.tile,source,new Vector2(cardWidth,cardHeight));
@@ -263,20 +266,22 @@ public sealed partial class ForgeBattlefieldController
             if(!ability)PresentComponentFace(item.tile,source);
             if(HasSpellChoices(item.entry))item.fallback.gameObject.SetActive(false);
             if(item.tile.Find("PreparedSpellFace")?.gameObject.activeSelf==true)item.fallback.gameObject.SetActive(false);
-            item.glow.Configure(ability,i==0);
+            item.glow.Configure(ability,!IsTargeting&&i==0);
             // Follow the actual card rectangle, including its top pivot. The
             // highlight belongs to this face, never to a fan/row-sized overlay.
             item.glow.rectTransform.anchorMin=Vector2.zero;
             item.glow.rectTransform.anchorMax=Vector2.one;
             item.glow.rectTransform.offsetMin=item.glow.rectTransform.offsetMax=Vector2.zero;
             item.glow.transform.SetAsLastSibling();
-            string owner=i<entries.Length?(entries[i].controllerSeat==seat?"你":"对手"):"";
-            item.caption.text=(i+1)+" · "+owner+(item.entry?.copied==true?" · 复制":"")+(targetSelected?" · ✓":i==0?" · 先结算":"");
-            item.caption.rectTransform.anchoredPosition=new Vector2(0,-cardHeight-20);
+            var badge=item.tile.Find("StackPositionBadge") as RectTransform;
+            if(badge==null) {
+                badge=Panel(item.tile,"StackPositionBadge",new Vector2(-84,-16),new Vector2(76,26),new Color(.035f,.065f,.095f,.94f));
+                badge.anchorMin=badge.anchorMax=new Vector2(.5f,1);badge.GetComponent<Image>().raycastTarget=false;
+                Label(badge,"Text","",Vector2.zero,new Vector2(74,26),14,Paper).raycastTarget=false;
+            }
+            badge.Find("Text").GetComponent<Text>().text=StackPositionLabel(i+1);badge.SetAsLastSibling();
             item.caption.gameObject.SetActive(false);
-            item.caption.resizeTextForBestFit=true;item.caption.resizeTextMinSize=10;item.caption.resizeTextMaxSize=14;
-            item.caption.horizontalOverflow=HorizontalWrapMode.Overflow;
-            item.caption.color=i==0?new Color(.7f,.85f,.92f):Paper;
+            PresentSelectionGlow(item.row,item.tile,targetSelected);
             if(created && !stackCollapsed && source?.id!=castingCardId)AnimateStackArrival(item,i<entries.Length?entries[i].controllerSeat:seat);
         }
         foreach(var id in stackCards.Keys.Where(id=>!retained.Contains(id)).ToArray())
@@ -286,7 +291,8 @@ public sealed partial class ForgeBattlefieldController
             item.row.gameObject.SetActive(false);Destroy(item.row.gameObject);stackCards.Remove(id);
         }
         if(hoveredStack!=null)ShowStackHover(hoveredStack);
-        // Drawing order is independent of engine order and card identity.
+        // The first resolving object stays in front. Legal targets never change
+        // drawing order. The overview handles crowded stacks and target inspection.
         foreach(var item in stackCards.Values.OrderByDescending(c=>int.Parse(c.row.name.Substring("StackEntry_".Length))))item.row.SetAsLastSibling();
     }
 

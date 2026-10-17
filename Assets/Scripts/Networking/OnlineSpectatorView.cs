@@ -23,6 +23,8 @@ public static class OnlineSpectatorView
                 players=(view.players??Array.Empty<ForgePlayerView>()).Select(p=>new ForgePlayerView {
                     seat=p.seat,controllingSeat=p.controllingSeat,targetId=p.targetId,life=p.life,handCount=p.handCount,libraryCount=p.libraryCount,
                     libraryTop=p.libraryTopPublic?PublicCard(p.libraryTop):null,libraryTopPublic=p.libraryTopPublic,
+                    libraryCards=(p.libraryCards??Array.Empty<ForgeLibraryPosition>()).Where(c=>c!=null&&c.publicInfo&&c.card!=null)
+                        .Select(c=>new ForgeLibraryPosition{position=c.position,publicInfo=true,card=PublicCard(c.card)}).ToArray(),
                     redMana=p.redMana,manaPool=p.manaPool?.ToArray(),snowManaPool=p.snowManaPool?.ToArray(),
                     manaPoolEntries=p.manaPoolEntries?.Select(e=>new ForgeManaPoolEntry {
                         id=e.id,symbol=e.symbol,count=e.count,snow=e.snow,restricted=e.restricted,
@@ -33,6 +35,7 @@ public static class OnlineSpectatorView
                     counters=p.counters,speed=p.speed,ringTemptedCount=p.ringTemptedCount,ringBearerId=p.ringBearerId,completedDungeons=p.completedDungeons,
                     graveyardCards=(p.graveyardCards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     exileCards=(p.exileCards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
+                    publicPlayableExile=(p.publicPlayableExile??Array.Empty<ForgeCardView>()).Where(c=>c!=null&&!c.faceDown).Select(PublicCard).ToArray(),
                     reviewGraveyard=(p.reviewGraveyard??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     reviewExile=(p.reviewExile??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     effectMarkers=(p.effectMarkers??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
@@ -58,7 +61,14 @@ public static class OnlineSpectatorView
     private static ForgeCardView PublicCard(ForgeCardView card)
     {
         if(card==null)return null;
-        if(!card.faceDown)return ServerSnapshotJson.Copy(card);
+        if(!card.faceDown) {
+            var visible=ServerSnapshotJson.Copy(card);
+            // Minimum proposals may depend on the caster's private resources.
+            // Observers retain public printed/committed costs, not that estimate.
+            visible.previewManaCost=visible.adventurePreviewManaCost=visible.secondaryPreviewManaCost=null;
+            if(visible.componentCards!=null)visible.componentCards=visible.componentCards.Select(PublicCard).ToArray();
+            return visible;
+        }
         return new ForgeCardView { id=card.id,ownerSeat=card.ownerSeat,faceDown=true,name="Face-down card",
             zone=card.zone,tapped=card.tapped,power=card.power,toughness=card.toughness,damage=card.damage,
             detained=card.detained,exertedBySeats=card.exertedBySeats,exertedThisTurn=card.exertedThisTurn,

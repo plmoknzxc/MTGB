@@ -89,6 +89,16 @@ public class GameAction {
     public Card changeZone(final Zone zoneFrom, Zone zoneTo, final Card c, Integer position, SpellAbility cause) {
         return changeZone(zoneFrom, zoneTo, c, position, cause, null);
     }
+    // Expose only the cause of the synchronous move notification, including subabilities.
+    private SpellAbility zoneChangeCause;
+    public SpellAbility getZoneChangeCause() { return zoneChangeCause; }
+    private void fireZoneChange(Card card, Zone from, Zone to, SpellAbility cause) {
+        SpellAbility previous = zoneChangeCause;
+        zoneChangeCause = cause;
+        try { game.fireEvent(new GameEventCardChangeZone(card, from, to)); }
+        finally { zoneChangeCause = previous; }
+    }
+
     private Card changeZone(final Zone zoneFrom, Zone zoneTo, final Card c, Integer position, SpellAbility cause, Map<AbilityKey, Object> params) {
         // 111.11. A copy of a permanent spell becomes a token as it resolves.
         // The token has the characteristics of the spell that became that token.
@@ -111,7 +121,7 @@ public class GameAction {
             zoneTo.add(c, position, CardCopyService.getLKICopy(c));
             checkStaticAbilities();
             game.getTriggerHandler().registerActiveTrigger(c, true);
-            game.fireEvent(new GameEventCardChangeZone(c, zoneFrom, zoneTo));
+            fireZoneChange(c, zoneFrom, zoneTo, cause);
             return c;
         }
 
@@ -581,7 +591,7 @@ public class GameAction {
         }
 
         // play the change zone sound
-        game.fireEvent(new GameEventCardChangeZone(c, zoneFrom, zoneTo));
+        fireZoneChange(c, zoneFrom, zoneTo, cause);
 
         game.getTriggerHandler().clearActiveTriggers(copied, null);
         game.getTriggerHandler().registerActiveTrigger(copied, false);

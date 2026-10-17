@@ -41,8 +41,14 @@ public sealed partial class ForgeBattlefieldController
         // not for producing {C}. Keep ordinary production/allocation unchanged.
         bool convoke=request?.kind=="dialog" && Regex.IsMatch(request.message??"",
             @"^one: Convoke .+ \(\d+\)  for which color\?$");
-        return convoke && string.Equals(label?.Trim(),"COLORLESS",StringComparison.OrdinalIgnoreCase)
-            ? "{1}" : ChoiceManaSymbols(label);
+        if(convoke && string.Equals(label?.Trim(),"COLORLESS",StringComparison.OrdinalIgnoreCase))return "{1}";
+        // Legacy activation dialogs include the shared tap cost. Accept only
+        // this exact cost and a pure output; extra costs/effects retain their text.
+        if(request?.kind=="dialog"&&request.message=="getAbilityToPlay") {
+            var tap=Regex.Match(label??"",@"^\s*\{T\}\s*:\s*(Add\s+.+)$",RegexOptions.IgnoreCase);
+            if(tap.Success)return ChoiceManaSymbols(tap.Groups[1].Value);
+        }
+        return ChoiceManaSymbols(label);
     }
     private static bool IsManaProductionChoice(ForgeRequest request)=>request!=null
         && (request.message??"").EndsWith("Select Mana to Produce",StringComparison.Ordinal)
@@ -120,14 +126,19 @@ public sealed partial class ForgeBattlefieldController
         choiceDismiss.gameObject.SetActive(true);choiceDismiss.SetAsLastSibling();
         if(landChoiceMenu==null)landChoiceMenu=Panel(surface,"CardAbilityChoices",Vector2.zero,Vector2.zero,Color.clear);
         landChoiceMenu.SetParent(surface,false);
+        SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);
+        SetOverlayLayer(choiceDismiss,DecisionLayerOffset-1,true);
         var menuDismiss=landChoiceMenu.GetComponent<ForgeChoiceDismiss>();
         if(menuDismiss==null)menuDismiss=landChoiceMenu.gameObject.AddComponent<ForgeChoiceDismiss>();
         menuDismiss.ListenForRightClick=false;
         menuDismiss.Dismiss=choiceDismiss.GetComponent<ForgeChoiceDismiss>().Dismiss;
         landChoiceMenu.anchorMin=landChoiceMenu.anchorMax=landChoiceMenu.pivot=new Vector2(.5f,.5f);
-        landChoiceMenu.GetComponent<Image>().color=cards?Color.clear:Ink;
+        landChoiceMenu.GetComponent<Image>().color=Ink;
         landChoiceMenu.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(500,240,16);
         if(playerVote){PresentGenericChoices(captured);return true;}
+        if(view.request.selectionPurpose=="manaAbility" && (!mana||options.Any(o=>Regex.Matches(ChoiceManaSymbols(o.label,view.request)??"",@"\{[^{}]+\}").Count>1))) {
+            PresentManaAbilityChoices(options,source,anchor,captured);return true;
+        }
         if(view.request.paymentMode=="manual" && (view.request.kind=="ChooseNumber"||options.All(o=>int.TryParse(o.label,out _)))) {
             PresentNumericChoices(options,source,anchor,captured);return true;
         }
@@ -158,7 +169,9 @@ public sealed partial class ForgeBattlefieldController
         int groupPlayer=GroupAssignmentSeat(source);
         string sectorTitle=assigningSector?TapPaymentText("分配分区","Assign a sector","セクターを割り当て"):TapPaymentText("选择分区","Choose a sector","セクターを選択");
         string groupTitle=groupPlayer>0?TapPaymentText($"为{PlayerDisplayName(groupPlayer)}选择友方或敌方",$"Choose friend or foe for {PlayerDisplayName(groupPlayer)}",$"{PlayerDisplayName(groupPlayer)}を味方か敵かに選ぶ"):null;
-        var title=Label(landChoiceMenu,"Title",groupTitle??(sectorChoice?sectorTitle:mana?TapPaymentText("选择法术力","Choose mana","マナを選択"):confirmation?"是否执行？":TapPaymentText("选择异能或施放方式","Choose ability or spell","能力や唱え方を選択")),new Vector2(0,height/2-(cards?20:16)),new Vector2(width,26),cards?21:17,Color.white);
+        bool tapMana=mana&&view.request.message=="getAbilityToPlay"&&options.All(o=>Regex.IsMatch(o.label??"",@"^\s*\{T\}\s*:"));
+        string manaTitle=tapMana?TapPaymentText("横置产费","Tap for mana","タップしてマナを出す"):TapPaymentText("选择法术力","Choose mana","マナを選択");
+        var title=Label(landChoiceMenu,"Title",groupTitle??(sectorChoice?sectorTitle:mana?manaTitle:confirmation?"是否执行？":TapPaymentText("选择异能或施放方式","Choose ability or spell","能力や唱え方を選択")),new Vector2(0,height/2-(cards?20:16)),new Vector2(width,26),cards?21:17,Color.white);
         title.raycastTarget=false;
         string name=source?.name??"";
         if(source!=null && (!sectorChoice||source.name==source.originalName) && catalog.TryGetValue(source.printingKey??"",out var definition))name=GamePreferences.CardName(definition);
@@ -230,7 +243,51 @@ public sealed partial class ForgeBattlefieldController
             var close=Button(landChoiceMenu,footer[i].id=="cancel"?"Cancel":"Confirm",footer[i].id=="cancel"?"取消":"确认",new Vector2((i-(footer.Length-1)*.5f)*(cards?182:120),-height/2+(cards?24:19)),new Vector2(cards?166:106,cards?42:28),()=>Choose(action,captured),new Color(.14f,.2f,.26f));
             close.interactable=canAct&&!submitted;close.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(166,42,10);
         }
-        landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return true;
+        landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();return true;
+    }
+    private void PresentManaAbilityChoices(ForgeOption[] options,ForgeCardView source,Vector2 anchor,long captured)
+    {
+        // A text row preserves the complete native cost/effect of pain, filter,
+        // restricted or variable mana abilities without repeating large card art.
+        float width=Mathf.Min(400,surface.rect.width-48);
+        var title=Label(landChoiceMenu,"Title",TapPaymentText("产法术力","Produce mana","マナを出す"),Vector2.zero,new Vector2(width-24,32),17,Paper);
+        title.raycastTarget=false;title.resizeTextForBestFit=false;PreferenceText.SetSize(title,17);
+        var name=Label(landChoiceMenu,"Source",GamePreferences.CardFaceName(source?.name??""),Vector2.zero,new Vector2(width-24,26),13,new Color(.7f,.78f,.84f));
+        name.raycastTarget=false;name.resizeTextForBestFit=false;PreferenceText.SetSize(name,13);
+        float titleHeight=Mathf.Max(28,title.preferredHeight+4),nameHeight=string.IsNullOrEmpty(name.text)?0:Mathf.Max(22,name.preferredHeight+4);
+        float header=titleHeight+nameHeight+16;
+        var content=Scroll(landChoiceMenu,"ManaAbilities",Vector2.zero,new Vector2(width-24,100));
+        float total=0;
+        foreach(var option in options) {
+            int index=OptionIndex(option.id);
+            var row=Panel(content,"ManaAbility_"+index,Vector2.zero,new Vector2(width-24,44),new Color(.12f,.23f,.3f));
+            row.anchorMin=row.anchorMax=row.pivot=new Vector2(.5f,1);
+            row.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(370,50,7);
+            var button=row.gameObject.AddComponent<Button>();button.targetGraphic=row.GetComponent<Image>();
+            button.onClick.AddListener(()=>Choose(index,captured));button.interactable=canAct&&!submitted&&!option.disabled;
+            row.gameObject.AddComponent<CanvasGroup>().alpha=button.interactable?1:.45f;
+            var body=CardSymbolText.Create(row,"Description",16,Paper);body.enableAutoSizing=false;body.alignment=TMPro.TextAlignmentOptions.MidlineLeft;
+            var origin=!string.IsNullOrEmpty(option.rulesSource?.name)?option.rulesSource:source;
+            string text=PrintedRuleText(origin,(option.label??"").Trim());
+            body.text=CardSymbolText.Format(text);
+            float rowHeight=Mathf.Max(44,Mathf.Ceil(body.GetPreferredValues(body.text,width-48,10000).y)+20);
+            row.sizeDelta=new Vector2(width-24,rowHeight);row.anchoredPosition=new Vector2(0,-total);
+            IntegratedUiUtility.Place(body.rectTransform,Vector2.zero,new Vector2(width-48,rowHeight-12));
+            total+=rowHeight+6;
+        }
+        total=Mathf.Max(0,total-6);
+        float height=Mathf.Min(Mathf.Min(320,surface.rect.height-64),header+total+16);
+        landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.GetComponent<Image>().color=Ink;
+        landChoiceMenu.anchoredPosition=new Vector2(Mathf.Clamp(anchor.x,surface.rect.xMin+width/2+20,surface.rect.xMax-width/2-20),
+            Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+20,surface.rect.yMax-height/2-20));
+        title.rectTransform.sizeDelta=new Vector2(width-24,titleHeight);title.rectTransform.anchoredPosition=new Vector2(0,height/2-8-titleHeight/2);
+        name.gameObject.SetActive(nameHeight>0);name.rectTransform.sizeDelta=new Vector2(width-24,nameHeight);name.rectTransform.anchoredPosition=new Vector2(0,height/2-8-titleHeight-nameHeight/2);
+        float available=Mathf.Max(40,height-header-16);
+        var viewport=(RectTransform)content.parent;viewport.sizeDelta=new Vector2(width-24,available);viewport.anchoredPosition=new Vector2(0,-height/2+8+available/2);
+        content.sizeDelta=new Vector2(width-24,Mathf.Max(available,total));
+        viewport.GetComponent<ScrollRect>().vertical=total>available+1;
+        if(total>available+1)AddStackScrollIndicator(content);
+        landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();
     }
     private static bool IsSectorChoice(ForgeRequest request)
     {
@@ -292,7 +349,7 @@ public sealed partial class ForgeBattlefieldController
             }
             int confirmation=OptionIndex("confirm-number");
             var commit=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(confirmation,captured),false);
-            commit.interactable=canAct&&!submitted&&confirmation>=0&&!view.request.options[confirmation].disabled;landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return;
+            commit.interactable=canAct&&!submitted&&confirmation>=0&&!view.request.options[confirmation].disabled;landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();return;
         }
         Button minus=null,plus=null;
         Action refresh=()=>{value.text=choices[selected].label;minus.interactable=canAct&&!submitted&&selected>0;plus.interactable=canAct&&!submitted&&selected+1<choices.Length;};
@@ -300,9 +357,28 @@ public sealed partial class ForgeBattlefieldController
         plus=Button(landChoiceMenu,"Increase","+",new Vector2(right,0),new Vector2(26,36),()=>{if(selected+1<choices.Length)selected++;refresh();},new Color(.14f,.2f,.26f));
         foreach(var control in new[]{minus,plus}){var label=control.GetComponentInChildren<Text>();PreferenceText.SetSize(label,16);label.rectTransform.sizeDelta=new Vector2(26,34);label.resizeTextForBestFit=false;}
         var confirm=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(OptionIndex(choices[selected].id),captured),false);
-        confirm.interactable=canAct&&!submitted&&!choices[selected].disabled;refresh();landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
+        confirm.interactable=canAct&&!submitted&&!choices[selected].disabled;refresh();landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();
     }
 
+    private ForgeCardView AbilityChoiceFace(ForgeCardView source,ForgeOption option)
+    {
+        if(!string.IsNullOrEmpty(option.castingFace?.name))return option.castingFace;
+        // Older snapshots did not carry LandAbility's actual face. Recover
+        // only an exact public printed face; unknown action text stays intact.
+        var land=Regex.Match(option.label??"",@"^Play land \((.+)\)$");
+        if(!land.Success||source==null||source.faceDown||!catalog.TryGetValue(source.printingKey??"",out var definition))return null;
+        var features=(definition.features??new System.Collections.Generic.List<CardFeatureDefinition>())
+            .Where(f=>f!=null&&f.cardName==land.Groups[1].Value&&f.cardTypes.Has(global::CardType.Land)).ToArray();
+        if(features.Length!=1)return null;
+        var feature=features[0];var result=ServerSnapshotJson.Copy(source);
+        result.name=result.originalName=feature.cardName;result.backFace=feature.faceIndex==1;
+        result.stateName=result.backFace?"Backside":"Original";
+        result.originalRules=result.currentRules=feature.description;
+        result.originalType=result.currentType=feature.cardTypes.ToString();
+        result.originalManaCost=result.manaCost=feature.manaCost;
+        result.land=true;result.creature=result.planeswalker=result.battle=false;
+        return result;
+    }
     private void DrawAbilityChoice(RectTransform face,ForgeCardView source,ForgeOption option,Vector2 size)
     {
         string description=option.label??"";
@@ -320,12 +396,13 @@ public sealed partial class ForgeBattlefieldController
         else if(source!=null && description.StartsWith(source.name,StringComparison.Ordinal))title="施放";
         var prefix=Regex.Match(description,keyword.Success?@"^(?<cost>(?:\{[^{}]+\}\s*)+)\s*[:—-]?\s*":@"^(?<cost>(?:\{[^{}]+\}\s*)+|[+−-]?\d+)\s*[:—-]\s*");
         if(prefix.Success){cost=prefix.Groups["cost"].Value;description=description.Substring(prefix.Length);}
-        bool casting=option.castingFace!=null&&!string.IsNullOrEmpty(option.castingFace.name);
+        var castingFace=AbilityChoiceFace(source,option);
+        bool casting=castingFace!=null;
         bool grouping=GroupAssignmentSeat(source)>0;
         if(grouping){title=option.id=="choice:0"?TapPaymentText("友方","Friend","味方"):TapPaymentText("敌方","Foe","敵");description=GroupChoiceText(source,option);}
         if(casting) {
-            source=option.castingFace;description=PrintedRuleText(source,source.currentRules?.Replace("\\n","\n")??"");cost=source.manaCost;
-            title=option.faceKind=="prepare"?"备法":option.faceKind=="adventure"?"历险":option.faceKind=="omen"?"前兆":option.faceKind=="mdfc-front"?"正面":option.faceKind=="mdfc-back"?"背面":"施放";
+            source=castingFace;description=PrintedRuleText(source,source.currentRules?.Replace("\\n","\n")??"");cost=source.manaCost;
+            title=source.land?TapPaymentText("使用地","Play land","土地をプレイ"):option.faceKind=="prepare"?"备法":option.faceKind=="adventure"?"历险":option.faceKind=="omen"?"前兆":option.faceKind=="mdfc-front"?"正面":option.faceKind=="mdfc-back"?"背面":"施放";
         }
         else if(view.request.kind=="dialog" && view.request.message=="getAbilityToPlay" && source!=null && !source.faceDown) {
             // Native alternate permissions may have no castingFace metadata.
@@ -371,7 +448,7 @@ public sealed partial class ForgeBattlefieldController
             if(description==source.name)description=GamePreferences.CardRules(definition);
         }
         if(sprite==null)TryBattlefieldArt(source,out sprite);
-        if(casting && option.faceKind.StartsWith("mdfc-")) {
+        if(casting && (option.faceKind?.StartsWith("mdfc-")==true || source.backFace)) {
             var full=Rect(face,"CastingFace",new Vector2(0,-10),new Vector2(size.x-14,size.y-64)).gameObject.AddComponent<Image>();
             full.sprite=sprite;full.preserveAspect=true;full.color=sprite==null?Ink:Color.white;full.raycastTarget=false;
             if(sprite==null)Label(face,"MissingFace",GamePreferences.CardFaceName(source.name)+"\n"+VisibleCardType(source)+"\n"+description,Vector2.zero,size-Vector2.one*18,16,Paper);

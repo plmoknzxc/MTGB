@@ -21,7 +21,7 @@ public sealed class OnlineSideboardCardTile : MonoBehaviour, IPointerClickHandle
         if (quantityControls == null) return;
         quantityControls.transform.Find("QuantityCountBackground/QuantityCount").GetComponent<Text>().text = "×" + Entry.count;
         quantityControls.SetActive(visible);
-        countBadge.SetActive(!visible);
+        countBadge.SetActive(!visible && Entry.count > 1);
         decreaseButton.interactable = visible && Entry.count > 0;
         increaseButton.interactable = visible && canIncrease;
     }
