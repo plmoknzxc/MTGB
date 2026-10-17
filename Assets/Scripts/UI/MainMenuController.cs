@@ -1772,6 +1772,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         deckDropdown.value = Mathf.Clamp(selected, 0, options.Count - 1);
         deckDropdown.RefreshShownValue();
         suppressDeckDropdownEvent = false;
+        deckDropdown.GetComponentInParent<DeckToolbarAutoSize>()?.RefreshNames();
     }
 
     private void RefreshSelectedCardInfo()

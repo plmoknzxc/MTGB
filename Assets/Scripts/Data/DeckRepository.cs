@@ -447,9 +447,19 @@ public static class DeckRepository
         EnsureFolder();
         string basis=MakeSafeFileName(string.IsNullOrWhiteSpace(deck.name)?"Imported Deck":deck.name).TrimEnd('.', ' ');
         if(string.IsNullOrEmpty(basis))basis="Deck";
+        string root=System.Text.RegularExpressions.Regex.Replace(basis,@"(?: \([0-9]+\))+$","");
+        if(string.IsNullOrWhiteSpace(root))root=basis;
+        bool numbered=string.Equals(root,"Imported Deck",StringComparison.OrdinalIgnoreCase)||File.Exists(Path.Combine(DeckRoot,basis+Extension));
+        var occupied=new HashSet<int>();
+        if(numbered)foreach(string file in EnumerateDeckFiles()) {
+            var match=System.Text.RegularExpressions.Regex.Match(Path.GetFileNameWithoutExtension(file),"^"+System.Text.RegularExpressions.Regex.Escape(root)+@" \(([0-9]+)\)$",System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if(match.Success&&int.TryParse(match.Groups[1].Value,out int number))occupied.Add(number);
+        }
         for(int i=0;i<10000;i++)
         {
-            string name=basis+(i==0?"":" ("+i+")"), path=Path.Combine(DeckRoot,name+Extension);
+            int number=numbered?i+1:i;
+            if(number>0&&occupied.Contains(number))continue;
+            string name=number==0?basis:root+" ("+number.ToString("D3")+")", path=Path.Combine(DeckRoot,name+Extension);
             if(File.Exists(path))continue;
             using(var stream=new FileStream(path,FileMode.CreateNew,FileAccess.Write))
             using(var writer=new StreamWriter(stream,new System.Text.UTF8Encoding(false)))

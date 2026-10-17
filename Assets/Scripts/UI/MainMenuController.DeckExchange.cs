@@ -306,6 +306,8 @@ public sealed class DeckToolbarAutoSize : MonoBehaviour
         public string lastText;
         public int lastSize;
         public Font lastFont;
+        public Dropdown dropdown;
+        public int lastRevision=-1;
     }
 
     private readonly System.Collections.Generic.List<Item> items = new System.Collections.Generic.List<Item>();
@@ -315,29 +317,45 @@ public sealed class DeckToolbarAutoSize : MonoBehaviour
         items.Clear();
         foreach (Transform child in transform)
         {
-            if (child.GetComponent<Button>() == null) continue;
+            var dropdown=child.GetComponent<Dropdown>();
+            if (child.GetComponent<Button>() == null&&dropdown==null) continue;
             var layout = child.GetComponent<LayoutElement>();
-            var label = child.GetComponentInChildren<Text>(true);
+            var label = dropdown!=null?dropdown.captionText:child.GetComponentInChildren<Text>(true);
             if (layout == null || label == null) continue;
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
             label.verticalOverflow = VerticalWrapMode.Truncate;
-            items.Add(new Item { layout = layout, label = label, baseWidth = layout.preferredWidth });
+            items.Add(new Item { layout = layout, label = label, baseWidth = layout.preferredWidth, dropdown=dropdown });
         }
         Refresh();
     }
 
     private void LateUpdate() { Refresh(); }
+    public void RefreshNames() { Refresh(true); }
 
-    private void Refresh()
+    private static float Measure(Text label,string value)=>label.cachedTextGeneratorForLayout.GetPreferredWidth(value,label.GetGenerationSettings(Vector2.zero))/label.pixelsPerUnit;
+    private void Refresh(bool force=false)
     {
         foreach (Item item in items)
         {
             if (item.label == null || item.layout == null) continue;
-            if (item.lastText == item.label.text && item.lastSize == item.label.fontSize && item.lastFont == item.label.font) continue;
+            if (!force&&item.lastText == item.label.text && item.lastSize == item.label.fontSize && item.lastFont == item.label.font&&item.lastRevision==GamePreferences.Revision) continue;
             item.lastText = item.label.text;
             item.lastSize = item.label.fontSize;
             item.lastFont = item.label.font;
+            item.lastRevision=GamePreferences.Revision;
             float width = Mathf.Max(item.baseWidth, Mathf.Ceil(item.label.preferredWidth) + 22f);
+            if(item.dropdown!=null) {
+                var dropdown=item.dropdown;
+                dropdown.itemText.GetComponent<PreferenceText>()?.Apply();
+                float minimum=Mathf.Max(item.baseWidth,Mathf.Ceil(Measure(dropdown.itemText,"Imported Deck (000)"))+48);
+                width=Mathf.Clamp(Mathf.Ceil(item.label.preferredWidth)+48,minimum,Mathf.Max(minimum,440));
+                float popup=width;
+                foreach(var option in dropdown.options)popup=Mathf.Max(popup,Mathf.Ceil(Measure(dropdown.itemText,option.text))+32);
+                var canvas=dropdown.GetComponentInParent<Canvas>().rootCanvas.transform as RectTransform;
+                if(canvas!=null)popup=Mathf.Max(width,Mathf.Min(popup,canvas.rect.width-40));
+                dropdown.template.sizeDelta=new Vector2(popup-width,dropdown.template.sizeDelta.y);
+                dropdown.template.anchoredPosition=new Vector2((popup-width)*.5f,dropdown.template.anchoredPosition.y);
+            }
             item.layout.minWidth = item.layout.preferredWidth = width;
         }
     }
