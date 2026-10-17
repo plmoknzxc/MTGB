@@ -162,6 +162,9 @@ public static class DeckTokenLinks
 
     // Native token objects append " Token" to a type name; reuse the existing
     // published subtype translations rather than inventing a second glossary.
+    internal static IEnumerable<string> SubtypeNames => Types.Keys;
+    internal static string LocalizedSubtype(string name) => GamePreferences.Language=="en-US"?name:
+        GamePreferences.Language=="ja-JP"?TranslateJapanese(name):Translate(name);
     public static string GeneratedTokenName(string name)
     {
         if(GamePreferences.Language=="en-US"||!name.EndsWith(" Token",StringComparison.Ordinal))return null;

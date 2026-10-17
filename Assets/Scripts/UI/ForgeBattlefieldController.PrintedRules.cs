@@ -9,6 +9,7 @@ public sealed partial class ForgeBattlefieldController
         if(card==null||card.faceDown)return GamePreferences.T("面朝下的牌");
         catalog.TryGetValue((card.copy||card.merged?card.currentArtPrintingKey:card.printingKey)??"",out var definition);
         var feature=definition?.features?.FirstOrDefault(f=>f.cardName==card.name);
+        if(string.IsNullOrWhiteSpace(card.currentType))return feature!=null?GamePreferences.FeatureType(feature,card.originalType):definition!=null?GamePreferences.CardType(definition):CardTypeText.Line(card.originalType);
         return CopyTypeText(card.currentType,definition,feature);
     }
     private string PrintedCostText(ForgeCardView source,string cost)

@@ -144,38 +144,9 @@ public sealed class SearchInsertionMenu : MonoBehaviour
         bar.handleRect = handle; bar.targetGraphic = handle.GetComponent<Image>(); bar.direction = Scrollbar.Direction.BottomToTop; scroll.verticalScrollbar = bar;
         Render(); GamePreferences.BindScene();
     }
-    static readonly Dictionary<string, string> Labels = new Dictionary<string, string> {
-        {"Artifact", "神器"}, {"Battle", "战役"}, {"Creature", "生物"}, {"Enchantment", "结界"}, {"Instant", "瞬间"},
-        {"Kindred", "亲缘"}, {"Land", "地"}, {"Planeswalker", "鹏洛客"}, {"Sorcery", "法术"},
-        {"Basic", "基本"}, {"Legendary", "传奇"}, {"Ongoing", "持续"}, {"Snow", "雪境"}, {"World", "世界"},
-        {"Human", "人类"}, {"Elf", "妖精"}, {"Goblin", "鬼怪"}, {"Dragon", "龙"}, {"Zombie", "灵俑"},
-        {"Vampire", "吸血鬼"}, {"Angel", "天使"}, {"Wizard", "法术师"}, {"Warrior", "战士"}, {"Soldier", "士兵"},
-        {"Island", "海岛"}, {"Plains", "平原"}, {"Swamp", "沼泽"}, {"Mountain", "山脉"}, {"Forest", "树林"}
-    };
-    [Serializable] sealed class TypeLabel { public string en,zh,ja; }
-    [Serializable] sealed class TypeLabels { public TypeLabel[] entries; }
-    static Dictionary<string,TypeLabel> localizedTypes;
     public static string Label(string value)
     {
-        if(localizedTypes==null)
-        {
-            var asset=Resources.Load<TextAsset>("TokenTypeAliases");
-            localizedTypes=asset==null?new Dictionary<string,TypeLabel>(StringComparer.OrdinalIgnoreCase):
-                JsonUtility.FromJson<TypeLabels>(asset.text).entries.GroupBy(e=>e.en,StringComparer.OrdinalIgnoreCase)
-                    .ToDictionary(g=>g.Key,g=>g.First(),StringComparer.OrdinalIgnoreCase);
-            var vocabulary=Resources.Load<TextAsset>("SearchTypeLabels");
-            if(vocabulary!=null)foreach(var term in JsonUtility.FromJson<TypeLabels>(vocabulary.text).entries)
-            {
-                if(localizedTypes.TryGetValue(term.en,out var existing))
-                { if(!string.IsNullOrEmpty(term.zh))existing.zh=term.zh; if(!string.IsNullOrEmpty(term.ja))existing.ja=term.ja; }
-                else localizedTypes[term.en]=term;
-            }
-        }
-        string translated=value;
-        if(localizedTypes.TryGetValue(value,out var entry))
-            translated=GamePreferences.Language=="ja-JP"?entry.ja:GamePreferences.Language=="zh-CN"?entry.zh:value;
-        if(string.IsNullOrEmpty(translated)||translated==value)
-            translated=Labels.TryGetValue(value,out string key)?GamePreferences.T(key):value;
+        string translated=CardTypeText.Term(value);
         return translated.Equals(value, StringComparison.OrdinalIgnoreCase) ? value : translated + " · " + value;
     }
     void Render()

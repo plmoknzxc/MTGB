@@ -10,10 +10,7 @@ public sealed partial class ForgeBattlefieldController
         string printed=feature!=null?string.Join(" ",feature.supertypes.ToDisplayString(),feature.cardTypes.ToDisplayString(),feature.subtypes):definition?.GetTypeLine();
         if(printed!=null&&Key(printed)==Key(type))return feature!=null?GamePreferences.FeatureType(feature,type):GamePreferences.CardType(definition);
         if(printed!=null&&Key(Regex.Replace(printed,@"\bLegendary\b",""))==Key(type))return Regex.Replace(feature!=null?GamePreferences.FeatureType(feature,type):GamePreferences.CardType(definition),@"\bLegendary\s*|传奇\s*|伝説の\s*","");
-        string[] words={"Creature","Artifact","Enchantment","Legendary","Land","Dinosaur","Bear","Construct","Equipment","Insect","Illusion","Elemental","Horror","Wizard","Human"};
-        string[] zh={"生物","神器","结界","传奇","地","恐龙","熊","组构体","武具","昆虫","虚影","元素","惊惧兽","法术师","人类"};
-        string[] ja={"クリーチャー","アーティファクト","エンチャント","伝説の","土地","恐竜","熊","構築物","装備品","昆虫","イリュージョン","エレメンタル","ホラー","ウィザード","人間"};
-        return Regex.Replace(type??"",@"\b("+string.Join("|",words)+@")\b",m=>{int i=Array.IndexOf(words,m.Value);return TapPaymentText(zh[i],words[i],ja[i]);});
+        return CardTypeText.Line(type);
     }
     private string CopyRulesText(ForgeCardView card,CardDefinition definition,CardFeatureDefinition feature)
     {

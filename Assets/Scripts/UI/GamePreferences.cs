@@ -384,7 +384,7 @@ public sealed class GamePreferences : MonoBehaviour
         }
     }
     public static string CardName(CardDefinition card) => Field(card,1,card?.cardName ?? "");
-    public static string CardType(CardDefinition card) => Field(card,2,card?.GetTypeLine() ?? "");
+    public static string CardType(CardDefinition card) => CardTypeText.Line(Field(card,2,card?.GetTypeLine() ?? ""));
     public static string CardRules(CardDefinition card) => LocalizedRules(card?.cardName,card?.description,card?.PrintingKey,
         DisplayRules(Field(card,3,card?.description ?? ""),card!=null&&card.cardTypes.Has(global::CardType.Planeswalker)));
     public static string FeatureName(CardFeatureDefinition feature) => Field(feature?.cardName, 1, feature?.cardName ?? "");
@@ -397,7 +397,7 @@ public sealed class GamePreferences : MonoBehaviour
         EnsureIdentityNames();identityNames.Add(name);identityNames.Add(localized);
         string display=DisplayCardIdentities(localized);identityNames.Add(display);return display;
     }
-    public static string FeatureType(CardFeatureDefinition feature, string fallback) => Field(feature?.cardName, 2, fallback);
+    public static string FeatureType(CardFeatureDefinition feature, string fallback) => CardTypeText.Line(Field(feature?.cardName, 2, fallback));
     public static string FeatureRules(CardFeatureDefinition feature) => LocalizedRules(feature?.cardName,feature?.description,null,
         DisplayRules(Field(feature?.cardName, 3, feature?.description ?? ""),feature!=null&&feature.cardTypes.Has(global::CardType.Planeswalker)));
     static string LocalizedRules(string name,string source,string printing,string display)

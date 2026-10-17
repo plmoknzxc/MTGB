@@ -286,8 +286,8 @@ public sealed partial class ForgeBattlefieldController
     public static string ChangedTypeText(string original,string current)
     {
         if(string.IsNullOrEmpty(original))return SafeDetail(CurrentLandTypeLabel(current));
-        var before=original.Split(new[]{' '},StringSplitOptions.RemoveEmptyEntries);
-        var after=(current??"").Split(new[]{' '},StringSplitOptions.RemoveEmptyEntries);
+        var before=CardTypeText.Parts(original).ToArray();
+        var after=CardTypeText.Parts(current).ToArray();
         var parts=after.Select(t=>before.Contains(t)?SafeDetail(CurrentLandTypeLabel(t)):ColoredDetail(CurrentLandTypeLabel(t),ChangedBlue));
         var lost=before.Where(t=>!after.Contains(t)).Select(t=>LostDetail(CurrentLandTypeLabel(t))).ToArray();
         return string.Join(" ",parts)+(lost.Length>0?"\n"+string.Join(" ",lost):"");
@@ -333,15 +333,7 @@ public sealed partial class ForgeBattlefieldController
             yield return null;
         }
     }
-    private static string LandTypeLabel(string value) => value switch {
-        "Plains"=>"平原", "Island"=>"海岛", "Swamp"=>"沼泽", "Mountain"=>"山脉", "Forest"=>"树林", _=>value
-    };
-    private static string CurrentLandTypeLabel(string type)
-    {
-        return System.Text.RegularExpressions.Regex.Replace(type??"", @"\b(Plains|Island|Swamp|Mountain|Forest|Basic|Land|Creature|Enchantment|Artifact|Legendary|Snow)\b", m=>m.Value switch {
-            "Basic"=>"基本", "Land"=>"地", "Creature"=>"生物", "Enchantment"=>"结界", "Artifact"=>"神器", "Legendary"=>"传奇", "Snow"=>"雪境", _=>LandTypeLabel(m.Value)
-        });
-    }
+    private static string CurrentLandTypeLabel(string type)=>CardTypeText.Line(type);
     private bool inspectDualFace;
     private void InspectIntegrated(ForgeCardView card)=>InspectIntegratedCore(card,true);
     private void InspectIntegratedCore(ForgeCardView card,bool showBothFaces)
@@ -397,7 +389,7 @@ public sealed partial class ForgeBattlefieldController
         SceneText("InspectPanel/TypeLine").supportRichText=true;
         // Live land text expands subtype mana abilities and omits printed
         // reminders. Compare it only when native types or traits really changed.
-        SetText("InspectPanel/TypeLine", card.faceDown ? "面朝下" : publicCopy ? copiedType : card.hasCurrentLandState || (!string.IsNullOrEmpty(card.currentType) && card.originalType!=card.currentType) ? ChangedTypeText(card.originalType,card.currentType) : card.backFace || IsPreparedSpell(card) || card.token ? card.currentType : GamePreferences.CardType(definition));
+        SetText("InspectPanel/TypeLine", card.faceDown ? "面朝下" : publicCopy ? copiedType : card.hasCurrentLandState || (!string.IsNullOrEmpty(card.currentType) && card.originalType!=card.currentType) ? ChangedTypeText(card.originalType,card.currentType) : VisibleCardType(card));
         SetText("InspectPanel/Rules", publicCopy && card.hasCopyAbilityChanges ? CopyRulesText(card,copiedDefinition,copiedFeature) : card.hasAbilityChanges ? LocalizedChangedRules(card,card.originalAbilityText,card.currentAbilityText) : card.hasCurrentLandState && card.landTypesChanged || !card.hasCurrentLandState && card.originalRules!=null && card.currentRules!=card.originalRules ? LocalizedChangedRules(card,card.originalRules,card.currentRules) : publicCopy ? copiedRules : card.backFace || IsPreparedSpell(card) || card.token ? PrintedRuleText(card,card.currentRules?.Replace("\\n", "\n")) : GamePreferences.CardRules(definition));
         if(specialized && !card.hasAbilityChanges && card.currentRules==card.originalRules) {
             var nativeFace=new CardFeatureDefinition { cardName=card.name,description=(card.currentRules??"").Replace("\\n","\n") };
