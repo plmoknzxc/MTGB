@@ -10,7 +10,7 @@ public enum MainMenuCardTileZone
     Commander
 }
 
-public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private MainMenuController controller;
     private CardDefinition card;
@@ -85,6 +85,13 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
         controller?.EndCardHover(this);
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // Suppress only a click emitted by the drag gesture itself. A completed
+        // drag usually emits no click, so the next press starts a fresh gesture.
+        if (eventData.button == PointerEventData.InputButton.Left) suppressNextClick = false;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (suppressNextClick)
@@ -121,6 +128,7 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
 
     private void OnDisable()
     {
+        suppressNextClick = false;
         controller?.EndCardHover(this);
     }
 }

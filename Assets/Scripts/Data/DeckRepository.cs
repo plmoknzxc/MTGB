@@ -257,7 +257,7 @@ public static class DeckRepository
     {
         if (deck == null || card == null) return 0;
         if (IsUnlimitedCopies(card)) return int.MaxValue;
-        int limit=DeckCommander.IsFormat(deck.format)&&card.forgeDeckLimit==4?1:card.forgeDeckLimit;
+        int limit = CopyLimit(card, deck.format);
         return Mathf.Max(0, limit - CountCopies(deck, card));
     }
 
@@ -268,9 +268,9 @@ public static class DeckRepository
 
         bool changed = false;
         var used = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        changed |= EnforceCopyLimits(GetEntryList(deck, DeckSection.Commander), cards, used);
-        changed |= EnforceCopyLimits(GetEntryList(deck, false), cards, used);
-        changed |= EnforceCopyLimits(GetEntryList(deck, true), cards, used);
+        changed |= EnforceCopyLimits(GetEntryList(deck, DeckSection.Commander), cards, used, deck.format);
+        changed |= EnforceCopyLimits(GetEntryList(deck, false), cards, used, deck.format);
+        changed |= EnforceCopyLimits(GetEntryList(deck, true), cards, used, deck.format);
         Normalize(deck);
         return changed;
     }
@@ -563,7 +563,7 @@ public static class DeckRepository
         return line.Equals("#extra", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool EnforceCopyLimits(List<DeckEntry> entries, IReadOnlyList<CardDefinition> cards, Dictionary<string, int> used)
+    private static bool EnforceCopyLimits(List<DeckEntry> entries, IReadOnlyList<CardDefinition> cards, Dictionary<string, int> used, string format)
     {
         bool changed = false;
         if (entries == null) return false;
@@ -580,7 +580,7 @@ public static class DeckRepository
             }
 
             CardDefinition card = ResolveCard(entry, cards);
-            string key = GetDeckKey(entry, card);
+            string key = GetCopyLimitKey(entry, card);
             if (string.IsNullOrEmpty(key))
             {
                 entries.RemoveAt(i);
@@ -589,7 +589,7 @@ public static class DeckRepository
                 continue;
             }
 
-            int max = card == null ? DefaultCopyLimit : IsUnlimitedCopies(card) ? int.MaxValue : card.forgeDeckLimit;
+            int max = CopyLimit(card, format);
             used.TryGetValue(key, out int current);
             int allowed = max == int.MaxValue ? entry.count : Mathf.Max(0, max - current);
             if (allowed <= 0)
@@ -617,6 +617,13 @@ public static class DeckRepository
         return card != null && card.forgeDeckLimit < 0;
     }
 
+    private static int CopyLimit(CardDefinition card, string format)
+    {
+        if (card == null) return DefaultCopyLimit;
+        if (IsUnlimitedCopies(card)) return int.MaxValue;
+        return DeckCommander.IsFormat(format) && card.forgeDeckLimit == DefaultCopyLimit ? 1 : card.forgeDeckLimit;
+    }
+
     private static int CountCopies(DeckDefinition deck, CardDefinition card)
     {
         if (deck == null || card == null) return 0;
@@ -632,9 +639,29 @@ public static class DeckRepository
         for (int i = 0; i < entries.Count; i++)
         {
             DeckEntry entry = entries[i];
-            if (EntryMatchesCard(entry, card)) count += Mathf.Max(0, entry.count);
+            if (EntryMatchesCard(entry, card)
+                || SharesCopyLimit(ResolveCard(entry, CardDatabaseRepository.LoadAll()), card))
+                count += Mathf.Max(0, entry.count);
         }
         return count;
+    }
+
+    // Printed versions keep separate deck rows, but share the official card's
+    // construction limit across the main deck, sideboard and command zone.
+    public static bool SharesCopyLimit(CardDefinition first, CardDefinition second)
+    {
+        if (first == null || second == null) return false;
+        string key = GetCopyLimitKey(null, first);
+        return !string.IsNullOrEmpty(key)
+            && string.Equals(key, GetCopyLimitKey(null, second), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GetCopyLimitKey(DeckEntry entry, CardDefinition card)
+    {
+        if (card != null && !card.customContent && !card.forgeAmbiguous && !string.IsNullOrWhiteSpace(card.cardName))
+            return "name:" + card.cardName.Trim();
+        string printing = GetDeckKey(entry, card);
+        return string.IsNullOrEmpty(printing) ? string.Empty : "printing:" + printing;
     }
 
     private static void AddKnown(DeckDefinition deck, IReadOnlyList<CardDefinition> cards, string setCode, string collector, int count)

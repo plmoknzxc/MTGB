@@ -1011,7 +1011,8 @@ public sealed partial class MainMenuController : MonoBehaviour
         for (int i = 0; i < parent.childCount; i++)
         {
             MainMenuCardTile tile = parent.GetChild(i).GetComponent<MainMenuCardTile>();
-            if (tile != null && tile.gameObject.activeSelf && ReferenceEquals(tile.Card, card)) return tile;
+            if (tile != null && tile.gameObject.activeSelf && tile.Card != null
+                && string.Equals(tile.Card.PrintingKey, card.PrintingKey, StringComparison.OrdinalIgnoreCase)) return tile;
         }
         return null;
     }
@@ -1025,8 +1026,8 @@ public sealed partial class MainMenuController : MonoBehaviour
             for (int i = 0; i < parent.childCount; i++)
             {
                 MainMenuCardTile tile = parent.GetChild(i).GetComponent<MainMenuCardTile>();
-                if (tile == null || !tile.gameObject.activeSelf || !ReferenceEquals(tile.Card, card)) continue;
-                int count = CountTileCopies(card, tile.Zone);
+                if (tile == null || !tile.gameObject.activeSelf || !DeckRepository.SharesCopyLimit(tile.Card, card)) continue;
+                int count = CountTileCopies(tile.Card, tile.Zone);
                 tile.SetCount(count);
                 tile.SetQuantityControls(tile.QuantityControlsVisible, count, canIncrease);
             }
@@ -1206,6 +1207,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         {
             MarkDeckDirty();
             RefreshDeckGrids();
+            RefreshVisibleCardQuantities(card);
             RefreshSelectedCardInfo();
         }
         else RefreshSelectedCardInfo();

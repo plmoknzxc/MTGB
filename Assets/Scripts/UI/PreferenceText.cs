@@ -70,6 +70,8 @@ public sealed class PreferenceText : MonoBehaviour
         // Refresh this role before translating later user-entered values.
         var input=GetComponentInParent<InputField>();
         var tmpInput=GetComponentInParent<TMP_InputField>();
+        if(input!=null && input.GetComponent<InputFieldLayoutSync>()==null)
+            input.gameObject.AddComponent<InputFieldLayoutSync>();
         inputText=input!=null&&input.textComponent==text || tmpInput!=null&&tmpInput.textComponent==tmp;
         userText=inputText || GetComponentInParent<Dropdown>()!=null;
         if(Current!=last) source=Current;
