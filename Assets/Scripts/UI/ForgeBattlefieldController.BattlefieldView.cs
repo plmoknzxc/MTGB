@@ -38,6 +38,8 @@ public sealed partial class ForgeBattlefieldController
     private void RefreshBattlefieldViewControls()
     {
         if(surface==null)return;
+        bool endReview=service?.EndReview!=null&&endDialog!=null;
+        if(endReview&&viewingBattlefield)RestoreBattlefieldWindows();
         if(viewingBattlefield && battlefieldViewContext!=BattlefieldDecisionContext && view?.inputPending!=true)
             RestoreBattlefieldWindows();
         var windows=BattlefieldWindows().Where(w=>w!=null&&w.gameObject.activeInHierarchy).Distinct().ToArray();
@@ -64,14 +66,19 @@ public sealed partial class ForgeBattlefieldController
         // One stable corner slot for viewing, returning, and leaving end review.
         viewRect.anchoredPosition=returnRect.anchoredPosition;
         if(leaveReviewButton!=null) {
+            var caption=leaveReviewButton.GetComponentInChildren<Text>();
+            caption.text=TapPaymentText("返回结算","Results menu","結果に戻る");
             var leaveRect=(RectTransform)leaveReviewButton.transform;
             leaveRect.SetParent(surface,false);
             leaveRect.anchorMin=leaveRect.anchorMax=leaveRect.pivot=new Vector2(0,1);
             leaveRect.anchoredPosition=returnRect.anchoredPosition;leaveRect.sizeDelta=returnRect.sizeDelta;
-            leaveReviewButton.gameObject.SetActive(!viewingBattlefield&&windows.Length==0&&endDialog!=null&&!endDialog.gameObject.activeSelf);
+            caption.rectTransform.sizeDelta=new Vector2(leaveRect.rect.width-16,caption.rectTransform.sizeDelta.y);
+            leaveReviewButton.gameObject.SetActive(endReview&&!endDialog.gameObject.activeSelf);
         }
-        viewBattlefieldButton.gameObject.SetActive(!viewingBattlefield&&windows.Length>0);
-        returnSelectionButton.gameObject.SetActive(viewingBattlefield);
+        // End review has one entry in its result menu and a persistent corner
+        // return action, including while browsing the read-only zones.
+        viewBattlefieldButton.gameObject.SetActive(!endReview&&!viewingBattlefield&&windows.Length>0);
+        returnSelectionButton.gameObject.SetActive(!endReview&&viewingBattlefield);
         if(noticeHistoryButton!=null)((RectTransform)noticeHistoryButton.transform).anchoredPosition=new Vector2(windows.Length>0?360:128,-48);
         if(viewingBattlefield)foreach(var window in windows) {
             var group=window.GetComponent<CanvasGroup>();
@@ -83,6 +90,7 @@ public sealed partial class ForgeBattlefieldController
     }
     public void ViewBattlefield()
     {
+        if(service?.EndReview!=null&&endDialog!=null){ContinueEndReview();return;}
         if(viewingBattlefield||!BattlefieldWindows().Any(w=>w!=null&&w.gameObject.activeInHierarchy))return;
         viewingBattlefield=true;battlefieldViewContext=BattlefieldDecisionContext;
         RefreshBattlefieldViewControls();

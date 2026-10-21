@@ -133,7 +133,8 @@ public sealed partial class OnlineLobbyPanel
             string roomState=room.state=="sideboarding"?"局间换备":room.state=="review"?"已结束 · 查看战场":room.inMatch?"对局中":"等待开局";
             var detail=AddText(row.transform,"Detail",room.hostName+" · "+GamePreferences.T(roomState),new Vector2(-100,-53),new Vector2(792,28),14,browserFont,TextAnchor.MiddleLeft,MutedTextColor);detail.supportRichText=false;
             detail.gameObject.AddComponent<PreferenceText>().Literal=true;
-            var join=AddButton(row.transform,"Join",room.inMatch||room.players>=2?"观战":"加入",new Vector2(420,-16),new Vector2(156,48),browserFont,AccentColor);join.interactable=true;
+            bool resuming=HasRoomCredential(room);
+            var join=AddButton(row.transform,"Join",resuming?DeckCompanion.Text("返回对局","Rejoin","対戦に戻る"):room.inMatch||room.players>=2?"观战":"加入",new Vector2(420,-16),new Vector2(156,48),browserFont,AccentColor);join.interactable=true;
             join.onClick.AddListener(()=>JoinListedRoom(room));
         }
         ApplyRoomPalette(roomList);
@@ -174,12 +175,14 @@ public sealed partial class OnlineLobbyPanel
     {
         if(OnlineMatchService.Instance?.IsOnline==true)return;
         createChoices.SetActive(false);SaveBrowserIdentity();
-        OnlineMatchService.EnsureInstance().Connect(room.address,(ushort)room.port,nameInput.text,profileInput.text,room.roomId,null,room.inMatch||room.players>=2?"spectate":"join");Refresh();
+        OnlineMatchService.EnsureInstance().Connect(room.address,(ushort)room.port,nameInput.text,profileInput.text,room.roomId,null,HasRoomCredential(room)?"join":room.inMatch||room.players>=2?"spectate":"join");Refresh();
     }
+    private bool HasRoomCredential(OnlineRoomListing room)
+        => !string.IsNullOrEmpty(OnlineClientProfileStore.GetReconnectToken(profileInput.text,room.address,(ushort)room.port,room.roomId));
     private void BrowserBack()
     {
         ++browserGeneration;browsing=false;
-        if(creatingRoom){creatingRoom=false;if(OnlineMatchService.Instance?.IsOnline==true)OnlineMatchService.Instance.Disconnect();Refresh();return;}
+        if(creatingRoom){if(OnlineMatchService.Instance!=null&&!OnlineMatchService.Instance.TryLeaveRoom())return;creatingRoom=false;Refresh();return;}
         if(createChoices.activeSelf){createChoices.SetActive(false);return;}
         Close();
     }

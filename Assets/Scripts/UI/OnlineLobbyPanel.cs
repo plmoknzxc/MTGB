@@ -420,7 +420,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         OnlineMatchService service = OnlineMatchService.EnsureInstance();
         if (service.IsOnline)
         {
-            service.Disconnect();
+            if(!service.TryLeaveRoom())return;
             ready = false;
             Refresh();
             return;
@@ -436,7 +436,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         OnlineMatchService service = OnlineMatchService.EnsureInstance();
         if (service.IsOnline)
         {
-            service.Disconnect();
+            if(!service.TryLeaveRoom())return;
             ready = false;
             Refresh();
             return;
@@ -450,7 +450,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private void LeaveRoom()
     {
         OnlineMatchService service = OnlineMatchService.Instance;
-        if (service != null && service.IsOnline && !service.IsInMatch) service.Disconnect();
+        if (service != null && !service.TryLeaveRoom()) return;
         creatingRoom=false;
         ready = false;
         sideboardBaselineDeck = null;
@@ -629,9 +629,9 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private void Close()
     {
         if (closing) return;
-        closing = true;
         OnlineMatchService service = OnlineMatchService.Instance;
-        if (service != null && service.IsOnline && !service.IsInMatch) service.Disconnect();
+        if (service != null && !service.IsInMatch && !service.TryLeaveRoom()) return;
+        closing = true;
         Unsubscribe();
         if (Application.isPlaying && contentGroup != null)
         {
@@ -690,7 +690,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         bool joinedRoom = service != null && service.HasJoinedLobby;
         bool online = service != null && service.IsOnline;
         bool disconnecting = service != null && service.IsDisconnecting;
-        bool canStartConnection = !online && !disconnecting;
+        bool canStartConnection = !online && !disconnecting && service?.IsCompeting!=true;
         OnlineLobbyState lobby = service?.LobbyState;
         OnlineSeriesState series = lobby?.series;
         bool betweenGames = joinedRoom && !service.IsSpectator && series != null && series.betweenGames && !series.finished;
@@ -729,6 +729,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             if (ready) readyLabel = "取消准备";
             SetButtonLabel(readyButton, readyLabel);
         }
+        if(leaveRoomButton!=null)leaveRoomButton.interactable=joinedRoom&&service.CanLeaveRoom;
         if (startMatchButton != null)
         {
             startMatchButton.interactable = roomHost && allPlayersReady && !betweenGames;
@@ -864,6 +865,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         bool betweenGames = series != null && series.betweenGames && !series.finished;
         if (betweenGames && sideboardGameNumber != series.gameNumber)
         {
+            var authoritative=OnlineMatchService.Instance?.LocalRegisteredDeck;
+            if(authoritative!=null)selectedDeck=CloneDeck(authoritative);
             sideboardGameNumber = series.gameNumber;
             sideboardBaselineDeck = CloneDeck(selectedDeck);
             sideboardGridSignature = null;

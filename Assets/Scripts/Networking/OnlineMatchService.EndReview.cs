@@ -69,6 +69,7 @@ public sealed partial class OnlineMatchService
 
     public void LeaveEndReview(bool leaveRoom)
     {
+        if(leaveRoom&&!CanLeaveRoom){EndReplayStatus="本场比赛尚未结束，请前往换备继续比赛。";return;}
         if (!EndReplayDecided) { EndReplayStatus = "请先选择保存录像或不保存"; return; }
         if(EndReview!=null&&endReplayChoice.HasValue)replaySaveChoices[EndReview.matchId]=endReplayChoice.Value;
         if(!leaveRoom)SendToServer<object>(OnlineProtocol.LeaveReview,null);

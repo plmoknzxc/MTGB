@@ -10,10 +10,10 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
-public sealed class EndReviewValidation : MonoBehaviour
+public sealed partial class EndReviewValidation : MonoBehaviour
 {
     public static bool AutomaticCase;
-    static string Output=>".tools/room-browser/end-review-"+(AutomaticCase?"auto":"manual")+"-result.txt";
+    static string Output=>ReconnectCase?".tools/bo3-room-1021/native-network-result.txt":".tools/room-browser/end-review-"+(AutomaticCase?"auto":"manual")+"-result.txt";
     readonly List<Probe> probes=new List<Probe>();
     OnlineMatchService service;
     sealed class Probe
@@ -36,11 +36,11 @@ public sealed class EndReviewValidation : MonoBehaviour
     public static void Run()
     {
         if(running)return;running=true;
-        Directory.CreateDirectory(".tools/room-browser");File.WriteAllText(Output,"RUNNING");
+        Directory.CreateDirectory(Path.GetDirectoryName(Output));File.WriteAllText(Output,"RUNNING");lifecycleChecks.Clear();
         var runner=new GameObject("EndReviewValidation").AddComponent<EndReviewValidation>();
         DontDestroyOnLoad(runner);runner.StartCoroutine(runner.Guard(runner.Validate()));
     }
-    static void Check(bool yes,string message){if(!yes)throw new Exception(message);}
+    static void Check(bool yes,string message){if(ReconnectCase){lifecycleChecks.Add((yes?"PASS ":"FAIL ")+message);File.WriteAllLines(".tools/bo3-room-1021/native-network-checks.txt",lifecycleChecks);}if(!yes)throw new Exception(message);}
     IEnumerator Guard(IEnumerator routine)
     {
         while(true) {
@@ -58,9 +58,10 @@ public sealed class EndReviewValidation : MonoBehaviour
         foreach(var p in probes) if(p.net!=null) Destroy(p.net.gameObject);
         service?.Disconnect();
         while(service!=null&&service.IsDisconnecting) yield return null;
+        if(ReconnectCase)UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
         running=false;Destroy(gameObject);
     }
-    Probe Connect(string name,string action)
+    Probe Connect(string name,string action,string token="")
     {
         var p=new Probe();probes.Add(p);
         var go=new GameObject(name);DontDestroyOnLoad(go);
@@ -70,7 +71,7 @@ public sealed class EndReviewValidation : MonoBehaviour
         var manifest=(OnlineContentManifest)typeof(OnlineMatchService).GetField("localManifest",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(service);
         p.net.OnClientConnectedCallback+=id=> {
             p.net.CustomMessagingManager.RegisterNamedMessageHandler(OnlineProtocol.MessageName,(sender,reader)=> {
-                reader.ReadValueSafe(out string json);var e=JsonUtility.FromJson<OnlineEnvelope>(json);
+                reader.ReadValueSafe(out string json);var e=JsonUtility.FromJson<OnlineEnvelope>(json);OnlineEnvelopeCodec.Decode(e);
                 if(e.type==OnlineProtocol.Welcome)p.welcome=JsonUtility.FromJson<OnlineWelcomeMessage>(e.payload);
                 if(e.type==OnlineProtocol.Lobby)p.lobby=JsonUtility.FromJson<OnlineLobbyState>(e.payload);
                 if(e.type==OnlineProtocol.MatchEnded)p.ended=JsonUtility.FromJson<OnlineMatchEndedMessage>(e.payload);
@@ -83,7 +84,7 @@ public sealed class EndReviewValidation : MonoBehaviour
                 if(p.view!=null&&(e.type==OnlineProtocol.StartMatch||e.type==OnlineProtocol.ResyncState))
                     p.Send(OnlineProtocol.HashReport,new OnlineHashReportMessage{appliedSequence=p.view.appliedSequence,stateHash=p.view.viewHash});
             });
-            p.Send(OnlineProtocol.Hello,new OnlineHelloMessage{displayName=name,roomId="spectator-test",roomAction=action,manifest=manifest,requestedRoomConfig=new OnlineRoomConfig{bestOf=3}});
+            p.Send(OnlineProtocol.Hello,new OnlineHelloMessage{displayName=name,roomId="spectator-test",roomAction=action,reconnectToken=token,manifest=manifest,requestedRoomConfig=new OnlineRoomConfig{bestOf=3}});
         };
         Check(p.net.StartClient(),"Probe could not connect");return p;
     }
@@ -105,6 +106,7 @@ public sealed class EndReviewValidation : MonoBehaviour
         var mountain=CardDatabaseRepository.LoadAll().First(c=>c.cardName=="Mountain");
         var own=new DeckDefinition{name="Review test",cards=new List<DeckEntry>{new DeckEntry{setCode=forest.setCode,collectorNumber=forest.CollectorNumber,count=60}}};
         var other=new DeckDefinition{name="Private opponent deck",cards=new List<DeckEntry>{new DeckEntry{setCode=mountain.setCode,collectorNumber=mountain.CollectorNumber,count=60}}};
+        if(ReconnectCase)other.sideboard.Add(new DeckEntry{setCode=forest.setCode,collectorNumber=forest.CollectorNumber,count=4});
         service.SubmitDeck(own);second.Send(OnlineProtocol.SubmitDeck,new OnlineDeckMessage{deck=other});
         yield return Wait(()=>service.LobbyState.players.Count(p=>p.hasDeck)==2);
         service.SetReady(true);second.Send(OnlineProtocol.SetReady,new OnlineReadyMessage{ready=true});
@@ -125,6 +127,7 @@ public sealed class EndReviewValidation : MonoBehaviour
         Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName,"Auto-left battlefield");
         Check(!service.IsInMatch&&service.EndReview.winnerSeat==2,"Wrong result");
         Check(!service.CanSubmitRuleAction,"Result screen permits rule actions");
+        if(ReconnectCase){var tail=ValidateSeriesReconnect(second,observer,own,other);while(tail.MoveNext())yield return tail.Current;yield break;}
         var players=service.ForgeView.forge.players;
         Check(players.Length==2,"Final view lost a player");
         var mine=players.First(p=>p.seat==1);var theirs=players.First(p=>p.seat==2);
@@ -140,9 +143,9 @@ public sealed class EndReviewValidation : MonoBehaviour
         ScreenCapture.CaptureScreenshot("D:/project/MTGB/.tools/room-browser/end-result"+(AutomaticCase?"-auto":"")+".png");yield return new WaitForEndOfFrame();
         var controller=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();
         var result=GameObject.Find("MatchResult").transform.Find("Result");
-        var leave=GameObject.Find("Canvas").transform.Find("GearBox/LeaveReview").GetComponent<UnityEngine.UI.Button>();
+        var leave=GameObject.Find("Canvas").GetComponentsInChildren<UnityEngine.UI.Button>(true).First(b=>b.name=="LeaveReview");
         Check(GameObject.Find("ReviewBar")==null&&!leave.gameObject.activeSelf,"Unexpected top bar/early leave button");
-        result.Find("继续查看").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+        result.Find("查看战场").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
         Check(!result.gameObject.activeSelf&&leave.gameObject.activeSelf,"Continue did not enter inspection");
         yield return new WaitForSecondsRealtime(.3f);
         ScreenCapture.CaptureScreenshot("D:/project/MTGB/.tools/room-browser/end-review-battlefield.png");yield return new WaitForEndOfFrame();
@@ -157,7 +160,7 @@ public sealed class EndReviewValidation : MonoBehaviour
         yield return new WaitForSecondsRealtime(.3f);ScreenCapture.CaptureScreenshot("D:/project/MTGB/.tools/room-browser/end-own-deck.png");yield return new WaitForEndOfFrame();
         leave.onClick.Invoke();yield return null;
         Check(!picker.activeSelf&&result.gameObject.activeSelf&&!leave.gameObject.activeSelf&&service.EndReview!=null,"Leave shortcut failed to reopen result");
-        result.Find("继续查看").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+        result.Find("查看战场").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
         Check(leave.gameObject.activeSelf&&!result.gameObject.activeSelf,"Repeated inspection failed");
         leave.onClick.Invoke();
         if(!AutomaticCase)service.DecideEndReplay(true);yield return Wait(()=>service.EndReplayStatus=="录像已保存",20);

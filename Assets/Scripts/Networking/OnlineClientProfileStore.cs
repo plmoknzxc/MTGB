@@ -48,13 +48,14 @@ public static class OnlineClientProfileStore
         SharedProfileData shared = LoadShared(id);
         string roomId = OnlineRoomRegistry.NormalizeRoomId(
             shared?.roomId ?? PlayerPrefs.GetString(key + "RoomId", "main"));
-        string reconnectToken = PlayerPrefs.GetString(key + "ReconnectToken." + roomId,
-            roomId == "main" ? PlayerPrefs.GetString(key + "ReconnectToken", string.Empty) : string.Empty);
+        string address = shared?.address ?? PlayerPrefs.GetString(key + "Address", "127.0.0.1");
+        ushort port = shared != null ? ParsePort(shared.port.ToString()) : ParsePort(PlayerPrefs.GetString(key + "Port", "7777"));
+        string reconnectToken = GetReconnectToken(id,address,port,roomId);
         return new OnlineClientProfile
         {
             id = id,
-            address = shared?.address ?? PlayerPrefs.GetString(key + "Address", "127.0.0.1"),
-            port = shared != null ? ParsePort(shared.port.ToString()) : ParsePort(PlayerPrefs.GetString(key + "Port", "7777")),
+            address = address,
+            port = port,
             displayName = shared?.displayName ?? PlayerPrefs.GetString(key + "DisplayName", DefaultDisplayName(id)),
             roomId = roomId,
             reconnectToken = reconnectToken,
@@ -71,6 +72,9 @@ public static class OnlineClientProfileStore
     {
         string id = NormalizeId(profileId);
         string key = Prefix + id + ".";
+        // Scope a legacy room-only credential before connection settings change.
+        // Never present one server's recovery token to another endpoint.
+        MigrateReconnectToken(id);
         PlayerPrefs.SetString(key + "Address", string.IsNullOrWhiteSpace(address) ? "127.0.0.1" : address.Trim());
         PlayerPrefs.SetString(key + "Port", (port == 0 ? 7777 : port).ToString());
         PlayerPrefs.SetString(key + "DisplayName", NormalizeDisplayName(displayName));
@@ -87,9 +91,38 @@ public static class OnlineClientProfileStore
 
     public static void SaveReconnectToken(string profileId, string token, string roomId = "main")
     {
-        string key = Prefix + NormalizeId(profileId) + ".ReconnectToken."
-            + OnlineRoomRegistry.NormalizeRoomId(roomId);
+        MigrateReconnectToken(profileId);
+        var profile=Load(profileId);
+        string key=ReconnectKey(profile.id,profile.address,profile.port,roomId);
         PlayerPrefs.SetString(key, token ?? string.Empty);
+        PlayerPrefs.Save();
+    }
+
+    private static string ReconnectKey(string profile,string address,ushort port,string room)
+        => Prefix+NormalizeId(profile)+".ReconnectToken2."+(address??"127.0.0.1").Trim().ToLowerInvariant()+":"+(port==0?7777:port)+"."+OnlineRoomRegistry.NormalizeRoomId(room);
+
+    public static string GetReconnectToken(string profile,string address,ushort port,string room)
+    {
+        string prefix=Prefix+NormalizeId(profile)+".";
+        if(PlayerPrefs.HasKey(prefix+"ReconnectToken."+OnlineRoomRegistry.NormalizeRoomId(room))
+            || PlayerPrefs.HasKey(prefix+"ReconnectToken"))MigrateReconnectToken(profile);
+        return PlayerPrefs.GetString(ReconnectKey(profile,address,port,room),string.Empty);
+    }
+
+    private static void MigrateReconnectToken(string profile)
+    {
+        string id=NormalizeId(profile),prefix=Prefix+id+".";
+        var shared=LoadShared(id);
+        string room=OnlineRoomRegistry.NormalizeRoomId(shared?.roomId??PlayerPrefs.GetString(prefix+"RoomId","main"));
+        string legacy=prefix+"ReconnectToken."+room;
+        string old=PlayerPrefs.GetString(legacy,room=="main"?PlayerPrefs.GetString(prefix+"ReconnectToken",""):"");
+        if(string.IsNullOrEmpty(old))return;
+        string address=shared?.address??PlayerPrefs.GetString(prefix+"Address","127.0.0.1");
+        ushort port=shared!=null?ParsePort(shared.port.ToString()):ParsePort(PlayerPrefs.GetString(prefix+"Port","7777"));
+        string key=ReconnectKey(id,address,port,room);
+        if(!PlayerPrefs.HasKey(key))PlayerPrefs.SetString(key,old);
+        PlayerPrefs.DeleteKey(legacy);
+        if(room=="main")PlayerPrefs.DeleteKey(prefix+"ReconnectToken");
         PlayerPrefs.Save();
     }
 

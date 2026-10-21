@@ -67,27 +67,33 @@ public sealed partial class ForgeBattlefieldController
             DockAction(attackBatchActions,"EndPhase","",new Vector2(73,0),140,()=>{},true);
             foreach(var label in attackBatchActions.GetComponentsInChildren<Text>())PreferenceText.SetSize(label,16);
         }
-        var eligible=view.request.options.Where(o=>o.id.StartsWith("attack:",StringComparison.Ordinal)||o.id.StartsWith("attack-remove:",StringComparison.Ordinal)).Select(o=>o.attackerId).Distinct().ToArray();
         var assigned=AssignedAttackers();
-        bool all=eligible.Length>0&&eligible.All(assigned.Contains);
-        bool partial=selectedAttackers.Count>0||assigned.Length>0&&!all;
-        int primary=OptionIndex(partial?"ok":all?"reset-attacks":"attack-all");
+        bool hasAttackers=selectedAttackers.Count>0||assigned.Length>0;
+        int primary=OptionIndex(hasAttackers?"ok":"attack-all");
         long captured=requestId;
         var left=attackBatchActions.Find("Primary").GetComponent<Button>();
-        left.GetComponentInChildren<Text>().text=partial?TapPaymentText("确定攻击","Confirm attacks","攻撃を確定")
-            :all?TapPaymentText("全部取消","Recall all","全て取消"):TapPaymentText("全部攻击","Attack all","全て攻撃");
+        left.GetComponentInChildren<Text>().text=hasAttackers?TapPaymentText("确定攻击","Confirm attacks","攻撃を確定")
+            :TapPaymentText("全部攻击","Attack all","全て攻撃");
         left.interactable=IsDeclaringAttack&&(selectedAttackers.Count>0
             ?DefaultAttackDestination()>=0&&(selectedAttackers.Count==1||submitOrder!=null)
             :primary>=0&&!view.request.options[primary].disabled);
         left.onClick.RemoveAllListeners();left.onClick.AddListener(()=>{
             if(!IsDeclaringAttack||captured!=requestId)return;
-            if(partial)ConfirmSelectedAttackers(captured);
+            if(hasAttackers)ConfirmSelectedAttackers(captured);
             else {ClearAttackSelection();Choose(primary,captured);}
         });
-        var right=attackBatchActions.Find("EndPhase").GetComponent<Button>();int finish=OptionIndex("ok");
-        right.GetComponentInChildren<Text>().text=TapPaymentText("结束阶段","End phase","フェイズ終了");
-        right.interactable=IsDeclaringAttack&&finish>=0&&!view.request.options[finish].disabled;
-        right.onClick.RemoveAllListeners();right.onClick.AddListener(()=>{if(IsDeclaringAttack&&captured==requestId){ClearAttackSelection();Choose(finish,captured);}});
+        var right=attackBatchActions.Find("EndPhase").GetComponent<Button>();
+        int secondary=OptionIndex(hasAttackers?"reset-attacks":"ok");
+        right.GetComponentInChildren<Text>().text=hasAttackers?TapPaymentText("全部取消","Recall all","全て取消")
+            :TapPaymentText("结束阶段","End phase","フェイズ終了");
+        right.interactable=IsDeclaringAttack&&(hasAttackers&&assigned.Length==0
+            ||secondary>=0&&!view.request.options[secondary].disabled);
+        right.onClick.RemoveAllListeners();right.onClick.AddListener(()=>{
+            if(!IsDeclaringAttack||captured!=requestId)return;
+            ClearAttackSelection();
+            if(hasAttackers&&assigned.Length==0)PresentIntegrated(connectionText.text);
+            else Choose(secondary,captured);
+        });
         RefreshDockActionColor(left);RefreshDockActionColor(right);attackBatchActions.SetAsLastSibling();
     }
 }

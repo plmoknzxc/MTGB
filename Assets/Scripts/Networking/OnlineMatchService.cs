@@ -58,7 +58,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     public string CurrentProfileId => currentProfileId;
     public string CurrentRoomId => currentRoomId;
     public string MatchId => matchId;
-    public bool IsReconnecting => IsInMatch && reconnectingMatch;
+    public bool IsReconnecting => reconnectingMatch;
     public double ReconnectGraceRemainingSeconds => clientReconnectWindow.RemainingSeconds(Time.realtimeSinceStartupAsDouble);
     public int LocalSeat { get; private set; }
     public OnlineLobbyState LobbyState { get; private set; }
@@ -242,6 +242,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             nextHeartbeatAt = now + HeartbeatIntervalSeconds;
             SendToServer(OnlineProtocol.Heartbeat, new OnlineHeartbeatMessage { nonce = DateTime.UtcNow.Ticks });
         }
+        // BO3 sideboarding has no live game, but still owns its reconnect window.
+        UpdateAutomaticReconnect(now);
         if (!IsInMatch) return;
         if (IsClient && actionGate.Tick(now))
         {
@@ -253,7 +255,6 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 stateHash = ForgeView?.viewHash ?? string.Empty
             });
         }
-        UpdateAutomaticReconnect(now);
     }
 
     public bool StartDedicatedServer(ushort port = DefaultPort)
@@ -350,6 +351,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     public void Disconnect()
     {
+        if(LocalSeat>0)OnlineClientProfileStore.SaveReconnectToken(currentProfileId,string.Empty,currentRoomId);
         lobbyConnectDeadline = 0;
         pendingLobbyDisconnect = false;
         pendingLobbyDisconnectReason = null;
@@ -499,7 +501,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             displayName = NormalizeDisplayName(profile.displayName),
             roomAction=reconnectingMatch?"join":requestedRoomAction,
-            reconnectToken = reconnectingMatch ? profile.reconnectToken : string.Empty,
+            reconnectToken = reconnectingMatch || requestedRoomAction!="create"&&requestedRoomAction!="spectate"
+                ? OnlineClientProfileStore.GetReconnectToken(currentProfileId,profile.address,profile.port,currentRoomId) : string.Empty,
             roomId = currentRoomId,
             manifest = localManifest,
             requestedRoomConfig = CloneRoomConfig(requestedRoomConfig)
@@ -518,7 +521,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             member.connected = false;
             member.sceneReady = false;
             member.disconnectedAt = Time.realtimeSinceStartupAsDouble;
-            if (room.match != null)
+            if (room.RetainsPlayers)
             {
                 member.reconnectWindow.Begin(member.disconnectedAt);
             SetRoomStatus(room, $"玩家 {member.seat} 断线，保留席位 {ReconnectGraceSeconds:0} 秒。");
@@ -535,7 +538,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (networkManager == null || clientId != networkManager.LocalClientId) return;
         SetInteractionConnected(false);
         ConnectionChanged?.Invoke(false);
-        if (IsInMatch)
+        if (IsInMatch || IsCompeting)
         {
             reconnectingMatch = true;
             automaticReconnectEnabled = true;
@@ -686,6 +689,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             case OnlineProtocol.ReplayChunk: ReceiveReplay(Deserialize<OnlineReplayChunk>(envelope)); break;
             case OnlineProtocol.Lobby:
                 LobbyState = Deserialize<OnlineLobbyState>(envelope);
+                if(EndReview!=null&&LobbyState?.series!=null)EndReview.series=CloneSeriesState(LobbyState.series);
+                if(!string.IsNullOrEmpty(LobbyState?.series?.completionReason))SetStatus(LobbyState.series.completionReason);
                 LobbyChanged?.Invoke(LobbyState);
                 if(HasJoinedLobby && LobbyState.playDrawChooserSeat>0){IsPreparingMatch=true;ForgeBattlefieldController.Open(this);}
                 else if(IsPreparingMatch && (LobbyState?.players?.Count(p=>p.seat<=2&&p.connected&&p.ready)??0)<2)IsPreparingMatch=false;
@@ -712,6 +717,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 if (!IsSpectator && ended != null && !ended.aborted) ExpectReplay(ended.matchId);
                 IsInMatch = false;
                 reconnectingMatch = false;
+                automaticReconnectEnabled = false;
+                clientReconnectWindow.Reset();
                 matchId = string.Empty;
                 ForgeView = ended?.finalView ?? ForgeView;
                 BeginEndReview(ended);
@@ -720,7 +727,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                     if (LobbyState == null) LobbyState = new OnlineLobbyState { roomId = currentRoomId };
                     LobbyState.series = CloneSeriesState(ended.series);
                 }
-                OnlineClientProfileStore.SaveReconnectToken(currentProfileId, string.Empty, currentRoomId);
+                // This ends one game, not the authenticated room membership.
+                // The same credential also covers sideboarding and a later series.
                 actionGate.SetConnected(false);
                 NotifyInteractionStateChanged();
                 MatchEnded?.Invoke(ended);
@@ -736,6 +744,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                     reconnectingMatch = false;
                     automaticReconnectEnabled = false;
                     IsInMatch = false;
+                    ClearLobbyState();
                 }
                 SetStatus(protocolError?.message ?? "网络协议错误。");
                 if (ShouldResetLobbyConnectionOnError(IsServer, IsInMatch, HasJoinedLobby, protocolError))
@@ -768,6 +777,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             return;
         }
         LocalSeat = welcome.seat;
+        // A restarted client must continue this authenticated member's sequence.
+        // The server keeps its replay/duplicate guard across connections and games.
+        if(welcome.lastRequestId<long.MaxValue)nextRequestId=Math.Max(nextRequestId,welcome.lastRequestId+1);
+        if(welcome.ownDeck!=null&&!IsSpectator)clientRegisteredDeck=CloneDeck(welcome.ownDeck);
         connectedToLanHost = welcome.lanHosted;
         currentRoomId = OnlineRoomRegistry.NormalizeRoomId(welcome.roomId);
         OnlinePlayerContext.SetLocalPlayer(LocalSeat);
@@ -778,6 +791,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             reconnectingMatch = true;
             actionGate.BeginResync();
             NotifyInteractionStateChanged();
+        }
+        else {
+            reconnectingMatch=false;automaticReconnectEnabled=false;clientReconnectWindow.Reset();
         }
         SetStatus(IsSpectator ? $"已加入房间 {currentRoomId} 的观战席。" : $"已作为玩家 {LocalSeat} 加入房间 {currentRoomId}。");
     }
@@ -868,6 +884,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             reconnectToken = member.reconnectToken,
             serverName = Application.productName,
             resumingMatch = resuming,
+            lastRequestId = member.requestGate.LastRequestId,
+            ownDeck = member.IsSpectator ? null : CloneDeck(member.deck),
             lanHosted = IsHost,
             roomId = room.roomId,
             manifest = localManifest
@@ -1259,7 +1277,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         RejectAction(clientId, 0, "Concession requires a numbered action request.");
     }
 
-    private void EndRoomMatch(OnlineRoomState room, int winnerSeat, string reason, bool aborted = false)
+    private void EndRoomMatch(OnlineRoomState room, int winnerSeat, string reason, bool aborted = false,bool finishSeries = false)
     {
         if (room?.match == null) return;
         room.series ??= new OnlineSeriesState();
@@ -1271,6 +1289,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (!aborted) room.series.RecordGameResult(winnerSeat);
         // An engine failure does not complete a game or open a sideboarding window.
         else room.series.betweenGames = false;
+        if(finishSeries)room.series.Forfeit(winnerSeat,reason);
         var ended = new OnlineMatchEndedMessage
         {
             aborted = aborted,
@@ -1313,9 +1332,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             member.ready = false;
             member.sceneReady = false;
             member.restoring = false;
-            member.reconnectWindow.Reset();
+            if(member.connected || !room.series.betweenGames)member.reconnectWindow.Reset();
         }
-        foreach (int seat in room.members.Where(pair => !pair.Value.connected).Select(pair => pair.Key).ToList())
+        foreach (int seat in room.members.Where(pair => !pair.Value.connected && (!room.series.betweenGames || pair.Value.IsSpectator)).Select(pair => pair.Key).ToList())
             room.members.Remove(seat);
         EnsureRoomHost(room);
         BroadcastLobby(room);
@@ -1374,14 +1393,17 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         for (int i = 0; i < idleClients.Count; i++) networkManager.DisconnectClient(idleClients[i], "Idle timeout");
         foreach (OnlineRoomState room in roomRegistry.Rooms.ToList())
         {
-            if (room.match != null)
+            if (room.RetainsPlayers)
             {
+                foreach(var gone in room.members.Values.Where(m=>m.connected && m.clientId!=NetworkManager.ServerClientId && !connectedIds.Contains(m.clientId)).ToArray())OnClientDisconnected(gone.clientId);
                 foreach(var observer in room.members.Values.Where(m=>m.IsSpectator&&!m.connected&&m.reconnectWindow.IsExpired(now)).ToArray())room.members.Remove(observer.seat);
                 OnlineRoomMember expired = room.members.Values.FirstOrDefault(item =>
                     !item.IsSpectator && !item.connected && item.reconnectWindow.IsExpired(now));
                 if (expired == null) continue;
                 OnlineRoomMember opponent = room.members.Values.FirstOrDefault(item => !item.IsSpectator && item.connected);
-                EndRoomMatch(room, opponent?.seat ?? 0, $"玩家 {expired.seat} 未在 {ReconnectGraceSeconds:0} 秒内重连。");
+                string reason=$"选手未在 {ReconnectGraceSeconds:0} 秒内重连，本场比赛按弃权结束。";
+                if(room.match!=null)EndRoomMatch(room,opponent?.seat??0,reason,opponent==null,true);
+                else EndDisconnectedSeries(room,opponent?.seat??0,reason);
                 continue;
             }
 
@@ -1399,6 +1421,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     /// 返回是否有变更。</summary>
     private bool PruneGoneLobbyMembers(OnlineRoomState room, HashSet<ulong> connectedIds, double now)
     {
+        if(room.RetainsPlayers)return false;
         bool changed = false;
         foreach (OnlineRoomMember member in room.members.Values.ToList())
         {
@@ -1424,6 +1447,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             automaticReconnectEnabled = false;
             reconnectingMatch = false;
             IsInMatch = false;
+            OnlineClientProfileStore.SaveReconnectToken(currentProfileId,string.Empty,currentRoomId);
+            ClearLobbyState();
             SetInteractionConnected(false);
             MatchEnded?.Invoke(new OnlineMatchEndedMessage { matchId = matchId, reason = "重连等待时间已过。" });
             SetStatus("重连等待时间已过。");
@@ -1489,12 +1514,12 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (room.hostSeat > 0
             && room.members.TryGetValue(room.hostSeat, out OnlineRoomMember current)
             && current != null
-            && current.connected)
+            && current.connected && (!room.RetainsPlayers || !current.IsSpectator))
         {
             return;
         }
         OnlineRoomMember next = room.members.Values
-            .Where(item => item != null && item.connected)
+            .Where(item => item != null && item.connected && (!room.RetainsPlayers || !item.IsSpectator))
             .OrderBy(item => item.seat)
             .FirstOrDefault();
         room.hostSeat = next?.seat ?? 0;

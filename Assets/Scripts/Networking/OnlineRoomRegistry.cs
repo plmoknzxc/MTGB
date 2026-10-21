@@ -32,6 +32,7 @@ public sealed class OnlineSeriesState
     public int nextChooserSeat;
     public bool betweenGames;
     public bool finished;
+    public string completionReason;
 
     public int WinsRequired => bestOf == 3 ? 2 : 1;
 
@@ -46,11 +47,21 @@ public sealed class OnlineSeriesState
         nextChooserSeat = 0;
         betweenGames = false;
         finished = false;
+        completionReason = string.Empty;
     }
 
     public void BeginGame()
     {
         betweenGames = false;
+    }
+
+    public void Forfeit(int winner,string reason = "")
+    {
+        winnerSeat = winner == 1 || winner == 2 ? winner : 0;
+        finished = true;
+        betweenGames = false;
+        nextChooserSeat = 0;
+        completionReason = reason;
     }
 
     public void RecordGameResult(int gameWinnerSeat)
@@ -104,6 +115,7 @@ public sealed class OnlineRoomState : IDisposable
     public OnlineSeriesState series = new OnlineSeriesState();
     public readonly Dictionary<int, OnlineRoomMember> members = new Dictionary<int, OnlineRoomMember>();
     public OnlineMatchSession match;
+    public bool RetainsPlayers => match != null || series?.betweenGames == true && !series.finished;
     // Only a public projection survives engine disposal for late spectators.
     public OnlineMatchEndedMessage publicReview;
     public bool HasReviewers => publicReview?.finalView?.forge!=null && System.Linq.Enumerable.Any(members.Values,m=>m.connected&&m.reviewing);

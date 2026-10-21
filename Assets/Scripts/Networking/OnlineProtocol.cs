@@ -61,6 +61,8 @@ public sealed class OnlineWelcomeMessage
     public string reconnectToken;
     public string serverName;
     public bool resumingMatch;
+    public long lastRequestId;
+    public DeckDefinition ownDeck;
     public bool lanHosted;
     public string roomId;
     public OnlineContentManifest manifest;
