@@ -351,7 +351,7 @@ public final class ForgeBridge {
                             || ability.isSpell() && ForgeCardCostPreview.canPayMinimum(ability,getPlayer())
                             || ability.isSpell() && hasNativeCastingPaymentChoice(host,getPlayer()))affordable.add(ability);
                     },new forge.ai.PlayerControllerAi(game,getPlayer(),getPlayer().getOriginalLobbyPlayer()));
-                    affordable.removeIf(a->!namePermits(a,getPlayer()));
+                    affordable.removeIf(a->!ForgeActionLegality.permits(a,getPlayer()));
                     if(affordable.isEmpty()){guiFor(this).inputRevision++;return null;}
                     Gui choiceGui=guiFor(this);
                     choiceGui.castingAbilities.clear();for(var a:affordable)choiceGui.castingAbilities.put(a.getId(),a);
@@ -492,6 +492,7 @@ public final class ForgeBridge {
         int attackerId, defenderId;
         String defenderKind;
         boolean requiresPaymentCheck;
+        transient boolean priorityResponse;
         Object card;
         Object ability;
         Object castingFace;
@@ -1273,26 +1274,6 @@ public final class ForgeBridge {
             catch(Exception e) { throw new IllegalStateException("Unanswered dialog: "+title,e); }
         }
     }
-    // Upstream canPlay predicts timing/costs; prohibitions are checked only later
-    // by PlaySpellAbility. Filter rules whose named/type/color choices are already
-    // fixed on their source. Announced amount-dependent rules remain final checks.
-    static boolean namePermits(forge.game.spellability.SpellAbility ability,Player player) {
-        Card host=ability.getHostCard();
-        if(ability.isSpell())host=Objects.requireNonNullElse(ability.getAlternateHost(host),host);
-        var mode=ability.isSpell()?forge.game.staticability.StaticAbilityMode.CantBeCast:forge.game.staticability.StaticAbilityMode.CantBeActivated;
-        List<Card> sources=new ArrayList<>();game.getCardsIn(ZoneType.STATIC_ABILITIES_SOURCE_ZONES).forEach(sources::add);
-        if(ability.isSpell())sources.add(host);
-        for(Card source:sources)for(var rule:source.getStaticAbilities()) {
-            String valid=rule.getParamOrDefault("ValidCard","");
-            if(!(valid.contains(".NamedCard") || valid.contains(".ChosenType") || valid.contains(".ChosenColor"))
-                || rule.hasParam("cmcGT") || !rule.checkConditions(mode))continue;
-            boolean forbidden=ability.isSpell()
-                ?forge.game.staticability.StaticAbilityCantBeCast.applyCantBeCastAbility(rule,ability,host,player)
-                :forge.game.staticability.StaticAbilityCantBeCast.applyCantBeActivatedAbility(rule,ability,host,player);
-            if(forbidden)return false;
-        }
-        return true;
-    }
     static synchronized void publish(Pending p) {
         if(finished || game!=null && game.isGameOver()){finish();throw new GameEnded();}
         if(p.gui!=null)p.playerSeat=game.getRegisteredPlayers().indexOf(p.gui.controller.getPlayer())+1;
@@ -1387,29 +1368,17 @@ public final class ForgeBridge {
                 if(inp instanceof InputSelectEntitiesFromList || inp instanceof InputSelectTargets)zones.addAll(List.of(ZoneType.Library,ZoneType.Command,ZoneType.Sideboard,ZoneType.Ante));
                 for(ZoneType z:zones) {
                     for(Card c:game.getCardsIn(z)) {
-                        String activate=inp.getActivateAction(c);
+                        // Priority proposals need one coherent native action, rather
+                        // than combining permissions from one mode with another's cost.
+                        ForgeActionLegality.Prediction prediction=inp instanceof InputPassPriority
+                            ?ForgeActionLegality.predict(c,g.controller.getPlayer()):null;
+                        String activate=prediction!=null?(prediction.selectable()?"Priority action":null):inp.getActivateAction(c);
                         boolean counterExhausted=activate==null && inp instanceof InputSelectCardToRemoveCounter selection && selection.getSelected().contains(c);
                         if(counterExhausted)activate="Selected counters";
                         if(chosenTargets.contains(c))activate="Deselect target";
                         boolean london=inp instanceof InputLondonMulligan
                             && z==ZoneType.Hand && c.getOwner()==g.controller.getPlayer();
                         if(london) activate="Select for London mulligan";
-                        boolean minimumPayable=activate!=null && inp instanceof InputPassPriority
-                            && !g.actionableCards.contains(c.getId()) && ForgeCardCostPreview.canPayMinimum(c,g.controller.getPlayer());
-                        // getActivateAction describes a possible proposal, not affordability.
-                        // Reuse Forge's priority-time prediction (includes mana sources and cost
-                        // modifiers); do not count lands or reimplement costs in the Unity client.
-                        // AvailableActions predicts through an AI controller. Its convoke
-                        // policy deliberately preserves creatures before combat, so a false
-                        // prediction cannot veto the human's legal tap-payment decision.
-                        if(inp instanceof InputPassPriority && z==ZoneType.Hand
-                            && !g.actionableCards.contains(c.getId())
-                            && !minimumPayable
-                            && !c.hasKeyword(forge.game.keyword.Keyword.CONVOKE)
-                            && !c.hasKeyword(forge.game.keyword.Keyword.IMPROVISE)
-                            && !hasNativeCastingPaymentChoice(c,g.controller.getPlayer())) activate=null;
-                        if(inp instanceof InputPassPriority && activate!=null
-                            && c.getAllPossibleAbilities(g.controller.getPlayer(),true).stream().noneMatch(a->namePermits(a,g.controller.getPlayer())))activate=null;
                         boolean visible=c.getView().canBeShownTo(g.controller.getPlayer().getView());
                         if(activate!=null) {
                             Option candidate=new Option("card:"+c.getId(),
@@ -1419,8 +1388,8 @@ public final class ForgeBridge {
                                 else if(singleTarget){g.targetDraft=g.targetDraft==c?null:c;g.inputRevision++;}
                                 else g.controller.getInputProxy().selectCard(c.getView(),null,null);
                             });
-                            candidate.requiresPaymentCheck=inp instanceof InputPassPriority && !g.actionableCards.contains(c.getId())
-                                && !minimumPayable;
+                            candidate.requiresPaymentCheck=prediction!=null&&!prediction.payable();
+                            candidate.priorityResponse=prediction!=null&&prediction.response();
                             candidate.disabled=counterExhausted;
                             if(inp instanceof InputSelectEntitiesFromList || inp instanceof InputSelectTargets || inp instanceof InputSelectCardsForConvokeOrImprovise || inp instanceof InputSelectCardToRemoveCounter) {
                                 candidate.card=visible?card(c):Map.of("id",c.getId(),"name","Face-down card","faceDown",true);
@@ -1729,11 +1698,7 @@ public final class ForgeBridge {
             Player acting=pending!=null && pending.seat==s+1 && pending.gui!=null?pending.gui.controller.getPlayer():guis.get(s).controller.getPlayer();
             boolean canRespond=acting.isInGame() && !game.isGameOver() && acting.getView().hasAvailableActions();
             if(acting.isInGame() && !game.isGameOver() && pending!=null && pending.seat==s+1 && pending.gui!=null && pending.kind.equals("InputPassPriority")) {
-                Set<Integer> offered=new HashSet<>();
-                for(Option option:pending.options)if(option.id.startsWith("card:") && !option.disabled && !option.requiresPaymentCheck)offered.add(Integer.parseInt(option.id.substring(5)));
-                canRespond=false;
-                for(Card candidate:game.getCardsInGame())if(offered.contains(candidate.getId())
-                    && candidate.getAllPossibleAbilities(acting,true).stream().anyMatch(a->!a.isManaAbility()&&namePermits(a,acting))) {canRespond=true;break;}
+                canRespond=pending.options.stream().anyMatch(o->!o.disabled&&o.priorityResponse);
             }
             view.put("canRespond",canRespond);
             view.put("attackStateKnown",true);

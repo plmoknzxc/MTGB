@@ -841,3 +841,5 @@ Unity 重载曾被项目盘低于 1 GB 的对话框阻挡。七轮较早的原�
 只为原生耗竭确认提示增加三语言本地化，复用紧凑双按钮；精确Yes/No射线、过期/重复/非操作拦截和查看战场往返字号通过，`.tools/arena-mana-1006/ui-increment.json` 为UI增量，33UI首验不增加。旧点击PASS后截图窗口已消失的尝试保留，仅修截图时机重采，未重新跑原生。
 
 按原生构造器九字段盘点245条AB/SP/DB Mana/ManaReflected声明，归为14分支并保留具体谓词/本地SVars；补入初版遗漏的TriggersWhenSpent/PersistentMana/CombatMana/SP入口。`.tools/mana-consumer-classification-1006/result.json` 只作R09与A01/A03/A04共用源码分类，不能当效果通过。R09/R12具体完成范围已核销；其他用途公式、关键词期限、条件指示物/花费触发、法术力保留、辅助effect展示及网络仍开放。累计352原生/33UI首验；goal继续且未完成。
+
+2026-10-21 可用动作与录像增量：通用原生禁用／目标／费用按同一异能判断，覆盖祈胜歌手、泰菲力、诅咒图腾、每回合上限及施放来源限制；合法循环／魂力和限制解除恢复另有真实原生结果。暂停录像的语言／字号刷新、调度提示、详情标题及堆叠编号按当前 Unity 消费者验证。仅分类刷新，保留旧证据状态，不恢复 goal，未打包或部署。见[本批范围与失败记录](ReplayLanguageAndActionLegality.2026-10-21.zh-CN.md)。

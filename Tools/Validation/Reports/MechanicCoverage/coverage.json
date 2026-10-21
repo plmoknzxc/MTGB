@@ -2,7 +2,7 @@
   "scope": "Controlled Forge games using the production bridge. Passing covers only the listed assertions; Unity input/rendering and other cards or edge cases remain unverified.",
   "provenance": {
     "revision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
-    "fingerprint": "6d83e7f0b2fb467acb84360dd1efd60720163bda95d7680b70b4f9ff25288f96",
+    "fingerprint": "117a37405838e643d75adcac94c29bcf8d02c8e063bf82f5ce1d3a29a923187f",
     "cardScripts": 33980,
     "scriptRoots": {
       "cardsfolder": 33980,
@@ -68695,6 +68695,7 @@
   ],
   "testsNotReviewedForThisManifest": [
     "Tools/ForgeBridge/Test-AbilityText.py",
+    "Tools/ForgeBridge/Test-ActionLegality.py",
     "Tools/ForgeBridge/Test-AttackWireBoundary.py",
     "Tools/ForgeBridge/Test-CardNotices.py",
     "Tools/ForgeBridge/Test-CatalogLoading.py",

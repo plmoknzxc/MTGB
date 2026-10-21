@@ -237,13 +237,18 @@ public sealed partial class ForgeBattlefieldController
         if(mulliganChoices==null)mulliganChoices=Panel(surface,"MulliganChoices",new Vector2(0,-135),new Vector2(520,154),Ink);
         mulliganChoices.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(520,154,12);
         string prompt=view.request.kind=="InputChooseStartingHand"?TapPaymentText("选择要保留的起手；其余起手将洗回牌库。","Choose a starting hand; the other hands will be shuffled into your library.","最初の手札を選択。他の手札はライブラリーに戻して切り直します。"):Prompt(view,seat);
-        Label(mulliganChoices,"Prompt",prompt,new Vector2(0,36),new Vector2(488,60),19,Paper).raycastTarget=false;
+        var promptLabel=Label(mulliganChoices,"Prompt",prompt,Vector2.zero,new Vector2(488,60),19,Paper);
+        promptLabel.raycastTarget=false;
+        float promptHeight=Mathf.Max(60,promptLabel.preferredHeight+8),panelHeight=promptHeight+94;
+        mulliganChoices.sizeDelta=new Vector2(520,panelHeight);
+        promptLabel.rectTransform.sizeDelta=new Vector2(488,promptHeight);
+        promptLabel.rectTransform.anchoredPosition=new Vector2(0,panelHeight*.5f-16-promptHeight*.5f);
         var options=view.request.options.Where(o=>!RepresentedOnBoard(o.id)).ToArray();
         for(int i=0;i<options.Length;i++)
         {
             var option=options[i];int index=OptionIndex(option.id);long captured=requestId;
             var button=Button(mulliganChoices,"Mulligan_"+option.id,RequestOptionLabel(option),
-                new Vector2((i-(options.Length-1)*.5f)*238,-39),new Vector2(226,46),()=>Choose(index,captured),option.id=="ok"?new Color(.25f,.34f,.39f):Ink);
+                new Vector2((i-(options.Length-1)*.5f)*238,-panelHeight*.5f+38),new Vector2(226,46),()=>Choose(index,captured),option.id=="ok"?new Color(.25f,.34f,.39f):Ink);
             button.interactable=canAct && !submitted;
         }
         mulliganChoices.gameObject.SetActive(true);mulliganChoices.SetAsLastSibling();
@@ -648,8 +653,9 @@ public sealed partial class ForgeBattlefieldController
         typeText.rectTransform.offsetMin=typeText.rectTransform.offsetMax=Vector2.zero;
         float typeHeight=Mathf.Max(24,Mathf.Ceil(typeText.GetPreferredValues(typeText.text,inner,10000).y)+4);
         var nameLabel=SceneText("InspectPanel/Name");
-        float originalWidth=Node("InspectPanel/OriginalState").gameObject.activeSelf?((RectTransform)Node("InspectPanel/OriginalState")).rect.width+10:0;
-        float nameWidth=inner-originalWidth;
+        var originalButton=(RectTransform)Node("InspectPanel/OriginalState");
+        float originalHeight=originalButton.gameObject.activeSelf?originalButton.rect.height+8:0;
+        float nameWidth=inner;
         nameLabel.rectTransform.sizeDelta=new Vector2(nameWidth,34);
         nameLabel.horizontalOverflow=HorizontalWrapMode.Wrap;nameLabel.resizeTextForBestFit=false;
         (nameLabel.GetComponent<PreferenceText>()??nameLabel.gameObject.AddComponent<PreferenceText>()).SetBaseSize(22);
@@ -658,7 +664,7 @@ public sealed partial class ForgeBattlefieldController
         Node("InspectPanel/Footer").gameObject.SetActive(footerHeight>0);
         float targetHeight=StackTargetDetailsHeight();
         float componentHeight=HasMeldComponents(card)?Mathf.Max(32,Mathf.Ceil(Node("InspectPanel/MeldComponents").GetComponentInChildren<Text>().preferredHeight)+6):0;
-        float fixedHeight=16+nameHeight+costHeight+artHeight+12+componentHeight+(componentHeight>0?8:0)+typeHeight+12+footerHeight+16+targetHeight;
+        float fixedHeight=16+nameHeight+originalHeight+costHeight+artHeight+12+componentHeight+(componentHeight>0?8:0)+typeHeight+12+footerHeight+16+targetHeight;
         float available=Mathf.Min((surface.rect.height-24)/detailScale,720);
         if(fixedHeight+preferred>available){float shrink=Mathf.Min(90,fixedHeight+preferred-available);artHeight-=shrink;fixedHeight-=shrink;}
         float rulesHeight=Mathf.Clamp(preferred,28,Mathf.Max(28,available-fixedHeight));
@@ -684,7 +690,10 @@ public sealed partial class ForgeBattlefieldController
             text.color=name=="TypeLine"?new Color(.67f,.73f,.78f):Paper;
         }
         Place("Name",nameHeight);
-        if(originalWidth>0) {var nameRect=(RectTransform)Node("InspectPanel/Name");nameRect.sizeDelta=new Vector2(nameWidth,nameHeight);nameRect.anchoredPosition+=Vector2.left*(originalWidth*.5f);}
+        if(originalHeight>0){
+            originalButton.anchorMin=originalButton.anchorMax=originalButton.pivot=new Vector2(1,1);
+            originalButton.anchoredPosition=new Vector2(-16,-y);y+=originalHeight;
+        }
         Place("CostRow",costHeight);
         var art=(RectTransform)Node("InspectPanel/Art");
         art.anchorMin=art.anchorMax=new Vector2(.5f,1);art.pivot=new Vector2(.5f,.5f);

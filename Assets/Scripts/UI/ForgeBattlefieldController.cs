@@ -522,7 +522,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if(option.id=="cancel" && kind.Contains("PayMana"))return TapPaymentText("取消支付","Cancel payment","支払いをキャンセル");
         if(option.id=="cancel" && kind.Contains("Targets"))return "取消施放";
         if(kind=="InputLondonMulligan" && option.label=="Auto")return TapPaymentText("自动补选并放回","Auto-select and return","自動選択して戻す");
-        if(kind.Contains("Mulligan") && option.label=="Keep")return view.request.remainingCount>0?TapPaymentText("保留 · 然后选择放回","Keep · then return cards","キープ・カードを戻す"):TapPaymentText("保留起手","Keep hand","手札をキープ");
+        if(kind.Contains("Mulligan") && option.label=="Keep")return TapPaymentText("保留起手","Keep hand","手札をキープ");
         if(kind.Contains("Mulligan") && option.label=="Mulligan")return TapPaymentText("再调度","Mulligan","マリガン");
         if(kind=="dialog"||kind=="InputConfirm")return RandomChoiceLabel(option.label);
         return OptionLabel(option);

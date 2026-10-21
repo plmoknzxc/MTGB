@@ -20,6 +20,7 @@ public sealed class ReplayPlayback : MonoBehaviour
     private Slider slider;
     private Text timeText, stateText, playText, speedText;
     private int lastFrame = -1;
+    private int lastPresentationRevision = -1;
     private string source;
     public static void Open(MatchReplay replay, string path, bool export)
     {
@@ -81,6 +82,8 @@ public sealed class ReplayPlayback : MonoBehaviour
     private void Update()
     {
         if (board == null) return;
+        // A paused frame still depends on loaded translations, fonts and text size.
+        if(GamePreferences.Ready && lastPresentationRevision!=GamePreferences.Revision)Render(false);
         if (Playing)
         {
             Position = Math.Min(Replay.Duration, Position + Time.unscaledDeltaTime * Speed);
@@ -105,8 +108,9 @@ public sealed class ReplayPlayback : MonoBehaviour
     {
         if (board == null) return;
         int frame = ReplayRepository.FrameAt(Replay, Position);
-        if (!seek && frame == lastFrame) return;
+        if (!seek && frame == lastFrame && lastPresentationRevision==GamePreferences.Revision) return;
         lastFrame = frame;
+        lastPresentationRevision=GamePreferences.Revision;
         board.PresentReplay(Replay.frames[frame].views[Seat - 1], Seat, Replay.players, seek,Replay.frames[frame].views[2-Seat]);
         stateText.text = Replay.players[Seat - 1] + " · " + GamePreferences.T("观看录像");
     }

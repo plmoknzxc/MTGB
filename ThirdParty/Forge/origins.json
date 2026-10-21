@@ -4,7 +4,7 @@
   "forgeSourceSha256": "2f060fbe00f7e28c052aeb935ad9723eeafda71c4ef7eeb2619cdde496810190",
   "javaBinaryUrl": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip",
   "javaBinarySha256": "bc21a93923103cdaac93ee337b0ae4365e739fde36df823dd456bc67c8a9d352",
-  "nativePatchesSha256": "2fac584ea51eacdf261f50dede3477cfe10ba896b0969d16790a2fd1f0f5e453",
+  "nativePatchesSha256": "0fdf65d985799e6ba3e50be3f6bdc454c6e7df4c881ac34d1382cb0897560631",
   "nativeAssetPatches": [
     {
       "id": "dragonborn-positive-power-boon-guard",
@@ -172,7 +172,7 @@
     },
     {
       "path": "forge/game/cost/CostAdjustment.java",
-      "sha256": "653c56305dd19cca8d7aaf64428f9c9b301d53b4e9fed2d79b41d68e00158892"
+      "sha256": "05b05372daaadbb04178d8bb4c25273c104e97a6d407ae5a5be6e0a0d5d84f39"
     },
     {
       "path": "forge/game/cost/CostMill.java",
@@ -192,7 +192,7 @@
     },
     {
       "path": "forge/game/GameAction.java",
-      "sha256": "bb81c736b8ced8eff98234d31ab12f16be4aa3f523ac5449bab7338afa3869c3"
+      "sha256": "af42e24127e5c9d355ff9153d86e070525e702fd275bca226ce4e923ed803cf1"
     },
     {
       "path": "forge/game/GameActionUtil.java",
@@ -221,6 +221,10 @@
     {
       "path": "forge/game/spellability/AbilityManaPart.java",
       "sha256": "f998fe2723329ee3384ac2c3f140652f0c7160e41c765b34ded75009d1fb951d"
+    },
+    {
+      "path": "forge/game/spellability/SpellAbility.java",
+      "sha256": "99f780cd7b4b65be3c4f0549bf4d901bcb749ebe7468b511d9ad7e2e16c8e3ac"
     },
     {
       "path": "forge/game/spellability/TargetRestrictions.java",
@@ -253,14 +257,14 @@
   ],
   "bridgeSourcesSha256": {
     "mtgb/bridge/BridgeAllocation.java": "f66276b2effa527deb57f3bbf70a081ae595b4d8b156173c80d7c7bb818cf36f",
-    "mtgb/bridge/BridgeCardNotices.java": "7b4409b3cf1167f074cc954b28fbbf168ec2891b5601f26889ed3ced97f31968",
+    "mtgb/bridge/BridgeCardNotices.java": "46e1f58267f32c51cd8fbc23bb5b22081a9d3b536422d20e61d2ef5a17456336",
     "mtgb/bridge/BridgeCleanupNotices.java": "e1a6770dd39d35b7cc6ef6315f96cfbc76e2f10d043361719bb9ce3b0c50f1ed",
-    "mtgb/bridge/BridgeLibraryKnowledge.java": "1fd46fff210a445908aa72984155e1b252711c9355211ae5e5c0d2019245d4da",
+    "mtgb/bridge/BridgeLibraryKnowledge.java": "71be4b3ab4871aedeee24da5247523ca4027dca0e2f11d48093bc48db6f28d25",
     "mtgb/bridge/BridgeMatchRemovals.java": "21d82a5046327bae17104d98de37790a2f4f195d1774a15ed31a3020fd849d27",
     "mtgb/bridge/BridgeRestartNotices.java": "f6a2a3bb1a62ca900b8c0396f9ab7baf824ba3158fb276b9205909bcd5cd7190",
     "mtgb/bridge/BridgeSeriesOwnership.java": "34c606d412e9cf72d1a53341bcd9392feb26d2a09bbd1ee74a8025407c615418",
-    "mtgb/bridge/ForgeBridge.java": "b9fd75a71fe810d1e9d64e6493bb9537c31bc920e1fc762cdfd9ff86549d8f02",
-    "mtgb/bridge/ForgeCardCostPreview.java": "4c34071105099928e321bdfeb2219c04989f7cc08784c40627e4dfdc1b061694",
+    "mtgb/bridge/ForgeBridge.java": "fa6afff18a78870158914cf0600ed034de55c4aba9d43c43a79d982e221bb795",
+    "mtgb/bridge/ForgeCardCostPreview.java": "87ec44834e39793ee4b2a829e1cd92e70e4d8a40ba06ddc2b3aaa8a1c4fed1ff",
     "mtgb/bridge/ForgeCardNameIndex.java": "bf6eec8eeb88b4739bc7d6b0506bcf369167d6cd0ee989233f502c37c1c4a0bc",
     "mtgb/bridge/ForgeCatalog.java": "848928b8814814987c3f7b5bb2fb246a161ddef8d260702fc6ad4a8ffbac888f",
     "mtgb/bridge/ForgeCharacteristicDetails.java": "e2a7634d982dcd9ef976869c0458948f1c476a568b338403eff44b1507062fc0",
@@ -269,6 +273,14 @@
     "mtgb/bridge/ForgePoolMana.java": "01aaf285dab5736c4abc241b7d3c03947c775e8a166ded233ce955741bae843b",
     "mtgb/bridge/ForgeSectorDetails.java": "4bb4505d9d45bd8f56f98a82d3ef6c97941148a54237be164e68a1d3cdf560bb",
     "mtgb/bridge/ForgeStackTargets.java": "d60ed1d588546d985e3bde316e6df7cc49c92ce76b17c9aff46c56c9575ce83c",
-    "mtgb/bridge/BridgeAbilityText.java": "0889fb587558615f78eee3eb59e9ecc1b5077d412c62dd05d242e4a912a66c62"
+    "mtgb/bridge/BridgeAbilityText.java": "0889fb587558615f78eee3eb59e9ecc1b5077d412c62dd05d242e4a912a66c62",
+    "mtgb/bridge/BridgeLibraryPositions.java": "5b8e0e403330023207994e83dacd8c1b14c4eb35160d0bf7631424768a48e6b3",
+    "mtgb/bridge/CommanderDeckInspector.java": "fac7876f215b2daeb456797fe2eb36c22ba7c6536e1ee0b5aa8927a5bb68d422",
+    "mtgb/bridge/DeckEditorCatalog.java": "a7edc1aff0741da1c67fca815a688e62f2a859b8151d6de1fe4f899af2e3cb14",
+    "forge/game/phase/PhaseHandler.java": "24c0dab38d9f38662323d70ddc02e51b24d7a9055b31c66a8f222fe756a4311b",
+    "forge/game/ability/effects/DigMultipleEffect.java": "ab44c2e92b23f653e3d5d96cd116ea455007bb40db9ead3ce5b9b5aefdae1e2e",
+    "forge/game/ability/effects/FlipOntoBattlefieldEffect.java": "1ae42e2089184fe2265eb736a901fa46bcae93500d2f4c6c1283a98d5c646287",
+    "mtgb/bridge/ForgePublicCardDetails.java": "1d244012a9ef0d7e324c53f71220cb460d526c80f742b61191121a58a78d32de",
+    "mtgb/bridge/ForgeActionLegality.java": "b653b73a557571c71abc2d67754a63f9ea1ac0aa2f4db493eb6e88f3d76321c8"
   }
 }

@@ -273,13 +273,6 @@ public sealed partial class ForgeBattlefieldController
             item.glow.rectTransform.anchorMax=Vector2.one;
             item.glow.rectTransform.offsetMin=item.glow.rectTransform.offsetMax=Vector2.zero;
             item.glow.transform.SetAsLastSibling();
-            var badge=item.tile.Find("StackPositionBadge") as RectTransform;
-            if(badge==null) {
-                badge=Panel(item.tile,"StackPositionBadge",new Vector2(-84,-16),new Vector2(76,26),new Color(.035f,.065f,.095f,.94f));
-                badge.anchorMin=badge.anchorMax=new Vector2(.5f,1);badge.GetComponent<Image>().raycastTarget=false;
-                Label(badge,"Text","",Vector2.zero,new Vector2(74,26),14,Paper).raycastTarget=false;
-            }
-            badge.Find("Text").GetComponent<Text>().text=StackPositionLabel(i+1);badge.SetAsLastSibling();
             item.caption.gameObject.SetActive(false);
             PresentSelectionGlow(item.row,item.tile,targetSelected);
             if(created && !stackCollapsed && source?.id!=castingCardId)AnimateStackArrival(item,i<entries.Length?entries[i].controllerSeat:seat);
