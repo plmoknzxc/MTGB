@@ -11,6 +11,7 @@ public sealed class ReplayVideoEncoder : IDisposable
     private readonly string output, temporary;
     private readonly StringBuilder errors = new StringBuilder();
     private bool finished;
+    private readonly bool overwrite;
     public static bool TryFind(out string executable)
     {
         string local = Path.Combine(PrintingKeyUtility.ApplicationRoot, "VideoTools", "ffmpeg.exe");
@@ -23,28 +24,38 @@ public sealed class ReplayVideoEncoder : IDisposable
         }
         executable = null; return false;
     }
-    public ReplayVideoEncoder(string executable, string destination, int width, int height, int fps)
+    public ReplayVideoEncoder(string executable, string destination, int width, int height, int fps,bool replaceExisting=false)
     {
+        overwrite=replaceExisting;
         output = destination; temporary = destination + "." + Guid.NewGuid().ToString("N") + ".partial.mp4";
         process = new Process { StartInfo = new ProcessStartInfo {
             FileName = executable, UseShellExecute = false, CreateNoWindow = true,
             RedirectStandardInput = true, RedirectStandardError = true,
             Arguments = "-hide_banner -loglevel error -y -f rawvideo -pixel_format rgb24 -video_size " + width + "x" + height
-                + " -framerate " + fps + " -i pipe:0 -an -vf \"vflip,scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2\""
-                + " -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -movflags +faststart \"" + temporary + "\""
+                + " -framerate " + fps + " -i pipe:0 -an -vf \"vflip,scale=out_color_matrix=bt709:out_range=tv\""
+                + " -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p -color_range tv -colorspace bt709 -color_primaries bt709 -color_trc bt709 -movflags +faststart \"" + temporary + "\""
         }};
         Utf8ProcessIO.Configure(process.StartInfo);
         process.ErrorDataReceived += (_, args) => { if (args.Data != null) lock(errors) { if(errors.Length < 8192) errors.AppendLine(args.Data); } };
         try { process.Start(); process.BeginErrorReadLine(); }
         catch { process.Dispose(); throw; }
     }
-    public Task Write(byte[] bytes) => process.StandardInput.BaseStream.WriteAsync(bytes, 0, bytes.Length);
+    public async Task Write(byte[] bytes)
+    {
+        // A 4K RGB frame exceeds the per-write quota of Windows anonymous pipes.
+        // Keep one frame in flight, with bounded writes and no additional copies.
+        const int chunk=1024*1024;
+        var input=process.StandardInput.BaseStream;
+        for(int offset=0;offset<bytes.Length;offset+=chunk)
+            await input.WriteAsync(bytes,offset,Math.Min(chunk,bytes.Length-offset)).ConfigureAwait(false);
+    }
     public Task Finish() => Task.Run(() => {
         process.StandardInput.Close();
         if (!process.WaitForExit(30000)) { process.Kill(); throw new IOException("视频编码超时。"); }
         process.WaitForExit();
         if (process.ExitCode != 0) { lock(errors) throw new IOException(errors.ToString()); }
-        File.Move(temporary, output); finished = true;
+        if(overwrite&&File.Exists(output))File.Replace(temporary,output,null);else File.Move(temporary, output);
+        finished = true;
     });
     public void Dispose()
     {

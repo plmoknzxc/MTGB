@@ -263,6 +263,7 @@ public sealed partial class ForgeBattlefieldController
     private readonly List<ForgeTargetArrow> assignedAttackArrows=new List<ForgeTargetArrow>();
     private bool IsDeclaringAttack => integrated && canAct && !submitted && !GameSettingsPanel.IsOpen
         && view?.awaitingInput==true && view.request.seat==seat && view.request.kind=="InputAttack";
+    private bool HasDefaultDuelDefender => view?.players?.Length==2 && DefaultAttackDestination()>=0;
     private bool CanSelectAttacker(int id) => IsDeclaringAttack && view.request.options.Any(o=>
         o.attackerId==id && (o.id.StartsWith("attack:") || o.id.StartsWith("attack-remove:")));
     private int AttackOption(string kind,int id) => IsDeclaringAttack && selectedAttackers.Count>0
@@ -319,7 +320,7 @@ public sealed partial class ForgeBattlefieldController
         for(int i=0;i<extraAttackArrows.Count;i++)extraAttackArrows[i].gameObject.SetActive(active&&i<selectedAttackers.Count-1);
         if(attackHint!=null)
         {
-            attackHint.gameObject.SetActive(active);
+            attackHint.gameObject.SetActive(active && (!HasDefaultDuelDefender || OptionIndex("attack-band:"+selectedAttacker)>=0));
             if(active)
             {
                 var source=AttackEntity("card",selectedAttacker);
@@ -396,6 +397,13 @@ public sealed partial class ForgeBattlefieldController
         if(!IsDeclaringAttack || selectedAttacker<0 || attackSelectionRequest!=requestId)
         {attackArrow.gameObject.SetActive(false);foreach(var arrow in extraAttackArrows)arrow.gameObject.SetActive(false);if(attackHint!=null)attackHint.gameObject.SetActive(false);return;}
         int index=AttackOptionAt(position);
+        // In 1v1, selection already means attacking the legal opposing player.
+        // Only an explicitly pointed permanent needs a target-selection arrow.
+        if(HasDefaultDuelDefender && (index<0 || view.request.options[index].defenderKind!="card")) {
+            attackArrow.gameObject.SetActive(false);
+            foreach(var arrow in extraAttackArrows)arrow.gameObject.SetActive(false);
+            return;
+        }
         RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,position,null,out var end);
         if(index>=0)
         {
@@ -415,6 +423,9 @@ public sealed partial class ForgeBattlefieldController
         if(!IsDeclaringAttack || expectedRequest!=requestId || attackSelectionRequest!=expectedRequest)return false;
         int index=AttackOptionAt(position);
         if(index>=0){ChooseAttackDestination(index,expectedRequest);return submitted;}
+        // An unassigned duel selection remains available to Confirm attacks;
+        // dropping on empty table space does not force a redundant avatar pick.
+        if(HasDefaultDuelDefender){UpdateAttackArrowAt(position);return false;}
         // Releasing over the table cancels only the local arrow, never changes Forge combat.
         ClearAttackSelection();PresentIntegrated(connectionText.text);return false;
     }

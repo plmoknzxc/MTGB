@@ -20,7 +20,7 @@ public sealed class GamePreferences : MonoBehaviour
     public static bool Ready { get; private set; }
     public static Font Font { get; private set; }
     public static TMP_FontAsset TmpFont { get; private set; }
-    public static float TextScale => Mathf.Clamp(PlayerPrefs.GetFloat("UI.TextScale", 1), .85f, 1.3f);
+    public static float TextScale => Mathf.Clamp(ReplayExportWorker.IsWorker?ReplayExportWorker.TextScale:PlayerPrefs.GetFloat("UI.TextScale", 1), .85f, 1.3f);
     public static bool AutoSaveReplays => PlayerPrefs.GetInt("Replay.AutoSave", 0) == 1;
     // Developer switch: set true to restore both language pickers and the saved
     // startup locale. Keep localization resources and SetLanguage for code/tools.

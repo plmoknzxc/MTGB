@@ -47,10 +47,13 @@ public static class AttackMultiselectValidation
         Card(a).onClick.Invoke();Card(b).onClick.Invoke();
         Check(((List<int>)Get(ui,"selectedAttackers")).SequenceEqual(new[]{a,b}),"Click two creatures selects both locally");
         Check(count==0,"Local selection causes no native or network request");
-        var arrows=GameObject.Find("Canvas").GetComponentsInChildren<ForgeTargetArrow>().Where(x=>x.name.StartsWith("AttackTargetArrow")&&x.gameObject.activeInHierarchy).ToArray();
-        Check(arrows.Length==2,"Both selected creatures keep a visible arrow");
-        Check(arrows.All(x=>x.GetComponent<Canvas>().sortingOrder>=20),"Both arrows use the top overlay layer");
         ui.UpdateAttackArrowAt(RectTransformUtility.WorldToScreenPoint(null,GameObject.Find("OpponentPlate").transform.position));
+        Check(!GameObject.Find("Canvas").GetComponentsInChildren<ForgeTargetArrow>().Any(x=>x.name.StartsWith("AttackTargetArrow")&&x.gameObject.activeInHierarchy),"Default duel player target needs no selection arrows");
+        var walker=v.players[1].battlefield.First(c=>c.planeswalker);
+        ui.UpdateAttackArrowAt(RectTransformUtility.WorldToScreenPoint(null,Card(walker.id).transform.position));
+        var arrows=GameObject.Find("Canvas").GetComponentsInChildren<ForgeTargetArrow>().Where(x=>x.name.StartsWith("AttackTargetArrow")&&x.gameObject.activeInHierarchy).ToArray();
+        Check(arrows.Length==2,"Both selected creatures show arrows for explicit planeswalker target");
+        Check(arrows.All(x=>x.GetComponent<Canvas>().sortingOrder>=20),"Both arrows use the top overlay layer");
         yield return new WaitForSecondsRealtime(.25f);Canvas.ForceUpdateCanvases();
         foreach(var arrow in arrows){var mesh=arrow.canvasRenderer.GetMesh();Check(mesh!=null&&mesh.vertexCount>0&&mesh.colors.Any(c=>c.a>.3f),"Arrow renders an opaque ribbon after its reveal animation");}
         ScreenCapture.CaptureScreenshot(Path.GetFullPath(Output+"/two-arrows.png"));yield return new WaitForEndOfFrame();
@@ -67,7 +70,6 @@ public static class AttackMultiselectValidation
         Check(!Legal(v.request,groupChoice,new List<int>{a,a}),"Host rejects duplicate members");
         Check(!Legal(v.request,groupChoice,new List<int>{a,999999}),"Host rejects missing or foreign attackers");
         Call(ui,"ClearAttackSelection");count=0;group=null;ui.Present(v,1,true,choose,null,"",chooseGroup);Card(a).onClick.Invoke();Card(b).onClick.Invoke();
-        var walker=v.players[1].battlefield.First(c=>c.planeswalker);
         var walkerPosition=RectTransformUtility.WorldToScreenPoint(null,Card(walker.id).transform.position);
         Check(ui.TryChooseAttackAt(walkerPosition,v.request.requestId)&&count==1&&group.SequenceEqual(new[]{a,b})&&v.request.options[groupChoice].defenderId==walker.id,"Dropping either group arrow on a planeswalker submits both exactly once");
         var draft=View(directory,"player-group");count=0;ui.Present(draft,1,true,choose,null,"",chooseGroup);yield return null;

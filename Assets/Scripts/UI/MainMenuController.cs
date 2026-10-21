@@ -132,6 +132,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void Awake()
     {
+        if(ReplayExportWorker.IsWorker){enabled=false;return;}
         BindSceneReferences();
         CreateCollectionSearchToolbar();
         CreateDialogButton(deckDropdown.transform.parent, "RenameDeckButton", "重命名",
@@ -238,6 +239,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if(ReplayExportWorker.IsWorker)return;
         DeckRelatedTokenArt.Clear();
         if(detailsArtHover!=null)detailsArtHover.Hide();
         GamePreferences.Changed -= RefreshLocalizedDetails;

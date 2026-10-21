@@ -154,7 +154,14 @@ public sealed class ReplayBrowser : MonoBehaviour
     {
         if (selected == null) return;
         if (video && !ReplayVideoEncoder.TryFind(out _)) { status.text = "未找到 FFmpeg，请将 ffmpeg.exe 放入 VideoTools 文件夹或加入 PATH。"; return; }
-        if (OnlineMatchService.Instance?.IsInMatch == true) { status.text = "请先完成当前对局。"; return; }
+        if (!video&&OnlineMatchService.Instance?.IsInMatch == true) { status.text = "请先完成当前对局。"; return; }
+        if(video) {
+            if(ReplayVideoExportJob.Busy){status.text=GamePreferences.T("已有视频正在后台导出");return;}
+            string videoSource=selectedPath;
+            ReplayVideoExportDialog.Show(Path.GetFileNameWithoutExtension(videoSource),
+                (destination,overwrite,width,height,fps)=>ReplayVideoExportJob.Start(videoSource,1,destination,overwrite,width,height,fps));
+            return;
+        }
         if(opening)return;
         int request=selectionRevision;string path=selectedPath;opening=true;
         play.interactable=export.interactable=false;status.text="正在加载录像…";

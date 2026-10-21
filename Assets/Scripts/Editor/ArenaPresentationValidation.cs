@@ -246,8 +246,9 @@ public static class AttackDefenderPresentationValidation
             pointer.position=Screen(destinations[i].transform);
             ExecuteEvents.Execute(source,pointer,ExecuteEvents.dragHandler);ui.UpdateAttackArrowAt(pointer.position);
             yield return new WaitForEndOfFrame();
-            var arrow=GameObject.Find("AttackTargetArrow").GetComponent<ForgeTargetArrow>();
-            Require(arrow.canvasRenderer.GetMesh().vertexCount>100,"Attack arrow has no rendered mesh.");
+            var arrow=GameObject.Find("Canvas").GetComponentsInChildren<ForgeTargetArrow>(true).First(a=>a.name=="AttackTargetArrow");
+            Require(i==0?!arrow.gameObject.activeInHierarchy:arrow.gameObject.activeInHierarchy&&arrow.canvasRenderer.GetMesh().vertexCount>100,
+                "Duel player target must hide its selection arrow; explicit permanent target must render one.");
             Require(Vector3.Distance(before,source.transform.position)<1,"Dragging moved the attacking card off the battlefield.");
             Require(!GameObject.Find("Canvas").transform.Find("ForgeChoices").gameObject.activeSelf,"Attack options leaked into sidebar.");
             ScreenCapture.CaptureScreenshot(Folder+"/drag-"+i+".png");yield return new WaitForEndOfFrame();
@@ -273,8 +274,7 @@ public static class AttackDefenderPresentationValidation
         var arrows=UnityEngine.Object.FindObjectsByType<ForgeTargetArrow>(FindObjectsSortMode.None).Where(a=>a.name.StartsWith("AssignedAttack_")).ToArray();
         Require(arrows.Length==3 && arrows.All(a=>a.canvasRenderer.GetMesh().vertexCount>100),"Missing individual assigned attack lines.");
         ScreenCapture.CaptureScreenshot(Folder+"/assignments.png");yield return new WaitForEndOfFrame();
-        ui.BeginAttackSelection(attackers[1].id,assigned.request.requestId);yield return null;
-        GameObject.Find("RecallAttacker").GetComponent<Button>().onClick.Invoke();
+        Card(attackers[1].id).GetComponent<Button>().onClick.Invoke();
         Require(calls==5 && last=="attack-remove:"+attackers[1].id,"Recall submitted another creature.");
         present(initial);yield return null;ui.BeginAttackSelection(attackers[0].id,initial.request.requestId);yield return null;
         present(assigned);yield return null;

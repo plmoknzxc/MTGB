@@ -48,15 +48,23 @@ public sealed partial class ForgeBattlefieldController
         controlModeButton.gameObject.SetActive(true);pauseNextPhaseButton.gameObject.SetActive(true);
         string manual=TapPaymentText("手动","Manual","手動"),auto=TapPaymentText("自动","Auto","自動"),skip=TapPaymentText("略过","Skip","スキップ");
         float modeWidth=LayoutControlPill(controlModeButton,ControlMode==ForgeControlMode.On?manual:ControlMode==ForgeControlMode.Off?skip:auto,new[]{manual,auto,skip},80);
-        string pause=TapPaymentText("下阶段暂停","Pause next","次で停止"),cancel=TapPaymentText("取消暂停","Cancel pause","停止取消");
-        float pauseWidth=LayoutControlPill(pauseNextPhaseButton,pauseNextPhase?cancel:pause,new[]{pause,cancel},130);
+        string pause=TapPaymentText("下阶段暂停","Pause next","次で停止");
+        float pauseWidth=LayoutControlPill(pauseNextPhaseButton,pause,new[]{pause},130);
         ((RectTransform)controlModeButton.transform).anchoredPosition=new Vector2(-46-modeWidth*.5f,58.5f);
         ((RectTransform)pauseNextPhaseButton.transform).anchoredPosition=new Vector2(-46-modeWidth-10-pauseWidth*.5f,58.5f);
         controlModeButton.GetComponent<Image>().color=new Color(.09f,.153f,.196f);
         var outline=controlModeButton.GetComponent<Outline>();if(outline!=null)outline.effectColor=ControlMode==ForgeControlMode.Off?new Color(.57f,.66f,.69f,.55f):new Color(.55f,.87f,.93f,.85f);
-        pauseNextPhaseButton.GetComponent<Image>().color=pauseNextPhase?new Color(.29f,.21f,.10f):new Color(.09f,.153f,.196f);
+        // Only the explicit one-shot appointment owns the selected appearance.
+        // Hover/keyboard focus must not look like an armed phase stop.
+        pauseNextPhaseButton.GetComponent<Image>().color=pauseNextPhase?Gold:new Color(.09f,.12f,.14f);
+        pauseNextPhaseButton.GetComponentInChildren<Text>().color=pauseNextPhase?Ink:new Color(.64f,.69f,.71f);
+        var pauseColors=pauseNextPhaseButton.colors;
+        pauseColors.normalColor=pauseColors.selectedColor=Color.white;
+        pauseColors.highlightedColor=new Color(1.12f,1.12f,1.12f);
+        pauseColors.pressedColor=new Color(.8f,.8f,.8f);
+        pauseNextPhaseButton.colors=pauseColors;
         var pauseOutline=pauseNextPhaseButton.GetComponent<Outline>()??pauseNextPhaseButton.gameObject.AddComponent<Outline>();
-        pauseOutline.effectColor=pauseNextPhase?Gold:new Color(.55f,.87f,.93f,.6f);pauseOutline.effectDistance=new Vector2(1,-1);
+        pauseOutline.effectColor=pauseNextPhase?Gold:new Color(.4f,.48f,.52f,.5f);pauseOutline.effectDistance=new Vector2(1,-1);
         pauseNextPhaseButton.interactable=pauseNextPhase||view!=null&&view.turn>0&&!string.IsNullOrEmpty(view.phase);
         controlModeButton.interactable=true;
     }

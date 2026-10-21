@@ -6,7 +6,7 @@ public static class ClientWindowDefaults
     private static void Initialize()
     {
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-        if (Application.isBatchMode) return;
+        if (Application.isBatchMode || ReplayExportWorker.IsWorker) return;
         // Older releases saved fullscreen preferences; always start in a normal window.
         Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
 #endif

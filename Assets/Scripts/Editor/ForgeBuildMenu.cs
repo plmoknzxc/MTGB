@@ -36,6 +36,7 @@ public static class ForgeBuildMenu
         // The client hosts the same headless Forge engine as the dedicated server.
         CopyRuntimeTo(root, dedicatedServer: true);
         CopyClientNotices(root);
+        ReplayVideoExportJob.EditorWorkerExecutable=Path.Combine(root,"MTGB.exe");
         Debug.Log("MTGB release player built: " + root);
     }
     private static void CopyClientNotices(string root)
@@ -77,6 +78,7 @@ public static class ForgeBuildMenu
         });
         if (report.summary.result != BuildResult.Succeeded) throw new InvalidOperationException("Forge validation player build failed.");
         CopyRuntimeTo(root);
+        ReplayVideoExportJob.EditorWorkerExecutable=Path.Combine(root,"MTGB.exe");
         Debug.Log("MTGB Forge validation player built: " + root);
     }
     [Serializable] private sealed class RuntimeFile { public string path, sha256; }

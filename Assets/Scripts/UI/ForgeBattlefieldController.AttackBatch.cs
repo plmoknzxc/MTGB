@@ -14,6 +14,17 @@ public sealed partial class ForgeBattlefieldController
     private int[] AssignedAttackers()=>view.request.options.Where(o=>o.id.StartsWith("attack-remove:",StringComparison.Ordinal)).Select(o=>o.attackerId).Distinct().ToArray();
     private int DefaultAttackDestination()
     {
+        // Use Forge's common legal player, including a controlled opponent's
+        // turn, rather than assuming the recipient owns the attackers.
+        if(view?.players?.Length==2) {
+            int destination=-1;
+            foreach(var player in view.players) {
+                int option=AttackOption("player",player.targetId);if(option<0)continue;
+                if(destination>=0)return -1;
+                destination=option;
+            }
+            return destination;
+        }
         var opponent=view?.players?.FirstOrDefault(p=>p.seat!=seat);
         return opponent!=null?AttackOption("player",opponent.targetId):-1;
     }

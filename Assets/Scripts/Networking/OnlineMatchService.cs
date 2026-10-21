@@ -98,6 +98,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void StartNetworkingFromCommandLine()
     {
+        if(ReplayExportWorker.IsWorker)return;
         string playerName = OnlineClientProfileStore.ReadArgument("-name");
         string normalizedPlayerName = (playerName ?? string.Empty).Replace(" ", string.Empty);
         bool preparedMainEditorServer = string.IsNullOrWhiteSpace(playerName)
