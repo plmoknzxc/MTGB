@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -232,7 +232,7 @@ public sealed partial class ForgeBattlefieldController
             else if(option.id=="cancel"&&view.request.kind=="dialog")label=TapPaymentText("保留原值","Keep unchanged","変更しない");
             var button=Button(content,"ValueOption_"+index,label,Vector2.zero,new Vector2(width-56,58),()=>Choose(index,captured),new Color(.16f,.29f,.43f));
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(.5f,1);rect.anchoredPosition=new Vector2(0,-offset);offset+=66;
-            PreferenceText.SetSize(button.GetComponentInChildren<Text>(),22);button.GetComponentInChildren<Text>().supportRichText=false;button.interactable=canAct&&!submitted;
+            PreferenceText.SetSize(button.GetComponentInChildren<Text>(),22);button.GetComponentInChildren<Text>().supportRichText=false;button.interactable=canAct&&!submitted&&!option.disabled;
         }
         content.sizeDelta=new Vector2(width-30,Mathf.Max(height-132,offset));landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
     }

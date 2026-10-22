@@ -39,6 +39,24 @@ public sealed partial class ForgeBattlefieldController
     }
     // Each overflow region owns its scroll. Original card IDs and grouping rules
     // remain unchanged; the hand, marker lanes and stack are outside these masks.
+    private float InformationLaneInset(RectTransform parent,bool own,float left)
+    {
+        float edge=left-44;
+        void Include(RectTransform rect) {
+            var corners=new Vector3[4];rect.GetWorldCorners(corners);
+            foreach(var corner in corners)edge=Mathf.Max(edge,parent.InverseTransformPoint(corner).x);
+        }
+        string prefix=own?"YourEmblem:":"OpponentEmblem:";
+        foreach(var pair in arenaCards)
+            if(retainedCards.Contains(pair.Key)&&pair.Key.StartsWith(prefix,StringComparison.Ordinal))Include(pair.Value.root);
+        var plate=Node(own?"PlayerPlate":"OpponentPlate");
+        foreach(string name in new[]{"StatesPrevious","StatesNext","EmblemsPrevious","EmblemsNext"}) {
+            var control=plate.Find(name) as RectTransform;
+            if(control!=null&&control.gameObject.activeInHierarchy)Include(control);
+        }
+        // The battlefield arrow extends 32 units outside its viewport.
+        return Mathf.Max(0,edge+44-left);
+    }
     private void LayoutDenseArenaRow(RectTransform parent,List<ForgeCardView[]> groups,string row,bool own,bool lands,bool support,float tableWidth,float sideWidth,float available)
     {
         const float gap=8;
@@ -46,7 +64,8 @@ public sealed partial class ForgeBattlefieldController
         int preferredColumns=Mathf.Clamp(Mathf.CeilToInt(groups.Count/(float)rowCount),1,support?5:6);
         float rowGap=support?5:gap;
         float zoneWidth=support?sideWidth:available;
-        float availableWidth=Mathf.Max(80,zoneWidth-64);
+        float informationInset=support?0:InformationLaneInset(parent,own,36-tableWidth*.5f+32);
+        float availableWidth=Mathf.Max(80,zoneWidth-64-informationInset);
         string signature=availableWidth+"/"+preferredColumns+"/"+GamePreferences.Revision+"/"+groups.Max(g=>g.Length)+"/"+groups.Any(g=>g[0].room)+"/"+groups.Any(g=>g[0].tapped)+"/"+groups.Any(g=>g[0].planeswalker);
         // Support lanes share the vertical space between midline and hand.
         // Reserve a row for every other populated support category on this side.
@@ -107,7 +126,7 @@ public sealed partial class ForgeBattlefieldController
                 height=Mathf.Max(height,footprints[i].height+(i+1<footprints.Length?footprints[i+1].height:footprints[i].height)+rowGap+8);
         }
         // Align to the lane's left edge, reserving a full arrow hit area at each end.
-        x+=-zoneWidth*.5f+32+width*.5f;
+        x+=-zoneWidth*.5f+32+informationInset+width*.5f;
         viewport.anchoredPosition=new Vector2(x,y);viewport.sizeDelta=new Vector2(width,height);
         int columns=Mathf.CeilToInt(groups.Count/(float)rowCount);
         contentRect.sizeDelta=new Vector2(Mathf.Max(width,columns*stride),height);

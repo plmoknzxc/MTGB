@@ -8,15 +8,22 @@ public sealed partial class ForgeBattlefieldController
     private long pileRequest;
     private int selectedPileIndex=-1;
     private Button pileConfirm;
+    private bool IsAvailablePile(int index)=>view?.request?.kind=="ChoosePile" && index>=0 &&
+        index<view.request.options.Length && !view.request.options[index].disabled;
 
     private void RenderPileSelection(ForgeRequest request)
     {
         string key="pile/"+request.requestId+"/"+surface.rect.size+"/"+GamePreferences.Revision;
+        bool sameRequest=pileRequest==request.requestId;
         if(pileRequest!=request.requestId){pileRequest=request.requestId;selectedPileIndex=-1;}
         if(selectionLayoutKey==key && selectionPanel!=null) {
             cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();SetOverlayLayer(cardSelectionOverlay,DecisionLayerOffset,true);
             UpdatePileSelection();return;
         }
+        var scrollOffsets=new System.Collections.Generic.Dictionary<string,float>();
+        if(sameRequest && selectionPanel!=null && selectionPanel.name=="PileSelection")
+            foreach(var scroll in selectionPanel.GetComponentsInChildren<ScrollRect>())
+                scrollOffsets[scroll.transform.parent.name]=scroll.content.anchoredPosition.y;
         selectionLayoutKey=key;
         if(cardSelectionOverlay==null) {
             cardSelectionOverlay=Panel(surface,"CardSelectionOverlay",Vector2.zero,Vector2.zero,new Color(0,0,0,.72f));
@@ -35,24 +42,26 @@ public sealed partial class ForgeBattlefieldController
             float x=(pile.pileId==1?-1:1)*(columnWidth+12)/2;
             var column=Panel(selectionPanel,"Pile_"+pile.pileId,new Vector2(x,-9),new Vector2(columnWidth,columnHeight),new Color(.09f,.13f,.18f));
             Label(column,"Count",TapPaymentText($"牌堆 {pile.pileId} · {pile.cardCount} 张",$"Pile {pile.pileId} · {pile.cardCount} cards",$"束 {pile.pileId}・{pile.cardCount} 枚"),new Vector2(0,columnHeight/2-24),new Vector2(columnWidth-20,44),20,Paper);
-            var select=Button(column,"SelectPile_"+index,TapPaymentText("选择这堆","Select pile","この束を選択"),new Vector2(0,-columnHeight/2+30),new Vector2(columnWidth-28,44),()=>{if(canAct&&!submitted&&requestId==captured){selectedPileIndex=index;UpdatePileSelection();}},new Color(.18f,.32f,.49f));
-            select.interactable=canAct&&!submitted;
+            var select=Button(column,"SelectPile_"+index,TapPaymentText("选择这堆","Select pile","この束を選択"),new Vector2(0,-columnHeight/2+30),new Vector2(columnWidth-28,44),()=>{if(canAct&&!submitted&&!viewingBattlefield&&requestId==captured&&IsAvailablePile(index)){selectedPileIndex=index;UpdatePileSelection();}},new Color(.18f,.32f,.49f));
+            select.interactable=canAct&&!submitted&&IsAvailablePile(index);
             float scrollHeight=columnHeight-112;
             var content=Scroll(column,"PileScroll",new Vector2(0,5),new Vector2(columnWidth-16,scrollHeight));
-            if(pile.concealed) {
+            if(pile.cardCount==0) {
+                TopLabel(content,"EmptyPile",TapPaymentText("空牌堆","Empty pile","空の束"),24,columnWidth-30,52);
+                content.sizeDelta=new Vector2(columnWidth-16,Mathf.Max(scrollHeight,88));
+            }else if(pile.concealed) {
                 // No art lookup, ID or face name exists for a concealed pile.
                 var back=Panel(content,"HiddenPile",new Vector2(0,-146),new Vector2(172,236),new Color(.15f,.20f,.26f));
                 back.anchorMin=back.anchorMax=new Vector2(.5f,1);
                 Label(back,"HiddenLabel",TapPaymentText("面朝下","Face down","裏向き"),Vector2.zero,new Vector2(152,72),20,Paper);
                 content.sizeDelta=new Vector2(columnWidth-16,Mathf.Max(scrollHeight,300));
-            }else if(pile.cardCount==0) {
-                TopLabel(content,"EmptyPile",TapPaymentText("空牌堆","Empty pile","空の束"),64,columnWidth-30,52);
             }else {
                 var cards=pile.cards??Array.Empty<ForgeCardView>();int columns=columnWidth<360?1:2;
-                float cell=(columnWidth-28)/columns,artWidth=Mathf.Min(178,cell-12),artHeight=artWidth*1.4f,row=artHeight+58;
+                float cell=(columnWidth-28)/columns,artWidth=Mathf.Min(178,cell-12),artHeight=artWidth*1.4f;
+                float rowTop=12,rowNameHeight=42;
                 for(int i=0;i<cards.Length;i++) {
                     var card=cards[i];
-                    var art=Panel(content,"PileCard_"+card.id,new Vector2((i%columns-(columns-1)/2f)*cell,-12-(i/columns)*row-artHeight/2),new Vector2(artWidth,artHeight),Ink);
+                    var art=Panel(content,"PileCard_"+card.id,new Vector2((i%columns-(columns-1)/2f)*cell,-rowTop-artHeight/2),new Vector2(artWidth,artHeight),Ink);
                     art.anchorMin=art.anchorMax=new Vector2(.5f,1);
                     // Inspectable exile stays face down in the engine. Only this
                     // recipient's supplied known face is used for its pile preview.
@@ -64,10 +73,20 @@ public sealed partial class ForgeBattlefieldController
                     }
                     TryBattlefieldArt(shown,out var sprite);var image=art.GetComponent<Image>();image.sprite=sprite;image.preserveAspect=true;image.color=sprite==null?Ink:Color.white;
                     if(sprite==null)Label(art,"MissingArt",TapPaymentText("缺失卡图","Missing card image","カード画像なし"),Vector2.zero,new Vector2(artWidth-12,92),16,Paper);
-                    Label(art,"CardName",GamePreferences.CardFaceName(shown.name),new Vector2(0,-artHeight/2-23),new Vector2(cell-12,42),16,Paper).supportRichText=false;
+                    var name=Label(art,"CardName",GamePreferences.CardFaceName(shown.name),Vector2.zero,new Vector2(cell-12,42),16,Paper);
+                    name.supportRichText=false;
+                    float nameHeight=Mathf.Max(42,Mathf.Ceil(name.preferredHeight));
+                    name.rectTransform.sizeDelta=new Vector2(cell-12,nameHeight);
+                    name.rectTransform.anchoredPosition=new Vector2(0,-artHeight/2-4-nameHeight/2);
+                    rowNameHeight=Mathf.Max(rowNameHeight,nameHeight);
+                    if(i%columns==columns-1||i==cards.Length-1) {
+                        rowTop+=artHeight+rowNameHeight+16;rowNameHeight=42;
+                    }
                 }
-                content.sizeDelta=new Vector2(columnWidth-16,Mathf.Max(scrollHeight,12+Mathf.CeilToInt(cards.Length/(float)columns)*row));
+                content.sizeDelta=new Vector2(columnWidth-16,Mathf.Max(scrollHeight,rowTop));
             }
+            if(scrollOffsets.TryGetValue(column.name,out float offset))
+                content.anchoredPosition=new Vector2(0,Mathf.Clamp(offset,0,Mathf.Max(0,content.rect.height-scrollHeight)));
         }
         pileConfirm=Button(selectionPanel,"PileConfirm",TapPaymentText("确认这堆","Confirm pile","束を確定"),new Vector2(0,-height/2+29),new Vector2(260,44),()=>Choose(selectedPileIndex,captured),new Color(.18f,.38f,.55f));
         UpdatePileSelection();
@@ -75,12 +94,13 @@ public sealed partial class ForgeBattlefieldController
 
     private void UpdatePileSelection()
     {
+        if(!IsAvailablePile(selectedPileIndex))selectedPileIndex=-1;
         foreach(var button in selectionPanel.GetComponentsInChildren<Button>()) {
             if(!button.name.StartsWith("SelectPile_"))continue;
-            int index=int.Parse(button.name.Substring(11));button.interactable=canAct&&!submitted;
+            int index=int.Parse(button.name.Substring(11));button.interactable=canAct&&!submitted&&IsAvailablePile(index);
             button.GetComponent<Image>().color=index==selectedPileIndex?new Color(.30f,.48f,.27f):new Color(.18f,.32f,.49f);
             button.GetComponentInChildren<Text>().text=index==selectedPileIndex?TapPaymentText("已选这堆","Selected pile","選択済み"):TapPaymentText("选择这堆","Select pile","この束を選択");
         }
-        if(pileConfirm!=null)pileConfirm.interactable=canAct&&!submitted&&selectedPileIndex>=0;
+        if(pileConfirm!=null)pileConfirm.interactable=canAct&&!submitted&&IsAvailablePile(selectedPileIndex);
     }
 }

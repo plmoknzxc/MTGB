@@ -36,3 +36,9 @@
 所有精确路径、删除前大小与哈希、压缩前后存储量及保留校验位于 `.tools/workspace-cleanup-1022/`：`inventory.json`、`protected.json`、`archive-review.json`、`retained-release-verification.json`、`deletion-plan.json`、`deletion-receipt.json`、`compression-plan.json`、`compression-journal.jsonl`、`compression-result.json`、`preservation-verification.json`、`summary.json`。
 
 初始目录盘点跳过 junction／symlink，单列链接及错误；文件使用实际 inode 去重。存储估算不含 NTFS 元数据和目录本身分配，不能把逻辑大小当作可回收空间。清理后仅复核目标及卷空闲量，未重复进行全盘扫描。
+
+## 晚间发布整理（release-review-1022）
+
+再次按实际占用与硬链接去重盘点目录，保留卡图、卡组、录像及当前验证证据。对一份堆快照、一份洗切统计 JSONL 和一份旧日志进行 NTFS LZX 无损压缩，三份文件 SHA-256 不变，实际节省 361,546,288 字节（约 344.8 MiB）。新客户端构建保留于 C:/Users/Sam/AppData/Local/MTGBBuilds/20261022-review/Client，供编辑器后台录像导出使用。
+
+自动审批分别拒绝删除可再生 Python 缓存及旧 .tools/release-independent-1022/staging，返回 blocked by policy，未提供具体理由。两项均未删除，也未换工具绕过；旧构建清理不能算完成。证据：.tools/release-review-1022/cleanup/ 下 inventory.json、compression.json、deletion-blocked.json。

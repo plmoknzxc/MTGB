@@ -476,6 +476,17 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
 
         string auxiliary=AuxiliaryOptionLabel(option);if(auxiliary!=null)return auxiliary;
         string kind=view?.request?.kind??"";
+        // Declining an "unless" card payment accepts its consequence; it does
+        // not return to the previous menu. Name the exact native consequence.
+        if(option.id=="cancel"&&kind=="InputSelectCardsFromList") {
+            var loss=System.Text.RegularExpressions.Regex.Match(view.request.message??"",@"\(or: Player (\d+) loses (\d+) life\.\s*\)\s*$");
+            if(loss.Success&&int.TryParse(loss.Groups[1].Value,out int affected)&&affected==seat)
+                return TapPaymentText(loss.Groups[2].Value+"点生命",loss.Groups[2].Value+" life",loss.Groups[2].Value+"点のライフ");
+        }
+        if(kind=="dialog"&&option.rulesSource is ForgeCardView ruleSource&&!ruleSource.faceDown&&!string.IsNullOrEmpty(ruleSource.name)) {
+            string localized=PrintedRuleText(ruleSource,option.label);
+            if(localized!=option.label)return localized;
+        }
         if(kind=="ChooseModes"&&view.request.sourceCard!=null) {
             string mode=PrintedRuleText(view.request.sourceCard,option.label);
             if(mode!=option.label)return mode;

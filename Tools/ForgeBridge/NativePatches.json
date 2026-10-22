@@ -936,6 +936,19 @@
           "after": "            // Prediction and announcement must not share mutable payment lists.\n            clone.pipsToReduce = Suppliers.ofInstance(Lists.newArrayList(pipsToReduce.get()));\n            clone.tappedForConvoke = Suppliers.ofInstance(new CardCollection(tappedForConvoke.get()));\n            clone.payingMana = Lists.newArrayList(payingMana);"
         }
       ]
+    },
+    {
+      "id": "mana-pool-publication-snapshot",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/mana/ManaPool.java",
+      "sourceSha256": "726d28b9eb963bc8648b803e7740244997761dc221c48ee2deb3219f680b0a0c",
+      "javaPath": "forge/game/mana/ManaPool.java",
+      "reason": "Native nested mana payment mutates the pool while the bridge UI publishes it. Synchronize collection operations and take a bounded membership snapshot under the same lock, without holding that lock across game events or payment callbacks. Preserve original Mana identities and native iterator semantics.",
+      "changes": [
+        {
+          "before": "    private final ArrayListMultimap<Byte, Mana> floatingMana = ArrayListMultimap.create();",
+          "after": "    private final com.google.common.collect.ListMultimap<Byte, Mana> floatingMana =\n            com.google.common.collect.Multimaps.synchronizedListMultimap(ArrayListMultimap.create());\n\n    /** Membership snapshot for asynchronous presentation; retains native Mana identities. */\n    public List<Mana> snapshot() {\n        synchronized (floatingMana) {\n            return new ArrayList<>(floatingMana.values());\n        }\n    }"
+        }
+      ]
     }
   ],
   "assetPatches": [

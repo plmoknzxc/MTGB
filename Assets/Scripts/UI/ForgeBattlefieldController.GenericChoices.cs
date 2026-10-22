@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,8 +43,16 @@ public sealed partial class ForgeBattlefieldController
             $"選択済み {request.selectedCount} · 必要 {request.minCount}–{request.maxCount}"),
             new Vector2(0,height/2-82),new Vector2(width-44,30),18,Gold);
         progress.resizeTextForBestFit=false;
-        float viewportWidth=width-30,viewportHeight=height-186;
-        var clip=Panel(landChoiceMenu,"GenericOptions",new Vector2(0,-16),new Vector2(viewportWidth,viewportHeight),Color.clear);
+        float titleHeight=Mathf.Max(54,title.preferredHeight+4);
+        title.rectTransform.sizeDelta=new Vector2(width-44,titleHeight);
+        title.rectTransform.anchoredPosition=new Vector2(0,height/2-11-titleHeight/2);
+        float progressHeight=Mathf.Max(30,progress.preferredHeight+4);
+        progress.rectTransform.sizeDelta=new Vector2(width-44,progressHeight);
+        progress.rectTransform.anchoredPosition=new Vector2(0,height/2-19-titleHeight-progressHeight/2);
+        float optionsTop=progress.rectTransform.anchoredPosition.y-progressHeight/2-12;
+        float optionsBottom=-height/2+77;
+        float viewportWidth=width-30,viewportHeight=Mathf.Max(60,optionsTop-optionsBottom);
+        var clip=Panel(landChoiceMenu,"GenericOptions",new Vector2(0,(optionsTop+optionsBottom)/2),new Vector2(viewportWidth,viewportHeight),Color.clear);
         clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;
         var content=Rect(clip,"Content",Vector2.zero,new Vector2(viewportWidth,viewportHeight));
         content.anchorMin=content.anchorMax=content.pivot=new Vector2(0,1);scroll.viewport=clip;scroll.content=content;scroll.Configure(viewportWidth);
@@ -71,14 +79,26 @@ public sealed partial class ForgeBattlefieldController
                     :GamePreferences.NativeText(label);
             }
             string buttonLabel=(option.selected?"●  ":"○  ")+label;
-            float rowHeight=Mathf.Max(48,new TextGenerator().GetPreferredHeight(buttonLabel,measure)+18);
+            float requiredHeight=Mathf.Max(48,new TextGenerator().GetPreferredHeight(buttonLabel,measure)+18);
+            float rowHeight=Mathf.Min(viewportHeight,requiredHeight);
             var button=Button(content,"GenericOption_"+index,buttonLabel,
                 Vector2.zero,new Vector2(width-58,rowHeight),()=>Choose(index,captured),option.selected?new Color(.18f,.38f,.55f):new Color(.13f,.19f,.25f));
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(0,1);tiles.Add(rect);tallest=Mathf.Max(tallest,rowHeight);
             var text=button.GetComponentInChildren<Text>();PreferenceText.SetSize(text,18);text.resizeTextForBestFit=false;text.supportRichText=false;
             if(playerVote)SetNamedPlayerText(text,buttonLabel);
             text.horizontalOverflow=HorizontalWrapMode.Wrap;text.verticalOverflow=VerticalWrapMode.Overflow;
-            button.interactable=canAct&&!submitted&&(option.selected||request.selectedCount<request.maxCount);
+            if(requiredHeight>rowHeight) {
+                // Keep the action and panel bounds fixed; only the long label scrolls.
+                var labelContent=Scroll(rect,"LongOption",Vector2.zero,new Vector2(textWidth,rowHeight-16));
+                text.rectTransform.SetParent(labelContent,false);
+                text.rectTransform.anchorMin=text.rectTransform.anchorMax=text.rectTransform.pivot=new Vector2(.5f,1);
+                text.rectTransform.anchoredPosition=Vector2.zero;
+                text.rectTransform.sizeDelta=new Vector2(textWidth,requiredHeight-18);
+                text.alignment=TextAnchor.UpperLeft;
+                labelContent.sizeDelta=new Vector2(textWidth,requiredHeight-18);
+                AddStackScrollIndicator(labelContent);
+            }
+            button.interactable=canAct&&!submitted&&!option.disabled&&(option.selected||request.selectedCount<request.maxCount);
         }
         int visibleRows=tallest+8<=viewportHeight/2?2:1;
         content.sizeDelta=new Vector2(Mathf.Max(viewportWidth,Mathf.CeilToInt(tiles.Count/(float)visibleRows)*viewportWidth),Mathf.Max(viewportHeight,tallest));
@@ -99,7 +119,7 @@ public sealed partial class ForgeBattlefieldController
         {
             int index=OptionIndex(item.Item1);
             var button=Button(landChoiceMenu,item.Item2,item.Item3,new Vector2(item.Item4,-height/2+35),new Vector2(145,44),()=>Choose(index,captured),new Color(.18f,.32f,.49f));
-            button.interactable=index>=0&&canAct&&!submitted;
+            button.interactable=index>=0&&canAct&&!submitted&&!request.options[index].disabled;
         }
         landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
     }

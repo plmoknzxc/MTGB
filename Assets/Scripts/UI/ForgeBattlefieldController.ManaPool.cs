@@ -70,7 +70,7 @@ public sealed partial class ForgeBattlefieldController
         foreach(var id in cells.Keys.Where(id=>!retained.Contains(id)).ToArray()) {
             cells[id].root.gameObject.SetActive(false);Destroy(cells[id].root.gameObject);cells.Remove(id);
         }
-        float stride=54;
+        float stride=62;
         foreach(var entry in entries) {
             if(!cells.TryGetValue(entry.id,out var cell)){cell=CreatePoolCell(scroll.content,entry);cells.Add(entry.id,cell);}
             cell.root.gameObject.SetActive(true);cell.count.fontSize=Mathf.RoundToInt(18*GamePreferences.TextScale);cell.count.text=entry.count.ToString();
@@ -84,15 +84,16 @@ public sealed partial class ForgeBattlefieldController
             if(sameOwner&&entry.count>cell.amount)cell.changed=Time.unscaledTime;else if(!sameOwner||entry.count!=cell.amount)cell.changed=-10;
             cell.amount=entry.count;
         }
-        // One short row fits between the land tiles and the hand. More colors
-        // or restriction buckets extend horizontally instead of under the hand.
-        int rows=1,columns=entries.Length,visible=Mathf.Min(4,Mathf.Max(1,columns));
-        float width=visible*stride,height=rows*34;
+        // Keep five equal-width cells beside the support lane, with horizontal overflow
+        // for additional colors and restricted buckets.
+        int rows=1,columns=entries.Length,visible=Mathf.Min(5,Mathf.Max(1,columns));
+        float sideWidth=Mathf.Min(500,Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560))*.38f);
+        float width=Mathf.Min(sideWidth-64,visible*stride),height=Mathf.Max(34,34*GamePreferences.TextScale);
         PlacePlayerMana(row,player?.seat??seat,width,height);row.gameObject.SetActive(entries.Length>0);
         scroll.content.sizeDelta=new Vector2(Mathf.Max(width,columns*stride),height);scroll.Configure(stride);
         for(int i=0;i<entries.Length;i++) {
-            var cell=cells[entries[i].id];cell.root.sizeDelta=new Vector2(stride,34);
-            cell.root.anchoredPosition=new Vector2((i/rows+.5f)*stride,-(i%rows+.5f)*34);
+            var cell=cells[entries[i].id];cell.root.sizeDelta=new Vector2(stride,height);
+            cell.root.anchoredPosition=new Vector2((i/rows+.5f)*stride,-(i%rows+.5f)*height);
             ((RectTransform)cell.root.Find("Symbol")).anchoredPosition=new Vector2(-stride*.5f+17,3);
             cell.count.rectTransform.anchoredPosition=new Vector2(-stride*.5f+31,-2);
             cell.count.rectTransform.pivot=new Vector2(0,.5f);cell.count.rectTransform.sizeDelta=new Vector2(stride-32,26);
@@ -112,20 +113,12 @@ public sealed partial class ForgeBattlefieldController
     {
         row.SetSiblingIndex(Node("CornerCluster").GetSiblingIndex());
         row.anchorMin=row.anchorMax=new Vector2(.5f,.5f);row.pivot=new Vector2(.5f,.5f);
-        // Dedicated gutter on the midline side of each land lane. Align with
-        // the main field's left edge; marker lanes stay in the information column.
+        // Keep the pool just outside the support lane, towards its player's hand.
         float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));
-        float left=68-tableWidth*.5f,y=playerSeat==seat?-222:222;
-        string markers=playerSeat==seat?"YourEmblem:":"OpponentEmblem:";
-        // A full state column can extend beyond the plate. Include the actual
-        // marker and quantity/shadow bounds in this row's vertical band.
-        foreach(var pair in arenaCards.Where(p=>retainedCards.Contains(p.Key)&&p.Key.StartsWith(markers,StringComparison.Ordinal))) {
-            var card=pair.Value.root;var footprint=DenseFieldViewport.LayoutFootprint(card,0);
-            var min=(Vector2)surface.InverseTransformPoint(card.TransformPoint(new Vector3(footprint.xMin,footprint.yMin,0)));
-            var max=(Vector2)surface.InverseTransformPoint(card.TransformPoint(new Vector3(footprint.xMax,footprint.yMax,0)));
-            if(min.y<y+height*.5f+8&&max.y>y-height*.5f-8)left=Mathf.Max(left,max.x+16);
-        }
-        row.anchoredPosition=new Vector2(left+width*.5f,y);
+        float sideWidth=Mathf.Min(500,tableWidth*.38f);
+        float x=36+tableWidth*.5f-sideWidth*.5f;
+        float edge=Mathf.Min(370,surface.rect.height*.5f-140);
+        row.anchoredPosition=new Vector2(x,(playerSeat==seat?-1:1)*(edge+height*.5f+12));
         row.sizeDelta=new Vector2(width,height);
     }
     private void UpdateManaPoolPulse()

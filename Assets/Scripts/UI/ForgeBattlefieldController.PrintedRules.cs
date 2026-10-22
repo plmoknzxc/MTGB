@@ -101,6 +101,7 @@ public sealed partial class ForgeBattlefieldController
             // paragraph uses "an Island". This is an article spelling change,
             // not a different card type or search restriction.
             value=Regex.Replace(value,@"\bfor an (?=[A-Za-z])","for a ");
+            value=Regex.Replace(value,@"\bPermanent\b","permanent");
             return Regex.Replace(value,@"\s+"," ").Trim();
         }
         var native=Lines(feature?.description??definition?.description);
@@ -135,6 +136,18 @@ public sealed partial class ForgeBattlefieldController
         var variants=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
         void MatchVariants(string original,string local) {
             if(Key(original)==match)variants.Add(local);
+            // Spree options omit the additional-cost heading. Strip it only
+            // from paired printed rows, never from a live payment description.
+            const string modePrefix=@"^\+\s*(?:\{[^{}]+\}\s*)+[—～〜-]\s*";
+            string mode=Regex.Replace(original,modePrefix,"");
+            string localMode=Regex.Replace(local,modePrefix,"");
+            if(mode!=original&&localMode!=local&&Key(mode)==match)variants.Add(localMode);
+            // Pawprint callbacks omit the printed budget prefix as well.
+            // Match the complete effect against its paired source row.
+            const string pawPrefix=@"^(?:\{(?:P|oH+)\}\s*)+[—―～〜-]\s*";
+            string paw=Regex.Replace(original,pawPrefix,"");
+            string localPaw=Regex.Replace(local,pawPrefix,"");
+            if(paw!=original&&localPaw!=local&&Key(paw)==match)variants.Add(localPaw);
             string noReminder=WithoutPrintedReminder(original);
             if(noReminder!=original&&Key(noReminder)==match)variants.Add(WithoutPrintedReminder(local));
             string body=WithoutPrintedCost(original);

@@ -400,6 +400,7 @@ public final class ForgeBridge {
                     return super.chooseColor(message,ability,colors);
                 }
                 @Override public List<forge.game.spellability.AbilitySub> chooseModeForAbility(forge.game.spellability.SpellAbility sa,List<forge.game.spellability.AbilitySub> possible,int min,int max,boolean repeat) {
+                    if(sa.hasParam("Pawprint"))return guiFor(this).choosePawprint(sa,possible,min,max,repeat);
                     if((sa.isSpell()&&guiFor(this).spreeModes.containsKey(sa.getHostCard().getId()))
                         ||(sa.getHostCard().hasKeyword(forge.game.keyword.Keyword.SPREE)&&possible.stream().allMatch(m->m.hasParam("ModeCost")))) {
                         Gui gui=guiFor(this);
@@ -504,7 +505,7 @@ public final class ForgeBridge {
         String faceKind, modeCost, cardName, rulesText;
         Object rulesSource;
         boolean selected, disabled;
-        int order;
+        int order, pawprintCost, chosenCount;
         transient Runnable action;
         Option(String id, String label, Runnable action) { this.id=id; this.label=label; this.action=action; }
     }
@@ -899,6 +900,7 @@ public final class ForgeBridge {
             if(max<min)throw new IllegalArgumentException("Inconsistent selection bounds: "+minimum+".."+maximum);
             List<Object> selected=new ArrayList<>();
             for(Object item:initial)if(values.contains(item)&&!selected.contains(item)&&selected.size()<max)selected.add(item);
+            long context=0;
             while(true) {
                 CompletableFuture<Integer> answer=new CompletableFuture<>();List<Option> options=new ArrayList<>();
                 for(int i=0;i<values.size();i++) {
@@ -913,6 +915,7 @@ public final class ForgeBridge {
                 if(!selected.isEmpty())options.add(new Option("reset-cards","重新选择",()->answer.complete(-2)));
                 boolean hasCards=options.stream().anyMatch(o->o.card!=null);
                 Pending request=new Pending(seat,ordered?"OrderCards":hasCards?"SelectCards":"ChooseOptions",title,options);request.modal=true;
+                if(context==0)context=request.requestId;request.contextId=context;
                 request.selectedCount=selected.size();request.remainingCount=Math.max(0,min-selected.size());request.minCount=min;request.maxCount=max;
                 if(title.replace("\r", "").equals("Exert Attackers?\nExerted"))request.selectionPurpose="exertAttack";
                 if(!values.isEmpty() && values.get(0) instanceof forge.game.spellability.SpellAbilityView ability) {
@@ -1104,6 +1107,30 @@ public final class ForgeBridge {
                 publish(request);
                 try {String action=awaitAnswer(answer);if(action.equals("cancel"))return null;if(action.equals("confirm"))return value;value+=Integer.parseInt(action);}
                 catch(Exception e){throw new IllegalStateException("Unanswered number selection",e);}
+            }
+        }
+        List<forge.game.spellability.AbilitySub> choosePawprint(forge.game.spellability.SpellAbility sa,List<forge.game.spellability.AbilitySub> possible,int min,int budget,boolean repeat) {
+            List<Integer> selected=new ArrayList<>();long context=0;
+            int[] costs=possible.stream().mapToInt(m->forge.game.ability.AbilityUtils.calculateAmount(m.getHostCard(),m.getParam("Pawprint"),m)).toArray();
+            while(true) {
+                int used=selected.stream().mapToInt(i->costs[i]).sum();
+                CompletableFuture<Integer> answer=new CompletableFuture<>();List<Option> options=new ArrayList<>();
+                for(int i=0;i<possible.size();i++) {
+                    final int index=i;var mode=possible.get(i);
+                    Option option=new Option("mode:"+i,mode.getDescription(),()->answer.complete(index));
+                    option.order=sa.getAdditionalAbilityList("Choices").indexOf(mode)+1;
+                    option.pawprintCost=costs[i];option.chosenCount=Collections.frequency(selected,i);option.selected=option.chosenCount>0;
+                    option.disabled=costs[i]>budget-used||(!repeat&&option.selected);options.add(option);
+                }
+                if(selected.size()>=min)options.add(new Option("confirm-modes","确认",()->answer.complete(-1)));
+                if(!selected.isEmpty())options.add(new Option("reset-modes","重新选择",()->answer.complete(-2)));
+                Pending request=new Pending(seat,"ChooseModes","Choose modes",options);request.modal=true;request.selectionPurpose="pawprint";
+                if(context==0)context=request.requestId;request.contextId=context;request.minCount=min;request.maxCount=budget;request.selectedCount=selected.size();
+                request.selectedValue=used;request.maxValue=budget;request.sourceCardId=sa.getHostCard().getId();request.sourceCard=card(sa.getHostCard());publish(request);
+                try {int choice=awaitAnswer(answer);
+                    if(choice==-1){var result=new ArrayList<forge.game.spellability.AbilitySub>();for(int i:selected)result.add(possible.get(i));return result;}
+                    if(choice==-2)selected.clear();else selected.add(choice);
+                }catch(Exception e){throw new IllegalStateException("Unanswered pawprint modes",e);}
             }
         }
         List<forge.game.spellability.AbilitySub> chooseSpree(forge.game.spellability.SpellAbility sa,List<forge.game.spellability.AbilitySub> possible,int min,int max,boolean cancellable) {
@@ -1819,15 +1846,18 @@ public final class ForgeBridge {
                 pv.put("junkyardCards",p.getCardsIn(ZoneType.Junkyard).stream().map(c->zoneCard(c,viewer)).toList());
                 pv.putAll(libraryKnowledge.top(p,s+1,viewer));
                 pv.put("libraryCards",libraryKnowledge.cards(p,s+1,viewer));
-                pv.put("redMana",p.getManaPool().getAmountOfColor(forge.card.MagicColor.RED));
+                // The native payment worker can consume/refund mana while the
+                // UI thread publishes. All pool fields must share one snapshot.
+                var poolSnapshot=p.getManaPool().snapshot();
                 int[] mana = new int[6], snowMana = new int[6]; byte[] manaColors = forge.card.mana.ManaAtom.MANATYPES;
                 for(int m=0;m<mana.length;m++) {
-                    mana[m]=p.getManaPool().getAmountOfColor(manaColors[m]);
-                    snowMana[m]=ForgePoolMana.count(p,manaColors[m],true);
+                    snowMana[m]=ForgePoolMana.count(poolSnapshot,manaColors[m],true);
+                    mana[m]=snowMana[m]+ForgePoolMana.count(poolSnapshot,manaColors[m],false);
                 }
+                pv.put("redMana",mana[3]);
                 pv.put("manaPool", mana);
                 pv.put("snowManaPool", snowMana);
-                pv.put("manaPoolEntries",ForgePoolMana.entries(p,viewer));
+                pv.put("manaPoolEntries",ForgePoolMana.entries(poolSnapshot,viewer));
                 List<Object> hand=libraryKnowledge.hand(p,s+1,viewer);
                 pv.put("hand",hand);
                 List<Object> field=new ArrayList<>(); for(Card c:p.getCardsIn(ZoneType.Battlefield)) {

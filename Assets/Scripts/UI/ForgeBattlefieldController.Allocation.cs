@@ -7,12 +7,13 @@ public sealed partial class ForgeBattlefieldController
 {
     private RectTransform allocationPanel;
     private long allocationContext;
+    private string allocationLayoutKey;
     private Button BindDecisionButton(RectTransform parent,string name,string label,string id,Vector2 position)
     {
         var existing=parent.Find(name);
         var button=existing!=null?existing.GetComponent<Button>():Button(parent,name,label,position,new Vector2(164,38),()=>{},new Color(.16f,.27f,.36f));
         int option=OptionIndex(id);long captured=requestId;
-        button.onClick.RemoveAllListeners();button.onClick.AddListener(()=>Choose(option,captured));button.interactable=canAct&&!submitted&&option>=0;
+        button.onClick.RemoveAllListeners();button.onClick.AddListener(()=>Choose(option,captured));button.interactable=canAct&&!submitted&&option>=0&&!view.request.options[option].disabled;
         button.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(164,38,8);
         var text=button.GetComponentInChildren<Text>();text.text=label;text.resizeTextForBestFit=false;
         (text.GetComponent<PreferenceText>()??text.gameObject.AddComponent<PreferenceText>()).SetBaseSize(16);
@@ -42,7 +43,12 @@ public sealed partial class ForgeBattlefieldController
         bool mana=view.request.selectionPurpose=="genericAmount"&&view.request.message=="分配 · mana";
         float width=Mathf.Min(surface.rect.width-96,Mathf.Max(520,values.Length*198+40));
         if(allocationPanel==null)allocationPanel=Panel(surface,"DamageAllocation",Vector2.zero,new Vector2(width,446),Ink);
-        bool rebuild=allocationContext!=view.request.contextId || allocationPanel.childCount==0;
+        string layoutKey=width+"/"+GamePreferences.Revision+"/"+string.Join(",",values.Select(v=>v.id));
+        bool sameContext=allocationContext==view.request.contextId;
+        var oldScroll=allocationPanel.GetComponentInChildren<ScrollRect>();
+        float offset=sameContext&&oldScroll!=null?-oldScroll.content.anchoredPosition.x:0;
+        bool rebuild=!sameContext || allocationLayoutKey!=layoutKey || allocationPanel.childCount==0;
+        allocationLayoutKey=layoutKey;
         allocationContext=view.request.contextId;allocationPanel.gameObject.SetActive(true);allocationPanel.SetAsLastSibling();
         if(rebuild) {
             // Destroy is deferred; detach before Find/binding creates new controls.
@@ -76,6 +82,7 @@ public sealed partial class ForgeBattlefieldController
                 AllocationFont(Button(tile,"Minus","−",new Vector2(-63,-79),new Vector2(36,36),()=>{},Ink).GetComponentInChildren<Text>(),18);
                 AllocationFont(Button(tile,"Plus","+",new Vector2(63,-79),new Vector2(36,36),()=>{},Ink).GetComponentInChildren<Text>(),18);
             }
+            content.anchoredPosition=new Vector2(-Mathf.Clamp(offset,0,Mathf.Max(0,content.rect.width-(width-28))),0);
         }
         allocationPanel.Find("Title").GetComponent<Text>().text=view.request.selectionPurpose=="combatDamage"?TapPaymentText("分配战斗伤害","Assign combat damage","戦闘ダメージの割り振り"):
             view.request.selectionPurpose=="genericAmount"&&view.request.message=="分配 · damage"?TapPaymentText("分配伤害","Assign damage","ダメージを割り振る"):GamePreferences.T(view.request.message);
@@ -94,7 +101,7 @@ public sealed partial class ForgeBattlefieldController
             tile.Find("Amount").GetComponent<Text>().text=value.amount.ToString();
             foreach(var direction in new[]{"Minus","Plus"}) {
                 var button=tile.Find(direction).GetComponent<Button>();int index=OptionIndex((direction=="Plus"?"amount-add:":"amount-sub:")+value.id);long captured=requestId;
-                button.onClick.RemoveAllListeners();button.onClick.AddListener(()=>Choose(index,captured));button.interactable=canAct&&!submitted&&index>=0;
+                button.onClick.RemoveAllListeners();button.onClick.AddListener(()=>Choose(index,captured));button.interactable=canAct&&!submitted&&index>=0&&!view.request.options[index].disabled;
             }
         }
         bool maySkip=OptionIndex("skip-amount")>=0;

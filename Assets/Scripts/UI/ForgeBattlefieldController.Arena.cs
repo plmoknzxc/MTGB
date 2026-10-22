@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -132,6 +132,8 @@ public sealed partial class ForgeBattlefieldController
     }
     private void EndArenaPresentation()
     {
+        ReserveRestingHandSpace(ownFan);
+        ReserveRestingHandSpace(opponentFan);
         PresentFlipHighlights(activeNotice);
         foreach(var key in arenaCards.Keys.Where(k=>!retainedCards.Contains(k)).ToArray())
         {arenaCards[key].root.gameObject.SetActive(false);Destroy(arenaCards[key].root.gameObject);arenaCards.Remove(key);}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -13,6 +13,7 @@ public sealed partial class ForgeBattlefieldController
         public ForgeHandFanNavigation navigation;
         public UnityEngine.UI.Button previous,next;
         public float available,radius,radians,travel;
+        public Rect restingBounds;
     }
     private sealed class HandFanSlot {public ArenaCard item;public RectTransform region;public float x,opacity;}
     private readonly HandFanState ownFan=new(false),opponentFan=new(true);
@@ -24,6 +25,7 @@ public sealed partial class ForgeBattlefieldController
         // Clearing a view can destroy its cards before the next hand layout.
         // Casting cleanup must not animate those previous-view references.
         fan.slots.RemoveAll(s=>s.item.root==null||s.item.pointer==null||s.region==null);
+        var handMin=new Vector2(float.PositiveInfinity,float.PositiveInfinity);var handMax=-handMin;
         foreach(var group in fan.slots.GroupBy(s=>s.region)) {
             var min=new Vector2(float.PositiveInfinity,float.PositiveInfinity);var max=-min;
             foreach(var slot in group) {
@@ -44,12 +46,44 @@ public sealed partial class ForgeBattlefieldController
                 var visibility=slot.item.root.GetComponent<CanvasGroup>();
                 if(visibility==castingHandGroup)exposure=0;
                 visibility.alpha=slot.opacity*exposure;visibility.blocksRaycasts=exposure>.02f;
+                if(exposure>.02f){handMin=Vector2.Min(handMin,position-half);handMax=Vector2.Max(handMax,position+half);}
                 slot.item.pointer.SetHandFanExposure(exposure>.02f);
             }
             group.Key.anchoredPosition=(min+max)*.5f;group.Key.sizeDelta=max-min;
         }
+        if(!float.IsInfinity(handMin.x))fan.restingBounds=UnityEngine.Rect.MinMaxRect(handMin.x,handMin.y,handMax.x,handMax.y);
+        ReserveRestingHandSpace(fan);
         fan.hits.Invalidate();
         if(fan.navigation!=null&&fan.navigation.CanPan){fan.previous.interactable=offset<fan.travel*.5f-.1f;fan.next.interactable=offset>-fan.travel*.5f+.1f;}
+    }
+    // Reserve against the actual lane bounds, including two-row lands. Keep card
+    // sizes and hover magnification intact; tuck only the resting fan towards its edge.
+    private void ReserveRestingHandSpace(HandFanState fan)
+    {
+        var root=fan.opponent?otherHand:ownHand;
+        if(root==null||surface==null)return;
+        root.anchoredPosition=new Vector2(root.anchoredPosition.x,0);
+        if(fan.slots.Count==0)return;
+        var low=surface.InverseTransformPoint(root.TransformPoint(fan.restingBounds.min));
+        var high=surface.InverseTransformPoint(root.TransformPoint(fan.restingBounds.max));
+        float shift=0;
+        string prefix=fan.opponent?"Opponent":"Your";
+        foreach(var pair in denseFieldRows) {
+            if(!pair.Key.StartsWith(prefix,StringComparison.Ordinal)||pair.Value==null||!pair.Value.gameObject.activeSelf)continue;
+            var corners=new Vector3[4];pair.Value.viewport.GetWorldCorners(corners);
+            var a=surface.InverseTransformPoint(corners[0]);var b=surface.InverseTransformPoint(corners[2]);
+            if(b.x<low.x||a.x>high.x)continue;
+            shift=fan.opponent?Mathf.Max(shift,b.y+12-low.y):Mathf.Min(shift,a.y-12-high.y);
+        }
+        var pool=fan.opponent?publicManaPoolRow:manaPoolRow;
+        if(pool!=null && pool.gameObject.activeInHierarchy) {
+            var corners=new Vector3[4];pool.GetWorldCorners(corners);
+            var a=surface.InverseTransformPoint(corners[0]);var b=surface.InverseTransformPoint(corners[2]);
+            // Include the external paging controls, not only the pool's mask.
+            if(b.x+32>=low.x && a.x-32<=high.x)
+                shift=fan.opponent?Mathf.Max(shift,b.y+12-low.y):Mathf.Min(shift,a.y-12-high.y);
+        }
+        root.anchoredPosition=new Vector2(root.anchoredPosition.x,shift);
     }
     private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards)=>LayoutPlayableHand(parent,cards,ownFan);
     private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards,HandFanState fan)

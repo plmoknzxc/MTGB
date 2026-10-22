@@ -9,7 +9,8 @@ public sealed partial class ForgeBattlefieldController
     private static int ChoiceActionOrder(ForgeOption option) => option.id is "ok" or "confirm-cards" or "confirm-modes" or "confirm-number" ? 0
         : option.id == "cancel" ? 2 : 1;
     private string ChoiceActionLabel(ForgeOption option) => option.id is "ok" or "confirm-cards" or "confirm-modes" or "confirm-number"
-        ? TapPaymentText("下一步","Next","次へ") : RequestOptionLabel(option);
+        ? TapPaymentText("下一步","Next","次へ")
+        : option.id=="reset-cards" ? TapPaymentText("重新选择","Reselect","選び直す") : RequestOptionLabel(option);
 
     private bool HasTargetChoice => integrated && view?.awaitingInput == true &&
         (view.request?.kind is "InputSelectTargets" or "SelectStackTarget" || view.request?.selectionPurpose is "costConfirmation" or "costScalar");
@@ -72,9 +73,9 @@ public sealed partial class ForgeBattlefieldController
         advance.onClick.RemoveAllListeners();advance.onClick.AddListener(()=>Choose(next,captured));
         advance.interactable = canAct && !submitted && next >= 0 && !view.request.options[next].disabled;
         var rect = (RectTransform)advance.transform;float width = cancel >= 0 ? 89 : 184;
-        rect.anchoredPosition = new Vector2(cancel >= 0 ? -47.5f : 0,0);rect.sizeDelta = new Vector2(width,42);
-        ((RectTransform)rect.Find("Face")).sizeDelta = new Vector2(width,42);
-        advance.GetComponentInChildren<Text>().rectTransform.sizeDelta = new Vector2(width-6,40);
+        rect.anchoredPosition = new Vector2(cancel >= 0 ? -47.5f : 0,0);rect.sizeDelta = new Vector2(width,54);
+        ((RectTransform)rect.Find("Face")).sizeDelta = new Vector2(width,54);
+        advance.GetComponentInChildren<Text>().rectTransform.sizeDelta = new Vector2(width-8,50);
         RefreshDockActionColor(advance);RefreshDockActionColor(decline);
     }
 }

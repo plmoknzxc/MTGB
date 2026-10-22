@@ -19,6 +19,8 @@ description: 在 MTGB 项目盘点机制缺口、复用 Forge 结算与 Unity �
 
 ## 盘点剩余
 
+用户要求继续排查对局界面时，先接续 `Docs/GameplayAuditProgress.zh-CN.md` 和对应窗口报告。区分已验证范围、明确缺口与待核对分类；不能用断言数或报告篇数回答剩余组数。要求彻查某窗口时，集中检查该消费者的布局、内容、权限及请求生命周期，已有相同证据直接复用，发现新差异才补跑。
+
 执行 `python -X utf8 .agents/skills/mtgb-mechanic-validation/scripts/summarize_remaining.py`。查看生成的 `Docs/MechanicValidationRemaining.zh-CN.md` 和 `Tools/Validation/Reports/MechanicCoverage/remaining-plan.json`。登记后同步 `Docs/MechanicValidationWorklist.zh-CN.md` 顶端的当前进度；旧批次标为历史，避免便读表沿用旧数量，不能为更新文档重跑已完成效果。
 
 当前活动事项以 [references/remaining-work.json](references/remaining-work.json) 为准，便读版见 `Docs/MechanicValidationWorklist.zh-CN.md`；TSV仅作包级索引。先选择具体事项编号并核对结束条件。审查项先归类冻结输入与旧证明，证据项启动前写明可达消费者、缺少的断言、真实操作/预期结果及UI复用或差异；不能拿“其他组合”直接开测试。某项已完成消费者/明确缺口归类，却同时承接未验证结果时，保留原编号、范围、转交断言与审查记录，将剩余工作标为补证据。用户继续goal后，满足上述条件的增量可与无关依赖审查并行推进；整理期间的临时运行限制随当前授权更新。新增事项记录源码/请求依据、旧证明为何不足、唯一归属、最小新增工作、关闭条件和前后数量；同义标签与数值变体映射已有事项。汇报完成/新增事项编号及分类数量，不用包数或批次数充当轮数。整理期间遵守当前暂停状态；catalog中的goalState只是该次整理快照，实时授权以用户及系统goal为准。

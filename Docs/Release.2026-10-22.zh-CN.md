@@ -41,3 +41,19 @@ Windows运行清单37538项逐项SHA256通过，`53d47365c5b307612b8ebadd92cd4ab
 ## SKILL 与源码发布
 
 用户另行要求更新SKILL和Git。本轮补齐独立包／累计包、打包／安装／部署／推送的真实状态及用户备份偏好；洗切统计保留固定种子、4地及以上主口径、同名牌跨印次及含地／非地口径，调度策略与生产行为分开记录。另修正12处已有证据相对链接，93条本地引用全部可达，skill格式有效。31项源码守卫、文本编码、13字体／14审核文件检查通过。实现源码与已发布构建保持一致，只有已记录的Windows Addressables生成状态不同。Git提交、远端与对应CI实际结果保留在`.tools/git-publish-1022/`，不把本轮source检查当作重新构建或新的公网对局证明。
+
+## 晚间审查修复合并发布（release-review-1022）
+
+本批按新授权合并桌面 22 号包，不修改 21 号包。内容包含此前对局交互、分堆/数值/分配窗口、季节模式、手牌与法术力/场地翻页布局、英文提示及原生法术力快照并发修复。机制证据与边界分别见 GameplayFlowAudit、SeasonChoices、NumericChoiceAudit、AllocationWindowAudit、PileSelectionAudit 及 GameplayAuditProgress；不是全卡池或全部公网长局验证。
+
+Windows 与 Linux Player 均构建成功，49 份原生补丁重建。Windows 运行清单 37540 项、Linux 37482 项及服务端完整发布 38312 项逐项哈希核对。客户端程序集 f18e7ef1309c538a063f7bbd05aadab22f9573956543951e97a3cd46da5677ed；服务端程序集 9bebef3cf8ac3c3b3b3df9e9497387de6fe25adade464d552bd4befd2e98fae1。来源清单增加全部 29 份桥接源文件 SHA-256。字体许可检查、9 份批准字体嵌入与禁用字体扫描通过。
+
+合并包 C:/Users/Sam/Desktop/MTGB-独立更新包-20261022.zip，保留旧 22 号包 59 条有效载荷并加入新差异，共 71 项，61,770,343 字节，SHA-256 为 4943c2023d4218203856ac23b466e5d20ef98eb5e21d39b6319d525d3dcd8879。CRC、路径唯一性、逐项 SHA-256 与虚拟覆盖完整运行清单通过；名称沿用原文件，manifest 标记 cumulative-20261022-review。21 号包保持原 SHA-256。
+
+31 项源码守卫、文本编码与 SKILL 格式检查通过。包内 Forge 实际启动、双方起手及 InputPassPriority 通过，洗切仍为 physical-pile10-mash3-cut-v2。法术力并发测试第一次在构建/盘点繁忙时超过原 45 秒等待且没有结果，保留失败记录；仅验证脚本副本把等待改为 120 秒并限制处理器数后，100000 次并发读写与最终空池通过，未修改生产超时。编辑器恢复 Windows Player、Main、停止运行，云设置恢复冻结原字节。字体仅生成缓存字段、Addressables 状态按构建差异记录。
+
+SKILL 补充分堆窗口生命周期、空堆/长名/滚动/权限矩阵及剩余项目分类；项目整理详情见 WorkspaceCleanup.2026-10-22.zh-CN.md，删除被自动审批拒绝的目标保留。证据集中于 .tools/release-review-1022/。
+
+桌面 71 项载荷已覆盖，完整 37540 项运行文件校验通过；覆盖前后 36862 张卡图、5 个卡组和安装目录内 1 个录像文件保护记录一致，未新增备份。服务器 33 项差异上传后，完整 38312 项校验与独立 23234 端口试启动通过；再次确认无房间及 TCP 玩家连接后切至 /opt/mtgb/releases/20261022-linux-24。PID 1381143、NRestarts=0，公网与正式目录实例一致、无 OOM，原 CPU/内存/Java 限额及其他服务保持。Replays 仍指向 /var/lib/mtgb/Replays，服务用户写入验证通过；旧正式目录原位保留。
+
+实际桌面安装版以隔离配置启动检查通过：进入 Main、资料就绪、正常退出（5 个采样）。发布与整理记录随本次源码提交推送；提交 SHA、远端一致性及对应 CI 最终结果见 .tools/release-review-1022/final-audit.json，不将历史 CI 当成本批验证。

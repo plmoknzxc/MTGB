@@ -25,8 +25,11 @@ final class ForgePoolMana {
         catch(IllegalAccessException e) { throw new IllegalStateException(e); }
     }
     static int count(Player player,byte color,boolean snow) {
+        return count(player.getManaPool().snapshot(),color,snow);
+    }
+    static int count(List<forge.game.mana.Mana> snapshot,byte color,boolean snow) {
         int count=0;
-        for(var mana:player.getManaPool()) if(mana.getColor()==color&&mana.isSnow()==snow) count++;
+        for(var mana:snapshot) if(mana.getColor()==color&&mana.isSnow()==snow) count++;
         return count;
     }
     private static String symbol(byte color) {
@@ -48,8 +51,11 @@ final class ForgePoolMana {
         return base+":restricted:"+mana.getSourceCard().getId()+":"+tag;
     }
     static List<Map<String,Object>> entries(Player player,Player viewer) {
+        return entries(player.getManaPool().snapshot(),viewer);
+    }
+    static List<Map<String,Object>> entries(List<forge.game.mana.Mana> snapshot,Player viewer) {
         Map<String,Map<String,Object>> buckets=new LinkedHashMap<>();
-        for(var mana:player.getManaPool()) {
+        for(var mana:snapshot) {
             String id=key(mana);
             var bucket=buckets.get(id);
             if(bucket==null) {
@@ -79,7 +85,7 @@ final class ForgePoolMana {
             // Copy before native removal changes the iterable. Preserve the actual
             // Mana instance, source, restrictions, refund and spending effects.
             var candidates=new ArrayList<forge.game.mana.Mana>();
-            for(var mana:pool) if(key(mana).equals(bucketId)) candidates.add(mana);
+            for(var mana:pool.snapshot()) if(key(mana).equals(bucketId)) candidates.add(mana);
             for(var mana:candidates) {
                 if(!mana.meetsManaRestrictions(ability)||!ability.allowsPayingWithShard(mana.getSourceCard(),mana.getColor())) continue;
                 if(pool.tryPayCostWithMana(ability,cost,mana,false)) {

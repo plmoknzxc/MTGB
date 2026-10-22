@@ -97,7 +97,9 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         const float hoverScale=1.8f;
         // Grow inward, preserving the visible outer edge of either hand.
         float extraLift=face.rect.height*(hoverScale-1.25f)*.5f;
-        var lift=Quaternion.Inverse(tableRotation)*new Vector3(0,topHand?-184-extraLift:154+extraLift,0);
+        // Resting fans may tuck outward to clear the battlefield; hover still lifts fully into view.
+        float restingInset=hand?((RectTransform)root.parent).anchoredPosition.y:0;
+        var lift=Quaternion.Inverse(tableRotation)*new Vector3(0,(topHand?-184-extraLift:154+extraLift)-restingInset,0);
         face.localPosition=Vector3.Lerp(face.localPosition,hovering && hand?lift:Vector3.zero,speed);
         face.localScale=Vector3.Lerp(face.localScale,Vector3.one*(hovering && hand?hoverScale:1),speed);
         // Hover straightens a fanned hand card, but must preserve a permanent's tapped orientation.

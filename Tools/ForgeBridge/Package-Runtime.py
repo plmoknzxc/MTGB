@@ -92,6 +92,8 @@ def main():
         "forgeRevision": config["revision"], "forgeRepository": "https://github.com/Card-Forge/forge",
         "forgeSourceSha256": sha(forge_source), "javaBinaryUrl": JRE_URL, "javaBinarySha256": JRE_SHA256,
         "nativePatchesSha256": sha(ROOT / "Tools/ForgeBridge/NativePatches.json"),
+        "bridgeSourcesSha256": {p.relative_to(ROOT / "Tools/ForgeBridge/java").as_posix(): sha(p)
+                                for p in sorted((ROOT / "Tools/ForgeBridge/java").rglob("*.java"))},
         "nativeAssetPatches": asset_patches,
         "nativePatchedSources": [{"path": p.relative_to(native_source).as_posix(), "sha256": sha(p)}
                                  for p in sorted(native_source.rglob("*.java"))]

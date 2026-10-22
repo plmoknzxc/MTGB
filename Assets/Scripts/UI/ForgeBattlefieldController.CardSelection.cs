@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -269,7 +269,7 @@ public sealed partial class ForgeBattlefieldController
                 PresentComponentFace((RectTransform)tile.Find("Artwork"),card);
                 bool chosen=options.Any(o=>o.selected||IsStagedHandChoice(o.id))||!string.IsNullOrEmpty(card.selection)&&card.selection!="不可选";
                 PresentSelectionGlow(tile,(RectTransform)tile.Find("Artwork"),chosen);
-                tile.GetComponent<Image>().color=chosen?new Color(.7f,.51f,.16f):options.Length>0?new Color(.18f,.45f,.58f):new Color(.12f,.16f,.21f);
+                tile.GetComponent<Image>().color=chosen?new Color(.16f,.18f,.20f):options.Length>0?new Color(.18f,.45f,.58f):new Color(.12f,.16f,.21f);
                 var destination=tile.Find("Destination")?.GetComponent<Text>();if(destination!=null)destination.text=card.selection??"";
                 var order=tile.Find("Artwork/Order")?.GetComponent<Text>();if(order!=null)order.text=chosen&&options.Length>0?options[0].order.ToString():"";
                 var counterCount=tile.Find("CounterCount")?.GetComponent<Text>();if(counterCount!=null)counterCount.text=CounterSelectionCount(options);
@@ -457,7 +457,7 @@ public sealed partial class ForgeBattlefieldController
             bool unavailable=card.selection=="不可选";
             bool chosen=item.options.Any(o=>o.selected||IsStagedHandChoice(o.id))||!string.IsNullOrEmpty(card.selection)&&!unavailable;
             bool selectable=item.options.Length>0;
-            tile.GetComponent<Image>().color=chosen?new Color(.7f,.51f,.16f):selectable?new Color(.18f,.45f,.58f):new Color(.12f,.16f,.21f);
+            tile.GetComponent<Image>().color=chosen?new Color(.16f,.18f,.20f):selectable?new Color(.18f,.45f,.58f):new Color(.12f,.16f,.21f);
             if(targetHints.Length>i)PresentZoneTargetHint(tile,targetHints[i],artWidth,targetHintHeight);
             var art=Panel(tile,"Artwork",new Vector2(0,-artHeight/2-8-targetHintHeight-legacyCostHeadroom),new Vector2(artWidth,artHeight),Ink);
             art.anchorMin=art.anchorMax=new Vector2(.5f,1);

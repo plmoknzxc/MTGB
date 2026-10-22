@@ -5,22 +5,21 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasRenderer))]
 public sealed class ForgePlayableGlow : MaskableGraphic
 {
-    // Selected cards have a steady bright inner edge and a warm halo, distinct
+    // Selected cards have a crisp warm edge and a restrained halo, distinct
     // from the cyan pulse that only means a card is available to play.
     public bool selected;
     private void Update()
     {
-        canvasRenderer.SetAlpha(selected?.96f+.04f*Mathf.Sin(Time.unscaledTime*2.1f):.87f+.13f*Mathf.Sin(Time.unscaledTime*2.1f));
+        canvasRenderer.SetAlpha(selected?1f:.87f+.13f*Mathf.Sin(Time.unscaledTime*2.1f));
     }
 
     protected override void OnPopulateMesh(VertexHelper mesh)
     {
         mesh.Clear();
         if(selected) {
-            Ring(mesh,22,12,0,.18f);
-            Ring(mesh,12,6,.18f,.48f);
-            Ring(mesh,6,2,.48f,1);
-            Ring(mesh,2,-1,1,1);
+            Ring(mesh,6,3,0,.15f);
+            Ring(mesh,3,2,.15f,.8f);
+            Ring(mesh,2,-1,.95f,.95f);
             return;
         }
         Ring(mesh,25,16,0,.09f);

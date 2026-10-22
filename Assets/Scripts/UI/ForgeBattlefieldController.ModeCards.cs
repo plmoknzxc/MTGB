@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -9,6 +9,7 @@ public sealed partial class ForgeBattlefieldController
     private void PresentModeCards(ForgeCardView source,long captured,bool modes,bool castingCosts=false)
     {
         var request=view.request;
+        bool pawprint=request.selectionPurpose=="pawprint";
         var options=request.options.Where(o=>o.id.StartsWith(castingCosts?"choice:":modes?"mode:":"select:",StringComparison.Ordinal)).ToArray();
         if(!modes && !castingCosts && request.minCount==0) {
             // Zero optional costs is a native choice too: confirm zero, or reset the
@@ -17,18 +18,22 @@ public sealed partial class ForgeBattlefieldController
             options=new[]{new ForgeOption{id=id,label=TapPaymentText("正常施放","Cast normally","通常の唱え方"),selected=request.selectedCount==0}}.Concat(options).ToArray();
         }
         bool spree=request.selectionPurpose=="spree" || modes&&options.Any(o=>!string.IsNullOrEmpty(o.modeCost));
-        float width=Mathf.Min(surface.rect.width-100,options.Length*254+36),height=Mathf.Min(540,surface.rect.height-80);
+        // A filtered mode list can contain a single card, but still needs room
+        // for confirmation, reset and cancel at the user's chosen text size.
+        float width=Mathf.Min(surface.rect.width-100,Mathf.Max(536,options.Length*254+36)),height=Mathf.Min(540,surface.rect.height-80);
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;
         landChoiceMenu.GetComponent<Image>().color=Ink;
         string title=spree?TapPaymentText("追欢","Spree","放題"):modes?TapPaymentText("选择效果","Choose modes","モードを選択"):TapPaymentText("选择施放方式","Choose casting method","唱え方を選択");
-        var heading=Label(landChoiceMenu,"Title",title,new Vector2(0,height*.5f-24),new Vector2(width,38),28,Paper);
+        if(pawprint&&source!=null)title=GamePreferences.CardFaceName(source.name);
+        var heading=Label(landChoiceMenu,"Title",title,new Vector2(0,height*.5f-30),new Vector2(width-32,54),24,Paper);
         heading.fontStyle=FontStyle.Bold;
-        var rule=Panel(landChoiceMenu,"TitleLine",new Vector2(0,height*.5f-48),new Vector2(width-40,1),new Color(1,1,1,.45f));rule.GetComponent<Image>().raycastTarget=false;
-        string instruction=!modes?TapPaymentText("选择施放方式","Choose a casting method","唱え方を選択"):
+        var rule=Panel(landChoiceMenu,"TitleLine",new Vector2(0,height*.5f-60),new Vector2(width-40,1),new Color(1,1,1,.45f));rule.GetComponent<Image>().raycastTarget=false;
+        string instruction=pawprint?TapPaymentText($"爪印 {request.selectedValue}/{request.maxValue} · 可重复选择",$"Pawprints {request.selectedValue}/{request.maxValue} · Modes may repeat",$"足跡 {request.selectedValue}/{request.maxValue} · 同じモードを選択可"):!modes?TapPaymentText("选择施放方式","Choose a casting method","唱え方を選択"):
             TapPaymentText($"已选 {request.selectedCount} · 选择 {request.minCount}–{request.maxCount} 项",$"Selected {request.selectedCount} · Choose {request.minCount}–{request.maxCount}",$"選択済み {request.selectedCount} · {request.minCount}–{request.maxCount} 項目を選択");
-        Label(landChoiceMenu,"Count",instruction,new Vector2(0,height*.5f-66),new Vector2(width,30),16,Paper);
+        Label(landChoiceMenu,"Count",instruction,new Vector2(0,height*.5f-84),new Vector2(width-32,40),16,Paper);
         float cardWidth=Mathf.Min(234,(width-36)/Math.Max(1,Math.Min(4,options.Length))-16);
         string CostText(ForgeOption option) {
+            if(pawprint)return TapPaymentText($"{option.pawprintCost} 爪印",$"{option.pawprintCost} pawprint"+(option.pawprintCost==1?"":"s"),$"足跡 {option.pawprintCost}");
             bool normal=castingCosts?option.faceKind=="normal":option.id=="confirm-cards"||option.id=="reset-cards";
             // Promising a gift has no additional mana cost. The native cost's
             // generic "Gift something" text is represented by the method heading.
@@ -54,19 +59,21 @@ public sealed partial class ForgeBattlefieldController
         UnityEngine.Object.Destroy(measure.gameObject);
         float methodHeight=modes?0:Mathf.Max(28,28*GamePreferences.TextScale);
         float headerHeight=costHeight+methodHeight+12;
-        float cardHeight=Mathf.Min(cardWidth*1.4f,height-152-headerHeight-12);
-        var content=Scroll(landChoiceMenu,"ModeOptions",new Vector2(0,-6),new Vector2(width-20,height-152));
+        float cardHeight=Mathf.Min(cardWidth*1.4f,height-180-headerHeight-12);
+        var content=Scroll(landChoiceMenu,"ModeOptions",new Vector2(0,-14),new Vector2(width-20,height-180));
         var scroll=content.parent.GetComponent<ScrollRect>();scroll.horizontal=true;scroll.vertical=false;
         content.anchorMin=content.anchorMax=new Vector2(0,1);content.pivot=new Vector2(0,1);
-        content.sizeDelta=new Vector2(Mathf.Max(width-20,options.Length*(cardWidth+20)),height-152);
+        content.sizeDelta=new Vector2(Mathf.Max(width-20,options.Length*(cardWidth+20)),height-180);
+        content.anchoredPosition=new Vector2(-Mathf.Clamp(choiceScrollOffset,0,Mathf.Max(0,content.rect.width-scroll.viewport.rect.width)),0);
+        float firstCardX=Mathf.Max(10,(width-20-(options.Length*(cardWidth+20)-20))*.5f);
         Sprite art=null;if(source!=null)TryBattlefieldArt(source,out art);
         for(int i=0;i<options.Length;i++) {
             var option=options[i];int index=OptionIndex(option.id);
             var button=Button(content,"Mode_"+option.id,"",Vector2.zero,new Vector2(cardWidth,cardHeight),()=>Choose(index,captured),option.selected?Gold:option.disabled?new Color(.2f,.24f,.28f):new Color(.28f,.83f,.95f));
-            var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(0,1);rect.anchoredPosition=new Vector2(10+i*(cardWidth+20),-headerHeight);
+            var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(0,1);rect.anchoredPosition=new Vector2(firstCardX+i*(cardWidth+20),-headerHeight);
             button.transition=Selectable.Transition.None;button.interactable=canAct&&!submitted&&!option.disabled;
             var border=button.GetComponent<Image>();border.sprite=IntegratedUiUtility.RoundedRect(240,336,10);
-            var selection=Label(button.transform,"Selection",option.selected?"✓":"",new Vector2(cardWidth*.5f-18,cardHeight*.5f-18),new Vector2(24,26),18,Gold);selection.gameObject.SetActive(option.selected);
+            var selection=Label(button.transform,"Selection",option.selected?(pawprint?"×"+option.chosenCount:"✓"):"",new Vector2(cardWidth*.5f-28,cardHeight*.5f-18),new Vector2(46,30),18,Gold);selection.gameObject.SetActive(option.selected);
             // Clip away the entire printed rules area instead of placing a smaller
             // opaque rectangle over it. No costs, other modes or flavour can peek out.
             float faceHeight=cardHeight-8,faceWidth=cardWidth-8,headHeight=Mathf.Min(92,faceHeight*.35f);
@@ -114,12 +121,13 @@ public sealed partial class ForgeBattlefieldController
             selection.transform.SetAsLastSibling();
         }
         string confirmId=modes?"confirm-modes":"confirm-cards",resetId=modes?"reset-modes":"reset-cards";
-        var actions=new[]{(confirmId,TapPaymentText("下一步","Next","次へ")),(resetId,TapPaymentText("重新选择","Reset","選び直す")),("cancel",TapPaymentText("取消","Cancel","キャンセル"))};
+        var actions=new[]{(confirmId,TapPaymentText("下一步","Next","次へ")),(resetId,TapPaymentText("重新选择","Reset","選び直す")),("cancel",TapPaymentText("取消","Cancel","キャンセル"))}
+            .Where(a=>OptionIndex(a.Item1)>=0||!castingCosts&&a.Item1!="cancel").ToArray();
+        float actionWidth=Mathf.Min(156,(width-40)/Math.Max(1,actions.Length)-12);
         for(int i=0;i<actions.Length;i++) {
             int index=OptionIndex(actions[i].Item1);
-            if(index<0&&(i==2||castingCosts))continue;
-            var button=Button(landChoiceMenu,actions[i].Item1,actions[i].Item2,new Vector2((i-1)*170,-height*.5f+28),new Vector2(156,42),()=>Choose(index,captured),i==0?new Color(.22f,.37f,.55f):Ink);
-            button.interactable=canAct&&!submitted&&index>=0;
+            var button=Button(landChoiceMenu,actions[i].Item1,actions[i].Item2,new Vector2((i-(actions.Length-1)*.5f)*(actionWidth+12),-height*.5f+28),new Vector2(actionWidth,42),()=>Choose(index,captured),i==0?new Color(.22f,.37f,.55f):Ink);
+            button.interactable=canAct&&!submitted&&index>=0&&!request.options[index].disabled;
         }
         landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
     }
@@ -137,10 +145,11 @@ public sealed partial class ForgeBattlefieldController
             return effect;
         }
         // Use the original rule-line identity; native filtering can remove earlier modes.
-        string[] Lines(string rules)=>Regex.Split((rules??"").Replace("\\n","\n"),"[\r\n]+").Where(l=>Regex.IsMatch(l.Trim(),@"^(?:[+＋•・]|—)")).ToArray();
+        string[] Lines(string rules)=>Regex.Split((rules??"").Replace("\\n","\n"),"[\r\n]+").Where(l=>Regex.IsMatch(l.Trim(),@"^(?:[+＋•・]|—|\{(?:P|oH+)\})")).ToArray();
         var english=Lines(definition.description);var translated=Lines(localized);
         if(option.order>0 && english.Length==translated.Length && option.order<=translated.Length) {
             string line=translated[option.order-1].Trim();
+            line=Regex.Replace(line,@"^(?:\{(?:P|oH+)\}\s*)+[—―－〜～~-]\s*","");
             line=Regex.Replace(line,@"^[+＋]\s*(?:\{[^}]+\}\s*)+\s*[—－〜～~-]\s*","");
             return Regex.Replace(line,@"^[•・—]\s*","");
         }

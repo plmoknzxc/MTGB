@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -89,7 +89,9 @@ public sealed partial class ForgeBattlefieldController
     private bool PrepareLandChoices()
     {
         long context=view?.request?.contextId>0?view.request.contextId:view?.request?.requestId??0;
-        var previousScroll=landChoiceMenu!=null?landChoiceMenu.GetComponentInChildren<BattlefieldHorizontalScroll>(true):null;
+        // Preserve only the top-level horizontal selector, never a nested rules scroller.
+        var previousScroll=landChoiceMenu!=null?landChoiceMenu.GetComponentsInChildren<ScrollRect>(true)
+            .FirstOrDefault(s=>s.transform.parent==landChoiceMenu&&s.gameObject.activeSelf&&s.horizontal):null;
         choiceScrollOffset=context==choiceScrollContext&&previousScroll!=null?-previousScroll.content.anchoredPosition.x:0;
         choiceScrollContext=context;
         if(landChoiceMenu!=null){landChoiceMenu.gameObject.SetActive(false);Clear(landChoiceMenu);}
@@ -241,7 +243,7 @@ public sealed partial class ForgeBattlefieldController
         for(int i=0;i<footer.Length;i++) {
             int action=OptionIndex(footer[i].id);
             var close=Button(landChoiceMenu,footer[i].id=="cancel"?"Cancel":"Confirm",footer[i].id=="cancel"?"取消":"确认",new Vector2((i-(footer.Length-1)*.5f)*(cards?182:120),-height/2+(cards?24:19)),new Vector2(cards?166:106,cards?42:28),()=>Choose(action,captured),new Color(.14f,.2f,.26f));
-            close.interactable=canAct&&!submitted;close.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(166,42,10);
+            close.interactable=canAct&&!submitted&&!footer[i].disabled;close.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(166,42,10);
         }
         landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();return true;
     }
@@ -333,10 +335,10 @@ public sealed partial class ForgeBattlefieldController
         float left=-79-extra/2,right=-16+extra/2,commitX=47.5f+extra/2;
         if(costNumber) {
             landChoiceMenu.sizeDelta=new Vector2(279+extra,48);landChoiceMenu.anchoredPosition=new Vector2(.5f-extra/2,-20);
-            value.rectTransform.anchoredPosition+=new Vector2(-47.5f,0);left-=47.5f;right-=47.5f;commitX=-47.5f+extra/2;
+            value.rectTransform.anchoredPosition+=new Vector2(-47.5f,0);left-=47.5f;right-=47.5f;commitX=extra/2;
             int decline=PresentedCancelOption;
             if(decline>=0) {
-                var cancel=DockAction(landChoiceMenu,"CancelValue",TapPaymentText("取消","Cancel","キャンセル"),new Vector2(47.5f+extra/2,0),89,()=>Choose(decline,captured),true);
+                var cancel=DockAction(landChoiceMenu,"CancelValue",TapPaymentText("取消","Cancel","キャンセル"),new Vector2(95+extra/2,0),89,()=>Choose(decline,captured),true);
                 cancel.interactable=canAct&&!submitted;
             }
         }
@@ -344,19 +346,19 @@ public sealed partial class ForgeBattlefieldController
             foreach(var item in new[]{("Decrease","−","number-minus",left),("Increase","+","number-plus",right)}) {
                 int index=OptionIndex(item.Item3);
                 var control=Button(landChoiceMenu,item.Item1,item.Item2,new Vector2(item.Item4,0),new Vector2(26,36),()=>Choose(index,captured),new Color(.14f,.2f,.26f));
-                control.interactable=index>=0&&canAct&&!submitted;var label=control.GetComponentInChildren<Text>();PreferenceText.SetSize(label,16);
+                control.interactable=index>=0&&canAct&&!submitted&&!view.request.options[index].disabled;var label=control.GetComponentInChildren<Text>();PreferenceText.SetSize(label,16);
                 label.rectTransform.sizeDelta=new Vector2(26,34);label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Truncate;
             }
             int confirmation=OptionIndex("confirm-number");
             var commit=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(confirmation,captured),false);
             commit.interactable=canAct&&!submitted&&confirmation>=0&&!view.request.options[confirmation].disabled;landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();return;
         }
-        Button minus=null,plus=null;
-        Action refresh=()=>{value.text=choices[selected].label;minus.interactable=canAct&&!submitted&&selected>0;plus.interactable=canAct&&!submitted&&selected+1<choices.Length;};
+        Button minus=null,plus=null,confirm=null;
+        Action refresh=()=>{value.text=choices[selected].label;minus.interactable=canAct&&!submitted&&selected>0;plus.interactable=canAct&&!submitted&&selected+1<choices.Length;if(confirm!=null)confirm.interactable=canAct&&!submitted&&!choices[selected].disabled;};
         minus=Button(landChoiceMenu,"Decrease","−",new Vector2(left,0),new Vector2(26,36),()=>{if(selected>0)selected--;refresh();},new Color(.14f,.2f,.26f));
         plus=Button(landChoiceMenu,"Increase","+",new Vector2(right,0),new Vector2(26,36),()=>{if(selected+1<choices.Length)selected++;refresh();},new Color(.14f,.2f,.26f));
         foreach(var control in new[]{minus,plus}){var label=control.GetComponentInChildren<Text>();PreferenceText.SetSize(label,16);label.rectTransform.sizeDelta=new Vector2(26,34);label.resizeTextForBestFit=false;}
-        var confirm=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(OptionIndex(choices[selected].id),captured),false);
+        confirm=DockAction(landChoiceMenu,"ConfirmValue",costNumber?TapPaymentText("下一步","Next","次へ"):TapPaymentText("确定","Confirm","確認"),new Vector2(commitX,0),89,()=>Choose(OptionIndex(choices[selected].id),captured),false);
         confirm.interactable=canAct&&!submitted&&!choices[selected].disabled;refresh();landChoiceMenu.gameObject.SetActive(true);SetOverlayLayer(landChoiceMenu,DecisionLayerOffset,true);landChoiceMenu.SetAsLastSibling();
     }
 
@@ -427,6 +429,12 @@ public sealed partial class ForgeBattlefieldController
             var summary=Regex.Match(description,"^"+Regex.Escape(source.name??"")+@" - (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*(?: -?\d+\s*/\s*-?\d+)?$");
             if(summary.Success){description=PrintedRuleText(source,(source.currentRules??source.originalRules??"").Replace("\\n","\n"));cost=source.manaCost;}
             description=(permission.Length>0?permission+"\n":"")+AbilityRecipeText(source,option.label,AbilityEffectText(source,description));
+        }
+        else if(!grouping&&source!=null&&!source.faceDown) {
+            // Ordinary mode sentences can start with glossary actions such as
+            // Create or Exile. They are effects, not cost-bearing activations.
+            if(keyword.Success&&!prefix.Success)description=option.label??"";
+            description=AbilityEffectText(source,description);
         }
         float top=size.y/2;
         var heading=Label(face,"Mode",title,new Vector2(0,top-19),new Vector2(size.x-18,28),20,Color.white);heading.raycastTarget=false;

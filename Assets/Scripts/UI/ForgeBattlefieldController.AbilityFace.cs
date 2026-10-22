@@ -164,6 +164,15 @@ public sealed partial class ForgeBattlefieldController
                 +(castSuffix.Groups["sacrifice"].Success?"\n"+TapPaymentText("牺牲永久物。","Sacrifice permanents.","パーマネントを生け贄に捧げる。"):"");
         }
         paragraph=NativeCostEffectText(PrintedRuleText(source,paragraph));
+        // Native TapEffect substitutes a public target into this complete
+        // duration clause. Keep that identity and reject extended rules.
+        var tapLock=System.Text.RegularExpressions.Regex.Match(paragraph,@"^Tap (.+?)(?: \((\d+)\))?\. Its activated abilities can't be activated for as long as it remains tapped\.$");
+        if(tapLock.Success&&(view?.players??System.Array.Empty<ForgePlayerView>()).SelectMany(p=>p.battlefield??System.Array.Empty<ForgeCardView>())
+            .Any(c=>!c.faceDown&&(!tapLock.Groups[2].Success||c.id.ToString()==tapLock.Groups[2].Value)&&c.name==tapLock.Groups[1].Value)) {
+            string targetName=GamePreferences.CardFaceName(tapLock.Groups[1].Value)+(tapLock.Groups[2].Success?" ("+tapLock.Groups[2].Value+")":"");
+            paragraph=TapPaymentText("横置"+targetName+"。于其持续横置的时段内，其起动式异能不能起动。",paragraph,
+                targetName+"をタップする。それがタップ状態であり続けるかぎり、それの起動型能力は起動できない。");
+        }
         paragraph=AbilityRecipeText(source,effect,paragraph);
         paragraph+=castContext;
         var libraryLook=System.Text.RegularExpressions.Regex.Match(paragraph,@"^Player (\d+) looks at the top card of their library\. (.+)$");

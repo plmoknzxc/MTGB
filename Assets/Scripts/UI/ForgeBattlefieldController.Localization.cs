@@ -114,13 +114,14 @@ public sealed partial class ForgeBattlefieldController
                 source=visible.FirstOrDefault(card=>card.id==id&&card.name==header.Groups[1].Value);
                 if(source!=null) {
                     lines[i]=GamePreferences.CardFaceName(source.name)+" ("+id+")";
-                    if(header.Groups[3].Success)lines[i]+=" — "+AbilityEffectText(source,header.Groups[3].Value);
+                    if(header.Groups[3].Success)lines[i]+=" — "+AbilityEffectText(source,
+                        view.request.kind=="InputSelectTargets"&&!string.IsNullOrEmpty(view.request.abilityText)?view.request.abilityText:header.Groups[3].Value);
                     continue;
                 }
             }
             if(source!=null&&lines[i].StartsWith(" - ",StringComparison.Ordinal))
                 lines[i]=AbilityEffectText(source,lines[i].Substring(3).Trim());
-            if(view?.request?.kind=="InputSelectTargets"&&IsSpecializedFace(source)) {
+            if(view?.request?.kind=="InputSelectTargets") {
                 if(lines[i]=="Select up to one target creature card exiled with this creature")
                     lines[i]=TapPaymentText("从以此生物放逐的牌中选择至多一张目标生物牌。",lines[i],"このクリーチャーによって追放されているクリーチャー・カード最大１枚を対象に選択。");
                 else if(lines[i]=="Select up to one target instant or sorcery card exiled with this creature")
@@ -142,6 +143,13 @@ public sealed partial class ForgeBattlefieldController
     private string TargetInstructionText(string text)
     {
         string original=text;
+        var permanentValue=Regex.Match(text??"",@"^Select target permanent card with mana value (\d+) or less in your graveyard$");
+        if(permanentValue.Success)return TapPaymentText("从你的坟墓场选择一张法术力值不大于"+permanentValue.Groups[1].Value+"的目标永久物牌。",text,"あなたの墓地にあるマナ総量が"+permanentValue.Groups[1].Value+"以下のパーマネント・カード１枚を対象に選ぶ。");
+        if(text=="Select target Permanent.nonLand")return TapPaymentText("选择目标非地永久物。",text,"土地でないパーマネント１つを対象に選ぶ。");
+        var graveyard=Regex.Match(text??"",@"^Select a card from your graveyard( \(\d+ / \d+\))?$");
+        if(graveyard.Success)return TapPaymentText("从你的坟墓场选择一张牌", "Select a card from your graveyard","あなたの墓地からカード１枚を選択")+graveyard.Groups[1].Value;
+        var tapPermanent=Regex.Match(text??"",@"^Select a\(n\) Permanent to tap \((\d+) left\)$");
+        if(tapPermanent.Success)return TapPaymentText("选择要横置的永久物（还剩"+tapPermanent.Groups[1].Value+"）",text,"タップするパーマネントを選択（残り"+tapPermanent.Groups[1].Value+"）");
         bool optionalPrefix=text?.StartsWith("oneOrNone: ",StringComparison.Ordinal)==true;
         if(optionalPrefix)text=text.Substring(11);
         else if(text?.StartsWith("one: ",StringComparison.Ordinal)==true)text=text.Substring(5);
@@ -190,6 +198,8 @@ public sealed partial class ForgeBattlefieldController
         if(!paragraph.StartsWith(prefix,StringComparison.Ordinal)||!paragraph.EndsWith(".",StringComparison.Ordinal))return paragraph;
         string clause=paragraph.Substring(prefix.Length,paragraph.Length-prefix.Length-1);
         if(string.IsNullOrEmpty(clause))return paragraph;
+        if(clause=="you may sacrifice any number of permanent.nonlands")
+            return TapPaymentText("你可以牺牲任意数量的非地永久物，以作为施放此咒语的额外费用。",paragraph,"この呪文を唱えるための追加コストとして、土地でないパーマネントを望む数だけ生け贄に捧げてもよい。");
         clause=char.ToUpperInvariant(clause[0])+clause.Substring(1);
         string translated=GamePreferences.NativeText(CostOrderLabel(clause));
         if(translated==clause)return paragraph;
