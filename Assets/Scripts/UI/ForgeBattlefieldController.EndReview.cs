@@ -58,7 +58,7 @@ public sealed partial class ForgeBattlefieldController
             // readonly card browser, which is raised within the battlefield canvas.
             var reviewShortcutCanvas = leaveReviewButton.gameObject.AddComponent<Canvas>();
             reviewShortcutCanvas.overrideSorting = true;
-            reviewShortcutCanvas.sortingOrder = canvas.sortingOrder + InspectLayerOffset + 1;
+            reviewShortcutCanvas.sortingOrder = canvas.sortingOrder + DecisionLayerOffset + 2;
             leaveReviewButton.gameObject.AddComponent<GraphicRaycaster>();
             leaveReviewButton.gameObject.SetActive(false);
         }

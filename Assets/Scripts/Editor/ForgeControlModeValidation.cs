@@ -23,7 +23,7 @@ public static class ForgeControlModeValidation
         foreach(string phase in new[]{"UNTAP","UPKEEP","DRAW","MAIN1","COMBAT_BEGIN","DECLARE_ATTACKERS","DECLARE_BLOCKERS","COMBAT_DAMAGE","COMBAT_END","MAIN2","END_OF_TURN"})
         foreach(int player in new[]{1,2})foreach(int turn in new[]{1,2})foreach(bool action in new[]{false,true})foreach(var mode in new[]{ForgeControlMode.On,ForgeControlMode.Auto,ForgeControlMode.Off}) {
             s.phase=phase;s.request.playerSeat=player;s.turnSeat=turn;s.canRespond=action;s.attackStateKnown=true;s.hasLegalAttackers=false;
-            bool ownMain=turn==player&&(phase=="MAIN1"||phase=="MAIN2");
+            bool ownMain=turn==player&&(phase=="MAIN1"||phase=="MAIN2"&&action);
             int expected=mode==ForgeControlMode.On||ownMain||mode==ForgeControlMode.Auto&&action?-1:0;
             Check(ForgeControlPolicy.AutomaticOption(s,1,mode,false)==expected,$"Priority policy {phase}/{player}/{turn}/{action}/{mode}");phaseChecks++;
         }
@@ -44,6 +44,14 @@ public static class ForgeControlModeValidation
         s.canRespond=true;Check(ForgeControlPolicy.AutomaticOption(s,1,ForgeControlMode.Auto,false)==-1,"AUTO skipped available response");
         s.canRespond=false;s.request.playerSeat=2;
         Check(ForgeControlPolicy.AutomaticOption(s,1,ForgeControlMode.Auto,false)==-1,"AUTO skipped controlled player's main phase");
+        s.request.playerSeat=1;s.turnSeat=1;s.phase="MAIN2";
+        foreach(var m in new[]{ForgeControlMode.Auto,ForgeControlMode.Off}){
+            s.request.options=new[]{new ForgeOption{id="ok"},new ForgeOption{id="card:1",requiresPaymentCheck=true}};
+            Check(ForgeControlPolicy.AutomaticOption(s,1,m,false)==-1,"Second main passed a native action requiring payment choice");
+            s.request.options[1].disabled=true;
+            Check(ForgeControlPolicy.AutomaticOption(s,1,m,false)==0,"Disabled uncertain action prevented empty second-main pass");
+        }
+        s.request.options=new[]{new ForgeOption{id="ok"}};
         s.request.playerSeat=0;
         s.request.kind="InputPayManaOfCostPayment";
         foreach(var mode in new[]{ForgeControlMode.On,ForgeControlMode.Auto,ForgeControlMode.Off})

@@ -70,7 +70,8 @@ public sealed partial class ForgeBattlefieldController
         var face=existing.GetComponent<TemplateCardFace>();
         void BindFrame(string selectedFrame)=>face.Bind(art,title,cost,type,rules,stats,printed,
             adventure==null?null:GamePreferences.FeatureName(adventure),adventureCost,
-            adventure==null?null:GamePreferences.FeatureType(adventure,"Instant — Adventure"),adventure==null?null:GamePreferences.FeatureRules(adventure),selectedFrame,compact);
+            adventure==null?null:GamePreferences.FeatureType(adventure,"Instant — Adventure"),adventure==null?null:GamePreferences.FeatureRules(adventure),selectedFrame,compact,
+            adventure?.manaCost,!original&&card.zone is "Hand" or "Graveyard" or "Exile");
         BindFrame(frame);
         // Actual translated typography can require more room than the native
         // text-length estimate. Try the larger rules panel before using a scan.

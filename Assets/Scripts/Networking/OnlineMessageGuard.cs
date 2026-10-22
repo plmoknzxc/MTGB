@@ -209,6 +209,12 @@ public sealed class OnlineMessageGuard
             error = "牌组项目或卡牌总数超过限制。";
             return false;
         }
+        if (!DeckCopyOrder.IsValid(deck.cards, deck.mainOrder, MaxDeckCards)
+            || !DeckCopyOrder.IsValid(deck.sideboard, deck.sideboardOrder, MaxDeckCards))
+        {
+            error = "牌组逐张顺序与卡牌数量不一致。";
+            return false;
+        }
         error = string.Empty;
         return true;
     }

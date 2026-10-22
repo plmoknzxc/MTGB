@@ -414,11 +414,35 @@
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/Player.java",
       "sourceSha256": "0dffd8d0384daeba7b0ea1665343c1c424a71a9487d3b4c540741d4a4b4e33b8",
       "javaPath": "forge/game/player/Player.java",
-      "reason": "Optional Companion selection returns null on cancel. Match.prepareAllZones then passed null to moveTo and fatally aborted startup. Return before any command-zone movement/effect construction when the player declines; accepted Companion setup and child-game callers retain the same native path.",
+      "reason": "Optional Companion selection returns null on cancel. Match.prepareAllZones then passed null to moveTo and fatally aborted startup. Return before any command-zone movement/effect construction when the player declines; accepted Companion setup and child-game callers retain the same native path. Passive library audit. Observe shuffle before/after and individual draw attempts without consuming random numbers or changing engine results. Finite physical shuffle. Allow the MTGB host to install five card-agnostic riffles and a cut for every native library shuffle; leave standalone Forge default behavior and passive audit boundaries intact.",
       "changes": [
         {
           "before": "        PlayerZone commandZone = getZone(ZoneType.Command);\n        companion = game.getAction().moveTo(ZoneType.Command, companion, null, AbilityKey.newMap());",
           "after": "        // Choosing a companion is optional; declining must leave the sideboard intact.\n        if (companion == null) {\n            return;\n        }\n\n        PlayerZone commandZone = getZone(ZoneType.Command);\n        companion = game.getAction().moveTo(ZoneType.Command, companion, null, AbilityKey.newMap());"
+        },
+        {
+          "before": "    public final void shuffle(final SpellAbility sa) {",
+          "after": "    // One isolated bridge process owns one game. Default null has no observer.\n    public interface LibraryAudit {\n        void shuffle(Player player, SpellAbility cause, boolean after);\n        Object beginDraw(Player player, SpellAbility cause);\n        void endDraw(Object context, CardCollectionView drawn);\n    }\n    private static LibraryAudit libraryAudit;\n    public static void setLibraryAudit(LibraryAudit observer) { libraryAudit = observer; }\n    private void auditShuffle(SpellAbility cause, boolean after) {\n        if (libraryAudit != null) try { libraryAudit.shuffle(this, cause, after); }\n        catch (RuntimeException error) { System.err.println(\"[shuffle-audit] observer failed: \" + error); }\n    }\n    public final void shuffle(final SpellAbility sa) {\n        auditShuffle(sa, false);"
+        },
+        {
+          "before": "        getZone(ZoneType.Library).setCards(getController().cheatShuffle(list));",
+          "after": "        getZone(ZoneType.Library).setCards(getController().cheatShuffle(list));\n        auditShuffle(sa, true);"
+        },
+        {
+          "before": "    private CardCollectionView doDraw(Map<Player, CardCollection> revealed, SpellAbility sa, Map<AbilityKey, Object> params, PlayerZone hand) {\n        CardCollection drawn = new CardCollection();",
+          "after": "    private CardCollectionView doDraw(Map<Player, CardCollection> revealed, SpellAbility sa, Map<AbilityKey, Object> params, PlayerZone hand) {\n        CardCollection drawn = new CardCollection();\n        final LibraryAudit observer = libraryAudit;\n        Object audit = null;\n        if (observer != null) try { audit = observer.beginDraw(this, sa); }\n        catch (RuntimeException error) { System.err.println(\"[shuffle-audit] observer failed: \" + error); }\n        try {"
+        },
+        {
+          "before": "        return drawn;\n    }\n\n    public final void resetNumDrawnThisDrawStep()",
+          "after": "        return drawn;\n        } finally {\n            if (observer != null) try { observer.endDraw(audit, drawn); }\n            catch (RuntimeException error) { System.err.println(\"[shuffle-audit] observer failed: \" + error); }\n        }\n    }\n\n    public final void resetNumDrawnThisDrawStep()"
+        },
+        {
+          "before": "    private static LibraryAudit libraryAudit;",
+          "after": "    // Optional host policy; standalone Forge retains its original shuffle.\n    private static java.util.function.Consumer<List<Card>> libraryShuffler;\n    public static void setLibraryShuffler(java.util.function.Consumer<List<Card>> shuffler) { libraryShuffler = shuffler; }\n    private static LibraryAudit libraryAudit;"
+        },
+        {
+          "before": "        Collections.shuffle(list, MyRandom.getRandom());",
+          "after": "        if (libraryShuffler == null) Collections.shuffle(list, MyRandom.getRandom());\n        else libraryShuffler.accept(list);"
         }
       ]
     },

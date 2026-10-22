@@ -85,6 +85,10 @@ public sealed partial class ForgeBattlefieldController
     }
     private string ResolutionChoiceInstruction(string message,bool localizeFallback=true)
     {
+        // The pinned sacrifice producer omits the article used by the existing
+        // localized format. Normalize only that equivalent selector phrase.
+        message=System.Text.RegularExpressions.Regex.Replace(message??"",@"(?m)^Select another creature or artifact to sacrifice \((\d+) left\)$",
+            m=>GamePreferences.NativeText("Select another creature or an artifact to sacrifice ("+m.Groups[1].Value+" left)"));
         string auxiliary=AuxiliaryPrompt(message);if(auxiliary!=null)return auxiliary;
         // Native prompts count the remaining cards (2, 1, then 0). Keep the
         // total requirement and progress separate so a full draft says 2/2.
@@ -602,7 +606,9 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentSelectionFooter(float height,string kind)
     {
-        if(HasTargetChoice) { Clear(selectionFooter); return; }
+        // Modal card pickers block the battlefield controls. Their target
+        // confirmation/reset must stay inside the same modal canvas.
+        if(HasTargetChoice&&!IsCardPickerRequest) { Clear(selectionFooter); return; }
         if(IsOptionalHandSelection) {
             Clear(selectionFooter);
             long captured=requestId;int cancel=OptionIndex("cancel");float y=-height*.5f+31+selectionPageFooter;

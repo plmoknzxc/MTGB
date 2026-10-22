@@ -59,6 +59,7 @@ public sealed partial class ForgeBattlefieldController
         handChoiceActions.sizeDelta=new Vector2(actions.Length==3?279:184,48);
         handChoiceActions.anchoredPosition=new Vector2(actions.Length==3?.5f:48,-20);
         handChoiceActions.gameObject.SetActive(true);advanceButton.gameObject.SetActive(false);
+        SetOverlayLayer(handChoiceActions,DecisionLayerOffset+1,true);
         if(IsOptionalDirectHandSelection) {
             long captured=requestId;int cancel=OptionIndex("cancel");
             var decline=DockAction(handChoiceActions,"HandAction_"+cancel,TapPaymentText("取消","Cancel","キャンセル"),new Vector2(47.5f,0),89,()=>Choose(cancel,captured),true);

@@ -104,7 +104,7 @@ public sealed class PhaseAndPlayerPlateValidation
                 owner.ControlMode=mode;Present(Priority(phase));Check(!Field<Button>(ui,"advanceButton").gameObject.activeSelf,mode+" "+phase+" hides Next before any automatic update");
             }
             foreach(var mode in new[]{ForgeControlMode.On,ForgeControlMode.Auto,ForgeControlMode.Off})foreach(string phase in new[]{"MAIN1","MAIN2"}){
-                owner.ControlMode=mode;Present(Priority(phase));Check(Field<Button>(ui,"advanceButton").gameObject.activeSelf,mode+" own "+phase+" retains manual Next");
+                owner.ControlMode=mode;Present(Priority(phase));Check(Field<Button>(ui,"advanceButton").gameObject.activeSelf==(mode==ForgeControlMode.On||phase=="MAIN1"),mode+" own "+phase+" Next matches native action policy");
             }
             owner.ControlMode=ForgeControlMode.Auto;Present(Priority("MAIN1",2,true));Check(Field<Button>(ui,"advanceButton").gameObject.activeSelf,"Auto keeps offered response window");
             owner.ControlMode=ForgeControlMode.Off;var delay=Priority("DRAW");Present(delay);Call(ui,"UpdateAutomaticControl");Click(Field<Button>(ui,"controlModeButton"));

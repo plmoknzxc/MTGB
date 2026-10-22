@@ -325,6 +325,8 @@ public sealed partial class ForgeBattlefieldController
     private bool inspectOriginalState;
     private ForgeCardView detailCard;
     private int inspectedCardId, inspectHoverRevision;
+    private RectTransform inspectAnchor;
+    private readonly Vector3[] inspectCorners=new Vector3[4];
     private void LeaveInspectCard() { if(this!=null && isActiveAndEnabled)StartCoroutine(CloseInspectWhenOutside(inspectHoverRevision)); }
     private System.Collections.IEnumerator CloseInspectWhenOutside(int revision)
     {
@@ -624,7 +626,6 @@ public sealed partial class ForgeBattlefieldController
         // preference-sized text. Position it using its displayed bounds.
         float detailScale=Mathf.Min(1.2f,(surface.rect.width-24)/width);
         panel.localScale=Vector3.one*detailScale;
-        float displayedWidth=width*detailScale;
         var backing=Node("InspectPanel/Rules").GetComponent<Text>();backing.enabled=false;
         var content=Node("InspectPanel/Rules").Find("RuleScroll/Content") as RectTransform;
         if(content==null)content=Scroll(Node("InspectPanel/Rules"),"RuleScroll",Vector2.zero,new Vector2(inner,100));
@@ -669,12 +670,13 @@ public sealed partial class ForgeBattlefieldController
         if(fixedHeight+preferred>available){float shrink=Mathf.Min(90,fixedHeight+preferred-available);artHeight-=shrink;fixedHeight-=shrink;}
         float rulesHeight=Mathf.Clamp(preferred,28,Mathf.Max(28,available-fixedHeight));
         float height=fixedHeight+rulesHeight;
-        float displayedHeight=height*detailScale;
         panel.sizeDelta=new Vector2(width,height);
-        var background=panel.GetComponent<Image>();background.color=new Color(.065f,.075f,.095f,1f);
+        // A warm, fully framed inspector reads separately from cool decision windows.
+        var background=panel.GetComponent<Image>();background.color=new Color(.185f,.157f,.122f,1f);
         background.sprite=IntegratedUiUtility.RoundedRect(340,500,12);background.type=Image.Type.Simple;background.material=null;
         var opacity=panel.GetComponent<CanvasGroup>();if(opacity!=null)opacity.alpha=1;
-        var outline=panel.GetComponent<Outline>();if(outline!=null)outline.enabled=false;
+        var outline=panel.GetComponent<Outline>();
+        if(outline!=null){outline.enabled=true;outline.effectColor=new Color(.76f,.61f,.36f,1);outline.effectDistance=new Vector2(2,-2);}
         Node("InspectPanel/Header").gameObject.SetActive(false);
         Node("InspectPanel/SetNumber").gameObject.SetActive(false);
         float y=16;
@@ -713,10 +715,27 @@ public sealed partial class ForgeBattlefieldController
         content.sizeDelta=new Vector2(inner,Mathf.Max(preferred,rulesHeight));content.anchoredPosition=Vector2.zero;
         rules.rectTransform.sizeDelta=new Vector2(inner,textHeight);
         rules.ForceMeshUpdate();
+        inspectAnchor=inspected;
+        PositionInspectPanel(panel);
+    }
+    private void RefreshInspectPosition()
+    {
+        if(!integrated||surface==null||inspectAnchor==null)return;
+        var panel=(RectTransform)Node("InspectPanel");
+        if(panel.gameObject.activeInHierarchy)PositionInspectPanel(panel);
+    }
+    private void PositionInspectPanel(RectTransform panel)
+    {
+        float displayedWidth=panel.rect.width*panel.localScale.x,displayedHeight=panel.rect.height*panel.localScale.y;
         Vector2 p=panel.anchoredPosition;
-        if(inspected!=null){p=surface.InverseTransformPoint(inspected.TransformPoint(inspected.rect.center));
-            float gap=inspected.rect.width*.5f+displayedWidth*.5f+24;
-            p.x+=p.x+gap<=surface.rect.xMax-displayedWidth*.5f-12?gap:-gap;}
+        if(inspectAnchor!=null){
+            inspectAnchor.GetWorldCorners(inspectCorners);
+            Vector2 min=surface.InverseTransformPoint(inspectCorners[0]),max=min;
+            for(int i=1;i<inspectCorners.Length;i++){Vector2 corner=surface.InverseTransformPoint(inspectCorners[i]);min=Vector2.Min(min,corner);max=Vector2.Max(max,corner);}
+            p=(min+max)*.5f;
+            float gap=(max.x-min.x)*.5f+displayedWidth*.5f+24;
+            p.x+=p.x+gap<=surface.rect.xMax-displayedWidth*.5f-12?gap:-gap;
+        }
         panel.anchorMin=panel.anchorMax=panel.pivot=new Vector2(.5f,.5f);
         p.x=Mathf.Clamp(p.x,surface.rect.xMin+displayedWidth*.5f+12,surface.rect.xMax-displayedWidth*.5f-12);
         p.y=Mathf.Clamp(p.y,surface.rect.yMin+displayedHeight*.5f+12,surface.rect.yMax-displayedHeight*.5f-12);

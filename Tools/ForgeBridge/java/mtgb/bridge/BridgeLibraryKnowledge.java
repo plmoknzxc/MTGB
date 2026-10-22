@@ -89,6 +89,7 @@ public final class BridgeLibraryKnowledge {
     }
     private void forget(int playerId) {for(var memory:known.values())memory.remove(playerId);}
     @Subscribe public synchronized void shuffle(GameEventShuffle event) {
+        if(ForgeBridge.libraryOrder!=null&&ForgeBridge.libraryOrder.enabled())return;
         int owner=event.player().getId();forget(owner);
         positions.forget(owner);
         libraryFaces.remove(owner);departures.remove(owner);

@@ -14,6 +14,7 @@ public sealed class OnlineRoomConfig
     public int maximumSideboardSize = 15;
     public bool allowCustomContent;
     public bool useAnte;
+    public bool noShuffle;
     // Host-only authorization; never accepted from a client's serialized configuration.
     [NonSerialized] internal DeckDefinition authorizedSeriesPool;
     [NonSerialized] internal DeckDefinition[] authorizedAuxiliarySeriesPools;

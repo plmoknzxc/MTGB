@@ -24,6 +24,8 @@ public sealed partial class ForgeBattlefieldController
         yield return targetOrigin;
         yield return targetChoiceActions;
         yield return choiceHintPanel;
+        yield return handChoiceActions;
+        if(handSelectionPrompt!=null)yield return handSelectionPrompt.rectTransform;
         foreach(var window in cardNoticeWindows.Values)yield return window;
         if(targetArrow!=null)yield return targetArrow.transform as RectTransform;
         if(integrated && actionRoot!=null)yield return actionRoot.parent.parent as RectTransform;
@@ -33,7 +35,7 @@ public sealed partial class ForgeBattlefieldController
             ? view.request.kind+"/"+(view.request.contextId>0?view.request.contextId:view.request.requestId).ToString()
             : "idle");
 
-    private void LateUpdate(){RefreshBattlefieldViewControls();RefreshAttachmentLinks();}
+    private void LateUpdate(){RefreshBattlefieldViewControls();RefreshAttachmentLinks();RefreshInspectPosition();}
 
     private void RefreshBattlefieldViewControls()
     {
@@ -48,6 +50,7 @@ public sealed partial class ForgeBattlefieldController
             viewBattlefieldButton=Button(surface,"ViewBattlefield",TapPaymentText("查看战场","View battlefield","戦場を見る"),Vector2.zero,new Vector2(220,44),ViewBattlefield,Ink);
             returnSelectionButton=Button(surface,"ReturnSelection",TapPaymentText("返回选择","Return to choice","選択に戻る"),Vector2.zero,new Vector2(220,44),RestoreBattlefieldWindows,Ink);
             foreach(var b in new[]{viewBattlefieldButton,returnSelectionButton}) {
+                SetOverlayLayer((RectTransform)b.transform,DecisionLayerOffset+2,true);
                 b.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(220,44,8);
                 PreferenceText.SetSize(b.GetComponentInChildren<Text>(),18);
                 var rect=(RectTransform)b.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(0,1);

@@ -203,7 +203,11 @@ public sealed partial class ForgeBattlefieldController
             var empty=selectionPanel.Find("Empty");if(empty!=null)empty.GetComponent<Text>().text=TapPaymentText("牌库为空。","Library is empty.","ライブラリーは空です。");
         }
     }
-    private static string LibraryBrowserInstruction=>TapPaymentText("按牌库顶至底排列；未公开的位置显示牌背。","Top to bottom; hidden positions show card backs.","上から下の順。非公開の位置はカード裏面です。");
+    private string LibraryBrowserInstruction=>HasOwnLibraryReview(view?.players?.FirstOrDefault(p=>p.seat==browsedSeat))
+        ?TapPaymentText("你的剩余牌库全部显示，仅你可见；按牌库顶至底排列。","Your full remaining library is visible only to you, ordered top to bottom.","あなたの残りのライブラリーを、上から下の順であなたにだけ表示します。")
+        :TapPaymentText("按牌库顶至底排列；未公开的位置显示牌背。","Top to bottom; hidden positions show card backs.","上から下の順。非公開の位置はカード裏面です。");
+    private bool HasOwnLibraryReview(ForgePlayerView player)=>player!=null&&player.seat==seat&&service?.IsSpectator!=true
+        &&player.reviewLibrary!=null&&player.reviewLibrary.Length==Math.Max(0,player.libraryCount);
     private ForgeCardView[] LibraryBrowserCards(ForgePlayerView player)
     {
         int count=Math.Max(0,player.libraryCount);
@@ -214,7 +218,7 @@ public sealed partial class ForgeBattlefieldController
             if(position<1||position>count||card==null||card.faceDown||string.IsNullOrEmpty(card.name))return;
             var visible=ServerSnapshotJson.Copy(card);visible.libraryPosition=position;cards[position-1]=visible;
         }
-        if(player.seat==seat&&service?.IsSpectator!=true&&player.reviewLibrary?.Length==count)
+        if(HasOwnLibraryReview(player))
             for(int i=0;i<count;i++)Show(i+1,player.reviewLibrary[i]);
         else {
             if(service?.IsSpectator!=true||player.libraryTopPublic)Show(1,player.libraryTop);

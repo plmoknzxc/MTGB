@@ -34,6 +34,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private RectTransform sideboardDropArea;
     private Toggle customContentToggle;
     private Toggle anteToggle;
+    private Toggle noShuffleToggle;
+    private Text noShuffleStateText;
     private Text anteStateText;
     private Text customContentStateText;
     private Text connectionBadgeText;
@@ -230,6 +232,11 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             new Vector2(780f,72f),font,out panel.anteStateText);
         panel.anteToggle.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
         panel.cardFormatDropdown.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
+
+        panel.noShuffleToggle = AddToggle(roomCard.transform,"NoShuffleToggle","不洗切卡组",
+            "按编辑器保存顺序抓牌；开局、调度和卡牌效果均不打乱牌库。",new Vector2(0f,-128f),
+            new Vector2(780f,72f),font,out panel.noShuffleStateText);
+        panel.noShuffleToggle.onValueChanged.AddListener(_=>panel.UpdateNoShuffleLabel());
 
         AddPanel(roomCard.transform, "Divider", new Vector2(0f, 8f), new Vector2(780f, 2f),
             ObsidianArenaTheme.LineSoft);
@@ -569,6 +576,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         destinationEntry.count++;
         entry.count--;
         if (entry.count <= 0) source.Remove(entry);
+        DeckCopyOrder.Synchronize(selectedDeck);
         DeckCompanion.ClearMissing(selectedDeck);
         RefreshDeckSummary();
         RefreshSideboardControls(series);
@@ -601,6 +609,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             minimumMainDeckSize = 60,
             maximumSideboardSize = 15,
             allowCustomContent = customContentToggle != null && customContentToggle.isOn,
+            noShuffle = noShuffleToggle != null && noShuffleToggle.isOn,
             useAnte = anteToggle != null && anteToggle.isOn && OnlineRoomConfig.AllowsAnte(
                 DeckFormatLegality.OnlineKeys[cardFormatDropdown.value],customContentToggle != null && customContentToggle.isOn),
             allowedSetCodes = new List<string>()
@@ -801,6 +810,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         if (formatDropdown != null) formatDropdown.interactable = interactable;
         if (cardFormatDropdown != null) cardFormatDropdown.interactable = interactable;
         if (customContentToggle != null) customContentToggle.interactable = interactable;
+        if (noShuffleToggle != null) noShuffleToggle.interactable = interactable;
         UpdateAnteLabel();
     }
 
@@ -841,6 +851,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             {
                 string format = RoomFormatLabel(config.formatId);
                 roomRulesText.text = "BO"+config.bestOf+" · "+DeckCompanion.Text("初始生命 ","Starting life ","初期ライフ ")+config.startingLife
+                    +" · "+ShuffleRuleLabel(config.noShuffle)
                     +"\n"+format+" · DIY "+PermissionLabel(config.allowCustomContent)+" · "+DeckCompanion.Text("赌注 ","Ante ","アンティ ")+PermissionLabel(config.useAnte);
             }
         }
@@ -1023,6 +1034,8 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         cardFormatDropdown?.SetValueWithoutNotify(Mathf.Max(0, Array.IndexOf(DeckFormatLegality.OnlineKeys, config.formatId ?? "none")));
         customContentToggle?.SetIsOnWithoutNotify(config.allowCustomContent);
         anteToggle?.SetIsOnWithoutNotify(config.useAnte);
+        noShuffleToggle?.SetIsOnWithoutNotify(config.noShuffle);
+        UpdateNoShuffleLabel();
         UpdateAnteLabel();
         formatDropdown?.SetValueWithoutNotify(config.bestOf == 3 ? 1 : 0);
     }
@@ -1039,6 +1052,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private void RefreshLanguage()
     {
         UpdateAnteLabel();
+        UpdateNoShuffleLabel();
         SetLocalizedOptions(formatDropdown, new[] { "BO1 · 一局胜负", "BO3 · 三局两胜" });
         var names = new string[DeckFormatLegality.OnlineKeys.Length];
         for (int i = 0; i < names.Length; i++) names[i] = RoomFormatLabel(DeckFormatLegality.OnlineKeys[i]);

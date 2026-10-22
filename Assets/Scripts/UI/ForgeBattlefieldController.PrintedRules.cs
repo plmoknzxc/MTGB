@@ -60,6 +60,9 @@ public sealed partial class ForgeBattlefieldController
         string key=source.printingKey+"/"+source.currentArtPrintingKey+"/"+source.name+"/"+source.originalName+"/"+source.originalRules+"/"+paragraph;
         if(printedRuleCache.TryGetValue(key,out var text))return text;
         text=PrintedRuleTextCore(source,paragraph);
+        // Generated tokens need not have an independent printing row. Apply
+        // only complete known public templates, including keyword reminders.
+        text=string.Join("\n",(text??paragraph).Replace("\\n","\n").Split('\n').Select(GeneratedPublicRuleText));
         if(printedRuleCache.Count>=1024)printedRuleCache.Clear();printedRuleCache[key]=text;
         return text;
     }
@@ -87,7 +90,7 @@ public sealed partial class ForgeBattlefieldController
             // The pinned Forge Oracle line misspells this card's own name.
             // Its live trigger and localized faces use Boggart Trawler.
             if(canonical=="Boggart Trawler")value=Regex.Replace(value,@"\bGoblin Trawler\b",canonical);
-            value=Regex.Replace(value.Trim(),@"^-\s+","");
+            value=Regex.Replace(value.Trim(),@"^(?:-\s+|[•●]\s*)","");
             if(!string.IsNullOrEmpty(source.name)&&source.name!=canonical)
                 value=Regex.Replace(value,@"(?<![\p{L}\p{N}])"+Regex.Escape(source.name)+@"(?![\p{L}\p{N}])",_=>canonical);
             // Forge's generated trigger text uses "enters" while older Oracle

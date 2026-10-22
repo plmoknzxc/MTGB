@@ -13791,6 +13791,68 @@
       "scope": "Exact detached native confirmation callback argument, two explicit yes/no answers and context cleanup;17 checks. Zero rule-effect casts/payment; companion actual N54 paid copy evidence stays separate.",
       "remaining": "No distinct new effect proof. Same actor/source native metadata only; no public exposure beyond native permission.",
       "reviewedOn": "2026-10-12"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-ShuffleAudit.py",
+      "kind": "native-input-contract",
+      "sourceHash": "c3df8aa399d082cf5abee9952fe20f3102695a80010c30e7a66135b517344cff",
+      "sourceGuards": [
+        {
+          "path": "Tools/ForgeBridge/tests/ShuffleAuditFixture.java",
+          "sha256": "a983668adda308febcd78acbff307246b62a43e2979356b84bf55a43888aec05"
+        },
+        {
+          "path": "Tools/ForgeBridge/Inspect-ShuffleAudit.py",
+          "sha256": "bc3ce0638bbac53392030e70f263efdccd886e30cf2864db7fcefb544db984cf"
+        },
+        {
+          "path": "Tools/ForgeBridge/Test-NoShuffle.py",
+          "sha256": "1ef05ce9df953030be89acb76ab872e9af02f5be81e2c276e74ae311d0fe34b9"
+        },
+        {
+          "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeShuffleAudit.java",
+          "sha256": "7d06f1ca1d0547b43315983b7bd5f44714c09efc316d62f66d2de85df95a13e1"
+        }
+      ],
+      "scope": "Host-private passive observation and persistence: nine native shuffle/draw flows reused as audit consumers; independent event equality, seeded-permutation determinism, bounded queue, writer failure, rotation, graceful game end and crash partial. No new card-effect first verification. Physical-shuffle increment: ordinary-room Evolving Wilds shuffle, finite-model audit identity; previous batches retain their identity. Pile/mash-v2 increment: same consumers with 10 piles, 3 mashes, 1 cut and bounded packet audit fields; prior proofs retain their runtime identity.",
+      "remaining": "No whole-card-pool, mana consistency guarantee, exact human motor model, public deployment or constrained Linux performance claim. Current increment: Docs/PileMashShuffle.2026-10-22.zh-CN.md; historical riffle-v1 and audit evidence preserved.",
+      "reviewedOn": "2026-10-22"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-NoShuffle.py",
+      "kind": "legacy-effect-regression",
+      "sourceHash": "1ef05ce9df953030be89acb76ab872e9af02f5be81e2c276e74ae311d0fe34b9",
+      "sourceGuards": [
+        {
+          "path": "Tools/ForgeBridge/tests/NoShuffleFixture.java",
+          "sha256": "6c5d8b1dd2b8c7fdee0f67387fe49eb8433e0eeee7824bcda4d98415513e46bc"
+        },
+        {
+          "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeLibraryOrder.java",
+          "sha256": "c4fa9f5abb166b0b4dd62dfe30c797b90e796122fc405039feb8dc7d2be48391"
+        }
+      ],
+      "scope": "Actual opening, London mulligan, next-turn draw, Evolving Wilds search and saved physical-copy order in nine bounded room-rule cases. Existing no-shuffle and deck-arrangement evidence retains its batch identity; opt-in private audit does not add effect coverage. Physical-shuffle increment: ordinary-room Evolving Wilds shuffle, finite-model audit identity; previous batches retain their identity. Pile/mash-v2 increment: same consumers with 10 piles, 3 mashes, 1 cut and bounded packet audit fields; prior proofs retain their runtime identity.",
+      "remaining": "No whole-card-pool, mana consistency guarantee, exact human motor model, public deployment or constrained Linux performance claim. Current increment: Docs/PileMashShuffle.2026-10-22.zh-CN.md; historical riffle-v1 and audit evidence preserved.",
+      "reviewedOn": "2026-10-22"
+    },
+    {
+      "path": "Tools/ForgeBridge/Test-PhysicalShuffle.py",
+      "kind": "native-input-contract",
+      "sourceHash": "3f3ce4b4dbfb0cc72a7baf21cd019a0b3e23c0cd58d4f0bb9aeac05201d240ea",
+      "sourceGuards": [
+        {
+          "path": "Tools/ForgeBridge/tests/PhysicalShuffleFixture.java",
+          "sha256": "829121d11aa62bc531a00845811fbfa9d4564aba08ab00a9525096a90077a7e6"
+        },
+        {
+          "path": "Tools/ForgeBridge/java/mtgb/bridge/BridgeLibraryShuffle.java",
+          "sha256": "2653644e839591faf3f10ea709fa36c7fa3902a5324ed77917bdbb70d159c07c"
+        }
+      ],
+      "scope": "Card-agnostic ten-pile round-robin dealing, three packet mashes and cut; seven-mash no-pile comparator; identity, determinism, exact packet/pile/cut orders and renaming contracts only. Historical riffle-v1 evidence remains separate.",
+      "remaining": "No whole-card-pool, mana consistency guarantee, exact human motor model, public deployment or constrained Linux performance claim. Current increment: Docs/PileMashShuffle.2026-10-22.zh-CN.md; historical riffle-v1 and audit evidence preserved.",
+      "reviewedOn": "2026-10-22"
     }
   ]
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>Owns one persistent Forge process and separately projected seat snapshots.</summary>
@@ -14,6 +15,7 @@ public sealed class OnlineMatchSession : IDisposable
     internal static Action<ProcessStartInfo,string> ValidationBeforeStart;
 #endif
     private static readonly HashSet<OnlineMatchSession> activeSessions = new HashSet<OnlineMatchSession>();
+    private static readonly HashSet<Task> stoppingWorkers = new HashSet<Task>();
     static OnlineMatchSession()
     {
         Application.quitting += DisposeAll;
@@ -24,13 +26,21 @@ public sealed class OnlineMatchSession : IDisposable
     }
     private static void DisposeAll()
     {
-        foreach (OnlineMatchSession session in activeSessions.ToArray()) session.Dispose();
+        var sessions = activeSessions.ToArray();
+        foreach (OnlineMatchSession session in sessions) session.Dispose();
+        // Exit/reload may unload managed tasks. Normal match disposal never waits.
+        Task[] stopping; lock (stoppingWorkers) stopping = stoppingWorkers.ToArray();
+        try { Task.WaitAll(stopping, 4000); }
+        catch (AggregateException error) { UnityEngine.Debug.LogWarning("Forge 退出清理：" + error.Message); }
     }
     [Serializable] private sealed class StartConfig
     {
         public string session;
         public int seed, startingLife, firstPlayerSeat;
         public bool useAnte;
+        public bool noShuffle;
+        public string shuffleAuditFile, runtimeHash, forgeRevision, roomId;
+        public int gameNumber;
         public DeckDefinition[] decks;
         public DeckDefinition[] authorizedAuxiliarySeriesPools;
     }
@@ -39,6 +49,8 @@ public sealed class OnlineMatchSession : IDisposable
     private bool diagnosticsWritten;
     private readonly OnlinePlayerViewState[] views = new OnlinePlayerViewState[2];
     private Process process;
+    private Task workerShutdown = Task.CompletedTask;
+    [Serializable] private sealed class ShutdownMessage { public string type = "shutdown", session; }
     private string configPath;
     private bool disposed, inputPending;
     private readonly Stopwatch startup = Stopwatch.StartNew();
@@ -50,17 +62,20 @@ public sealed class OnlineMatchSession : IDisposable
     }
     public string MatchId { get; }
     public int RandomSeed { get; }
+    // Authority-local path, deliberately absent from lobby/view/replay payloads.
+    public string ShuffleAuditFile { get; }
     public long AppliedSequence { get; private set; }
     public string Failure { get; private set; }
     public bool Ready { get; private set; }
 
-    public OnlineMatchSession(string matchId, DeckDefinition first, DeckDefinition second, int seed, OnlineRoomConfig config = null)
+    public OnlineMatchSession(string matchId, DeckDefinition first, DeckDefinition second, int seed, OnlineRoomConfig config = null, string roomId = null, int gameNumber = 1)
     {
         if (first == null || second == null) throw new ArgumentNullException("decks");
         MatchId = string.IsNullOrWhiteSpace(matchId) ? Guid.NewGuid().ToString("N") : matchId;
         replay = new MatchReplayRecorder(MatchId);
         RandomSeed = seed;
         var runtime = ForgeCardCatalog.ReadConfigForMatch();
+        ShuffleAuditFile = Path.Combine(Application.persistentDataPath, "ShuffleAudits", Guid.NewGuid().ToString("N") + ".jsonl.gz");
         for (int i = 0; i < 2; i++)
         {
             views[i] = new OnlinePlayerViewState { matchId = MatchId, viewerSeat = i + 1,
@@ -73,6 +88,9 @@ public sealed class OnlineMatchSession : IDisposable
         File.WriteAllText(configPath, JsonUtility.ToJson(new StartConfig {
             session = MatchId, seed = seed, startingLife = config?.startingLife ?? 20,
             firstPlayerSeat = config?.firstPlayerSeat ?? 1, useAnte = config?.useAnte == true, decks = new[] { first, second },
+            noShuffle = config?.noShuffle == true,
+            shuffleAuditFile = ShuffleAuditFile, runtimeHash = runtime.runtimeHash, forgeRevision = runtime.revision,
+            roomId = roomId, gameNumber = gameNumber,
             authorizedAuxiliarySeriesPools = config?.authorizedAuxiliarySeriesPools
         }));
         try
@@ -95,6 +113,8 @@ public sealed class OnlineMatchSession : IDisposable
             process.ErrorDataReceived += (_, args) => {
                 if (args.Data == null) return;
                 diagnostics.Enqueue(args.Data);
+                if (args.Data.StartsWith("[shuffle-audit]", StringComparison.Ordinal))
+                    UnityEngine.Debug.LogWarning("洗牌审计（" + MatchId + "）：" + args.Data);
                 while (diagnostics.Count > 128) diagnostics.TryDequeue(out string discarded);
             };
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -257,27 +277,39 @@ public sealed class OnlineMatchSession : IDisposable
         try{replay.Dispose();}
         catch(IOException error){UnityEngine.Debug.LogWarning("无法清理录像临时文件："+error.Message);}
         catch(UnauthorizedAccessException error){UnityEngine.Debug.LogWarning("无法清理录像临时文件："+error.Message);}
-        if (process != null)
-        {
-            // Disposal must not wait on a stalled stdin pipe or engine shutdown hook.
-            try { StopWorker(); }
-            finally { process.Dispose(); }
-        }
-        if (configPath != null)
-        {
-            string sessionDirectory = Path.GetFullPath(Path.GetDirectoryName(configPath));
-            string sessionsRoot = Path.GetFullPath(Path.Combine(Application.persistentDataPath, "ForgeSessions")) + Path.DirectorySeparatorChar;
-            if (sessionDirectory.StartsWith(sessionsRoot, StringComparison.OrdinalIgnoreCase) && Directory.Exists(sessionDirectory))
-                Directory.Delete(sessionDirectory, true);
-        }
+        StopWorker();
     }
     private void StopWorker()
     {
-        if (process == null) return;
-        try { if (!process.HasExited) process.Kill(); }
-        catch (InvalidOperationException) { } // Process never started or already exited.
-        catch (System.ComponentModel.Win32Exception error)
-        { UnityEngine.Debug.LogError("无法结束 Forge 会话进程：" + error.Message); }
+        var worker = process;
+        if (worker == null && !workerShutdown.IsCompleted) return;
+        process = null;
+        string shutdown = JsonUtility.ToJson(new ShutdownMessage { session = MatchId });
+        string sessionDirectory = configPath == null ? null : Path.GetFullPath(Path.GetDirectoryName(configPath));
+        string sessionsRoot = Path.GetFullPath(Path.Combine(Application.persistentDataPath, "ForgeSessions")) + Path.DirectorySeparatorChar;
+        workerShutdown = Task.Run(() => {
+            try {
+                if (worker != null && !worker.HasExited) {
+                    // A wedged stdin must not stall the authority or the timeout.
+                    _ = Task.Run(() => { try { worker.StandardInput.WriteLine(shutdown); worker.StandardInput.Flush(); }
+                        catch (IOException) { } catch (InvalidOperationException) { } });
+                    if (!worker.WaitForExit(3000)) { worker.Kill(); worker.WaitForExit(500); }
+                }
+            }
+            catch (InvalidOperationException) { } // Worker never started.
+            catch (System.ComponentModel.Win32Exception error) { UnityEngine.Debug.LogError("无法结束 Forge 会话进程：" + error.Message); }
+            finally {
+                worker?.Dispose();
+                if (sessionDirectory != null && sessionDirectory.StartsWith(sessionsRoot, StringComparison.OrdinalIgnoreCase)
+                    && Directory.Exists(sessionDirectory)) {
+                    try { Directory.Delete(sessionDirectory, true); }
+                    catch (IOException error) { UnityEngine.Debug.LogWarning("Forge 临时目录清理：" + error.Message); }
+                    catch (UnauthorizedAccessException error) { UnityEngine.Debug.LogWarning("Forge 临时目录清理：" + error.Message); }
+                }
+            }
+        });
+        lock (stoppingWorkers) stoppingWorkers.Add(workerShutdown);
+        _ = workerShutdown.ContinueWith(task => { lock (stoppingWorkers) stoppingWorkers.Remove(task); });
     }
     private static string Quote(string value)
     {

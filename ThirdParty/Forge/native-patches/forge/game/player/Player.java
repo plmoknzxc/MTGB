@@ -1172,6 +1172,11 @@ public class Player extends GameEntity implements Comparable<Player> {
      */
     private CardCollectionView doDraw(Map<Player, CardCollection> revealed, SpellAbility sa, Map<AbilityKey, Object> params, PlayerZone hand) {
         CardCollection drawn = new CardCollection();
+        final LibraryAudit observer = libraryAudit;
+        Object audit = null;
+        if (observer != null) try { audit = observer.beginDraw(this, sa); }
+        catch (RuntimeException error) { System.err.println("[shuffle-audit] observer failed: " + error); }
+        try {
         final PlayerZone library = getZone(ZoneType.Library);
 
         SpellAbility cause = sa;
@@ -1261,6 +1266,10 @@ public class Player extends GameEntity implements Comparable<Player> {
             triedToDrawFromEmptyLibrary = true;
         }
         return drawn;
+        } finally {
+            if (observer != null) try { observer.endDraw(audit, drawn); }
+            catch (RuntimeException error) { System.err.println("[shuffle-audit] observer failed: " + error); }
+        }
     }
 
     public final void resetNumDrawnThisDrawStep() {
@@ -1609,13 +1618,31 @@ public class Player extends GameEntity implements Comparable<Player> {
         return topCards;
     }
 
+    // One isolated bridge process owns one game. Default null has no observer.
+    public interface LibraryAudit {
+        void shuffle(Player player, SpellAbility cause, boolean after);
+        Object beginDraw(Player player, SpellAbility cause);
+        void endDraw(Object context, CardCollectionView drawn);
+    }
+    // Optional host policy; standalone Forge retains its original shuffle.
+    private static java.util.function.Consumer<List<Card>> libraryShuffler;
+    public static void setLibraryShuffler(java.util.function.Consumer<List<Card>> shuffler) { libraryShuffler = shuffler; }
+    private static LibraryAudit libraryAudit;
+    public static void setLibraryAudit(LibraryAudit observer) { libraryAudit = observer; }
+    private void auditShuffle(SpellAbility cause, boolean after) {
+        if (libraryAudit != null) try { libraryAudit.shuffle(this, cause, after); }
+        catch (RuntimeException error) { System.err.println("[shuffle-audit] observer failed: " + error); }
+    }
     public final void shuffle(final SpellAbility sa) {
+        auditShuffle(sa, false);
         final CardCollection list = new CardCollection(getCardsIn(ZoneType.Library));
 
         // Note: Shuffling once is sufficient.
-        Collections.shuffle(list, MyRandom.getRandom());
+        if (libraryShuffler == null) Collections.shuffle(list, MyRandom.getRandom());
+        else libraryShuffler.accept(list);
 
         getZone(ZoneType.Library).setCards(getController().cheatShuffle(list));
+        auditShuffle(sa, true);
 
         // Always Run triggers (701.20e)
         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(this);

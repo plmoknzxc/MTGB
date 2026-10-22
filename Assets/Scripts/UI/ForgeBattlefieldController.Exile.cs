@@ -21,6 +21,9 @@ public sealed partial class ForgeBattlefieldController
     private void ApplyHandFanOffset(float offset,bool snap)=>ApplyHandFanOffset(ownFan,offset,snap);
     private void ApplyHandFanOffset(HandFanState fan,float offset,bool snap)
     {
+        // Clearing a view can destroy its cards before the next hand layout.
+        // Casting cleanup must not animate those previous-view references.
+        fan.slots.RemoveAll(s=>s.item.root==null||s.item.pointer==null||s.region==null);
         foreach(var group in fan.slots.GroupBy(s=>s.region)) {
             var min=new Vector2(float.PositiveInfinity,float.PositiveInfinity);var max=-min;
             foreach(var slot in group) {
@@ -36,7 +39,7 @@ public sealed partial class ForgeBattlefieldController
                 min=Vector2.Min(min,position-half);max=Vector2.Max(max,position+half);
                 float localX=fan.opponent?128-position.x:position.x;
                 float edge=Mathf.Min(localX-half.x-(64-fan.available*.5f),64+fan.available*.5f-localX-half.x);
-                float exposure=fan.navigation.CanPan?Mathf.Clamp01(edge/24):1;
+                float exposure=fan.navigation!=null&&fan.navigation.CanPan?Mathf.Clamp01(edge/24):1;
                 if(slot.item.pointer.IsCastingDrag)exposure=1;
                 var visibility=slot.item.root.GetComponent<CanvasGroup>();
                 if(visibility==castingHandGroup)exposure=0;
@@ -46,11 +49,15 @@ public sealed partial class ForgeBattlefieldController
             group.Key.anchoredPosition=(min+max)*.5f;group.Key.sizeDelta=max-min;
         }
         fan.hits.Invalidate();
-        if(fan.navigation.CanPan){fan.previous.interactable=offset<fan.travel*.5f-.1f;fan.next.interactable=offset>-fan.travel*.5f+.1f;}
+        if(fan.navigation!=null&&fan.navigation.CanPan){fan.previous.interactable=offset<fan.travel*.5f-.1f;fan.next.interactable=offset>-fan.travel*.5f+.1f;}
     }
     private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards)=>LayoutPlayableHand(parent,cards,ownFan);
     private void LayoutPlayableHand(RectTransform parent,ForgeCardView[] cards,HandFanState fan)
     {
+        bool choosingHand=DirectHandSelection&&SelectionHand is ForgePlayerView selection
+            &&cards.Any(c=>c.zone=="Hand"&&c.ownerSeat==selection.seat);
+        if(choosingHand||parent.GetComponent<Canvas>()!=null)
+            SetOverlayLayer(parent,choosingHand?DecisionLayerOffset:0,true);
         foreach(var region in fan.regions.Values)region.gameObject.SetActive(false);
         fan.hits.Clear();
         fan.slots.Clear();
@@ -101,8 +108,12 @@ public sealed partial class ForgeBattlefieldController
                 DrawArenaCard(parent,card,1,key,key,fan.opponent?new Vector2(128-initial.x,-initial.y):initial,new Vector2(width,height),true,fan.opponent?180:0,order++);
                 if(fan.opponent){
                     var item=arenaCards[key];item.root.GetComponent<CanvasGroup>().alpha=1;
-                    item.button.onClick.RemoveAllListeners();
-                    if(!card.faceDown)item.button.onClick.AddListener(()=>InspectIntegrated(card));
+                    // A native choice in a fully revealed opponent hand owns
+                    // this click. Inspection must not replace its callback.
+                    if(!choosingHand){
+                        item.button.onClick.RemoveAllListeners();
+                        if(!card.faceDown)item.button.onClick.AddListener(()=>InspectIntegrated(card));
+                    }
                     item.pointer.DisableActions();
                 }
                 arenaCards[key].pointer.ConfigurePlayRegion(region);

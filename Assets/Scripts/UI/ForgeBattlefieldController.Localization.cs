@@ -137,34 +137,49 @@ public sealed partial class ForgeBattlefieldController
         }
         return GamePreferences.NativeText(string.Join("\n",lines));
     }
-    // TargetRestrictions builds these prompts from lowercase core types.
-    // Translate that exact grammar; custom restrictions remain intact.
+    // TargetRestrictions also accepts capitalized subtype lists and an
+    // explicit graveyard qualifier. Unknown restrictions remain intact.
     private string TargetInstructionText(string text)
     {
+        string original=text;
+        bool optionalPrefix=text?.StartsWith("oneOrNone: ",StringComparison.Ordinal)==true;
+        if(optionalPrefix)text=text.Substring(11);
+        else if(text?.StartsWith("one: ",StringComparison.Ordinal)==true)text=text.Substring(5);
         var library=Regex.Match(text??"",@"^Select up to (\d+) cards from your library$");
         if(library.Success)return string.Format(System.Globalization.CultureInfo.InvariantCulture,
             GamePreferences.T("Select up to {0} cards from your library"),library.Groups[1].Value);
         if(text=="Select any target")return TapPaymentText("选择任意一个目标。",text,"対象１つを選ぶ。");
-        var target=Regex.Match(text??"",@"^Select target ([a-z ,/]+)$");
-        if(!target.Success)return text;
-        var words=Regex.Split(target.Groups[1].Value,@"( and/or | or |, )");
+        var target=Regex.Match(text??"",@"^Select (?<optional>up to one )?target (?<types>[A-Za-z ,/]+?)(?<zone> card (?:in|from) (?<owner>your|an opponent's|a) graveyard)?$");
+        if(!target.Success)return original;
+        var words=Regex.Split(target.Groups["types"].Value.ToLowerInvariant().Replace(", or "," or ").Replace(", and/or "," and/or "),@"( and/or | or |, )");
         var translated=new System.Collections.Generic.List<string>();
         foreach(string word in words) {
             string local=word switch {
                 "artifact"=>TapPaymentText("神器",word,"アーティファクト"),"battle"=>TapPaymentText("战役",word,"バトル"),
                 "card"=>TapPaymentText("牌",word,"カード"),"creature"=>TapPaymentText("生物",word,"クリーチャー"),
                 "enchantment"=>TapPaymentText("结界",word,"エンチャント"),"instant"=>TapPaymentText("瞬间",word,"インスタント"),
+                "equipment"=>TapPaymentText("武具",word,"装備品"),
                 "kindred"=>TapPaymentText("亲缘",word,"同族"),"land"=>TapPaymentText("地",word,"土地"),
                 "opponent"=>TapPaymentText("对手",word,"対戦相手"),"permanent"=>TapPaymentText("永久物",word,"パーマネント"),
                 "planeswalker"=>TapPaymentText("鹏洛客",word,"プレインズウォーカー"),"player"=>TapPaymentText("牌手",word,"プレイヤー"),
                 "sorcery"=>TapPaymentText("法术",word,"ソーサリー"),"spell"=>TapPaymentText("咒语",word,"呪文"),
                 " or "=>TapPaymentText("或",word,"または")," and/or "=>TapPaymentText("和／或",word,"や"),", "=>TapPaymentText("、",word,"、"),_=>null
             };
-            if(local==null)return text;
+            if(local==null)return original;
             translated.Add(local);
         }
         string types=string.Concat(translated);
-        return TapPaymentText("选择目标"+types+"。",text,types+"を対象に選ぶ。");
+        bool upTo=optionalPrefix||target.Groups["optional"].Success;
+        string optional=upTo?TapPaymentText("至多一个", "up to one ","最大１つ"):"";
+        if(target.Groups["zone"].Success) {
+            string owner=target.Groups["owner"].Value;
+            string zone=owner=="your"?TapPaymentText("你的坟墓场", "your graveyard","あなたの墓地")
+                :owner=="an opponent's"?TapPaymentText("对手的坟墓场","an opponent's graveyard","対戦相手の墓地")
+                :TapPaymentText("坟墓场","a graveyard","墓地");
+            return TapPaymentText("从"+zone+"中选择"+optional+"目标"+types+"牌。",original,zone+"にある"+types+"であるカード"+(upTo?"最大１枚":"１枚")+"を対象に選ぶ。");
+        }
+        if(upTo)return TapPaymentText("选择至多一个目标"+types+"。",original,types+"最大１つを対象に選ぶ。");
+        return TapPaymentText("选择目标"+types+"。",original,types+"を対象に選ぶ。");
     }
     // Forge generates payment prose from CostParts, rather than the printed
     // rule (including alternate costs). Translate that exact clause through

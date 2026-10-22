@@ -88,6 +88,8 @@ public final class ForgeBridge {
         return false;
     }
     static JsonObject config;
+    static BridgeLibraryOrder libraryOrder;
+    static BridgeShuffleAudit shuffleAudit;
     static Map<String,List<forge.item.PaperCard>> catalog;
     static final class BridgePlayer extends LobbyPlayerHuman {
         BridgePlayer(String name) { super(name); }
@@ -108,6 +110,9 @@ public final class ForgeBridge {
     // Both ordinary and controlled players use the same production overrides.
     // Forge's controlled-player constructor shares the master's input queue/proxy.
     static final class BridgeController extends PlayerControllerHuman {
+        @Override public CardCollectionView cheatShuffle(CardCollectionView cards) {
+            return libraryOrder==null?super.cheatShuffle(cards):libraryOrder.preserve(getPlayer(),cards);
+        }
         BridgeController(Game game,Player player,LobbyPlayerHuman lobby){super(game,player,lobby);}
         BridgeController(Player player,LobbyPlayerHuman lobby,PlayerControllerHuman master){super(player,lobby,master);}
         static final class PaymentIntent {
@@ -534,6 +539,7 @@ public final class ForgeBridge {
         Map<String,Object> m=new LinkedHashMap<>(); m.put("type",type); m.put("session",SESSION); return m;
     }
     static void fatal(Throwable e) {
+        if(shuffleAudit!=null)shuffleAudit.finish("engine_fatal");
         e.printStackTrace(System.err);
         Map<String,Object> m=envelope("fatal"); m.put("error", "Forge rules engine failed; see server diagnostics."); send(m); System.exit(2);
     }
@@ -2443,6 +2449,7 @@ public final class ForgeBridge {
     static synchronized void finish() {
         if(finished || game==null || !game.isGameOver()) return;
         finished=true; pending=null;
+        if(shuffleAudit!=null)shuffleAudit.finish("game_ended");
         for(var answer:modalAnswers)answer.completeExceptionally(new GameEnded());
         modalAnswers.clear();
         int winner=0;
@@ -2461,7 +2468,18 @@ public final class ForgeBridge {
         System.setOut(new PrintStream(System.err,true,StandardCharsets.UTF_8));
         Thread.setDefaultUncaughtExceptionHandler((t,e) -> {if(terminalCancellation(e))finish();else fatal(e);});
         config=JsonParser.parseString(java.nio.file.Files.readString(java.nio.file.Path.of(args[1]))).getAsJsonObject();
+        libraryOrder=new BridgeLibraryOrder(config.has("noShuffle")&&config.get("noShuffle").getAsBoolean());
+        Player.setLibraryShuffler(cards -> BridgeLibraryShuffle.shuffle(cards,MyRandom.getRandom()));
+        config.addProperty("shuffleAlgorithm",libraryOrder.enabled()?"saved-order-v1":BridgeLibraryShuffle.MODEL);
+        config.addProperty("shufflePasses",libraryOrder.enabled()?0:BridgeLibraryShuffle.PASSES);
+        config.addProperty("shufflePiles",libraryOrder.enabled()?0:BridgeLibraryShuffle.PILES);
+        config.addProperty("shuffleMaxPacket",libraryOrder.enabled()?0:BridgeLibraryShuffle.MAX_PACKET);
+        config.addProperty("shuffleCuts",libraryOrder.enabled()?0:1);
         SESSION=config.get("session").getAsString();
+        if(config.has("shuffleAuditFile")&&!config.get("shuffleAuditFile").getAsString().isBlank()){
+            shuffleAudit=new BridgeShuffleAudit(config);Player.setLibraryAudit(shuffleAudit);
+            Runtime.getRuntime().addShutdownHook(new Thread(()->shuffleAudit.close("shutdown"),"mtgb-audit-close"));
+        }
         String assets=new File(args[0]).getCanonicalPath().replace('\\','/')+"/";
         if(Boolean.getBoolean("mtgb.bridge.lazyCatalog"))
             System.setProperty("mtgb.bridge.cardNameIndex",assets+"res/cardsfolder/mtgb-name-index.bin");
@@ -2499,6 +2517,7 @@ public final class ForgeBridge {
         GameRules rules=new GameRules(GameType.Constructed); rules.setGamesPerMatch(1);
         rules.setPlayForAnte(config.has("useAnte") && config.get("useAnte").getAsBoolean());
         Match match=new Match(rules,players,"Unity bridge proof"); game=match.createGame();
+        for(int i=0;i<2;i++)libraryOrder.register(game.getPlayers().get(i),decks.get(i).getAsJsonObject());
         game.subscribeToEvents(libraryKnowledge); game.subscribeToEvents(new BridgeCleanupNotices()); game.subscribeToEvents(matchRemovals); game.subscribeToEvents(seriesOwnership);
         game.subscribeToEvents(new BridgeRestartNotices());
         game.subscribeToEvents(new BridgeCardNotices());

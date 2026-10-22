@@ -15,16 +15,18 @@ public sealed class LegacyCardCost : MonoBehaviour
     RawImage mainCover,adventureCover;
     Texture2D mainPatch,adventurePatch;
     Rect mainBounds,adventureBounds;
-    bool raisedTitle,mainFirst,paired,sideways;
+    bool raisedTitle,mainFirst,paired,sideways,printedIsSecondary,hovered;
+    ForgeBattlefieldCardPointer pointer;
     TMP_Text separator,mainEmpty,secondaryEmpty;
     public static float IconSize(float width)=>Mathf.Min(22,width*.095f);
     static int Count(string cost)=>Regex.Matches(cost??"",@"\{[^{}]+\}").Count;
     static string Normalize(string cost)=>string.Equals(cost,"no cost",System.StringComparison.OrdinalIgnoreCase)?"":cost??"";
+    static bool SameCost(string a,string b)=>Regex.Replace(Normalize(a),@"\s+","").ToUpperInvariant()==Regex.Replace(Normalize(b),@"\s+","").ToUpperInvariant();
     RectTransform Region(string name)
     {
         var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(Root,false);return r;
     }
-    public void Bind(Sprite art,string printedCost,string dynamicCost,string printedAdventure,string dynamicAdventure,bool highTitle=false,bool primaryFirst=false,bool pair=false,bool rotated=false)
+    public void Bind(Sprite art,string printedCost,string dynamicCost,string printedAdventure,string dynamicAdventure,bool highTitle=false,bool primaryFirst=false,bool pair=false,bool rotated=false,bool secondaryFace=false)
     {
         if(Root==null){
             Root=new GameObject("LegacyCostOverlay",typeof(RectTransform)).GetComponent<RectTransform>();Root.SetParent(transform,false);
@@ -56,6 +58,7 @@ public sealed class LegacyCardCost : MonoBehaviour
             mainCover.texture=mainPatch;adventureCover.texture=adventurePatch;
         }
         current=Normalize(dynamicCost);adventureCurrent=Normalize(dynamicAdventure);
+        printedIsSecondary=secondaryFace;pointer=GetComponentInParent<ForgeBattlefieldCardPointer>();
         mainFirst=primaryFirst;paired=pair||printedAdventure!=null;
         Root.gameObject.SetActive(true);Root.SetAsLastSibling();Layout();
     }
@@ -82,10 +85,18 @@ public sealed class LegacyCardCost : MonoBehaviour
         Group(separator.rectTransform,left+(mainFirst?mw:aw),sw);PreferenceText.SetSize(separator,diameter*.85f/textScale);separator.gameObject.SetActive(paired);
         Group(mainEmpty.rectTransform,mx,mw);PreferenceText.SetSize(mainEmpty,diameter*.8f/textScale);mainEmpty.gameObject.SetActive(paired&&n==0);
         Group(secondaryEmpty.rectTransform,ax,aw);PreferenceText.SetSize(secondaryEmpty,diameter*.8f/textScale);secondaryEmpty.gameObject.SetActive(paired&&a==0);
-        // Never erase the native cost if a glyph cannot be rendered.
-        mainCover.gameObject.SetActive(mainPatch!=null&&Main.Complete&&Adventure.Complete);
-        adventureCover.gameObject.SetActive(adventurePatch!=null&&Main.Complete&&Adventure.Complete);
+        RefreshPrintedCosts();
     }
+    void RefreshPrintedCosts()
+    {
+        hovered=pointer!=null&&pointer.IsHovered;
+        // Reveal the actual scanned symbols at their original position; keep
+        // both authoritative preview strips above the card untouched.
+        bool complete=Main.Complete&&Adventure.Complete;
+        mainCover.gameObject.SetActive(mainPatch!=null&&complete&&!(hovered&&!SameCost(printed,printedIsSecondary?adventureCurrent:current)));
+        adventureCover.gameObject.SetActive(adventurePatch!=null&&complete&&!(hovered&&!SameCost(adventurePrinted,adventureCurrent)));
+    }
+    void LateUpdate(){if(Root!=null&&hovered!=(pointer!=null&&pointer.IsHovered))RefreshPrintedCosts();}
     // Reuse a quiet strip of the scanned title texture. The narrow feather
     // keeps native title edges intact when the hand card is enlarged.
     static Texture2D Cover(Sprite art,Rect uv,bool rotated)

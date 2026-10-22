@@ -1069,7 +1069,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 room.members[2].seriesDeckChanged ? room.members[2].registeredDeck : null
             };
             room.match = new OnlineMatchSession(Guid.NewGuid().ToString("N"),
-                room.members[1].deck, room.members[2].deck, seed, matchConfig);
+                room.members[1].deck, room.members[2].deck, seed, matchConfig, room.roomId, room.series.gameNumber);
             room.publicReview=null;
             foreach (OnlineRoomMember member in room.members.Values)
             {
@@ -1760,7 +1760,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             minimumMainDeckSize = Math.Max(1, Math.Min(250, source?.minimumMainDeckSize ?? 60)),
             maximumSideboardSize = Math.Max(0, Math.Min(30, source?.maximumSideboardSize ?? 15)),
             allowCustomContent = source?.allowCustomContent == true,
-            useAnte = source?.useAnte == true
+            useAnte = source?.useAnte == true,
+            noShuffle = source?.noShuffle == true
         };
         result.useAnte &= OnlineRoomConfig.AllowsAnte(result.formatId, result.allowCustomContent);
         if (source?.allowedSetCodes == null) return result;

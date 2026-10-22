@@ -20,7 +20,8 @@ public sealed partial class MainMenuController
     bool TryReuseDeckTile(CardDefinition card,int count,MainMenuCardTileZone zone)
     {
         if(zone==MainMenuCardTileZone.Collection||!reusableDeckTiles.TryGetValue((zone,card.PrintingKey),out var queue)||queue.Count==0)return false;
-        var tile=queue.Dequeue();tile.transform.SetAsLastSibling();tile.SetCount(count);
+        var tile=queue.Dequeue();tile.transform.SetAsLastSibling();
+        tile.SetSingleCopyDisplay(singleDeckCards&&zone is MainMenuCardTileZone.MainDeck or MainMenuCardTileZone.Sideboard);tile.SetCount(count);
         var face=tile.transform.Find("CardFace")?.GetComponent<UnityEngine.UI.Image>();
         bool rebind=!ReferenceEquals(tile.Card,card);
         if(face!=null){
@@ -32,8 +33,8 @@ public sealed partial class MainMenuController
             foreach(string name in new[]{"FallbackText","FallbackOverlay"}){var label=tile.transform.Find(name);if(label!=null)label.gameObject.SetActive(!full);}
         }
         if(rebind)tile.Configure(this,card,zone);
-        bool selected=ReferenceEquals(quantityCard,card)&&quantityZone==zone;
-        tile.SetQuantityControls(selected,count,zone!=MainMenuCardTileZone.Commander&&DeckRepository.GetAllowedCopiesToAdd(currentDeck,card)>0);
+        bool selected=ReferenceEquals(quantityCard,card)&&quantityZone==zone&&(!singleDeckCards||ReferenceEquals(quantityTile,tile));
+        tile.SetQuantityControls(selected,CountTileCopies(card,zone),zone!=MainMenuCardTileZone.Commander&&DeckRepository.GetAllowedCopiesToAdd(currentDeck,card)>0);
         if(selected){quantityTile=tile;SetHighlightedTile(tile);}
         AddDeckRole(tile);ApplyLegality(tile);return true;
     }

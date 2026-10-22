@@ -16,6 +16,7 @@ using UnityEngine;
     public int spectators;
     public int startingLife, rulesVersion;
     public bool useAnte;
+    public bool noShuffle;
     [NonSerialized] public string address, source, serverId;
     [NonSerialized] public int port;
     public static OnlineRoomListing FromRoom(OnlineRoomState room,bool lanHosted)=>new OnlineRoomListing{
@@ -23,7 +24,7 @@ using UnityEngine;
         players=room.members.Values.Count(m=>!m.IsSpectator),spectators=room.members.Values.Count(m=>m.IsSpectator),
         lanHosted=lanHosted,allowCustomContent=room.config.allowCustomContent,format=room.config.formatId,
         bestOf=room.config.bestOf,inMatch=room.SpectatorOnly,state=room.DirectoryState,
-        startingLife=room.config.startingLife,useAnte=room.config.useAnte,rulesVersion=1
+        startingLife=room.config.startingLife,useAnte=room.config.useAnte,noShuffle=room.config.noShuffle,rulesVersion=2
     };
 }
 [Serializable] public sealed class OnlineRoomDirectory

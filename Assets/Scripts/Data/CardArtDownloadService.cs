@@ -74,6 +74,12 @@ public sealed class CardArtDownloadService
         return true;
     }
 
+    public bool CanDownload(CardDefinition card)
+    {
+        try {Validate(card);foreach(int face in Faces(card)){if(!TryExisting(card,face,out _))GetImageUrl(card,face);}return true;}
+        catch(Exception error) when(error is ArgumentException || error is InvalidOperationException || error is InvalidDataException){return false;}
+    }
+
     // Duplicate clicks share the first request; its token/progress owns that request.
     public Task DownloadAsync(CardDefinition card, IProgress<Progress> progress = null, CancellationToken cancellation = default)
     {

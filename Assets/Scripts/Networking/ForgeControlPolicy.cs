@@ -15,9 +15,13 @@ public static class ForgeControlPolicy
         int ok=Array.FindIndex(request.options??Array.Empty<ForgeOption>(),o=>o!=null&&o.id=="ok"&&!o.disabled);
         if(ok<0)return -1;
         int playerSeat=request.playerSeat>0?request.playerSeat:seat;
-        // Resolving an unanswerable stack is allowed; ending our empty main
-        // phase always needs a deliberate click, including the skip mode.
-        if(view.stackCount==0 && view.turnSeat==playerSeat && (view.phase=="MAIN1" || view.phase=="MAIN2"))return -1;
+        // The first main phase remains an explicit stop. End the second only
+        // when the engine offers no non-mana action, including in skip mode.
+        if(view.stackCount==0 && view.turnSeat==playerSeat){
+            if(view.phase=="MAIN1")return -1;
+            if(view.phase=="MAIN2")return view.canRespond||Array.Exists(request.options??Array.Empty<ForgeOption>(),
+                o=>o!=null&&!o.disabled&&o.requiresPaymentCheck)?-1:ok;
+        }
         if(mode==ForgeControlMode.Off)return ok;
         // Native canRespond excludes mana-only actions. A playable spell or
         // non-mana ability always keeps priority, even during draw/upkeep or

@@ -14,7 +14,9 @@ public sealed partial class MainMenuController
     private readonly Dictionary<DeckEntry,int> deckShuffleOrder=new Dictionary<DeckEntry,int>();
     private DeckDefinition shuffledDeck;
     private Button deckCurve,deckCostSort,deckTypeSort,deckShuffle;
-    private (float,float,int,string,string,string,string,string,string,int,int,int) deckHeaderLayoutKey;
+    private Dropdown deckArrangement;
+    private bool singleDeckCards;
+    private (float,float,int,string,string,string,string,string,string,string,int,int,int) deckHeaderLayoutKey;
     private float deckHeaderLayoutHeight;
 
     private void CreateDeckSortControls()
@@ -26,6 +28,15 @@ public sealed partial class MainMenuController
             PreferenceText.SetSize(button.GetComponentInChildren<Text>(),16);return button;
         }
         deckCurve=Add("DeckCurve",ShowDeckCurve);
+        deckArrangement=Instantiate(deckFormatDropdown,mainDeckCountText.transform,false);
+        deckArrangement.name="DeckArrangementDropdown";
+        deckArrangement.onValueChanged=new Dropdown.DropdownEvent();
+        deckArrangement.captionText.GetComponent<PreferenceText>().Literal=true;
+        deckArrangement.itemText.GetComponent<PreferenceText>().Literal=true;
+        deckArrangement.onValueChanged.AddListener(index=>{
+            bool single=index==1;if(singleDeckCards==single)return;
+            CloseQuantityControls();singleDeckCards=single;RefreshDeckGrids();
+        });
         deckCostSort=Add("DeckSortCost",()=>SetDeckViewSort(DeckViewSort.Cost));
         deckTypeSort=Add("DeckSortType",()=>SetDeckViewSort(DeckViewSort.Type));
         deckShuffle=Add("DeckShuffle",()=>SetDeckViewSort(DeckViewSort.Shuffle));
@@ -39,6 +50,11 @@ public sealed partial class MainMenuController
             button.GetComponent<Image>().color=active?MenuVisualTheme.Primary:MenuVisualTheme.Raised;
         }
         Label(deckCurve,DeckCompanion.Text("查看曲线","Mana curve","マナカーブ"),false);
+        deckArrangement.ClearOptions();
+        deckArrangement.AddOptions(new List<string>{DeckCompanion.Text("合并排列","Merged copies","まとめて表示"),DeckCompanion.Text("单张排列","Individual cards","1枚ずつ表示")});
+        deckArrangement.SetValueWithoutNotify(singleDeckCards?1:0);
+        deckArrangement.RefreshShownValue();
+        deckArrangement.interactable=currentDeck!=null;
         Label(deckCostSort,DeckCompanion.Text("按费用","Mana value","マナ総量"),deckViewSort==DeckViewSort.Cost);
         Label(deckTypeSort,DeckCompanion.Text("按类型","Card type","タイプ"),deckViewSort==DeckViewSort.Type);
         Label(deckShuffle,DeckCompanion.Text("打乱","Shuffle","混ぜる"),deckViewSort==DeckViewSort.Shuffle&&ReferenceEquals(shuffledDeck,currentDeck));
@@ -50,14 +66,18 @@ public sealed partial class MainMenuController
         if(mainDeckCountText==null||deckFormatDropdown==null||deckCostSort==null)return minimumRowHeight;
         float gap=Mathf.Clamp(width*.012f,6,12);
         var curve=deckCurve.GetComponentInChildren<Text>();var cost=deckCostSort.GetComponentInChildren<Text>();var type=deckTypeSort.GetComponentInChildren<Text>();var shuffle=deckShuffle.GetComponentInChildren<Text>();
-        var key=(width,minimumRowHeight,GamePreferences.Revision,mainDeckCountText.text,deckFormatDropdown.captionText.text,curve.text,cost.text,type.text,shuffle.text,mainDeckCountText.fontSize,deckFormatDropdown.captionText.fontSize,cost.fontSize);
+        var key=(width,minimumRowHeight,GamePreferences.Revision,mainDeckCountText.text,deckFormatDropdown.captionText.text,curve.text,deckArrangement.captionText.text,cost.text,type.text,shuffle.text,mainDeckCountText.fontSize,deckFormatDropdown.captionText.fontSize,cost.fontSize);
         if(key==deckHeaderLayoutKey)return deckHeaderLayoutHeight;
         float rowHeight=Mathf.Ceil(Mathf.Max(minimumRowHeight,38,mainDeckCountText.fontSize*1.25f+6,cost.fontSize*1.25f+6,deckFormatDropdown.captionText.fontSize*1.25f+6));
         float costWidth=Mathf.Ceil(Mathf.Max(60,cost.preferredWidth+20));
         float typeWidth=Mathf.Ceil(Mathf.Max(60,type.preferredWidth+20));
         float shuffleWidth=Mathf.Ceil(Mathf.Max(56,shuffle.preferredWidth+20));
         float curveWidth=Mathf.Ceil(Mathf.Max(72,curve.preferredWidth+20));
-        float sortingWidth=curveWidth+costWidth+typeWidth+shuffleWidth+gap*3;
+        var arrangementText=deckArrangement.captionText;
+        var arrangementSettings=arrangementText.GetGenerationSettings(Vector2.zero);
+        float arrangementWidth=Mathf.Ceil(deckArrangement.options.Max(o=>arrangementText.cachedTextGeneratorForLayout.GetPreferredWidth(o.text,arrangementSettings)/arrangementText.pixelsPerUnit)+46);
+        var controls=new[]{((RectTransform)deckCurve.transform,curveWidth),((RectTransform)deckArrangement.transform,arrangementWidth),((RectTransform)deckCostSort.transform,costWidth),((RectTransform)deckTypeSort.transform,typeWidth),((RectTransform)deckShuffle.transform,shuffleWidth)};
+        float sortingWidth=controls.Sum(c=>c.Item2)+gap*(controls.Length-1);
         float countWidth=Mathf.Ceil(mainDeckCountText.preferredWidth);
         float formatWidth=Mathf.Ceil(Mathf.Max(96,deckFormatDropdown.captionText.preferredWidth+46));
         bool secondRow=countWidth+gap*2+formatWidth+sortingWidth+8>width;
@@ -72,13 +92,10 @@ public sealed partial class MainMenuController
         }
         Position((RectTransform)deckFormatDropdown.transform,false,countWidth+gap,-rowHeight*.5f,formatWidth);
         float sortY=-rowHeight*.5f-(secondRow?rowHeight+gap:0);
-        Position((RectTransform)deckShuffle.transform,true,-8,sortY,shuffleWidth);
-        Position((RectTransform)deckTypeSort.transform,true,-8-shuffleWidth-gap,sortY,typeWidth);
-        Position((RectTransform)deckCostSort.transform,true,-8-shuffleWidth-gap-typeWidth-gap,sortY,costWidth);
-        Position((RectTransform)deckCurve.transform,true,-8-shuffleWidth-gap-typeWidth-gap-costWidth-gap,sortY,curveWidth);
+        float controlX=-8-sortingWidth;
+        foreach(var control in controls){controlX+=control.Item2;Position(control.Item1,true,controlX,sortY,control.Item2);controlX+=gap;}
         int controlRows=1;
         if(secondRow&&sortingWidth>width-16){
-            var controls=new[]{(deckCurve,curveWidth),(deckCostSort,costWidth),(deckTypeSort,typeWidth),(deckShuffle,shuffleWidth)};
             int start=0;
             while(start<controls.Length){
                 int end=start;float rowWidth=controls[start].Item2;
@@ -86,7 +103,7 @@ public sealed partial class MainMenuController
                 float x=-8-rowWidth;
                 for(int i=start;i<=end;i++){
                     x+=controls[i].Item2;
-                    Position((RectTransform)controls[i].Item1.transform,true,x,sortY-(controlRows-1)*(rowHeight+gap),controls[i].Item2);
+                    Position(controls[i].Item1,true,x,sortY-(controlRows-1)*(rowHeight+gap),controls[i].Item2);
                     x+=gap;
                 }
                 start=end+1;
@@ -94,6 +111,9 @@ public sealed partial class MainMenuController
             }
         }
         FitDeckFormatPopup(width,formatWidth);
+        var popup=deckArrangement.template;
+        popup.anchorMin=popup.anchorMax=Vector2.zero;popup.pivot=new Vector2(0,1);popup.anchoredPosition=new Vector2(0,-6);
+        popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,Mathf.Min(width,arrangementWidth));
         deckHeaderLayoutKey=key;
         int rows=secondRow?1+controlRows:1;
         return deckHeaderLayoutHeight=rowHeight*rows+gap*(rows-1);
@@ -102,11 +122,11 @@ public sealed partial class MainMenuController
     {
         if(currentDeck==null)return;
         if(mode==DeckViewSort.Shuffle){
-            var main=DeckDisplayEntries(currentDeck.cards).ToList();var side=DeckDisplayEntries(SecondaryDeckEntries).ToList();
+            var main=DeckDisplayEntries(currentDeck.cards).Distinct().ToList();var side=DeckDisplayEntries(SecondaryDeckEntries).Distinct().ToList();
             deckShuffleOrder.Clear();shuffledDeck=currentDeck;ShuffleDeckEntries(main);ShuffleDeckEntries(side);
         }
         deckViewSort=mode;
-        ReorderDeckTiles(mainDeckContent,currentDeck.cards);ReorderDeckTiles(sideboardContent,SecondaryDeckEntries);
+        CloseQuantityControls();RefreshDeckGrids();
         RefreshDeckSortControls();
     }
     private void ShuffleDeckEntries(List<DeckEntry> entries)
@@ -120,11 +140,25 @@ public sealed partial class MainMenuController
     private IEnumerable<DeckEntry> DeckDisplayEntries(List<DeckEntry> entries)
     {
         if(entries==null)return Enumerable.Empty<DeckEntry>();
-        if(deckViewSort==DeckViewSort.Original)return entries;
-        if(deckViewSort==DeckViewSort.Shuffle)return ReferenceEquals(shuffledDeck,currentDeck)?entries.OrderBy(e=>e!=null&&deckShuffleOrder.TryGetValue(e,out int rank)?rank:int.MaxValue):entries;
-        var resolved=entries.Select(e=>(entry:e,card:DeckRepository.ResolveCard(e,cards)));
+        var order=CopyOrderFor(entries);
+        IEnumerable<DeckEntry> display=!singleDeckCards&&(order==null||order.Count==0)?entries:DeckCopyOrder.Expand(entries,order);
+        if(!singleDeckCards)display=display.Distinct();
+        if(deckViewSort==DeckViewSort.Original)return display;
+        if(deckViewSort==DeckViewSort.Shuffle)return ReferenceEquals(shuffledDeck,currentDeck)?display.OrderBy(e=>e!=null&&deckShuffleOrder.TryGetValue(e,out int rank)?rank:int.MaxValue):display;
+        var resolved=display.Select(e=>(entry:e,card:DeckRepository.ResolveCard(e,cards)));
         if(deckViewSort==DeckViewSort.Cost)return resolved.OrderBy(p=>p.card==null?2:p.card.HasType(CardType.Land)?1:0).ThenByDescending(p=>DeckSortManaValue(p.card)).ThenBy(p=>DeckSortType(p.card)).ThenBy(p=>p.card?.cardName,StringComparer.OrdinalIgnoreCase).ThenBy(p=>p.card?.PrintingKey,StringComparer.OrdinalIgnoreCase).Select(p=>p.entry);
         return resolved.OrderBy(p=>DeckSortType(p.card)).ThenBy(p=>p.card?.cardName,StringComparer.OrdinalIgnoreCase).ThenBy(p=>p.card?.PrintingKey,StringComparer.OrdinalIgnoreCase).Select(p=>p.entry);
+    }
+    private List<string> CopyOrderFor(List<DeckEntry> entries) => currentDeck==null?null:ReferenceEquals(entries,currentDeck.cards)?currentDeck.mainOrder:ReferenceEquals(entries,currentDeck.sideboard)?currentDeck.sideboardOrder:null;
+    private void SetCopyOrderFor(List<DeckEntry> entries,List<string> order)
+    {
+        if(ReferenceEquals(entries,currentDeck.cards))currentDeck.mainOrder=order;
+        else if(ReferenceEquals(entries,currentDeck.sideboard))currentDeck.sideboardOrder=order;
+    }
+    private void RemoveDraggedCopyOrder(List<DeckEntry> entries,int index)
+    {
+        var order=CopyOrderFor(entries);
+        if(order!=null&&index>=0&&index<order.Count)order.RemoveAt(index);
     }
     private static int DeckSortType(CardDefinition card)
     {
@@ -155,7 +189,8 @@ public sealed partial class MainMenuController
         int index=parent==sideboardContent?CommandPrefixCount():0;
         foreach(var entry in DeckDisplayEntries(entries)){
             var card=DeckRepository.ResolveCard(entry,cards);
-            if(card!=null&&tiles.TryGetValue(card.PrintingKey,out var queue)&&queue.Count>0)queue.Dequeue().SetSiblingIndex(index++);
+            if(card!=null&&tiles.TryGetValue(card.PrintingKey,out var queue))
+                if(queue.Count>0)queue.Dequeue().SetSiblingIndex(index++);
         }
     }
 }

@@ -21,7 +21,7 @@ public final class BridgeCardNotices {
     private record Arrival(long revision,ZoneType from,SpellAbility ability,Map<ForgeBridge.Gui,Map<String,Object>> moves) {}
     private static final Map<Integer,Arrival> handArrivals=new HashMap<>();
     static void restarted(){recentReveals.clear();publiclyRevealed.clear();handArrivals.clear();}
-    @Subscribe public void shuffled(GameEventShuffle event){synchronized(ForgeBridge.class){for(var player:ForgeBridge.game.getPlayers())if(player.getId()==event.player().getId())for(Card card:player.getCardsIn(ZoneType.Library))publiclyRevealed.remove(card.getId());}}
+    @Subscribe public void shuffled(GameEventShuffle event){if(ForgeBridge.libraryOrder!=null&&ForgeBridge.libraryOrder.enabled())return;synchronized(ForgeBridge.class){for(var player:ForgeBridge.game.getPlayers())if(player.getId()==event.player().getId())for(Card card:player.getCardsIn(ZoneType.Library))publiclyRevealed.remove(card.getId());}}
     static SpellAbility cause() {
         var cost=ForgeBridge.game.costPaymentStack.peek();
         if(cost!=null)return cost.payment().getAbility();

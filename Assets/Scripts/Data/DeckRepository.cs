@@ -240,7 +240,7 @@ public static class DeckRepository
         RemoveCard(deck, card, count, false);
     }
 
-    public static void RemoveCard(DeckDefinition deck, CardDefinition card, int count, bool sideboard)
+    public static void RemoveCard(DeckDefinition deck, CardDefinition card, int count, bool sideboard, int copyIndex = -1)
     {
         if (deck == null || card == null || count <= 0) return;
 
@@ -248,6 +248,9 @@ public static class DeckRepository
         DeckEntry entry = FindEntry(entries, card);
         if (entry == null) return;
 
+        var order = sideboard ? deck.sideboardOrder : deck.mainOrder;
+        if (count == 1 && order != null && copyIndex >= 0 && copyIndex < order.Count
+            && string.Equals(order[copyIndex], DeckCopyOrder.Key(entry), StringComparison.OrdinalIgnoreCase)) order.RemoveAt(copyIndex);
         entry.count -= count;
         Normalize(deck);
         DeckCompanion.ClearMissing(deck);
@@ -346,6 +349,11 @@ public static class DeckRepository
             string line = lines[i].Trim();
             if (line.Length == 0) continue;
 
+            if (line.StartsWith("#main-order ", StringComparison.OrdinalIgnoreCase))
+            { deck.mainOrder = new List<string>(line.Substring(12).Split(',')); continue; }
+            if (line.StartsWith("#sideboard-order ", StringComparison.OrdinalIgnoreCase))
+            { deck.sideboardOrder = new List<string>(line.Substring(17).Split(',')); continue; }
+
             if (line.StartsWith("#name ", StringComparison.OrdinalIgnoreCase))
             {
                 deck.name = line.Substring(6).Trim();
@@ -416,6 +424,8 @@ public static class DeckRepository
             "#banlist " + (string.IsNullOrWhiteSpace(deck.banlist) ? "current" : deck.banlist.Trim())
         };
 
+        if (deck.mainOrder != null && deck.mainOrder.Count > 0) lines.Add("#main-order " + string.Join(",", deck.mainOrder));
+        if (deck.sideboardOrder != null && deck.sideboardOrder.Count > 0) lines.Add("#sideboard-order " + string.Join(",", deck.sideboardOrder));
         if (deck.commanders != null && deck.commanders.Count > 0)
         {
             lines.Add("#commander");
@@ -747,6 +757,8 @@ public static class DeckRepository
         if (deck.contraptions == null) deck.contraptions = new List<DeckEntry>();
         NormalizeEntries(deck.attractions);
         NormalizeEntries(deck.contraptions);
+        DeckCopyOrder.Synchronize(deck.cards, deck.mainOrder);
+        DeckCopyOrder.Synchronize(deck.sideboard, deck.sideboardOrder);
     }
 
     private static void NormalizeEntries(List<DeckEntry> entries)

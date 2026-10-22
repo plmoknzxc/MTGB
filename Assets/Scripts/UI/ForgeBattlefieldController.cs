@@ -183,7 +183,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             root.gameObject.AddComponent<GraphicRaycaster>();
     }
 
-    private const int NoticeLayerOffset = 10, DragArrowLayerOffset = 20, DecisionLayerOffset = 25, InspectLayerOffset = 30;
+    private const int NoticeLayerOffset = 10, DragArrowLayerOffset = 20, InspectLayerOffset = 30, DecisionLayerOffset = 35;
 
     private void Build()
     {
@@ -476,6 +476,17 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
 
         string auxiliary=AuxiliaryOptionLabel(option);if(auxiliary!=null)return auxiliary;
         string kind=view?.request?.kind??"";
+        if(kind=="ChooseModes"&&view.request.sourceCard!=null) {
+            string mode=PrintedRuleText(view.request.sourceCard,option.label);
+            if(mode!=option.label)return mode;
+        }
+        if(kind=="ChooseOptions"&&view.request.sourceCard is ForgeCardView choiceSource) {
+            string prefix=choiceSource.name+" — ";
+            if((option.label??"").StartsWith(prefix,StringComparison.Ordinal)) {
+                string raw=option.label.Substring(prefix.Length),local=GeneratedPublicRuleText(raw);
+                if(local!=raw)return GamePreferences.CardFaceName(choiceSource.name)+" — "+local;
+            }
+        }
         if(kind=="ChooseOptions"&&option.id.StartsWith("select:",StringComparison.Ordinal)) {
             string source=view.request.sourceCard?.originalName??view.request.sourceCard?.name;
             if(source=="Bronze Tablet"||source=="Tempest Efreet") {

@@ -43,10 +43,10 @@ public sealed partial class ForgeBattlefieldController
         }
         bool inset=d.forgeSplitType is "Adventure" or "Omen";
         bool rotated=d.forgeSplitType is "Split" or "Room";
-        string printed=f?.manaCost??d.manaCost;
+        string printed=inset?primary?.manaCost:f?.manaCost??d.manaCost;
         if(existing==null)existing=parent.gameObject.AddComponent<LegacyCardCost>();
         existing.Bind(image.sprite,rotated?primary?.manaCost:printed,Cost(pair?primary:f),
             pair&&(inset||rotated)?secondary.manaCost:null,pair?Cost(secondary):null,
-            ((f?.cardTypes??d.cardTypes)&CardType.Planeswalker)!=0,!inset,pair,rotated);
+            ((f?.cardTypes??d.cardTypes)&CardType.Planeswalker)!=0,!inset,pair,rotated,pair&&!inset&&!rotated&&f==secondary);
     }
 }

@@ -40,6 +40,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private ForgeHandFanNavigation handNavigation;
     private bool browsingHand,handFanVisible=true;
     public bool IsCastingDrag=>dragging;
+    public bool IsHovered=>hovering&&!dragging;
     public void ConfigureHandNavigation(ForgeHandFanNavigation navigation)=>handNavigation=navigation;
     public void SetHandFanExposure(bool visible){if(handFanVisible!=visible){handFanVisible=visible;handHitLayout?.Invalidate();}}
     public void SetHandFanPose(Vector2 position,float rotation,bool snap)
@@ -93,9 +94,12 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         root.localRotation=Quaternion.Slerp(root.localRotation,tableRotation,speed);
         // Lift in table coordinates, keeping the end cards from sliding sideways.
         bool topHand=root.parent.name=="OpponentHandRoot";
-        var lift=Quaternion.Inverse(tableRotation)*new Vector3(0,topHand?-184:154,0);
+        const float hoverScale=1.8f;
+        // Grow inward, preserving the visible outer edge of either hand.
+        float extraLift=face.rect.height*(hoverScale-1.25f)*.5f;
+        var lift=Quaternion.Inverse(tableRotation)*new Vector3(0,topHand?-184-extraLift:154+extraLift,0);
         face.localPosition=Vector3.Lerp(face.localPosition,hovering && hand?lift:Vector3.zero,speed);
-        face.localScale=Vector3.Lerp(face.localScale,Vector3.one*(hovering && hand?1.25f:1),speed);
+        face.localScale=Vector3.Lerp(face.localScale,Vector3.one*(hovering && hand?hoverScale:1),speed);
         // Hover straightens a fanned hand card, but must preserve a permanent's tapped orientation.
         face.localRotation=Quaternion.Slerp(face.localRotation,Quaternion.Euler(0,0,hovering && hand?-angle:0),speed);
         // The lifted face stays clickable while crossing from the hand's original hit area.

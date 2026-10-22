@@ -167,7 +167,7 @@ public sealed class CardArtPanel : MonoBehaviour
             var label=button.GetComponentInChildren<Text>();PreferenceText.SetSize(label,embedded?14:15);label.alignment=TextAnchor.MiddleCenter;
             label.rectTransform.anchorMin=Vector2.zero;label.rectTransform.anchorMax=new Vector2(1,.15f);label.rectTransform.offsetMin=label.rectTransform.offsetMax=Vector2.zero;
             bool installed=CardImageLibrary.TryLoadExact(version,0,out var sprite);
-            label.text=version.PrintingKey+"\n"+(CardArtPreferences.Get(card)==version.PrintingKey?"当前偏好":installed?"已下载":"未下载");
+            label.text=version.PrintingKey+"\n"+(CardArtPreferences.Get(card)==version.PrintingKey?"当前偏好":installed?"已下载":downloader.CanDownload(version)?"未下载":"暂无图片来源");
             if(installed) image.texture=sprite.texture;
             else {image.color=new Color(.3f,.34f,.35f);jobs.Add(Tuple.Create(version,image));}
         }
@@ -226,16 +226,17 @@ public sealed class CardArtPanel : MonoBehaviour
     {
         foreach(var choice in choices) {choice.Item2.effectColor=choice.Item1==selected?MenuVisualTheme.Accent:MenuVisualTheme.Line;choice.Item2.GetComponent<Button>().interactable=!busy;}
         clear.interactable=!busy && !string.IsNullOrEmpty(CardArtPreferences.Get(card));
-        apply.interactable=!busy && selected!=null;
+        bool available=selected!=null&&downloader.CanDownload(selected);
+        apply.interactable=!busy && selected!=null&&available;
         bool installed=selected!=null && CardImageLibrary.TryLoadExact(selected,0,out _);
-        apply.GetComponentInChildren<Text>().text=installed?"使用此版本 · 设为偏好":"下载并设为偏好";
+        apply.GetComponentInChildren<Text>().text=installed?"使用此版本 · 设为偏好":selected!=null&&!available?"暂无图片来源":"下载并设为偏好";
             if(!busy) status.text=selected==null?"当前偏好："+(string.IsNullOrEmpty(CardArtPreferences.Get(card))?GamePreferences.T("默认卡图"):CardArtPreferences.Get(card)):
-            "已选："+selected.PrintingKey+(installed?" · 已下载":" · 点击下方按钮下载并使用");
+            "已选："+selected.PrintingKey+(installed?" · 已下载":available?" · 点击下方按钮下载并使用":" · 暂无图片来源，请选择其他版本");
     }
 
     private async void DownloadAndApply()
     {
-        if(busy || selected==null) return;
+        if(busy || selected==null || !downloader.CanDownload(selected)) return;
         var version=selected;int request=generation;var token=cancellation.Token;
         busy=true;UpdateSelection();previous.interactable=next.interactable=false;
         try

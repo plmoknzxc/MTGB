@@ -48,13 +48,13 @@ public sealed partial class ForgeBattlefieldController
 
     private void PresentTargetChoiceActions()
     {
-        if (!HasTargetChoice || HasStackTargetChoices) {
+        if (!HasTargetChoice || HasStackTargetChoices || IsCardPickerRequest) {
             if (targetChoiceActions != null) targetChoiceActions.gameObject.SetActive(false);
             return;
         }
         if (targetChoiceActions == null) {
             targetChoiceActions = Rect(Node("CornerCluster/ControlRow"), "TargetChoiceActions", new Vector2(48,-20), new Vector2(184,48));
-            SetOverlayLayer(targetChoiceActions, 1, true);
+            SetOverlayLayer(targetChoiceActions, DecisionLayerOffset+1, true);
             DockAction(targetChoiceActions,"CancelTargetChoice","",new Vector2(47.5f,0),89,()=>{},true);
             DockAction(targetChoiceActions,"NextTargetChoice","",new Vector2(-47.5f,0),89,()=>{},false);
         }

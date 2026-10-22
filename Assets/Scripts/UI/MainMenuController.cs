@@ -143,8 +143,8 @@ public sealed partial class MainMenuController : MonoBehaviour
         CreateDeckExchangeToolbar();
         CreateAuxiliaryDeckEntry();
         CreateCompanionDeckEntry();
-        CreateDeckSortControls();
         CreateDeckFormatControl();
+        CreateDeckSortControls();
         RegisterListeners();
         ShowStartScreen();
         loadingStatus = AddText(startScreenGroup.transform, "LoadingStatus", "正在准备卡牌…", 20,
@@ -705,6 +705,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void RefreshDeckGrids()
     {
+        DeckCopyOrder.Synchronize(currentDeck);
         DeckCompanion.ClearMissing(currentDeck);
         RefreshConstructionFilters();
         ClearHighlightedTileInZone(MainMenuCardTileZone.MainDeck);
@@ -733,11 +734,15 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         if (parent == null || entries == null) return;
 
+        var canonical = singleDeckCards ? DeckCopyOrder.Expand(entries, CopyOrderFor(entries)) : new List<DeckEntry>();
+        var positions = canonical.Select((entry, index) => (entry, index)).GroupBy(p => p.entry)
+            .ToDictionary(g => g.Key, g => new Queue<int>(g.Select(p => p.index)));
         foreach (DeckEntry entry in DeckDisplayEntries(entries))
         {
             CardDefinition card = DeckRepository.ResolveCard(entry, cards);
             if (card == null) continue;
             CreateCardTile(parent, card, entry.count, zone);
+            parent.GetChild(parent.childCount - 1).GetComponent<MainMenuCardTile>().CopyOrderIndex = singleDeckCards ? positions[entry].Dequeue() : -1;
         }
     }
 
@@ -790,11 +795,12 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         MainMenuCardTile tile = tileObject.GetComponent<MainMenuCardTile>();
         tile.Configure(this, card, zone);
+        tile.SetSingleCopyDisplay(singleDeckCards&&zone is MainMenuCardTileZone.MainDeck or MainMenuCardTileZone.Sideboard);
         AddDeckRole(tile);
         CreateQuantityControls(tile, size, countBadge);
         tile.SetCount(count);
         if (zone != MainMenuCardTileZone.Collection) ApplyLegality(tile);
-        if (ReferenceEquals(quantityCard, card) && quantityZone == zone)
+        if (!singleDeckCards && ReferenceEquals(quantityCard, card) && quantityZone == zone)
         {
             quantityTile = tile;
             tile.SetQuantityControls(true, CountTileCopies(card, zone),
@@ -967,11 +973,17 @@ public sealed partial class MainMenuController : MonoBehaviour
         }
         int before = CountCardCopies(tile.Card, sideboard);
         if (delta > 0) DeckRepository.AddCard(currentDeck, tile.Card, 1, sideboard);
-        else DeckRepository.RemoveCard(currentDeck, tile.Card, 1, sideboard);
+        else DeckRepository.RemoveCard(currentDeck, tile.Card, 1, sideboard, singleDeckCards ? tile.CopyOrderIndex : -1);
         int after = CountCardCopies(tile.Card, sideboard);
         if (after == before) return;
         MarkDeckDirty();
         selectedCard = tile.Card;
+        if(singleDeckCards||(currentDeck.mainOrder?.Count??0)>0||(currentDeck.sideboardOrder?.Count??0)>0){
+            if(singleDeckCards)CloseQuantityControls();
+            RefreshDeckGrids();
+            SetStatus($"{tile.Card.cardName} {(delta>0?"+1":"-1")} {(sideboard?"sideboard":"main deck")}.");
+            return;
+        }
         if(IsCommandZoneEditor&&sideboard){RefreshDeckGrids();RefreshSelectedCardInfo();return;}
         SetStatus($"{tile.Card.cardName} {(delta > 0 ? "+1" : "-1")} {(sideboard ? "sideboard" : "main deck")}.");
         MainMenuCardTileZone deckZone = sideboard ? MainMenuCardTileZone.Sideboard : MainMenuCardTileZone.MainDeck;
@@ -1101,7 +1113,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         if ((sourceTile.Zone == MainMenuCardTileZone.MainDeck && dropZone == MainMenuDropZone.MainDeck)
             || (sourceTile.Zone == MainMenuCardTileZone.Sideboard && dropZone == MainMenuDropZone.Sideboard))
             ReorderDraggedCard(sourceTile, eventData);
-        else ApplyDraggedCard(sourceTile.Card, sourceTile.Zone, dropZone);
+        else ApplyDraggedCard(sourceTile.Card, sourceTile.Zone, dropZone, singleDeckCards ? sourceTile.CopyOrderIndex : -1);
     }
 
     private void ReorderDraggedCard(MainMenuCardTile source, PointerEventData pointer)
@@ -1115,26 +1127,56 @@ public sealed partial class MainMenuController : MonoBehaviour
         float distance = float.MaxValue;
         foreach (var tile in content.GetComponentsInChildren<MainMenuCardTile>())
         {
+            if (!tile.gameObject.activeSelf || tile.Zone != source.Zone) continue;
             var rect = (RectTransform)tile.transform;
             Vector2 center = RectTransformUtility.WorldToScreenPoint(pointer.pressEventCamera, rect.TransformPoint(rect.rect.center));
             float d = (center - pointer.position).sqrMagnitude;
             if (d < distance) { distance = d; nearest = tile; nearestPoint = center; }
         }
         if (nearest == null || nearest == source || nearest.Zone != source.Zone) return;
-        int insertion = entries.FindIndex(e => DeckRepository.ResolveCard(e, cards) == nearest.Card);
+        if (singleDeckCards)
+        {
+            var order = DeckCopyOrder.Expand(entries, CopyOrderFor(entries)).Select(DeckCopyOrder.Key).ToList();
+            from = source.CopyOrderIndex;
+            int to = nearest.CopyOrderIndex + (pointer.position.x >= nearestPoint.x ? 1 : 0);
+            if (from < 0 || from >= order.Count || to < 0 || to > order.Count) return;
+            if (from < to) to--;
+            if (from == to) return;
+            string key = order[from]; order.RemoveAt(from); order.Insert(to, key);
+            SetCopyOrderFor(entries, order);
+            deckViewSort = DeckViewSort.Original;
+            CloseQuantityControls(); MarkDeckDirty(); RefreshDeckGrids();
+            SetStatusTextOnly("已调整单张卡牌顺序，保存后保留。");
+            return;
+        }
+        // A previous individual move can change the first occurrence of a group
+        // without changing the grouped quantity rows. Drag against visible order.
+        var groups = DeckCopyOrder.Expand(entries, CopyOrderFor(entries)).Distinct().ToList();
+        from = groups.FindIndex(e => DeckRepository.ResolveCard(e, cards) == source.Card);
+        int insertion = groups.FindIndex(e => DeckRepository.ResolveCard(e, cards) == nearest.Card);
         if (insertion < 0) return;
         if (pointer.position.x >= nearestPoint.x) insertion++;
         if (from < insertion) insertion--;
         if (from == insertion) return;
-        var entry = entries[from]; entries.RemoveAt(from); entries.Insert(insertion, entry);
-        // Reuse the existing tiles: only their order changes, avoiding image reload/flicker.
-        source.transform.SetSiblingIndex(insertion+(source.Zone==MainMenuCardTileZone.Sideboard?CommandPrefixCount():0));
-        LayoutRebuilder.MarkLayoutForRebuild(content);
-        MarkDeckDirty();
+        var entry = groups[from]; groups.RemoveAt(from); groups.Insert(insertion, entry);
+        entries.Clear(); entries.AddRange(groups);
+        var savedOrder = CopyOrderFor(entries);
+        if (savedOrder != null && savedOrder.Count > 0)
+        {
+            string key = DeckCopyOrder.Key(entry);
+            var moving = savedOrder.Where(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase)).ToList();
+            savedOrder.RemoveAll(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
+            string nextKey = insertion + 1 < entries.Count ? DeckCopyOrder.Key(entries[insertion + 1]) : null;
+            int to = nextKey == null ? savedOrder.Count : savedOrder.FindIndex(k => string.Equals(k, nextKey, StringComparison.OrdinalIgnoreCase));
+            savedOrder.InsertRange(to < 0 ? savedOrder.Count : to, moving);
+        }
+        // The grid reuses its card tiles while switching back to persisted order.
+        deckViewSort=DeckViewSort.Original;
+        CloseQuantityControls();MarkDeckDirty();RefreshDeckGrids();
         SetStatusTextOnly("已调整卡牌顺序，保存后保留。");
     }
 
-    private void ApplyDraggedCard(CardDefinition card, MainMenuCardTileZone sourceZone, MainMenuDropZone targetZone)
+    private void ApplyDraggedCard(CardDefinition card, MainMenuCardTileZone sourceZone, MainMenuDropZone targetZone, int copyIndex = -1)
     {
         if (card == null || currentDeck == null) return;
         if (sourceZone == MainMenuCardTileZone.Collection && DeckAuxiliary.IsAuxiliary(card)
@@ -1178,13 +1220,14 @@ public sealed partial class MainMenuController : MonoBehaviour
             case MainMenuCardTileZone.MainDeck:
                 if (targetZone == MainMenuDropZone.Sideboard)
                 {
+                    RemoveDraggedCopyOrder(currentDeck.cards, copyIndex);
                     MoveDeckCopies(card,count,false);
                     changed = true;
                     message = $"Moved {count} {card.cardName} to sideboard.";
                 }
                 else if (targetZone == MainMenuDropZone.Collection)
                 {
-                    DeckRepository.RemoveCard(currentDeck, card, count, false);
+                    DeckRepository.RemoveCard(currentDeck, card, count, false, copyIndex);
                     changed = true;
                     message = $"{card.cardName} -{count} from main deck.";
                 }
@@ -1192,13 +1235,14 @@ public sealed partial class MainMenuController : MonoBehaviour
             case MainMenuCardTileZone.Sideboard:
                 if (targetZone == MainMenuDropZone.MainDeck)
                 {
+                    RemoveDraggedCopyOrder(currentDeck.sideboard, copyIndex);
                     MoveDeckCopies(card,count,true);
                     changed = true;
                     message = $"Moved {count} {card.cardName} to main deck.";
                 }
                 else if (targetZone == MainMenuDropZone.Collection)
                 {
-                    DeckRepository.RemoveCard(currentDeck, card, count, true);
+                    DeckRepository.RemoveCard(currentDeck, card, count, true, copyIndex);
                     changed = true;
                     message = $"{card.cardName} -{count} from sideboard.";
                 }
@@ -1207,6 +1251,8 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         if (changed)
         {
+            DeckCopyOrder.Synchronize(currentDeck.cards, currentDeck.mainOrder);
+            DeckCopyOrder.Synchronize(currentDeck.sideboard, currentDeck.sideboardOrder);
             MarkDeckDirty();
             RefreshDeckGrids();
             RefreshVisibleCardQuantities(card);
@@ -1229,6 +1275,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         int available = CountTileCopies(card, sourceZone);
         if (available <= 0) return 0;
+        if (singleDeckCards) return 1;
         return Mathf.Min(requested, available);
     }
 
@@ -1398,12 +1445,12 @@ public sealed partial class MainMenuController : MonoBehaviour
                 if (dropZone == MainMenuDropZone.Sideboard) return $"Release to add {count} {cardName} to sideboard.";
                 return $"Drag {cardName} to Main Deck or Sideboard.";
             case MainMenuCardTileZone.MainDeck:
-                if (dropZone == MainMenuDropZone.MainDeck) return "拖到卡牌左侧或右侧，调整整叠卡牌的顺序。";
+                if (dropZone == MainMenuDropZone.MainDeck) return singleDeckCards ? "拖到卡牌左侧或右侧，调整这一张牌的顺序。" : "拖到卡牌左侧或右侧，调整整叠卡牌的顺序。";
                 if (dropZone == MainMenuDropZone.Sideboard) return $"Release to move {count} {cardName} to sideboard.";
                 if (dropZone == MainMenuDropZone.Collection) return $"Release to remove {count} {cardName} from main deck.";
                 return $"Drag {cardName} to Sideboard or Collection.";
             case MainMenuCardTileZone.Sideboard:
-                if (dropZone == MainMenuDropZone.Sideboard) return "拖到卡牌左侧或右侧，调整整叠卡牌的顺序。";
+                if (dropZone == MainMenuDropZone.Sideboard) return singleDeckCards ? "拖到卡牌左侧或右侧，调整这一张牌的顺序。" : "拖到卡牌左侧或右侧，调整整叠卡牌的顺序。";
                 if (dropZone == MainMenuDropZone.MainDeck) return $"Release to move {count} {cardName} to main deck.";
                 if (dropZone == MainMenuDropZone.Collection) return $"Release to remove {count} {cardName} from sideboard.";
                 return $"Drag {cardName} to Main Deck or Collection.";
@@ -2015,6 +2062,8 @@ public sealed partial class MainMenuController : MonoBehaviour
             commanders = CloneEntries(source.commanders),
             cards = CloneEntries(source.cards),
             sideboard = CloneEntries(source.sideboard),
+            mainOrder = new List<string>(source.mainOrder ?? new List<string>()),
+            sideboardOrder = new List<string>(source.sideboardOrder ?? new List<string>()),
             companion = DeckCompanion.Copy(source.companion),
             attractions = CloneEntries(source.attractions),
             contraptions = CloneEntries(source.contraptions)

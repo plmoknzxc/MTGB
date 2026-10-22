@@ -40,13 +40,21 @@ public static class CardArtSources
     public static bool TryGet(CardDefinition card, out Entry entry)
     {
         entry = null;
-        return card != null && entries != null && !card.forgeAmbiguous &&
-            entries.TryGetValue(card.PrintingKey, out entry) && entry.name == card.cardName;
+        if(card==null||entries==null||card.forgeAmbiguous)return false;
+        if(entries.TryGetValue(card.PrintingKey,out entry))return entry.name==card.cardName;
+        // Forge's ImageUtil explicitly maps the ☇ printing to the reverse of
+        // the same collector number. Do not use a different printing/name.
+        string key=card.PrintingKey;
+        if(key.EndsWith("☇",StringComparison.Ordinal)&&entries.TryGetValue(key.Substring(0,key.Length-1),out var front)
+            &&front.name==card.cardName&&front.faces?.Length==2&&front.faces[1]!=null){
+            entry=new Entry{key=key,name=card.cardName,language=front.language,faces=new[]{front.faces[1]}};return true;
+        }
+        return false;
     }
 
     public static Uri Url(CardDefinition card, int face, string quality)
     {
-        if (!TryGet(card, out var entry) || face < 0 || face >= entry.faces.Length)
+        if (!TryGet(card, out var entry) || face < 0 || entry.faces==null || face >= entry.faces.Length || entry.faces[face]==null)
             throw new InvalidOperationException("此版本暂无可用的图片来源。");
         var image = entry.faces[face];
         string value = quality == "small" ? image.small : quality == "large" ? image.large : image.normal;

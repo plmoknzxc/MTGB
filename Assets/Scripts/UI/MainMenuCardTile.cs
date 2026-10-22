@@ -23,8 +23,11 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
     private Button increaseButton;
     private GameObject countBadge;
     private Text countBadgeText;
+    private bool singleCopyDisplay;
+    public void SetSingleCopyDisplay(bool single){singleCopyDisplay=single;}
 
     public CardDefinition Card => card;
+    public int CopyOrderIndex { get; set; } = -1;
     public MainMenuCardTileZone Zone => zone;
     public bool QuantityControlsVisible => quantityControls != null && quantityControls.activeSelf;
 
@@ -42,17 +45,17 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
     public void SetCount(int count)
     {
         if (countBadgeText != null) countBadgeText.text = "x" + count;
-        if (countBadge != null) countBadge.SetActive(count > 1 && !QuantityControlsVisible);
+        if (countBadge != null) countBadge.SetActive(!singleCopyDisplay && count > 1 && !QuantityControlsVisible);
     }
 
     public void SetQuantityControls(bool visible, int count, bool canIncrease)
     {
         if (quantityControls == null) return;
-        quantityText.text = "x" + count;
+        quantityText.text = singleCopyDisplay?"1":"x"+count;
         decreaseButton.interactable = count > 0;
         increaseButton.interactable = canIncrease;
         quantityControls.SetActive(visible);
-        if (countBadge != null) countBadge.SetActive(!visible && count > 1);
+        if (countBadge != null) countBadge.SetActive(!singleCopyDisplay && !visible && count > 1);
     }
 
     public void Configure(MainMenuController owner, CardDefinition cardDefinition, MainMenuCardTileZone tileZone)

@@ -50,15 +50,24 @@ public sealed partial class OnlineLobbyPanel
         createChoices.SetActive(false);createRoomButton.onClick.AddListener(()=>createChoices.SetActive(!createChoices.activeSelf));
 
         connectionPageGroup.transform.Find("ConnectionCard").gameObject.SetActive(false);
-        var setup=(RectTransform)connectionPageGroup.transform.Find("MatchSetupCard");Place(setup,new Vector2(0,-28),new Vector2(760,760));
-        setup.Find("Kicker").gameObject.SetActive(false);Place((RectTransform)setup.Find("Heading"),new Vector2(0,327),new Vector2(648,44));
+        var setup=(RectTransform)connectionPageGroup.transform.Find("MatchSetupCard");Place(setup,new Vector2(0,-28),new Vector2(760,860));
+        setup.Find("Kicker").gameObject.SetActive(false);Place((RectTransform)setup.Find("Heading"),new Vector2(0,377),new Vector2(648,44));
         setup.Find("Heading").GetComponent<Text>().text="建立房间";
-        AddText(setup,"RoomNameLabel","房间名称",new Vector2(-238,257),new Vector2(172,28),17,browserFont,TextAnchor.MiddleLeft,MutedTextColor);
-        MoveBrowserField(roomInput,setup,new Vector2(100,257),new Vector2(448,48));
-        setup.Find("RulesHelp").gameObject.SetActive(false);Place((RectTransform)setup.Find("ConnectionStatusPanel"),new Vector2(0,-208),new Vector2(648,92));
-        if(anteToggle!=null)Place((RectTransform)setup.Find("ConnectionStatusPanel"),new Vector2(0,-245),new Vector2(648,70));
-        hostButton.transform.SetParent(setup,false);Place(hostButton.GetComponent<RectTransform>(),new Vector2(170,-319),new Vector2(308,52));
-        AddButton(setup,"BackToBrowser","返回房间列表",new Vector2(-170,-319),new Vector2(308,52),browserFont,PanelColor).onClick.AddListener(BrowserBack);
+        AddText(setup,"RoomNameLabel","房间名称",new Vector2(-238,307),new Vector2(172,28),17,browserFont,TextAnchor.MiddleLeft,MutedTextColor);
+        MoveBrowserField(roomInput,setup,new Vector2(100,307),new Vector2(448,48));
+        foreach(string name in new[]{"LifeLabel","LifeInput","FormatLabel","FormatDropdown","SetsLabel","CardFormatDropdown"})
+            ((RectTransform)setup.Find(name)).anchoredPosition+=new Vector2(0,50);
+        var toggles=new[]{customContentToggle,anteToggle,noShuffleToggle};
+        for(int i=0;i<toggles.Length;i++){
+            var toggle=toggles[i].transform;Place((RectTransform)toggle,new Vector2(0,-5-i*100),new Vector2(648,96));
+            Place((RectTransform)toggle.Find("Label"),new Vector2(-32,24),new Vector2(440,40));
+            Place((RectTransform)toggle.Find("Description"),new Vector2(-5,-26),new Vector2(494,52));
+            Place((RectTransform)toggle.Find("State"),new Vector2(249,24),new Vector2(110,40));
+        }
+        setup.Find("RulesHelp").gameObject.SetActive(false);setup.Find("Divider").gameObject.SetActive(false);
+        Place((RectTransform)setup.Find("ConnectionStatusPanel"),new Vector2(0,-300),new Vector2(648,70));
+        hostButton.transform.SetParent(setup,false);Place(hostButton.GetComponent<RectTransform>(),new Vector2(170,-382),new Vector2(308,52));
+        AddButton(setup,"BackToBrowser","返回房间列表",new Vector2(-170,-382),new Vector2(308,52),browserFont,PanelColor).onClick.AddListener(BrowserBack);
         BindBrowserText(page.transform);
         DrawBrowserRooms();
     }
@@ -125,7 +134,8 @@ public sealed partial class OnlineLobbyPanel
             var titleBinding=title.gameObject.AddComponent<PreferenceText>();titleBinding.Literal=true;titleBinding.FitSingleLineHeight=true;
             string life=room.startingLife>0?DeckCompanion.Text("初始生命 ","Starting life ","初期ライフ ")+room.startingLife:DeckCompanion.Text("生命未提供","Life unavailable","ライフ情報なし");
             string format=RoomFormatLabel(room.format);
-            AddText(row.transform,"Rules",life+" · "+format+" · BO"+room.bestOf,new Vector2(-100,13),new Vector2(792,30),16,browserFont,TextAnchor.MiddleLeft,TextColor);
+            string shuffle=room.rulesVersion>=2?ShuffleRuleLabel(room.noShuffle):DeckCompanion.Text("洗切设置未提供","Shuffle setting unavailable","シャッフル設定不明");
+            AddText(row.transform,"Rules",life+" · "+format+" · BO"+room.bestOf+" · "+shuffle,new Vector2(-100,13),new Vector2(792,30),16,browserFont,TextAnchor.MiddleLeft,TextColor);
             string diy=DeckCompanion.Text("DIY ","DIY ","DIY ")+PermissionLabel(room.allowCustomContent);
             string ante=room.rulesVersion>0?DeckCompanion.Text("赌注 ","Ante ","アンティ ")+PermissionLabel(room.useAnte):DeckCompanion.Text("赌注未提供","Ante unavailable","アンティ情報なし");
             string seats=DeckCompanion.Text("玩家 ","Players ","プレイヤー ")+room.players+"/2 · "+DeckCompanion.Text("观战 ","Spectators ","観戦 ")+room.spectators;
@@ -141,6 +151,21 @@ public sealed partial class OnlineLobbyPanel
         BindBrowserText(roomList);
     }
     private static string PermissionLabel(bool allowed)=>allowed?DeckCompanion.Text("允许","allowed","有効"):DeckCompanion.Text("禁用","disabled","無効");
+    private static string ShuffleRuleLabel(bool enabled)=>DeckCompanion.Text("不洗切：","No shuffle: ","シャッフルなし：")+(enabled?DeckCompanion.Text("开","On","有効"):DeckCompanion.Text("关","Off","無効"));
+    private void UpdateNoShuffleLabel()
+    {
+        if(noShuffleStateText==null||noShuffleToggle==null)return;
+        void Set(string path,string value){
+            var label=noShuffleToggle.transform.Find(path).GetComponent<Text>();
+            (label.GetComponent<PreferenceText>()??label.gameObject.AddComponent<PreferenceText>()).Literal=true;
+            label.text=value;
+        }
+        Set("Label",DeckCompanion.Text("不洗切卡组","Do not shuffle decks","デッキをシャッフルしない"));
+        Set("Description",DeckCompanion.Text("按编辑器保存顺序抓牌；开局、调度和卡牌效果均不打乱牌库。","Draw in saved order. Never shuffle, including mulligans and card effects.","保存順で引きます。開始時・マリガン・カード効果でも混ぜません。"));
+        (noShuffleStateText.GetComponent<PreferenceText>()??noShuffleStateText.gameObject.AddComponent<PreferenceText>()).Literal=true;
+        noShuffleStateText.text=noShuffleToggle.isOn?DeckCompanion.Text("已开启","On","有効"):DeckCompanion.Text("已关闭","Off","無効");
+        noShuffleStateText.color=noShuffleToggle.isOn?LobbyGold:MutedTextColor;
+    }
     private static void BindBrowserText(Transform root)
     {
         foreach(var label in root.GetComponentsInChildren<Text>(true))

@@ -19,6 +19,12 @@ public sealed class TemplateCardFace : MonoBehaviour
     bool sagaLayout;
     public bool Fits { get; private set; }
     Sprite source;
+    ForgeBattlefieldCardPointer hoverPointer;
+    string previewCost,printedCost,previewAdventureCost,printedAdventureCost;
+    float previewDiameter;
+    bool costHovered,hoverCosts;
+    RectTransform hoverCostRoot;
+    TemplateManaCost hoverMain,hoverAdventure;
     static Color Ink=>Color.black;
     static TMP_FontAsset Font(bool heading,bool symbols=false,bool stats=false)
     {
@@ -76,7 +82,7 @@ public sealed class TemplateCardFace : MonoBehaviour
         image.texture=Resources.Load<Texture2D>("UI/CardTemplates/"+resource);image.raycastTarget=false;
     }
     public void Bind(Sprite art,string title,string cost,string type,string rules,string stats,string printed,
-        string adventureTitle,string adventureCost,string adventureType,string adventureRules,string frame,bool small)
+        string adventureTitle,string adventureCost,string adventureType,string adventureRules,string frame,bool small,string adventurePrinted=null,bool allowHoverCosts=false)
     {
         bool adventure=frame.StartsWith("Adventure"),walker=frame.StartsWith("Planeswalker"),saga=frame.StartsWith("Saga"),fourRows=frame.StartsWith("Planeswalker4");
         string key=frame+"/"+small+"/"+!string.IsNullOrEmpty(stats);
@@ -123,6 +129,8 @@ public sealed class TemplateCardFace : MonoBehaviour
             Title.rectTransform.sizeDelta=new Vector2(Mathf.Max(1,Mathf.Min(340,553-symbolsWidth-62)),51);
         }
         BindCost(Cost,cost,symbolSize);
+        previewCost=cost;printedCost=printed;previewAdventureCost=adventureCost;printedAdventureCost=adventurePrinted;previewDiameter=symbolSize;
+        hoverPointer=GetComponentInParent<ForgeBattlefieldCardPointer>();hoverCosts=allowHoverCosts&&!small;
         Rules=design.Find("Rules")?.GetComponent<TextMeshProUGUI>();AdventureTitle=design.Find("AdventureTitle")?.GetComponent<TextMeshProUGUI>();
         AdventureCost=design.Find("AdventureCost")?.GetComponent<TextMeshProUGUI>();AdventureRules=design.Find("AdventureRules")?.GetComponent<TextMeshProUGUI>();
         if(!small) {
@@ -180,6 +188,39 @@ public sealed class TemplateCardFace : MonoBehaviour
             }
             sizes[text]=size;
         }
+        RefreshHoverCosts();
+    }
+    static bool SameCost(string a,string b)
+    {
+        string Clean(string s)=>string.Equals(s,"no cost",System.StringComparison.OrdinalIgnoreCase)?"":Regex.Replace(s??"",@"\s+","").ToUpperInvariant();
+        return Clean(a)==Clean(b);
+    }
+    void RefreshHoverCosts()
+    {
+        costHovered=hoverCosts&&hoverPointer!=null&&hoverPointer.IsHovered;
+        bool main=costHovered&&!SameCost(previewCost,printedCost),adventure=costHovered&&AdventureCost!=null&&!SameCost(previewAdventureCost,printedAdventureCost);
+        if((main||adventure)&&hoverCostRoot==null){
+            hoverCostRoot=new GameObject("HoverDynamicCost",typeof(RectTransform)).GetComponent<RectTransform>();hoverCostRoot.SetParent(transform,false);
+            hoverMain=new GameObject("Main",typeof(RectTransform)).AddComponent<TemplateManaCost>();hoverMain.transform.SetParent(hoverCostRoot,false);
+            hoverAdventure=new GameObject("Adventure",typeof(RectTransform)).AddComponent<TemplateManaCost>();hoverAdventure.transform.SetParent(hoverCostRoot,false);
+        }
+        if(hoverCostRoot!=null){
+            hoverCostRoot.gameObject.SetActive(main||adventure);
+            var box=((RectTransform)transform).rect.size;float width=Mathf.Min(box.x,box.y*595/831f);
+            int count=Regex.Matches(previewCost??"",@"\{[^{}]+\}").Count;
+            int secondaryCount=Regex.Matches(previewAdventureCost??"",@"\{[^{}]+\}").Count;
+            float diameter=Mathf.Min(LegacyCardCost.IconSize(width),(width-12)/Mathf.Max(1,(main?count:0)+(adventure?secondaryCount:0)+(main&&adventure?1:0)));
+            hoverCostRoot.anchorMin=hoverCostRoot.anchorMax=new Vector2(.5f,.5f);hoverCostRoot.sizeDelta=new Vector2(width-12,diameter+4);hoverCostRoot.anchoredPosition=new Vector2(0,width*831/595f/2+diameter/2+2);
+            foreach(var t in new[]{(RectTransform)hoverMain.transform,(RectTransform)hoverAdventure.transform}){t.anchorMin=Vector2.zero;t.anchorMax=Vector2.one;t.offsetMin=t.offsetMax=Vector2.zero;}
+            hoverMain.Bind(main?previewCost:"",diameter);
+            // Keep the two casting faces independent, separated by one glyph.
+            ((RectTransform)hoverAdventure.transform).offsetMax=new Vector2(main?-(count+1)*diameter:0,0);
+            hoverAdventure.Bind(adventure?previewAdventureCost:"",diameter);
+        }
+        float PrintedSize(TextMeshProUGUI label,string fee,float normal)=>Mathf.Min(normal,Mathf.Max(1,label.rectTransform.rect.width/Mathf.Max(1,Regex.Matches(fee??"",@"\{[^{}]+\}").Count)-3));
+        BindCost(Cost,main?printedCost:previewCost,main?PrintedSize(Cost,printedCost,previewDiameter):previewDiameter);
+        Cost.color=main||SameCost(previewCost,printedCost)?Ink:new Color(.08f,.36f,.63f);
+        if(AdventureCost!=null)BindCost(AdventureCost,adventure?printedAdventureCost:previewAdventureCost,adventure?PrintedSize(AdventureCost,printedAdventureCost,30):30);
     }
     // Loyalty costs and Saga chapters are separate semantic rows, not a single
     // paragraph with a numerical prefix. Their badges come from the same PSD.
@@ -241,6 +282,8 @@ public sealed class TemplateCardFace : MonoBehaviour
     }
     static void BindCost(TextMeshProUGUI label,string cost,float diameter)
     {
+        if(string.Equals(cost,"no cost",System.StringComparison.OrdinalIgnoreCase))cost="";
+        label.text=CardSymbolText.Format(cost??"");
         var strip=label.transform.GetComponent<TemplateManaCost>()??label.gameObject.AddComponent<TemplateManaCost>();
         strip.Bind(cost,diameter);
         // Retain the semantic text for the display model and diagnostics.
@@ -254,5 +297,5 @@ public sealed class TemplateCardFace : MonoBehaviour
         if(source!=null)CardArtCrop.Fill(Illustration,source,sagaLayout?new Rect(.5f,.16f,.43f,.73f):new Rect(.078f,.442f,.844f,.445f),1);
     }
     void OnRectTransformDimensionsChange()=>Fit();
-    void LateUpdate(){foreach(var pair in sizes)if(pair.Key!=null)pair.Key.fontSize=pair.Value;}
+    void LateUpdate(){foreach(var pair in sizes)if(pair.Key!=null)pair.Key.fontSize=pair.Value;if(costHovered!=(hoverCosts&&hoverPointer!=null&&hoverPointer.IsHovered))RefreshHoverCosts();}
 }
