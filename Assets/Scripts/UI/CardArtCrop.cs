@@ -11,6 +11,18 @@ public static class CardArtCrop
     public static void Header(RawImage image,Sprite sprite)
         => Fill(image,sprite,new Rect(0,.45f,1,.55f));
 
+    // Split scans store the left half below the right half, both sideways.
+    // Rotate only the illustration, keeping the surrounding choice upright.
+    public static void SplitIllustration(RawImage image,Sprite sprite,bool rightHalf)
+    {
+        var frame=image.rectTransform;
+        var size=frame.rect.size;
+        frame.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,size.y);
+        frame.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,size.x);
+        frame.localRotation=Quaternion.Euler(0,0,-90);
+        Fill(image,sprite,new Rect(.155f,rightHalf?.56f:.10f,.38f,.385f));
+    }
+
     public static void Fill(RawImage image,Sprite sprite,Rect region,float verticalAnchor=.5f)
     {
         image.texture=sprite!=null?sprite.texture:null;

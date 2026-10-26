@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public sealed partial class ForgeBattlefieldController
 {
-    private static bool HasSpellChoices(ForgeStackItem entry)=>entry?.kind=="spell"&&entry.source?.faceDown!=true&&
+    private static bool HasSpellChoices(ForgeStackItem entry)=>entry?.kind=="spell"&&entry.source!=null&&!entry.source.faceDown&&
         ((entry.chosenModes?.Length??0)>0||(entry.castingChoices?.Length??0)>0);
 
     private static string StackManaCost(ForgeCardView card)=>string.IsNullOrEmpty(card?.castingManaCost)?card?.manaCost??"":card.castingManaCost;
@@ -94,6 +94,9 @@ public sealed partial class ForgeBattlefieldController
 
     private string ChosenSpellRules(ForgeStackItem entry)
     {
+        if (IsRedesignLayout && (entry.chosenModes?.Length ?? 0) > 0)
+            return string.Join("\n\n", entry.chosenModes.Where(m => m != null && !string.IsNullOrWhiteSpace(m.description))
+                .Select(m => RedesignChosenModeText(RedesignRulesOrigin(entry), m)));
         if((entry.chosenModes?.Length??0)>0)return string.Join("\n\n",entry.chosenModes.Select(m=>ModeRules(entry.source,new ForgeOption{order=m.order,label=m.description},true).TrimStart(' ','\t','\r','\n','•','・').TrimEnd()));
         string rules=ModeRules(entry.source,new ForgeOption{faceKind=entry.castingChoices?.Any(c=>c.kind=="Evoke")==true?"evoke":"",label=entry.source.currentRules??""},false);
         return entry.castingChoices?.Any(c=>c.kind=="Overload")==true?OverloadedSpellRules(rules,entry.source.name):rules;

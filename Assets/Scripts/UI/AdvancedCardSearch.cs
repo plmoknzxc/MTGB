@@ -140,6 +140,18 @@ public sealed class AdvancedCardSearch
                 : (CardSearchMetadata.Get(b)?.released ?? 0).CompareTo(CardSearchMetadata.Get(a)?.released ?? 0);
             return n != 0 ? n : string.CompareOrdinal(a.PrintingKey, b.PrintingKey);
         });
-        if (Unique) { var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase); results.RemoveAll(c => !seen.Add(c.cardName ?? c.PrintingKey)); }
+        if (Unique)
+        {
+            // OM1 is an alternate treatment of SPM. Prefer the paper original
+            // only when it also passed the query; an OM1-only search stays OM1.
+            var originals = results.Where(c => c.setCode == "SPM")
+                .GroupBy(c => c.cardName ?? c.PrintingKey, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < results.Count; i++)
+                if (results[i].setCode == "OM1" && originals.TryGetValue(results[i].cardName ?? results[i].PrintingKey, out var original))
+                    results[i] = original;
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            results.RemoveAll(c => !seen.Add(c.cardName ?? c.PrintingKey));
+        }
     }
 }

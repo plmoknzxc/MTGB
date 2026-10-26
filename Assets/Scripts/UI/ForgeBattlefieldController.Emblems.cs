@@ -103,8 +103,9 @@ public sealed partial class ForgeBattlefieldController
     {
         var markers=VisibleEffectMarkers(player).Concat(own?view.globalEffects??Array.Empty<ForgeCardView>():Array.Empty<ForgeCardView>()).ToArray();
         bool State(ForgeCardView card)=>card.markerKind!="delayed"&&!string.IsNullOrEmpty(card.helperArtName);
-        PresentMarkerLane(player,own,"States",markers.Where(State).ToArray(),own?200:-200);
-        PresentMarkerLane(player,own,"Emblems",(player.emblems??Array.Empty<ForgeCardView>()).Concat(markers.Where(c=>!State(c))).ToArray(),own?314:-314);
+        float manaReserve = IsRedesignLayout ? RedesignPlayerManaReserve : 0;
+        PresentMarkerLane(player,own,"States",markers.Where(State).ToArray(),(own?1:-1)*(200+manaReserve));
+        PresentMarkerLane(player,own,"Emblems",(player.emblems??Array.Empty<ForgeCardView>()).Concat(markers.Where(c=>!State(c))).ToArray(),(own?1:-1)*(314+manaReserve));
     }
     private void PresentMarkerLane(ForgePlayerView player,bool own,string lane,ForgeCardView[] markers,float y)
     {

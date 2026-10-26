@@ -6,6 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasRenderer))]
 public sealed class ExperienceCounterIcon : MaskableGraphic
 {
+    public bool SmoothEdges;
     static readonly Vector2[] Rim={new Vector2(-14,10),new Vector2(-5,10),new Vector2(-2,8),new Vector2(-3,5),new Vector2(0,2),new Vector2(3,5),new Vector2(2,8),new Vector2(5,10),new Vector2(14,10),new Vector2(12,5),new Vector2(11,3),new Vector2(11,-3),new Vector2(9,-7),new Vector2(0,-12),new Vector2(-9,-7),new Vector2(-11,-3),new Vector2(-11,3),new Vector2(-12,5)};
     protected override void OnPopulateMesh(VertexHelper vh)
     {
@@ -15,6 +16,10 @@ public sealed class ExperienceCounterIcon : MaskableGraphic
     }
     void Line(VertexHelper vh,Vector2 a,Vector2 b,float scale)
     {
+        if (SmoothEdges) {
+            BattlefieldUiStroke.Line(vh, a * scale, b * scale, .95f * scale, color, .65f / Mathf.Max(.1f, canvas.scaleFactor));
+            return;
+        }
         Vector2 normal=new Vector2(-(b-a).y,(b-a).x).normalized*.95f;int start=vh.currentVertCount;
         vh.AddVert((a+normal)*scale,color,Vector2.zero);vh.AddVert((b+normal)*scale,color,Vector2.zero);
         vh.AddVert((b-normal)*scale,color,Vector2.zero);vh.AddVert((a-normal)*scale,color,Vector2.zero);

@@ -29,7 +29,7 @@ public sealed partial class OnlineLobbyPanel
         {
             var card = side.Find(name);
             Place((RectTransform)card, new Vector2(name == "MainDeckCard" ? -430 : 430, 12), new Vector2(820, 704));
-            Place((RectTransform)card.Find("Heading"), new Vector2(0, 312), new Vector2(740, 40));
+            Place((RectTransform)card.Find("Heading"), new Vector2(0, 318), new Vector2(740, 60));
             Place((RectTransform)card.Find(name == "MainDeckCard" ? "MainDeckScroll" : "SideboardScroll"), new Vector2(0, -24), new Vector2(780, 610));
         }
         Place(resetSideboardButton.GetComponent<RectTransform>(), new Vector2(375, -391), new Vector2(260, 54));

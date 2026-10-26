@@ -35,6 +35,7 @@ public sealed partial class ForgeBattlefieldController
         var row=Panel(surface,name,Vector2.zero,new Vector2(240,68),Color.clear);
         row.gameObject.AddComponent<RectMask2D>();var scroll=row.gameObject.AddComponent<BattlefieldHorizontalScroll>();
         scroll.hidePartialChildren=true;
+        scroll.smoothIcons=IsRedesignLayout;
         var content=Rect(row,"Content",Vector2.zero,row.sizeDelta);
         content.anchorMin=content.anchorMax=content.pivot=new Vector2(0,1);
         scroll.viewport=row;scroll.content=content;return row;
@@ -89,6 +90,7 @@ public sealed partial class ForgeBattlefieldController
         int rows=1,columns=entries.Length,visible=Mathf.Min(5,Mathf.Max(1,columns));
         float sideWidth=Mathf.Min(500,Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560))*.38f);
         float width=Mathf.Min(sideWidth-64,visible*stride),height=Mathf.Max(34,34*GamePreferences.TextScale);
+        if (IsRedesignLayout) width = Mathf.Min(310, visible * stride);
         PlacePlayerMana(row,player?.seat??seat,width,height);row.gameObject.SetActive(entries.Length>0);
         scroll.content.sizeDelta=new Vector2(Mathf.Max(width,columns*stride),height);scroll.Configure(stride);
         for(int i=0;i<entries.Length;i++) {
@@ -97,6 +99,28 @@ public sealed partial class ForgeBattlefieldController
             ((RectTransform)cell.root.Find("Symbol")).anchoredPosition=new Vector2(-stride*.5f+17,3);
             cell.count.rectTransform.anchoredPosition=new Vector2(-stride*.5f+31,-2);
             cell.count.rectTransform.pivot=new Vector2(0,.5f);cell.count.rectTransform.sizeDelta=new Vector2(stride-32,26);
+        }
+        if (IsRedesignLayout && entries.Length>0) {
+            // Measure each number independently: identical symbol-to-number and
+            // number-to-next-symbol gaps, instead of padding every cell to 23's width.
+            float glyphWidth=Mathf.Max(26,22*GamePreferences.TextScale);
+            float[] widths=entries.Select(e=>glyphWidth+4+Mathf.Ceil(cells[e.id].count.preferredWidth)+10).ToArray();
+            float firstFive=widths.Take(5).Sum(), viewportWidth=Mathf.Min(310,firstFive);
+            float[] starts=new float[entries.Length];float x=0;
+            for(int i=0;i<entries.Length;i++) {
+                starts[i]=x;var cell=cells[entries[i].id];float cellWidth=widths[i];
+                cell.root.sizeDelta=new Vector2(cellWidth,height);
+                cell.root.anchoredPosition=new Vector2(x+cellWidth*.5f,-height*.5f);
+                var symbol=(RectTransform)cell.root.Find("Symbol");
+                symbol.sizeDelta=new Vector2(glyphWidth,Mathf.Max(28,28*GamePreferences.TextScale));
+                symbol.anchoredPosition=new Vector2(-cellWidth*.5f+glyphWidth*.5f,0);
+                cell.count.rectTransform.anchoredPosition=new Vector2(-cellWidth*.5f+glyphWidth+4,-2);
+                cell.count.rectTransform.sizeDelta=new Vector2(cellWidth-glyphWidth-4,26*GamePreferences.TextScale);
+                x+=cellWidth;
+            }
+            PlacePlayerMana(row,player?.seat??seat,viewportWidth,height);
+            scroll.content.sizeDelta=new Vector2(Mathf.Max(viewportWidth,x),height);
+            scroll.Configure(widths[0]);scroll.ConfigureColumns(starts);
         }
     }
     private void PresentManaPool()
@@ -112,6 +136,13 @@ public sealed partial class ForgeBattlefieldController
     private void PlacePlayerMana(RectTransform row,int playerSeat,float width,float height)
     {
         row.SetSiblingIndex(Node("CornerCluster").GetSiblingIndex());
+        if (IsRedesignLayout)
+        {
+            bool own = playerSeat == seat;
+            RedesignPlace(row, own ? Vector2.zero : new Vector2(0, 1), Vector2.one * .5f,
+                new Vector2(205, own ? 194 : -242), new Vector2(width, height));
+            return;
+        }
         row.anchorMin=row.anchorMax=new Vector2(.5f,.5f);row.pivot=new Vector2(.5f,.5f);
         // Keep the pool just outside the support lane, towards its player's hand.
         float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));

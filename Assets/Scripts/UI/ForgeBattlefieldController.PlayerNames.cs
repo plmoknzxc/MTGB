@@ -6,9 +6,17 @@ using UnityEngine.UI;
 public sealed partial class ForgeBattlefieldController
 {
     // Presentation only. All selection and ownership continue to use native IDs.
+    private string PlayerNickname(int playerSeat)=>service?.LobbyState?.players?.FirstOrDefault(p=>p!=null&&p.seat==playerSeat)?.displayName;
+    private string PlayerIdentityName(int playerSeat)
+    {
+        string name=PlayerNickname(playerSeat);
+        if(!string.IsNullOrWhiteSpace(name))return name;
+        return playerSeat>0?TapPaymentText("玩家 ","Player ","プレイヤー ")+playerSeat
+            :TapPaymentText("未知玩家","Unknown player","不明なプレイヤー");
+    }
     private string PlayerDisplayName(int playerSeat)
     {
-        string name=service?.LobbyState?.players?.FirstOrDefault(p=>p!=null&&p.seat==playerSeat)?.displayName;
+        string name=PlayerNickname(playerSeat);
         if(!string.IsNullOrWhiteSpace(name))return name;
         if(playerSeat==seat&&service?.IsSpectator!=true)return TapPaymentText("你","You","あなた");
         if(service?.IsSpectator!=true&&playerSeat>0&&(view?.players?.Length??2)<=2)
@@ -40,6 +48,13 @@ public sealed partial class ForgeBattlefieldController
     // Carry native identity through generated prose without adding visible IDs.
     private static string PlayerTextReference(int playerSeat)=>"\uE000"+playerSeat+"\uE001";
 
+    // Role words in rules prose are not player nicknames. An explicit native
+    // player reference can still identify a real nickname that equals one.
+    private static readonly System.Collections.Generic.HashSet<string> playerRoleWords=new(StringComparer.OrdinalIgnoreCase) {
+        "你","我","对手","自己","你的","我的","you","your","yours","yourself","yourselves",
+        "I","me","my","mine","myself","opponent","opponents","あなた","私","わたし","自分","相手","対戦相手"
+    };
+
     // The surrounding fixed words have already been localized. A nickname is
     // literal user data, even if it happens to equal a key such as "Ready".
     private string PlayerNamesRichText(string value,int exactSeat=0)
@@ -47,7 +62,7 @@ public sealed partial class ForgeBattlefieldController
         value=value??"";
         bool colors=service?.IsSpectator!=true&&(view?.players?.Length??0)==2;
         string Color(int player)=>player==seat?"#5DB9F5":"#F17C7C";
-        if(exactSeat>0)return colors?ColoredDetail(value,Color(exactSeat)):SafeDetail(value);
+        if(exactSeat>0)return colors&&!string.IsNullOrWhiteSpace(PlayerNickname(exactSeat))?ColoredDetail(value,Color(exactSeat)):SafeDetail(value);
         var references=System.Text.RegularExpressions.Regex.Matches(value,"\uE000([0-9]+)\uE001");
         if(references.Count>0) {
             var resolved=new System.Text.StringBuilder();int from=0;
@@ -60,7 +75,8 @@ public sealed partial class ForgeBattlefieldController
             return resolved.Append(PlayerNamesRichText(value.Substring(from))).ToString();
         }
         if(!colors)return SafeDetail(value);
-        var names=view.players.Where(p=>p.seat>0).Select(p=>new{p.seat,name=PlayerDisplayName(p.seat)})
+        var names=view.players.Where(p=>p.seat>0).Select(p=>new{p.seat,name=PlayerNickname(p.seat)})
+            .Where(p=>!string.IsNullOrWhiteSpace(p.name)&&!playerRoleWords.Contains(p.name))
             .GroupBy(p=>p.name).Where(g=>g.Count()==1).Select(g=>g.First()).OrderByDescending(p=>p.name.Length).ToArray();
         if(names.Length==0)return SafeDetail(value);
         string pattern=string.Join("|",names.Select(p=>

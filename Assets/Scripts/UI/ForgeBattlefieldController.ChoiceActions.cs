@@ -72,10 +72,22 @@ public sealed partial class ForgeBattlefieldController
         advance.GetComponentInChildren<Text>().text = TapPaymentText("下一步","Next","次へ");
         advance.onClick.RemoveAllListeners();advance.onClick.AddListener(()=>Choose(next,captured));
         advance.interactable = canAct && !submitted && next >= 0 && !view.request.options[next].disabled;
-        var rect = (RectTransform)advance.transform;float width = cancel >= 0 ? 89 : 184;
-        rect.anchoredPosition = new Vector2(cancel >= 0 ? -47.5f : 0,0);rect.sizeDelta = new Vector2(width,54);
-        ((RectTransform)rect.Find("Face")).sizeDelta = new Vector2(width,54);
-        advance.GetComponentInChildren<Text>().rectTransform.sizeDelta = new Vector2(width-8,50);
+        // Preserve the selected font size: localized captions determine the
+        // paired control widths, anchored to the same right edge as before.
+        float Fit(Button button,float minimum){
+            var label=button.GetComponentInChildren<Text>();label.horizontalOverflow=HorizontalWrapMode.Overflow;
+            float width=Mathf.Max(minimum,Mathf.Ceil(label.preferredWidth)+16);
+            var rect=(RectTransform)button.transform;rect.sizeDelta=new Vector2(width,54);
+            ((RectTransform)rect.Find("Face")).sizeDelta=new Vector2(width,54);
+            label.rectTransform.sizeDelta=new Vector2(width-8,50);label.horizontalOverflow=HorizontalWrapMode.Wrap;
+            return width;
+        }
+        float advanceWidth=Fit(advance,cancel>=0?89:184),declineWidth=cancel>=0?Fit(decline,89):0;
+        float total=advanceWidth+(cancel>=0?declineWidth+6:0);
+        targetChoiceActions.sizeDelta=new Vector2(total,54);
+        targetChoiceActions.anchoredPosition=new Vector2(140-total*.5f,-20);
+        ((RectTransform)advance.transform).anchoredPosition=new Vector2(-total*.5f+advanceWidth*.5f,0);
+        ((RectTransform)decline.transform).anchoredPosition=new Vector2(total*.5f-declineWidth*.5f,0);
         RefreshDockActionColor(advance);RefreshDockActionColor(decline);
     }
 }

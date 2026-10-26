@@ -1,5 +1,4 @@
 id	mode	priority	title	families	boundary
-A01	audit	P0	复核未登记机制与已有测试		A01.01有界接入差异筛查：保留共享复用，确认是否仍有新请求/权限/隐藏信息/LKI身份/恢复分支；不逐卡重跑，补测数量未确定。
 R02	reuse	P0	请求恢复与真实网络时序	priority,opening,control,piles,random,combat,targets	R02.01审查、R02.02真实传输竞争及类型等待恢复、R02.03实际部分付款和宽限结果已完成；仅R02.04跨机器验证环境/突发房间容量决定仍开放。原dedicated/LAN队列和起手证明保留，本次localhost不是远程WAN/全部网络PASS；真实付款资源代表为普通mana，其他原生资源合同复用R12/R36原证据。见network-boundaries-1010/audit.json。 N57用户明确后置本包剩余事项；原编号/原证明保留，不算通过。
 R37	reuse	P1	多方轮序与额外回合	control	R37.01原反转/额外/跳过回合阶段和结束回合的原生轮序、期限/来源/后继权限已完成，R37.02原生命周期与当前双人终局绑定已完成；仅R37.03生产四人客户端/大厅/战场及指挥官支持范围仍待决定。NoSchemes模式专属原结果与入口义务完整保留A01.01 scheme-set-abandon-lifecycle，不授模式PASS；真实远程网络归R02、当前全局依赖归A06。见turn-wheel-1010/audit.json。 用户2026-10-11明确排除当前goal：R37.03生产四人/指挥官及专属边界保存scope-exclusions.json，不作为本次完成门槛。
 R49	reuse	P1	未登记机制族代表场景	faces,prepared,state,trigger,combat	R49.01原命名族定位与R49.02原10引用/8身份接收审查完成。8项入口/支持范围/实际结果归A01、依赖归A06；全部原生产者/断言保留，无变体排除或效果通过。

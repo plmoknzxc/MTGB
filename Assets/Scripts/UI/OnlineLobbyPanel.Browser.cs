@@ -78,6 +78,7 @@ public sealed partial class OnlineLobbyPanel
     }
     private void SaveBrowserIdentity()
     {
+        if(!ValidatePlayerName())return;
         var profile=OnlineClientProfileStore.Load(profileInput.text);
         OnlineClientProfileStore.SaveConnection(profileInput.text,addressInput.text,ushort.TryParse(portInput.text,out var port)&&port>0?port:profile.port,nameInput.text,profile.roomId);
     }
@@ -175,6 +176,7 @@ public sealed partial class OnlineLobbyPanel
     private async void BeginRoomCreation(bool server)
     {
         if(browsing||OnlineMatchService.Instance?.IsOnline==true)return;
+        if(!ValidatePlayerName())return;
         createChoices.SetActive(false);if(!BrowserPort(out var port))return;
         int generation=++browserGeneration;serverRoom=server;createRoomButton.interactable=false;
         if(server) {
@@ -189,6 +191,7 @@ public sealed partial class OnlineLobbyPanel
     }
     private void CreateSelectedRoom()
     {
+        if(!ValidatePlayerName())return;
         if(!BrowserPort(out var port))return;
         if(string.IsNullOrWhiteSpace(roomInput.text)){connectionStatusText.text="请输入房间名称。";return;}
         SaveBrowserIdentity();
@@ -199,6 +202,7 @@ public sealed partial class OnlineLobbyPanel
     private void JoinListedRoom(OnlineRoomListing room)
     {
         if(OnlineMatchService.Instance?.IsOnline==true)return;
+        if(!ValidatePlayerName())return;
         createChoices.SetActive(false);SaveBrowserIdentity();
         OnlineMatchService.EnsureInstance().Connect(room.address,(ushort)room.port,nameInput.text,profileInput.text,room.roomId,null,HasRoomCredential(room)?"join":room.inMatch||room.players>=2?"spectate":"join");Refresh();
     }

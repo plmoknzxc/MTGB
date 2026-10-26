@@ -28,3 +28,14 @@ python Tools/ForgeBridge/Export-SearchMetadata.py
 ## 验证
 
 Unity 菜单 `MTGB/验证/卡牌/高级搜索` 运行组合条件、译名、背面名称、虚色/颜色标识、同面数值、非法输入、重印去重和整库扫描验证。结果位于 `SessionState["AdvancedSearch.Validation"]`。
+
+
+## 2026-10-23 OM1 异画与合并显示
+
+OM1（穿越预兆路）与 SPM 原版在本地已共享 Forge 牌名及 oracleID，CardArtVersions 会把两者放在同一异画列表。原“每张卡只显示一个版本”直接保留结果中首项，究极蜘蛛侠实际默认得到 OM1/140；该行为不能由“默认平台是纸质”推定，因为普通列表未应用高级条件、或平台包含MO时，仍有合并代表选择的问题。
+
+本次只改 AdvancedCardSearch.Order 的 Unique 分支：当前查询结果同时包含同名 SPM 和 OM1 时，以结果内的 SPM 替换 OM1 代表，再按原有同名去重。没有从查询之外补牌；明确只筛OM1时仍保留OM1。全部版本模式仍展示全部，平台筛选默认纸质及其元数据保持，异画菜单仍可选OM1。不改卡牌身份、牌组、原生费用或规则。
+
+证据 `.tools/om1-art-1023/`：Unity 实际加载本地卡库，189个OM1印次均有SPM对应。四种排序的合并代表、仅OM1、全部版本及异画分组共1323项通过；Play模式语言资源Ready后，实际筛选查询3项通过：默认纸质/全平台选择SPM/155，仅OM1+MO选择OM1/140。查询条件中没有偷偷切换平台。小范围算法与真实数据检查，不授予整个高级搜索或原生效果通过。
+
+旧 AdvancedSearchValidation 整套校验另有驱动限制：首次Edit模式GamePreferences.Ready=false导致平台检查失败；进入Play并等Ready后，旧“Japanese search”仍假设非当前语言也可搜索，而当前实现只查已加载语言，失败原件保留为 `edit-mode-not-ready-advanced-results.txt` 和 `legacy-validation-current-locale-failure.txt`。本批不修改该历史驱动、不声称整套通过；新专项与查询证明独立。仅客户端源码修复，尚未打包覆盖或发布Git。

@@ -1573,6 +1573,101 @@
         "path": ".tools/name-consumer-delta-1012/audit.json",
         "sha256": "e2572e50ba312a70f5fc7bf974728f1cdfb3b4909b1b9bf90fa0d325bbce8d62"
       }
+    },
+    {
+      "id": "duel-brawl-format-presentation-increment",
+      "type": "Duel Commander/Arena Brawl lobby, command zone and separated playable sources",
+      "result": ".tools/duel-brawl-integration-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries",
+        "permission-lifecycle",
+        "replacements"
+      ],
+      "assertions": "Actual native snapshots through IntegratedBattlefield; EventSystem source/commander/companion drags, return/replacement decisions and public browsers; three locale/font settings, dense two-row clearance, native source transitions and real hand-payment recovery; actual lobby replacement and editor role bans; both recipients/spectators see commander plus companion, live transfer removes exact ID and old replay fallback works; 1024x768/1366x768/1920x1080. Exact completed prefixes and delta results retained; UI replay is not native effect or UTP proof.",
+      "audit": {
+        "path": ".tools/duel-brawl-integration-1024/audit.json",
+        "sha256": "14893723ff28ea1f9f7b6748ac5cb328c3523188f703d2ac687b6061a764793a"
+      }
+    },
+    {
+      "id": "commander-card-context-presentation-increment",
+      "type": "Commander chooser, free cast tax and Command-source discard context",
+      "result": ".tools/commander-settlement-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries",
+        "permission-lifecycle"
+      ],
+      "assertions": "Actual native messages replayed in IntegratedBattlefield with EventSystem rays for commander choice, payment/cancel and discard. Completed single-card request uses actual production completion policy plus controller submission callback in isolated replay; no new authenticated session/transport claim.",
+      "audit": {
+        "path": ".tools/commander-settlement-1024/audit.json",
+        "sha256": "bdec68b0efe8171c6b8e258f3788115012198f5d210f195ab6e22314123571fa"
+      }
+    },
+    {
+      "id": "commander-rule-boundary-presentation-increment",
+      "type": "Owner-controlled commander return, ninjutsu and lost ability recast",
+      "result": ".tools/commander-boundaries-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries",
+        "permission-lifecycle"
+      ],
+      "assertions": "Actual native owner-seat 2/seat 1 returns, destroy/reanimate choice before SBA, command activation drag, ninjutsu return payment/owner replacement/cancel, and lost-ability normal recast. Three locales, large font; independent EventSystem replay, not new authenticated transport.",
+      "audit": {
+        "path": ".tools/commander-boundaries-1024/audit.json",
+        "sha256": "965ea96f1c17f0c4ab01220b2c0087f3ebc3ee3c1737bee31d13899a23e3dc1c"
+      }
+    },
+    {
+      "id": "arena-commander-perpetual-reset-increment",
+      "type": "Arena commander owner all-perpetual reset confirmation",
+      "result": ".tools/commander-perpetual-reset-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries"
+      ],
+      "assertions": "Actual native remove/keep, owner seat 2 and hand-return replacement confirmations. Three locales at 1.3 scale, native options and EventSystem clicks; independent UI replay.",
+      "audit": {
+        "path": ".tools/commander-perpetual-reset-1024/audit.json",
+        "sha256": "a0e457c1b562de6893198c5c6613e0946e1e28cfa574f1aec883c9628071ef85"
+      }
+    },
+    {
+      "id": "stolen-transformed-commander-owner-increment",
+      "type": "Original-owner commander choice after theft and noncreature type changes",
+      "result": ".tools/commander-stolen-types-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries"
+      ],
+      "assertions": "Three real owner-seat2 Graveyard/Exile requests; accept/decline exact actions, former controller read-only; Chinese large font, prior three-language contract reused. Independent UI replay.",
+      "audit": {
+        "path": ".tools/commander-stolen-types-1024/audit.json",
+        "sha256": "bb368498832647196b49abf7b268fbd5f8655cbaa162b57ac98908fa4ef723d2"
+      }
+    },
+    {
+      "id": "commander-perpetual-reset-wording-increment",
+      "type": "Clearer commander perpetual-modification confirmation",
+      "result": ".tools/commander-reset-wording-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries"
+      ],
+      "assertions": "18 presentations and actual ok/cancel ray clicks; three locales x small/standard/large font, full instruction at selected size, button labels/title/screen bounds. Independent UI replay; native results retained, no repeated paid operation.",
+      "audit": {
+        "path": ".tools/commander-reset-wording-1024/audit.json",
+        "sha256": "9385b93ff42d69a2ab5aac4d99ab0288234487880cded7d6a25faca7fa713af9"
+      }
+    },
+    {
+      "id": "commander-perpetual-reset-concise-increment",
+      "type": "Concise commander reset question",
+      "result": ".tools/commander-reset-short-1024/ui-result.txt",
+      "engineJobs": [
+        "opening-boundaries"
+      ],
+      "assertions": "Three locales, short instruction fits, explicit unchanged buttons and exact native clicks. Prior three-size layout result reused.",
+      "audit": {
+        "path": ".tools/commander-reset-short-1024/audit.json",
+        "sha256": "f8a7119da42d53a129d50118e7aa4e1d31dda86b7549ccd578ad2f9658ec22a9"
+      }
     }
   ],
   "families": [

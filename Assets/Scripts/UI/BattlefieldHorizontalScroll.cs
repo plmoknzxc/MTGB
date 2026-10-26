@@ -8,6 +8,8 @@ public sealed class BattlefieldHorizontalScroll : ScrollRect
 {
     public float columnWidth=96;
     public bool hidePartialChildren;
+    public bool smoothIcons;
+    private float[] columnStarts;
     private float target;
     private bool settling;
     private RectTransform navigation;
@@ -15,6 +17,7 @@ public sealed class BattlefieldHorizontalScroll : ScrollRect
     public void Configure(float stride)
     {
         columnWidth=Mathf.Max(1,stride);horizontal=true;vertical=false;
+        columnStarts=null;
         inertia=false;movementType=MovementType.Clamped;
         velocity=Vector2.zero;
         if(content!=null) {
@@ -23,19 +26,31 @@ public sealed class BattlefieldHorizontalScroll : ScrollRect
             if(settling)target=Mathf.Clamp(target,0,Travel);
         }
     }
+    public void ConfigureColumns(float[] starts) => columnStarts=starts;
+    private float NextColumn(float offset,int direction)
+    {
+        if(columnStarts==null)return offset+direction*columnWidth;
+        if(direction>0){foreach(float x in columnStarts)if(x>offset+.5f)return x;return Travel;}
+        for(int i=columnStarts.Length-1;i>=0;i--)if(columnStarts[i]<offset-.5f)return columnStarts[i];
+        return 0;
+    }
     private float Travel=>content==null||viewport==null?0:Mathf.Max(0,content.rect.width-viewport.rect.width);
     public override void OnBeginDrag(PointerEventData data){settling=false;base.OnBeginDrag(data);}
     public override void OnEndDrag(PointerEventData data)
     {
         base.OnEndDrag(data);velocity=Vector2.zero;
-        SetTarget(Mathf.Round(-content.anchoredPosition.x/columnWidth)*columnWidth);
+        float offset=-content.anchoredPosition.x;
+        float previous=NextColumn(offset,-1),next=NextColumn(offset,1);
+        if(columnStarts!=null)foreach(float x in columnStarts)if(Mathf.Abs(x-offset)<.5f){SetTarget(x);return;}
+        SetTarget(columnStarts==null?Mathf.Round(offset/columnWidth)*columnWidth:offset-previous<next-offset?previous:next);
     }
     public override void OnScroll(PointerEventData data)
     {
         if(!IsActive()||Travel<=0)return;
         float delta=Mathf.Abs(data.scrollDelta.x)>Mathf.Abs(data.scrollDelta.y)?data.scrollDelta.x:-data.scrollDelta.y;
         if(Mathf.Abs(delta)<.001f)return;
-        SetTarget((settling?target:-content.anchoredPosition.x)+Mathf.Clamp(delta,-1,1)*columnWidth);
+        float offset=settling?target:-content.anchoredPosition.x;
+        SetTarget(columnStarts==null?offset+Mathf.Clamp(delta,-1,1)*columnWidth:NextColumn(offset,delta>0?1:-1));
     }
     private void SetTarget(float value){target=Mathf.Clamp(value,0,Travel);settling=true;}
     private Button NavigationButton(string name,float anchor,string glyph,int direction)
@@ -46,9 +61,9 @@ public sealed class BattlefieldHorizontalScroll : ScrollRect
         var outline=root.AddComponent<Outline>();outline.effectDistance=new Vector2(1,-1);outline.effectColor=new Color(.4f,.69f,.8f,.8f);
         var button=root.GetComponent<Button>();button.targetGraphic=image;button.transition=Selectable.Transition.ColorTint;
         var colors=button.colors;colors.highlightedColor=new Color(1.4f,1.4f,1.4f);colors.disabledColor=new Color(.5f,.5f,.5f,.65f);colors.fadeDuration=.1f;button.colors=colors;
-        button.onClick.AddListener(()=>SetTarget((settling?target:-content.anchoredPosition.x)+direction*columnWidth));
+        button.onClick.AddListener(()=>SetTarget(NextColumn(settling?target:-content.anchoredPosition.x,direction)));
         var label=new GameObject("Chevron",typeof(RectTransform),typeof(BattlefieldScrollChevron));label.transform.SetParent(root.transform,false);
-        var text=label.GetComponent<BattlefieldScrollChevron>();text.direction=direction;text.color=new Color(.8f,.93f,.98f);text.raycastTarget=false;
+        var text=label.GetComponent<BattlefieldScrollChevron>();text.direction=direction;text.SmoothEdges=smoothIcons;text.color=new Color(.8f,.93f,.98f);text.raycastTarget=false;
         var labelRect=(RectTransform)label.transform;labelRect.anchorMin=Vector2.zero;labelRect.anchorMax=Vector2.one;labelRect.offsetMin=labelRect.offsetMax=Vector2.zero;
         return button;
     }

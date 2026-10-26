@@ -27,27 +27,28 @@ public sealed partial class ForgeBattlefieldController
         if(item.source==null)return;
         InspectIntegratedCore(item.source,item.entry?.kind=="spell");
         inspectedCardId=0; // Stack ability details must not be replaced by its source land.
+        string detailRules=SceneText("InspectPanel/Rules").text;
         if(item.entry!=null && item.entry.kind!="spell") {
             string rules=NamedAbilityEffectText(item.source,item.entry.description);
             if((item.entry.targets?.Length??0)>0) {
                 string targetLine="\n"+TapPaymentText("目标：","Targets: ","対象：");
                 int at=rules.LastIndexOf(targetLine,StringComparison.Ordinal);if(at>=0)rules=rules.Substring(0,at);
             }
-            SetText("InspectPanel/Rules",PlayerNamesRichText(rules));
-            LayoutInspectPanel(item.source,item.tile);
+            detailRules=PlayerNamesRichText(rules);
         }
         if(HasSpellChoices(item.entry)) {
-            SetText("InspectPanel/Rules",ChosenSpellHeading(item.entry)+"\n"+ChosenSpellRules(item.entry));
-            LayoutInspectPanel(item.source,item.tile);
-            var art=Node("InspectPanel/Art").GetComponent<Image>();
-            PresentChosenSpellFace((RectTransform)art.transform,item.entry,art.sprite);
+            detailRules=ChosenSpellRules(item.entry);
         }
-        else {
-            var art=Node("InspectPanel/Art").GetComponent<Image>();
-            PresentChosenSpellFace((RectTransform)art.transform,item.entry,art.sprite);
-        }
+        string metadata=RedesignStackEffect(item.entry,"");
+        SetText("InspectPanel/Rules",string.IsNullOrWhiteSpace(metadata)?detailRules:metadata.Trim()+"\n\n"+detailRules);
         inspectedStackTargets=item.entry?.targets;
-        LayoutInspectPanel(item.source,item.tile);
+        LayoutInspectPanel(item.source,item.tile,IsRedesignLayout);
+        if(!IsRedesignLayout){
+            // Build an editable stack face only after its final art dimensions.
+            // The redesign inspector keeps the original scan and one text body.
+            var art=Node("InspectPanel/Art").GetComponent<Image>();
+            PresentChosenSpellFace((RectTransform)art.transform,item.entry,art.sprite);
+        }
     }
     private void PresentAbilityOrder()
     {
@@ -144,6 +145,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentStackCards()
     {
+        if (IsRedesignLayout) redesignStackOffset = stackContent.anchoredPosition.y;
         const float cardWidth=240,cardHeight=335,rowHeight=389;
         var entries=view?.stackItems ?? Array.Empty<ForgeStackItem>();
         var text=view?.stack ?? Array.Empty<string>();
@@ -203,6 +205,7 @@ public sealed partial class ForgeBattlefieldController
             string id=i<entries.Length?"id:"+entries[i].id:"text:"+i+":"+text[i];
             retained.Add(id);
             bool created=!stackCards.TryGetValue(id,out var item);
+            if(created && IsRedesignLayout && RestoreRedesignStack(id,out item))created=false;
             float fraction=count>1?i/(float)(count-1):0;
             Vector2 position=new Vector2(spread*.5f-fraction*spread,-(1-fraction)*depth-44);
             if(created)
@@ -224,6 +227,7 @@ public sealed partial class ForgeBattlefieldController
                 item.fallback.raycastTarget=false;
                 var button=item.tile.gameObject.AddComponent<Button>();button.targetGraphic=item.image;button.transition=Selectable.Transition.None;
                 var captured=item;button.onClick.AddListener(()=>{
+                    if (IsRedesignLayout) { SelectRedesignStack(captured.entry); return; }
                     if(IsTargeting && !HasStackTargetChoices && captured.entry!=null){Choose(OptionIndex("stack:"+captured.entry.id),requestId);return;}
                 });
                 item.tile.gameObject.AddComponent<ForgeBattlefieldCardPointer>().Configure(()=>{
@@ -255,7 +259,7 @@ public sealed partial class ForgeBattlefieldController
                 else if(!string.IsNullOrEmpty(printing) && catalog.TryGetValue(printing,out var definition))CardImageLibrary.TryLoadFullCard(definition,source.backFace?1:0,out art);
                 item.image.sprite=art;item.image.color=art!=null?Color.white:Ink;
             }
-            item.fallback.text=source?.name ?? (i<text.Length?text[i]:"堆叠");
+            item.fallback.text=IsRedesignLayout&&source?.faceDown==true?RedesignStackEffect(item.entry,""):source?.name ?? (i<text.Length?text[i]:"堆叠");
             item.fallback.gameObject.SetActive(item.image.sprite==null && !ability);
             PresentAbilityFace(item.tile,source,item.entry?.description,item.entry?.kind,ability);
             PresentSpentMana(item.row,source,new Vector2(0,-cardHeight-18),cardWidth);
@@ -266,6 +270,7 @@ public sealed partial class ForgeBattlefieldController
             if(!ability)PresentComponentFace(item.tile,source);
             if(HasSpellChoices(item.entry))item.fallback.gameObject.SetActive(false);
             if(item.tile.Find("PreparedSpellFace")?.gameObject.activeSelf==true)item.fallback.gameObject.SetActive(false);
+            if(item.glow.transform.parent!=item.tile)item.glow.transform.SetParent(item.tile,false);
             item.glow.Configure(ability,!IsTargeting&&i==0);
             // Follow the actual card rectangle, including its top pivot. The
             // highlight belongs to this face, never to a fan/row-sized overlay.
@@ -275,18 +280,20 @@ public sealed partial class ForgeBattlefieldController
             item.glow.transform.SetAsLastSibling();
             item.caption.gameObject.SetActive(false);
             PresentSelectionGlow(item.row,item.tile,targetSelected);
-            if(created && !stackCollapsed && source?.id!=castingCardId)AnimateStackArrival(item,i<entries.Length?entries[i].controllerSeat:seat);
+            if(created && !IsRedesignLayout && !stackCollapsed && source?.id!=castingCardId)AnimateStackArrival(item,i<entries.Length?entries[i].controllerSeat:seat);
         }
         foreach(var id in stackCards.Keys.Where(id=>!retained.Contains(id)).ToArray())
         {
             var item=stackCards[id];
             if(hoveredStack==item){hoveredStack=null;Node("InspectPanel").gameObject.SetActive(false);}
-            item.row.gameObject.SetActive(false);Destroy(item.row.gameObject);stackCards.Remove(id);
+            if(IsRedesignLayout && view!=null)RetireRedesignStack(id,item);
+            else {item.row.gameObject.SetActive(false);Destroy(item.row.gameObject);stackCards.Remove(id);}
         }
         if(hoveredStack!=null)ShowStackHover(hoveredStack);
         // The first resolving object stays in front. Legal targets never change
         // drawing order. The overview handles crowded stacks and target inspection.
         foreach(var item in stackCards.Values.OrderByDescending(c=>int.Parse(c.row.name.Substring("StackEntry_".Length))))item.row.SetAsLastSibling();
+        if (IsRedesignLayout) LayoutRedesignStack(entries, count);
     }
 
     private void AnimateStackArrival(StackCardVisual item,int controllerSeat)

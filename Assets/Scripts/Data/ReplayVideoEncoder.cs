@@ -16,10 +16,13 @@ public sealed class ReplayVideoEncoder : IDisposable
     {
         string local = Path.Combine(PrintingKeyUtility.ApplicationRoot, "VideoTools", "ffmpeg.exe");
         if (File.Exists(local)) { executable = local; return true; }
-        foreach (string directory in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator))
+        // A running desktop app can retain PATH from before FFmpeg was installed.
+        // Read the persisted Windows paths as well; workers use the same lookup.
+        foreach (var scope in new[]{EnvironmentVariableTarget.Process,EnvironmentVariableTarget.User,EnvironmentVariableTarget.Machine})
+        foreach (string directory in (Environment.GetEnvironmentVariable("PATH",scope) ?? "").Split(Path.PathSeparator))
         {
             if (string.IsNullOrWhiteSpace(directory)) continue;
-            string path = Path.Combine(directory.Trim().Trim('"'), "ffmpeg.exe");
+            string path = Path.Combine(Environment.ExpandEnvironmentVariables(directory.Trim().Trim('"')), "ffmpeg.exe");
             if (File.Exists(path)) { executable = path; return true; }
         }
         executable = null; return false;

@@ -126,6 +126,7 @@ public sealed partial class ForgeBattlefieldController
         var plate=Node(own?"PlayerPlate":"OpponentPlate");
         var row=plate.Find("PlayerCounters") as RectTransform;
         if(row==null)row=Rect(plate,"PlayerCounters",new Vector2(0,own?114:-114),new Vector2(310,30));
+        if (IsRedesignLayout) row.anchoredPosition = new Vector2(0, (own ? 1 : -1) * (114 + RedesignPlayerManaReserve));
         var counters=(player.counters??Array.Empty<ForgeCardCounter>()).Where(c=>c.count>0).ToArray();
         // Only rebuild when the actual counter values or locale changes.
         string pageKey="counters:"+player.seat;
@@ -144,10 +145,13 @@ public sealed partial class ForgeBattlefieldController
                 glyph.font=poolGlyphFont;glyph.text="\uE907";glyph.fontSize=16;glyph.color=Color.white;
                 glyph.alignment=TextAnchor.MiddleCenter;glyph.horizontalOverflow=HorizontalWrapMode.Overflow;glyph.verticalOverflow=VerticalWrapMode.Overflow;glyph.raycastTarget=false;
                 var preference=glyph.gameObject.AddComponent<PreferenceText>();preference.KeepFont=true;preference.enabled=false;
-                glyph.font=poolGlyphFont;preference.SetBaseSize(16);
+                // Fit normalizes the visible span below. Rasterize at that span
+                // first, rather than enlarging a 16px glyph mesh to 28 units.
+                glyph.font=poolGlyphFont;preference.SetBaseSize(IsRedesignLayout?32:16);
             } else if(counter.kind=="EXPERIENCE") {
                 var icon=Rect(chip,"Symbol",new Vector2(-8,4),new Vector2(28,28)).gameObject.AddComponent<ExperienceCounterIcon>();
                 icon.color=Color.white;icon.raycastTarget=false;
+                icon.SmoothEdges=IsRedesignLayout;
             } else if(PlayerCounterIcons.TryLoad(counter.kind,out var sprite)) {
                 var icon=Rect(chip,"Symbol",new Vector2(-8,4),new Vector2(28,28)).gameObject.AddComponent<Image>();
                 icon.sprite=sprite;icon.preserveAspect=true;icon.raycastTarget=false;
@@ -167,6 +171,15 @@ public sealed partial class ForgeBattlefieldController
             chip.sizeDelta=new Vector2(width,34);chips.Add(chip);
             ((RectTransform)chip.Find("Symbol")).anchoredPosition=new Vector2(-width*.5f+16,4);
             count.rectTransform.pivot=new Vector2(0,.5f);count.rectTransform.anchoredPosition=new Vector2(-width*.5f+22,-7);count.rectTransform.sizeDelta=new Vector2(width-26,30);
+            if (IsRedesignLayout) {
+                // The old lower-right numeral covered the shield's outline, so
+                // different counts made the same experience symbol look different.
+                width=32+Mathf.Max(16,count.preferredWidth)+6;
+                chip.sizeDelta=new Vector2(width,34);
+                symbol.rectTransform.anchoredPosition=new Vector2(-width*.5f+16,2);
+                count.rectTransform.anchoredPosition=new Vector2(-width*.5f+32,-2);
+                count.rectTransform.sizeDelta=new Vector2(width-34,30);
+            }
         }
         // Pack by the real numeral widths rather than an arbitrary type count.
         var packed=new List<List<RectTransform>>();var current=new List<RectTransform>();float used=0;

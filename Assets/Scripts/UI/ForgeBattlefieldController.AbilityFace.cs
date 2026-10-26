@@ -24,6 +24,7 @@ public sealed partial class ForgeBattlefieldController
     private string NamedAbilityEffectText(ForgeCardView source,string effect)=>AbilityEffectTextCore(source,effect,true);
     private string AbilityEffectTextCore(ForgeCardView source,string effect,bool playerReferences)
     {
+        if(CommanderReturnText(source,effect) is string commanderReturn)return commanderReturn;
         string PlayerName(int player)=>playerReferences?PlayerTextReference(player):PlayerDisplayName(player);
         using var diagnostics=BattleTextDiagnostics.DeferIntermediate();
         string Complete(string text){
@@ -34,7 +35,8 @@ public sealed partial class ForgeBattlefieldController
             return text;
         }
         string prefix=source?.name+" ("+source?.id+") - ";
-        string effectText=effect!=null&&effect.StartsWith(prefix,System.StringComparison.Ordinal)?effect.Substring(prefix.Length):effect??"";
+        string effectText=NormalizePrintedSelfNames(source,effect??"");
+        if(effectText.StartsWith(prefix,System.StringComparison.Ordinal))effectText=effectText.Substring(prefix.Length);
         effectText=System.Text.RegularExpressions.Regex.Replace(effectText,@"\s*\[Zone Changer: [^\r\n]*\]\s*$","");
         string eventContext="";
         var eventSuffix=System.Text.RegularExpressions.Regex.Match(effectText,@"\s+\[Card: (.+?) \((\d+)\), Activator: Player (\d+), SpellAbility: [^\r\n]*\]\s*$");
@@ -277,7 +279,11 @@ public sealed partial class ForgeBattlefieldController
             text.rectTransform.sizeDelta=new Vector2(218,Mathf.Max(138,text.preferredHeight));
         }
         var symbolEffect=SymbolizeStackLabel(effectLabel);
-        FitAbilityBodyText(effectLabel,symbolEffect,208,138,13,18);
+        // The compact stack scales this 240px face to a 116px thumbnail.
+        // Fit its body at that presentation size, rather than retaining the
+        // full-size face's tiny 13–18px range. Other ability surfaces stay unchanged.
+        bool compact=IsRedesignLayout&&parent.parent?.parent==stackContent;
+        FitAbilityBodyText(effectLabel,symbolEffect,208,138,compact?22:13,compact?34:18);
         symbolEffect.overflowMode=TMPro.TextOverflowModes.Masking;
         var viewport=(RectTransform)face.Find("EffectClip");
         var effectScroll=viewport.GetComponent<ScrollRect>();

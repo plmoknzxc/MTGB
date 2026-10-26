@@ -138,6 +138,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         CreateDialogButton(deckDropdown.transform.parent, "RenameDeckButton", "重命名",
             new Vector2(-100f, 482f), MenuVisualTheme.Panel, BeginRenameDeck);
         MenuVisualTheme.ApplyMain(startScreenGroup.transform.parent);
+        CreateLocalAiEntry();
         CreateCardPreviewChrome();
         CreateDeckCollapseControls();
         CreateDeckExchangeToolbar();
@@ -149,10 +150,10 @@ public sealed partial class MainMenuController : MonoBehaviour
         ShowStartScreen();
         loadingStatus = AddText(startScreenGroup.transform, "LoadingStatus", "正在准备卡牌…", 20,
             MenuVisualTheme.Muted, TextAnchor.MiddleLeft);
-        Place(loadingStatus.rectTransform, new Vector2(-570f, -305f), new Vector2(570f, 62f));
+        Place(loadingStatus.rectTransform, new Vector2(-595f, -350f), new Vector2(520f, 62f));
         loadingStatus.gameObject.SetActive(false);
         retryLoadButton = CreateDialogButton(startScreenGroup.transform, "RetryLoadButton", "重试加载",
-            new Vector2(-570f, -375f), MenuVisualTheme.Panel, ReloadData);
+            new Vector2(-595f, -420f), MenuVisualTheme.Panel, ReloadData);
         retryLoadButton.gameObject.SetActive(false);
         EnableMenuEntrypoints();
         GamePreferences.Changed += RefreshLocalizedDetails;
@@ -468,6 +469,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void RefreshLocalizedDetails()
     {
+        RefreshLocalAiEntry();
         RefreshAuxiliaryDeckLocale();
         RefreshCompanionEntry();
         RefreshCommanderEntry();
@@ -1797,7 +1799,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void StartMatchCore()
     {
-        SetStatus("Forge 迁移版请从联机大厅开局，使用调试面板操作。正式战场交互尚未适配。");
+        OnLocalAi();
     }
 
     private void RefreshDeckDropdown(string selectedName = null)

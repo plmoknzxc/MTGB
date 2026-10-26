@@ -8,7 +8,7 @@ using UnityEngine;
 
 public static class DeckCommanderInspector
 {
-    [Serializable] public sealed class Result { public string[] legal,partners;public string problem,error; }
+    [Serializable] public sealed class Result { public string[] legal,partners;public string problem,error;public int identity; }
     [Serializable] sealed class Config { public string format;public List<DeckEntry> cards,sideboard,commanders,candidates; }
     static readonly Dictionary<string,Task<Result>> cache=new();
     static readonly System.Threading.SemaphoreSlim worker=new(1,1);
@@ -52,7 +52,7 @@ public static class DeckCommanderInspector
             "commander"=>T("当前主将不符合资格。","The commander is not eligible.","統率者の資格を満たしていません。"),
             "copies"=>T("同名牌数量超过构筑上限。","A card exceeds its copy limit.","同名カードが枚数制限を超えています。"),
             "sideboard"=>T("备牌数量不符合构筑条件。","Sideboard size does not meet construction rules.","サイドボードの枚数が構築条件を満たしていません。"),
-            "size"=>T("牌组张数不符合构筑要求（指挥官共 100 张，争锋共 60 张）。","Deck size must be 100 including commanders, or 60 for Brawl.","統率者を含め100枚、ブロールは60枚が必要です。"),
+            "size"=>T("牌组必须包含主将在内共 100 张牌。","The deck must contain 100 cards including commanders.","統率者を含め100枚のデッキが必要です。"),
             _=>T("牌组尚不符合主将构筑条件。","The deck does not meet commander construction rules.","統率者の構築条件を満たしていません。")
         };
     }

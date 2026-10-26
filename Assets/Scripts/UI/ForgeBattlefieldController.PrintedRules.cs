@@ -53,6 +53,26 @@ public sealed partial class ForgeBattlefieldController
         return text;
     }
     private static string WithoutPrintedCost(string text)=>Regex.Replace(text,@"^.*?[:：]\s*","");
+    // A Universes Within variant can use its alternate self-name in native
+    // rules while the public card identity still uses the original name.
+    // Accept that name only when every other part of its full rules agrees.
+    private string NormalizePrintedSelfNames(ForgeCardView source,string text)
+    {
+        if(source==null||source.faceDown||string.IsNullOrEmpty(source.name)||string.IsNullOrEmpty(text)
+            ||string.IsNullOrEmpty(source.originalRules)||!catalog.TryGetValue(source.printingKey??"",out var definition))return text;
+        string Clean(string value)=>Regex.Replace((value??"").Replace("\\n","\n"),@"\s+"," ").Trim();
+        string canonical=definition.cardName;
+        if(string.IsNullOrEmpty(canonical)||source.name!=canonical)return text;
+        var parts=Clean(definition.description).Split(new[]{canonical},StringSplitOptions.None);
+        if(parts.Length<2)return text;
+        string pattern="^"+Regex.Escape(parts[0])+@"(?<self>[^\r\n]{1,160}?)"+Regex.Escape(parts[1]);
+        for(int i=2;i<parts.Length;i++)pattern+=@"\k<self>"+Regex.Escape(parts[i]);
+        var match=Regex.Match(Clean(source.originalRules),pattern+"$");
+        if(!match.Success)return text;
+        string alias=match.Groups["self"].Value;
+        if(alias==canonical||alias!=alias.Trim())return text;
+        return Regex.Replace(text,@"(?<![\p{L}\p{N}])"+Regex.Escape(alias)+@"(?![\p{L}\p{N}])",_=>canonical);
+    }
     private string PrintedRuleText(ForgeCardView source,string paragraph)
     {
         if(source==null||source.faceDown||string.IsNullOrEmpty(paragraph))return paragraph;
@@ -86,7 +106,7 @@ public sealed partial class ForgeBattlefieldController
         string canonical=feature?.cardName??definition.cardName;
         string[] Lines(string value)=>(value??"").Replace("\\n","\n").Split('\n',StringSplitOptions.RemoveEmptyEntries).Select(s=>s.Trim()).Where(s=>s.Length>0).ToArray();
         string Key(string value) {
-            value=(value??"").Replace("CARDNAME",canonical).Replace("\\n","\n");
+            value=NormalizePrintedSelfNames(source,value??"").Replace("CARDNAME",canonical).Replace("\\n","\n");
             // The pinned Forge Oracle line misspells this card's own name.
             // Its live trigger and localized faces use Boggart Trawler.
             if(canonical=="Boggart Trawler")value=Regex.Replace(value,@"\bGoblin Trawler\b",canonical);
@@ -136,6 +156,18 @@ public sealed partial class ForgeBattlefieldController
         var variants=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
         void MatchVariants(string original,string local) {
             if(Key(original)==match)variants.Add(local);
+            // A first-draw reveal registers its later trigger from the same
+            // printed paragraph. Japanese can split that trigger differently;
+            // remove only the exact paired reveal instruction, not N sentences.
+            const string firstDrawReveal="You may reveal the first card you draw each turn as you draw it.";
+            if(original.StartsWith(firstDrawReveal,StringComparison.Ordinal)&&Key(original.Substring(firstDrawReveal.Length))==match) {
+                string localReveal=TapPaymentText("你可以于你抓每回合第一张牌时展示之。",firstDrawReveal,
+                    "各ターン、あなたはあなたの最初のカードを引くに際し、それを公開してもよい。");
+                var revealForms=GamePreferences.Language=="ja-JP"
+                    ?new[]{localReveal,"各ターンであなたの最初のカードを引くに際し、あなたはそれを公開してもよい。"}:new[]{localReveal};
+                foreach(string reveal in revealForms)
+                    if(local.StartsWith(reveal,StringComparison.Ordinal))variants.Add(local.Substring(reveal.Length).TrimStart());
+            }
             // Spree options omit the additional-cost heading. Strip it only
             // from paired printed rows, never from a live payment description.
             const string modePrefix=@"^\+\s*(?:\{[^{}]+\}\s*)+[—～〜-]\s*";
@@ -227,9 +259,29 @@ public sealed partial class ForgeBattlefieldController
         var recipes=AbilityRecipes(source,effect);
         if(recipes.Length!=1)return fallback;
         string recipe=recipes[0].text;var origin=recipes[0].origin;
+        if(recipe=="When you do, exile that card.") {
+            string translated=TapPaymentText("当你如此作时，放逐该牌。",recipe,"そうしたとき、そのカードを追放する。");
+            if(effect==recipe)return translated;
+            var remembered=Regex.Match(effect,"^"+Regex.Escape(recipe)+@" \(\[(.+)\]\)$");
+            if(remembered.Success&&GamePreferences.IsCardIdentity(remembered.Groups[1].Value))
+                return translated+"（"+GamePreferences.CardFaceName(remembered.Groups[1].Value)+"）";
+        }
         string localized=PrintedRuleText(origin,recipe);
         if(localized==recipe){recipe=Regex.Replace(recipe,@"^(?:\{[^{}]+\}\s*[,，]?\s*)+[:：]\s*","");localized=PrintedRuleText(origin,recipe);}
-        return localized!=recipe?localized:fallback;
+        if(localized==recipe)return fallback;
+        // Native delayed/reflexive descriptions carry remembered public cards
+        // after the recipe. Keep their identity when replacing only the rule.
+        var rememberedCards=Regex.Match(effect,"^"+Regex.Escape(recipe)+@" \(\[(.+)\]\)$");
+        if(rememberedCards.Success) {
+            string names=rememberedCards.Groups[1].Value;
+            var cards=Regex.Matches(names,@"(.+?) \((\d+)\)(?:,\s*|$)").Cast<Match>().ToArray();
+            if(cards.Length>0&&string.Concat(cards.Select(m=>m.Value))==names
+                &&cards.All(m=>GamePreferences.IsCardIdentity(m.Groups[1].Value)))
+                localized+="\n"+TapPaymentText("关联牌：","Referenced cards: ","関連カード：")
+                    +string.Join(", ",cards.Select(m=>GamePreferences.CardFaceName(m.Groups[1].Value)+" ("+m.Groups[2].Value+")"));
+            else return fallback;
+        }
+        return localized;
     }
     private (string text,ForgeCardView origin)[] AbilityRecipes(ForgeCardView source,string effect)
     {

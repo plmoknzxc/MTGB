@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,7 +55,8 @@ public sealed class LegacyCardCost : MonoBehaviour
                 mainBounds=new Rect(.043f,.5f-Count(printed)*.035f-.023f,.086f,Count(printed)*.035f+.016f);
                 adventureBounds=new Rect(.043f,.963f-Count(adventurePrinted)*.035f-.023f,.086f,Count(adventurePrinted)*.035f+.011f);
             }
-            mainPatch=Count(printed)>0?Cover(source,mainBounds,sideways):null;adventurePatch=Count(adventurePrinted)>0?Cover(source,adventureBounds,sideways):null;
+            mainPatch=Count(printed)>0?Cover(source,ref mainBounds,sideways,highTitle?0:Count(printed)):null;
+            adventurePatch=Count(adventurePrinted)>0?Cover(source,ref adventureBounds,sideways):null;
             mainCover.texture=mainPatch;adventureCover.texture=adventurePatch;
         }
         current=Normalize(dynamicCost);adventureCurrent=Normalize(dynamicAdventure);
@@ -99,14 +101,65 @@ public sealed class LegacyCardCost : MonoBehaviour
     void LateUpdate(){if(Root!=null&&hovered!=(pointer!=null&&pointer.IsHovered))RefreshPrintedCosts();}
     // Reuse a quiet strip of the scanned title texture. The narrow feather
     // keeps native title edges intact when the hand card is enlarged.
-    static Texture2D Cover(Sprite art,Rect uv,bool rotated)
+    static readonly Vector2[] circleSamples=CircleSamples();
+    static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Sprite,Dictionary<(Rect,int),Rect>> printedBounds=new();
+    static Vector2[] CircleSamples()
     {
-        var sourceRect=art.rect;var pixel=new Rect(Mathf.Floor(sourceRect.x+uv.x*sourceRect.width),Mathf.Floor(sourceRect.y+uv.y*sourceRect.height),Mathf.Ceil(uv.width*sourceRect.width),Mathf.Ceil(uv.height*sourceRect.height));
-        int width=Mathf.Max(4,(int)pixel.width),height=Mathf.Max(4,(int)pixel.height);
+        var samples=new Vector2[24];
+        for(int i=0;i<samples.Length;i++){float angle=(i+.5f)*Mathf.PI*2/samples.Length;samples[i]=new Vector2(Mathf.Cos(angle),Mathf.Sin(angle));}
+        return samples;
+    }
+    // Localized scans can print much larger symbols than the usual frame.
+    // Widen only after finding the complete, evenly spaced circle sequence;
+    // otherwise retain the established bounds rather than cover title text.
+    static Rect WidenPrintedCost(Sprite art,Rect bounds,int count)
+    {
+        var cached=printedBounds.GetOrCreateValue(art);
+        if(cached.TryGetValue((bounds,count),out var found))return found;
+        Rect Complete(Rect value){cached[(bounds,count)]=value;return value;}
+        int width=(int)art.rect.width,height=(int)art.rect.height,bottom=Mathf.FloorToInt(height*.86f);
+        var sample=new Texture2D(width,Mathf.CeilToInt(height*.12f),TextureFormat.RGB24,false);
+        Color[] pixels;
+        try{sample.ReadPixels(new Rect(art.rect.x,art.rect.y+bottom,width,sample.height),0,0);pixels=sample.GetPixels();}
+        finally{Destroy(sample);}
+        float Light(float x,float y){var c=pixels[Mathf.Clamp(Mathf.RoundToInt(y)-bottom,0,pixels.Length/width-1)*width+Mathf.Clamp(Mathf.RoundToInt(x),0,width-1)];return(c.r+c.g+c.b)/3;}
+        float Score(int x,int y,int radius,out int votes){
+            float score=0;votes=0;
+            foreach(var d in circleSamples){float contrast=(Light(x+d.x*radius*1.18f,y+d.y*radius*1.18f)+Light(x+d.x*radius*.75f,y+d.y*radius*.75f))*.5f-Light(x+d.x*radius,y+d.y*radius);score+=contrast;if(contrast>.08f)votes++;}
+            return score/circleSamples.Length;
+        }
+        float best=.11f;int cx=0,cy=0,r=0;
+        for(int radius=Mathf.RoundToInt(width*.018f);radius<=Mathf.RoundToInt(width*.044f);radius++)
+            for(int y=Mathf.RoundToInt(height*.894f);y<Mathf.RoundToInt(height*.958f);y+=2)
+                for(int x=Mathf.RoundToInt(width*.865f);x<Mathf.RoundToInt(width*.94f);x+=2){
+                    float score=Score(x,y,radius,out int votes);
+                    if(votes>=10&&score>best){best=score;cx=x;cy=y;r=radius;}
+                }
+        if(r==0)return Complete(bounds);
+        int right=cx,left=cx;
+        for(int i=1;i<count;i++){
+            best=.11f;int next=0;
+            for(int x=Mathf.Max(0,Mathf.RoundToInt(left-2.8f*r));x<Mathf.RoundToInt(left-1.8f*r);x++){
+                float score=Score(x,cy,r,out int votes);if(votes>=10&&score>best){best=score;next=x;}
+            }
+            if(next==0)return Complete(bounds);
+            left=next;
+        }
+        float padding=r+Mathf.Ceil(r*.25f)+3;
+        if((left-padding)/width>=bounds.xMin)return Complete(bounds);
+        return Complete(Rect.MinMaxRect(Mathf.Max(.06f,(left-padding)/width),Mathf.Min(bounds.yMin,(cy-padding)/height),
+            Mathf.Max(bounds.xMax,(right+padding)/width),Mathf.Max(bounds.yMax,(cy+padding)/height)));
+    }
+    static Texture2D Cover(Sprite art,ref Rect uv,bool rotated,int symbols=0)
+    {
         var target=RenderTexture.GetTemporary(art.texture.width,art.texture.height,0,RenderTextureFormat.ARGB32);var previous=RenderTexture.active;
-        var patch=new Texture2D(width,height,TextureFormat.RGBA32,true){name="PrintedCostCover",filterMode=FilterMode.Trilinear,wrapMode=TextureWrapMode.Clamp};
         try{
-            Graphics.Blit(art.texture,target);RenderTexture.active=target;patch.ReadPixels(pixel,0,0);var pixels=patch.GetPixels();
+            Graphics.Blit(art.texture,target);RenderTexture.active=target;
+            if(!rotated&&symbols>0)uv=WidenPrintedCost(art,uv,symbols);
+            var sourceRect=art.rect;var pixel=new Rect(Mathf.Floor(sourceRect.x+uv.x*sourceRect.width),Mathf.Floor(sourceRect.y+uv.y*sourceRect.height),Mathf.Ceil(uv.width*sourceRect.width),Mathf.Ceil(uv.height*sourceRect.height));
+            int width=Mathf.Max(4,(int)pixel.width),height=Mathf.Max(4,(int)pixel.height);
+            var patch=new Texture2D(width,height,TextureFormat.RGBA32,true){name="PrintedCostCover",filterMode=FilterMode.Trilinear,wrapMode=TextureWrapMode.Clamp};
+            patch.ReadPixels(pixel,0,0);var pixels=patch.GetPixels();
             // Clone the adjacent blank title texture, preserving its fine grain
             // and bevel across the fee region instead of stretching two pixels.
             int strip=6;

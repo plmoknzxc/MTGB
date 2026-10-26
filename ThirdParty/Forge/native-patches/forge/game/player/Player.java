@@ -1683,6 +1683,9 @@ public class Player extends GameEntity implements Comparable<Player> {
     }
 
     public final boolean canPlayLand(final Card land, final boolean ignoreZoneAndTiming, SpellAbility landSa) {
+        // These formats have no wishboard, including lands granted by outside-game permissions.
+        if (land.isInZone(ZoneType.Sideboard)
+                && (game.getRules().isDuelCommander() || game.getRules().hasAppliedVariant(GameType.Brawl))) return false;
         if (!ignoreZoneAndTiming) {
             // CR 305.3
             if (!game.getPhaseHandler().isPlayerTurn(this)) {
@@ -2075,7 +2078,7 @@ public class Player extends GameEntity implements Comparable<Player> {
             return true;
         }
 
-        if (game.getRules().hasAppliedVariant(GameType.Commander)) {
+        if (game.getRules().hasAppliedVariant(GameType.Commander) && !game.getRules().isDuelCommander()) {
             for (Entry<Card, Integer> entry : getCommanderDamage()) {
                 if (entry.getValue() >= 21 && loseConditionMet(GameLossReason.CommanderDamage, null)) {
                     return true;
@@ -2889,6 +2892,14 @@ public class Player extends GameEntity implements Comparable<Player> {
         }
         ColorSet identity = ColorSet.fromMask(ci);
         return identity;
+    }
+
+    public boolean canCastCommanderFromCommand(Card commander) {
+        if (!game.getRules().isDuelCommander()) return true;
+        for (Entry<Card, Integer> entry : commanderCast.entrySet())
+            if (entry.getValue() > 0 && entry.getKey().getOwner() == this
+                    && entry.getKey().getId() != commander.getId()) return false;
+        return true;
     }
 
     public int getCommanderCast(Card commander) {

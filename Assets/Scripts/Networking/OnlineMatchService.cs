@@ -46,7 +46,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     public bool IsServer => networkManager != null && networkManager.IsServer;
     public bool IsClient => networkManager != null && networkManager.IsClient;
     public bool IsHost => networkManager != null && networkManager.IsHost;
-    public bool IsConnected => networkManager != null && networkManager.IsConnectedClient;
+    public bool IsConnected => localAiSession != null || networkManager != null && networkManager.IsConnectedClient;
     public bool IsDisconnecting => IsManagerShutdownInProgress(shuttingDownManager);
     public bool HasJoinedLobby => HasLobbyIdentity(IsConnected, LocalSeat, LobbyState);
     public bool IsSpectator => LocalSeat > 2;
@@ -193,6 +193,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         double now = Time.realtimeSinceStartupAsDouble;
         TickEndReplay(now);
+        if(IsLocalAiMatch){UpdateLocalAiMatch();return;}
         TickServerReplayArchives();
         if (lobbyConnectDeadline > 0 && !IsInMatch)
         {
@@ -278,6 +279,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         string roomId = null,
         OnlineRoomConfig roomConfig = null)
     {
+        if (!OnlineMessageGuard.ValidateDisplayName(displayName, out string nameError)) { SetStatus(nameError); return false; }
         pendingLobbyDisconnect = false;
         pendingLobbyDisconnectReason = null;
         connectedToLanHost = true;
@@ -323,6 +325,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         OnlineRoomConfig roomConfig = null,
         string roomAction = null)
     {
+        if (!OnlineMessageGuard.ValidateDisplayName(displayName, out string nameError)) { SetStatus(nameError); return false; }
         requestedRoomAction=roomAction;
         pendingLobbyDisconnect = false;
         pendingLobbyDisconnectReason = null;
@@ -390,6 +393,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     public void Concede()
     {
+        if(localAiSession!=null){SubmitLocalAiChoice(-1,null,true);return;}
         if (IsSpectator || !IsConnected || !IsInMatch || !actionGate.CanSubmit) return;
         long requestId = nextRequestId++;
         if (!actionGate.TryBeginSubmit(requestId, Time.realtimeSinceStartupAsDouble, ActionTimeoutSeconds)) return;
@@ -733,7 +737,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 NotifyInteractionStateChanged();
                 MatchEnded?.Invoke(ended);
                 SetStatus(ended?.reason ?? "对局结束。");
-                if(IsSpectator&&ended?.finalView!=null&&SceneManager.GetActiveScene().name!=ForgeBattlefieldController.SceneName)ForgeBattlefieldController.Open(this);
+                if(IsSpectator&&ended?.finalView!=null&&!ForgeBattlefieldController.IsBattlefieldSceneActive)ForgeBattlefieldController.Open(this);
                 break;
             case OnlineProtocol.Error:
                 OnlineErrorMessage protocolError = Deserialize<OnlineErrorMessage>(envelope);
@@ -905,6 +909,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         if (!TryGetMember(clientId, out OnlineRoomState room, out OnlineRoomMember member) || room.match != null || member.IsSpectator) return;
         long check=++companionDeckCheckSequence;companionDeckChecks[clientId]=check;companionPendingReady.Remove(clientId);
+        if(message?.deck!=null)message.deck.format=room.config.formatId;
         if (!ValidateDeck(message?.deck, SeriesValidationConfig(room,member), out string error))
         {
             companionDeckChecks.Remove(clientId);
@@ -920,6 +925,28 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             return;
         }
         member.ready=false;
+        if(DeckCommander.IsFormat(room.config.formatId)){
+            BroadcastLobby(room);
+            var inspected=CloneDeck(message.deck);inspected.format=room.config.formatId;
+            DeckCommanderInspector.Result result;
+            try{result=await DeckCommanderInspector.Inspect(inspected);}catch(Exception){result=new DeckCommanderInspector.Result{error="engine"};}
+            if(this==null||!companionDeckChecks.TryGetValue(clientId,out long latest)||latest!=check)return;
+            if(!TryGetMember(clientId,out var currentRoom,out var currentMember)||currentRoom!=room||currentMember!=member||room.match!=null){companionDeckChecks.Remove(clientId);companionPendingReady.Remove(clientId);return;}
+            if(result.error!=null||!string.IsNullOrEmpty(result.problem)){
+                companionDeckChecks.Remove(clientId);companionPendingReady.Remove(clientId);
+                Send(clientId,OnlineProtocol.Error,new OnlineErrorMessage{code="invalid-commander",message=DeckCommanderInspector.Status(result)});BroadcastLobby(room);return;
+            }
+            if(room.config.formatId=="duelcommander"&&room.series?.betweenGames==true&&member.registeredDeck!=null){
+                DeckCommanderInspector.Result original;
+                try{original=await DeckCommanderInspector.Inspect(member.registeredDeck);}catch(Exception){original=new DeckCommanderInspector.Result{error="engine"};}
+                if(this==null||!companionDeckChecks.TryGetValue(clientId,out latest)||latest!=check)return;
+                if(!TryGetMember(clientId,out currentRoom,out currentMember)||currentRoom!=room||currentMember!=member||room.match!=null){companionDeckChecks.Remove(clientId);companionPendingReady.Remove(clientId);return;}
+                if(original.error!=null||original.identity!=result.identity){
+                    companionDeckChecks.Remove(clientId);companionPendingReady.Remove(clientId);
+                    Send(clientId,OnlineProtocol.Error,new OnlineErrorMessage{code="invalid-commander-swap",message="局间更换主将不能改变原注册牌组的标识色。"});BroadcastLobby(room);return;
+                }
+            }
+        }
         if(DeckCompanion.Has(message.deck)){
             BroadcastLobby(room);
             DeckCompanionInspector.Result result;
@@ -933,6 +960,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         }
         companionDeckChecks.Remove(clientId);
         member.deck = CloneDeck(message.deck);
+        member.deck.format=room.config.formatId;
         if (room.series?.finished == true) { member.registeredDeck = null; member.seriesOriginalDeck = null; member.seriesDeckChanged = false; }
         member.ready = false;
         BroadcastLobby(room);
@@ -1370,6 +1398,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void SubmitForgeChoice(int optionIndex, int[] order)
     {
+        if(localAiSession!=null){SubmitLocalAiChoice(optionIndex,order,false);return;}
         ForgeRequest request = ForgeView?.forge?.awaitingInput == true ? ForgeView.forge.request : null;
         if (request == null || !IsConnected || !actionGate.CanSubmit) return;
         long requestId = nextRequestId++;
@@ -1591,10 +1620,22 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private bool ValidateDeck(DeckDefinition deck, OnlineRoomConfig config, out string error)
     {
         if (!OnlineMessageGuard.ValidateDeckShape(deck, out error)) return false;
-        if (deck.commanders != null && deck.commanders.Count > 0)
-        { error = "当前 Forge 联机支持主牌/备牌构筑，尚未适配指挥官牌组。"; return false; }
         IReadOnlyList<CardDefinition> cards = CardDatabaseRepository.LoadAll();
         string format = string.IsNullOrEmpty(config?.formatId) ? "none" : config.formatId;
+        bool commandFormat=format=="duelcommander"||format=="brawl";
+        if(!commandFormat&&DeckCommander.Has(deck)){error="当前房间赛制不使用主将。";return false;}
+        if(commandFormat){
+            if(deck.commanders==null||deck.cards==null||deck.sideboard==null){error="主将牌组分区缺失。";return false;}
+            int commanders=deck.commanders.Sum(e=>e.count);
+            if(commanders<1||commanders>(format=="brawl"?1:2)||deck.commanders.Any(e=>e.count!=1)){
+                error=format=="brawl"?"争锋必须指定一位主将。":"法禁必须指定一位主将或合法的共同主将。";return false;
+            }
+            if(deck.cards.Sum(e=>e.count)+commanders!=100){error="主牌与主将合计必须为100张。";return false;}
+            if(deck.sideboard.Sum(e=>e.count)!=(DeckCompanion.Has(deck)?1:0)){
+                error="此赛制没有备牌；统帅区外只可保留指定的行侣。";return false;
+            }
+            if((deck.attractions?.Count??0)>0||(deck.contraptions?.Count??0)>0){error="此赛制不使用游乐设施或装置辅助牌组。";return false;}
+        }
         if(!DeckCompanion.ValidateReference(deck,cards,out error))return false;
         bool authorizedPool=config?.authorizedSeriesPool!=null&&HaveSameCardPool(config.authorizedSeriesPool,deck)
             &&HaveSameEntries(config.authorizedSeriesPool.commanders,deck.commanders);
@@ -1602,7 +1643,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (Array.IndexOf(DeckFormatLegality.OnlineKeys, format) < 0) { error = "不支持的房间赛制。"; return false; }
         if (format != "none")
         {
-            try { roomLegality.PrepareForValidation(format, cards); }
+            try { roomLegality.PrepareForValidation(format, cards);if(format=="duelcommander")roomLegality.PrepareForValidation("vintage",cards); }
             catch (Exception e) { error = "无法读取赛制规则：" + e.Message; return false; }
             var counts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in EnumerateDeckEntries(deck))
@@ -1610,7 +1651,10 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 var card = DeckRepository.ResolveCard(entry, cards);
                 if (card == null || card.customContent) continue; // Custom content has its separate room permission below.
                 counts.TryGetValue(card.cardName, out int count); counts[card.cardName] = count + entry.count;
-                string legality = roomLegality.Get(card, format, DeckFormatLegality.Current);
+                string legality = roomLegality.Get(card, format, DeckFormatLegality.Current, deck.commanders.Contains(entry), DeckCompanion.IsSelected(deck,entry));
+                if(format=="duelcommander"&&roomLegality.Get(card,"vintage",DeckFormatLegality.Current) is "not_legal" or "banned" or "unknown"){
+                    error=$"卡牌 {card.cardName} 不属于法禁的纸牌卡池。";return false;
+                }
                 if (legality == "banned" || legality == "not_legal" || legality == "unknown" || legality == "restricted" && counts[card.cardName] > 1 && !authorizedPool)
                 { error = $"卡牌 {card.cardName} 不符合房间赛制。"; return false; }
             }
@@ -1621,7 +1665,9 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             { error = $"无法唯一映射牌组条目 {(string.IsNullOrWhiteSpace(entry.PrintingKey) ? "旧本地 ID " + entry.cardId : entry.PrintingKey)}；请修正缺失或歧义条目。"; return false; }
         }
         DeckDefinition copy = CloneDeck(deck);
+        copy.format=format;
         if(!authorizedPool)DeckRepository.EnforceCopyLimits(copy, cards);
+        copy.format=deck.format;
         List<CardDefinition> runtime = DeckRepository.BuildRuntimeDeck(copy, cards, out string warning);
         // Only the host's series-removal config can lower the minimum to zero.
         // An emptied registered pool must reach Forge's normal empty-library loss.
@@ -1632,8 +1678,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         }
         int mainCount = DeckRepository.GetTotalCount(deck, false);
         int sideboardCount = DeckRepository.GetTotalCount(deck, true);
-        int minimumMain = Math.Max(0, config?.minimumMainDeckSize ?? 60);
-        int maximumSideboard = Math.Max(0, config?.maximumSideboardSize ?? 15);
+        int minimumMain = commandFormat?100-deck.commanders.Sum(e=>e.count):Math.Max(0, config?.minimumMainDeckSize ?? 60);
+        int maximumSideboard = commandFormat?(DeckCompanion.Has(deck)?1:0):Math.Max(0, config?.maximumSideboardSize ?? 15);
         if (mainCount < minimumMain)
         {
             error = $"主牌至少需要 {minimumMain} 张，当前为 {mainCount} 张。";
@@ -1680,6 +1726,16 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         out string error)
     {
         if (!ValidateDeck(submittedDeck, config, out error)) return false;
+        if(config?.formatId=="duelcommander"){
+            if(!CountsEqual(BuildEntryCounts(registeredDeck.cards,registeredDeck.commanders),BuildEntryCounts(submittedDeck.cards,submittedDeck.commanders))
+                ||!HaveSameEntries(registeredDeck.sideboard,submittedDeck.sideboard)
+                ||!HaveSameEntries(registeredDeck.attractions,submittedDeck.attractions)
+                ||!HaveSameEntries(registeredDeck.contraptions,submittedDeck.contraptions)
+                ||!HaveSameEntries(DeckCompanion.Has(registeredDeck)?new List<DeckEntry>{registeredDeck.companion}:null,DeckCompanion.Has(submittedDeck)?new List<DeckEntry>{submittedDeck.companion}:null)){
+                error="法禁局间只可从原注册的100张牌中更换主将，其他卡池和行侣必须保持不变。";return false;
+            }
+            return true;
+        }
         if (!HaveSameEntries(registeredDeck.commanders, submittedDeck.commanders)
             || !HaveSameEntries(registeredDeck.attractions, submittedDeck.attractions)
             || !HaveSameEntries(registeredDeck.contraptions, submittedDeck.contraptions)
@@ -1764,6 +1820,12 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             noShuffle = source?.noShuffle == true
         };
         result.useAnte &= OnlineRoomConfig.AllowsAnte(result.formatId, result.allowCustomContent);
+        if(result.formatId=="duelcommander"||result.formatId=="brawl"){
+            result.startingLife=result.formatId=="brawl"?25:20;
+            result.minimumMainDeckSize=99;result.maximumSideboardSize=1;
+            result.allowCustomContent=false;result.useAnte=false;
+            if(result.formatId=="brawl")result.bestOf=1;
+        }
         if (source?.allowedSetCodes == null) return result;
         for (int i = 0; i < source.allowedSetCodes.Count && result.allowedSetCodes.Count < 64; i++)
         {
@@ -1799,6 +1861,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     }
     private void Shutdown()
     {
+        StopLocalAiMatch();
         ArchiveOpenServerMatches();
         FlushServerReplayArchives();
         declinedReviewReplays.Clear();

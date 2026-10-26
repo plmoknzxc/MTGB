@@ -106,6 +106,24 @@ public static class DeckArrangementValidation
             var preserved=deck.mainOrder.ToArray();dropdown.value=1;yield return null;
             Check(Tiles("mainDeckContent").Select(t=>t.Card.PrintingKey).SequenceEqual(preserved),"Switching back restores individual sequence");
             var sortedMode=typeof(MainMenuController).GetNestedType("DeckViewSort",BindingFlags.NonPublic);
+            var previousRandom=Get("deckSortRandom");
+            try
+            {
+                Set("deckSortRandom",new System.Random(1022));
+                Call("SetDeckViewSort",Enum.Parse(sortedMode,"Shuffle"));yield return null;
+                var shuffled=Tiles("mainDeckContent");var shuffledKeys=shuffled.Select(t=>t.Card.PrintingKey).ToArray();
+                Check(shuffledKeys.OrderBy(k=>k).SequenceEqual(preserved.OrderBy(k=>k)),"Individual shuffle retains every copy and printing");
+                int runs=shuffledKeys.Where((k,i)=>i==0||k!=shuffledKeys[i-1]).Count();
+                Check(runs>shuffledKeys.Distinct().Count(),"Seeded individual shuffle separates repeated copies instead of shuffling groups");
+                Check(shuffled.Select(t=>t.CopyOrderIndex).OrderBy(i=>i).SequenceEqual(Enumerable.Range(0,preserved.Length)),"Shuffled tiles retain distinct canonical copy indices");
+                var display=(IEnumerable<DeckEntry>)Call("DeckDisplayEntries",deck.cards);
+                Check(display.SequenceEqual(display.ToArray()),"Shuffled display can be enumerated repeatedly without changing order");
+                dropdown.value=0;yield return null;dropdown.value=1;yield return null;
+                Check(Tiles("mainDeckContent").Select(t=>t.Card.PrintingKey).SequenceEqual(shuffledKeys),"Merged and individual toggles retain the shuffled copy order");
+                Check(deck.mainOrder.SequenceEqual(preserved),"Shuffle remains a view and preserves the saved physical order");
+            }
+            finally {Set("deckSortRandom",previousRandom);}
+            Call("SetDeckViewSort",Enum.Parse(sortedMode,"Original"));yield return null;
             Call("SetDeckViewSort",Enum.Parse(sortedMode,"Cost"));yield return null;Canvas.ForceUpdateCanvases();
             Check(deck.mainOrder.SequenceEqual(preserved),"Cost sorting is a view and leaves persisted order intact");
             var sorted=Tiles("mainDeckContent");var sortedSource=sorted.First(t=>t.Card==forest);var sortedTarget=sorted.First(t=>t.Card==duress);

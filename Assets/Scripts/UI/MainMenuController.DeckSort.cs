@@ -11,7 +11,7 @@ public sealed partial class MainMenuController
     private enum DeckViewSort { Original, Cost, Type, Shuffle }
     private DeckViewSort deckViewSort;
     private readonly System.Random deckSortRandom=new System.Random();
-    private readonly Dictionary<DeckEntry,int> deckShuffleOrder=new Dictionary<DeckEntry,int>();
+    private readonly Dictionary<(DeckEntry entry,int copy),int> deckShuffleOrder=new();
     private DeckDefinition shuffledDeck;
     private Button deckCurve,deckCostSort,deckTypeSort,deckShuffle;
     private Dropdown deckArrangement;
@@ -122,7 +122,7 @@ public sealed partial class MainMenuController
     {
         if(currentDeck==null)return;
         if(mode==DeckViewSort.Shuffle){
-            var main=DeckDisplayEntries(currentDeck.cards).Distinct().ToList();var side=DeckDisplayEntries(SecondaryDeckEntries).Distinct().ToList();
+            var main=DeckDisplayEntries(currentDeck.cards).ToList();var side=DeckDisplayEntries(SecondaryDeckEntries).ToList();
             deckShuffleOrder.Clear();shuffledDeck=currentDeck;ShuffleDeckEntries(main);ShuffleDeckEntries(side);
         }
         deckViewSort=mode;
@@ -135,7 +135,11 @@ public sealed partial class MainMenuController
         var previous=entries.ToArray();
         for(int i=entries.Count-1;i>0;i--){int j=deckSortRandom.Next(i+1);var item=entries[i];entries[i]=entries[j];entries[j]=item;}
         if(entries.Count>1&&entries.SequenceEqual(previous)){var first=entries[0];entries.RemoveAt(0);entries.Add(first);}
-        for(int i=0;i<entries.Count;i++)deckShuffleOrder[entries[i]]=i;
+        var copies=new Dictionary<DeckEntry,int>();
+        for(int i=0;i<entries.Count;i++){
+            var entry=entries[i];copies.TryGetValue(entry,out int copy);copies[entry]=copy+1;
+            deckShuffleOrder[(entry,copy)]=i;
+        }
     }
     private IEnumerable<DeckEntry> DeckDisplayEntries(List<DeckEntry> entries)
     {
@@ -144,7 +148,19 @@ public sealed partial class MainMenuController
         IEnumerable<DeckEntry> display=!singleDeckCards&&(order==null||order.Count==0)?entries:DeckCopyOrder.Expand(entries,order);
         if(!singleDeckCards)display=display.Distinct();
         if(deckViewSort==DeckViewSort.Original)return display;
-        if(deckViewSort==DeckViewSort.Shuffle)return ReferenceEquals(shuffledDeck,currentDeck)?display.OrderBy(e=>e!=null&&deckShuffleOrder.TryGetValue(e,out int rank)?rank:int.MaxValue):display;
+        if(deckViewSort==DeckViewSort.Shuffle){
+            if(!ReferenceEquals(shuffledDeck,currentDeck))return display;
+            var copies=new Dictionary<DeckEntry,int>();
+            // Rank each displayed copy separately; repeated entries share an
+            // object, so an entry-only key would regroup them after shuffling.
+            return display.Select(entry=>{
+                int copy=0;if(entry!=null){copies.TryGetValue(entry,out copy);copies[entry]=copy+1;}
+                int rank=int.MaxValue;
+                if(entry!=null&&!deckShuffleOrder.TryGetValue((entry,copy),out rank))
+                    rank=deckShuffleOrder.TryGetValue((entry,0),out int first)?first:int.MaxValue;
+                return (entry,rank);
+            }).OrderBy(p=>p.rank).Select(p=>p.entry).ToArray();
+        }
         var resolved=display.Select(e=>(entry:e,card:DeckRepository.ResolveCard(e,cards)));
         if(deckViewSort==DeckViewSort.Cost)return resolved.OrderBy(p=>p.card==null?2:p.card.HasType(CardType.Land)?1:0).ThenByDescending(p=>DeckSortManaValue(p.card)).ThenBy(p=>DeckSortType(p.card)).ThenBy(p=>p.card?.cardName,StringComparer.OrdinalIgnoreCase).ThenBy(p=>p.card?.PrintingKey,StringComparer.OrdinalIgnoreCase).Select(p=>p.entry);
         return resolved.OrderBy(p=>DeckSortType(p.card)).ThenBy(p=>p.card?.cardName,StringComparer.OrdinalIgnoreCase).ThenBy(p=>p.card?.PrintingKey,StringComparer.OrdinalIgnoreCase).Select(p=>p.entry);

@@ -36,7 +36,8 @@ public sealed class OnlineMatchSession : IDisposable
     [Serializable] private sealed class StartConfig
     {
         public string session;
-        public int seed, startingLife, firstPlayerSeat;
+        public string formatId;
+        public int seed, startingLife, firstPlayerSeat, aiSeat;
         public bool useAnte;
         public bool noShuffle;
         public string shuffleAuditFile, runtimeHash, forgeRevision, roomId;
@@ -53,6 +54,7 @@ public sealed class OnlineMatchSession : IDisposable
     [Serializable] private sealed class ShutdownMessage { public string type = "shutdown", session; }
     private string configPath;
     private bool disposed, inputPending;
+    private readonly int aiSeat;
     private readonly Stopwatch startup = Stopwatch.StartNew();
     private readonly MatchReplayRecorder replay;
     public RecordedMatchReplay CompleteReplay(string[] players, int game, int bestOf, int winner, string reason)
@@ -68,9 +70,11 @@ public sealed class OnlineMatchSession : IDisposable
     public string Failure { get; private set; }
     public bool Ready { get; private set; }
 
-    public OnlineMatchSession(string matchId, DeckDefinition first, DeckDefinition second, int seed, OnlineRoomConfig config = null, string roomId = null, int gameNumber = 1)
+    public OnlineMatchSession(string matchId, DeckDefinition first, DeckDefinition second, int seed, OnlineRoomConfig config = null, string roomId = null, int gameNumber = 1, int aiSeat = 0)
     {
         if (first == null || second == null) throw new ArgumentNullException("decks");
+        if(aiSeat<0||aiSeat>2)throw new ArgumentOutOfRangeException(nameof(aiSeat));
+        this.aiSeat=aiSeat;
         MatchId = string.IsNullOrWhiteSpace(matchId) ? Guid.NewGuid().ToString("N") : matchId;
         replay = new MatchReplayRecorder(MatchId);
         RandomSeed = seed;
@@ -86,9 +90,9 @@ public sealed class OnlineMatchSession : IDisposable
         Directory.CreateDirectory(directory);
         configPath = Path.Combine(directory, "start.json");
         File.WriteAllText(configPath, JsonUtility.ToJson(new StartConfig {
-            session = MatchId, seed = seed, startingLife = config?.startingLife ?? 20,
+            session = MatchId, formatId = config?.formatId ?? "none", seed = seed, startingLife = config?.startingLife ?? 20,
             firstPlayerSeat = config?.firstPlayerSeat ?? 1, useAnte = config?.useAnte == true, decks = new[] { first, second },
-            noShuffle = config?.noShuffle == true,
+            noShuffle = config?.noShuffle == true, aiSeat = aiSeat,
             shuffleAuditFile = ShuffleAuditFile, runtimeHash = runtime.runtimeHash, forgeRevision = runtime.revision,
             roomId = roomId, gameNumber = gameNumber,
             authorizedAuxiliarySeriesPools = config?.authorizedAuxiliarySeriesPools
@@ -224,6 +228,7 @@ public sealed class OnlineMatchSession : IDisposable
     {
         if (disposed || Failure != null || action == null) return GameActionResult.Rejected("会话不可用。", AppliedSequence);
         if (action.playerId < 1 || action.playerId > 2) return GameActionResult.Rejected("无效席位。", AppliedSequence);
+        if(action.playerId==aiSeat)return GameActionResult.Rejected("AI 席位由本地引擎控制。",AppliedSequence);
         ForgeRequest request = views[action.playerId - 1].forge.request;
         bool concede = action.type == GameActionType.Concede;
         if (concede && (!Ready || views[0].outcome.isFinished))

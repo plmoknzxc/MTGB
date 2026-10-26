@@ -46,6 +46,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentStackTargetDetails(RectTransform panel,float top,float height)
     {
+        if(stackTargetDetails!=null&&stackTargetDetails.parent!=panel){stackTargetDetails.SetParent(panel,false);stackTargetDetailsKey=null;}
         if(stackTargetDetails!=null)stackTargetDetails.gameObject.SetActive(height>0);
         if(height<=0)return;
         if(stackTargetDetails==null)stackTargetDetails=Rect(panel,"StackTargets",Vector2.zero,new Vector2(308,height));

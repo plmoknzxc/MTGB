@@ -69,6 +69,12 @@ public sealed partial class MainMenuController
         string key=JsonUtility.ToJson(deck);status.text=DeckCompanion.Label(deck,cards)+"\n"+DeckCompanion.Text("正在检查行侣条件…","Checking companion restriction…","相棒条件を確認中…");
         yield return new WaitForSecondsRealtime(.45f);
         if(revision!=companionStatusRevision||status==null||!companionDialogOpen||JsonUtility.ToJson(currentDeck)!=key)yield break;
+        yield return deckLegality.Refresh(deck.format,deck.banlist??DeckFormatLegality.Current,cards);
+        if(revision!=companionStatusRevision||status==null||!companionDialogOpen||JsonUtility.ToJson(currentDeck)!=key)yield break;
+        if(deckLegality.Get(DeckRepository.ResolveCard(deck.companion,cards),deck.format,deck.banlist,false,true)=="banned"){
+            status.text=DeckCompanion.Label(deck,cards)+"\n"+DeckCompanion.Text("此赛制禁止将这张牌用作行侣。","This card is banned as a companion in this format.","このフォーマットではこのカードを相棒に指定できません。");
+            status.color=MenuVisualTheme.Accent;yield break;
+        }
         System.Threading.Tasks.Task<DeckCompanionInspector.Result> task;
         try{task=DeckCompanionInspector.Inspect(deck);}catch(System.Exception){status.text=DeckCompanionInspector.Status(new DeckCompanionInspector.Result{error="engine"},false);yield break;}
         while(!task.IsCompleted){if(revision!=companionStatusRevision||status==null)yield break;yield return null;}

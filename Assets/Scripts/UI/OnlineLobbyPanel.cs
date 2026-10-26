@@ -231,7 +231,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             "归属变化影响 BO3 后续局，不修改保存的牌组或收藏。",new Vector2(0f,-46f),
             new Vector2(780f,72f),font,out panel.anteStateText);
         panel.anteToggle.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
-        panel.cardFormatDropdown.onValueChanged.AddListener(_=>panel.UpdateAnteLabel());
+        panel.cardFormatDropdown.onValueChanged.AddListener(_=>{panel.UpdateAnteLabel();panel.RefreshFormatRules();});
 
         panel.noShuffleToggle = AddToggle(roomCard.transform,"NoShuffleToggle","不洗切卡组",
             "按编辑器保存顺序抓牌；开局、调度和卡牌效果均不打乱牌库。",new Vector2(0f,-128f),
@@ -422,6 +422,17 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         OnlineMatchService.Instance.ConnectionChanged -= OnConnection;
     }
 
+    private bool ValidatePlayerName()
+    {
+        if (OnlineMessageGuard.ValidateDisplayName(nameInput.text, out _)) return true;
+        string message=string.IsNullOrWhiteSpace(nameInput.text)
+            ?DeckCompanion.Text("玩家名称不能为空，也不能只填空格。","Player name cannot be empty or only spaces.","プレイヤー名は空欄や空白のみにできません。")
+            :DeckCompanion.Text("玩家名称最多 24 个字。","Player name must be at most 24 characters.","プレイヤー名は24文字以内にしてください。");
+        if(browserStatus!=null)browserStatus.text=message;
+        if(connectionStatusText!=null)connectionStatusText.text=message;
+        return false;
+    }
+
     private void Connect()
     {
         OnlineMatchService service = OnlineMatchService.EnsureInstance();
@@ -433,6 +444,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             return;
         }
 
+        if(!ValidatePlayerName())return;
         ushort port = ushort.TryParse(portInput.text, out ushort parsed) ? parsed : (ushort)7777;
         service.Connect(addressInput.text, port, nameInput.text, profileInput.text, roomInput.text, ReadRoomConfig());
         Refresh();
@@ -449,6 +461,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             return;
         }
 
+        if(!ValidatePlayerName())return;
         ushort port = ushort.TryParse(portInput.text, out ushort parsed) ? parsed : (ushort)7777;
         service.StartLanHost(port, nameInput.text, profileInput.text, roomInput.text, ReadRoomConfig());
         Refresh();
@@ -562,6 +575,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     {
         OnlineSeriesState series = OnlineMatchService.Instance?.LobbyState?.series;
         if (selectedDeck == null || series == null || !series.betweenGames || ready || entry == null) return;
+        if(selectedDeck.format=="duelcommander"){MoveCommanderCard(entry,toSideboard);return;}
         List<DeckEntry> source = toSideboard ? selectedDeck.cards : selectedDeck.sideboard;
         List<DeckEntry> destination = toSideboard ? selectedDeck.sideboard : selectedDeck.cards;
         entry = source.Find(item => SamePrinting(item, entry));
@@ -767,6 +781,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         RefreshDeckSummary();
 
         if (lobby?.config != null) ApplyAuthoritativeRoomConfig(lobby.config);
+        RefreshFormatRules();
         UpdateCustomContentLabel();
         RefreshRoomSummary(lobby);
         RefreshSideboardControls(series);
@@ -913,12 +928,16 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private int sideboardStartRequested=-1;
     private void RefreshSideboardCardGrids()
     {
-        string signature = JsonUtility.ToJson(selectedDeck);
+        string signature = JsonUtility.ToJson(selectedDeck)+"/"+GamePreferences.Revision;
         if (signature == sideboardGridSignature) return;
         sideboardGridSignature = signature;
         IReadOnlyList<CardDefinition> cardDatabase = CardDatabaseRepository.LoadAll();
         PopulateSideboardGrid(mainDeckContent, selectedDeck?.cards, false, cardDatabase, "主牌为空");
-        PopulateSideboardGrid(sideboardContent, selectedDeck?.sideboard, true, cardDatabase, "备牌为空");
+        PopulateSideboardGrid(sideboardContent, SideboardDisplayEntries, true, cardDatabase, selectedDeck?.format=="duelcommander"?"将原牌组中的合法主将拖入统帅区":"备牌为空");
+        var heading=sideboardPageGroup.transform.Find("SideboardCard/Heading")?.GetComponent<Text>();
+        if(heading!=null)heading.text=selectedDeck?.format=="duelcommander"?DeckCompanion.Text("统帅区","Command zone","統率領域"):DeckCompanion.Text("备牌","Sideboard","サイドボード");
+        var mainHeading=sideboardPageGroup.transform.Find("MainDeckCard/Heading")?.GetComponent<Text>();
+        if(mainHeading!=null)mainHeading.text=selectedDeck?.format=="duelcommander"?DeckCompanion.Text("主牌 · 拖到右侧指定主将","Main deck · Drag commander right","メイン · 右へドラッグして統率者に指定"):DeckCompanion.Text("主牌 · 拖到右侧移入备牌","Main deck · Drag right to move to sideboard","メイン · 右へドラッグしてサイドボードへ");
         foreach (var content in new[] { mainDeckContent, sideboardContent })
         {
             if(content==null)continue;

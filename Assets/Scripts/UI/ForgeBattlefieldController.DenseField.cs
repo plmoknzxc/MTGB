@@ -9,6 +9,7 @@ public sealed partial class ForgeBattlefieldController
     private readonly Dictionary<string,ScrollRect> denseFieldRows=new Dictionary<string,ScrollRect>();
     private readonly Dictionary<string,float> denseCardWidths=new Dictionary<string,float>();
     private readonly Dictionary<string,string> denseWidthSignatures=new Dictionary<string,string>();
+    private readonly Dictionary<string,List<ForgeCardView[]>> denseFieldGroups=new Dictionary<string,List<ForgeCardView[]>>();
     private bool HasTwoLandRows(bool own)
     {
         var player=view?.players?.FirstOrDefault(p=>own?p.seat==seat:p.seat!=seat);
@@ -22,6 +23,7 @@ public sealed partial class ForgeBattlefieldController
     private void SetDenseArenaRowVisible(string row,bool visible)
     {
         if(denseFieldRows.TryGetValue(row,out var scroll)&&scroll!=null)scroll.gameObject.SetActive(visible);
+        if(!visible)denseFieldGroups.Remove(row);
     }
     // Pack populated regions from each hand towards the midline. All three
     // own independent horizontal offsets and use their measured full card bounds.
@@ -29,6 +31,25 @@ public sealed partial class ForgeBattlefieldController
     {
         string prefix=own?"Your":"Opponent";
         float edge=Mathf.Min(370,surface.rect.height*.5f-140);
+        var active=new[]{"Support","Planeswalkers","Battles"}.Select(kind=>prefix+kind)
+            .Where(key=>denseFieldRows.TryGetValue(key,out var lane)&&lane!=null&&lane.gameObject.activeSelf).ToArray();
+        // Fit the real footprints, including shadows and loyalty/defense shields.
+        // A fixed height ratio understated those adornments and crossed midline.
+        float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));
+        float sideWidth=Mathf.Min(500,tableWidth*.38f);
+        for(int pass=0;pass<4&&active.Length>0;pass++) {
+            float height=active.Sum(key=>((RectTransform)denseFieldRows[key].transform).rect.height);
+            float budget=edge-Math.Max(0,active.Length-1)*16-2;
+            if(height<=budget)break;
+            float factor=budget/height;bool resized=false;
+            foreach(string key in active) {
+                float prior=denseCardWidths[key],target=Mathf.Max(48,prior*factor-.5f);
+                if(target>=prior-.1f)continue;
+                denseCardWidths[key]=target;resized=true;
+                LayoutDenseArenaRow((RectTransform)denseFieldRows[key].transform.parent,denseFieldGroups[key],key,own,false,true,tableWidth,sideWidth,sideWidth);
+            }
+            if(!resized)break;
+        }
         foreach(string kind in new[]{"Support","Planeswalkers","Battles"}) {
             if(!denseFieldRows.TryGetValue(prefix+kind,out var lane) || lane==null || !lane.gameObject.activeSelf)continue;
             var rect=(RectTransform)lane.transform;
@@ -50,6 +71,19 @@ public sealed partial class ForgeBattlefieldController
         foreach(var pair in arenaCards)
             if(retainedCards.Contains(pair.Key)&&pair.Key.StartsWith(prefix,StringComparison.Ordinal))Include(pair.Value.root);
         var plate=Node(own?"PlayerPlate":"OpponentPlate");
+        if(plate.gameObject.activeInHierarchy)Include((RectTransform)plate);
+        if (IsRedesignLayout)
+        {
+            // The fixed player mana lane includes 32-unit external arrows.
+            // Reserve it before the first pool render, including tapped lands.
+            var manaEdge = surface.TransformPoint(new Vector3(surface.rect.xMin + 392, 0, 0));
+            edge = Mathf.Max(edge, parent.InverseTransformPoint(manaEdge).x);
+        }
+        var counters=plate.Find("PlayerCounters") as RectTransform;
+        if(counters!=null&&counters.gameObject.activeInHierarchy) {
+            Include(counters);
+            foreach(var control in counters.GetComponentsInChildren<Button>())Include((RectTransform)control.transform);
+        }
         foreach(string name in new[]{"StatesPrevious","StatesNext","EmblemsPrevious","EmblemsNext"}) {
             var control=plate.Find(name) as RectTransform;
             if(control!=null&&control.gameObject.activeInHierarchy)Include(control);
@@ -59,21 +93,28 @@ public sealed partial class ForgeBattlefieldController
     }
     private void LayoutDenseArenaRow(RectTransform parent,List<ForgeCardView[]> groups,string row,bool own,bool lands,bool support,float tableWidth,float sideWidth,float available)
     {
+        denseFieldGroups[row]=groups;
         const float gap=8;
         int rowCount=Math.Min(groups.Count,row.Contains("Planeswalkers") || row.Contains("Battles")?1:2);
+        var supportField=support?(view?.players?.FirstOrDefault(p=>own?p.seat==seat:p.seat!=seat)?.battlefield??Array.Empty<ForgeCardView>())
+            .Where(c=>!c.land&&!c.creature).ToArray():Array.Empty<ForgeCardView>();
+        bool hasSupport=supportField.Any(c=>!c.planeswalker&&!c.battle),hasWalkers=supportField.Any(c=>c.planeswalker&&!c.battle),hasBattles=supportField.Any(c=>c.battle);
+        int supportCategories=(hasSupport?1:0)+(hasWalkers?1:0)+(hasBattles?1:0);
+        // When categories share this half, use its horizontal room before
+        // reserving a second artifact/enchantment row and shrinking every card.
+        if(support&&supportCategories>1)rowCount=1;
         int preferredColumns=Mathf.Clamp(Mathf.CeilToInt(groups.Count/(float)rowCount),1,support?5:6);
         float rowGap=support?5:gap;
         float zoneWidth=support?sideWidth:available;
         float informationInset=support?0:InformationLaneInset(parent,own,36-tableWidth*.5f+32);
         float availableWidth=Mathf.Max(80,zoneWidth-64-informationInset);
         string signature=availableWidth+"/"+preferredColumns+"/"+GamePreferences.Revision+"/"+groups.Max(g=>g.Length)+"/"+groups.Any(g=>g[0].room)+"/"+groups.Any(g=>g[0].tapped)+"/"+groups.Any(g=>g[0].planeswalker);
-        // Support lanes share the vertical space between midline and hand.
-        // Reserve a row for every other populated support category on this side.
-        int supportRows=0;
-        if(support){var player=view?.players?.FirstOrDefault(p=>p.seat==(own?seat:(seat==1?2:1)));var field=player?.battlefield??Array.Empty<ForgeCardView>();
-            supportRows=(field.Any(c=>c.battle)?1:0)+(field.Any(c=>c.planeswalker)?1:0)+(field.Any(c=>!c.land&&!c.creature&&!c.battle&&!c.planeswalker)?2:0);}
-        float maximum=support?Mathf.Min(144*.88f,supportRows>2?272f/supportRows/1.3f:144*.88f):lands?112*.88f:HasTwoLandRows(own)?112*.88f:144*.88f;
-        signature+="/"+maximum;
+        float maximum=support?144*.88f:lands?112*.88f:HasTwoLandRows(own)?112*.88f:144*.88f;
+        if(support) {
+            float footprintWidth=maximum*(groups.Any(g=>g[0].room)?1.7f:1);
+            preferredColumns=Math.Min(preferredColumns,Math.Max(1,Mathf.FloorToInt((availableWidth+gap)/(footprintWidth+gap))));
+        }
+        signature+="/"+supportCategories+"/"+rowCount+"/"+preferredColumns+"/"+maximum;
         bool retained=denseWidthSignatures.TryGetValue(row,out var prior)&&prior==signature&&denseCardWidths.ContainsKey(row);
         float cardWidth=retained?denseCardWidths[row]:maximum;
         float height=160,width=availableWidth,stride=80;
@@ -103,7 +144,7 @@ public sealed partial class ForgeBattlefieldController
                 float rotation=card.tapped?(own?-12:12):0;
                 var size=new Vector2(card.room?cardWidth*1.7f:cardWidth,card.planeswalker?cardWidth*1.3f:cardWidth*.88f);
                 var previous=arenaCards.TryGetValue(key,out var existing)?existing.root.anchoredPosition:Vector2.zero;
-                DrawArenaCard(contentRect,card,group.Length,key,row+":"+ArenaGroupKey(card),previous,size,false,rotation,i);
+                DrawArenaCard(contentRect,card,group.Length,key,row+":"+ArenaPresentationGroupKey(card),previous,size,false,rotation,i);
                 var bounds=DenseFieldViewport.LayoutFootprint(arenaCards[key].root,rotation);
                 footprints[i]=bounds;
                 left=Mathf.Min(left,bounds.xMin);right=Mathf.Max(right,bounds.xMax);bottom=Mathf.Min(bottom,bounds.yMin);top=Mathf.Max(top,bounds.yMax);

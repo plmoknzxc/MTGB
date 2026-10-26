@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// <summary>Unity presentation of the authenticated seat view. Only server-offered options can be submitted.</summary>
 public sealed partial class ForgeBattlefieldController : MonoBehaviour
 {
-    public const string SceneName = "IntegratedBattlefield";
+    public const string SceneName = BattlefieldRedesignLayout.SceneName;
     private static bool loading;
     private OnlineMatchService service;
     private Canvas canvas;
@@ -46,11 +46,11 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         loading = true;
         try
         {
-            if (SceneManager.GetActiveScene().name != SceneName || OnlineLobbyPanel.HasBattlefieldLobby)
+            if (!IsBattlefieldSceneActive || OnlineLobbyPanel.HasBattlefieldLobby)
                 yield return SceneManager.LoadSceneAsync(SceneName);
             if (owner == null || (!owner.IsInMatch && !owner.IsPreparingMatch && owner.EndReview == null))
             {
-                if(SceneManager.GetActiveScene().name==SceneName) SceneManager.LoadScene("Main");
+                if(IsBattlefieldSceneActive) SceneManager.LoadScene("Main");
                 yield break;
             }
             var controller = FindFirstObjectByType<ForgeBattlefieldController>();
@@ -78,6 +78,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
 
     private void Update()
     {
+        UpdateRedesignLayout();
         UpdateChoiceCancelShortcut();
         UpdateTargeting();
         UpdateUndoShortcut();
@@ -145,20 +146,21 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             && (!string.IsNullOrEmpty(state.boardKey)?state.boardKey==view.boardKey:
                 string.Join("|",(state.players??Array.Empty<ForgePlayerView>()).Select(p=>ServerSnapshotJson.Serialize(p)))==string.Join("|",(view.players??Array.Empty<ForgePlayerView>()).Select(p=>ServerSnapshotJson.Serialize(p))));
         if(integrated && (seat!=localSeat || state==null))ResetCastingVisual();
-        if(state==null||seat!=localSeat)RestoreBattlefieldWindows();
+        if(state==null||seat!=localSeat){RestoreBattlefieldWindows();selectedHandSource="Hand";ResetRedesignTransitions();}
         if(integrated&&(state==null||seat!=localSeat)) {
             hoveredStack=null;detailCard=null;detailCardId=inspectedCardId=0;inspectHoverRevision++;
             Node("InspectPanel").gameObject.SetActive(false);
         }
         if(state==null){nameRequest=0;nameLanguageRevision=-1;pileRequest=0;selectedPileIndex=-1;ResetNotices();}
         if(seat!=localSeat)ResetNotices();
+        ObserveStackReadWindow(state,localSeat);
         view = state; seat = localSeat; canAct = enabledInput; submit = onChoice; submitOrder = onOrder; concede = onConcede;
         boardPreferenceKey=preferenceKey;
         requestId = state?.awaitingInput == true ? state.request.requestId : 0;
         submitted = false;
         ObserveNextPhasePause(state,localSeat);
         PresentNotices();
-        if(pickerUpdate){SetText("PriorityPill/Text","等待你完成选择");PresentCardSelection();PresentTargetChoiceActions();RefreshBattlefieldViewControls();return;}
+        if(pickerUpdate){SetText("PriorityPill/Text","等待你完成选择");PresentCardSelection();PresentTargetChoiceActions();RefreshBattlefieldViewControls();PresentRedesignLayout();return;}
         if (integrated) { PresentIntegrated(status);RefreshBattlefieldViewControls(); return; }
         Clear(cardsRoot); Clear(actionRoot); Clear(previewRoot);
         connectionText.text = status;
@@ -188,7 +190,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private void Build()
     {
         if (canvas != null) return;
-        if (SceneManager.GetActiveScene().name == SceneName) { BuildIntegrated(); return; }
+        if (IsBattlefieldSceneActive) { BuildIntegrated(); return; }
         foreach (var old in FindObjectsByType<Canvas>(FindObjectsSortMode.None)) old.enabled = false;
         var whitebox = GameObject.Find("ArenaWhitebox");
         if (whitebox != null)
@@ -469,6 +471,10 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     }
     private string RequestOptionLabel(ForgeOption option)
     {
+        if(IsCommanderPerpetualReset) {
+            if(option.id=="ok")return TapPaymentText("清除永久改动","Clear changes","変更を消す");
+            if(option.id=="cancel")return TapPaymentText("保留永久改动","Keep changes","変更を残す");
+        }
         if(view?.request?.selectionPurpose=="forageMethod") {
             if(option.id=="ok")return TapPaymentText("牺牲食品","Sacrifice Food","食物を生け贄");
             if(option.id=="cancel")return TapPaymentText("放逐坟场三张","Exile three from graveyard","墓地３枚を追放");

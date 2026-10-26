@@ -22,6 +22,21 @@ def patched_source(source,definition):
         source=source.replace(change['before'],change['after'],1)
     return source
 
+def reviewed_java_sources(definitions):
+    """Compose every reviewed patch for a class, in declaration order."""
+    sources={}
+    origins={}
+    for fix in definitions['patches']:
+        path=fix['javaPath']
+        origin=(fix['source'],fix['sourceSha256'])
+        if path not in sources:
+            sources[path]=reviewed_java_source(ROOT/fix['source'],fix)
+            origins[path]=origin
+        elif origins[path]!=origin:
+            raise ValueError('Conflicting native source origins: '+path)
+        sources[path]=patched_source(sources[path],fix)
+    return sources
+
 def apply_asset_patches(runtime,definitions):
     """Validate every source, destination and context before writing any card script."""
     scope=(runtime/'assets/res/cardsfolder').resolve()
@@ -56,10 +71,9 @@ def main():
         print(f'PASS: {len(assets)} reviewed card-script fix')
         return
     sources=[]
-    for fix in definitions['patches']:
-        original=ROOT/fix['source'];text=reviewed_java_source(original,fix)
-        output=BUILD/'src'/fix['javaPath'];output.parent.mkdir(parents=True,exist_ok=True)
-        output.write_text(patched_source(text,fix),encoding='utf8')
+    for java_path,text in reviewed_java_sources(definitions).items():
+        output=BUILD/'src'/java_path;output.parent.mkdir(parents=True,exist_ok=True)
+        output.write_text(text,encoding='utf8')
         sources.append(output)
     classes=(BUILD/'classes').resolve()
     if classes!=ROOT.joinpath('.tools/native-patches/classes').resolve():raise ValueError('Unsafe build output')

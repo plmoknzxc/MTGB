@@ -59,7 +59,9 @@ public sealed partial class ForgeBattlefieldController
         if(view.request.sourceCard!=null && !string.IsNullOrEmpty(view.request.sourceCard.name))return view.request.sourceCard;
         int id=view.request.sourceCardId>0?view.request.sourceCardId:choiceSeat==seat?clickedLandId:0;
         return (view.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>(p.hand??Array.Empty<ForgeCardView>())
-            .Concat(p.battlefield??Array.Empty<ForgeCardView>()))
+            .Concat(p.battlefield??Array.Empty<ForgeCardView>())
+            .Concat(p.graveyardCards??Array.Empty<ForgeCardView>()).Concat(p.exileCards??Array.Empty<ForgeCardView>()))
+            .Concat(view.playableGraveyard??Array.Empty<ForgeCardView>()).Concat(view.playableExile??Array.Empty<ForgeCardView>())
             .Concat((view.stackItems??Array.Empty<ForgeStackItem>()).Select(s=>s.source))
             .FirstOrDefault(c=>c!=null&&c.id==id);
     }
@@ -177,11 +179,12 @@ public sealed partial class ForgeBattlefieldController
         title.raycastTarget=false;
         string name=source?.name??"";
         if(source!=null && (!sectorChoice||source.name==source.originalName) && catalog.TryGetValue(source.printingKey??"",out var definition))name=GamePreferences.CardName(definition);
+        if(options.All(o=>o.withoutManaCost))name=TapPaymentText("无需支付法术力费用","Without paying its mana cost","マナ・コストを支払わずに唱える");
         if(sectorChoice)name=source!=null?$"{name} ({source.id})":assigningSector?Regex.Match(view.request.message,@"^one: Assign (.+) to a sector$").Groups[1].Value:"";
         var subtitle=Label(landChoiceMenu,"Source",name,new Vector2(0,height/2-(cards?48:36)),new Vector2(width-20,20),cards||sectorChoice?15:13,new Color(.7f,.78f,.84f));subtitle.raycastTarget=false;
         float groupHeader=0;
-        if(groupPlayer>0){
-            title.supportRichText=subtitle.supportRichText=false;PreferenceText.SetSize(title,17);PreferenceText.SetSize(subtitle,13);title.resizeTextForBestFit=subtitle.resizeTextForBestFit=false;
+        if(groupPlayer>0||cards){
+            title.supportRichText=subtitle.supportRichText=false;PreferenceText.SetSize(title,cards?21:17);PreferenceText.SetSize(subtitle,cards?15:13);title.resizeTextForBestFit=subtitle.resizeTextForBestFit=false;
             float titleHeight=Mathf.Max(26,title.preferredHeight+4),sourceHeight=Mathf.Max(20,subtitle.preferredHeight+4);
             title.rectTransform.sizeDelta=new Vector2(width,titleHeight);title.rectTransform.anchoredPosition=new Vector2(0,height/2-6-titleHeight/2);
             subtitle.rectTransform.sizeDelta=new Vector2(width-20,sourceHeight);subtitle.rectTransform.anchoredPosition=new Vector2(0,height/2-10-titleHeight-sourceHeight/2);
@@ -209,7 +212,7 @@ public sealed partial class ForgeBattlefieldController
         }
         float viewportHeight=sectorChoice?sectorItemHeight+10:cards?height-(hasFooter?128:88):46,cellWidth=(width-24)/columns;
         float choicesY=mana||sectorChoice?-height/2+12+(hasFooter?32:0)+viewportHeight/2:cards?(hasFooter?-12:-32):(hasFooter?-4:-22);
-        if(groupPlayer>0){viewportHeight=height-groupHeader-16-(hasFooter?32:0);choicesY=-height/2+12+(hasFooter?32:0)+viewportHeight/2;}
+        if(groupPlayer>0||cards){viewportHeight=height-groupHeader-16-(hasFooter?32:0);choicesY=-height/2+12+(hasFooter?32:0)+viewportHeight/2;}
         var clip=Panel(landChoiceMenu,"Choices",new Vector2(0,choicesY),new Vector2(width-24,viewportHeight),Color.clear);
         clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;
         var content=Rect(clip,"Content",Vector2.zero,new Vector2(width,viewportHeight));scroll.viewport=clip;scroll.content=content;scroll.Configure(cellWidth);
@@ -403,7 +406,7 @@ public sealed partial class ForgeBattlefieldController
         bool grouping=GroupAssignmentSeat(source)>0;
         if(grouping){title=option.id=="choice:0"?TapPaymentText("友方","Friend","味方"):TapPaymentText("敌方","Foe","敵");description=GroupChoiceText(source,option);}
         if(casting) {
-            source=castingFace;description=PrintedRuleText(source,source.currentRules?.Replace("\\n","\n")??"");cost=source.manaCost;
+            source=castingFace;description=PrintedRuleText(source,source.currentRules?.Replace("\\n","\n")??"");cost=source.previewManaCost??source.manaCost;
             title=source.land?TapPaymentText("使用地","Play land","土地をプレイ"):option.faceKind=="prepare"?"备法":option.faceKind=="adventure"?"历险":option.faceKind=="omen"?"前兆":option.faceKind=="mdfc-front"?"正面":option.faceKind=="mdfc-back"?"背面":"施放";
         }
         else if(view.request.kind=="dialog" && view.request.message=="getAbilityToPlay" && source!=null && !source.faceDown) {
@@ -436,11 +439,28 @@ public sealed partial class ForgeBattlefieldController
             if(keyword.Success&&!prefix.Success)description=option.label??"";
             description=AbilityEffectText(source,description);
         }
+        if(!casting&&option.faceKind=="activation") {
+            if(!keyword.Success)title=TapPaymentText("激活异能","Activate ability","能力起動");
+            var entry=DeckKeywordGlossary.All.FirstOrDefault(e=>string.Equals(e.English,keyword.Value,StringComparison.OrdinalIgnoreCase));
+            // Granted keywords need not occur in this card's printed rules.
+            // Reuse the glossary only for an exact native reminder, including
+            // its printed cost; a changed effect must keep its own description.
+            if(entry!=null&&prefix.Success&&!GamePreferences.Language.StartsWith("en",StringComparison.Ordinal)) {
+                string Key(string value)=>Regex.Replace(value??"",@"\s+","");
+                string reminder=(entry.EnglishHelp??"").Replace("the printed cost",prefix.Groups["cost"].Value.Trim());
+                if(Key(description)==Key("("+reminder+")"))description=entry.Help;
+            }
+            // This is the exact offered action, not the card's spell preview.
+            // Preserve tap/untap/energy symbols from an existing cost prefix.
+            if(!string.IsNullOrEmpty(option.modeCost))
+                cost=option.modeCost+Regex.Replace(cost,@"\{(?![TQE]\})[^{}]+\}","").Trim();
+        }
+        if(title=="施放")title=TapPaymentText("施放","Cast","唱える");
         float top=size.y/2;
         var heading=Label(face,"Mode",title,new Vector2(0,top-19),new Vector2(size.x-18,28),20,Color.white);heading.raycastTarget=false;
-        if(!casting&&source?.zone=="Battlefield"&&prefix.Success)
-            heading.rectTransform.sizeDelta=new Vector2(size.x-18,Mathf.Max(28,heading.preferredHeight+4));
         if(grouping){PreferenceText.SetSize(heading,17);heading.resizeTextForBestFit=false;heading.rectTransform.sizeDelta=new Vector2(size.x-18,Mathf.Max(28,heading.preferredHeight+4));}
+        float headingHeight=Mathf.Max(28,heading.preferredHeight+4),artTop=Mathf.Max(38,headingHeight+8);
+        heading.rectTransform.sizeDelta=new Vector2(size.x-18,headingHeight);heading.rectTransform.anchoredPosition=new Vector2(0,top-4-headingHeight/2);
         if(casting&&UsesComponentFace(source)) {
             var full=Rect(face,"CastingFace",new Vector2(0,-14),new Vector2(size.x-14,size.y-58));
             full.gameObject.AddComponent<Image>().raycastTarget=false;
@@ -464,15 +484,18 @@ public sealed partial class ForgeBattlefieldController
             name.resizeTextForBestFit=true;name.resizeTextMinSize=10;name.resizeTextMaxSize=13;return;
         }
         float artHeight=size.y*.27f;
-        var art=Rect(face,"Art",new Vector2(0,top-38-artHeight/2),new Vector2(size.x-16,artHeight)).gameObject.AddComponent<RawImage>();
+        var art=Rect(face,"Art",new Vector2(0,top-artTop-artHeight/2),new Vector2(size.x-16,artHeight)).gameObject.AddComponent<RawImage>();
         art.texture=sprite?.texture;art.color=sprite==null?new Color(.12f,.18f,.22f):Color.white;art.raycastTarget=false;
-        CardArtCrop.Illustration(art,sprite);
+        bool splitHalf=casting&&source!=null&&(source.stateName=="LeftSplit"||source.stateName=="RightSplit")
+            &&catalog.TryGetValue(source.printingKey??"",out var splitDefinition)&&splitDefinition.forgeSplitType=="Split";
+        if(splitHalf)CardArtCrop.SplitIllustration(art,sprite,source.stateName=="RightSplit");
+        else CardArtCrop.Illustration(art,sprite);
         if(casting) {
-            var strip=Panel(face,"FaceNameStrip",new Vector2(0,top-38-artHeight+10),new Vector2(size.x-16,24),new Color(.03f,.04f,.05f,.92f));strip.GetComponent<Image>().raycastTarget=false;
+            var strip=Panel(face,"FaceNameStrip",new Vector2(0,top-artTop-artHeight+10),new Vector2(size.x-16,24),new Color(.03f,.04f,.05f,.92f));strip.GetComponent<Image>().raycastTarget=false;
             var name=Label(strip,"FaceName",GamePreferences.CardFaceName(source.name),Vector2.zero,new Vector2(size.x-24,22),14,Paper);name.resizeTextForBestFit=true;name.resizeTextMinSize=10;name.resizeTextMaxSize=14;
         }
-        float effectHeight=size.y-artHeight-94;
-        var effect=Panel(face,"EffectPanel",new Vector2(0,top-44-artHeight-effectHeight/2),new Vector2(size.x-16,effectHeight),new Color(.86f,.88f,.84f));effect.GetComponent<Image>().raycastTarget=false;
+        float effectHeight=size.y-artHeight-artTop-56;
+        var effect=Panel(face,"EffectPanel",new Vector2(0,top-artTop-6-artHeight-effectHeight/2),new Vector2(size.x-16,effectHeight),new Color(.86f,.88f,.84f));effect.GetComponent<Image>().raycastTarget=false;
         float typeHeight=casting?20:0;
         if(casting){var type=Label(effect,"Type",VisibleCardType(source),new Vector2(0,effectHeight*.5f-12),new Vector2(size.x-30,20),11,new Color(.16f,.2f,.21f));type.resizeTextForBestFit=true;type.resizeTextMinSize=9;type.resizeTextMaxSize=11;}
         var effectContent=Scroll(effect,"TextScroll",new Vector2(0,-typeHeight*.5f),new Vector2(size.x-28,effectHeight-12-typeHeight));
@@ -488,11 +511,16 @@ public sealed partial class ForgeBattlefieldController
         textHeight=Mathf.Max(effectHeight-14-typeHeight,bodySymbols.GetPreferredValues(bodySymbols.text,size.x-38,10000).y+4);
         body.rectTransform.sizeDelta=new Vector2(size.x-38,textHeight);effectContent.sizeDelta=new Vector2(size.x-28,textHeight);
         if(textHeight>effectHeight-12-typeHeight)AddStackScrollIndicator(effectContent);
+        float statsWidth=0;
+        if(casting&&source.creature){
+            var stats=Label(face,"CreatureStats",source.power+"/"+source.toughness,Vector2.zero,new Vector2(42,28),18,Paper);stats.fontStyle=FontStyle.Bold;
+            statsWidth=Mathf.Max(42,stats.preferredWidth+4);stats.rectTransform.sizeDelta=new Vector2(statsWidth,Mathf.Max(28,stats.preferredHeight+4));
+            stats.rectTransform.anchoredPosition=new Vector2(size.x*.5f-6-statsWidth*.5f,-top+29);
+        }
         if(!string.IsNullOrEmpty(cost)) {
-            if(cost.Contains("{")){var symbols=CardSymbolText.Create(face,"Cost",25,Paper);IntegratedUiUtility.Place(symbols.rectTransform,new Vector2(0,-top+29),new Vector2(size.x-22,34));symbols.alignment=TMPro.TextAlignmentOptions.Center;symbols.text=CardSymbolText.Format(cost);}
+            if(cost.Contains("{")){var symbols=CardSymbolText.Create(face,"Cost",25,Paper);IntegratedUiUtility.Place(symbols.rectTransform,new Vector2(statsWidth>0?-(statsWidth+8)*.5f:0,-top+29),new Vector2(size.x-22-(statsWidth>0?statsWidth+8:0),34));symbols.alignment=TMPro.TextAlignmentOptions.Center;symbols.text=CardSymbolText.Format(cost);}
             else {var value=Label(face,"Cost",PrintedCostText(source,cost),new Vector2(0,-top+29),new Vector2(size.x-22,34),26,Gold);value.raycastTarget=false;}
         }
-        if(casting&&source.creature){var stats=Label(face,"CreatureStats",source.power+"/"+source.toughness,new Vector2(size.x*.5f-25,-top+29),new Vector2(42,28),18,Paper);stats.fontStyle=FontStyle.Bold;}
     }
     private void PresentSpreeChoices(ForgeCardView source,Vector2 anchor,long captured) => PresentModeCards(source,captured,true);
 }

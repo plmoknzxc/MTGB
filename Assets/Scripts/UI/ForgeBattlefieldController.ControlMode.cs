@@ -8,6 +8,10 @@ public sealed partial class ForgeBattlefieldController
     private ForgeControlMode previewControlMode=ForgeControlMode.Auto;
     private long automaticRequest, attemptedPaymentContext;
     private float automaticReadyAt;
+    private const float StackReadSeconds=1f, StackResultSeconds=.35f;
+    private string readableStackKey, readableStackMatch;
+    private int readableStackSeat, readableStackRestart;
+    private float readableStackUntil;
     private ForgeControlMode ControlMode=>service!=null?service.ControlMode:previewControlMode;
     private bool pauseNextPhase;
     private string pausePhase,pauseMatch;
@@ -77,6 +81,7 @@ public sealed partial class ForgeBattlefieldController
     {
         SetControlMode((ForgeControlMode)(((int)ControlMode+1)%3));
         PresentControlMode();RefreshPriorityAdvanceVisibility();
+        PresentRedesignLayout();
     }
     private void ToggleNextPhasePause()
     {
@@ -87,6 +92,7 @@ public sealed partial class ForgeBattlefieldController
             pauseSeat=seat;pauseRestart=view.restartRevision;pauseMatch=service?.MatchId;
         }
         renderedKey=null;PresentControlMode();
+        PresentRedesignLayout();
     }
     private void ObserveNextPhasePause(ForgeSeatView state,int localSeat)
     {
@@ -111,6 +117,28 @@ public sealed partial class ForgeBattlefieldController
         if(advanceButton==null || view?.request?.kind!="InputPassPriority")return;
         advanceButton.gameObject.SetActive(!submitted&&OptionIndex("ok")>=0&&AutomaticPriorityOption()<0);
     }
+    private void ObserveStackReadWindow(ForgeSeatView state,int localSeat)
+    {
+        if(state==null){readableStackKey=null;readableStackUntil=0;return;}
+        string match=service?.MatchId;
+        if(localSeat!=readableStackSeat || state.restartRevision!=readableStackRestart || match!=readableStackMatch){
+            readableStackKey=null;readableStackUntil=0;
+        }
+        readableStackSeat=localSeat;readableStackRestart=state.restartRevision;readableStackMatch=match;
+        // Track stack incarnations/order, not request IDs: priority changes and
+        // preference redraws must not keep restarting the same reading window.
+        int count=Mathf.Max(state.stackCount,Mathf.Max(state.stackItems?.Length??0,state.stack?.Length??0));
+        string key=count==0?"":count+":"+string.Join("|",Enumerable.Range(0,count).Select(i=>
+            i<(state.stackItems?.Length??0)&&state.stackItems[i]!=null
+                ?"id:"+state.stackItems[i].id
+                :"text:"+(i<(state.stack?.Length??0)?state.stack[i]:i.ToString())));
+        if(key==readableStackKey)return;
+        bool hadStack=!string.IsNullOrEmpty(readableStackKey);
+        readableStackKey=key;
+        readableStackUntil=Time.unscaledTime+(count>0?StackReadSeconds:hadStack?StackResultSeconds:0);
+    }
+    private bool StackReadWindowOpen=>Time.unscaledTime<readableStackUntil ||
+        !string.IsNullOrEmpty(readableStackKey)&&(hoveredStack!=null||stackBrowseOpen);
     private void UpdateAutomaticControl()
     {
         if(viewingBattlefield || service==null || !canAct || submitted || GameSettingsPanel.IsOpen || view?.awaitingInput!=true)return;
@@ -120,7 +148,8 @@ public sealed partial class ForgeBattlefieldController
         // when ordinary casting has automatic payment enabled.
         if(IsManaPaymentDecision)return;
         if(automaticRequest!=requestId){automaticRequest=requestId;automaticReadyAt=Time.unscaledTime+.06f;}
-        if(Time.unscaledTime<automaticReadyAt || view.request.kind=="InputPassPriority"&&Time.unscaledTime<phaseVisibleUntil)return;
+        if(Time.unscaledTime<automaticReadyAt || view.request.kind=="InputPassPriority"&&
+            (Time.unscaledTime<phaseVisibleUntil || StackReadWindowOpen))return;
         long context=view.request.contextId>0?view.request.contextId:requestId;
         int option=view.request.kind=="InputPassPriority"?AutomaticPriorityOption():ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,attemptedPaymentContext==context);
         if(option<0)return;

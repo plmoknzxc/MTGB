@@ -15,7 +15,7 @@ public sealed class DeckFormatLegality
     public static readonly string[] Names = { "标准", "先驱", "摩登", "前摩登", "薪传", "特选", "纯铁", "指挥官·官禁", "指挥官·法禁", "争锋", "史迹", "永恒", "N/A" };
     public const string Current = "current";
     public const string NoBanlist = "none";
-    public static readonly string[] OnlineKeys = { "standard", "pioneer", "modern", "premodern", "legacy", "vintage", "pauper", "historic", "timeless", "none" };
+    public static readonly string[] OnlineKeys = { "standard", "pioneer", "modern", "premodern", "legacy", "vintage", "pauper", "duelcommander", "brawl", "historic", "timeless", "none" };
     public static string FormatName(string key)
     {
         int index = Array.IndexOf(Keys, key);
@@ -50,6 +50,8 @@ public sealed class DeckFormatLegality
         public DateTime Effective = DateTime.MaxValue;
         public readonly HashSet<string> Sets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public readonly HashSet<string> Banned = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        public readonly HashSet<string> BannedCommanders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        public readonly HashSet<string> BannedCompanions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public readonly HashSet<string> Restricted = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public readonly HashSet<string> Additional = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     }
@@ -91,7 +93,7 @@ public sealed class DeckFormatLegality
 
     public static string Label(string banlist) => banlist == Current ? "现行规则（无历史日期）" : banlist == NoBanlist ? "N/A（无禁限）" : banlist;
 
-    public string Get(CardDefinition card, string format, string banlist)
+    public string Get(CardDefinition card, string format, string banlist, bool commander = false, bool companion = false)
     {
         if (card == null || string.IsNullOrWhiteSpace(card.cardName)) return "unknown";
         if (format == "none") return "legal";
@@ -100,6 +102,8 @@ public sealed class DeckFormatLegality
         if (banlist != NoBanlist)
         {
             if (rule.Banned.Contains(name)) return "banned";
+            if (companion && rule.BannedCompanions.Contains(name)) return "banned";
+            if (commander && (rule.BannedCommanders.Contains(name) || rule.BannedCommanders.Contains(name.Split(new[] { " // " }, StringSplitOptions.None)[0]))) return "banned";
             if (rule.Restricted.Contains(name) || rule.RestrictedLegendary && card.HasSupertype(CardSupertype.Legendary))
                 return "restricted";
         }
@@ -218,6 +222,11 @@ public sealed class DeckFormatLegality
                 case "Sets": rule.HasSets = true; Add(rule.Sets, value, ','); break;
                 case "Additional": Add(rule.Additional, value, ';'); break;
                 case "Banned": Add(rule.Banned, value, ';'); break;
+                case "BannedCompanion": Add(rule.BannedCompanions, value, ';'); break;
+                case "BannedCommander":
+                    Add(rule.BannedCommanders, value, ';');
+                    foreach (var name in value.Split(';')) rule.BannedCommanders.Add(name.Trim().Split(new[] { " // " }, StringSplitOptions.None)[0]);
+                    break;
                 case "Restricted": Add(rule.Restricted, value, ';'); break;
                 case "Rarities": rule.CommonOnly = value.Contains("C"); break;
                 case "RestrictedLegendary": rule.RestrictedLegendary = value.Equals("true", StringComparison.OrdinalIgnoreCase); break;

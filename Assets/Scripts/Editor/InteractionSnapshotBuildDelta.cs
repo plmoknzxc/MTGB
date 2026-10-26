@@ -21,7 +21,7 @@ public static class InteractionSnapshotBuildDelta
         try {
         if(server)addressables.BuildAddressablesWithPlayerBuild=AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer;
         report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-            scenes=server?new[]{"Assets/Scenes/DedicatedServer.unity"}:new[]{"Assets/Scenes/Main.unity","Assets/Scenes/IntegratedBattlefield.unity"},
+            scenes=server?new[]{"Assets/Scenes/DedicatedServer.unity"}:new[]{"Assets/Scenes/Main.unity","Assets/Scenes/IntegratedBattlefieldRedesign.unity"},
             locationPathName=Path.Combine(root,server?"MTGBServer":"MTGB.exe"),
             target=server?BuildTarget.StandaloneLinux64:BuildTarget.StandaloneWindows64,
             subtarget=(int)(server?StandaloneBuildSubtarget.Server:StandaloneBuildSubtarget.Player),options=BuildOptions.None

@@ -44,6 +44,68 @@ import forge.item.PaperCard;
 
 public class PlayEffect extends SpellAbilityEffect {
 
+    // Scope presentation to the exact native options and effect. A preview
+    // transforms a copy; nested choices restore their parent's context.
+    private record CastingChoice(SpellAbility effect, List<SpellAbility> options) {}
+    private static final ThreadLocal<CastingChoice> castingChoice = new ThreadLocal<>();
+
+    private static SpellAbility choosingEffect(final SpellAbility option) {
+        final CastingChoice context = castingChoice.get();
+        return context != null && context.options().stream().anyMatch(s -> s == option)
+                ? context.effect() : null;
+    }
+
+    public static boolean isChoosingWithoutManaCost(final SpellAbility option) {
+        final SpellAbility effect = choosingEffect(option);
+        return effect != null && effect.hasParam("WithoutManaCost");
+    }
+
+    public static SpellAbility castingCostPreview(final SpellAbility option) {
+        final SpellAbility effect = choosingEffect(option);
+        if (effect == null || !option.isSpell()) return option;
+        final SpellAbility preview = replacePlayCost(effect, option.copy(option.getActivatingPlayer()));
+        applyPlayCostModifiers(effect, preview);
+        return preview;
+    }
+
+    private static SpellAbility replacePlayCost(final SpellAbility sa, SpellAbility tgtSA) {
+        if (sa.hasParam("WithoutManaCost")) {
+            tgtSA = tgtSA.copyWithNoManaCost();
+        } else if (sa.hasParam("PlayCost")) {
+            Cost abCost;
+            String cost = sa.getParam("PlayCost");
+            if ("ManaCost".equals(sa.getParam("PlayCost"))) {
+                abCost = new Cost(tgtSA.getCardState().getManaCost(), false);
+            } else if (cost.equals("SuspendCost")) {
+                abCost = IterableUtil.find(tgtSA.getHostCard().getNonManaAbilities(), s -> s.isKeyword(Keyword.SUSPEND)).getPayCosts();
+            } else {
+                if (cost.contains("ConvertedManaCost")) {
+                    final String costcmc = Integer.toString(tgtSA.getHostCard().getCMC());
+                    cost = cost.replace("ConvertedManaCost", costcmc);
+                }
+                abCost = new Cost(cost, false);
+            }
+
+            tgtSA = tgtSA.copyWithManaCostReplaced(tgtSA.getActivatingPlayer(), abCost);
+        }
+        return tgtSA;
+    }
+
+    private static void applyPlayCostModifiers(final SpellAbility sa, final SpellAbility tgtSA) {
+        if (sa.hasParam("PlayReduceCost")) {
+            // for Kefnet only can reduce colorless cost
+            String reduce = sa.getParam("PlayReduceCost");
+            tgtSA.putParam("ReduceCost", reduce);
+            if (!StringUtils.isNumeric(reduce)) {
+                tgtSA.setSVar(reduce, sa.getSVar(reduce));
+            }
+        }
+        if (sa.hasParam("PlayRaiseCost")) {
+            String raise = sa.getParam("PlayRaiseCost");
+            tgtSA.putParam("RaiseCost", raise);
+        }
+    }
+
     @Override
     public boolean movesCardToOrFromLibrary(final SpellAbility sa) {
         // cards are played from hand unless ValidZone says otherwise
@@ -330,7 +392,14 @@ public class PlayEffect extends SpellAbilityEffect {
                 tgtSA = CardFactoryUtil.abilityCastFaceDown(tgtCard.getCurrentState(), false, "Morph");
                 tgtSA.setCastFromPlayEffect(true);
             } else {
-                tgtSA = controller.getController().getAbilityToPlay(tgtCard, sas);
+                final CastingChoice previousChoices = castingChoice.get();
+                try {
+                    castingChoice.set(new CastingChoice(sa, sas));
+                    tgtSA = controller.getController().getAbilityToPlay(tgtCard, sas);
+                } finally {
+                    if (previousChoices == null) castingChoice.remove();
+                    else castingChoice.set(previousChoices);
+                }
             }
 
             // in case player canceled from choice dialog
@@ -376,24 +445,8 @@ public class PlayEffect extends SpellAbilityEffect {
                 continue;
             }
 
-            if (sa.hasParam("WithoutManaCost")) {
-                tgtSA = tgtSA.copyWithNoManaCost();
-            } else if (sa.hasParam("PlayCost")) {
-                Cost abCost;
-                String cost = sa.getParam("PlayCost");
-                if (altCostManaCost) {
-                    abCost = new Cost(tgtSA.getCardState().getManaCost(), false);
-                } else if (cost.equals("SuspendCost")) {
-                    abCost = IterableUtil.find(tgtCard.getNonManaAbilities(), s -> s.isKeyword(Keyword.SUSPEND)).getPayCosts();
-                } else {
-                    if (cost.contains("ConvertedManaCost")) {
-                        final String costcmc = Integer.toString(tgtCard.getCMC());
-                        cost = cost.replace("ConvertedManaCost", costcmc);
-                    }
-                    abCost = new Cost(cost, false);
-                }
-
-                tgtSA = tgtSA.copyWithManaCostReplaced(tgtSA.getActivatingPlayer(), abCost);
+            if (altCost) {
+                tgtSA = replacePlayCost(sa, tgtSA);
             } else if (tgtSA.getPayCosts().hasManaCost() && tgtSA.getPayCosts().getCostMana().getMana().isNoCost()) {
                 // unpayable
                 continue;
@@ -414,18 +467,7 @@ public class PlayEffect extends SpellAbilityEffect {
                 }
             }
 
-            if (sa.hasParam("PlayReduceCost")) {
-                // for Kefnet only can reduce colorless cost
-                String reduce = sa.getParam("PlayReduceCost");
-                tgtSA.putParam("ReduceCost", reduce);
-                if (!StringUtils.isNumeric(reduce)) {
-                    tgtSA.setSVar(reduce, sa.getSVar(reduce));
-                }
-            }
-            if (sa.hasParam("PlayRaiseCost")) {
-                String raise = sa.getParam("PlayRaiseCost");
-                tgtSA.putParam("RaiseCost", raise);
-            }
+            applyPlayCostModifiers(sa, tgtSA);
 
             if (sa.isKeyword(Keyword.MADNESS)) {
                 tgtSA.setAlternativeCost(AlternativeCost.Madness);

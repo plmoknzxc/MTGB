@@ -4,6 +4,19 @@ using System.Text.RegularExpressions;
 
 public sealed partial class ForgeBattlefieldController
 {
+    private const string CommanderPerpetualResetPrompt="Remove all perpetual modifications from your commander?";
+    private bool IsCommanderPerpetualReset => view?.request?.kind=="InputConfirm"
+        && view.request.sourceCard?.commander==true && !view.request.sourceCard.faceDown
+        && (view.request.message==CommanderPerpetualResetPrompt
+            ||(view.request.message??"").Replace("\r","").EndsWith("\n\n"+CommanderPerpetualResetPrompt,StringComparison.Ordinal));
+    private const string CommanderHandLibraryRule="If a commander would be put into its owner's hand or library from anywhere, its owner may put it into the command zone instead.";
+    private string CommanderReturnText(ForgeCardView commander,string rule)
+    {
+        if(commander?.commander!=true||commander.faceDown)return null;
+        string text=Regex.Replace(rule?.Trim()??"",@"^Commander Effect \(\d+\) - ","");
+        if(text!=CommanderHandLibraryRule)return null;
+        return TapPaymentText("你可以将这张主将放回统帅区，代替将其移入手牌或牌库。",CommanderHandLibraryRule,"この統率者が手札かライブラリーに置かれるなら、代わりに統率領域に置いてもよい。");
+    }
     // Translate the public source's rules through the existing printed-rule
     // consumer, then translate the choice instruction. Do not translate wire
     // fields in place: those fields also select native interaction contracts.
@@ -11,7 +24,33 @@ public sealed partial class ForgeBattlefieldController
     {
         if(CompletedSingleCardOption(view?.request)>=0)return "";
         if(string.IsNullOrEmpty(message))return message;
+        if(IsCommanderPerpetualReset)return TapPaymentText(
+            "主将回统帅区时，如何处理永久改动？",
+            "How should this commander's perpetual changes be handled?",
+            "統率者の永久的な変更をどうしますか？");
+        var commander=view?.request?.sourceCard;
+        if(view?.request?.kind=="InputConfirm"&&view.request.selectionPurpose=="optionalReplacement"
+            &&message.Replace("\r","")=="Apply replacement effect of Commander Effect?\n"+CommanderHandLibraryRule
+            &&CommanderReturnText(commander,CommanderHandLibraryRule) is string replacementRule)
+            return TapPaymentText("是否将主将放回统帅区？","Return your commander to the command zone?","統率者を統率領域に戻しますか？")+"\n\n"+replacementRule;
+        const string commanderReturn="If a commander is in a graveyard or in exile and that card was put into that zone since the last time state-based actions were checked, its owner may put it into the command zone.";
+        bool commanderReturnPrompt=commander!=null&&(message==commander.name+": "+commanderReturn
+            ||message.StartsWith(commander.name+" ("+commander.id+") - ",StringComparison.Ordinal)
+                &&message.Replace("\r","").EndsWith("\n\n"+commander.name+": "+commanderReturn,StringComparison.Ordinal));
+        if(view?.request?.kind=="InputConfirm"&&commander?.commander==true&&!commander.faceDown&&commanderReturnPrompt){
+            string name=GamePreferences.CardFaceName(commander.name);
+            return TapPaymentText($"是否将{name}放回统帅区？\n选择“否”会将它留在当前区域。",message,$"{name}を統率領域に戻しますか？\n「いいえ」を選ぶと現在の領域に残ります。");
+        }
+        message=NormalizePrintedSelfNames(view?.request?.sourceCard,message);
         message=string.Join("\n",message.Replace("\r","").Split('\n').Select(TargetInstructionText));
+        var replacementSource=view?.request?.sourceCard;
+        if(view?.request?.kind=="InputConfirm"&&replacementSource!=null&&!replacementSource.faceDown
+            &&!string.IsNullOrEmpty(replacementSource.name)) {
+            var replacement=Regex.Match(message,"^Apply replacement effect of "+Regex.Escape(replacementSource.name)+@"\?\n+(.+)$",RegexOptions.Singleline);
+            if(replacement.Success)return TapPaymentText("是否应用“"+GamePreferences.CardFaceName(replacementSource.name)+"”的替代效果？",
+                "Apply replacement effect of "+replacementSource.name+"?",GamePreferences.CardFaceName(replacementSource.name)+"の置換効果を適用しますか？")
+                +"\n\n"+AbilityEffectText(replacementSource,replacement.Groups[1].Value);
+        }
         string auxiliary=AuxiliaryPrompt(message);if(auxiliary!=null)return auxiliary;
         if(view?.request?.kind=="InputSelectEntitiesFromList") {
             message=Regex.Replace(message,@"(?m)^(?:Choose a creature(?: with a different power| with -?[0-9]+ power)?|Secretly choose a creature you (?:control|don't control)|Choose (?:a|an) (?:Cleric|Rogue|Warrior|Wizard|Plains|Island|Swamp|Mountain|Forest))\r?$",match=> {
@@ -111,7 +150,8 @@ public sealed partial class ForgeBattlefieldController
         for(int i=0;i<lines.Length;i++) {
             var header=Regex.Match(lines[i],@"^(.+) \(([0-9]+)\)(?: - (.*))?$");
             if(header.Success&&int.TryParse(header.Groups[2].Value,out int id)) {
-                source=visible.FirstOrDefault(card=>card.id==id&&card.name==header.Groups[1].Value);
+                source=visible.FirstOrDefault(card=>card.id==id
+                    &&card.name==NormalizePrintedSelfNames(card,header.Groups[1].Value));
                 if(source!=null) {
                     lines[i]=GamePreferences.CardFaceName(source.name)+" ("+id+")";
                     if(header.Groups[3].Success)lines[i]+=" — "+AbilityEffectText(source,
@@ -143,6 +183,9 @@ public sealed partial class ForgeBattlefieldController
     private string TargetInstructionText(string text)
     {
         string original=text;
+        if(text=="Select a commander")return TapPaymentText("选择一位主将。",text,"統率者１枚を選択。");
+        var ninjutsuReturn=Regex.Match(text??"",@"^Return (\d+) unblocked attacker card\(s\) to Hand$");
+        if(ninjutsuReturn.Success)return TapPaymentText("选择"+ninjutsuReturn.Groups[1].Value+"个由你操控且未受阻挡的攻击生物，移回其拥有者手上。",text,"あなたがコントロールするブロックされていない攻撃クリーチャーを"+ninjutsuReturn.Groups[1].Value+"体選び、オーナーの手札に戻す。");
         var permanentValue=Regex.Match(text??"",@"^Select target permanent card with mana value (\d+) or less in your graveyard$");
         if(permanentValue.Success)return TapPaymentText("从你的坟墓场选择一张法术力值不大于"+permanentValue.Groups[1].Value+"的目标永久物牌。",text,"あなたの墓地にあるマナ総量が"+permanentValue.Groups[1].Value+"以下のパーマネント・カード１枚を対象に選ぶ。");
         if(text=="Select target Permanent.nonLand")return TapPaymentText("选择目标非地永久物。",text,"土地でないパーマネント１つを対象に選ぶ。");

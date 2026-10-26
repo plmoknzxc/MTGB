@@ -37,6 +37,8 @@ public sealed partial class ForgeBattlefieldController
         authored = GameObject.Find("Canvas").transform;
         canvas = authored.GetComponent<Canvas>();
         surface = (RectTransform)authored;
+        redesignProfile = authored.GetComponent<BattlefieldRedesignLayout>();
+        if (IsRedesignLayout && service == null) previewControlMode = ForgeControlMode.On;
         foreach (var card in CardDatabaseRepository.LoadAll())
             if (!card.forgeAmbiguous && !catalog.ContainsKey(card.PrintingKey)) catalog.Add(card.PrintingKey, card);
         ownHand = (RectTransform)Node("PlayerHandRoot");
@@ -98,6 +100,8 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentIntegrated(string status)
     {
+        PrepareRedesignLayout();
+        if(handSourceTabs!=null)handSourceTabs.gameObject.SetActive(false);
         PresentSpectatorExit();
         PresentControlMode();
         BeginZoneMotion();
@@ -207,7 +211,7 @@ public sealed partial class ForgeBattlefieldController
         PresentAbilityOrder();
         PresentAllocation();
         if(localLandChoices){if(choiceDismiss!=null && choiceDismiss.gameObject.activeSelf)choiceDismiss.SetAsLastSibling();landChoiceMenu.SetAsLastSibling();}
-        Node("StackColumn").gameObject.SetActive((view?.stackCount ?? 0)>0);
+        if(!IsRedesignLayout)Node("StackColumn").gameObject.SetActive((view?.stackCount ?? 0)>0);
         actionRoot.parent.parent.gameObject.SetActive(view?.request?.kind!="InputBlock" && view?.request?.kind!="AssignAmount" && view?.request?.kind!="OrderAbilities" && !IsMulliganChoice && view?.request?.kind!="InputAttack" && !localLandChoices && !IsPayingPreview && (count>0 || !IsTargeting && view?.awaitingInput==true && view.request.kind!="InputPassPriority"));
         if(view?.request?.selectionPurpose=="optionalReplacement")actionRoot.parent.parent.gameObject.SetActive(false);
         if(HasTargetChoice)actionRoot.parent.parent.gameObject.SetActive(false);
@@ -229,6 +233,7 @@ public sealed partial class ForgeBattlefieldController
             if(latest!=null){int revision=inspectHoverRevision;InspectIntegrated(latest);inspectHoverRevision=revision;}
             else { inspectedCardId=0; Node("InspectPanel").gameObject.SetActive(false); }
         }
+        PresentRedesignLayout();
     }
     private void PresentMulliganChoices()
     {
@@ -557,10 +562,9 @@ public sealed partial class ForgeBattlefieldController
             mana.tintAllSprites=true;
             mana.text="<color="+ChangedBlue+">"+mana.text+"</color>";
         }
-        // A full scan already includes its printed cost. Reserve this row for
-        // changed characteristics or missing artwork, using the same flat icons
-        // as component cards instead of the old TMP sprite scale/baseline.
-        Node("InspectPanel/CostRow").gameObject.SetActive((sprite==null||changedDetailCost)&&!string.IsNullOrEmpty(detailCost));
+        // The copied scene has a deck-editor-style name/cost header. The
+        // shipping layout keeps its separate row only for missing/changed art.
+        Node("InspectPanel/CostRow").gameObject.SetActive((IsRedesignLayout||sprite==null||changedDetailCost)&&!string.IsNullOrEmpty(detailCost));
         var costStrip=mana.gameObject.AddComponent<TemplateManaCost>();costStrip.Bind(detailCost,22,false);
         mana.enabled=!costStrip.Complete;
         if(changedDetailCost)foreach(var icon in mana.GetComponentsInChildren<RawImage>())icon.color=new Color(.25f,.65f,1f);
@@ -618,7 +622,7 @@ public sealed partial class ForgeBattlefieldController
         }
         return height;
     }
-    private void LayoutInspectPanel(ForgeCardView card,RectTransform inspected)
+    private void LayoutInspectPanel(ForgeCardView card,RectTransform inspected,bool stackDetail=false)
     {
         var panel=(RectTransform)Node("InspectPanel");
         float width=inspectDualFace?548:300,inner=width-32;
@@ -633,39 +637,66 @@ public sealed partial class ForgeBattlefieldController
         if(rules==null)rules=CardSymbolText.Create(content,"SymbolRules",18,Paper);
         LostAbilityStrikeGraphic.Attach(rules);
         rules.font=GamePreferences.TmpFont!=null?GamePreferences.TmpFont:TMPro.TMP_Settings.defaultFontAsset;
-        rules.lineSpacing=4;rules.alignment=TMPro.TextAlignmentOptions.TopLeft;
+        rules.lineSpacing=IsRedesignLayout?5:4;rules.alignment=TMPro.TextAlignmentOptions.TopLeft;
         rules.richText=true;rules.text=CardSymbolText.Format(backing.text);rules.enableAutoSizing=false;rules.fontStyle=TMPro.FontStyles.Normal;
         rules.tintAllSprites=!inspectOriginalState&&(card.hasAbilityChanges||card.hasCurrentLandState&&card.landTypesChanged);
-        (rules.GetComponent<PreferenceText>()??rules.gameObject.AddComponent<PreferenceText>()).SetBaseSize(18);
+        (rules.GetComponent<PreferenceText>()??rules.gameObject.AddComponent<PreferenceText>()).SetBaseSize(IsRedesignLayout?20:18);
         rules.rectTransform.anchorMin=rules.rectTransform.anchorMax=rules.rectTransform.pivot=new Vector2(0,1);
-        rules.rectTransform.anchoredPosition=Vector2.zero;
-        float textHeight=Mathf.Ceil(rules.GetPreferredValues(rules.text,inner,10000).y)+24;
+        float rulesTop=IsRedesignLayout&&!string.IsNullOrWhiteSpace(backing.text)?26:0;
+        var rulesHeading=content.Find("RulesHeading") as RectTransform;
+        if(IsRedesignLayout&&rulesHeading==null)rulesHeading=Label(content,"RulesHeading","",Vector2.zero,new Vector2(inner,22),14,new Color(.67f,.73f,.78f)).rectTransform;
+        if(rulesHeading!=null){
+            rulesHeading.gameObject.SetActive(rulesTop>0);
+            rulesHeading.anchorMin=rulesHeading.anchorMax=rulesHeading.pivot=new Vector2(0,1);
+            rulesHeading.anchoredPosition=Vector2.zero;rulesHeading.sizeDelta=new Vector2(inner,22);
+            var heading=rulesHeading.GetComponent<Text>();heading.text=TapPaymentText("规则文本","Rules text","ルール・テキスト");heading.alignment=TextAnchor.UpperLeft;
+        }
+        rules.rectTransform.anchoredPosition=new Vector2(0,-rulesTop);
+        float textHeight=rulesTop+Mathf.Ceil(rules.GetPreferredValues(rules.text,inner,10000).y)+24;
         float preferred=textHeight+PresentInspectCounterLegend(content,card,inner,textHeight);
         float artHeight=card.markerKind=="player-protection"||card.emblem && Node("InspectPanel/Art").GetComponent<Image>().sprite==null?80:card.room?172:320;
-        float costHeight=Node("InspectPanel/CostRow").gameObject.activeSelf?28:0;
+        float costHeight=!IsRedesignLayout&&Node("InspectPanel/CostRow").gameObject.activeSelf?28:0;
         var typeBacking=SceneText("InspectPanel/TypeLine");typeBacking.enabled=false;
         var typeText=typeBacking.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if(typeText==null)typeText=CardSymbolText.Create(typeBacking.transform,"SymbolType",15,new Color(.67f,.73f,.78f));
         LostAbilityStrikeGraphic.Attach(typeText);
         typeText.font=rules.font;typeText.richText=true;typeText.enableAutoSizing=false;
         typeText.text=typeBacking.text;typeText.alignment=TMPro.TextAlignmentOptions.TopLeft;
-        (typeText.GetComponent<PreferenceText>()??typeText.gameObject.AddComponent<PreferenceText>()).SetBaseSize(15);
+        typeText.color=IsRedesignLayout?new Color(.72f,.81f,.91f):new Color(.67f,.73f,.78f);
+        (typeText.GetComponent<PreferenceText>()??typeText.gameObject.AddComponent<PreferenceText>()).SetBaseSize(IsRedesignLayout?18:15);
         typeText.rectTransform.anchorMin=Vector2.zero;typeText.rectTransform.anchorMax=Vector2.one;
         typeText.rectTransform.offsetMin=typeText.rectTransform.offsetMax=Vector2.zero;
         float typeHeight=Mathf.Max(24,Mathf.Ceil(typeText.GetPreferredValues(typeText.text,inner,10000).y)+4);
         var nameLabel=SceneText("InspectPanel/Name");
         var originalButton=(RectTransform)Node("InspectPanel/OriginalState");
+        if(IsRedesignLayout){
+            var label=originalButton.GetComponentInChildren<Text>();
+            originalButton.sizeDelta=new Vector2(Mathf.Max(100,Mathf.Ceil(label.preferredWidth)+16),Mathf.Max(28,Mathf.Ceil(label.preferredHeight)+4));
+        }
         float originalHeight=originalButton.gameObject.activeSelf?originalButton.rect.height+8:0;
-        float nameWidth=inner;
+        var costRow=(RectTransform)Node("InspectPanel/CostRow");
+        var headerMana=costRow.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
+        float headerCostWidth=IsRedesignLayout&&costRow.gameObject.activeSelf&&headerMana!=null
+            ?Mathf.Max(headerMana.GetPreferredValues(headerMana.text).x,headerMana.GetComponentsInChildren<RawImage>().Count(i=>i.gameObject.activeSelf)*25-3):0;
+        // A very long cost gets a wrapping title, while retaining the actual
+        // computed symbols beside it rather than another row below the title.
+        headerCostWidth=Mathf.Min(inner-64,Mathf.Ceil(headerCostWidth));
+        float nameWidth=inner-(headerCostWidth>0?headerCostWidth+8:0);
         nameLabel.rectTransform.sizeDelta=new Vector2(nameWidth,34);
         nameLabel.horizontalOverflow=HorizontalWrapMode.Wrap;nameLabel.resizeTextForBestFit=false;
-        (nameLabel.GetComponent<PreferenceText>()??nameLabel.gameObject.AddComponent<PreferenceText>()).SetBaseSize(22);
+        (nameLabel.GetComponent<PreferenceText>()??nameLabel.gameObject.AddComponent<PreferenceText>()).SetBaseSize(IsRedesignLayout?25:22);
+        nameLabel.fontStyle=IsRedesignLayout?FontStyle.Bold:FontStyle.Normal;
         float nameHeight=Mathf.Max(34,Mathf.Ceil(nameLabel.preferredHeight)+4);
-        float footerHeight=string.IsNullOrEmpty(SceneText("InspectPanel/Footer").text)?0:28;
+        var footer=SceneText("InspectPanel/Footer");
+        if(IsRedesignLayout){PreferenceText.SetSize(footer,18);footer.rectTransform.sizeDelta=new Vector2(inner,28);}
+        float footerHeight=string.IsNullOrEmpty(footer.text)?0:IsRedesignLayout?Mathf.Max(28,Mathf.Ceil(footer.preferredHeight)+4):28;
         Node("InspectPanel/Footer").gameObject.SetActive(footerHeight>0);
         float targetHeight=StackTargetDetailsHeight();
+        bool scrollingTargets=IsRedesignLayout&&stackDetail;
+        float targetTop=preferred+12;
+        if(scrollingTargets&&targetHeight>0)preferred=targetTop+targetHeight;
         float componentHeight=HasMeldComponents(card)?Mathf.Max(32,Mathf.Ceil(Node("InspectPanel/MeldComponents").GetComponentInChildren<Text>().preferredHeight)+6):0;
-        float fixedHeight=16+nameHeight+originalHeight+costHeight+artHeight+12+componentHeight+(componentHeight>0?8:0)+typeHeight+12+footerHeight+16+targetHeight;
+        float fixedHeight=16+nameHeight+originalHeight+costHeight+artHeight+12+componentHeight+(componentHeight>0?8:0)+typeHeight+12+footerHeight+16+(scrollingTargets?0:targetHeight);
         float available=Mathf.Min((surface.rect.height-24)/detailScale,720);
         if(fixedHeight+preferred>available){float shrink=Mathf.Min(90,fixedHeight+preferred-available);artHeight-=shrink;fixedHeight-=shrink;}
         float rulesHeight=Mathf.Clamp(preferred,28,Mathf.Max(28,available-fixedHeight));
@@ -687,16 +718,28 @@ public sealed partial class ForgeBattlefieldController
             var text=rect.GetComponent<Text>();if(text==null)return;
             text.alignment=TextAnchor.UpperLeft;text.horizontalOverflow=HorizontalWrapMode.Wrap;
             text.verticalOverflow=VerticalWrapMode.Truncate;text.resizeTextForBestFit=false;
-            (text.GetComponent<PreferenceText>()??text.gameObject.AddComponent<PreferenceText>()).SetBaseSize(name=="Name"?22:15);
-            text.verticalOverflow=VerticalWrapMode.Truncate;text.fontStyle=FontStyle.Normal;
-            text.color=name=="TypeLine"?new Color(.67f,.73f,.78f):Paper;
+            (text.GetComponent<PreferenceText>()??text.gameObject.AddComponent<PreferenceText>()).SetBaseSize(name=="Name"?(IsRedesignLayout?25:22):name=="Footer"&&IsRedesignLayout?18:15);
+            text.verticalOverflow=VerticalWrapMode.Truncate;text.fontStyle=IsRedesignLayout&&name=="Name"?FontStyle.Bold:FontStyle.Normal;
+            text.color=name=="TypeLine"?new Color(.67f,.73f,.78f):IsRedesignLayout&&name=="Footer"?new Color(.82f,.71f,.50f):Paper;
         }
+        if(IsRedesignLayout&&originalHeight>0){
+            originalButton.anchorMin=originalButton.anchorMax=originalButton.pivot=Vector2.one;
+            originalButton.anchoredPosition=new Vector2(-8,-8);y=8+originalHeight;
+        }
+        float titleTop=y;
         Place("Name",nameHeight);
-        if(originalHeight>0){
+        if(IsRedesignLayout){
+            nameLabel.rectTransform.anchorMin=nameLabel.rectTransform.anchorMax=nameLabel.rectTransform.pivot=new Vector2(0,1);
+            nameLabel.rectTransform.anchoredPosition=new Vector2(16,-titleTop);nameLabel.rectTransform.sizeDelta=new Vector2(nameWidth,nameHeight);
+            costRow.anchorMin=costRow.anchorMax=costRow.pivot=Vector2.one;
+            costRow.anchoredPosition=new Vector2(-16,-titleTop);costRow.sizeDelta=new Vector2(headerCostWidth,30);
+            y+=9;
+        }
+        if(!IsRedesignLayout&&originalHeight>0){
             originalButton.anchorMin=originalButton.anchorMax=originalButton.pivot=new Vector2(1,1);
             originalButton.anchoredPosition=new Vector2(-16,-y);y+=originalHeight;
         }
-        Place("CostRow",costHeight);
+        if(!IsRedesignLayout)Place("CostRow",costHeight);
         var art=(RectTransform)Node("InspectPanel/Art");
         art.anchorMin=art.anchorMax=new Vector2(.5f,1);art.pivot=new Vector2(.5f,.5f);
         float artWidth=inspectDualFace?(inner-12)*.5f:inner;
@@ -708,13 +751,33 @@ public sealed partial class ForgeBattlefieldController
             reverse.anchoredPosition=new Vector2((artWidth+12)*.5f,-y-artHeight*.5f);reverse.sizeDelta=new Vector2(artWidth,artHeight);
         }
         art.localRotation=Quaternion.Euler(0,0,card.room?-90:0);y+=artHeight+12;
+        var divider=panel.Find("DetailDivider") as RectTransform;
+        if(IsRedesignLayout&&divider==null)divider=Panel(panel,"DetailDivider",Vector2.zero,Vector2.one,new Color(.5f,.62f,.7f,.5f));
+        if(divider!=null){
+            divider.gameObject.SetActive(IsRedesignLayout);divider.GetComponent<Image>().raycastTarget=false;
+            divider.anchorMin=divider.anchorMax=divider.pivot=new Vector2(.5f,1);
+            divider.anchoredPosition=new Vector2(0,-y+6);divider.sizeDelta=new Vector2(inner,1);
+        }
         if(componentHeight>0){Place("MeldComponents",componentHeight);y+=8;}
-        Place("TypeLine",typeHeight);y+=12;Place("Rules",rulesHeight);Place("Footer",footerHeight);
-        PresentStackTargetDetails(panel,y,targetHeight);
+        Place("TypeLine",typeHeight);y+=IsRedesignLayout?9:12;
+        if(IsRedesignLayout&&footerHeight>0){Place("Footer",footerHeight);y+=9;}
+        Place("Rules",rulesHeight);if(!IsRedesignLayout)Place("Footer",footerHeight);
+        PresentStackTargetDetails(scrollingTargets?content:panel,scrollingTargets?targetTop:y,targetHeight);
         var viewport=(RectTransform)content.parent;viewport.sizeDelta=new Vector2(inner,rulesHeight);
         content.sizeDelta=new Vector2(inner,Mathf.Max(preferred,rulesHeight));content.anchoredPosition=Vector2.zero;
-        rules.rectTransform.sizeDelta=new Vector2(inner,textHeight);
+        rules.rectTransform.sizeDelta=new Vector2(inner,textHeight-rulesTop);
         rules.ForceMeshUpdate();
+        var ruleScroll=viewport.GetComponent<ScrollRect>();
+        if(scrollingTargets||ruleScroll.verticalScrollbar!=null){
+            bool overflow=preferred>rulesHeight+1;
+            ruleScroll.vertical=true;ruleScroll.horizontal=false;ruleScroll.movementType=ScrollRect.MovementType.Clamped;
+            ruleScroll.StopMovement();
+            if(ruleScroll.verticalScrollbar==null)AddStackScrollIndicator(content);
+            ruleScroll.verticalScrollbar.gameObject.SetActive(overflow);
+            var bar=(RectTransform)ruleScroll.verticalScrollbar.transform;
+            bar.anchorMin=bar.anchorMax=bar.pivot=Vector2.one;
+            bar.anchoredPosition=Vector2.zero;bar.sizeDelta=new Vector2(4,rulesHeight);
+        }
         inspectAnchor=inspected;
         PositionInspectPanel(panel);
     }
@@ -738,6 +801,7 @@ public sealed partial class ForgeBattlefieldController
         }
         panel.anchorMin=panel.anchorMax=panel.pivot=new Vector2(.5f,.5f);
         p.x=Mathf.Clamp(p.x,surface.rect.xMin+displayedWidth*.5f+12,surface.rect.xMax-displayedWidth*.5f-12);
+        if (IsRedesignLayout) p.x = Mathf.Min(p.x, surface.rect.xMin + 380 + RedesignHandMaximumWidth - displayedWidth * .5f - 16);
         p.y=Mathf.Clamp(p.y,surface.rect.yMin+displayedHeight*.5f+12,surface.rect.yMax-displayedHeight*.5f-12);
         panel.anchoredPosition=p;
     }

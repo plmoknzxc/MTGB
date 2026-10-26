@@ -1,7 +1,6 @@
 package mtgb.bridge;
 
 import forge.ai.AvailableActions;
-import forge.ai.ComputerUtilAbility;
 import forge.ai.PlayerControllerAi;
 import forge.game.card.Card;
 import forge.game.player.Player;
@@ -30,7 +29,7 @@ final class ForgeActionLegality {
         var abilities=card.getAllPossibleAbilities(player,true);
         player.runWithController(()->{
             for(var ability:abilities) {
-                if(!permits(ability,player)||!ComputerUtilAbility.isFullyTargetable(ability))continue;
+                if(!permits(ability,player)||!hasLegalTargets(ability))continue;
                 boolean payable=AvailableActions.canAffordHuman(ability,player)
                     ||ability.isSpell()&&ForgeCardCostPreview.canPayMinimum(ability,player);
                 boolean deferred=ability.isSpell()&&(card.hasKeyword(forge.game.keyword.Keyword.CONVOKE)
@@ -41,5 +40,29 @@ final class ForgeActionLegality {
             }
         },new PlayerControllerAi(ForgeBridge.game,player,player.getOriginalLobbyPlayer()));
         return new Prediction(result[0],result[1],result[2]);
+    }
+
+    static boolean hasLegalTargets(SpellAbility ability) {
+        for(SpellAbility part=ability;part!=null;part=part.getSubAbility()) {
+            if(!part.usesTargeting())continue;
+            Player previous=part.getTargetingPlayer();
+            // setupTargets assigns this immediately before the real chooser.
+            // Predict each permitted chooser without prompting or committing one;
+            // TargetingPlayerControls otherwise rejects every card against null.
+            Iterable<Player> choosers=previous!=null?java.util.List.of(previous)
+                :part.hasParam("TargetingPlayer")
+                    ?forge.game.ability.AbilityUtils.getDefinedPlayers(part.getHostCard(),part.getParam("TargetingPlayer"),part)
+                    :java.util.Collections.singletonList(part.getActivatingPlayer());
+            boolean possible=false;
+            try {
+                for(Player chooser:choosers) {
+                    if(chooser==null||!chooser.isInGame())continue;
+                    part.setTargetingPlayer(chooser);
+                    if(part.getTargetRestrictions().getNumCandidates(part)>=part.getMinTargets()) {possible=true;break;}
+                }
+            } finally {part.setTargetingPlayer(previous);}
+            if(!possible)return false;
+        }
+        return true;
     }
 }

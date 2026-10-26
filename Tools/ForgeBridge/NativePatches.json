@@ -797,6 +797,22 @@
         {
           "before": "        } else if (sa.hasParam(\"CopyFromChosenName\")) {\n            String name = source.getNamedCard();",
           "after": "        } else if (sa.hasParam(\"CopyFromChosenName\")) {\n            // A completed manual name-list choice can be empty. The host retains\n            // its earlier names for ExcludeChosen, so those are not a new choice.\n            final SpellAbility naming = sa.getParent();\n            if (naming != null && naming.getApi() == forge.game.ability.ApiType.NameCard\n                    && naming.hasParam(\"ChooseFromList\") && naming.hasParam(\"ExcludeChosen\")\n                    && !naming.hasParam(\"AtRandom\") && getTargetPlayers(naming).size() == 1\n                    && getTargetPlayers(naming).contains(controller)\n                    && controller.getNamedCard().isEmpty()) {\n                return;\n            }\n            String name = source.getNamedCard();"
+        },
+        {
+          "before": "public class PlayEffect extends SpellAbilityEffect {",
+          "after": "public class PlayEffect extends SpellAbilityEffect {\n\n    // Scope presentation to the exact native options and effect. A preview\n    // transforms a copy; nested choices restore their parent's context.\n    private record CastingChoice(SpellAbility effect, List<SpellAbility> options) {}\n    private static final ThreadLocal<CastingChoice> castingChoice = new ThreadLocal<>();\n\n    private static SpellAbility choosingEffect(final SpellAbility option) {\n        final CastingChoice context = castingChoice.get();\n        return context != null && context.options().stream().anyMatch(s -> s == option)\n                ? context.effect() : null;\n    }\n\n    public static boolean isChoosingWithoutManaCost(final SpellAbility option) {\n        final SpellAbility effect = choosingEffect(option);\n        return effect != null && effect.hasParam(\"WithoutManaCost\");\n    }\n\n    public static SpellAbility castingCostPreview(final SpellAbility option) {\n        final SpellAbility effect = choosingEffect(option);\n        if (effect == null || !option.isSpell()) return option;\n        final SpellAbility preview = replacePlayCost(effect, option.copy(option.getActivatingPlayer()));\n        applyPlayCostModifiers(effect, preview);\n        return preview;\n    }\n\n    private static SpellAbility replacePlayCost(final SpellAbility sa, SpellAbility tgtSA) {\n        if (sa.hasParam(\"WithoutManaCost\")) {\n            tgtSA = tgtSA.copyWithNoManaCost();\n        } else if (sa.hasParam(\"PlayCost\")) {\n            Cost abCost;\n            String cost = sa.getParam(\"PlayCost\");\n            if (\"ManaCost\".equals(sa.getParam(\"PlayCost\"))) {\n                abCost = new Cost(tgtSA.getCardState().getManaCost(), false);\n            } else if (cost.equals(\"SuspendCost\")) {\n                abCost = IterableUtil.find(tgtSA.getHostCard().getNonManaAbilities(), s -> s.isKeyword(Keyword.SUSPEND)).getPayCosts();\n            } else {\n                if (cost.contains(\"ConvertedManaCost\")) {\n                    final String costcmc = Integer.toString(tgtSA.getHostCard().getCMC());\n                    cost = cost.replace(\"ConvertedManaCost\", costcmc);\n                }\n                abCost = new Cost(cost, false);\n            }\n\n            tgtSA = tgtSA.copyWithManaCostReplaced(tgtSA.getActivatingPlayer(), abCost);\n        }\n        return tgtSA;\n    }\n\n    private static void applyPlayCostModifiers(final SpellAbility sa, final SpellAbility tgtSA) {\n        if (sa.hasParam(\"PlayReduceCost\")) {\n            // for Kefnet only can reduce colorless cost\n            String reduce = sa.getParam(\"PlayReduceCost\");\n            tgtSA.putParam(\"ReduceCost\", reduce);\n            if (!StringUtils.isNumeric(reduce)) {\n                tgtSA.setSVar(reduce, sa.getSVar(reduce));\n            }\n        }\n        if (sa.hasParam(\"PlayRaiseCost\")) {\n            String raise = sa.getParam(\"PlayRaiseCost\");\n            tgtSA.putParam(\"RaiseCost\", raise);\n        }\n    }"
+        },
+        {
+          "before": "                tgtSA = controller.getController().getAbilityToPlay(tgtCard, sas);",
+          "after": "                final CastingChoice previousChoices = castingChoice.get();\n                try {\n                    castingChoice.set(new CastingChoice(sa, sas));\n                    tgtSA = controller.getController().getAbilityToPlay(tgtCard, sas);\n                } finally {\n                    if (previousChoices == null) castingChoice.remove();\n                    else castingChoice.set(previousChoices);\n                }"
+        },
+        {
+          "before": "            if (sa.hasParam(\"WithoutManaCost\")) {\n                tgtSA = tgtSA.copyWithNoManaCost();\n            } else if (sa.hasParam(\"PlayCost\")) {\n                Cost abCost;\n                String cost = sa.getParam(\"PlayCost\");\n                if (altCostManaCost) {\n                    abCost = new Cost(tgtSA.getCardState().getManaCost(), false);\n                } else if (cost.equals(\"SuspendCost\")) {\n                    abCost = IterableUtil.find(tgtCard.getNonManaAbilities(), s -> s.isKeyword(Keyword.SUSPEND)).getPayCosts();\n                } else {\n                    if (cost.contains(\"ConvertedManaCost\")) {\n                        final String costcmc = Integer.toString(tgtCard.getCMC());\n                        cost = cost.replace(\"ConvertedManaCost\", costcmc);\n                    }\n                    abCost = new Cost(cost, false);\n                }\n\n                tgtSA = tgtSA.copyWithManaCostReplaced(tgtSA.getActivatingPlayer(), abCost);\n            }",
+          "after": "            if (altCost) {\n                tgtSA = replacePlayCost(sa, tgtSA);\n            }"
+        },
+        {
+          "before": "            if (sa.hasParam(\"PlayReduceCost\")) {\n                // for Kefnet only can reduce colorless cost\n                String reduce = sa.getParam(\"PlayReduceCost\");\n                tgtSA.putParam(\"ReduceCost\", reduce);\n                if (!StringUtils.isNumeric(reduce)) {\n                    tgtSA.setSVar(reduce, sa.getSVar(reduce));\n                }\n            }\n            if (sa.hasParam(\"PlayRaiseCost\")) {\n                String raise = sa.getParam(\"PlayRaiseCost\");\n                tgtSA.putParam(\"RaiseCost\", raise);\n            }\n",
+          "after": "            applyPlayCostModifiers(sa, tgtSA);\n"
         }
       ]
     },
@@ -947,6 +963,160 @@
         {
           "before": "    private final ArrayListMultimap<Byte, Mana> floatingMana = ArrayListMultimap.create();",
           "after": "    private final com.google.common.collect.ListMultimap<Byte, Mana> floatingMana =\n            com.google.common.collect.Multimaps.synchronizedListMultimap(ArrayListMultimap.create());\n\n    /** Membership snapshot for asynchronous presentation; retains native Mana identities. */\n    public List<Mana> snapshot() {\n        synchronized (floatingMana) {\n            return new ArrayList<>(floatingMana.values());\n        }\n    }"
+        }
+      ]
+    },
+    {
+      "id": "duel-commander-game-rules",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameRules.java",
+      "sourceSha256": "ae575ae3ce23fcd707611b38051c1344d9a29bd6e1c15942b0a81db0e66a1ecd",
+      "javaPath": "forge/game/GameRules.java",
+      "reason": "Room-scoped Duel Commander rule profile; default native formats retain prior behavior.",
+      "changes": [
+        {
+          "before": "    private boolean manaBurn;",
+          "after": "    private boolean manaBurn;\n    private boolean duelCommander;\n    public boolean isDuelCommander() { return duelCommander; }\n    public void setDuelCommander(boolean value) { duelCommander = value; }"
+        }
+      ]
+    },
+    {
+      "id": "duel-commander-damage-and-cast-lock",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/Player.java",
+      "sourceSha256": "0dffd8d0384daeba7b0ea1665343c1c424a71a9487d3b4c540741d4a4b4e33b8",
+      "javaPath": "forge/game/player/Player.java",
+      "reason": "Duel Commander has no commander-damage loss and only the first own commander cast from Command is available from Command this game. Native actual casts/tax map and restart reset remain authoritative.",
+      "changes": [
+        {
+          "before": "        if (game.getRules().hasAppliedVariant(GameType.Commander)) {\n            for (Entry<Card, Integer> entry : getCommanderDamage()) {",
+          "after": "        if (game.getRules().hasAppliedVariant(GameType.Commander) && !game.getRules().isDuelCommander()) {\n            for (Entry<Card, Integer> entry : getCommanderDamage()) {"
+        },
+        {
+          "before": "    public int getCommanderCast(Card commander) {",
+          "after": "    public boolean canCastCommanderFromCommand(Card commander) {\n        if (!game.getRules().isDuelCommander()) return true;\n        for (Entry<Card, Integer> entry : commanderCast.entrySet())\n            if (entry.getValue() > 0 && entry.getKey().getOwner() == this\n                    && entry.getKey().getId() != commander.getId()) return false;\n        return true;\n    }\n\n    public int getCommanderCast(Card commander) {"
+        },
+        {
+          "before": "    public final boolean canPlayLand(final Card land, final boolean ignoreZoneAndTiming, SpellAbility landSa) {\n",
+          "after": "    public final boolean canPlayLand(final Card land, final boolean ignoreZoneAndTiming, SpellAbility landSa) {\n        // These formats have no wishboard, including lands granted by outside-game permissions.\n        if (land.isInZone(ZoneType.Sideboard)\n                && (game.getRules().isDuelCommander() || game.getRules().hasAppliedVariant(GameType.Brawl))) return false;\n"
+        }
+      ]
+    },
+    {
+      "id": "duel-commander-native-cast-restriction",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/spellability/SpellAbilityRestriction.java",
+      "sourceSha256": "ec42584664e06209d4c4eb9a8bb16ed6e5d21126690dbb5ffa1964f292a66386",
+      "javaPath": "forge/game/spellability/SpellAbilityRestriction.java",
+      "reason": "Apply the partner cast lock only to casting an owned commander from Command. Activated abilities, casts from hand, ordinary Commander and Brawl are unchanged.",
+      "changes": [
+        {
+          "before": "        // Special check for Lion's Eye Diamond",
+          "after": "        if (sa.isSpell() && c.isCommander() && c.isInZone(forge.game.zone.ZoneType.Command)\n                && c.getOwner() == activator && !activator.canCastCommanderFromCommand(c)) return false;\n        if (sa.isSpell() && c.isInZone(forge.game.zone.ZoneType.Sideboard)\n                && (c.getGame().getRules().isDuelCommander() || c.getGame().getRules().hasAppliedVariant(forge.game.GameType.Brawl))) return false;\n\n        // Special check for Lion's Eye Diamond"
+        }
+      ]
+    },
+    {
+      "id": "arena-brawl-hundred-card-deck",
+      "source": ".tools/forge-proof/upstream/forge-core/src/main/java/forge/deck/DeckFormat.java",
+      "sourceSha256": "6a655ef78ddecf2bdf8bb2274d8cdccbbaffae078c0631be08f5021a047d1eec",
+      "javaPath": "forge/deck/DeckFormat.java",
+      "reason": "The project Brawl pool is Arena Brawl, explicitly selected by the user: one commander plus 99 cards. Other formats and special copy/color-identity rules retain their native behavior.",
+      "changes": [
+        {
+          "before": "    Brawl      ( Range.is(59), Range.of(0, 15), 1, null,",
+          "after": "    Brawl      ( Range.is(99), Range.of(0, 15), 1, null,"
+        },
+        {
+          "before": "                if (commanders.size() > 2) {",
+          "after": "                if (commanders.size() > 2 || this == DeckFormat.Brawl && commanders.size() != 1) {"
+        },
+        {
+          "before": "                if (cmdCI == 0 && cp.getKey().getRules().getType().isBasicLand()){",
+          "after": "                if (this == DeckFormat.Brawl && cmdCI == 0 && cp.getKey().getRules().getType().isBasicLand()){"
+        },
+        {
+          "before": "                    if (!isLegalCommander(pc.getRules())) {",
+          "after": "                    // Background eligibility permits the second commander of a\n                    // legal pair; it does not make a noncreature Background a\n                    // legal sole commander. Creature Backgrounds remain valid.\n                    if (!isLegalCommander(pc.getRules()) || commanders.size() == 1\n                            && pc.getRules().canBeBackground() && !pc.getRules().canBeCreature()\n                            && !pc.getRules().getMainPart().getOracleText().contains(\"can be your commander\")) {"
+        }
+      ]
+    },
+    {
+      "id": "duel-brawl-no-wish-board",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java",
+      "sourceSha256": "bfbfafcbc06951e5491a51968a50316bd8f8f8bd3457181025737111a27f3678",
+      "javaPath": "forge/game/ability/effects/ChangeZoneEffect.java",
+      "reason": "No wish-board in Duel Commander or Arena Brawl; companion uses its native self-referencing special action. Other formats retain previous sideboard behavior.",
+      "changes": [
+        {
+          "before": "            if (player.isControlled()) {\n                origin.remove(ZoneType.Sideboard);",
+          "after": "            if (player.isControlled() || game.getRules().isDuelCommander() || game.getRules().hasAppliedVariant(forge.game.GameType.Brawl)) {\n                origin.remove(ZoneType.Sideboard);"
+        }
+      ]
+    },
+    {
+      "id": "ability-loss-retains-normal-cast-and-land-actions",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/CardTraitChanges.java",
+      "sourceSha256": "4d1f2ed7d9d122c7a29f040028df3c04cc48ebd7950fc76c6914cdce42d046f0",
+      "javaPath": "forge/game/card/CardTraitChanges.java",
+      "reason": "Actual Patriars Humiliation on registered Sram removes normal SpellPermanent action along with card abilities; after owner return commander cannot be cast. Normal permanent casting/land play are game actions represented by internal SpellAbility types, not removable printed abilities. Retain only those base actions; activated and triggered abilities including commander ninjutsu remain removed.",
+      "changes": [
+        {
+          "before": "import forge.game.spellability.SpellAbility;",
+          "after": "import forge.game.spellability.SpellAbility;\nimport forge.game.spellability.SpellPermanent;\nimport forge.game.spellability.LandAbility;"
+        },
+        {
+          "before": "    public List<SpellAbility> applySpellAbility(List<SpellAbility> list) {\n        if (remove != null) {\n            list.removeIf(remove);\n        }",
+          "after": "    public List<SpellAbility> applySpellAbility(List<SpellAbility> list) {\n        if (remove != null) {\n            // Casting a permanent and playing a land are game actions, not card abilities.\n            list.removeIf(sa -> !(sa instanceof SpellPermanent) && !(sa instanceof LandAbility) && remove.test(sa));\n        }"
+        }
+      ]
+    },
+    {
+      "id": "arena-brawl-commander-perpetual-reset-state",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/Card.java",
+      "sourceSha256": "34994c349cf22a2ab0a0fb091ad81539410e6ebfb878e594b1edc201a7ca143f",
+      "javaPath": "forge/game/card/Card.java",
+      "reason": "Arena Brawl June 2022 rule: commander entering Command may have all perpetual modifications removed by owner. Preserve normal commander tax, nonperpetual state and LKI; retain option is unchanged.",
+      "changes": [
+        {
+          "before": "    public final boolean isUntapped() {",
+          "after": "    // Detach from prior zone objects/LKI and remove only perpetual timestamps.\n    public final void clearPerpetual() {\n        Set<Long> timestamps = new HashSet<>();\n        for (PerpetualInterface effect : perpetual) timestamps.add(effect.getTimestamp());\n        perpetual = new ArrayList<>();\n        for (long timestamp : timestamps) {\n            removeChangedCardTypes(timestamp, 0, false);\n            removeChangedCardTypesByText(timestamp, 0);\n            removeColor(timestamp, 0);\n            removeColorByText(timestamp, 0);\n            removeNewPT(timestamp, 0, false);\n            removeNewPTbyText(timestamp, 0);\n            removePTBoost(timestamp, 0);\n            removeChangedCardTraits(timestamp, 0);\n            removeChangedCardTraitsByText(timestamp, 0);\n            removeChangedCardKeywords(timestamp, 0, false);\n            removeChangedCardKeywordsByText(timestamp, 0);\n            removeChangedManaCost(timestamp, 0);\n        }\n        for (CardState state : states.values()) state.calculatePerpetualAdjustedManaCost();\n        updateStateForView();\n    }\n\n    public final boolean isUntapped() {"
+        }
+      ]
+    },
+    {
+      "id": "arena-brawl-commander-perpetual-reset-choice",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
+      "sourceSha256": "1d53cdcb0974825f7fc0310e5def0131e8b8a15ccb30fc009569b4efb62ce255",
+      "javaPath": "forge/game/GameAction.java",
+      "reason": "Arena Brawl June 2022 rule: commander entering Command may have all perpetual modifications removed by owner. Preserve normal commander tax, nonperpetual state and LKI; retain option is unchanged.",
+      "changes": [
+        {
+          "before": "        if (!zoneTo.is(ZoneType.Stack)) {\n            // reset timestamp in changezone effects",
+          "after": "        // Arena Brawl permits an all-or-nothing reset as the real commander\n        // enters Command. Ask only after movement replacements have succeeded.\n        if (!suppress && zoneTo.is(ZoneType.Command) && !zoneFrom.is(ZoneType.Command)\n                && copied.isRealCommander() && copied.hasPerpetual()\n                && game.getRules().hasAppliedVariant(GameType.Brawl)\n                && copied.getOwner().getController().confirmAction(\n                        copied.getCurrentState().getFirstSpellAbilityWithFallback(),\n                        PlayerActionConfirmMode.ChangeZoneToAltDestination,\n                        \"Remove all perpetual modifications from your commander?\",\n                        List.of(), copied, null)) {\n            copied.clearPerpetual();\n        }\n\n        if (!zoneTo.is(ZoneType.Stack)) {\n            // reset timestamp in changezone effects"
+        }
+      ]
+    },
+    {
+      "id": "defined-mana-replaces-zero-placeholder",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/cost/Cost.java",
+      "sourceSha256": "f9b3c74ee294c30235a6957525dffcb2a4863097845f73202df110d703fd9fc9",
+      "javaPath": "forge/game/cost/Cost.java",
+      "reason": "Perpetual reset exposed copyWithDefinedMana appending real mana after a zero placeholder from copyWithNoMana; getCostMana reads zero and commander recast preview lost printed cost. Replace that placeholder only; preserve free casting copyWithNoMana and nonmana cost parts.",
+      "changes": [
+        {
+          "before": "    public final Cost copyWithDefinedMana(ManaCost manaCost) {\n        Cost toRet = copyWithNoMana();\n        toRet.costParts.add(new CostPartMana(manaCost, null));",
+          "after": "    public final Cost copyWithDefinedMana(ManaCost manaCost) {\n        Cost toRet = copyWithNoMana();\n        toRet.costParts.removeIf(CostPartMana.class::isInstance);\n        toRet.costParts.add(new CostPartMana(manaCost, null));"
+        }
+      ]
+    },
+    {
+      "id": "perpetual-adjusted-mana-cache-reset",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/CardState.java",
+      "sourceSha256": "ba29cb718f13d6d6944a212ddec7ee009b7ed3ba146865c2f6416dadde79c254",
+      "javaPath": "forge/game/card/CardState.java",
+      "reason": "Eight-family perpetual reset adapter reproduced stale reduced mana display after removing all traits. Recalculation must invalidate prior perpetual-adjusted cache even when no modifier remains.",
+      "changes": [
+        {
+          "before": "    public void calculatePerpetualAdjustedManaCost() {\n        // If the total amount reduced",
+          "after": "    public void calculatePerpetualAdjustedManaCost() {\n        perpetualAdjustedManaCost = null;\n        // If the total amount reduced"
         }
       ]
     }

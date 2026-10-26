@@ -11,6 +11,13 @@ import java.util.Map;
 /** Public display provenance only. Never changes abilities, targets or decisions. */
 final class BridgeAbilityText {
     private BridgeAbilityText() { }
+    // Selecting later targets of one spell is still casting that spell. A
+    // description of an unpriced subability can evaluate Converge/X as zero.
+    static SpellAbility targetingPresentation(SpellAbility ability) {
+        if (ability == null) return null;
+        var root = ability.getRootAbility();
+        return root != null && root.isSpell() ? root : ability;
+    }
     static CardState origin(SpellAbility ability) {
         if (ability.getGrantorStatic() != null) return ability.getGrantorStatic().getCardState();
         CardTraitBase trait = ability.getTrigger() != null ? ability.getTrigger() : ability;

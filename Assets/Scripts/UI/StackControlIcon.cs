@@ -5,6 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasRenderer))]
 public sealed class StackControlIcon : MaskableGraphic
 {
+    public bool SmoothEdges;
     public enum Kind { View,Right,Left,Close }
     [field: SerializeField] public Kind Current {get;private set;}
     public void SetKind(Kind kind){if(Current==kind)return;Current=kind;SetVerticesDirty();}
@@ -19,6 +20,10 @@ public sealed class StackControlIcon : MaskableGraphic
     }
     private void Line(VertexHelper vh,Vector2 a,Vector2 b,float scale)
     {
+        if (SmoothEdges) {
+            BattlefieldUiStroke.Line(vh, a * scale, b * scale, 1.2f * scale, color, .65f / Mathf.Max(.1f, canvas.scaleFactor));
+            return;
+        }
         Vector2 n=new Vector2(-(b-a).y,(b-a).x).normalized*1.2f;int start=vh.currentVertCount;
         vh.AddVert((a+n)*scale,color,Vector2.zero);vh.AddVert((b+n)*scale,color,Vector2.zero);vh.AddVert((b-n)*scale,color,Vector2.zero);vh.AddVert((a-n)*scale,color,Vector2.zero);
         vh.AddTriangle(start,start+1,start+2);vh.AddTriangle(start,start+2,start+3);

@@ -25,6 +25,7 @@ public sealed partial class ForgeBattlefieldController
         }
         shell.anchorMin=shell.anchorMax=anchor;
         shell.anchoredPosition=own?new Vector2(205,96):new Vector2(205,-144);
+        shell.sizeDelta=new Vector2(342,140);
         int behind=Math.Min(Node(plate).GetSiblingIndex(),node.GetSiblingIndex());
         // Removing a previous sibling shifts the target index down by one.
         // Repeated snapshots/paging must not bring the shell over the zone text.
@@ -36,6 +37,7 @@ public sealed partial class ForgeBattlefieldController
             var divider=Panel(node,"BarDivider",new Vector2(0,own?-23:23),new Vector2(310,1),new Color(.5f,.62f,.7f,.25f));
             divider.GetComponent<Image>().raycastTarget=false;
         }
+        ((RectTransform)node.Find("BarDivider")).anchoredPosition=new Vector2(0,own?-23:23);
         // Known hand browsing is read-only. Targeting still owns clicks on
         // the player plate while an authoritative player choice is active.
         var handLabel=SceneText(plate+"/Sub");
@@ -48,20 +50,58 @@ public sealed partial class ForgeBattlefieldController
         PresentZonePile(player,path,"坟场",1,grave.Length);
         PresentZonePile(player,path,"放逐",2,Math.Max(player.exileCount,exile.Length));
         bool ante=view?.anteEnabled==true;
+        bool command=view?.formatId is "duelcommander" or "brawl";
         var anteEntry=node.Find("Pile_赌注");
         if(ante&&anteEntry==null)anteEntry=Panel(node,"Pile_赌注",Vector2.zero,new Vector2(80,40),Color.clear);
         if(anteEntry!=null)anteEntry.gameObject.SetActive(ante);
         if(ante)PresentZonePile(player,path,"赌注",3,ZoneCards(player,"赌注").Length);
+        var commandEntry=node.Find("Pile_统帅区");
+        if(command&&commandEntry==null)commandEntry=Panel(node,"Pile_统帅区",Vector2.zero,new Vector2(80,40),Color.clear);
+        if(commandEntry!=null)commandEntry.gameObject.SetActive(command);
+        if(command)PresentZonePile(player,path,"统帅区",3,ZoneCards(player,"统帅区").Length);
         PresentAuxiliaryEntry(player,node);
-        var entries=(ante?new[]{"牌库","坟场","放逐","赌注"}:new[]{"牌库","坟场","放逐"}).Select(z=>(RectTransform)Node(path+"/Pile_"+z)).ToArray();
+        var zones=(command?new[]{"牌库","坟场","放逐","统帅区"}:ante?new[]{"牌库","坟场","放逐","赌注"}:new[]{"牌库","坟场","放逐"}).ToList();
+        bool sideboard=IsRedesignLayout&&own&&!command&&service?.IsSpectator!=true;
+        var sideboardEntry=node.Find("Pile_备牌");
+        if(sideboard&&sideboardEntry==null)sideboardEntry=Panel(node,"Pile_备牌",Vector2.zero,new Vector2(80,40),Color.clear);
+        if(sideboardEntry!=null)sideboardEntry.gameObject.SetActive(sideboard);
+        if(sideboard){PresentZonePile(player,path,"备牌",4,player.sideboardCards?.Length??0);zones.Add("备牌");}
+        var entries=zones.Select(z=>(RectTransform)Node(path+"/Pile_"+z)).ToArray();
+        if(IsRedesignLayout){
+            var labels=entries.Select(e=>e.Find("ZoneEntry/ZoneCaption").GetComponent<Text>()).ToArray();
+            foreach(var label in labels){label.fontStyle=FontStyle.Normal;label.horizontalOverflow=HorizontalWrapMode.Overflow;}
+            // Share a single row by actual caption width. Long locales may reduce
+            // the enlarged text together, without wrapping individual entries.
+            float textWidth=labels.Sum(l=>l.preferredWidth),padding=entries.Length*10;
+            if(textWidth+padding>342){
+                // Floor the final pixel size; rounding it up can push the last
+                // entry outside the row after localization or a three-digit count.
+                float baseSize=Mathf.Max(1,Mathf.Floor(labels[0].fontSize*(342-padding)/textWidth))/GamePreferences.TextScale;
+                foreach(var label in labels)PreferenceText.SetSize(label,baseSize);
+            }
+            var sizes=labels.Select(l=>l.preferredWidth+10).ToArray();
+            float total=sizes.Sum(),compression=Mathf.Min(1,342/total);
+            float spare=Mathf.Max(0,(342-total)/entries.Length),left=-171;
+            for(int i=0;i<entries.Length;i++){
+                float width=sizes[i]*compression+spare;
+                var root=entries[i];root.sizeDelta=new Vector2(width,40);root.anchoredPosition=new Vector2(left+width*.5f,0);left+=width;
+                var face=(RectTransform)root.Find("ZoneEntry");face.sizeDelta=new Vector2(width-2,40);
+                face.Find("Icon").gameObject.SetActive(false);
+                var label=labels[i];label.alignment=TextAnchor.MiddleCenter;
+                label.rectTransform.pivot=new Vector2(.5f,.5f);label.rectTransform.anchoredPosition=Vector2.zero;label.rectTransform.sizeDelta=new Vector2(width-6,40);
+                if(label.preferredWidth>width-6)PreferenceText.SetSize(label,Mathf.Max(1,Mathf.Floor(label.fontSize*(width-6)/label.preferredWidth))/GamePreferences.TextScale);
+                var separator=root.Find("Separator");if(separator!=null)separator.gameObject.SetActive(false);
+            }
+            return;
+        }
         // Ante uses the same fixed row. Omit the decorative icons to keep four captions legible.
-        var widths=entries.Select(e=>e.Find("ZoneEntry/ZoneCaption").GetComponent<Text>().preferredWidth+(ante?12:32)).ToArray();
+        var widths=entries.Select(e=>e.Find("ZoneEntry/ZoneCaption").GetComponent<Text>().preferredWidth+(ante||command?12:32)).ToArray();
         float extra=Mathf.Max(0,(342-widths.Sum())/entries.Length),cursor=-widths.Sum()*.5f-extra*entries.Length*.5f;
         for(int i=0;i<entries.Length;i++){
             var root=entries[i];float width=widths[i]+extra;root.sizeDelta=new Vector2(width,40);root.anchoredPosition=new Vector2(cursor+width*.5f,0);cursor+=width;
             var face=(RectTransform)root.Find("ZoneEntry");face.sizeDelta=new Vector2(width-2,40);
-            var icon=face.Find("Icon");icon.gameObject.SetActive(!ante);((RectTransform)icon).anchoredPosition=new Vector2(-width*.5f+12,0);
-            var label=face.Find("ZoneCaption").GetComponent<Text>();label.rectTransform.pivot=new Vector2(0,.5f);label.rectTransform.anchoredPosition=new Vector2(-width*.5f+(ante?6:25),0);label.rectTransform.sizeDelta=new Vector2(width-(ante?12:28),40);
+            var icon=face.Find("Icon");icon.gameObject.SetActive(!ante&&!command);((RectTransform)icon).anchoredPosition=new Vector2(-width*.5f+12,0);
+            var label=face.Find("ZoneCaption").GetComponent<Text>();label.rectTransform.pivot=new Vector2(0,.5f);label.rectTransform.anchoredPosition=new Vector2(-width*.5f+(ante||command?6:25),0);label.rectTransform.sizeDelta=new Vector2(width-(ante||command?12:28),40);
             var separator=root.Find("Separator") as RectTransform;if(separator!=null)separator.anchoredPosition=new Vector2(-width*.5f,0);
         }
     }
@@ -86,18 +126,25 @@ public sealed partial class ForgeBattlefieldController
             Label(root,"HoverCount","",new Vector2(0,-34),new Vector2(68,26),18,Paper);
             if(index>0)Panel(root,"Separator",new Vector2(-44,0),new Vector2(1,20),new Color(.5f,.62f,.7f,.18f));
         }
-        string caption=index==0?TapPaymentText("牌库","Library","ライブラリー"):index==1?TapPaymentText("坟墓场","Graveyard","墓地"):index==2?TapPaymentText("放逐","Exile","追放"):TapPaymentText("赌注","Ante","アンティ");
-        var zoneLabel=face.Find("ZoneCaption").GetComponent<Text>();zoneLabel.text=caption+" "+count;PreferenceText.SetSize(zoneLabel,12);
+        string caption=zone=="备牌"?TapPaymentText("备牌","Sideboard","サイドボード"):zone=="统帅区"?TapPaymentText("统帅区","Command","統率領域"):index==0?TapPaymentText("牌库","Library","ライブラリー"):index==1?TapPaymentText("坟墓场","Graveyard","墓地"):index==2?TapPaymentText("放逐","Exile","追放"):TapPaymentText("赌注","Ante","アンティ");
+        var zoneLabel=face.Find("ZoneCaption").GetComponent<Text>();zoneLabel.text=caption+" "+(zone=="备牌"&&player.sideboardCards==null?"—":count.ToString());PreferenceText.SetSize(zoneLabel,IsRedesignLayout?16:12);
+        if(zone=="备牌")button.interactable=player.sideboardCards!=null;
+        var payable=zone=="备牌"&&player.seat==seat&&service?.IsSpectator!=true&&canAct&&!submitted
+            ?RedesignPayableSourceIds(view):Array.Empty<int>();
+        bool available=(player.sideboardCards??Array.Empty<ForgeCardView>()).Any(c=>payable.Contains(c.id));
+        zoneLabel.color=available?new Color(.3f,.88f,1f):Paper;
         foreach(var graphic in root.GetComponentsInChildren<Graphic>(true))if(graphic.transform!=root)graphic.raycastTarget=false;
         var hover=root.GetComponent<ZonePileHover>()??root.gameObject.AddComponent<ZonePileHover>();
-        hover.Configure(root.Find("HoverCount").GetComponent<Text>(),face,count,false);
+        hover.Configure(root.Find("HoverCount").GetComponent<Text>(),face,count,false,available);
     }
     private static ForgeCardView[] ZoneCards(ForgePlayerView player,string zone)
     {
         if(zone=="手牌")return player.hand??Array.Empty<ForgeCardView>();
+        if(zone=="备牌")return player.sideboardCards??Array.Empty<ForgeCardView>();
         if(zone=="牌库")return player.reviewLibrary??Array.Empty<ForgeCardView>();
         if(zone=="放逐")return player.exileCards??player.reviewExile??Array.Empty<ForgeCardView>();
         if(zone=="赌注")return player.anteCards??Array.Empty<ForgeCardView>();
+        if(zone=="统帅区")return player.commandCards??player.commanders??Array.Empty<ForgeCardView>();
         if(zone=="垃圾场")return player.junkyardCards??Array.Empty<ForgeCardView>();
         if(player.graveyardCards!=null)return player.graveyardCards;
         if(player.reviewGraveyard!=null)return player.reviewGraveyard;
@@ -107,6 +154,7 @@ public sealed partial class ForgeBattlefieldController
     private void OpenZoneBrowser(int playerSeat,string zone)
     {
         if(IsCardPickerRequest || endDialog!=null&&endDialog.gameObject.activeSelf)return;
+        if(zone=="备牌"&&(playerSeat!=seat||service?.IsSpectator==true||view?.players?.FirstOrDefault(p=>p.seat==seat)?.sideboardCards==null))return;
         CloseReviewCards();browsedSeat=playerSeat;browsedZone=zone;selectionPage=0;
         RefreshZoneBrowser();
     }
@@ -121,24 +169,31 @@ public sealed partial class ForgeBattlefieldController
         &&card.componentCards[0].id!=card.componentCards[1].id;
     private string ZoneTargetHint(ForgeCardView card)
     {
-        string zone=browsedZone=="坟场"?"Graveyard":browsedZone=="放逐"?"Exile":browsedZone=="赌注"?"Ante":null;
-        if(zone==null||card.id<0)return "";
+        string zone=card.zone;
+        if(string.IsNullOrEmpty(zone)||card.id<=0)return "";
+        return ConfirmedTargetHint(target=>target.kind=="card"&&!target.leftZone&&target.id==card.id&&target.ownerSeat==card.ownerSeat&&target.zone==zone);
+    }
+    private string StackIncomingTargetHint(ForgeStackItem entry)=>entry==null||entry.id<=0?"":
+        ConfirmedTargetHint(target=>target.kind=="stack"&&!target.leftZone&&target.stackId==entry.id);
+    private string ConfirmedTargetHint(Func<ForgeStackTarget,bool> matches)
+    {
         return string.Join("\n",(view?.stackItems??Array.Empty<ForgeStackItem>())
             .Select((entry,index)=>new {entry,order=index+1})
-            .Where(item=>(item.entry.targets??Array.Empty<ForgeStackTarget>()).Any(target=>
-                target.kind=="card"&&!target.leftZone&&target.id==card.id&&target.ownerSeat==browsedSeat&&target.zone==zone))
+            .Where(item=>(item.entry.targets??Array.Empty<ForgeStackTarget>()).Any(matches))
             .Select(item=>{
                 var entry=item.entry;
                 string name=entry.source?.faceDown==true?TapPaymentText("面朝下的咒语","Face-down spell","裏向きの呪文"):GamePreferences.CardFaceName(entry.source?.name);
                 if(string.IsNullOrEmpty(name))name=TapPaymentText("堆叠中的对象","Stack object","スタック上のオブジェクト");
-                return TapPaymentText($"成为「{name}」的目标（堆叠{item.order}）",$"Targeted by {name} (Stack {item.order})",$"「{name}」の対象（スタック{item.order}）");
+                string text=TapPaymentText($"成为「{name}」的目标（堆叠{item.order}）",$"Targeted by {name} (Stack {item.order})",$"「{name}」の対象（スタック{item.order}）");
+                return ColoredDetail(text,entry.controllerSeat<=0?"#D8D8D8":entry.controllerSeat==seat?"#5DB9F5":"#F17C7C");
             }));
     }
     private float ZoneTargetHintHeight(string[] hints,float width)
     {
         if(!hints.Any(h=>!string.IsNullOrEmpty(h)))return 0;
         var measure=Label(surface,"MeasureZoneTargetHint","",Vector2.zero,new Vector2(width-12,100),14,new Color(.65f,.85f,1));
-        measure.supportRichText=false;measure.raycastTarget=false;measure.resizeTextForBestFit=false;
+        measure.supportRichText=true;measure.raycastTarget=false;measure.resizeTextForBestFit=false;
+        (measure.GetComponent<PreferenceText>()??measure.gameObject.AddComponent<PreferenceText>()).Literal=true;
         float height=0;
         foreach(string hint in hints){measure.text=hint;height=Mathf.Max(height,Mathf.Ceil(measure.preferredHeight)+12);}
         measure.gameObject.SetActive(false);Destroy(measure.gameObject);
@@ -152,7 +207,8 @@ public sealed partial class ForgeBattlefieldController
         var content=Scroll(band,"HintScroll",Vector2.zero,new Vector2(width-12,height-12));
         AddStackScrollIndicator(content);
         var label=Label(content,"Text",text,Vector2.zero,new Vector2(width-12,height-12),14,new Color(.65f,.85f,1));
-        label.supportRichText=false;label.raycastTarget=false;label.resizeTextForBestFit=false;label.alignment=TextAnchor.UpperLeft;
+        label.supportRichText=true;label.raycastTarget=false;label.resizeTextForBestFit=false;label.alignment=TextAnchor.UpperLeft;
+        (label.GetComponent<PreferenceText>()??label.gameObject.AddComponent<PreferenceText>()).Literal=true;
         float textHeight=Mathf.Max(height-12,Mathf.Ceil(label.preferredHeight));
         content.sizeDelta=new Vector2(width-12,textHeight);label.rectTransform.sizeDelta=content.sizeDelta;
         label.rectTransform.anchorMin=label.rectTransform.anchorMax=label.rectTransform.pivot=new Vector2(.5f,1);label.rectTransform.anchoredPosition=Vector2.zero;
@@ -173,6 +229,7 @@ public sealed partial class ForgeBattlefieldController
         }
         var player=view?.players?.FirstOrDefault(p=>p.seat==browsedSeat);
         if(player==null){CloseReviewCards();return;}
+        if(browsedZone=="备牌"&&(player.seat!=seat||service?.IsSpectator==true||player.sideboardCards==null)){CloseReviewCards();return;}
         bool library=browsedZone=="牌库";
         var cards=library?LibraryBrowserCards(player):ZoneCards(player,browsedZone);
         cards=cards.Select(c=>{
@@ -182,13 +239,15 @@ public sealed partial class ForgeBattlefieldController
             visible.currentRules=c.knownFaceRules;return visible;
         }).ToArray();
         string signature=browsedSeat+"/"+browsedZone+"/"+surface.rect.size+"/"+GamePreferences.Revision+"/"+player.libraryCount+"/"+string.Join("|",cards.Select(ServerSnapshotJson.Serialize))+"/"+string.Join("|",cards.Select(ZoneTargetHint));
-        if(library)signature+="/"+view?.request?.requestId+"/"+canAct+"/"+submitted;
+        if(library||browsedZone=="备牌")signature+="/"+view?.request?.requestId+"/"+canAct+"/"+submitted;
         if(signature==zoneBrowserSignature && cardSelectionOverlay!=null && cardSelectionOverlay.gameObject.activeSelf)return;
         zoneBrowserSignature=signature;
         if(endDetail!=null)Destroy(endDetail.gameObject);
         string title=(player.seat==seat?"你的":"对手的")+(browsedZone=="手牌"?"已知手牌":browsedZone=="坟场"?"坟墓场":browsedZone=="放逐"?"放逐区":browsedZone=="赌注"?"赌注区":"剩余牌库");
         if(browsedZone=="赌注")title=TapPaymentText((player.seat==seat?"你的":"对手的")+"赌注区",(player.seat==seat?"Your":"Opponent's")+" ante",(player.seat==seat?"あなた":"対戦相手")+"のアンティ");
-        RenderCardSelection(new ForgeRequest{kind=library?"BrowseLibrary":"BrowseZone",options=Array.Empty<ForgeOption>(),previewCards=cards},title);
+        if(browsedZone=="统帅区")title=TapPaymentText((player.seat==seat?"你的":"对手的")+"统帅区",(player.seat==seat?"Your":"Opponent's")+" command zone",(player.seat==seat?"あなた":"対戦相手")+"の統率領域");
+        if(browsedZone=="备牌")title=TapPaymentText("你的备牌","Your sideboard","あなたのサイドボード");
+        RenderCardSelection(new ForgeRequest{kind=library?"BrowseLibrary":browsedZone=="备牌"?"BrowseSideboard":"BrowseZone",options=Array.Empty<ForgeOption>(),previewCards=cards},title);
         if(browsedZone=="垃圾场"){
             selectionPanel.Find("Title").GetComponent<Text>().text=TapPaymentText((player.seat==seat?"你的":"对手的")+"垃圾场",(player.seat==seat?"Your":"Opponent's")+" scrapyard",(player.seat==seat?"あなた":"対戦相手")+"の廃品置き場");
             selectionPanel.Find("Instruction").GetComponent<Text>().text=AuxiliarySummary(player);

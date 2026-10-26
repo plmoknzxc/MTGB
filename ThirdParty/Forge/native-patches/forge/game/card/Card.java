@@ -4631,6 +4631,29 @@ public class Card extends GameEntity implements Comparable<Card>, IHasSVars, ITr
         }
     }
 
+    // Detach from prior zone objects/LKI and remove only perpetual timestamps.
+    public final void clearPerpetual() {
+        Set<Long> timestamps = new HashSet<>();
+        for (PerpetualInterface effect : perpetual) timestamps.add(effect.getTimestamp());
+        perpetual = new ArrayList<>();
+        for (long timestamp : timestamps) {
+            removeChangedCardTypes(timestamp, 0, false);
+            removeChangedCardTypesByText(timestamp, 0);
+            removeColor(timestamp, 0);
+            removeColorByText(timestamp, 0);
+            removeNewPT(timestamp, 0, false);
+            removeNewPTbyText(timestamp, 0);
+            removePTBoost(timestamp, 0);
+            removeChangedCardTraits(timestamp, 0);
+            removeChangedCardTraitsByText(timestamp, 0);
+            removeChangedCardKeywords(timestamp, 0, false);
+            removeChangedCardKeywordsByText(timestamp, 0);
+            removeChangedManaCost(timestamp, 0);
+        }
+        for (CardState state : states.values()) state.calculatePerpetualAdjustedManaCost();
+        updateStateForView();
+    }
+
     public final boolean isUntapped() {
         return !tapped;
     }

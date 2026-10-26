@@ -8,7 +8,7 @@ public sealed partial class OnlineLobbyPanel
     private string companionStatus;
     private void BuildSideboardCompanionControl(Transform parent,DeckEntry entry,CardDefinition card,bool side,Vector2 size)
     {
-        if(!side||!DeckCompanion.IsCompanion(card))return;
+        if(!side||selectedDeck?.format=="duelcommander"||!DeckCompanion.IsCompanion(card))return;
         var button=AddButton(parent,"SetCompanion",DeckCompanion.Text("行侣","Comp.","相棒"),new Vector2(-20,-size.y*.5f+16),new Vector2(64,28),browserFont,FieldColor);
         PreferenceText.SetSize(button.GetComponentInChildren<Text>(),12);
         button.onClick.AddListener(()=>{
@@ -30,7 +30,8 @@ public sealed partial class OnlineLobbyPanel
         if(sideboardStatusText!=null){
             sideboardStatusText.gameObject.SetActive(true);
             sideboardStatusText.rectTransform.anchoredPosition=new Vector2(0,-457);sideboardStatusText.rectTransform.sizeDelta=new Vector2(1640,62);
-            sideboardStatusText.text=DeckCompanion.Label(selectedDeck,CardDatabaseRepository.LoadAll())+(DeckCompanion.Has(selectedDeck)?"\n"+(string.IsNullOrEmpty(companionStatus)?DeckCompanion.Text("正在检查行侣条件…","Checking companion restriction…","相棒条件を確認中…"):companionStatus):"");
+            string instructions=selectedDeck?.format=="duelcommander"?DeckCompanion.Text("可用原牌组内的合法主将替换；主牌与主将合计 100 张，标识色须保持不变。","Choose a legal commander from your registered 100 cards. Color identity must stay the same.","登録済みの100枚から統率者を変更できます。固有色は変更できません。"):"";
+            sideboardStatusText.text=instructions+(string.IsNullOrEmpty(instructions)?"":"\n")+DeckCompanion.Label(selectedDeck,CardDatabaseRepository.LoadAll())+(DeckCompanion.Has(selectedDeck)?"\n"+(string.IsNullOrEmpty(companionStatus)?DeckCompanion.Text("正在检查行侣条件…","Checking companion restriction…","相棒条件を確認中…"):companionStatus):"");
         }
     }
     private IEnumerator CheckSideboardCompanion(string key)

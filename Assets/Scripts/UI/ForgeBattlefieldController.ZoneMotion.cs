@@ -60,7 +60,7 @@ public sealed partial class ForgeBattlefieldController
             if(surfaces.TryGetValue("Card_"+pose.card.id,out var exact))return exact;
             if(pose.zone=="Battlefield") {
                 string row=(pose.player==seat?"Your":"Opponent")+(pose.card.creature?"Creatures":pose.card.land?"Lands":"Support");
-                if(surfaces.TryGetValue(row+":"+ArenaGroupKey(pose.card),out var grouped))return grouped;
+                if(surfaces.TryGetValue(row+":"+ArenaPresentationGroupKey(pose.card),out var grouped))return grouped;
             }
             // Authorized hand identities may be known while the opponent fan shows backs.
             return pose.zone=="Hand"?(pose.player==DisplayedHandSeat?ownHand:otherHand):null;

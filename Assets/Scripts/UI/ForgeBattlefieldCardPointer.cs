@@ -41,6 +41,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private bool browsingHand,handFanVisible=true;
     public bool IsCastingDrag=>dragging;
     public bool IsHovered=>hovering&&!dragging;
+    public event Action VisualStateChanged;
     public void ConfigureHandNavigation(ForgeHandFanNavigation navigation)=>handNavigation=navigation;
     public void SetHandFanExposure(bool visible){if(handFanVisible!=visible){handFanVisible=visible;handHitLayout?.Invalidate();}}
     public void SetHandFanPose(Vector2 position,float rotation,bool snap)
@@ -59,7 +60,9 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private bool combatDragging;
     private float hoverStartedAt;
     private bool detailShown;
-    private BattlefieldHorizontalScroll scrollDrag;
+    private UnityEngine.UI.ScrollRect scrollDrag, scrollParent;
+    public bool AllowHandHover { get; set; } = true;
+    public void ConfigureScrollParent(UnityEngine.UI.ScrollRect scroll) => scrollParent = scroll;
     private RectTransform playRegion,dragSpace;
     private Rect dragSourceBounds;
     private Action activePlay;
@@ -70,6 +73,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         hovering=false;detailShown=false;
         if(hoverSurface!=null)hoverSurface.raycastTarget=false;
         if(face!=null){face.localPosition=Vector3.zero;face.localScale=Vector3.one;face.localRotation=Quaternion.identity;}
+        VisualStateChanged?.Invoke();
     }
     public void ConfigureCombat(Action<Vector2> begin,Action<Vector2> move,Action<Vector2> end)
     { combatBegin=begin;combatMove=move;combatEnd=end; }
@@ -109,9 +113,9 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     }
     private void OnDisable() { bool open=detailShown;if(browsingHand&&handNavigation!=null)handNavigation.CancelDrag();dragging=false;browsingHand=false;activePlay=null;combatDragging=false;activeCombatEnd=null;scrollDrag=null;ResetHover(); if(open)exit?.Invoke(); }
     public void OnPointerEnter(PointerEventData eventData)
-    {if(dragging || hovering || handNavigation!=null&&handNavigation.IsDragging)return; hovering=true;detailShown=hand;hoverStartedAt=Time.unscaledTime; sibling=transform.GetSiblingIndex(); transform.SetAsLastSibling();if(hand)enter?.Invoke();}
+    {if(hand && !AllowHandHover || dragging || hovering || handNavigation!=null&&handNavigation.IsDragging)return; hovering=true;detailShown=hand;hoverStartedAt=Time.unscaledTime; sibling=transform.GetSiblingIndex(); transform.SetAsLastSibling();VisualStateChanged?.Invoke();if(hand)enter?.Invoke();}
     public void OnPointerExit(PointerEventData eventData)
-    {if(dragging || !hovering)return; hovering=false;detailShown=false; RestoreOrder(); exit?.Invoke();}
+    {if(dragging || !hovering)return; hovering=false;detailShown=false;VisualStateChanged?.Invoke();RestoreOrder(); exit?.Invoke();}
     public static void RestoreHandOrder(Transform parent)
     {
         var cards=parent.GetComponentsInChildren<ForgeBattlefieldCardPointer>(false)
@@ -136,7 +140,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
             browsingHand=true;ResetHover();exit?.Invoke();handNavigation.OnBeginDrag(eventData);return;
         }
         if(!draggable || eventData.button!=PointerEventData.InputButton.Left) {
-            scrollDrag=GetComponentInParent<BattlefieldHorizontalScroll>();
+            scrollDrag=(UnityEngine.UI.ScrollRect)GetComponentInParent<BattlefieldHorizontalScroll>() ?? scrollParent;
             if(scrollDrag!=null){ResetHover();exit?.Invoke();scrollDrag.OnBeginDrag(eventData);}return;
         }
         if(!hovering)sibling=transform.GetSiblingIndex();
@@ -148,6 +152,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         dragging=true; hovering=false; initial=transform.position; transform.SetAsLastSibling(); exit?.Invoke();
         if(face!=null){face.localPosition=Vector3.zero;face.localRotation=Quaternion.identity;face.localScale=Vector3.one*1.12f;}
         transform.localRotation=Quaternion.identity;
+        VisualStateChanged?.Invoke();
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -168,6 +173,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         }
         if(!dragging)return;
         dragging=false;eventData.eligibleForClick=false;
+        VisualStateChanged?.Invoke();
         bool releasedOnBoard=eventData.position.y>Screen.height*.28f && eventData.position.y<Screen.height*.88f
             && eventData.position.x>Screen.width*.12f && eventData.position.x<Screen.width*.83f;
         bool clearOfSource=false;

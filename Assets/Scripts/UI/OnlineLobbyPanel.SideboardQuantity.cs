@@ -32,7 +32,7 @@ public sealed partial class OnlineLobbyPanel
         minus.onClick.AddListener(() => MoveOneCard(tile.Entry, !tile.IsSideboard));
         plus.onClick.AddListener(() =>
         {
-            var other = tile.IsSideboard ? selectedDeck?.cards : selectedDeck?.sideboard;
+            var other = tile.IsSideboard ? selectedDeck?.cards : SideboardDisplayEntries;
             var entry = other?.Find(item => SamePrinting(item, tile.Entry));
             if (entry != null) MoveOneCard(entry, tile.IsSideboard);
         });
@@ -46,7 +46,7 @@ public sealed partial class OnlineLobbyPanel
             && OnlineMatchService.Instance?.LobbyState?.series?.betweenGames == true;
         foreach (var tile in sideboardPageGroup.GetComponentsInChildren<OnlineSideboardCardTile>())
         {
-            var other = tile.IsSideboard ? selectedDeck?.cards : selectedDeck?.sideboard;
+            var other = tile.IsSideboard ? selectedDeck?.cards : SideboardDisplayEntries;
             bool canIncrease = other?.Exists(item => item.count > 0 && SamePrinting(item, tile.Entry)) == true;
             tile.SetQuantityControls(editable && tile.Entry.PrintingKey == quantityPrintingKey
                 && tile.IsSideboard == quantityInSideboard, canIncrease);

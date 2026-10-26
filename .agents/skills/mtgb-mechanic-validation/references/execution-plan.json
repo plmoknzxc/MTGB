@@ -1,13 +1,12 @@
 {
   "schema": 1,
-  "reviewedOn": "2026-10-11",
-  "scope": "当前goal完成普通1v1。指挥官/生产四人、完整子游戏、Planechase、Vanguard、Archenemy、征召笔记/密谋牌后置，原编号/断言/证据保留scope-exclusions.json；游乐设施和装置辅助牌组继续接入，普通共用规则和BO3仍保留。",
+  "reviewedOn": "2026-10-24",
+  "scope": "当前明确目标是完成法禁（Duel Commander）与 Arena 100张争锋的实际接入。普通1v1共用机制的N81闭合仅作为复用证据；生产四人、官禁多人、完整子游戏、其他特殊模式、外部机器/容量和A06全局依赖继续后置。",
   "batches": [
     {
       "id": "E01",
       "title": "消费者分类与证据依赖",
       "packages": [
-        "A01",
         "A02",
         "A03",
         "A04",
@@ -15,7 +14,7 @@
         "A06",
         "R49"
       ],
-      "focus": "A01.01有界接入差异筛查：保留共享复用，确认是否仍有新请求/权限/隐藏信息/LKI身份/恢复分支；不逐卡重跑，补测数量未确定。"
+      "focus": "N81已完成普通1v1接入范围；A06全局依赖与特殊模式继续按用户决定后置。"
     },
     {
       "id": "E02",
@@ -1234,6 +1233,17 @@
         "path": ".tools/redundant-work-disposition-1012/closure-clarification.json",
         "sha256": "5d84205de2de81047d8233381b60613b070b7f2f2d2d13f8475e0e34e1f282c0"
       }
+    },
+    {
+      "id": "N81",
+      "owner": "A01.01",
+      "title": "准确根入口、后继及已知修复的有界结束条件复核",
+      "status": "COMPLETED_BOUNDED_INTEGRATION_REUSE",
+      "completionEvidence": {
+        "path": ".tools/integration-completion-1024/audit.json",
+        "sha256": "37deb335cb40e0b2ea0cf381ceeda6e5abe43172422e96855547c1e0b022645b"
+      },
+      "scope": "N81完成A01.01结束条件复核：1085条当前根入口、1386条后继源码引用均有准确归属；动态构建分支和N67-N72实际修复/前向缺口关闭证据已核对，没有当前明确接入缺口或失败尾段。关闭独立选择、生成/事件两个原组及A01.01，当前普通1v1接入范围待办1→0、原组2→0。复用原有界原生/UI证据，0新增实局、0新增整牌PASS；70条准确原卡结果不变。用户后置事项及全局REVIEW_SOURCE_CHANGES不变。"
     }
   ]
 }

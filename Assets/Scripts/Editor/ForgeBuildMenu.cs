@@ -27,7 +27,7 @@ public static class ForgeBuildMenu
             throw new InvalidOperationException("Release output must be empty.");
         Directory.CreateDirectory(root);
         BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefield.unity" },
+            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefieldRedesign.unity" },
             locationPathName = Path.Combine(root, "MTGB.exe"), target = BuildTarget.StandaloneWindows64,
             subtarget = (int)StandaloneBuildSubtarget.Player, options = BuildOptions.None
         });
@@ -36,6 +36,7 @@ public static class ForgeBuildMenu
         // The client hosts the same headless Forge engine as the dedicated server.
         CopyRuntimeTo(root, dedicatedServer: true);
         CopyClientNotices(root);
+        CopyVideoToolsTo(root);
         ReplayVideoExportJob.EditorWorkerExecutable=Path.Combine(root,"MTGB.exe");
         Debug.Log("MTGB release player built: " + root);
     }
@@ -71,17 +72,29 @@ public static class ForgeBuildMenu
         string root = Path.GetFullPath("Builds/ForgeValidation");
         Directory.CreateDirectory(root);
         BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefield.unity" },
+            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefieldRedesign.unity" },
             locationPathName = Path.Combine(root, "MTGB.exe"), target = BuildTarget.StandaloneWindows64,
             subtarget = (int)StandaloneBuildSubtarget.Player,
             options = BuildOptions.Development
         });
         if (report.summary.result != BuildResult.Succeeded) throw new InvalidOperationException("Forge validation player build failed.");
         CopyRuntimeTo(root);
+        CopyVideoToolsTo(root);
         ReplayVideoExportJob.EditorWorkerExecutable=Path.Combine(root,"MTGB.exe");
         Debug.Log("MTGB Forge validation player built: " + root);
     }
     [Serializable] private sealed class RuntimeFile { public string path, sha256; }
+    // Ship the encoder with the player. A successful developer PATH lookup is
+    // not evidence that the installed client has its required dependency.
+    public static void CopyVideoToolsTo(string root)
+    {
+        string source=Path.GetFullPath("VideoTools");
+        if(!File.Exists(Path.Combine(source,"ffmpeg.exe")))
+            throw new FileNotFoundException("Client export requires VideoTools/ffmpeg.exe and its distribution notices.");
+        string target=Path.Combine(Path.GetFullPath(root),"VideoTools");
+        if(string.Equals(source,target,StringComparison.OrdinalIgnoreCase))return;
+        CopyTree(source,target);
+    }
     [Serializable] private sealed class RuntimeManifest { public RuntimeFile[] files; }
 
     private static readonly string[] ServerResourceFolders = { "ai", "blockdata", "cardsfolder", "defaults", "editions", "effects", "formats", "licenses", "lists", "setlookup", "tokenscripts" };

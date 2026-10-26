@@ -255,6 +255,7 @@ public sealed partial class ForgeBattlefieldController
         bool mixedZones=allCards.Where(c=>!string.IsNullOrEmpty(c.zone)).Select(c=>c.zone).Distinct().Count()>1;
         string key=request.kind+"/"+selectionPage+"/"+surface.rect.size+"/"+request.sourceCardId+"/"+GamePreferences.Revision+"/"+
             request.votingPlayerSeat+"/"+request.secretVote+"/"+request.message+"/"+
+            string.Join("|",allCards.OrderBy(c=>c.id).Select(ZoneTargetHint))+"/"+
             string.Join("|",allCards.OrderBy(c=>c.id).Select(c=>c.id+":"+c.printingKey+":"+c.backFace+":"+c.ownerSeat+":"+c.zone));
         if(!readOnly && key==selectionLayoutKey && selectionPanel!=null) {
             cardSelectionOverlay.gameObject.SetActive(true);
@@ -268,7 +269,7 @@ public sealed partial class ForgeBattlefieldController
                 if(tile==null)continue;
                 PresentComponentFace((RectTransform)tile.Find("Artwork"),card);
                 bool chosen=options.Any(o=>o.selected||IsStagedHandChoice(o.id))||!string.IsNullOrEmpty(card.selection)&&card.selection!="不可选";
-                PresentSelectionGlow(tile,(RectTransform)tile.Find("Artwork"),chosen);
+                PresentSelectionGlow(tile,(RectTransform)tile.Find("Artwork"),chosen||!string.IsNullOrEmpty(ZoneTargetHint(card)));
                 tile.GetComponent<Image>().color=chosen?new Color(.16f,.18f,.20f):options.Length>0?new Color(.18f,.45f,.58f):new Color(.12f,.16f,.21f);
                 var destination=tile.Find("Destination")?.GetComponent<Text>();if(destination!=null)destination.text=card.selection??"";
                 var order=tile.Find("Artwork/Order")?.GetComponent<Text>();if(order!=null)order.text=chosen&&options.Length>0?options[0].order.ToString():"";
@@ -337,16 +338,17 @@ public sealed partial class ForgeBattlefieldController
             float slotWidth=(GamePreferences.Language=="ja-JP"?148:130)*Mathf.Max(1,GamePreferences.TextScale);
             width=Mathf.Min(Mathf.Max(width,footerSlots*slotWidth+48),surface.rect.width-36);
         }
+        if(IsCommanderPerpetualReset)width=Mathf.Min(Mathf.Max(width,560),surface.rect.width-36);
         int columns=Mathf.Clamp(Mathf.FloorToInt((width-48)/200),1,Math.Max(1,Math.Min(5,visible.Length)));
         float cell=Mathf.Min(200,(width-56)/columns),artWidth=cell-20,artHeight=artWidth*1.4f;
-        var targetHints=readOnly&&request.kind=="BrowseZone"?visible.Select(item=>ZoneTargetHint(item.card)).ToArray():Array.Empty<string>();
+        var targetHints=visible.Select(item=>ZoneTargetHint(item.card)).ToArray();
         float targetHintHeight=ZoneTargetHintHeight(targetHints,artWidth);
         float rowHeight=artHeight+(singleDestination?28:destinationChoices||showDestination?116:request.selectionPurpose=="removeCounters"?64:28)+targetHintHeight;
         float originHeight=mixedZones?26:0;
         rowHeight+=originHeight;
         float positionHeight=orderedLibrary?Mathf.Max(28,Mathf.Ceil(24*GamePreferences.TextScale)):0;
         rowHeight+=positionHeight;
-        bool castRow=(kind=="BrowseZone"||orderedLibrary)&&view?.request?.kind=="InputPassPriority"&&canAct&&!submitted
+        bool castRow=(kind=="BrowseZone"||kind=="BrowseSideboard"||orderedLibrary)&&view?.request?.kind=="InputPassPriority"&&canAct&&!submitted
             &&visible.Any(item=>!item.card.faceDown&&OptionIndex("card:"+item.card.id) is int index&&index>=0&&!view.request.options[index].disabled);
         if(castRow)rowHeight+=40;
         bool legacyCosts=visible.Any(item=>HasLegacyCost(item.card));
@@ -358,6 +360,7 @@ public sealed partial class ForgeBattlefieldController
         selectionPanel=panel;
         selectionFooter=Rect(panel,"SelectionFooter",Vector2.zero,Vector2.zero);
         string title=request.selectionPurpose=="collectEvidence"?TapPaymentText("搜证","Collect evidence","証拠収集"):IsTapPayment(request)?TapPaymentTitle(request):kind=="Scry"?TapPaymentText("占卜","Scry","占術"):kind=="Surveil"?TapPaymentText("刺探","Surveil","諜報"):kind=="OrderCards"?TapPaymentText("排列卡牌顺序","Order cards","カードの順番"):kind=="RevealCards"?TapPaymentText("查看卡牌","View cards","カードを見る"):kind=="InputConfirm"?TapPaymentText("确认效果","Confirm effect","効果を確認"):TapPaymentText("选择卡牌","Choose cards","カードを選択");
+        if(IsCommanderPerpetualReset)title=TapPaymentText("主将的永久改动","Commander modifications","統率者の永久的な変更");
         if(request.selectionPurpose=="dungeon")title=TapPaymentText("选择地城","Choose a dungeon","ダンジョンを選択");
         if(request.selectionPurpose=="removeCounters")title=TapPaymentText("移去指示物","Remove counters","カウンターを取り除く");
         if(request.selectionPurpose=="putLibraryCost")title=TapPaymentText("支付费用","Payment","支払い");
@@ -461,7 +464,7 @@ public sealed partial class ForgeBattlefieldController
             if(targetHints.Length>i)PresentZoneTargetHint(tile,targetHints[i],artWidth,targetHintHeight);
             var art=Panel(tile,"Artwork",new Vector2(0,-artHeight/2-8-targetHintHeight-legacyCostHeadroom),new Vector2(artWidth,artHeight),Ink);
             art.anchorMin=art.anchorMax=new Vector2(.5f,1);
-            PresentSelectionGlow(tile,art,chosen);
+            PresentSelectionGlow(tile,art,chosen||!string.IsNullOrEmpty(targetHints[i]));
             Sprite sprite=null;
             TryBattlefieldArt(card,out sprite);
             var image=art.GetComponent<Image>();image.sprite=sprite;image.preserveAspect=true;image.color=sprite==null?Ink:Color.white;
@@ -504,10 +507,10 @@ public sealed partial class ForgeBattlefieldController
             // Browsing is read-only except an explicit server-offered cast action.
             // Its availability must not depend on the chosen card renderer.
             int castOption=OptionIndex("card:"+card.id);
-            if((kind=="BrowseZone"||orderedLibrary)&&!card.faceDown&&view?.request?.kind=="InputPassPriority"
+            if((kind=="BrowseZone"||kind=="BrowseSideboard"||orderedLibrary)&&!card.faceDown&&view?.request?.kind=="InputPassPriority"
                 &&castOption>=0&&!view.request.options[castOption].disabled&&canAct&&!submitted) {
                 long expected=requestId;
-                var cast=Button(tile,"CastComponentCard",TapPaymentText("施放","Cast","唱える"),new Vector2(0,y-6),new Vector2(artWidth,32),()=>{CloseReviewCards();Choose(castOption,expected);},new Color(.18f,.32f,.49f));
+                var cast=Button(tile,"CastComponentCard",card.land?TapPaymentText("使用","Play","プレイ"):TapPaymentText("施放","Cast","唱える"),new Vector2(0,y-6),new Vector2(artWidth,32),()=>{CloseReviewCards();Choose(castOption,expected);},new Color(.18f,.32f,.49f));
                 ((RectTransform)cast.transform).anchorMin=((RectTransform)cast.transform).anchorMax=new Vector2(.5f,1);
                 PreferenceText.SetSize(cast.GetComponentInChildren<Text>(),15);
             }

@@ -69,6 +69,7 @@ public sealed partial class OnlineMatchService
 
     public void LeaveEndReview(bool leaveRoom)
     {
+        if(IsLocalAiMatch){LeaveLocalAiReview();return;}
         if(leaveRoom&&!CanLeaveRoom){EndReplayStatus="本场比赛尚未结束，请前往换备继续比赛。";return;}
         if (!EndReplayDecided) { EndReplayStatus = "请先选择保存录像或不保存"; return; }
         if(EndReview!=null&&endReplayChoice.HasValue)replaySaveChoices[EndReview.matchId]=endReplayChoice.Value;
@@ -76,7 +77,7 @@ public sealed partial class OnlineMatchService
         ClearEndReview();
         ForgeView = null;
         if (leaveRoom) Disconnect();
-        if(!leaveRoom && !IsSpectator && LobbyState?.series?.betweenGames==true && SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName)
+        if(!leaveRoom && !IsSpectator && LobbyState?.series?.betweenGames==true && ForgeBattlefieldController.IsBattlefieldSceneActive)
         { OnlineLobbyPanel.OpenSideboarding();return; }
         SceneManager.LoadScene(MainSceneName);
     }

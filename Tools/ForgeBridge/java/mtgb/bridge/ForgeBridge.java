@@ -94,6 +94,8 @@ public final class ForgeBridge {
     static final class BridgePlayer extends LobbyPlayerHuman {
         BridgePlayer(String name) { super(name); }
         @Override public PlayerController createMindSlaveController(Player master, Player slave) {
+            if(master.getController() instanceof forge.ai.PlayerControllerAi)
+                return new BridgeAiController(slave.getGame(),slave,master.getOriginalLobbyPlayer());
             BridgeController controller=new BridgeController(slave,this,(PlayerControllerHuman)master.getController());
             Gui handler=new Gui(guiFor((PlayerControllerHuman)master.getController()).seat);
             handler.controller=controller;
@@ -105,6 +107,45 @@ public final class ForgeBridge {
             Player player = new Player(getName(), game, id);
             player.setFirstController(new BridgeController(game,player,this));
             return player;
+        }
+    }
+    static final class BridgeAiPlayer extends forge.ai.LobbyPlayerAi {
+        BridgeAiPlayer(String name){super(name,Set.of());setAiProfile("Default");}
+        @Override public Player createIngamePlayer(Game game,int id){
+            Player player=new Player(getName(),game,id);
+            player.setFirstController(new BridgeAiController(game,player,this));return player;
+        }
+        @Override public PlayerController createMindSlaveController(Player master,Player slave){
+            if(master.getController() instanceof PlayerControllerHuman)
+                return new BridgePlayer(getName()).createMindSlaveController(master,slave);
+            return new BridgeAiController(slave.getGame(),slave,master.getOriginalLobbyPlayer());
+        }
+    }
+    static final class BridgeAiController extends forge.ai.PlayerControllerAi {
+        BridgeAiController(Game game,Player player,forge.LobbyPlayer lobby){super(game,player,lobby);}
+        @Override public CardCollectionView cheatShuffle(CardCollectionView cards){
+            return libraryOrder==null?super.cheatShuffle(cards):libraryOrder.preserve(getPlayer(),cards);
+        }
+        @Override public <T extends GameEntity> T chooseSingleEntityForEffect(forge.util.collect.FCollectionView<T> values,
+            DelayedReveal reveal,forge.game.spellability.SpellAbility ability,String title,boolean optional,Player targeted,Map<String,Object> params){
+            if(ability!=null&&ability.getApi()==forge.game.ability.ApiType.CompanionChoose){
+                int seat=getGame().getRegisteredPlayers().indexOf(getPlayer());
+                JsonObject deck=config.getAsJsonArray("decks").get(seat).getAsJsonObject();
+                if(deck.has("companion")){
+                    JsonElement marked=deck.get("companion");if(marked==null||marked.isJsonNull())return null;
+                    JsonObject entry=marked.getAsJsonObject();
+                    if(!entry.has("setCode")||entry.get("setCode").isJsonNull()||entry.get("setCode").getAsString().isBlank())return null;
+                    String key=entry.get("setCode").getAsString()+"/"+entry.get("collectorNumber").getAsString();
+                    for(T value:values)if(value instanceof Card c&&ForgeCatalog.key((forge.item.PaperCard)c.getPaperCard()).equalsIgnoreCase(key))return value;
+                    throw new IllegalArgumentException("Designated AI companion is not legal for this deck");
+                }
+            }
+            return super.chooseSingleEntityForEffect(values,reveal,ability,title,optional,targeted,params);
+        }
+        @Override public Player chooseStartingPlayer(boolean firstGame){
+            int seat=config.get("firstPlayerSeat").getAsInt();
+            if(seat<1||seat>2)throw new IllegalArgumentException("Invalid first player seat");
+            return getGame().getPlayers().get(seat-1);
         }
     }
     // Both ordinary and controlled players use the same production overrides.
@@ -312,6 +353,7 @@ public final class ForgeBridge {
                     for(var target:current.getTargets().getTargetSpells())if(target.isSpell())affected.add(target.getHostCard());
                 }
                 if(affected.size()==1)cardToShow=affected.iterator().next();
+                else if(affected.isEmpty() && ability.getHostCard().isCommander())cardToShow=ability.getHostCard();
             }
             // Generated copies can have a None zone without belonging to its
             // collection yet. Retain the exact native confirmation argument,
@@ -351,7 +393,11 @@ public final class ForgeBridge {
                     List<forge.game.spellability.SpellAbility> affordable=new ArrayList<>();
                     if(abilities.size()==1)affordable.addAll(abilities);
                     else getPlayer().runWithController(() -> {
-                        for(var ability:abilities)if(ability.getPayCosts()==null || !ability.getPayCosts().hasManaCost()
+                        // PlayEffect selects the face before replacing its mana
+                        // cost (free cast, alternative cost, reduction). Defer
+                        // affordability to that native payment transaction.
+                        for(var ability:abilities)if(ability.isCastFromPlayEffect()
+                            ||ability.getPayCosts()==null || !ability.getPayCosts().hasManaCost()
                             || forge.ai.AvailableActions.canAffordHuman(ability,getPlayer())
                             || ability.isSpell() && ForgeCardCostPreview.canPayMinimum(ability,getPlayer())
                             || ability.isSpell() && hasNativeCastingPaymentChoice(host,getPlayer()))affordable.add(ability);
@@ -502,6 +548,7 @@ public final class ForgeBridge {
         Object card;
         Object ability;
         Object castingFace;
+        boolean withoutManaCost;
         String faceKind, modeCost, cardName, rulesText;
         Object rulesSource;
         boolean selected, disabled;
@@ -1032,7 +1079,15 @@ public final class ForgeBridge {
             return replacementPreview(nativeReplacement(value));
         }
         Object replacementPreview(forge.game.replacement.ReplacementEffect nativeEffect) {
-            return Map.of("id",nativeEffect.getId(),"kind","replacement","description",nativeEffect.toString(),"source",card(nativeEffect.getHostCard()));
+            return Map.of("id",nativeEffect.getId(),"kind","replacement","description",nativeEffect.toString(),"source",card(replacementDisplaySource(nativeEffect)));
+        }
+        Card replacementDisplaySource(forge.game.replacement.ReplacementEffect effect) {
+            Card host=effect.getHostCard();
+            // The native commander rule is an immutable carrier, not a printed
+            // card. Its owner decision concerns this exact affected commander.
+            return host.isImmutable() && host.getName().equals("Commander Effect")
+                && replacementAffected instanceof Card affected && affected.isCommander()
+                && affected.getView().canBeShownTo(controller.getPlayer().getView()) ? affected : host;
         }
         forge.game.replacement.ReplacementEffect nativeReplacement(forge.game.replacement.ReplacementEffectView value) {
             var nativeEffect=replacementChoices.get(value.getId());
@@ -1075,10 +1130,11 @@ public final class ForgeBridge {
                 for(Card c:game.getCardsInGame())if(c.getId()==interactionSourceCardId)request.sourceCard=card(c);
                 if(targeting!=null) {
                     request.sourceCardId=targeting.getHostCard().getId();request.sourceCard=card(targeting.getHostCard());
-                    request.abilityText=targeting.getDescription();
-                    request.rulesText=BridgeAbilityText.rules(targeting);request.rulesSource=BridgeAbilityText.source(targeting);
-                    if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=targeting.getStackDescription();
-                    request.abilityKind=targeting.isTrigger()?"trigger":targeting.isSpell()?"spell":"ability";
+                    var presentation=BridgeAbilityText.targetingPresentation(targeting);
+                    request.abilityText=presentation.getDescription();
+                    request.rulesText=BridgeAbilityText.rules(presentation);request.rulesSource=BridgeAbilityText.source(presentation);
+                    if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=presentation.getStackDescription();
+                    request.abilityKind=presentation.isTrigger()?"trigger":presentation.isSpell()?"spell":"ability";
                 }
                 publish(request);
                 try {
@@ -1173,6 +1229,11 @@ public final class ForgeBridge {
             if(!(value instanceof forge.game.spellability.SpellAbilityView av))return;
             var sa=castingAbilities.get(av.getId());if(sa==null)return;
             option.rulesText=BridgeAbilityText.rules(sa);option.rulesSource=BridgeAbilityText.source(sa);
+            if(sa.isActivatedAbility()&&!sa.isManaAbility()) {
+                option.faceKind="activation";
+                if(sa.getPayCosts()!=null&&sa.getPayCosts().hasManaCost())option.modeCost=ForgeCardCostPreview.forAbility(sa);
+                return;
+            }
             var host=sa.getHostCard();var state=sa.getCardState();if(state==null)return;
             boolean evokeChoice=sa.isSpell()&&host.hasKeyword(forge.game.keyword.Keyword.EVOKE);
             if(!sa.isSpell()&&!sa.isLandAbility())return;
@@ -1185,7 +1246,10 @@ public final class ForgeBridge {
             face.put("creature",state.getType().isCreature());face.put("land",state.getType().isLand());face.put("planeswalker",state.getType().isPlaneswalker());
             face.put("stateName",sa.getCardStateName().name());face.put("backFace",sa.getCardStateName()==forge.card.CardStateName.Backside);
             option.castingFace=face;option.faceKind=sa.getCardStateName()==forge.card.CardStateName.PreparedSpell?"prepare":host.isModal()?(sa.getCardStateName()==forge.card.CardStateName.Backside?"mdfc-back":"mdfc-front"):sa.isAdventure()?"adventure":sa.isOmen()?"omen":"main";
-            String pilotCost=ForgeCardCostPreview.forAbility(sa);
+            option.withoutManaCost=sa.isSpell()&&forge.game.ability.effects.PlayEffect.isChoosingWithoutManaCost(sa);
+            // Use the effect's exact cost conversion before native adjustments;
+            // the choice object itself retains its untouched printed cost.
+            String pilotCost=ForgeCardCostPreview.forAbility(forge.game.ability.effects.PlayEffect.castingCostPreview(sa));
             if(pilotCost!=null)face.put("previewManaCost",pilotCost);
             if(evokeChoice){option.faceKind=sa.isEvoke()?"evoke":"normal";option.modeCost=sa.getPayCosts().toSimpleString();}
         }
@@ -1397,7 +1461,7 @@ public final class ForgeBridge {
                 List<ZoneType> zones=new ArrayList<>(List.of(ZoneType.Hand,ZoneType.Battlefield,ZoneType.Graveyard,ZoneType.Exile));
                 // Native getActivateAction checks the library permission and exact top
                 // identity. Hidden and unauthorized library cards never become options.
-                if(inp instanceof InputPassPriority)zones.addAll(List.of(ZoneType.Library,ZoneType.Command));
+                if(inp instanceof InputPassPriority)zones.addAll(List.of(ZoneType.Library,ZoneType.Command,ZoneType.Sideboard));
                 if(inp instanceof InputSelectEntitiesFromList || inp instanceof InputSelectTargets)zones.addAll(List.of(ZoneType.Library,ZoneType.Command,ZoneType.Sideboard,ZoneType.Ante));
                 for(ZoneType z:zones) {
                     for(Card c:game.getCardsIn(z)) {
@@ -1518,7 +1582,8 @@ public final class ForgeBridge {
                     if(cv!=null && cv.canBeShownTo(g.controller.getPlayer().getView())){request.previewCards.add(g.choiceCard(cv));request.sourceCardId=cv.getId();request.sourceCard=g.choiceCard(cv);}
                 }catch(ReflectiveOperationException e){throw new IllegalStateException("Pinned confirmation API changed",e);}
                 if(g.optionalReplacement!=null){
-                    request.selectionPurpose="optionalReplacement";request.sourceCardId=g.optionalReplacement.getHostCard().getId();request.sourceCard=card(g.optionalReplacement.getHostCard());
+                    Card replacementSource=g.replacementDisplaySource(g.optionalReplacement);
+                    request.selectionPurpose="optionalReplacement";request.sourceCardId=replacementSource.getId();request.sourceCard=card(replacementSource);
                     request.orderedAbilities.add(g.replacementPreview(g.optionalReplacement));
                     if(g.replacementAffected instanceof Player affected)request.replacementAffectedPlayerSeat=game.getRegisteredPlayers().indexOf(affected)+1;
                     if(g.replacementAffected instanceof Card affected&&affected.getView().canBeShownTo(g.controller.getPlayer().getView()))request.replacementAffectedCard=card(affected);
@@ -1608,11 +1673,12 @@ public final class ForgeBridge {
                     }
                     request.sourceCardId=ability.getHostCard().getId();
                     request.sourceCard=card(ability.getHostCard());
-                    request.abilityText=ability.getDescription();
-                    request.rulesText=BridgeAbilityText.rules(ability);request.rulesSource=BridgeAbilityText.source(ability);
-                    if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=ability.isTrigger()?ability.getTrigger().toString():ability.getStackDescription();
+                    var presentation=BridgeAbilityText.targetingPresentation(ability);
+                    request.abilityText=presentation.getDescription();
+                    request.rulesText=BridgeAbilityText.rules(presentation);request.rulesSource=BridgeAbilityText.source(presentation);
+                    if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=presentation.isTrigger()?presentation.getTrigger().toString():presentation.getStackDescription();
                     if(request.abilityText==null || request.abilityText.isBlank())request.abilityText=g.message;
-                    request.abilityKind=ability.isTrigger()?"trigger":ability.isSpell()?"spell":"ability";
+                    request.abilityKind=presentation.isTrigger()?"trigger":presentation.isSpell()?"spell":"ability";
                     for(Option option:opts)if(option.id.startsWith("player:"))option.selected=singleTarget?
                         g.targetDraft!=null && option.id.equals("player:"+g.targetDraft.getId()):
                         chosenTargets.stream().anyMatch(t->option.id.equals("player:"+t.getId()));
@@ -1717,6 +1783,22 @@ public final class ForgeBridge {
             selection.showMessage();
         }catch(ReflectiveOperationException e){throw new IllegalStateException("Pinned Forge selection API changed",e);}
     }
+    static List<Integer> usableSourceIds(Player player,Player viewer,int recipientSeat) {
+        Pending request=pending;
+        if(game.isGameOver() || request==null || request.consumed || request.gui==null
+                || !request.kind.equals("InputPassPriority") || request.gui.controller.getPlayer()!=player)return List.of();
+        Set<String> payable=request.options.stream().filter(o->!o.disabled&&!o.requiresPaymentCheck)
+            .map(o->o.id).collect(java.util.stream.Collectors.toSet());
+        List<Integer> ids=new ArrayList<>();
+        for(ZoneType zone:List.of(ZoneType.Graveyard,ZoneType.Exile,ZoneType.Command))for(Card card:game.getCardsIn(zone)) {
+            boolean publicFace=!card.isFaceDown()&&card.getView().canBeShownTo(viewer.getView());
+            boolean privateKnownFace=request.seat==recipientSeat&&card.isFaceDown()
+                &&card.getView().canFaceDownBeShownTo(viewer.getView());
+            if((publicFace||privateKnownFace)&&payable.contains("card:"+card.getId()))ids.add(card.getId());
+        }
+        return ids;
+    }
+
     static List<Object> views() {
         List<Object> views=new ArrayList<>();
         if(game==null) return views;
@@ -1726,7 +1808,7 @@ public final class ForgeBridge {
         try { for(int s=0;s<guis.size();s++) {
             ForgeCardCostPreview.viewer.set(guis.get(s).controller.getPlayer());
             seriesOwnership.publishChanges();
-            Map<String,Object> view=new LinkedHashMap<>(); view.put("seat",s+1); view.put("anteEnabled",game.getRules().useAnte());
+            Map<String,Object> view=new LinkedHashMap<>(); view.put("seat",s+1); view.put("anteEnabled",game.getRules().useAnte());view.put("formatId",BridgeMatchFormat.id());
             view.put("notices",new ArrayList<>(guis.get(s).notices));
             Player acting=pending!=null && pending.seat==s+1 && pending.gui!=null?pending.gui.controller.getPlayer():guis.get(s).controller.getPlayer();
             boolean canRespond=acting.isInGame() && !game.isGameOver() && acting.getView().hasAvailableActions();
@@ -1758,6 +1840,8 @@ public final class ForgeBridge {
                 BridgeAbilityText.project(entry,item.getSpellAbility());
                 entry.put("kind",item.getSpellAbility().isSpell()?"spell":item.getSpellAbility().isTrigger()?"trigger":"ability");
                 entry.put("copied",item.getSpellAbility().isCopied());
+                entry.put("hasPaymentReceipt",true);
+                entry.put("payment",ForgeStackPayment.project(item.getSpellAbility()));
                 entry.put("controllerSeat",game.getRegisteredPlayers().indexOf(item.getActivatingPlayer())+1);
                 // Public stack state comes from the paid native ability, never a
                 // GUI's pending choices (which can be cancelled or reset).
@@ -1787,9 +1871,9 @@ public final class ForgeBridge {
                 }
                 Map<String,Object> stackSource=(Map<String,Object>)card(source);
                 Integer x=item.getSpellAbility().getXManaCostPaid();
-                if(item.getSpellAbility().isSpell()&&x!=null&&!source.isFaceDown()) {
+                if(x!=null&&!source.isFaceDown()) {
                     entry.put("xValue",x);entry.put("hasXValue",true);
-                    stackSource.put("manaCost",String.valueOf(stackSource.get("manaCost")).replace("{X}","{"+x+"}"));
+                    if(item.getSpellAbility().isSpell())stackSource.put("manaCost",String.valueOf(stackSource.get("manaCost")).replace("{X}","{"+x+"}"));
                 }
                 // Frozen before casting payment; resolution taxes do not replace it.
                 if(cast.isSpell()&&!source.isFaceDown()) {
@@ -1807,7 +1891,7 @@ public final class ForgeBridge {
             for(ZoneType playableZone:List.of(ZoneType.Graveyard,ZoneType.Exile)) for(Card c:game.getCardsIn(playableZone)) {
                 boolean permitted=c.mayPlay(acting).stream().anyMatch(o->o.grantsZonePermissions());
                 if(playableZone==ZoneType.Graveyard&&c.getOwner()==acting)
-                    permitted|=c.getAllSpellAbilities().stream().anyMatch(a->a.getRestrictions().getZone()==ZoneType.Graveyard);
+                    permitted|=c.getAllSpellAbilities().stream().flatMap(a->java.util.stream.Stream.concat(java.util.stream.Stream.of(a),forge.game.GameActionUtil.getAlternativeCosts(a,acting,false).stream())).anyMatch(a->a.getRestrictions().getZone()==ZoneType.Graveyard);
                 boolean offered=pending!=null && pending.seat==s+1 && pending.kind.equals("InputPassPriority")
                     && pending.options.stream().anyMatch(o->o.id.equals("card:"+c.getId()));
                 boolean knownFace=c.isFaceDown()&&c.getView().canFaceDownBeShownTo(viewer.getView());
@@ -1831,6 +1915,15 @@ public final class ForgeBridge {
             for(int i=0;i<guis.size();i++) {
                 Player p=guis.get(i).controller.getPlayer();
                 Map<String,Object> pv=new LinkedHashMap<>(); pv.put("seat",i+1); pv.put("life",p.getLife());
+                // Eligibility is distinct from the longer-lived zone permission lists.
+                // Publish only IDs of public/recipient-authorised outside-hand cards.
+                pv.put("usableSourceIds",usableSourceIds(p,viewer,s+1));
+                // Sideboards remain private even when another player controls this seat.
+                pv.put("sideboardCards",p==viewer?p.getCardsIn(ZoneType.Sideboard).stream().map(c->zoneCard(c,viewer)).toList():List.of());
+                pv.put("commanders",p.getCardsIn(ZoneType.Command).stream().filter(Card::isCommander).map(c->zoneCard(c,viewer)).toList());
+                pv.put("commandCards",p.getCardsIn(ZoneType.Command).stream()
+                    .filter(c->!c.isImmutable()&&c.getView().canBeShownTo(viewer.getView()))
+                    .map(c->zoneCard(c,viewer)).toList());
                 pv.put("controllingSeat",p.getControllingPlayer()==null?0:game.getRegisteredPlayers().indexOf(p.getControllingPlayer())+1);
                 pv.put("targetId", p.getId());
                 List<Object> playerCounters=new ArrayList<>();
@@ -1948,6 +2041,15 @@ public final class ForgeBridge {
                             &&c.mayPlay(p).stream().anyMatch(o->o.grantsZonePermissions()))
                         publicPlayableExile.add(zoneCard(c,viewer));
                 pv.put("publicPlayableExile",publicPlayableExile);
+                List<Object> publicPlayableGraveyard=new ArrayList<>();
+                for(Card c:game.getCardsIn(ZoneType.Graveyard)) {
+                    boolean permitted=c.mayPlay(p).stream().anyMatch(o->o.grantsZonePermissions());
+                    if(c.getOwner()==p)permitted|=c.getAllSpellAbilities().stream().flatMap(a->java.util.stream.Stream.concat(java.util.stream.Stream.of(a),forge.game.GameActionUtil.getAlternativeCosts(a,p,false).stream()))
+                        .anyMatch(a->a.getRestrictions().getZone()==ZoneType.Graveyard);
+                    if(permitted&&!c.isFaceDown()&&c.getView().canBeShownTo(viewer.getView()))
+                        publicPlayableGraveyard.add(zoneCard(c,viewer));
+                }
+                pv.put("publicPlayableGraveyard",publicPlayableGraveyard);
                 pv.put("exileCount",p.getCardsIn(ZoneType.Exile).size());
                 if(game.isGameOver()) {
                     List<Object> library=new ArrayList<>();
@@ -2052,6 +2154,8 @@ public final class ForgeBridge {
         result.put("id", c.getId()); result.put("name", c.isFaceDown() ? "Face-down card" : c.getName());
         result.put("ownerSeat",guis.stream().filter(g->g.controller.getPlayer()==c.getOwner()).map(g->g.seat).findFirst().orElse(0));
         result.put("zone",c.getZone()==null?"":c.getZone().getZoneType().name());
+        result.put("commander",c.isCommander());
+        if(c.isCommander())result.put("commanderCastCount",c.getOwner().getCommanderCast(c));
         result.put("tapped", c.isTapped()); result.put("faceDown", c.isFaceDown());
         if(!c.isFaceDown()) {
             result.put("contraption",c.isContraption()); result.put("attraction",c.isAttraction());
@@ -2062,6 +2166,7 @@ public final class ForgeBridge {
             }
         }
         if(c.isInZone(ZoneType.Battlefield)) {
+            result.put("hasSicknessState",true);result.put("summoningSick",c.isSick());
             result.put("detained",c.isDetained());
             result.put("exertedThisTurn",c.getExertedThisTurn());
             result.put("exertedBySeats",game.getPlayers().stream().filter(c::isExertedBy).map(p->game.getRegisteredPlayers().indexOf(p)+1).toList());
@@ -2110,12 +2215,12 @@ public final class ForgeBridge {
             result.put("currentRules",liveLand ? currentLandRules(c) : c.getCurrentState().getOracleText());
             result.put("hasCurrentLandState",liveLand);
             boolean support=c.isInZone(ZoneType.Battlefield) && !c.isCreature() && !c.isPlaneswalker() && (c.isArtifact() || c.isEnchantment());
-            boolean stackable=c.isInZone(ZoneType.Battlefield) && !c.isRoom() && !c.isCloned() && !c.isAttachedToEntity()
+            boolean unlinked=c.isInZone(ZoneType.Battlefield) && !c.isRoom() && !c.isCloned() && !c.isAttachedToEntity()
                 && c.getAttachedCards().isEmpty() && !c.hasRemembered() && !c.hasImprintedCard() && !c.hasExiledCard()
                 && !c.hasChosenType() && !c.hasChosenNumber() && !c.hasChosenPlayer()
                 && !c.hasChosenColor() && c.getChangedCardTraits().isEmpty() && c.getChangedCardKeywords().isEmpty()
-                && c.getChangedTextColorWords().isEmpty() && c.getChangedTextTypeWords().isEmpty()
-                && c.getAbilityActivatedThisTurn().isEmpty() && c.getAbilityActivatedThisGame().isEmpty();
+                && c.getChangedTextColorWords().isEmpty() && c.getChangedTextTypeWords().isEmpty();
+            boolean stackable=unlinked && c.getAbilityActivatedThisTurn().isEmpty() && c.getAbilityActivatedThisGame().isEmpty();
             result.put("stackableSupport",support && stackable);
             result.put("stackableStateKnown",true);
             result.put("stackablePermanent",stackable);
@@ -2130,6 +2235,13 @@ public final class ForgeBridge {
                 }
             }
             if(liveLand) {
+                var used=new java.util.HashSet<forge.game.spellability.SpellAbility>(c.getAbilityActivatedThisTurn().rowKeySet());
+                used.addAll(c.getAbilityActivatedThisGame().rowKeySet());
+                boolean ordinaryMana=used.stream().allMatch(a->a.isManaAbility()
+                    && a.getRestrictions().getLimitToCheck()==null && a.getRestrictions().getGameLimitToCheck()==null);
+                result.put("landPresentationKnown",true);
+                result.put("landStackable",unlinked&&!c.isCreature()&&ordinaryMana);
+                result.put("landManaColors",c.getProducibleColors().stream().mapToInt(forge.card.MagicColor::fromName).reduce(0,(a,b)->a|b));
                 result.put("landTypesChanged",!c.getType().toString().equals(c.getCurrentState().getType().toString()));
                 result.put("basicLandTypes",java.util.stream.Stream.of("Plains","Island","Swamp","Mountain","Forest")
                     .filter(t->c.getType().hasSubtype(t)).toList());
@@ -2537,14 +2649,17 @@ public final class ForgeBridge {
             Deck deck=new Deck("MTGB Player "+seat);
             loadSection(deck.getMain(),source.getAsJsonArray("cards"));
             loadSection(deck.getOrCreate(forge.deck.DeckSection.Sideboard),source.getAsJsonArray("sideboard"));
+            if(source.has("commanders"))loadSection(deck.getOrCreate(forge.deck.DeckSection.Commander),source.getAsJsonArray("commanders"));
             loadAuxiliarySection(deck,source,"attractions",forge.deck.DeckSection.Attractions,10);
             loadAuxiliarySection(deck,source,"contraptions",forge.deck.DeckSection.Contraptions,15);
-            RegisteredPlayer registered=new RegisteredPlayer(deck).setPlayer(new BridgePlayer("Player "+seat));
-            registered.setStartingLife(config.get("startingLife").getAsInt());
+            boolean ai=config.has("aiSeat")&&config.get("aiSeat").getAsInt()==seat;
+            RegisteredPlayer registered=BridgeMatchFormat.register(deck).setPlayer(ai?new BridgeAiPlayer("Forge AI"):new BridgePlayer("Player "+seat));
+            registered.setStartingLife(BridgeMatchFormat.startingLife(config.get("startingLife").getAsInt()));
             players.add(registered);
         }
         if(registrationHook!=null)registrationHook.accept(players);
         GameRules rules=new GameRules(GameType.Constructed); rules.setGamesPerMatch(1);
+        BridgeMatchFormat.apply(rules);
         rules.setPlayForAnte(config.has("useAnte") && config.get("useAnte").getAsBoolean());
         Match match=new Match(rules,players,"Unity bridge proof"); game=match.createGame();
         for(int i=0;i<2;i++)libraryOrder.register(game.getPlayers().get(i),decks.get(i).getAsJsonObject());
@@ -2552,7 +2667,9 @@ public final class ForgeBridge {
         game.subscribeToEvents(new BridgeRestartNotices());
         game.subscribeToEvents(new BridgeCardNotices());
         for(int i=0;i<2;i++) {
-            Gui handler=new Gui(i+1); handler.controller=(PlayerControllerHuman)game.getPlayers().get(i).getController();
+            Gui handler=new Gui(i+1);Player player=game.getPlayers().get(i);
+            // Keep both seat projections without replacing the native AI mind.
+            handler.controller=player.getController() instanceof PlayerControllerHuman human?human:new BridgeController(game,player,new BridgePlayer(player.getName()));
             handler.controller.setGui((IGuiGame)Proxy.newProxyInstance(IGuiGame.class.getClassLoader(),new Class<?>[]{IGuiGame.class},handler));
             guis.add(handler);
         }

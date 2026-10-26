@@ -84,6 +84,22 @@ public sealed class OnlineMessageGuard
         return true;
     }
 
+    public static bool ValidateDisplayName(string value, out string error)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            error = "玩家名称不能为空。";
+            return false;
+        }
+        if (value.Length > MaxDisplayNameCharacters)
+        {
+            error = "玩家名称长度非法。";
+            return false;
+        }
+        error = string.Empty;
+        return true;
+    }
+
     public static bool ValidateHello(OnlineHelloMessage hello, out string error)
     {
         if (hello == null)
@@ -91,11 +107,7 @@ public sealed class OnlineMessageGuard
             error = "握手消息为空。";
             return false;
         }
-        if (string.IsNullOrWhiteSpace(hello.displayName) || hello.displayName.Length > MaxDisplayNameCharacters)
-        {
-            error = "玩家名称长度非法。";
-            return false;
-        }
+        if (!ValidateDisplayName(hello.displayName, out error)) return false;
         if (!ValidateRoomId(hello.roomId))
         {
             error = "房间号格式非法。";

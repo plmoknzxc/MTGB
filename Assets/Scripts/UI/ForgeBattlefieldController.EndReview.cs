@@ -43,7 +43,7 @@ public sealed partial class ForgeBattlefieldController
             }
             float actionsY=hasReplayChoice?-116:-72;
             ReplayWidgets.Button(endDialog, "查看战场", -204, actionsY, 216, ViewBattlefield);
-            returnEndReviewButton=ReplayWidgets.Button(endDialog, ended.series?.betweenGames == true ? "前往换备" : "返回房间", 140, actionsY, 344, () => service.LeaveEndReview(false), true);
+            returnEndReviewButton=ReplayWidgets.Button(endDialog, service.IsLocalAiMatch?"返回主菜单":ended.series?.betweenGames == true ? "前往换备" : "返回房间", 140, actionsY, 344, () => service.LeaveEndReview(false), true);
             // Result buttons retain the user's font size while the dialog is
             // hidden and reopened; ReplayWidgets' generic best-fit is unsuitable here.
             foreach (var label in endDialog.GetComponentsInChildren<Text>(true))
@@ -63,7 +63,7 @@ public sealed partial class ForgeBattlefieldController
             leaveReviewButton.gameObject.SetActive(false);
         }
         endReplayLabel.text = service.EndReplayStatus;
-        returnEndReviewButton.GetComponentInChildren<Text>().text=GamePreferences.T(ended.series?.betweenGames==true?"前往换备":"返回房间");
+        returnEndReviewButton.GetComponentInChildren<Text>().text=GamePreferences.T(service.IsLocalAiMatch?"返回主菜单":ended.series?.betweenGames==true?"前往换备":"返回房间");
         if (saveEndReplay != null)
         {
             bool show = !GamePreferences.AutoSaveReplays || !service.EndReplayDecided;

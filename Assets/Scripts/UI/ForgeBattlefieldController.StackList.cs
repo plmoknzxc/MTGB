@@ -43,7 +43,8 @@ public sealed partial class ForgeBattlefieldController
                 string id="stack:"+entry.name.Substring("Entry_stack_".Length);bool selected=StackTargetSelected(id);
                 entry.GetComponent<Image>().color=selected?Gold:window==stackList?new Color(.1f,.9f,1):new Color(.38f,.49f,.56f);
                 var art=entry.Find(window==stackList?"StackListTarget_"+id.Substring(6):"Card") as RectTransform;
-                if(art!=null)PresentSelectionGlow((RectTransform)entry,art,selected);
+                var stackEntry=view?.stackItems?.FirstOrDefault(e=>id=="stack:"+e.id);
+                if(art!=null)PresentSelectionGlow((RectTransform)entry,art,selected||!string.IsNullOrEmpty(StackIncomingTargetHint(stackEntry)));
             }
         }
     }
@@ -96,12 +97,13 @@ public sealed partial class ForgeBattlefieldController
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(1,1);
             rect.anchoredPosition=new Vector2(button==stackCollapseButton?-6:-52,0);
         }
-        stackCollapseButton.gameObject.SetActive(count>0);stackViewButton.gameObject.SetActive(count>0);
+        if(!IsRedesignLayout || count>0){stackCollapseButton.gameObject.SetActive(count>0);stackViewButton.gameObject.SetActive(count>0);}
         stackCollapseButton.GetComponentInChildren<StackControlIcon>().SetKind(stackCollapsed?StackControlIcon.Kind.Left:StackControlIcon.Kind.Right);
         // Move the masked viewport (cards and scroll together), keeping the
         // controls on screen. Children cannot be clicked while retracted.
         var group=viewport.GetComponent<CanvasGroup>();if(group==null)group=viewport.gameObject.AddComponent<CanvasGroup>();
         group.interactable=group.blocksRaycasts=!stackCollapsed;
+        if(IsRedesignLayout)return; // The complete copied-scene panel has its own sliding presentation.
         float offscreen=column.rect.width+400;
         ForgeUiMotion.On(viewport).MoveTo(new Vector2(stackCollapsed?offscreen:0,-40),viewport.sizeDelta,seconds:.28f);
         if(stackScrollbar!=null)stackScrollbar.gameObject.SetActive(!stackCollapsed&&stackContent.rect.height>height);
@@ -145,7 +147,9 @@ public sealed partial class ForgeBattlefieldController
             if(window!=null)window.gameObject.SetActive(false);return;
         }
         float width=Mathf.Min(Mathf.Min(surface.rect.width-80,1200),Mathf.Max(640,choices.Count*264+96));
-        float ordinalHeight=Mathf.Ceil(28*GamePreferences.TextScale),height=502+ordinalHeight,viewportHeight=height-104;
+        var targetHints=choices.Select(e=>e.id.StartsWith("stack:",StringComparison.Ordinal)?StackIncomingTargetHint(e.entry):e.entry.source==null?"":ZoneTargetHint(e.entry.source)).ToArray();
+        float targetHintHeight=ZoneTargetHintHeight(targetHints,244);
+        float ordinalHeight=Mathf.Ceil(28*GamePreferences.TextScale),height=502+ordinalHeight+targetHintHeight,viewportHeight=height-104;
         if(window==null) {
             window=Panel(surface,overview?"StackOverview":"StackList",Vector2.zero,new Vector2(width,height),new Color(.035f,.065f,.095f,.97f));
             if(overview)stackOverview=window;else stackList=window;
@@ -158,7 +162,7 @@ public sealed partial class ForgeBattlefieldController
             window.anchoredPosition=new Vector2(Mathf.Clamp(window.anchoredPosition.x,-limit.x,limit.x),Mathf.Clamp(window.anchoredPosition.y,-limit.y,limit.y));
         }
         window.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(1200,Mathf.CeilToInt(height),14);
-        string key=ServerSnapshotJson.Serialize(view.request)+"/"+string.Join("|",choices.Select(e=>e.id+ServerSnapshotJson.Serialize(e.entry)))+"/"+submitted+"/"+GamePreferences.Revision+"/"+width;
+        string key=ServerSnapshotJson.Serialize(view.request)+"/"+string.Join("|",choices.Select(e=>e.id+ServerSnapshotJson.Serialize(e.entry)))+"/"+string.Join("|",targetHints)+"/"+submitted+"/"+GamePreferences.Revision+"/"+width;
         string previousKey=overview?stackOverviewKey:stackListKey;
         if(previousKey!=key) {
             float scrollPosition=window.GetComponentInChildren<ScrollRect>()?.horizontalNormalizedPosition??0;
@@ -191,7 +195,12 @@ public sealed partial class ForgeBattlefieldController
                     label.rectTransform.anchorMin=label.rectTransform.anchorMax=new Vector2(.5f,1);
                 }
                 var tile=Panel(rim,selecting?(optionId.StartsWith("stack:",StringComparison.Ordinal)?"StackListTarget_"+entry.id:"StackListChoice_"+option):"Card",Vector2.zero,new Vector2(240,335),Ink);
-                PresentSelectionGlow(rim,tile,selected);
+                PresentSelectionGlow(rim,tile,selected||!string.IsNullOrEmpty(targetHints[i]));
+                if(!string.IsNullOrEmpty(targetHints[i])) {
+                    var hint=Rect(rim,"TargetHint",new Vector2(0,-339),new Vector2(244,targetHintHeight));
+                    hint.anchorMin=hint.anchorMax=hint.pivot=new Vector2(.5f,1);
+                    PresentZoneTargetHint(hint,targetHints[i],244,targetHintHeight);
+                }
                 Sprite art=null;if(entry.source!=null)TryBattlefieldArt(entry.source,out art);var image=tile.GetComponent<Image>();image.sprite=art;image.color=art!=null?Color.white:Ink;image.preserveAspect=true;
                 if(art==null) {
                     string name=entry.source?.faceDown==true?TapPaymentText("面朝下的牌","Face-down card","裏向きのカード"):entry.source!=null?GamePreferences.CardFaceName(entry.source.name):option>=0?RequestOptionLabel(view.request.options[option]):"";

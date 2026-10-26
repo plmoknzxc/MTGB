@@ -4130,5 +4130,76 @@
       "sha256": "5d84205de2de81047d8233381b60613b070b7f2f2d2d13f8475e0e34e1f282c0"
     },
     "note": "N65更正N64过早收尾：两类已做旧证据/源码复用判断，但1015未关联声明未逐项证明均重复或无需验证。保留有效共享复用与取消逐卡整链配额；当前1项有界接入差异筛查、0已确认补测，不能以此授全部普通1v1接入完成。"
+  },
+  "rootRequestScreenN66": {
+    "path": ".tools/integration-screen-1024/audit.json",
+    "sha256": "131da0f55e7337ad9990e00067d76cf1b655bd05e179f7b1c27117540b02d71a"
+  },
+  "effectCastingN67": {
+    "path": ".tools/effect-casting-1024/audit.json",
+    "sha256": "1078a4d57e31c7735a32321290307358c2ecf550bc4e8bc86103712705e9abd9"
+  },
+  "freeCastPreviewN68": {
+    "path": ".tools/free-cast-preview-1024/audit.json",
+    "sha256": "569b5ca7441840a70b87256ea829b1246d69e1bcae4f203b480df04e330cf9ff"
+  },
+  "opponentTargetPreflightN69": {
+    "path": ".tools/generated-screen-1024/audit.json",
+    "sha256": "b9a409019d9cb15d393a2b62abef08d61ae8bea6637de58b5449b782da32ef21"
+  },
+  "generatedRootEntryScreenN70": {
+    "path": ".tools/generated-contracts-1024/audit.json",
+    "sha256": "eb93b2af3d9dc8367c997fe911ad72efb0d7f5fb34f47e1fd2aac6e2bd6e9914"
+  },
+  "effectCostAndSplitArtN71": {
+    "path": ".tools/effect-cost-faces-1024/audit.json",
+    "sha256": "ab7dbeac78ea7e49ea26b83f69b8cf5eff620c4e82d21695e302eb94376d8fe1"
+  },
+  "triggerLocalizationN72": {
+    "path": ".tools/trigger-sentence-1024/audit.json",
+    "sha256": "e7eac5fbba4b8848d28e137fa351f55d0c2e89b1a461c27f3677a05a6ed54893"
+  },
+  "descendantSourceScreenN73": {
+    "path": ".tools/downstream-index-1024/audit.json",
+    "sha256": "81674b4de8e4577a6b3f9d4dbb938778defa003c21b77bb4094a40a4e50fbd0c"
+  },
+  "chosenCopyPlayN74": {
+    "path": ".tools/chosen-copy-play-1024/audit.json",
+    "sha256": "853477996bb95af1f35dd360f0a51e6622bda4c77864ec38c1c492242e62de52"
+  },
+  "generatedDefinitionsN75": {
+    "path": ".tools/generated-definitions-1024/audit.json",
+    "sha256": "a0edcd5d0e89a0f009f03c964969180bcb2b09393f5986d51373b952a0c1c153"
+  },
+  "copyCreateN76": {
+    "path": ".tools/copy-create-descendants-1024/audit.json",
+    "sha256": "301615017cd688cba0eb6ab8f4020e83e03db79f80eb131ad8e3732cf29d253d"
+  },
+  "inspectSelectN77": {
+    "path": ".tools/inspect-select-descendants-1024/audit.json",
+    "sha256": "ecf50a7c37aa0c3eb77f63887ab45babd329feed507949bbe94a6d0f0fa4a669"
+  },
+  "drawDamageRemovalN78": {
+    "path": ".tools/draw-damage-removal-1024/audit.json",
+    "sha256": "f097478b436a5d5542749ebebaa348d86c6ab006f48af3f4809a08e21bfb5e5e"
+  },
+  "stateChangeN79": {
+    "path": ".tools/state-change-descendants-1024/audit.json",
+    "sha256": "e536a3deb601532c689ed0c5f192b6ce29e58335dfb360910cdfced80cbe01ce"
+  },
+  "controlRegistrationN80": {
+    "path": ".tools/control-registration-descendants-1024/audit.json",
+    "sha256": "eb4d2c90c82e2f31b6c462a1a637a09d588cc9ab77786893146a7221175ff05b"
+  },
+  "n81IntegrationCompletion": {
+    "audit": {
+      "path": ".tools/integration-completion-1024/audit.json",
+      "sha256": "37deb335cb40e0b2ea0cf381ceeda6e5abe43172422e96855547c1e0b022645b"
+    },
+    "workloadReview": {
+      "path": ".tools/integration-completion-1024/workload-review.json",
+      "sha256": "642cf0c20608674b90ac5db9ac723dc50ab230bebcc06bee98b09c3236f8ed1c"
+    },
+    "note": "N81完成A01.01结束条件复核：1085条当前根入口、1386条后继源码引用均有准确归属；动态构建分支和N67-N72实际修复/前向缺口关闭证据已核对，没有当前明确接入缺口或失败尾段。关闭独立选择、生成/事件两个原组及A01.01，当前普通1v1接入范围待办1→0、原组2→0。复用原有界原生/UI证据，0新增实局、0新增整牌PASS；70条准确原卡结果不变。用户后置事项及全局REVIEW_SOURCE_CHANGES不变。"
   }
 }

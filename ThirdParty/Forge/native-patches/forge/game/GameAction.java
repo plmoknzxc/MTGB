@@ -380,6 +380,19 @@ public class GameAction {
             }
         }
 
+        // Arena Brawl permits an all-or-nothing reset as the real commander
+        // enters Command. Ask only after movement replacements have succeeded.
+        if (!suppress && zoneTo.is(ZoneType.Command) && !zoneFrom.is(ZoneType.Command)
+                && copied.isRealCommander() && copied.hasPerpetual()
+                && game.getRules().hasAppliedVariant(GameType.Brawl)
+                && copied.getOwner().getController().confirmAction(
+                        copied.getCurrentState().getFirstSpellAbilityWithFallback(),
+                        PlayerActionConfirmMode.ChangeZoneToAltDestination,
+                        "Remove all perpetual modifications from your commander?",
+                        List.of(), copied, null)) {
+            copied.clearPerpetual();
+        }
+
         if (!zoneTo.is(ZoneType.Stack)) {
             // reset timestamp in changezone effects so they have same timestamp if ETB simultaneously
             copied.setGameTimestamp(game.getNextTimestamp());

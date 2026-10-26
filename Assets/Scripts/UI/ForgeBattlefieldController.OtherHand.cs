@@ -13,6 +13,9 @@ public sealed partial class ForgeBattlefieldController
             .Select(i=>new ForgeCardView{id=-1-i,faceDown=true,zone="Hand",name="Face-down card"});
         var exile=(player.publicPlayableExile??Array.Empty<ForgeCardView>())
             .Where(c=>c!=null&&!c.faceDown&&!string.IsNullOrEmpty(c.name)).GroupBy(c=>c.id).Select(g=>g.First());
-        LayoutPlayableHand(otherHand,known.Concat(hidden).Concat(exile).ToArray(),opponentFan);
+        var grave=(player.publicPlayableGraveyard??Array.Empty<ForgeCardView>())
+            .Where(c=>c!=null&&!c.faceDown&&!string.IsNullOrEmpty(c.name)).GroupBy(c=>c.id).Select(g=>g.First());
+        var command=(player.commandCards??Array.Empty<ForgeCardView>()).Where(c=>c!=null&&!c.faceDown&&c.commander&&c.zone=="Command");
+        LayoutPlayableHand(otherHand,known.Concat(hidden).Concat(exile).Concat(IsRedesignLayout?grave.Concat(command):Array.Empty<ForgeCardView>()).ToArray(),opponentFan);
     }
 }

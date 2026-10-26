@@ -31,7 +31,7 @@ final class ForgeCardCostPreview {
     }
     static boolean canPayMinimum(Card card, Player payer) {
         for (var ability : card.getAllPossibleAbilities(payer, true)) {
-            if (!ability.isSpell() || !forge.ai.ComputerUtilAbility.isFullyTargetable(ability)) continue;
+            if (!ability.isSpell() || !ForgeActionLegality.hasLegalTargets(ability)) continue;
             Preview result = minimum(ability, payer, true, true);
             if (result != null && result.payable) return true;
         }
@@ -43,9 +43,22 @@ final class ForgeCardCostPreview {
     }
     static String forCard(Card card) { return viewer.get() == null ? null : forCard(card, viewer.get()); }
     static String forCard(Card card, Player payer) {
-        if (!canPreview(card, payer)) return null;
-        var original = card.getSpellAbilities().stream().filter(a -> a.isSpell() && !a.isAdventure() && !a.isOmen()).findFirst().orElse(null);
-        Preview result = original == null ? null : minimum(original, payer, true, false);
+        Preview result = null;
+        if (canPreview(card, payer)) {
+            var original = card.getSpellAbilities().stream().filter(a -> a.isSpell() && !a.isAdventure() && !a.isOmen()).findFirst().orElse(null);
+            result = original == null ? null : minimum(original, payer, true, false);
+        }
+        // A card offered beside the hand may only be usable through a zone
+        // activation. Its printed spell cost is not the cost of that action.
+        if (result == null && !card.isFaceDown() && card.getZone() != null && card.getOwner() == payer) {
+            ZoneType zone = card.getZone().getZoneType();
+            if (zone == ZoneType.Graveyard || zone == ZoneType.Exile)
+                for (var ability : card.getAllSpellAbilities()) {
+                    if (!ability.isActivatedAbility() || ability.isManaAbility() || ability.getRestrictions().getZone() != zone) continue;
+                    Preview activation = minimum(ability, payer, false, false);
+                    if (activation != null && (result == null || activation.mana < result.mana)) result = activation;
+                }
+        }
         return result == null ? null : result.text;
     }
     static String adventure(Card card) { return viewer.get() == null ? null : adventure(card, viewer.get()); }
@@ -76,7 +89,8 @@ final class ForgeCardCostPreview {
             || card.getAllSpellAbilities().stream().anyMatch(a -> a.isSpell() && a.getRestrictions().getZone() == zone));
     }
     static String forAbility(SpellAbility original) {
-        if (!original.isSpell() || original.getHostCard().isFaceDown()) return null;
+        if ((!original.isSpell() && (!original.isActivatedAbility() || original.isManaAbility()))
+                || original.getHostCard().isFaceDown()) return null;
         Player payer = original.getActivatingPlayer();
         Preview result = minimum(original, payer == null ? original.getHostCard().getOwner() : payer, false, false);
         return result == null ? null : result.text;
@@ -85,7 +99,7 @@ final class ForgeCardCostPreview {
     private static Preview minimum(SpellAbility original, Player payer, boolean alternatives, boolean affordability) {
         if (original.getPayCosts() == null) return null;
         Card alternateHost = original.getAlternateHost(original.getHostCard());
-        if (alternateHost != null) original = original.copy(alternateHost, payer, false);
+        if (alternateHost != null) original = copyForPreview(original, alternateHost, payer);
         Card host = original.getHostCard();
         // Keep native prediction scratch state scoped to this projection.
         // A preview must not announce or pay any cost.
@@ -96,7 +110,7 @@ final class ForgeCardCostPreview {
         for (Card c : payer.getCardsIn(ZoneType.Battlefield)) used.put(c, c.isUsedToPay());
         Preview[] best = {null}; boolean[] payable = {false};
         try {
-            var base = original.copy(payer);
+            var base = copyForPreview(original, payer);
             base.removeParam("AIPhyrexianPayment");base.putParam("MTGBHumanAffordability", "True");
             if (!host.isInZone(ZoneType.Stack)) host.setCastFrom(host.getZone());
             List<SpellAbility> abilities = new ArrayList<>();
@@ -104,7 +118,7 @@ final class ForgeCardCostPreview {
             if (alternatives) for (var alternate : host.getAllPossibleAbilities(payer, false))
                 if (alternate.isSpell() && alternate.getCardStateName() == original.getCardStateName()
                         && abilities.stream().noneMatch(a -> a.getPayCosts().toString().equals(alternate.getPayCosts().toString())
-                            && a.getAlternativeCost() == alternate.getAlternativeCost())) abilities.add(alternate.copy(payer));
+                            && a.getAlternativeCost() == alternate.getAlternativeCost())) abilities.add(copyForPreview(alternate, payer));
             var targeted = new ArrayList<SpellAbility>();
             for (var ability : abilities) targeted.addAll(targetPlans(ability, payer));
             for (var ability : targeted) {
@@ -116,7 +130,7 @@ final class ForgeCardCostPreview {
                 for (var reduction : reductions) for (var previous : new ArrayList<>(variants)) {
                     var choices = new ArrayList<>(previous);choices.add(reduction);
                     restorePips(ability, pips);
-                    var intent = GameActionUtil.addOptionalCosts(ability.copy(payer), choices);
+                    var intent = GameActionUtil.addOptionalCosts(copyForPreview(ability, payer), choices);
                     if (!intent.getPayCosts().canPay(intent, payer, false)) continue;
                     String key = intent.getPayCosts().toString() + "/" + intent.getPipsToReduce();
                     if (seen.add(key)) variants.add(choices);
@@ -132,7 +146,7 @@ final class ForgeCardCostPreview {
                   for (int x = maximumX; x >= (affordability ? 0 : maximumX); x--)
                   for (int plan = 0; plan < sacrificePlans.size(); plan++) for (boolean preserveMana : new boolean[]{false, true}) {
                     restorePips(ability, pips);
-                    var intent = GameActionUtil.addOptionalCosts(ability.copy(payer), choices);
+                    var intent = GameActionUtil.addOptionalCosts(copyForPreview(ability, payer), choices);
                     var sacrifice = variableSacrifice(intent);
                     if (sacrifice != null && hasVariableSacrificeReduction(host)) {
                         intent.setXManaCostPaid(x);
@@ -170,6 +184,17 @@ final class ForgeCardCostPreview {
             host.setCastFrom(castFrom);for (Card c : used.keySet()) c.setUsedToPay(used.get(c));
         }
     }
+    private static SpellAbility copyForPreview(SpellAbility original, Player payer) {
+        return copyForPreview(original, original.getHostCard(), payer);
+    }
+    private static SpellAbility copyForPreview(SpellAbility original, Card host, Player payer) {
+        var copy = original.copy(host, payer, false);
+        // Native ordinary copies reset runtime parameters to printed values.
+        // Keep effect-added payment modifiers, as native addOptionalCosts does.
+        for (String key : List.of("ReduceCost", "ReduceAmount", "RaiseCost"))
+            if (original.hasParam(key)) copy.putParam(key, original.getParam(key));
+        return copy;
+    }
     private static void restorePips(SpellAbility ability, List<String> pips) {
         ability.clearPipsToReduce();ability.getPipsToReduce().addAll(pips);
     }
@@ -181,7 +206,7 @@ final class ForgeCardCostPreview {
                 || a.checkMode(forge.game.staticability.StaticAbilityMode.RaiseCost))).toList();
         if (conditions.isEmpty()) return List.of(original);
         var result = new ArrayList<SpellAbility>();
-        var ordinary = original.copy(payer);
+        var ordinary = copyForPreview(original, payer);
         if (completeTargets(ordinary)) result.add(ordinary);
         int index = 0;
         for (var sub = original; sub != null; sub = sub.getSubAbility(), index++) {
@@ -190,7 +215,7 @@ final class ForgeCardCostPreview {
             for (var candidate : targetCandidates(sub)) {
                 String signature = conditions.stream().map(a -> Boolean.toString(a.matchesValidParam("ValidTarget", candidate))).toList().toString();
                 if (!seen.add(signature)) continue;
-                var plan = original.copy(payer);var chosen = plan;
+                var plan = copyForPreview(original, payer);var chosen = plan;
                 for (int i = 0; i < index; i++) chosen = chosen.getSubAbility();
                 chosen.getTargets().add(candidate);
                 if (completeTargets(plan)) result.add(plan);

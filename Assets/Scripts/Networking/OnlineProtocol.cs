@@ -5,7 +5,8 @@ public static class OnlineProtocol
 {
     // v19 hashes the complete field snapshot without Unity's recursive DTO scan.
     // v20 adds a room-wide shuffle rule that every player must be able to see.
-    public const int Version = 20;
+    // v21 enables Duel Commander/Arena Brawl and public command-zone snapshots.
+    public const int Version = 21;
     public const string MessageName = "mtgb.protocol.v15";
 
     public const string Hello = "hello";

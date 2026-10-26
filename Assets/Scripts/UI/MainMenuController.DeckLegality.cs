@@ -131,7 +131,9 @@ public sealed partial class MainMenuController
     private void ApplyLegality(MainMenuCardTile tile)
     {
         if (tile == null || tile.Card == null) return;
-        string state = deckLegality.Get(tile.Card, GamePreferences.DeckFormat, GamePreferences.DeckBanlist);
+        bool companion=tile.Zone==MainMenuCardTileZone.Sideboard&&DeckCompanion.Has(currentDeck)
+            &&string.Equals(currentDeck.companion.PrintingKey,tile.Card.PrintingKey,StringComparison.OrdinalIgnoreCase);
+        string state = deckLegality.Get(tile.Card, GamePreferences.DeckFormat, GamePreferences.DeckBanlist, tile.Zone==MainMenuCardTileZone.Commander, companion);
         bool restrictedOverflow = state == "restricted" && TotalCopiesByName(tile.Card.cardName) > 1;
         string constructionProblem=ConstructionCardProblem(tile);
         bool invalid = state == "not_legal" || state == "banned" || restrictedOverflow || constructionProblem!=null;

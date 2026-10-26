@@ -109,17 +109,55 @@ public static class MenuVisualTheme
         var title = Find(start, "StartTitle").GetComponent<Text>();
         title.resizeTextForBestFit = false;
         title.horizontalOverflow = HorizontalWrapMode.Overflow;
-        Place(start, "OnlineMatchButton", -570, -10, 570, 86);
-        Place(start, "SettingsButton", -570, -118, 570, 86);
-        Place(start, "DeckEditorButton", -570, -226, 570, 86);
         Find(start, "SettingsButton").GetComponentInChildren<Text>(true).text = "观看录像";
-        foreach (string name in new[] { "OnlineMatchButton", "DeckEditorButton", "SettingsButton" })
-        {
-            var button = Find(start, name);
-            var label = button.Find("Text") as RectTransform;
-            if (label != null) { Stretch(label, 12); label.offsetMin = new Vector2(24, 12); PreferenceText.SetSize(label.GetComponent<Text>(),26); }
-        }
+        ApplyStartNavigation(start);
+    }
 
+    public static void ApplyStartNavigation(Transform start)
+    {
+        EnsureLocalPlayButton(start);
+        string[] names={"OnlineMatchButton","LocalAiButton","SettingsButton","DeckEditorButton"};
+        float[] rows={40,-56,-172,-268};
+        var normal=new Color(.075f,.10f,.13f,.96f);
+        for(int index=0;index<names.Length;index++)
+        {
+            var target=Find(start,names[index]);if(target==null)continue;
+            var button=target.GetComponent<Button>();var image=button.GetComponent<Image>();
+            Place(start,names[index],-595,rows[index],520,76);
+            image.sprite=IntegratedUiUtility.RoundedRect(520,76,8);image.color=Color.white;
+            var outline=button.GetComponent<Outline>();if(outline==null)outline=button.gameObject.AddComponent<Outline>();
+            outline.effectColor=new Color(.30f,.38f,.44f,.6f);outline.effectDistance=new Vector2(1,-1);
+            button.transition=Selectable.Transition.ColorTint;
+            var colors=button.colors;colors.normalColor=normal;colors.selectedColor=new Color(.105f,.145f,.18f,1);
+            colors.highlightedColor=new Color(.14f,.20f,.25f,1);colors.pressedColor=new Color(.05f,.075f,.10f,1);
+            colors.disabledColor=new Color(.055f,.07f,.09f,.7f);colors.fadeDuration=.12f;button.colors=colors;
+            image.CrossFadeColor(normal,0,true,true);
+            var label=button.GetComponentInChildren<Text>();
+            Stretch(label.rectTransform);label.rectTransform.offsetMin=new Vector2(26,8);label.rectTransform.offsetMax=new Vector2(-68,-8);
+            label.alignment=TextAnchor.MiddleLeft;label.fontStyle=FontStyle.Normal;label.color=Paper;
+            label.resizeTextForBestFit=false;PreferenceText.SetSize(label,26);label.raycastTarget=false;
+            var arrow=target.Find("MenuArrow");
+            if(arrow==null){arrow=new GameObject("MenuArrow",typeof(RectTransform),typeof(Text)).transform;arrow.SetParent(target,false);}
+            var ar=(RectTransform)arrow;ar.anchorMin=ar.anchorMax=new Vector2(1,.5f);ar.pivot=new Vector2(.5f,.5f);ar.anchoredPosition=new Vector2(-30,0);ar.sizeDelta=new Vector2(32,48);
+            var glyph=arrow.GetComponent<Text>();glyph.font=GamePreferences.Font??IntegratedUiUtility.Font;glyph.text="›";glyph.color=Muted;glyph.alignment=TextAnchor.MiddleCenter;glyph.raycastTarget=false;
+            PreferenceText.SetSize(glyph,26);glyph.GetComponent<PreferenceText>().Literal=true;
+        }
+    }
+
+    public static Button EnsureLocalPlayButton(Transform start)
+    {
+        var existing=Find(start,"LocalAiButton");
+        if(existing!=null)return existing.GetComponent<Button>();
+        var source=Find(start,"OnlineMatchButton").GetComponent<Button>();
+        var button=Object.Instantiate(source,start.Find("StartMenuContent")??start);
+        button.name="LocalAiButton";
+        // A navigation clone must never inherit the online entry's events.
+        button.onClick=new Button.ButtonClickedEvent();
+        var label=button.GetComponentInChildren<Text>(true);
+        label.text="本地模式";
+        var binding=label.GetComponent<PreferenceText>()??label.gameObject.AddComponent<PreferenceText>();
+        binding.Literal=true;
+        return button;
     }
 
     public static void ApplyMain(Transform root)

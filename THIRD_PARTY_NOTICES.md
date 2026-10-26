@@ -11,6 +11,7 @@ The root MIT license covers MTGB-authored Unity client/server source code and do
 | Renamed BabelStone Han CJK fallback subset | Original Arphic Public License; preserve [ARPHICPL.TXT](Assets/Resources/UI/CardTemplates/Fonts/ARPHICPL.TXT) |
 | Unity Editor, Unity runtime and Unity packages | Their respective Unity/package licenses; not relicensed by this repository |
 | Other Maven/UPM libraries | Their original licenses and copyright notices; consult the dependency POM/package metadata and distributed notices |
+| FFmpeg replay video encoder (separate executable) | GPL v3; distributed client includes `VideoTools/LICENSE`, original build README and [provenance](VideoTools/PROVENANCE.md) |
 | Magic card names, rules, translations, artwork and symbols | Rights remain with their respective owners, including Wizards of the Coast; software licenses do not grant ownership of these materials |
 
 Forge is pinned to `4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676`. Original notices are retained. Native changes are described by `Tools/ForgeBridge/NativePatches.json`; the published patched Java source snapshot is in `ThirdParty/Forge/native-patches`.

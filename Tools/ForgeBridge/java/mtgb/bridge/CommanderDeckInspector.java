@@ -33,6 +33,7 @@ public final class CommanderDeckInspector {
         DeckFormat format=source.get("format").getAsString().equals("brawl")?DeckFormat.Brawl:DeckFormat.Commander;
         JsonObject result=new JsonObject();JsonArray legal=new JsonArray(),partners=new JsonArray();
         var selected=deck.getCommanders();
+        int identity=0;for(PaperCard commander:selected)identity|=commander.getRules().getColorIdentity().getColor();
         for(var entry:catalog.entrySet()){
             PaperCard card=entry.getValue().get(0);
             if(format.isLegalCommander(card.getRules()))legal.add(entry.getKey());
@@ -40,6 +41,7 @@ public final class CommanderDeckInspector {
                 && format.isLegalCommander(card.getRules()) && selected.get(0).getRules().canBePartnerCommanders(card.getRules()))partners.add(entry.getKey());
         }
         result.add("legal",legal);result.add("partners",partners);
+        result.addProperty("identity",identity);
         String problem=format.getDeckConformanceProblem(deck);
         // Keep engine text in diagnostics; UI uses localized issue categories.
         if(problem!=null)System.err.println(problem);

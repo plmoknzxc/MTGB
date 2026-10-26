@@ -39,7 +39,7 @@ public final class ForgeCatalog {
             if (!config.has(field) || config.get(field).isJsonNull()) continue;
             for (JsonElement deck : config.getAsJsonArray(field)) {
                 if (deck.isJsonNull()) continue;
-                for (String section : List.of("cards", "sideboard", "attractions", "contraptions")) {
+                for (String section : List.of("cards", "sideboard", "commanders", "attractions", "contraptions")) {
                     JsonObject source = deck.getAsJsonObject();
                     if (!source.has(section) || source.get(section).isJsonNull()) continue;
                     for (JsonElement entry : source.getAsJsonArray(section)) {

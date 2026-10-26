@@ -40,7 +40,7 @@ public sealed partial class ForgeBattlefieldController
             var frame=card.root.Find("FlipHitFrame") as RectTransform;
             var liveHits=(view?.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>p.battlefield??Array.Empty<ForgeCardView>()).Where(c=>hits.Contains(c.id));
             bool hit=hits.Any(id=>card.root.name=="Card_"+id)||card.representedCount>1&&
-                liveHits.Any(c=>card.groupKey?.EndsWith(":"+ArenaGroupKey(c),StringComparison.Ordinal)==true);
+                liveHits.Any(c=>card.groupKey?.EndsWith(":"+ArenaPresentationGroupKey(c),StringComparison.Ordinal)==true);
             if(hit&&frame==null)
             {
                 frame=Rect(card.root,"FlipHitFrame",Vector2.zero,card.root.sizeDelta+new Vector2(4,4));

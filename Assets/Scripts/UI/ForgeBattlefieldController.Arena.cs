@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +16,8 @@ public sealed partial class ForgeBattlefieldController
         public int representedCount;
         public bool faceDown;
         public ForgeCardView card;
+        public Vector2 restingPosition;
+        public float restingRotation;
     }
     private readonly Dictionary<string,ArenaCard> arenaCards=new Dictionary<string,ArenaCard>();
     private readonly HashSet<string> retainedCards=new HashSet<string>();
@@ -136,7 +138,11 @@ public sealed partial class ForgeBattlefieldController
         ReserveRestingHandSpace(opponentFan);
         PresentFlipHighlights(activeNotice);
         foreach(var key in arenaCards.Keys.Where(k=>!retainedCards.Contains(k)).ToArray())
-        {arenaCards[key].root.gameObject.SetActive(false);Destroy(arenaCards[key].root.gameObject);arenaCards.Remove(key);}
+        {
+            var item=arenaCards[key];
+            if(IsRedesignLayout && view!=null && (item.root.parent==ownHand || item.root.parent==otherHand)) RetireRedesignCard(key,item);
+            else {item.root.gameObject.SetActive(false);Destroy(item.root.gameObject);arenaCards.Remove(key);}
+        }
         otherHand.SetAsLastSibling();
         ForgeBattlefieldCardPointer.RestoreHandOrder(otherHand);
         ownHand.SetAsLastSibling();
@@ -145,13 +151,14 @@ public sealed partial class ForgeBattlefieldController
         // all text and layout to rebuild on every priority snapshot.
     }
     // Visual grouping is deliberately separate from engine identity: expand before choosing a member.
-    public static string ArenaGroupKey(ForgeCardView c)
+    public static string ArenaGroupKey(ForgeCardView c)=>ArenaGroupKeyCore(c,false);
+    private static string ArenaGroupKeyCore(ForgeCardView c,bool normalizeLand)
     {
-        bool simpleToken=c.token&&!c.creature&&!c.copy&&!c.merged&&!c.effectMarker&&c.stackableStateKnown&&c.stackablePermanent;
+        bool simpleToken=normalizeLand||c.token&&!c.creature&&!c.copy&&!c.merged&&!c.effectMarker&&c.stackableStateKnown&&c.stackablePermanent;
         if(c.faceDown)return "hidden:"+c.sector+":"+c.detained+":"+c.ringBearer+":"+c.hasStatBaseline+":"+c.basePower+":"+c.baseToughness+":"+string.Join(",",c.grantedKeywords??Array.Empty<string>())+":"+c.id+":"+c.tapped+":"+c.power+":"+c.toughness+":"+c.faceDownKind+":"+string.Join(",",c.exertedBySeats??Array.Empty<int>())+":"+c.exertedThisTurn+":"+c.currentRules+":"+c.damage+":"+c.attacking+":"+c.blocking;
-        return string.Join("|",c.contraption,c.sprocket,c.attraction,string.Join(",",c.attractionLights??Array.Empty<int>()),c.functionalVariant,c.sector,c.chosenSector,c.attachedToKind,c.attachedToId,string.Join(",",c.attachedByIds??Array.Empty<int>()),simpleToken?null:c.printingKey,simpleToken?null:c.currentArtPrintingKey,simpleToken?false:c.currentArtBackFace,simpleToken?null:c.effectSourcePrintingKey,simpleToken?null:c.effectSourceName,simpleToken?false:c.effectSourceBackFace,c.genericEffectName,c.ringBearer,c.ownerSeat,c.effectMarker,c.markerKind,c.markerStatus,c.helperArtName,c.stackableSupport,c.stackableStateKnown,c.stackablePermanent,c.protectingPlayerSeat,c.devotion,c.devotionRequired,c.token,c.copy,c.merged,simpleToken?null:c.tokenArtKey,simpleToken?null:c.tokenSourcePrintingKey,c.name,c.zone,c.land,c.creature,c.tapped,string.Join(",",c.exertedBySeats??Array.Empty<int>()),c.exertedThisTurn,c.detained,c.harnessed,c.solved,c.suspected,c.saddled,c.plotted,c.attacking,c.blocking,c.hasStatBaseline,c.basePower,c.baseToughness,c.powerBaseChanged,c.toughnessBaseChanged,c.effectiveBasePower,c.effectiveBaseToughness,c.hasIntensity,c.intensity,c.originalIntensity,c.originalName,c.originalManaCost,c.manaCost,c.originalColors,c.currentColors,c.hasAbilityChanges,c.originalAbilityText,c.currentAbilityText,c.hasCopyAbilityChanges,c.copyOriginalAbilityText,c.copyCurrentAbilityText,string.Join(",",c.originalKeywordDetails??Array.Empty<string>()),string.Join(",",c.currentKeywordDetails??Array.Empty<string>()),string.Join(",",c.grantedKeywords??Array.Empty<string>()),c.power,c.toughness,c.damage,c.defenderKind,c.defenderId,c.loyalty,c.defense,c.backFace,c.stateName,c.room,c.leftRoomUnlocked,c.rightRoomUnlocked,c.hasCurrentLandState,c.landTypesChanged,c.originalType,c.originalRules,c.currentType,c.currentRules,
+        return string.Join("|",c.contraption,c.sprocket,c.attraction,string.Join(",",c.attractionLights??Array.Empty<int>()),c.functionalVariant,c.sector,c.chosenSector,c.attachedToKind,c.attachedToId,string.Join(",",c.attachedByIds??Array.Empty<int>()),simpleToken?null:c.printingKey,simpleToken?null:c.currentArtPrintingKey,simpleToken?false:c.currentArtBackFace,simpleToken?null:c.effectSourcePrintingKey,simpleToken?null:c.effectSourceName,simpleToken?false:c.effectSourceBackFace,c.genericEffectName,c.ringBearer,c.ownerSeat,c.effectMarker,c.markerKind,c.markerStatus,c.helperArtName,normalizeLand?false:c.stackableSupport,c.stackableStateKnown,normalizeLand?c.landStackable:c.stackablePermanent,c.protectingPlayerSeat,c.devotion,c.devotionRequired,c.token,c.copy,c.merged,simpleToken?null:c.tokenArtKey,simpleToken?null:c.tokenSourcePrintingKey,c.name,c.zone,c.land,c.creature,c.tapped,string.Join(",",c.exertedBySeats??Array.Empty<int>()),c.exertedThisTurn,c.detained,c.harnessed,c.solved,c.suspected,c.saddled,c.plotted,c.attacking,c.blocking,c.hasStatBaseline,c.basePower,c.baseToughness,c.powerBaseChanged,c.toughnessBaseChanged,c.effectiveBasePower,c.effectiveBaseToughness,c.hasIntensity,c.intensity,c.originalIntensity,c.originalName,c.originalManaCost,c.manaCost,c.originalColors,c.currentColors,c.hasAbilityChanges,c.originalAbilityText,c.currentAbilityText,c.hasCopyAbilityChanges,c.copyOriginalAbilityText,c.copyCurrentAbilityText,string.Join(",",c.originalKeywordDetails??Array.Empty<string>()),string.Join(",",c.currentKeywordDetails??Array.Empty<string>()),string.Join(",",c.grantedKeywords??Array.Empty<string>()),c.power,c.toughness,c.damage,c.defenderKind,c.defenderId,c.loyalty,c.defense,c.backFace,c.stateName,c.room,c.leftRoomUnlocked,c.rightRoomUnlocked,c.hasCurrentLandState,c.landTypesChanged,c.originalType,c.originalRules,c.currentType,c.currentRules,
             string.Join(",",c.basicLandTypes??Array.Empty<string>()),string.Join(";",(c.pendingDepartures??Array.Empty<ForgePendingDeparture>()).Select(d=>d.action+":"+d.phase+":"+d.yourTurn+":"+d.condition)),
-            string.Join(",",(c.counters??Array.Empty<ForgeCardCounter>()).Select(x=>x.kind+":"+x.count)),string.Join(",",c.keywords??Array.Empty<string>()),string.Join(",",c.temporaryExileIds??Array.Empty<int>()),c.spentMana,c.qualificationKind,c.qualificationCount,c.qualificationRequired,c.qualificationEarned);
+            string.Join(",",(c.counters??Array.Empty<ForgeCardCounter>()).Select(x=>x.kind+":"+x.count)),string.Join(",",c.keywords??Array.Empty<string>()),string.Join(",",c.temporaryExileIds??Array.Empty<int>()),c.spentMana,c.qualificationKind,c.qualificationCount,c.qualificationRequired,c.qualificationEarned,c.hasSicknessState,c.summoningSick);
     }
     private List<ForgeCardView[]> ArenaVisualGroups(ForgeCardView[] cards,string row)
     {
@@ -159,13 +166,14 @@ public sealed partial class ForgeBattlefieldController
             (view.request.kind.StartsWith("InputSelect") || view.request.kind=="SelectCards" || view.request.kind=="InputAttack" || view.request.kind=="InputBlock");
         bool hand=row=="Hand";
         var groups=new List<ForgeCardView[]>();
-        foreach(var group in cards.GroupBy(c=>hand?c.id.ToString():ArenaGroupKey(c)))
+        foreach(var group in cards.GroupBy(c=>hand?c.id.ToString():ArenaPresentationGroupKey(c)))
         {
             string key=row+":"+group.Key;
             // The bridge excludes support permanents with per-object linked state.
             var first=group.First();catalog.TryGetValue(first.printingKey??"",out var definition);
             bool simple=first.stackableStateKnown?first.stackablePermanent:first.stackableSupport || definition!=null && (first.land && first.name is "Mountain" or "Island" or "Swamp" or "Forest" or "Plains"
                 || first.creature && string.IsNullOrWhiteSpace(definition.description));
+            if(IsRedesignLayout&&first.land&&!first.creature&&first.landPresentationKnown)simple=first.landStackable;
             bool hasCandidate=group.Any(c=>OptionIndex("card:"+c.id)>=0 || (AttackCardCandidate(c.id)||BlockCandidate(c.id)));
             if(hand || first.attacking || first.blocking || !simple || choosingIndividual && hasCandidate || expandedGroups.Contains(key))groups.AddRange(group.Select(c=>new[]{c}));
             else groups.Add(group.ToArray());
@@ -244,7 +252,7 @@ public sealed partial class ForgeBattlefieldController
             float fan=offset/Mathf.Max(1,(n-1)*.5f);
             var position=new Vector2(x+offset*step,y+(hand?-fan*fan*28:(support?supportOffsets[line]*(own?1:-1):line*(own?-1:1)*(height+10))));
             if(support)position.x=x-sideWidth*.5f+cardWidth*.5f+supportRows[line].Take(col).Sum(g=>cardWidth+StackOverhang(g)+12)+StackOverhang(groups[i]);
-            var member=groups[i][0];string groupKey=row+":"+ArenaGroupKey(member);
+            var member=groups[i][0];string groupKey=row+":"+ArenaPresentationGroupKey(member);
             if(!hand && member.attacking)position.y+=own?36:-36;
             float memberHeight=!hand && member.planeswalker?cardWidth*1.3f:height;
             float memberWidth=!hand&&member.room?Mathf.Min(sideWidth-16,cardWidth*1.7f):cardWidth;
@@ -254,11 +262,25 @@ public sealed partial class ForgeBattlefieldController
             if(!hand)position.y+=(own?1:-1)*(memberHeight-height)*.5f;
             DrawArenaCard(parent,member,groups[i].Length,row+":"+member.id,groupKey,position,new Vector2(memberWidth,memberHeight),hand,hand?-fan*Mathf.Min(14,(n-1)*1.5f):member.tapped?(own?-12:12):0,i);
         }
+        if(!hand&&!support) {
+            float left=36-tableWidth*.5f+32,inset=InformationLaneInset(parent,own,left);
+            if(inset>0) {
+                var items=groups.Select(group=>arenaCards[row+":"+group[0].id]).ToArray();
+                float first=items.Min(item=>item.restingPosition.x+DenseFieldViewport.LayoutFootprint(item.root,item.restingRotation).xMin);
+                // Ordinary rows do not need the overflow lane's 32-unit arrow gutter.
+                float shift=Mathf.Max(0,left+inset-32-first);
+                for(int i=0;i<items.Length;i++) {
+                    var item=items[i];item.restingPosition+=Vector2.right*shift;
+                    var current=item.root.anchoredPosition;current.x=item.restingPosition.x;item.root.anchoredPosition=current;
+                    item.pointer.SetLayout(item.restingPosition,item.restingRotation,item.face,false,i);
+                }
+            }
+        }
     }
     private void DrawArenaCard(RectTransform parent,ForgeCardView card,int count,string key,string groupKey,Vector2 position,Vector2 size,bool hand,float rotation,int order)
     {
         retainedCards.Add(key);
-        if(!arenaCards.TryGetValue(key,out var item))
+        if(!arenaCards.TryGetValue(key,out var item) && !(IsRedesignLayout && RestoreRedesignCard(key,out item)))
         {
             item=new ArenaCard();item.root=Panel(parent,"Card_"+card.id,position,size,Color.clear);
             item.face=Rect(item.root,"Visual",Vector2.zero,size);
@@ -267,6 +289,7 @@ public sealed partial class ForgeBattlefieldController
         }
         if(item.root.parent!=parent)item.root.SetParent(parent,false);
         item.card=card;
+        item.restingPosition=position;item.restingRotation=rotation;
         bool denseParent=parent.parent!=null&&parent.parent.name.StartsWith("Dense_",StringComparison.Ordinal);
         item.root.anchorMin=item.root.anchorMax=new Vector2(.5f,denseParent?1:.5f);
         item.root.sizeDelta=size;item.face.sizeDelta=size;
@@ -284,7 +307,7 @@ public sealed partial class ForgeBattlefieldController
         bool attackSelected=IsDeclaringAttack && selectedAttackers.Contains(card.id) || IsBlockingChoice && selectedBlocker==card.id;
         bool playableHand=hand && actionable && !paymentUncertain && view.request.kind=="InputPassPriority";
         bool own=key.StartsWith("Your",StringComparison.Ordinal);
-        string appearance=ArenaGroupKey(card)+"/"+size+"/"+count+"/"+actionable+"/"+selected+"/"+paymentUncertain+"/"+playableHand+"/"+attackSelected
+        string appearance=ArenaGroupKey(card)+"/"+size+"/"+count+"/"+actionable+"/"+selected+"/"+paymentUncertain+"/"+playableHand+"/"+attackSelected+"/land:"+(IsRedesignLand(card,hand)?RedesignLandColors(card):-1)
             +"/exiled:"+string.Join(",",card.temporaryExileIds??Array.Empty<int>())+"/band:"+string.Join(",",card.attackingBandIds??Array.Empty<int>())
             +"/"+card.qualificationKind+":"+card.qualificationCount+":"+card.qualificationRequired+":"+card.qualificationEarned+"/"+GamePreferences.Revision;
         if(item.appearance!=appearance)
@@ -304,11 +327,17 @@ public sealed partial class ForgeBattlefieldController
                 accent=selected||attackSelected?new Color(1,.83f,.32f):new Color(.68f,.95f,1);
             }
             bool stateArt=card.effectMarker&&!string.IsNullOrEmpty(card.helperArtName)&&card.markerKind!="delayed";
+            if(IsRedesignLand(card,hand))PresentRedesignLandLayers(item.face,card,size,count);
             if(!hand&&!stateArt) {
                 var shadow=Panel(item.face,"CardShadow",new Vector2(0,-5),size+new Vector2(5,5),new Color(0,0,0,.6f));
                 shadow.GetComponent<Image>().sprite=HasTokenFrame(card)?TokenFrame(card):IntegratedUiUtility.RoundedRect(140,125,10);
             }
+            if(IsRedesignLand(card,hand)&&actionable&&!paymentUncertain&&!selected&&!attackSelected){
+                var available=Panel(item.face,"LandPlayableOutline",Vector2.zero,size+Vector2.one*4,new Color(.3f,.85f,1));
+                available.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(140,125,10);
+            }
             var border=Panel(item.face,"Border",Vector2.zero,size,accent);
+            if(IsRedesignLand(card,hand)&&!selected&&!attackSelected)TintRedesignLandBorder(border.GetComponent<Image>(),card);
             if(!hand)border.GetComponent<Image>().sprite=card.markerKind=="delayed"?IntegratedUiUtility.RoundedRect(76,68,12):stateArt?IntegratedUiUtility.RoundedRect(76,82,6):card.effectMarker?EffectMarkerShape():card.emblem?EmblemShape():HasTokenFrame(card)?TokenFrame(card):IntegratedUiUtility.RoundedRect(140,125,9);
             if(stateArt)border.GetComponent<Image>().color=Color.clear;
             if(card.emblem||card.effectMarker&&!stateArt)border.gameObject.AddComponent<Mask>().showMaskGraphic=true;
@@ -448,7 +477,10 @@ public sealed partial class ForgeBattlefieldController
             else if(actionable)Choose(option,captured);
         };
         bool dragToPlay=hand&&view?.request?.kind=="InputPassPriority";
-        item.button.onClick.AddListener(()=> {if(!dragToPlay)choose();});
+        item.button.onClick.AddListener(()=> {
+            if (IsRedesignLayout && hand && item.root.GetComponent<BattlefieldRedesignHandInput>()?.ConsumeRevealClick() == true) return;
+            if(!dragToPlay)choose();
+        });
         item.pointer.Configure(()=> {
             if(hand){
                 bool dual=!card.faceDown&&catalog.TryGetValue(card.printingKey??"",out var d)
@@ -503,6 +535,7 @@ public sealed partial class ForgeBattlefieldController
     {
         if(card.faceDown)return Array.Empty<string>();
         var labels=new List<string>();
+        if(card.hasSicknessState&&card.summoningSick)labels.Add(TapPaymentText("召唤失调","Summoning sick","召喚酔い"));
         if(card.harnessed)labels.Add(TapPaymentText("∞ 已启用","Harnessed","装着済み"));
         if(card.solved)labels.Add(TapPaymentText("已侦结","Solved","解明完了"));
         if(card.suspected)labels.Add(TapPaymentText("疑犯","Suspected","容疑あり"));
@@ -537,12 +570,14 @@ public sealed partial class ForgeBattlefieldController
         var attributes=AttributeStateLabels(card);
         if(attributes.Length>0) {
             float offset=(card.detained?20:0)+((card.exertedBySeats?.Length??0)>0?20:0);
-            string text=attributes[0]+(attributes.Length>1?" +"+(attributes.Length-1):"");
+            string text=(card.hasSicknessState&&card.summoningSick?"Zzz":attributes[0])+(attributes.Length>1?" +"+(attributes.Length-1):"");
             float width=Mathf.Max(34,size.x-2);
             var badge=Panel(face,"AttributeState",new Vector2(0,size.y*.5f-10-offset),new Vector2(width,18),new Color(.08f,.12f,.15f,.95f));
             badge.GetComponent<Image>().raycastTarget=false;
-            var label=Label(badge,"Label",text,Vector2.zero,new Vector2(width-4,18),10,GrantedKeywordColor);
-            label.resizeTextForBestFit=true;label.resizeTextMinSize=8;label.resizeTextMaxSize=10;
+            bool sicknessBadge=card.hasSicknessState&&card.summoningSick;
+            var label=Label(badge,"Label",text,Vector2.zero,new Vector2(width-4,18),sicknessBadge?14:10,GrantedKeywordColor);
+            label.resizeTextForBestFit=!sicknessBadge;label.resizeTextMinSize=8;label.resizeTextMaxSize=10;
+            if(sicknessBadge)label.fontStyle=FontStyle.Bold;
             label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Overflow;label.raycastTarget=false;
         }
         if(card.qualificationRequired>0 && !card.faceDown) {

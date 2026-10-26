@@ -13,7 +13,7 @@ public static class OnlineSpectatorView
             matchId=source.matchId, viewerSeat=spectatorSeat, appliedSequence=source.appliedSequence,
             outcome=source.outcome,
             forge=new ForgeSeatView {
-                seat=1, phase=view.phase, dayTime=view.dayTime,turn=view.turn, turnSeat=view.turnSeat,
+                seat=1, phase=view.phase, formatId=view.formatId,dayTime=view.dayTime,turn=view.turn, turnSeat=view.turnSeat,
                 prioritySeat=view.prioritySeat, stackCount=view.stackCount,
                 notices=(view.notices??Array.Empty<ForgeNotice>()).Where(n=>n.publicNotice).Select(n=>new ForgeNotice {
                     id=n.id,actorSeat=n.actorSeat,kind=n.kind,value=n.value,message=n.message,title=n.title,publicNotice=true,sourceCard=PublicCard(n.sourceCard),
@@ -22,6 +22,8 @@ public static class OnlineSpectatorView
                 globalEffects=(view.globalEffects??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                 players=(view.players??Array.Empty<ForgePlayerView>()).Select(p=>new ForgePlayerView {
                     seat=p.seat,controllingSeat=p.controllingSeat,targetId=p.targetId,life=p.life,handCount=p.handCount,libraryCount=p.libraryCount,
+                    commanders=(p.commanders??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
+                    commandCards=(p.commandCards??p.commanders??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     libraryTop=p.libraryTopPublic?PublicCard(p.libraryTop):null,libraryTopPublic=p.libraryTopPublic,
                     libraryCards=(p.libraryCards??Array.Empty<ForgeLibraryPosition>()).Where(c=>c!=null&&c.publicInfo&&c.card!=null)
                         .Select(c=>new ForgeLibraryPosition{position=c.position,publicInfo=true,card=PublicCard(c.card)}).ToArray(),
@@ -36,6 +38,10 @@ public static class OnlineSpectatorView
                     graveyardCards=(p.graveyardCards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     exileCards=(p.exileCards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     publicPlayableExile=(p.publicPlayableExile??Array.Empty<ForgeCardView>()).Where(c=>c!=null&&!c.faceDown).Select(PublicCard).ToArray(),
+                    publicPlayableGraveyard=(p.publicPlayableGraveyard??Array.Empty<ForgeCardView>()).Where(c=>c!=null&&!c.faceDown).Select(PublicCard).ToArray(),
+                    usableSourceIds=(p.usableSourceIds??Array.Empty<int>()).Intersect((view.players??Array.Empty<ForgePlayerView>())
+                        .SelectMany(owner=>(owner.graveyardCards??Array.Empty<ForgeCardView>()).Concat(owner.exileCards??Array.Empty<ForgeCardView>()).Concat(owner.commandCards??Array.Empty<ForgeCardView>()))
+                        .Where(c=>c!=null&&!c.faceDown).Select(c=>c.id)).ToArray(),
                     reviewGraveyard=(p.reviewGraveyard??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     reviewExile=(p.reviewExile??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     effectMarkers=(p.effectMarkers??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
@@ -47,6 +53,9 @@ public static class OnlineSpectatorView
                     description=s.source?.faceDown==true?"Face-down spell":s.description,
                     rulesText=s.source?.faceDown==true?null:s.rulesText,
                     rulesSource=s.source?.faceDown==true?null:PublicCard(s.rulesSource),
+                    hasPaymentReceipt=s.hasPaymentReceipt,payment=s.payment==null?null:ServerSnapshotJson.Copy(s.payment),
+                    chosenModes=s.source?.faceDown==true?Array.Empty<ForgeChosenMode>():s.chosenModes,
+                    castingChoices=s.source?.faceDown==true?Array.Empty<ForgeCastingChoice>():s.castingChoices,
                     hasXValue=s.source?.faceDown!=true&&s.hasXValue,xValue=s.source?.faceDown==true?0:s.xValue,
                     source=PublicCard(s.source)
                 }).ToArray(),

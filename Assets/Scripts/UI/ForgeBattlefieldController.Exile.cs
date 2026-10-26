@@ -22,6 +22,7 @@ public sealed partial class ForgeBattlefieldController
     private void ApplyHandFanOffset(float offset,bool snap)=>ApplyHandFanOffset(ownFan,offset,snap);
     private void ApplyHandFanOffset(HandFanState fan,float offset,bool snap)
     {
+        if (IsRedesignLayout) { ApplyRedesignHandOffset(fan, offset, snap); return; }
         // Clearing a view can destroy its cards before the next hand layout.
         // Casting cleanup must not animate those previous-view references.
         fan.slots.RemoveAll(s=>s.item.root==null||s.item.pointer==null||s.region==null);
@@ -46,7 +47,21 @@ public sealed partial class ForgeBattlefieldController
                 var visibility=slot.item.root.GetComponent<CanvasGroup>();
                 if(visibility==castingHandGroup)exposure=0;
                 visibility.alpha=slot.opacity*exposure;visibility.blocksRaycasts=exposure>.02f;
-                if(exposure>.02f){handMin=Vector2.Min(handMin,position-half);handMax=Vector2.Max(handMax,position+half);}
+                if(exposure>.02f){
+                    handMin=Vector2.Min(handMin,position-half);handMax=Vector2.Max(handMax,position+half);
+                    // Scanned faces put their dynamic fee strip above the card.
+                    // Measure in the resting face's coordinates, ignoring hover
+                    // scale/lift so hovering never pushes the whole fan away.
+                    var turn=Quaternion.Euler(0,0,rotation);var corners=new Vector3[4];
+                    foreach(var cost in slot.item.face.GetComponentsInChildren<LegacyCardCost>()) {
+                        if(cost.Root==null||!cost.Root.gameObject.activeInHierarchy)continue;
+                        foreach(var graphic in cost.Root.GetComponentsInChildren<UnityEngine.UI.Graphic>()) {
+                            if(!graphic.enabled)continue;
+                            graphic.rectTransform.GetWorldCorners(corners);
+                            foreach(var corner in corners){Vector2 point=position+(Vector2)(turn*slot.item.face.InverseTransformPoint(corner));handMin=Vector2.Min(handMin,point);handMax=Vector2.Max(handMax,point);}
+                        }
+                    }
+                }
                 slot.item.pointer.SetHandFanExposure(exposure>.02f);
             }
             group.Key.anchoredPosition=(min+max)*.5f;group.Key.sizeDelta=max-min;
@@ -60,6 +75,7 @@ public sealed partial class ForgeBattlefieldController
     // sizes and hover magnification intact; tuck only the resting fan towards its edge.
     private void ReserveRestingHandSpace(HandFanState fan)
     {
+        if (IsRedesignLayout && !fan.opponent) return;
         var root=fan.opponent?otherHand:ownHand;
         if(root==null||surface==null)return;
         root.anchoredPosition=new Vector2(root.anchoredPosition.x,0);
@@ -68,12 +84,29 @@ public sealed partial class ForgeBattlefieldController
         var high=surface.InverseTransformPoint(root.TransformPoint(fan.restingBounds.max));
         float shift=0;
         string prefix=fan.opponent?"Opponent":"Your";
+        void Reserve(Vector3 a,Vector3 b) {
+            if(b.x<low.x||a.x>high.x)return;
+            shift=fan.opponent?Mathf.Max(shift,b.y+12-low.y):Mathf.Min(shift,a.y-12-high.y);
+        }
         foreach(var pair in denseFieldRows) {
             if(!pair.Key.StartsWith(prefix,StringComparison.Ordinal)||pair.Value==null||!pair.Value.gameObject.activeSelf)continue;
             var corners=new Vector3[4];pair.Value.viewport.GetWorldCorners(corners);
             var a=surface.InverseTransformPoint(corners[0]);var b=surface.InverseTransformPoint(corners[2]);
-            if(b.x<low.x||a.x>high.x)continue;
-            shift=fan.opponent?Mathf.Max(shift,b.y+12-low.y):Mathf.Min(shift,a.y-12-high.y);
+            Reserve(a,b);
+        }
+        // Ordinary one/two-row lanes do not have a dense viewport. Use this
+        // presentation's final poses, so animation and stale cards cannot move
+        // the clearance boundary. Dense children are covered by their mask above.
+        foreach(var pair in arenaCards) {
+            var item=pair.Value;
+            if(!retainedCards.Contains(pair.Key)||!pair.Key.StartsWith(prefix,StringComparison.Ordinal)
+                ||item.card?.zone!="Battlefield"||!item.root.gameObject.activeSelf)continue;
+            var parent=item.root.parent as RectTransform;
+            if(parent==null||parent.parent!=null&&parent.parent.name.StartsWith("Dense_",StringComparison.Ordinal))continue;
+            var footprint=DenseFieldViewport.LayoutFootprint(item.root,item.restingRotation);
+            var center=parent.rect.center+item.restingPosition;
+            Reserve(surface.InverseTransformPoint(parent.TransformPoint(center+footprint.min)),
+                surface.InverseTransformPoint(parent.TransformPoint(center+footprint.max)));
         }
         var pool=fan.opponent?publicManaPoolRow:manaPoolRow;
         if(pool!=null && pool.gameObject.activeInHierarchy) {
@@ -90,8 +123,14 @@ public sealed partial class ForgeBattlefieldController
     {
         bool choosingHand=DirectHandSelection&&SelectionHand is ForgePlayerView selection
             &&cards.Any(c=>c.zone=="Hand"&&c.ownerSeat==selection.seat);
-        if(choosingHand||parent.GetComponent<Canvas>()!=null)
-            SetOverlayLayer(parent,choosingHand?DecisionLayerOffset:0,true);
+        if(!fan.opponent)cards=PresentHandSources(cards,choosingHand);
+        else if(IsRedesignLayout)cards=PresentRedesignSources(cards,fan,choosingHand);
+        if(choosingHand)SetOverlayLayer(parent,DecisionLayerOffset,true);
+        else if(parent.TryGetComponent<Canvas>(out var handCanvas))
+            // An overriding canvas at the root canvas's order can render behind
+            // its background. Return the fan to the parent's normal draw order.
+            handCanvas.overrideSorting=false;
+        if (IsRedesignLayout) { if (choosingHand && !fan.opponent) redesignHandExpanded = true; LayoutRedesignHand(parent, cards, fan, choosingHand); return; }
         foreach(var region in fan.regions.Values)region.gameObject.SetActive(false);
         fan.hits.Clear();
         fan.slots.Clear();

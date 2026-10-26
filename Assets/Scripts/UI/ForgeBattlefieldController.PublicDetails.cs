@@ -38,6 +38,11 @@ public sealed partial class ForgeBattlefieldController
     private static bool ShouldShowSpentMana(ForgeCardView card)
     {
         if(card==null||card.faceDown||string.IsNullOrEmpty(card.spentMana))return false;
+        return ManaPaymentAffectsRules(card);
+    }
+    private static bool ManaPaymentAffectsRules(ForgeCardView card)
+    {
+        if(card==null||card.faceDown)return false;
         // Keep the receipt in the snapshot, but only annotate cards whose rules
         // depend on that payment. Native rules remain English across UI locales.
         if((card.keywords??Array.Empty<string>()).Any(k=>string.Equals(k,"Sunburst",StringComparison.OrdinalIgnoreCase)))return true;

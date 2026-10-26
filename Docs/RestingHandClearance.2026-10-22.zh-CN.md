@@ -7,3 +7,5 @@
 证据 .tools/hand-clearance-1022/：生产IntegratedBattlefield，BattlefieldStressPresentationValidation.Fixture为明确合成密集展示，另裁为少量场面。两侧×标准/大字号×少量/密集32项通过：可见静止牌矩形与战场各行不重叠、手牌留至少40屏幕像素可访问条带、通过OnPointerEnter后的放大牌完整在屏内、倍率仍1.8。它们是几何与指针回调展示验证，不冒充完整对局或真实鼠标拖牌。dense.png和sparse.png为实际截图；after.png为补偿悬停前的首张静止截图。密集两侧各收起约90 Canvas单位。未验证所有窗口纵横比或不同手牌数量，未声称所有悬停都不遮挡战场（悬停放大本身保留）。
 
 首编译Rect方法遮蔽UnityEngine.Rect类型，限定完整类型后编译通过；初次进入Play重载期间连接中断，等待就绪后重试。均属于开发/驱动过程。未打包或覆盖客户端，服务端无须为这项改动更新。
+
+2026-10-23更正范围：以上32项没有覆盖普通双排地；旧实现只避让密集viewport，不能据此声称所有双排地已避让。已补普通战场最终姿态、动态费用边界及PresentReplay下两种16:9分辨率的验证，详见[修正与保留的失败](HandTargetAndVideoExport.2026-10-23.zh-CN.md)。悬停仍允许遮挡，未增加点击切换整排开关。

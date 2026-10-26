@@ -986,7 +986,7 @@ public class ChangeZoneEffect extends SpellAbilityEffect {
 
             // for Wish cards, if the player is controlled by someone else
             // they can't fetch from the outside the game/sideboard
-            if (player.isControlled()) {
+            if (player.isControlled() || game.getRules().isDuelCommander() || game.getRules().hasAppliedVariant(forge.game.GameType.Brawl)) {
                 origin.remove(ZoneType.Sideboard);
             }
 
