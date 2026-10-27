@@ -80,15 +80,35 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
     private void OnApplicationFocus(bool focused){if(focused)nextDeckScan=0;}
 
     private Canvas battlefieldLobbyCanvas;
-    internal static bool HasBattlefieldLobby => FindFirstObjectByType<OnlineLobbyPanel>()?.battlefieldLobbyCanvas != null;
+    private Canvas sideboardReturnCanvas;
+    internal static bool HasBattlefieldLobby => FindObjectsByType<OnlineLobbyPanel>(FindObjectsInactive.Include,FindObjectsSortMode.None).Any(p=>p.battlefieldLobbyCanvas!=null);
     internal static void OpenSideboarding()
     {
+        var existing=FindObjectsByType<OnlineLobbyPanel>(FindObjectsInactive.Include,FindObjectsSortMode.None).FirstOrDefault(p=>p.battlefieldLobbyCanvas!=null);
+        if(existing!=null){existing.battlefieldLobbyCanvas.gameObject.SetActive(true);if(existing.sideboardReturnCanvas!=null)existing.sideboardReturnCanvas.gameObject.SetActive(false);return;}
         // Stay on the current scene while editing the match's deck. Loading the
         // main menu rebuilt its full menus and catalog just to show this panel.
         var canvas=ReplayWidgets.Canvas("SideboardingCanvas",700);
         var panel=Create(canvas.transform);
         panel.battlefieldLobbyCanvas=canvas;
+        var backButton=panel.GetComponentsInChildren<Button>(true).First(b=>b.name=="BackButton");
+        ((RectTransform)backButton.transform).sizeDelta=new Vector2(212,58);
+        var back=backButton.GetComponentInChildren<Text>();
+        back.rectTransform.anchorMin=Vector2.zero;back.rectTransform.anchorMax=Vector2.one;
+        back.rectTransform.offsetMin=new Vector2(8,4);back.rectTransform.offsetMax=new Vector2(-8,-4);
+        back.text="查看战场";back.GetComponent<PreferenceText>()?.Apply();
+        var title=(RectTransform)panel.transform.Find("Title");if(title!=null)title.anchoredPosition+=new Vector2(12,0);
         Show(null,null);
+    }
+    private void ViewSideboardBattlefield()
+    {
+        battlefieldLobbyCanvas.gameObject.SetActive(false);
+        if(sideboardReturnCanvas==null){
+            sideboardReturnCanvas=ReplayWidgets.Canvas("ReturnToSideboard",700);
+            var button=ReplayWidgets.Button(sideboardReturnCanvas.transform,"前往换备",0,0,216,OpenSideboarding);
+            var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=new Vector2(0,1);rect.anchoredPosition=new Vector2(230,-45);
+        }
+        sideboardReturnCanvas.gameObject.SetActive(true);
     }
 
     public static OnlineLobbyPanel Show(MainMenuController owner, DeckDefinition deck)
@@ -304,6 +324,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             new Vector2(0f, 145f), new Vector2(780f, 82f), ObsidianArenaTheme.Field);
         panel.deckText = AddText(selectedDeckPanel.transform, "DeckValue", "尚未选择牌组", Vector2.zero,
             new Vector2(720f, 60f), 19, font, TextAnchor.MiddleLeft, TextColor);
+        panel.CreateRoomAiControls(preparationCard.transform,font);
 
         panel.readyButton = AddButton(preparationCard.transform, "ReadyButton", "提交牌组并准备",
             new Vector2(-190f, -42f), new Vector2(390f, 64f), font, AccentColor);
@@ -398,7 +419,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         return panel;
     }
 
-    private void OnDestroy() => Unsubscribe();
+    private void OnDestroy(){Unsubscribe();if(sideboardReturnCanvas!=null)Destroy(sideboardReturnCanvas.gameObject);}
 
     private void Subscribe()
     {
@@ -506,6 +527,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             ? 0
             : Mathf.Max(0, availableDecks.FindIndex(item => SameDeckName(item, selectedDeck)));
         deckDropdown.SetValueWithoutNotify(selectedIndex);
+        ReloadAiDeckChoices();
         suppressDeckSelection = false;
     }
 
@@ -755,7 +777,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         if(leaveRoomButton!=null)leaveRoomButton.interactable=joinedRoom&&service.CanLeaveRoom;
         if (startMatchButton != null)
         {
-            startMatchButton.interactable = roomHost && allPlayersReady && !betweenGames;
+            startMatchButton.interactable = roomHost && allPlayersReady && !betweenGames && lobby?.aiPending!=true;
             SetButtonLabel(startMatchButton, roomHost
                 ? allPlayersReady ? "开始比赛" : "等待双方准备"
                 : "等待房主开始");
@@ -792,6 +814,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
         RefreshMatchPreparation(service, betweenGames);
         // Create refreshes the panel before Show creates the service and subscribes.
         RefreshPlayerSeats(lobby, service?.LocalSeat ?? 0);
+        RefreshRoomAiControls(service);
     }
     private void RefreshPlayerSeats(OnlineLobbyState lobby,int localSeat)
     {
@@ -802,6 +825,7 @@ public sealed partial class OnlineLobbyPanel : MonoBehaviour
             nameBinding.Literal=player!=null;
             seatNames[seat - 1].text = player == null ? "等待玩家加入" : player.displayName;
             string role = GamePreferences.T(lobby != null && lobby.hostSeat == seat ? "房主" : "玩家");
+            if(player?.isAi==true)role="AI";
             if (player != null && localSeat == seat) role += " · "+GamePreferences.T("你");
             seatStates[seat - 1].text = player == null ? "空位 · 等待连接" :
                 role + "   /   " + GamePreferences.T(player.ready ? "已准备" : player.hasDeck ? "牌组已提交 · 未准备" : "正在选择牌组");

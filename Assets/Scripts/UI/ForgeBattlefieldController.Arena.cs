@@ -578,6 +578,14 @@ public sealed partial class ForgeBattlefieldController
             var label=Label(badge,"Label",text,Vector2.zero,new Vector2(width-4,18),sicknessBadge?14:10,GrantedKeywordColor);
             label.resizeTextForBestFit=!sicknessBadge;label.resizeTextMinSize=8;label.resizeTextMaxSize=10;
             if(sicknessBadge)label.fontStyle=FontStyle.Bold;
+            width=Mathf.Min(size.x-2,Mathf.Max(24,Mathf.Ceil(label.preferredWidth)+8));
+            badge.sizeDelta=new Vector2(width,18);label.rectTransform.sizeDelta=new Vector2(width-4,18);
+            var background=badge.GetComponent<Image>();
+            if(sicknessBadge&&attributes.Length==1) {
+                background.color=Color.clear;
+                var outline=label.gameObject.AddComponent<UnityEngine.UI.Outline>();
+                outline.effectColor=new Color(.02f,.035f,.045f,.9f);outline.effectDistance=new Vector2(1,-1);
+            }else background.sprite=IntegratedUiUtility.RoundedRect(width,18,4);
             label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Overflow;label.raycastTarget=false;
         }
         if(card.qualificationRequired>0 && !card.faceDown) {

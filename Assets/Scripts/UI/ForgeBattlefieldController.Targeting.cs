@@ -15,6 +15,17 @@ public sealed partial class ForgeBattlefieldController
     private CanvasGroup castingHandGroup, castingDestinationGroup;
     private RectTransform castingDestination;
     private bool returningCast;
+    private const int PendingCastId=int.MinValue;
+    private ForgeStackItem PendingCastEntry()
+    {
+        if(!IsRedesignLayout||!canAct||service?.IsSpectator==true||view==null)return null;
+        if(!HasCastingPrompt&&!(castingSource!=null&&castingRequest==requestId))return null;
+        var source=!string.IsNullOrEmpty(view.request?.sourceCard?.name)?view.request.sourceCard:castingPreparedSpell??castingSource;
+        if(source==null)return null;
+        string kind=string.IsNullOrEmpty(view.request?.abilityKind)?"spell":view.request.abilityKind;
+        if(kind=="spell"&&(view.stackItems??System.Array.Empty<ForgeStackItem>()).Any(s=>s.kind=="spell"&&s.source?.id==source.id))return null;
+        return new ForgeStackItem{id=PendingCastId,source=source,controllerSeat=ActionPlayerSeat,kind=kind,description=view.request?.abilityText??source.name};
+    }
 
     private bool IsTargeting => integrated && canAct && !submitted && !IsCardPickerRequest && view?.awaitingInput==true
         && (view.request.kind=="InputSelectTargets" || view.request.kind=="SelectStackTarget");
@@ -59,6 +70,11 @@ public sealed partial class ForgeBattlefieldController
         else if(catalog.TryGetValue(source.printingKey ?? "",out var definition) && !source.faceDown)
             CardImageLibrary.TryLoadFullCard(definition,source.backFace?1:0,out castingSprite);
         castingCardId=source.id;castingRequest=requestId;
+        if(IsRedesignLayout){
+            var slot=arenaCards.Values.FirstOrDefault(c=>c.root.name=="Card_"+source.id);
+            if(slot!=null&&slot.root.parent==ownHand)HideCastingHand(slot);
+            HideTargeting();PresentStackCards();return;
+        }
         EnsureCastingPreview();
         targetOrigin.gameObject.SetActive(true);targetOrigin.SetAsLastSibling();
         var item=arenaCards.Values.FirstOrDefault(c=>c.root.name=="Card_"+(preparedSource?.id??source.id));
@@ -94,6 +110,12 @@ public sealed partial class ForgeBattlefieldController
         if(HasStackTargetChoices){HideTargeting();return;}
         if(HasCastingPrompt)
         {
+            if(IsRedesignLayout){
+                EnsureCastingPreview();targetingRequest=requestId;
+                targetOrigin.gameObject.SetActive(false);
+                targetArrow.SetVisible(IsTargeting);targetArrow.transform.SetAsLastSibling();
+                UpdateTargeting();return;
+            }
             EnsureCastingPreview();
             targetingRequest=requestId;
             Sprite sourceSprite=castingSprite;
@@ -160,6 +182,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void FinishCastingAt(RectTransform destination,bool toHand)
     {
+        if(IsRedesignLayout){ResetCastingVisual();return;}
         if(targetOrigin==null)return;
         returningCast=toHand;castingDestination=destination;
         targetOrigin.Find("Hint").gameObject.SetActive(false);
@@ -199,7 +222,7 @@ public sealed partial class ForgeBattlefieldController
     private void UpdateTargeting()
     {
         UpdateAttackArrowAt(Input.mousePosition);
-        if(targetOrigin==null || !targetOrigin.gameObject.activeSelf)return;
+        if(targetOrigin==null || !targetOrigin.gameObject.activeSelf&&!IsRedesignLayout)return;
         if(IsTargeting)UpdateTargetingAt(Input.mousePosition);
     }
     // Also used by pointer-driven scene validation; never submits a rule action.
@@ -223,7 +246,9 @@ public sealed partial class ForgeBattlefieldController
             foreach(var player in view.players)
                 if(id=="player:"+player.targetId)endpoint=surface.InverseTransformPoint(Node(player.seat==seat?"PlayerPlate":"OpponentPlate").position);
         }
-        targetArrow.SetEndpoints(targetOrigin.anchoredPosition+new Vector2(-targetOrigin.rect.width*.4f,targetOrigin.rect.height*.2f),endpoint,
+        Vector2 origin=targetOrigin.anchoredPosition+new Vector2(-targetOrigin.rect.width*.4f,targetOrigin.rect.height*.2f);
+        if(IsRedesignLayout&&stackCards.TryGetValue("id:"+PendingCastId,out var pending))origin=surface.InverseTransformPoint(pending.tile.TransformPoint(new Vector3(pending.tile.rect.xMin,pending.tile.rect.center.y,0)));
+        targetArrow.SetEndpoints(origin,endpoint,
             candidate>=0 && view.request.options[candidate].selected?Gold:candidate>=0?new Color(.2f,.85f,1):new Color(.22f,.55f,.85f),candidate>=0,true);
     }
     private int TargetOptionAt(Vector2 position)

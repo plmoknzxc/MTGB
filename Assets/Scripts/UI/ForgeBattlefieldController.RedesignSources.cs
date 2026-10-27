@@ -58,7 +58,7 @@ public sealed partial class ForgeBattlefieldController
             .Where(c=>c!=null&&!c.faceDown&&c.zone=="Command"&&!c.emblem&&!c.effectMarker);
         cards=cards.Concat(commandCards).GroupBy(c=>c.id).Select(g=>g.First())
             .Where(c=>HandSource(c)!="Command"||usable.Contains(c.id)).ToArray();
-        var zones=RedesignOrderedSources(cards).ToArray();
+        var zones=(service?.IsSpectator==true?new[]{"Hand"}.Concat(RedesignOrderedSources(cards)).Distinct():RedesignOrderedSources(cards)).ToArray();
         var tabs=other?otherSourceTabs:handSourceTabs;
         if(tabs==null){
             tabs=Rect(surface,other?"OtherHandSourceTabs":"HandSourceTabs",Vector2.zero,new Vector2(600,36));

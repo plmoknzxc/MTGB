@@ -33,7 +33,7 @@ public sealed partial class OnlineMatchService
         string playerName=OnlineClientProfileStore.Load(currentProfileId).displayName;
         if(string.IsNullOrWhiteSpace(playerName))playerName="Player 1";
         string id=Guid.NewGuid().ToString("N");
-        var session=new OnlineMatchSession(id,CloneDeck(own),CloneDeck(opponent),UnityEngine.Random.Range(1,int.MaxValue),config,"local-ai",1,2);
+        var session=new OnlineMatchSession(id,CloneDeck(own),CloneDeck(opponent),UnityEngine.Random.Range(1,int.MaxValue),config,"local-ai",1,2,true);
         localAiSession=session;IsLocalAiMatch=true;IsInMatch=true;IsPreparingMatch=false;
         LocalSeat=1;matchId=id;currentRoomId="本地 AI";clientRegisteredDeck=CloneDeck(own);
         LobbyState=new OnlineLobbyState{roomId="local-ai",config=config,players=new List<OnlineLobbyPlayer>{

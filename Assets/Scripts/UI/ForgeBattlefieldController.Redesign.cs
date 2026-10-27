@@ -134,6 +134,7 @@ public sealed partial class ForgeBattlefieldController
 
     private void SetRedesignHandExpanded(bool expanded)
     {
+        if(service?.IsSpectator==true)expanded=true;
         if (!IsRedesignLayout || redesignHandExpanded == expanded) return;
         redesignHandExpanded = expanded;
         foreach (var slot in ownFan.slots) slot.item.pointer.ResetHover();

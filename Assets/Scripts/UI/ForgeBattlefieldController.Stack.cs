@@ -148,6 +148,7 @@ public sealed partial class ForgeBattlefieldController
         if (IsRedesignLayout) redesignStackOffset = stackContent.anchoredPosition.y;
         const float cardWidth=240,cardHeight=335,rowHeight=389;
         var entries=view?.stackItems ?? Array.Empty<ForgeStackItem>();
+        if(PendingCastEntry() is ForgeStackItem pending)entries=new[]{pending}.Concat(entries).ToArray();
         var text=view?.stack ?? Array.Empty<string>();
         int count=Math.Max(entries.Length,text.Length);
         // Keep the dock bounded. The independent overview exposes every object.

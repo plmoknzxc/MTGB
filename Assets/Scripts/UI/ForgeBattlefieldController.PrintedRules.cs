@@ -156,6 +156,15 @@ public sealed partial class ForgeBattlefieldController
         var variants=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
         void MatchVariants(string original,string local) {
             if(Key(original)==match)variants.Add(local);
+            // Japanese may split one reflexive English sentence into target
+            // selection and effect sentences. Pair its explicit "this way"
+            // trigger boundary within this same printed paragraph.
+            if(GamePreferences.Language=="ja-JP") {
+                var reflexive=Regex.Match(original,@"(?<=[.!?]\s)(When you [^.!?]+ this way, .+)$");
+                var localReflexive=Regex.Match(local,@"(?<=。)(これにより[^。]*とき、.+)$");
+                if(reflexive.Success&&localReflexive.Success&&Key(reflexive.Groups[1].Value)==match)
+                    variants.Add(localReflexive.Groups[1].Value);
+            }
             // A first-draw reveal registers its later trigger from the same
             // printed paragraph. Japanese can split that trigger differently;
             // remove only the exact paired reveal instruction, not N sentences.
@@ -189,7 +198,20 @@ public sealed partial class ForgeBattlefieldController
             }
         }
         if(native.Length==localized.Length) {
-            for(int i=0;i<native.Length;i++)MatchVariants(native[i],localized[i]);
+            for(int i=0;i<native.Length;i++) {
+                MatchVariants(native[i],localized[i]);
+                // A reflexive trigger can be a later sentence of one paragraph.
+                // Keep the sentence pairing within that same translated row.
+                foreach(bool omitReminder in new[]{true,false}) {
+                    string original=omitReminder?WithoutPrintedReminder(native[i]):native[i];
+                    string localRow=omitReminder?WithoutPrintedReminder(localized[i]):localized[i];
+                    var english=Regex.Matches(original,@"[^.!?\n]+[.!?]?").Cast<Match>().Select(m=>m.Value.Trim()).Where(s=>s.Length>0).ToArray();
+                    var local=Regex.Matches(localRow,@"[^。！？\n]+[。！？]?").Cast<Match>().Select(m=>m.Value.Trim()).Where(s=>s.Length>0).ToArray();
+                    if(english.Length<2||english.Length!=local.Length||english.Length>128)continue;
+                    for(int first=0;first<english.Length;first++)for(int count=1;count<=english.Length-first;count++)
+                        MatchVariants(string.Join("\n",english.Skip(first).Take(count)),string.Join("\n",local.Skip(first).Take(count)));
+                }
+            }
             if(variants.Count==1)return variants.Single();
         }
         if(native.Length!=localized.Length){
@@ -271,7 +293,8 @@ public sealed partial class ForgeBattlefieldController
         if(localized==recipe)return fallback;
         // Native delayed/reflexive descriptions carry remembered public cards
         // after the recipe. Keep their identity when replacing only the rule.
-        var rememberedCards=Regex.Match(effect,"^"+Regex.Escape(recipe)+@" \(\[(.+)\]\)$");
+        string withoutTargets=Regex.Replace(effect,@"\s+\(Targeting: [^\r\n]*\)$","");
+        var rememberedCards=Regex.Match(withoutTargets,"^"+Regex.Escape(recipe)+@" \(\[(.+)\]\)$");
         if(rememberedCards.Success) {
             string names=rememberedCards.Groups[1].Value;
             var cards=Regex.Matches(names,@"(.+?) \((\d+)\)(?:,\s*|$)").Cast<Match>().ToArray();

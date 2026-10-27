@@ -40,7 +40,8 @@ public sealed partial class ForgeBattlefieldController
         string printed=feature?.manaCost??definition.manaCost;
         string intrinsic=original?printed:card.manaCost??printed;
         bool permitted=card.zone=="Hand"||card.zone=="Graveyard"&&(view?.playableGraveyard??Array.Empty<ForgeCardView>()).Any(c=>c.id==card.id)
-            ||card.zone=="Exile"&&(view?.playableExile??Array.Empty<ForgeCardView>()).Any(c=>c.id==card.id)||card.zone=="Library"&&OptionIndex("card:"+card.id)>=0;
+            ||card.zone=="Exile"&&(view?.playableExile??Array.Empty<ForgeCardView>()).Any(c=>c.id==card.id)
+            ||card.zone=="Library"&&OptionIndex("card:"+card.id)>=0||card.zone=="Sideboard"&&card.previewManaCost!=null;
         string cost=original?printed:card.zone=="Stack"?card.castingManaCost??intrinsic:permitted?card.previewManaCost??intrinsic:intrinsic;
         if(string.Equals(cost,"no cost",StringComparison.OrdinalIgnoreCase))cost="";
         string type=feature!=null?GamePreferences.FeatureType(feature,card.currentType):GamePreferences.CardType(definition);
@@ -71,7 +72,7 @@ public sealed partial class ForgeBattlefieldController
         void BindFrame(string selectedFrame)=>face.Bind(art,title,cost,type,rules,stats,printed,
             adventure==null?null:GamePreferences.FeatureName(adventure),adventureCost,
             adventure==null?null:GamePreferences.FeatureType(adventure,"Instant — Adventure"),adventure==null?null:GamePreferences.FeatureRules(adventure),selectedFrame,compact,
-            adventure?.manaCost,!original&&card.zone is "Hand" or "Graveyard" or "Exile");
+            adventure?.manaCost,!original&&card.zone is "Hand" or "Graveyard" or "Exile" or "Sideboard");
         BindFrame(frame);
         // Actual translated typography can require more room than the native
         // text-length estimate. Try the larger rules panel before using a scan.

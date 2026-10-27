@@ -6,13 +6,15 @@ public static class OnlineProtocol
     // v19 hashes the complete field snapshot without Unity's recursive DTO scan.
     // v20 adds a room-wide shuffle rule that every player must be able to see.
     // v21 enables Duel Commander/Arena Brawl and public command-zone snapshots.
-    public const int Version = 21;
+    // v22 adds authority-controlled AI room seats and their lobby identity.
+    public const int Version = 22;
     public const string MessageName = "mtgb.protocol.v15";
 
     public const string Hello = "hello";
     public const string Welcome = "welcome";
     public const string Lobby = "lobby";
     public const string SubmitDeck = "submit-deck";
+    public const string ConfigureAi = "configure-ai";
     public const string SetSpectator = "set-spectator";
     public const string SetReady = "set-ready";
     public const string RequestStartMatch = "request-start-match";
@@ -73,6 +75,7 @@ public sealed class OnlineWelcomeMessage
 [Serializable]
 public sealed class OnlineLobbyPlayer
 {
+    public bool isAi;
     public int seat;
     public string displayName;
     public bool connected;
@@ -83,6 +86,7 @@ public sealed class OnlineLobbyPlayer
 [Serializable]
 public sealed class OnlineLobbyState
 {
+    public bool aiPending;
     public int playDrawChooserSeat;
     public string roomId;
     public int hostSeat;
@@ -94,6 +98,13 @@ public sealed class OnlineLobbyState
 [Serializable]
 public sealed class OnlineDeckMessage
 {
+    public DeckDefinition deck;
+}
+
+[Serializable]
+public sealed class OnlineAiMessage
+{
+    public bool remove;
     public DeckDefinition deck;
 }
 

@@ -118,6 +118,12 @@ public sealed partial class ForgeBattlefieldController
                 inset.GetComponent<Image>().color=new Color(.27f,.29f,.27f,1);
                 text.color=new Color(.62f,.65f,.63f,1);
             }
+            if(option.id.StartsWith("mode:unavailable:",StringComparison.Ordinal)) {
+                var shade=Panel(head,"UnavailableShade",Vector2.zero,new Vector2(faceWidth,headHeight),new Color(.035f,.05f,.065f,.8f));
+                shade.GetComponent<Image>().raycastTarget=false;
+                var unavailable=Label(shade,"Unavailable",TapPaymentText("当前不可选","Unavailable","現在は選択不可"),Vector2.zero,new Vector2(faceWidth-8,28),13,Paper);
+                unavailable.raycastTarget=false;
+            }
             selection.transform.SetAsLastSibling();
         }
         string confirmId=modes?"confirm-modes":"confirm-cards",resetId=modes?"reset-modes":"reset-cards";

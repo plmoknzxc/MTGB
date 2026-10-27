@@ -4,6 +4,8 @@ using UnityEngine;
 
 public sealed partial class ForgeBattlefieldController
 {
+    private static ForgeCardView[] AnonymousHand(ForgePlayerView player)=>Enumerable.Range(0,Math.Max(0,player.handCount))
+        .Select(i=>new ForgeCardView{id=-100000-player.seat*1000-i,ownerSeat=player.seat,faceDown=true,zone="Hand",name="Face-down card"}).ToArray();
     private void PresentOtherHand(ForgePlayerView player)
     {
         var known=VisibleHand(player).Where(c=>c!=null&&!c.faceDown&&!string.IsNullOrEmpty(c.name))

@@ -217,6 +217,7 @@ public sealed partial class ForgeBattlefieldController
             name=card.knownFaceName,printingKey=card.knownFacePrintingKey,
             currentRules=card.knownFaceRules,currentType=definition?.GetTypeLine(),
             manaCost=definition?.manaCost,power=definition?.attack??0,toughness=definition?.defence??0,
+            previewManaCost=card.previewManaCost,
             creature=definition?.HasType(CardType.Creature)??false,
             land=definition?.HasType(CardType.Land)??false,
             planeswalker=definition?.HasType(CardType.Planeswalker)??false,

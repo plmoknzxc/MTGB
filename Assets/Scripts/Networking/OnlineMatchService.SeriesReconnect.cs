@@ -19,8 +19,9 @@ public sealed partial class OnlineMatchService
     {
         room.series.Forfeit(winner,reason);
         room.playDrawChooserSeat=0;
-        foreach(var member in room.members.Values)member.ready=false;
+        foreach(var member in room.members.Values)member.ready=member.isAi;
         foreach(var member in room.members.Values.Where(m=>!m.connected).ToArray())room.members.Remove(member.seat);
+        RemoveOrphanedAi(room);
         SetRoomStatus(room,reason);
         BroadcastLobby(room);
         roomRegistry.RemoveIfEmpty(room.roomId);

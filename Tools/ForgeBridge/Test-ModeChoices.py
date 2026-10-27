@@ -14,6 +14,7 @@ def run(case):
         def send(r,id):p.stdin.write(json.dumps(dict(type='respond',session=case,seat=r['seat'],requestId=r['requestId'],option=id))+'\n');p.stdin.flush()
         def snap(m,label):
             v=dict(m['views'][m['request']['seat']-1]);v.update(request=m['request'],awaitingInput=True);(OUT/(case+'-'+label+'.json')).write_text(json.dumps(v),encoding='utf8')
+        modal_views={}
         cast=False;cancelled=False;rejected=False;chosen=False;seen_stack=False;replicate_number=False
         spell_name='Tender Wildguide' if case.startswith('offspring') else 'One Dozen Eyes' if case.startswith('entwine') else 'Shattering Spree' if case.startswith('replicate') else 'Mulldrifter' if case.startswith('evoke') else 'Boros Charm' if case.startswith('choose-one') else 'Burst Lightning' if case.startswith('kicker') else 'Requisition Raid'
         try:
@@ -24,6 +25,10 @@ def run(case):
                     if m['type']=='request':break
                     assert m['type']!='rejected',m
                 r=m['request'];v=m['views'][0];one,two=v['players'];opts=r['options'];ids=[o['id'] for o in opts];kind=r['kind'];pick='ok'
+                if kind in ('ChooseModes','ChooseNumber') and r.get('contextId',0)>0:
+                    key=(kind,r['contextId']);snapshot=json.dumps(m['views'],sort_keys=True)
+                    assert snapshot==modal_views.setdefault(key,snapshot),'Modal selection changed the board projection'
+                    assert 'decisionViews' not in r,'Internal modal snapshot leaked'
                 for entry in v['stackItems']:
                     if entry['kind']!='spell' or entry['source']['name']!=spell_name:continue
                     modes=entry.get('chosenModes',[]);costs=entry.get('castingChoices',[])
@@ -80,7 +85,11 @@ def run(case):
                         assert 'cancel' in ids and not v['stackItems'] and one['handCount']==8
                         pick='mode:0' if not r['selectedCount'] else 'cancel';cancelled=pick=='cancel'
                     elif case=='spree-unpayable':assert all(o['disabled'] for o in modes) and 'confirm-modes' not in ids;pick='cancel';cancelled=True
-                    elif case=='spree-targets':assert len(modes)==1 and modes[0]['order']==3;pick=modes[0]['id'] if not r['selectedCount'] else 'confirm-modes'
+                    elif case=='spree-targets':
+                        legal=[o for o in modes if not o['id'].startswith('mode:unavailable:')]
+                        assert len(modes)==3 and len(legal)==1 and legal[0]['order']==3
+                        assert all(o['disabled'] for o in modes if o['id'].startswith('mode:unavailable:'))
+                        pick=legal[0]['id'] if not r['selectedCount'] else 'confirm-modes'
                     elif case=='spree-limited':
                         if not r['selectedCount']:assert all(not o['disabled'] for o in modes);pick='mode:0'
                         else:

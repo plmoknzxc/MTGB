@@ -24,6 +24,8 @@ public sealed partial class ForgeBattlefieldController
     {
         if(CompletedSingleCardOption(view?.request)>=0)return "";
         if(string.IsNullOrEmpty(message))return message;
+        if(view?.request?.kind=="InputSelectTargets")
+            message=string.Join("\n",message.Replace("\r","").Split('\n').Select(TargetInstructionText));
         if(IsCommanderPerpetualReset)return TapPaymentText(
             "主将回统帅区时，如何处理永久改动？",
             "How should this commander's perpetual changes be handled?",
@@ -200,7 +202,9 @@ public sealed partial class ForgeBattlefieldController
         if(library.Success)return string.Format(System.Globalization.CultureInfo.InvariantCulture,
             GamePreferences.T("Select up to {0} cards from your library"),library.Groups[1].Value);
         if(text=="Select any target")return TapPaymentText("选择任意一个目标。",text,"対象１つを選ぶ。");
-        var target=Regex.Match(text??"",@"^Select (?<optional>up to one )?target (?<types>[A-Za-z ,/]+?)(?<zone> card (?:in|from) (?<owner>your|an opponent's|a) graveyard)?$");
+        if(text=="Select target non-outlaw creature. (Assassins, Mercenaries, Pirates, Rogues, and Warlocks are outlaws. Everyone else is fair game.)")
+            return TapPaymentText("选择目标非狂徒生物。（杀手、佣兵、海盗、浪客和邪术师是狂徒。除此之外概不设限。）",text,"無法者でないクリーチャー１体を対象に選ぶ。（暗殺者、傭兵、海賊、ならず者、邪術師は無法者である。それ以外はすべて対象にできる。）");
+        var target=Regex.Match(text??"",@"^Select (?<optional>up to one )?(?<other>other )?target (?<types>[A-Za-z ,/]+?)(?<zone> (?:card )?(?:in|from) (?<owner>your|an opponent's|a) graveyard)?$");
         if(!target.Success)return original;
         var words=Regex.Split(target.Groups["types"].Value.ToLowerInvariant().Replace(", or "," or ").Replace(", and/or "," and/or "),@"( and/or | or |, )");
         var translated=new System.Collections.Generic.List<string>();
@@ -212,6 +216,7 @@ public sealed partial class ForgeBattlefieldController
                 "equipment"=>TapPaymentText("武具",word,"装備品"),
                 "kindred"=>TapPaymentText("亲缘",word,"同族"),"land"=>TapPaymentText("地",word,"土地"),
                 "opponent"=>TapPaymentText("对手",word,"対戦相手"),"permanent"=>TapPaymentText("永久物",word,"パーマネント"),
+                "nonland permanent"=>TapPaymentText("非地永久物",word,"土地でないパーマネント"),
                 "planeswalker"=>TapPaymentText("鹏洛客",word,"プレインズウォーカー"),"player"=>TapPaymentText("牌手",word,"プレイヤー"),
                 "sorcery"=>TapPaymentText("法术",word,"ソーサリー"),"spell"=>TapPaymentText("咒语",word,"呪文"),
                 " or "=>TapPaymentText("或",word,"または")," and/or "=>TapPaymentText("和／或",word,"や"),", "=>TapPaymentText("、",word,"、"),_=>null
@@ -220,6 +225,7 @@ public sealed partial class ForgeBattlefieldController
             translated.Add(local);
         }
         string types=string.Concat(translated);
+        bool other=target.Groups["other"].Success;
         bool upTo=optionalPrefix||target.Groups["optional"].Success;
         string optional=upTo?TapPaymentText("至多一个", "up to one ","最大１つ"):"";
         if(target.Groups["zone"].Success) {
@@ -227,10 +233,11 @@ public sealed partial class ForgeBattlefieldController
             string zone=owner=="your"?TapPaymentText("你的坟墓场", "your graveyard","あなたの墓地")
                 :owner=="an opponent's"?TapPaymentText("对手的坟墓场","an opponent's graveyard","対戦相手の墓地")
                 :TapPaymentText("坟墓场","a graveyard","墓地");
-            return TapPaymentText("从"+zone+"中选择"+optional+"目标"+types+"牌。",original,zone+"にある"+types+"であるカード"+(upTo?"最大１枚":"１枚")+"を対象に選ぶ。");
+            bool plainCard=target.Groups["types"].Value.Equals("card",StringComparison.OrdinalIgnoreCase);
+            return TapPaymentText("从"+zone+"中选择"+(upTo?"至多一张":"一张")+(other?"其他":"")+"目标"+(plainCard?"":types)+"牌。",original,zone+"にある"+(other?"他の":"")+(plainCard?"":types+"である")+"カード"+(upTo?"最大１枚":"１枚")+"を対象に選ぶ。");
         }
-        if(upTo)return TapPaymentText("选择至多一个目标"+types+"。",original,types+"最大１つを対象に選ぶ。");
-        return TapPaymentText("选择目标"+types+"。",original,types+"を対象に選ぶ。");
+        if(upTo)return TapPaymentText("选择至多"+(other?"另一个":"一个")+"目标"+types+"。",original,(other?"他の":"")+types+"最大１つを対象に選ぶ。");
+        return TapPaymentText("选择"+(other?"另一个":"")+"目标"+types+"。",original,(other?"他の":"")+types+"を対象に選ぶ。");
     }
     // Forge generates payment prose from CostParts, rather than the printed
     // rule (including alternate costs). Translate that exact clause through

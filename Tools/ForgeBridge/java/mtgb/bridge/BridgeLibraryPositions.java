@@ -49,7 +49,8 @@ final class BridgeLibraryPositions {
     void orderedMove(int recipient,List<Card> cards,forge.game.spellability.SpellAbility source) {
         if(cards.size()<2||source==null)return;
         // CR 401.4: public origins do not expose the owner's chosen batch order.
-        String index=source.getParamOrDefault("LibraryPosition","0");
+        Integer digPosition=ForgeBridge.digLibraryPosition(source);
+        String index=digPosition==null?source.getParamOrDefault("LibraryPosition","0"):digPosition.toString();
         for(Player owner:ForgeBridge.game.getPlayers()) {
             List<Card> ordered=new ArrayList<>(cards.stream().filter(c->c.getOwner()==owner).toList());
             if(ordered.size()<2)continue;

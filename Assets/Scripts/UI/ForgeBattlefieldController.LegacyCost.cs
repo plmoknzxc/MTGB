@@ -8,7 +8,7 @@ public sealed partial class ForgeBattlefieldController
     private bool HasLegacyCost(ForgeCardView card)
     {
         if(GamePreferences.UseComponentCardFaces||card==null||card.faceDown||card.emblem||card.effectMarker
-            ||card.zone is not ("Hand" or "Graveyard" or "Exile"))return false;
+            ||card.zone is not ("Hand" or "Graveyard" or "Exile" or "Sideboard"))return false;
         var d=ComponentDefinition(card,false);
         return d!=null&&!card.battle&&d.forgeSplitType!="Aftermath"
             &&(d.forgeSplitType!="Split"||card.room||d.features.Any(f=>(f.subtypes??"").Split(' ').Contains("Room")))
@@ -28,7 +28,8 @@ public sealed partial class ForgeBattlefieldController
             ??d.features.FirstOrDefault(x=>x.faceIndex==0&&x.featureIndex>0);
         bool pair=secondary!=null&&new[]{"Adventure","Omen","Modal","Transform","Split","Room"}.Contains(d.forgeSplitType);
         bool permitted=card.zone=="Hand"||card.zone=="Graveyard"&&(view?.playableGraveyard??Array.Empty<ForgeCardView>()).Any(x=>x.id==card.id)
-            ||card.zone=="Exile"&&(view?.playableExile??Array.Empty<ForgeCardView>()).Any(x=>x.id==card.id);
+            ||card.zone=="Exile"&&(view?.playableExile??Array.Empty<ForgeCardView>()).Any(x=>x.id==card.id)
+            ||card.zone=="Sideboard"&&card.previewManaCost!=null;
         string Cost(CardFeatureDefinition feature){
             if(feature==null)return "";
             if(permitted){

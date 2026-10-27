@@ -147,9 +147,12 @@ public sealed partial class ForgeBattlefieldController
         // Resolution-time/reconnected payments need an explicit decision, even
         // when ordinary casting has automatic payment enabled.
         if(IsManaPaymentDecision)return;
-        if(automaticRequest!=requestId){automaticRequest=requestId;automaticReadyAt=Time.unscaledTime+.06f;}
+        bool idlePriority=view.request.kind=="InputPassPriority"&&view.stackCount==0
+            &&(view.stackItems?.Length??0)==0&&(view.stack?.Length??0)==0&&!view.canRespond
+            &&!view.request.options.Any(o=>!o.disabled&&o.requiresPaymentCheck);
+        if(automaticRequest!=requestId){automaticRequest=requestId;automaticReadyAt=Time.unscaledTime+(idlePriority?0:.06f);}
         if(Time.unscaledTime<automaticReadyAt || view.request.kind=="InputPassPriority"&&
-            (Time.unscaledTime<phaseVisibleUntil || StackReadWindowOpen))return;
+            (!idlePriority&&Time.unscaledTime<phaseVisibleUntil || StackReadWindowOpen))return;
         long context=view.request.contextId>0?view.request.contextId:requestId;
         int option=view.request.kind=="InputPassPriority"?AutomaticPriorityOption():ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,attemptedPaymentContext==context);
         if(option<0)return;

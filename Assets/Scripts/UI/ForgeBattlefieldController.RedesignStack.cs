@@ -63,6 +63,8 @@ public sealed partial class ForgeBattlefieldController
 
     private string RedesignStackOwner(ForgeStackItem entry, int index, int count)
     {
+        if(entry?.id==PendingCastId)return "";
+        if(PendingCastEntry()!=null)index--;
         // This is an identity label, not rules prose. Keep an actual nickname
         // even when it is "You"; missing names use seats instead of role words.
         string who = SafeDetail(PlayerIdentityName(entry?.controllerSeat ?? 0));
@@ -145,7 +147,7 @@ public sealed partial class ForgeBattlefieldController
             Color owner = own ? RedesignOwn : RedesignOpponent;
             var row = item.row;
             ForgeUiMotion.On(row).Cancel(); row.localRotation = Quaternion.identity;
-            var incoming = entries.Select((e, n) => new { entry = e, number = n + 1 }).Where(e => (e.entry.targets ?? Array.Empty<ForgeStackTarget>()).Any(t => t.kind == "stack" && !t.leftZone && t.stackId == entry?.id)).ToArray();
+            var incoming = entries.Where(e=>e.id!=PendingCastId).Select((e, n) => new { entry = e, number = n + 1 }).Where(e => (e.entry.targets ?? Array.Empty<ForgeStackTarget>()).Any(t => t.kind == "stack" && !t.leftZone && t.stackId == entry?.id)).ToArray();
             row.GetComponent<Image>().color = own ? new Color(.12f, .21f, .28f, .94f) : new Color(.27f, .16f, .19f, .94f);
             row.GetComponent<Image>().raycastTarget = true;
             foreach (string n in new[] { "Shadow", "Rim", "SpentMana" }) if (row.Find(n) is Transform child) child.gameObject.SetActive(false);
@@ -153,7 +155,7 @@ public sealed partial class ForgeBattlefieldController
             // Reuse the original travelling highlight, fitted to this list row.
             // Only the current top item flashes; target selection suppresses it.
             item.glow.transform.SetParent(row,false);
-            item.glow.gameObject.SetActive(true);item.glow.Configure(false,!IsTargeting&&i==0);
+            item.glow.gameObject.SetActive(true);item.glow.Configure(false,entry?.id!=PendingCastId&&!IsTargeting&&i==0);
             item.glow.rectTransform.anchorMin=Vector2.zero;item.glow.rectTransform.anchorMax=Vector2.one;
             item.glow.rectTransform.offsetMin=new Vector2(6,6);item.glow.rectTransform.offsetMax=new Vector2(-6,-6);
             RedesignPlace(item.tile, new Vector2(0, 1), new Vector2(0, 1), new Vector2(inset, -10), new Vector2(240, 335));

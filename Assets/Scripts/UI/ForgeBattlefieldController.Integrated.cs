@@ -144,7 +144,9 @@ public sealed partial class ForgeBattlefieldController
             PresentZonePiles(p,zones);
             if (p.seat==DisplayedHandSeat)
             {
-                IntegratedRow(ownHand, VisibleHand(p).Concat(p.seat==ActionPlayerSeat?AvailableExileCards():Array.Empty<ForgeCardView>()).ToArray(), "Hand", 100, 124, 172, 7);
+                var hand=service?.IsSpectator==true?AnonymousHand(p):VisibleHand(p);
+                if(service?.IsSpectator==true)redesignHandExpanded=true;
+                IntegratedRow(ownHand, hand.Concat(p.seat==ActionPlayerSeat?AvailableExileCards():Array.Empty<ForgeCardView>()).ToArray(), "Hand", 100, 124, 172, 7);
             }
             else PresentOtherHand(p);
             var field = p.battlefield ?? Array.Empty<ForgeCardView>();

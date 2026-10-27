@@ -39,7 +39,7 @@ final class BridgeMatchFormat {
     }
     static int startingLife(int requested) {
         // Local practice explicitly permits a custom life total; online variant rules stay fixed.
-        if(ForgeBridge.config.has("aiSeat")&&ForgeBridge.config.get("aiSeat").getAsInt()>0)return requested;
+        if(ForgeBridge.config.has("localPractice")&&ForgeBridge.config.get("localPractice").getAsBoolean())return requested;
         return commanders() ? (id().equals("brawl")?25:20) : requested;
     }
 }

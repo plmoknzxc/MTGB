@@ -127,6 +127,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     public void Present(ForgeSeatView state, int localSeat, bool enabledInput, Action<int> onChoice, Action onConcede, string status, Action<int,int[]> onOrder = null)
     {
         Build();
+        bool joiningSpectator=state!=null&&service?.IsSpectator==true&&(view==null||seat!=localSeat);
         bool restarted=state!=null&&view!=null&&seat==localSeat&&state.restartRevision!=view.restartRevision;
         if(restarted)ResetRestartPresentation();
         // A server acknowledgement clears its request until Forge publishes the
@@ -141,6 +142,12 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         // authoritative request updates it; a submitting notification is not a new scene.
         if(!restarted && integrated && submitted && service!=null && service.HasPendingAction && seat==localSeat) return;
         string preferenceKey=GamePreferences.Revision+"/"+PlayerNamesKey();
+        bool decisionUpdate=!restarted&&integrated&&boardPreferenceKey==preferenceKey&&state?.awaitingInput==true
+            &&view?.awaitingInput==true&&state.request?.kind==view.request?.kind
+            &&state.request.contextId>0&&state.request.contextId==view.request.contextId
+            &&state.request.kind is "ChooseModes" or "ChooseNumber" or "OrderAbilities"
+            &&state.turn==view.turn&&state.phase==view.phase&&state.stackCount==view.stackCount
+            &&!string.IsNullOrEmpty(state.boardKey)&&state.boardKey==view.boardKey;
         bool pickerUpdate=!restarted && integrated && boardPreferenceKey==preferenceKey && IsCardPickerRequest && state?.awaitingInput==true && state.request?.kind==view.request.kind
             && state.turn==view.turn && state.phase==view.phase && state.stackCount==view.stackCount
             && (!string.IsNullOrEmpty(state.boardKey)?state.boardKey==view.boardKey:
@@ -159,7 +166,16 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         requestId = state?.awaitingInput == true ? state.request.requestId : 0;
         submitted = false;
         ObserveNextPhasePause(state,localSeat);
+        if(joiningSpectator){
+            var existing=state.notices??Array.Empty<ForgeNotice>();
+            lastNoticeId=existing.Select(n=>n.id).DefaultIfEmpty(0).Max();
+            dismissedCardNotices.UnionWith(existing.Where(IsCardNotice).Select(n=>n.id));
+        }
         PresentNotices();
+        if(decisionUpdate){
+            if(state.request.kind=="OrderAbilities")PresentAbilityOrder();else PrepareLandChoices();
+            RefreshBattlefieldViewControls();return;
+        }
         if(pickerUpdate){SetText("PriorityPill/Text","等待你完成选择");PresentCardSelection();PresentTargetChoiceActions();RefreshBattlefieldViewControls();PresentRedesignLayout();return;}
         if (integrated) { PresentIntegrated(status);RefreshBattlefieldViewControls(); return; }
         Clear(cardsRoot); Clear(actionRoot); Clear(previewRoot);

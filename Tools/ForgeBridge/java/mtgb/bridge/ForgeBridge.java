@@ -46,6 +46,15 @@ public final class ForgeBridge {
     static final long started = System.nanoTime();
     static volatile boolean finished;
     static final Set<CompletableFuture<?>> modalAnswers=new HashSet<>();
+    // Dig has separate positions for its chosen cards and its remainder. Only
+    // infer the branch when exactly one destination is the library.
+    static Integer digLibraryPosition(forge.game.spellability.SpellAbility source) {
+        if(source==null||source.getApi()!=forge.game.ability.ApiType.Dig)return null;
+        boolean first=source.getParamOrDefault("DestinationZone","Hand").equals("Library");
+        boolean second=source.getParamOrDefault("DestinationZone2","Library").equals("Library");
+        if(first==second)return null;
+        return Integer.parseInt(source.getParamOrDefault(first?"LibraryPosition":"LibraryPosition2","-1"));
+    }
     private static final class GameEnded extends RuntimeException {}
     // Modal GUI callbacks do not use Forge's InputQueue.onGameOver latch.
     // Register their waits atomically with finish, so conceding can unwind the
@@ -326,6 +335,10 @@ public final class ForgeBridge {
             try {return super.chooseSingleEntityForEffect(values,reveal,ability,title,optional,targeted,params);}
             finally {gui.choiceObjects.clear();gui.choiceObjects.putAll(previous);gui.sourceChoiceAbility=previousSource;}
         }
+        @Override protected boolean orderedMoveToTopOfLibrary(ZoneType destination,forge.game.spellability.SpellAbility source) {
+            Integer position=destination==ZoneType.Library?digLibraryPosition(source):null;
+            return position==null?super.orderedMoveToTopOfLibrary(destination,source):position>=0;
+        }
         @Override public CardCollectionView orderMoveToZoneList(CardCollectionView cards,
             ZoneType destination,forge.game.spellability.SpellAbility source) {
             // These collections have no player-visible zone order. Keep Forge's
@@ -334,13 +347,16 @@ public final class ForgeBridge {
             // Keep only the exact native ordering candidates, including a Meld
             // original that has just left the hidden linked-card container.
             Gui gui=guiFor(this);Map<Integer,Card> previous=new HashMap<>(gui.choiceObjects);
+            boolean previousBottomOrder=gui.bottomDigOrder;
+            Integer position=destination==ZoneType.Library?digLibraryPosition(source):null;
+            gui.bottomDigOrder=position!=null&&position<0;
             for(Card card:cards)gui.choiceObjects.put(card.getId(),card);
             try {
                 var ordered=super.orderMoveToZoneList(cards,destination,source);
                 if(destination==ZoneType.Library&&ordered!=null)libraryKnowledge.orderedMove(gui.seat,new ArrayList<>(ordered),source);
                 return ordered;
             }
-            finally{gui.choiceObjects.clear();gui.choiceObjects.putAll(previous);}
+            finally{gui.choiceObjects.clear();gui.choiceObjects.putAll(previous);gui.bottomDigOrder=previousBottomOrder;}
         }
         @Override public boolean confirmAction(forge.game.spellability.SpellAbility ability,
             PlayerActionConfirmMode mode,String message,List<String> options,Card cardToShow,Map<String,Object> params) {
@@ -574,6 +590,8 @@ public final class ForgeBridge {
         String selectionPurpose, remainingManaCost, paymentMode;
         int selectedValue, requiredValue;
         int minValue,maxValue;
+        // Reused only inside a synchronous number/mode callback; never serialized.
+        transient List<Object> decisionViews;
         transient boolean modal;
         transient boolean consumed;
         transient Gui gui;
@@ -696,6 +714,7 @@ public final class ForgeBridge {
         forge.game.spellability.SpellAbility sourceChoiceAbility;
         forge.game.spellability.SpellAbility targetingAbility;
         forge.game.spellability.SpellAbility optionalCostAbility;
+        boolean bottomDigOrder;
         Player votingPlayer;
         forge.game.spellability.SpellAbility votingAbility;
         void publish(Pending request){request.gui=this;ForgeBridge.publish(request);}
@@ -803,7 +822,9 @@ public final class ForgeBridge {
                 int max=(int)a[2]<0?values.size():Math.max(0,values.size()-(int)a[2]);
                 if(values.stream().allMatch(v -> v instanceof forge.game.replacement.ReplacementEffectView))
                     return orderReplacementEffects(values,a[5]==null?List.of():(List<?>)a[5],min,max);
-                return new IGuiGame.OrderResult<>(selectCards(a[0]+"\n"+a[1],values,min,max,List.of(),true),false);
+                var selected=selectCards(a[0]+"\n"+a[1],values,min,max,List.of(),true);
+                if(bottomDigOrder)Collections.reverse(selected);
+                return new IGuiGame.OrderResult<>(selected,false);
             }
             if(n.equals("showOptionDialog")) return modalIndex(n+": "+a[0], (List<?>)a[3]);
             if(n.equals("confirm")) return modalIndex(n+": "+a[1], (List<?>)a[3])==0;
@@ -947,7 +968,7 @@ public final class ForgeBridge {
             if(max<min)throw new IllegalArgumentException("Inconsistent selection bounds: "+minimum+".."+maximum);
             List<Object> selected=new ArrayList<>();
             for(Object item:initial)if(values.contains(item)&&!selected.contains(item)&&selected.size()<max)selected.add(item);
-            long context=0;
+            long context=0;List<Object> decisionViews=null;
             while(true) {
                 CompletableFuture<Integer> answer=new CompletableFuture<>();List<Option> options=new ArrayList<>();
                 for(int i=0;i<values.size();i++) {
@@ -971,7 +992,7 @@ public final class ForgeBridge {
                 }
                 if(sourceChoiceAbility!=null){request.selectionPurpose="chooseSource";request.sourceCardId=sourceChoiceAbility.getHostCard().getId();request.sourceCard=card(sourceChoiceAbility.getHostCard());}
                 if(optionalCostAbility!=null){request.selectionPurpose="optionalCosts";request.sourceCardId=optionalCostAbility.getHostCard().getId();request.sourceCard=card(optionalCostAbility.getHostCard());}
-                publish(request);
+                request.decisionViews=decisionViews;publish(request);decisionViews=request.decisionViews;
                 try {
                     int result=awaitAnswer(answer);if(result==-1){if(ordered)libraryKnowledge.ordered(seat,selected);return selected;}if(result==-2){selected.clear();continue;}
                     Object value=values.get(result);
@@ -1148,7 +1169,7 @@ public final class ForgeBridge {
         }
         Integer chooseInteger(String title,int min,int max,boolean descending) {
             if(min>max)return null;
-            int value=descending?max:min;long context=++revision;
+            int value=descending?max:min;long context=++revision;List<Object> decisionViews=null;
             while(true) {
                 CompletableFuture<String> answer=new CompletableFuture<>();List<Option> options=new ArrayList<>();
                 if(value>min)options.add(new Option("number-minus","−",()->answer.complete("-1")));
@@ -1160,13 +1181,13 @@ public final class ForgeBridge {
                 Pending request=new Pending(seat,"ChooseNumber",title,options);request.modal=true;request.contextId=context;
                 request.selectedValue=value;request.minValue=min;request.maxValue=max;request.sourceCardId=interactionSourceCardId;
                 for(Card c:game.getCardsInGame())if(c.getId()==interactionSourceCardId)request.sourceCard=card(c);
-                publish(request);
+                request.decisionViews=decisionViews;publish(request);decisionViews=request.decisionViews;
                 try {String action=awaitAnswer(answer);if(action.equals("cancel"))return null;if(action.equals("confirm"))return value;value+=Integer.parseInt(action);}
                 catch(Exception e){throw new IllegalStateException("Unanswered number selection",e);}
             }
         }
         List<forge.game.spellability.AbilitySub> choosePawprint(forge.game.spellability.SpellAbility sa,List<forge.game.spellability.AbilitySub> possible,int min,int budget,boolean repeat) {
-            List<Integer> selected=new ArrayList<>();long context=0;
+            List<Integer> selected=new ArrayList<>();long context=0;List<Object> decisionViews=null;
             int[] costs=possible.stream().mapToInt(m->forge.game.ability.AbilityUtils.calculateAmount(m.getHostCard(),m.getParam("Pawprint"),m)).toArray();
             while(true) {
                 int used=selected.stream().mapToInt(i->costs[i]).sum();
@@ -1182,7 +1203,7 @@ public final class ForgeBridge {
                 if(!selected.isEmpty())options.add(new Option("reset-modes","重新选择",()->answer.complete(-2)));
                 Pending request=new Pending(seat,"ChooseModes","Choose modes",options);request.modal=true;request.selectionPurpose="pawprint";
                 if(context==0)context=request.requestId;request.contextId=context;request.minCount=min;request.maxCount=budget;request.selectedCount=selected.size();
-                request.selectedValue=used;request.maxValue=budget;request.sourceCardId=sa.getHostCard().getId();request.sourceCard=card(sa.getHostCard());publish(request);
+                request.selectedValue=used;request.maxValue=budget;request.sourceCardId=sa.getHostCard().getId();request.sourceCard=card(sa.getHostCard());request.decisionViews=decisionViews;publish(request);decisionViews=request.decisionViews;
                 try {int choice=awaitAnswer(answer);
                     if(choice==-1){var result=new ArrayList<forge.game.spellability.AbilitySub>();for(int i:selected)result.add(possible.get(i));return result;}
                     if(choice==-2)selected.clear();else selected.add(choice);
@@ -1190,23 +1211,30 @@ public final class ForgeBridge {
             }
         }
         List<forge.game.spellability.AbilitySub> chooseSpree(forge.game.spellability.SpellAbility sa,List<forge.game.spellability.AbilitySub> possible,int min,int max,boolean cancellable) {
-            Set<Integer> selected=new LinkedHashSet<>();long context=0;
+            Set<Integer> selected=new LinkedHashSet<>();long context=0;List<Object> decisionViews=null;
             boolean spree=sa.getHostCard().hasKeyword(forge.game.keyword.Keyword.SPREE);
+            var printed=sa.getAdditionalAbilityList("Choices");
+            // Forge filters illegal modes before this callback. Keep their public
+            // descriptions visible, while preserving the original legal response IDs.
+            var shown=printed.containsAll(possible)?printed:possible;
             while(true) {
                 CompletableFuture<Integer> answer=new CompletableFuture<>();List<Option> options=new ArrayList<>();
-                for(int i=0;i<possible.size();i++) {
-                    final int index=i;var mode=possible.get(i);
-                    Option option=new Option("mode:"+i,mode.getDescription(),()->answer.complete(index));
-                    option.selected=selected.contains(i);option.modeCost=mode.hasParam("ModeCost")?new forge.game.cost.Cost(mode.getParam("ModeCost"),false).toSimpleString():null;
-                    option.order=sa.getAdditionalAbilityList("Choices").indexOf(mode)+1;
-                    option.disabled=!option.selected && (selected.size()>=max || spree&&!canAffordSpree(sa,possible,selected,i));options.add(option);
+                for(int i=0;i<shown.size();i++) {
+                    var mode=shown.get(i);final int index=possible.indexOf(mode);
+                    Option option=new Option(index<0?"mode:unavailable:"+i:"mode:"+index,mode.getDescription(),()->{
+                        if(index<0)throw new IllegalStateException("Unavailable mode");
+                        answer.complete(index);
+                    });
+                    option.selected=selected.contains(index);option.modeCost=mode.hasParam("ModeCost")?new forge.game.cost.Cost(mode.getParam("ModeCost"),false).toSimpleString():null;
+                    option.order=printed.indexOf(mode)+1;
+                    option.disabled=index<0 || !option.selected && (selected.size()>=max || spree&&!canAffordSpree(sa,possible,selected,index));options.add(option);
                 }
                 if(selected.size()>=min)options.add(new Option("confirm-modes","确认",()->answer.complete(-1)));
                 if(!selected.isEmpty())options.add(new Option("reset-modes","重新选择",()->answer.complete(-2)));
                 if(cancellable)options.add(new Option("cancel","取消施放",()->answer.complete(-3)));
                 Pending request=new Pending(seat,"ChooseModes",spree?"Spree":"Choose modes",options);request.modal=true;request.selectionPurpose=spree?"spree":"modes";
                 if(context==0)context=request.requestId;request.contextId=context;request.minCount=min;request.maxCount=max;request.selectedCount=selected.size();
-                request.sourceCardId=sa.getHostCard().getId();request.sourceCard=card(sa.getHostCard());publish(request);
+                request.sourceCardId=sa.getHostCard().getId();request.sourceCard=card(sa.getHostCard());request.decisionViews=decisionViews;publish(request);decisionViews=request.decisionViews;
                 try {int choice=awaitAnswer(answer);
                     if(choice==-3)return null;
                     if(choice==-1){List<forge.game.spellability.AbilitySub> result=new ArrayList<>();for(int i:selected)result.add(possible.get(i));return result;}
@@ -1412,7 +1440,9 @@ public final class ForgeBridge {
             && Objects.equals(p.message,pending.message)
             && JSON.toJsonTree(p.options).equals(JSON.toJsonTree(pending.options)))return;
         pending=p;
-        Map<String,Object> m=envelope("request"); m.put("request",p); m.put("views",views());
+        Map<String,Object> m=envelope("request"); m.put("request",p);
+        if(p.decisionViews==null)p.decisionViews=views();
+        m.put("views",p.decisionViews);
         m.put("elapsedMs",(System.nanoTime()-started)/1_000_000); send(m);
     }
     static synchronized void publishInput() {
@@ -2120,6 +2150,8 @@ public final class ForgeBridge {
             var original=c.getState(forge.card.CardStateName.Original);
             visible.put("knownFaceName",original.getName());visible.put("knownFaceRules",original.getOracleText());
             if(c.getPaperCard() instanceof forge.item.PaperCard)visible.put("knownFacePrintingKey",ForgeCatalog.key((forge.item.PaperCard)c.getPaperCard()));
+            String preview=ForgeCardCostPreview.knownExileFace(c,viewer);
+            if(preview!=null)visible.put("previewManaCost",preview);
         }
         return visible;
     }

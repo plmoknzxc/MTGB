@@ -140,6 +140,7 @@ public sealed partial class OnlineLobbyPanel
             string diy=DeckCompanion.Text("DIY ","DIY ","DIY ")+PermissionLabel(room.allowCustomContent);
             string ante=room.rulesVersion>0?DeckCompanion.Text("赌注 ","Ante ","アンティ ")+PermissionLabel(room.useAnte):DeckCompanion.Text("赌注未提供","Ante unavailable","アンティ情報なし");
             string seats=DeckCompanion.Text("玩家 ","Players ","プレイヤー ")+room.players+"/2 · "+DeckCompanion.Text("观战 ","Spectators ","観戦 ")+room.spectators;
+            if(room.aiPlayers>0)seats+=" · AI "+room.aiPlayers;
             AddText(row.transform,"Permissions",diy+" · "+ante+" · "+seats,new Vector2(-100,-20),new Vector2(792,30),15,browserFont,TextAnchor.MiddleLeft,MutedTextColor);
             string roomState=room.state=="sideboarding"?"局间换备":room.state=="review"?"已结束 · 查看战场":room.inMatch?"对局中":"等待开局";
             var detail=AddText(row.transform,"Detail",room.hostName+" · "+GamePreferences.T(roomState),new Vector2(-100,-53),new Vector2(792,28),14,browserFont,TextAnchor.MiddleLeft,MutedTextColor);detail.supportRichText=false;
@@ -210,6 +211,9 @@ public sealed partial class OnlineLobbyPanel
         => !string.IsNullOrEmpty(OnlineClientProfileStore.GetReconnectToken(profileInput.text,room.address,(ushort)room.port,room.roomId));
     private void BrowserBack()
     {
+        if(battlefieldLobbyCanvas!=null){
+            ViewSideboardBattlefield();return;
+        }
         ++browserGeneration;browsing=false;
         if(creatingRoom){if(OnlineMatchService.Instance!=null&&!OnlineMatchService.Instance.TryLeaveRoom())return;creatingRoom=false;Refresh();return;}
         if(createChoices.activeSelf){createChoices.SetActive(false);return;}

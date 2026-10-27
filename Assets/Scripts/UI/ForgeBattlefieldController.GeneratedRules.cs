@@ -67,6 +67,10 @@ public sealed partial class ForgeBattlefieldController
             TapPaymentText("在下个回合的维持开始时，抓一张牌。",rule,"次のターンのアップキープの開始時に、カード１枚を引く。"),
         "Draw a card at the beginning of the next upkeep." =>
             TapPaymentText("在下个维持开始时，抓一张牌。",rule,"次のアップキープの開始時に、カード１枚を引く。"),
+        "Until the end of your next turn, you may play that card." =>
+            TapPaymentText("直到你的下个回合结束，你可以使用该牌。",rule,"あなたの次のターンの終了時まで、あなたはそのカードをプレイしてもよい。"),
+        "You may play that card this turn." =>
+            TapPaymentText("本回合中，你可以使用该牌。",rule,"このターン、あなたはそのカードをプレイしてもよい。"),
         _ => rule
         };
     }

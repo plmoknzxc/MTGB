@@ -11,6 +11,7 @@ import forge.game.mana.ManaCostBeingPaid;
 import forge.game.player.Player;
 import forge.game.spellability.*;
 import forge.game.zone.ZoneType;
+import forge.game.staticability.StaticAbilityLayer;
 import java.util.*;
 
 /** Lowest native mana proposal, never payment or a commitment to substitutions. */
@@ -61,6 +62,17 @@ final class ForgeCardCostPreview {
         }
         return result == null ? null : result.text;
     }
+    static String knownExileFace(Card card, Player payer) {
+        if(!card.isFaceDown()||!card.isInZone(ZoneType.Exile)
+            ||!card.getView().canFaceDownBeShownTo(payer.getView()))return null;
+        Preview best=null;
+        for(var ability:card.getAllPossibleAbilities(payer,false)) {
+            if(!ability.isSpell()||ability.getRestrictions().getZone()!=ZoneType.Exile)continue;
+            Preview value=minimum(ability,payer,false,false);
+            if(value!=null&&(best==null||value.mana<best.mana))best=value;
+        }
+        return best==null?null:best.text;
+    }
     static String adventure(Card card) { return viewer.get() == null ? null : adventure(card, viewer.get()); }
     static String adventure(Card card, Player payer) {
         if (!canPreview(card, payer)) return null;
@@ -83,10 +95,12 @@ final class ForgeCardCostPreview {
     private static boolean canPreview(Card card, Player payer) {
         if (card.isFaceDown() || card.getZone() == null) return false;
         ZoneType zone = card.getZone().getZoneType();
-        if (!List.of(ZoneType.Hand, ZoneType.Graveyard, ZoneType.Exile, ZoneType.Library, ZoneType.Command).contains(zone)) return false;
+        if (!List.of(ZoneType.Hand, ZoneType.Graveyard, ZoneType.Exile, ZoneType.Library, ZoneType.Command, ZoneType.Sideboard).contains(zone)) return false;
         if (card.mayPlay(payer).stream().anyMatch(o -> o.grantsZonePermissions())) return true;
         return card.getOwner() == payer && (zone == ZoneType.Hand || zone == ZoneType.Command && card.isCommander()
-            || card.getAllSpellAbilities().stream().anyMatch(a -> a.isSpell() && a.getRestrictions().getZone() == zone));
+            || card.getAllSpellAbilities().stream().anyMatch(a -> a.isSpell() && a.getRestrictions().getZone() == zone)
+            || (zone==ZoneType.Exile||zone==ZoneType.Graveyard)
+                &&card.getAllPossibleAbilities(payer,false).stream().anyMatch(a->a.isSpell()&&a.getRestrictions().getZone()==zone));
     }
     static String forAbility(SpellAbility original) {
         if ((!original.isSpell() && (!original.isActivatedAbility() || original.isManaAbility()))
@@ -154,15 +168,15 @@ final class ForgeCardCostPreview {
                     var controller = new PreviewController(payer, preserveMana, sacrificePlans.get(plan));
                     if (affordability && sacrifice != null && hasVariableSacrificeReduction(host))
                         controller.reserveSacrifice(intent, sacrifice);
-                    payer.runWithController(() -> {
-                        var raised = CostAdjustment.adjust(intent.getPayCosts().copy(), intent, false);
-                        if (!raised.canPay(intent, payer, false)) return;
-                        ManaCost mana = raised.getCostMana() == null ? ManaCost.ZERO : raised.getCostMana().getManaCostFor(intent);
+                    payer.runWithController(() -> withStackProjection(intent,payer,projected -> {
+                        var raised = CostAdjustment.adjust(projected.getPayCosts().copy(), projected, false);
+                        if (!raised.canPay(projected, payer, false)) return;
+                        ManaCost mana = raised.getCostMana() == null ? ManaCost.ZERO : raised.getCostMana().getManaCostFor(projected);
                         if (mana.isNoCost()) return;
                         var cost = new ManaCostBeingPaid(mana);
-                        if (!CostAdjustment.adjust(cost, intent, payer, new CardCollection(), true, false)) return;
-                        if (intent.isOffering() && intent.getSacrificedAsOffering() == null
-                                || intent.isEmerge() && intent.getSacrificedAsEmerge() == null) return;
+                        if (!CostAdjustment.adjust(cost, projected, payer, new CardCollection(), true, false)) return;
+                        if (projected.isOffering() && projected.getSacrificedAsOffering() == null
+                                || projected.isEmerge() && projected.getSacrificedAsEmerge() == null) return;
                         String text = cost.isPaid() && cost.getXcounter() == 0 ? "{0}" : cost.toManaCost().toString();
                         int amount = cost.getConvertedManaCost();
                         if (best[0] == null || amount < best[0].mana) best[0] = new Preview(text, amount, false);
@@ -170,9 +184,9 @@ final class ForgeCardCostPreview {
                         // and a mana source in this predictive payment plan.
                         try {
                             for (Card c : controller.reserved) c.setUsedToPay(true);
-                            if (affordability && controller.sacrificeFeasible) payable[0] |= ComputerUtilMana.canPayManaCost(cost, intent, payer, false);
+                            if (affordability && controller.sacrificeFeasible) payable[0] |= ComputerUtilMana.canPayManaCost(cost, projected, payer, false);
                         } finally { for (Card c : used.keySet()) c.setUsedToPay(used.get(c)); }
-                    }, controller);
+                    }), controller);
                     for (Card candidate : controller.sacrificeOptions) if (!sacrificePlans.contains(candidate)) sacrificePlans.add(candidate);
                     if (affordability && payable[0]) return new Preview(best[0].text, best[0].mana, true);
                   }
@@ -182,6 +196,29 @@ final class ForgeCardCostPreview {
         } finally {
             restorePips(original, pips);original.clearTappedForConvoke();for (Card c : convoked) original.addTappedForConvoke(c);
             host.setCastFrom(castFrom);for (Card c : used.keySet()) c.setUsedToPay(used.get(c));
+        }
+    }
+    private static void withStackProjection(SpellAbility intent,Player payer,java.util.function.Consumer<SpellAbility> action) {
+        var game=payer.getGame();var host=intent.getHostCard();
+        if(!intent.isSpell()||host.isInZone(ZoneType.Stack)
+            ||!game.getAction().hasStaticAbilityAffectingZone(ZoneType.Stack,StaticAbilityLayer.ABILITIES)) {
+            action.accept(intent);return;
+        }
+        // Mirror native stack-keyword forecasting on an LKI card. Zone-bound
+        // permissions can grant affinity only after the chosen spell is cast.
+        var copy=CardCopyService.getLKICopy(host);
+        var projected=copyForPreview(intent,copy,payer);
+        projected.clearPipsToReduce();projected.getPipsToReduce().addAll(intent.getPipsToReduce());
+        projected.setXManaCostPaid(intent.getXManaCostPaid());
+        copy.setLastKnownZone(game.getStackZone());copy.setCastFrom(host.getZone());copy.setCastSA(projected);
+        game.getTracker().freeze();
+        try {
+            copy.clearStaticChangedCardKeywords(false);
+            game.getAction().checkStaticAbilities(false,new HashSet<>(List.of(copy)),new CardCollection(copy));
+            action.accept(projected);
+        } finally {
+            game.getAction().checkStaticAbilities(false);
+            game.getTracker().clearDelayed();game.getTracker().unfreeze();
         }
     }
     private static SpellAbility copyForPreview(SpellAbility original, Player payer) {

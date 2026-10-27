@@ -37,6 +37,12 @@ public sealed partial class ForgeBattlefieldController
         string prefix=source?.name+" ("+source?.id+") - ";
         string effectText=NormalizePrintedSelfNames(source,effect??"");
         if(effectText.StartsWith(prefix,System.StringComparison.Ordinal))effectText=effectText.Substring(prefix.Length);
+        // Keyword triggers in the ordering dialog use the same physical source
+        // followed by a colon instead of the stack's dash. Its name is already
+        // displayed in the ability header; bind only this exact source prefix.
+        string keywordPrefix=source?.name+" ("+source?.id+"): ";
+        if(source!=null&&!source.faceDown&&effectText.StartsWith(keywordPrefix,System.StringComparison.Ordinal))
+            effectText=effectText.Substring(keywordPrefix.Length);
         effectText=System.Text.RegularExpressions.Regex.Replace(effectText,@"\s*\[Zone Changer: [^\r\n]*\]\s*$","");
         string eventContext="";
         var eventSuffix=System.Text.RegularExpressions.Regex.Match(effectText,@"\s+\[Card: (.+?) \((\d+)\), Activator: Player (\d+), SpellAbility: [^\r\n]*\]\s*$");

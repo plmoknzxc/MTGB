@@ -38,7 +38,7 @@ public sealed class OnlineMatchSession : IDisposable
         public string session;
         public string formatId;
         public int seed, startingLife, firstPlayerSeat, aiSeat;
-        public bool useAnte;
+        public bool useAnte, localPractice;
         public bool noShuffle;
         public string shuffleAuditFile, runtimeHash, forgeRevision, roomId;
         public int gameNumber;
@@ -70,7 +70,7 @@ public sealed class OnlineMatchSession : IDisposable
     public string Failure { get; private set; }
     public bool Ready { get; private set; }
 
-    public OnlineMatchSession(string matchId, DeckDefinition first, DeckDefinition second, int seed, OnlineRoomConfig config = null, string roomId = null, int gameNumber = 1, int aiSeat = 0)
+    public OnlineMatchSession(string matchId, DeckDefinition first, DeckDefinition second, int seed, OnlineRoomConfig config = null, string roomId = null, int gameNumber = 1, int aiSeat = 0, bool localPractice = false)
     {
         if (first == null || second == null) throw new ArgumentNullException("decks");
         if(aiSeat<0||aiSeat>2)throw new ArgumentOutOfRangeException(nameof(aiSeat));
@@ -92,7 +92,7 @@ public sealed class OnlineMatchSession : IDisposable
         File.WriteAllText(configPath, JsonUtility.ToJson(new StartConfig {
             session = MatchId, formatId = config?.formatId ?? "none", seed = seed, startingLife = config?.startingLife ?? 20,
             firstPlayerSeat = config?.firstPlayerSeat ?? 1, useAnte = config?.useAnte == true, decks = new[] { first, second },
-            noShuffle = config?.noShuffle == true, aiSeat = aiSeat,
+            noShuffle = config?.noShuffle == true, aiSeat = aiSeat, localPractice = localPractice,
             shuffleAuditFile = ShuffleAuditFile, runtimeHash = runtime.runtimeHash, forgeRevision = runtime.revision,
             roomId = roomId, gameNumber = gameNumber,
             authorizedAuxiliarySeriesPools = config?.authorizedAuxiliarySeriesPools
@@ -108,7 +108,10 @@ public sealed class OnlineMatchSession : IDisposable
                 WorkingDirectory = assets, UseShellExecute = false, CreateNoWindow = true,
                 RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true
             }};
-            process.StartInfo.Arguments = "-Dmtgb.bridge.lazyCatalog=true " + process.StartInfo.Arguments;
+            // Bound JIT startup contention; AI retains a second optimizing compiler.
+            // Full tiered optimization and game/AI worker parallelism remain enabled.
+            string compilerThreads = aiSeat > 0 ? "3" : "2";
+            process.StartInfo.Arguments = "-XX:CICompilerCount=" + compilerThreads + " -Dmtgb.bridge.lazyCatalog=true " + process.StartInfo.Arguments;
             Utf8ProcessIO.Configure(process.StartInfo);
             process.StartInfo.EnvironmentVariables["APPDATA"] = directory;
             process.StartInfo.EnvironmentVariables["LOCALAPPDATA"] = directory;

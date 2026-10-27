@@ -640,6 +640,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             case OnlineProtocol.Hello:
             case OnlineProtocol.SubmitDeck:
+            case OnlineProtocol.ConfigureAi:
             case OnlineProtocol.SetSpectator:
             case OnlineProtocol.SetReady:
             case OnlineProtocol.RequestStartMatch:
@@ -663,6 +664,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             case OnlineProtocol.Hello: HandleHello(clientId, Deserialize<OnlineHelloMessage>(envelope)); break;
             case OnlineProtocol.SubmitDeck: HandleDeck(clientId, Deserialize<OnlineDeckMessage>(envelope)); break;
+            case OnlineProtocol.ConfigureAi: HandleConfigureAi(clientId, Deserialize<OnlineAiMessage>(envelope)); break;
             case OnlineProtocol.SetSpectator: HandleSpectator(clientId, Deserialize<OnlineReadyMessage>(envelope)); break;
             case OnlineProtocol.SetReady: HandleReady(clientId, Deserialize<OnlineReadyMessage>(envelope)); break;
             case OnlineProtocol.RequestStartMatch: HandleStartMatchRequest(clientId); break;
@@ -1018,7 +1020,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private static bool CanStartRoomMatch(OnlineRoomState room, int requesterSeat, out string error)
     {
         EnsureRoomHost(room);
-        if (room == null || room.match != null)
+        if (room == null || room.match != null || room.aiPending)
         {
             error = "房间当前不能开始新对局。";
             return false;
@@ -1058,6 +1060,13 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             room.playDrawChooserSeat = room.series.nextChooserSeat == 0 ? UnityEngine.Random.Range(1, 3) : room.series.nextChooserSeat;
             room.series.nextChooserSeat = room.playDrawChooserSeat;
+            if (room.members[room.playDrawChooserSeat].isAi)
+            {
+                int first = room.playDrawChooserSeat;
+                room.playDrawChooserSeat = 0;
+                BeginRoomGame(room, first);
+                return;
+            }
             BroadcastLobby(room);
             return;
         }
@@ -1097,12 +1106,13 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 room.members[2].seriesDeckChanged ? room.members[2].registeredDeck : null
             };
             room.match = new OnlineMatchSession(Guid.NewGuid().ToString("N"),
-                room.members[1].deck, room.members[2].deck, seed, matchConfig, room.roomId, room.series.gameNumber);
+                room.members[1].deck, room.members[2].deck, seed, matchConfig, room.roomId, room.series.gameNumber,
+                room.members.Values.FirstOrDefault(m => m.isAi)?.seat ?? 0);
             room.publicReview=null;
             foreach (OnlineRoomMember member in room.members.Values)
             {
                 member.reviewing=false;
-                member.sceneReady = false;
+                member.sceneReady = member.isAi;
                 member.restoring = false;
                 SendStartMatch(room, member);
             }
@@ -1113,7 +1123,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             // Return both clients from the preparation board if native startup
             // fails; a cleared chooser alone is indistinguishable from loading.
-            foreach(var member in room.members.Values)member.ready=false;
+            foreach(var member in room.members.Values)member.ready=member.isAi;
             BroadcastLobby(room);
             SetRoomStatus(room, $"无法开始对局：{exception.Message}");
         }
@@ -1121,6 +1131,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void SendStartMatch(OnlineRoomState room, OnlineRoomMember member)
     {
+        if (member.isAi) return;
         Send(member.clientId, OnlineProtocol.StartMatch, new OnlineStartMatchMessage
         {
             matchId = room.match.MatchId,
@@ -1205,7 +1216,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             RejectAction(clientId, message.requestId, result.error);
             return;
         }
-        foreach (OnlineRoomMember recipient in room.members.Values.Where(item => item.connected))
+        foreach (OnlineRoomMember recipient in room.members.Values.Where(item => item.connected && !item.isAi))
         {
             OnlinePlayerViewState view = room.match.GetViewForTransport(recipient.seat);
             Send(recipient.clientId, OnlineProtocol.StateUpdate, new OnlineStateUpdateMessage
@@ -1326,7 +1337,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             reason = string.IsNullOrWhiteSpace(reason) ? "对局结束。" : reason,
             series = CloneSeriesState(room.series)
         };
-        foreach (var member in room.members.Values.Where(m => m.connected))
+        foreach (var member in room.members.Values.Where(m => m.connected && !m.isAi))
         {
             var personal = ServerSnapshotJson.Copy(ended);
             member.reviewing=true;
@@ -1340,7 +1351,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
                 ? member.displayName : "Player " + seat).ToArray();
             var replay = room.match.CompleteReplay(players, replayGame, room.series.bestOf, winnerSeat, ended.reason);
             if(replay.FrameCount>0)
-                StartCoroutine(SendCompletedReplay(replay, aborted ? Array.Empty<ulong>() : room.members.Values.Where(m => m.connected && !m.IsSpectator).Select(m => m.clientId).ToArray()));
+                StartCoroutine(SendCompletedReplay(replay, aborted ? Array.Empty<ulong>() : room.members.Values.Where(m => m.connected && !m.IsSpectator && !m.isAi).Select(m => m.clientId).ToArray()));
             else {replay.Dispose();Debug.LogWarning("对局尚无可回放画面，未生成录像："+replay.Metadata.matchId);}
         }
         catch (Exception error) { Debug.LogWarning("录像生成失败：" + error.Message); }
@@ -1357,13 +1368,14 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         room.match = null;
         foreach (OnlineRoomMember member in room.members.Values)
         {
-            member.ready = false;
-            member.sceneReady = false;
+            member.ready = member.isAi;
+            member.sceneReady = member.isAi;
             member.restoring = false;
             if(member.connected || !room.series.betweenGames)member.reconnectWindow.Reset();
         }
         foreach (int seat in room.members.Where(pair => !pair.Value.connected && (!room.series.betweenGames || pair.Value.IsSpectator)).Select(pair => pair.Key).ToList())
             room.members.Remove(seat);
+        RemoveOrphanedAi(room);
         EnsureRoomHost(room);
         BroadcastLobby(room);
         roomRegistry.RemoveIfEmpty(room.roomId);
@@ -1376,7 +1388,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             if (room.match == null || !room.match.Poll()) continue;
             if (room.match.Failure != null) { EndRoomMatch(room, 0, room.match.Failure, true); continue; }
-            foreach (OnlineRoomMember recipient in room.members.Values.Where(item => item.connected))
+            foreach (OnlineRoomMember recipient in room.members.Values.Where(item => item.connected && !item.isAi))
             {
                 var view = room.match.GetViewForTransport(recipient.seat);
                 Send(recipient.clientId, OnlineProtocol.StateUpdate, new OnlineStateUpdateMessage {
@@ -1424,7 +1436,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         {
             if (room.RetainsPlayers)
             {
-                foreach(var gone in room.members.Values.Where(m=>m.connected && m.clientId!=NetworkManager.ServerClientId && !connectedIds.Contains(m.clientId)).ToArray())OnClientDisconnected(gone.clientId);
+                foreach(var gone in room.members.Values.Where(m=>!m.isAi && m.connected && m.clientId!=NetworkManager.ServerClientId && !connectedIds.Contains(m.clientId)).ToArray())OnClientDisconnected(gone.clientId);
                 foreach(var observer in room.members.Values.Where(m=>m.IsSpectator&&!m.connected&&m.reconnectWindow.IsExpired(now)).ToArray())room.members.Remove(observer.seat);
                 OnlineRoomMember expired = room.members.Values.FirstOrDefault(item =>
                     !item.IsSpectator && !item.connected && item.reconnectWindow.IsExpired(now));
@@ -1454,7 +1466,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         bool changed = false;
         foreach (OnlineRoomMember member in room.members.Values.ToList())
         {
-            if (member.clientId == NetworkManager.ServerClientId) continue; // 主机本地成员
+            if (member.isAi || member.clientId == NetworkManager.ServerClientId) continue; // AI 或主机本地成员
             bool connectionGone = !connectedIds.Contains(member.clientId);
             bool leaseExpired = !messageGuard.WasSeenWithin(member.clientId, now, LobbyLeaseSeconds);
             if (!connectionGone && !leaseExpired) continue;
@@ -1464,7 +1476,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             if (!connectionGone) networkManager.DisconnectClient(member.clientId, "Lobby lease expired");
             changed = true;
         }
-        if (changed) EnsureRoomHost(room);
+        if (changed) { RemoveOrphanedAi(room); EnsureRoomHost(room); }
         return changed;
     }
 
@@ -1518,6 +1530,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             roomId = room.roomId,
             hostSeat = room.hostSeat,
             playDrawChooserSeat = room.playDrawChooserSeat,
+            aiPending = room.aiPending,
             config = room.config,
             series = CloneSeriesState(room.series)
         };
@@ -1528,6 +1541,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
             state.players.Add(new OnlineLobbyPlayer
             {
                 seat = member.seat,
+                isAi = member.isAi,
                 displayName = member.displayName,
                 connected = true,
                 hasDeck = member.deck != null,
@@ -1543,12 +1557,12 @@ public sealed partial class OnlineMatchService : MonoBehaviour
         if (room.hostSeat > 0
             && room.members.TryGetValue(room.hostSeat, out OnlineRoomMember current)
             && current != null
-            && current.connected && (!room.RetainsPlayers || !current.IsSpectator))
+            && !current.isAi && current.connected && (!room.RetainsPlayers || !current.IsSpectator))
         {
             return;
         }
         OnlineRoomMember next = room.members.Values
-            .Where(item => item != null && item.connected && (!room.RetainsPlayers || !item.IsSpectator))
+            .Where(item => item != null && !item.isAi && item.connected && (!room.RetainsPlayers || !item.IsSpectator))
             .OrderBy(item => item.seat)
             .FirstOrDefault();
         room.hostSeat = next?.seat ?? 0;
@@ -1557,6 +1571,8 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     private static bool RemoveLobbyMember(OnlineRoomState room, int seat)
     {
         if (room == null || !room.members.Remove(seat)) return false;
+        room.aiRevision++; room.aiPending = false;
+        RemoveOrphanedAi(room);
         EnsureRoomHost(room);
         return true;
     }
@@ -1565,7 +1581,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
     {
         if (room == null) return;
         foreach (OnlineRoomMember member in room.members.Values)
-            if (member.connected) Send(member.clientId, type, payload);
+            if (member.connected && !member.isAi) Send(member.clientId, type, payload);
     }
 
     private void SendToServer<T>(string type, T payload)
@@ -1576,6 +1592,7 @@ public sealed partial class OnlineMatchService : MonoBehaviour
 
     private void Send<T>(ulong clientId, string type, T payload)
     {
+        if (clientId == AiClientId) return;
         if (networkManager?.CustomMessagingManager == null) return;
         string payloadJson = payload == null ? string.Empty : payload is OnlineStateUpdateMessage or OnlineStartMatchMessage or OnlineResyncMessage or OnlineMatchEndedMessage ? ServerSnapshotJson.Serialize(payload) : JsonUtility.ToJson(payload);
         string json = JsonUtility.ToJson(OnlineEnvelopeCodec.Encode(type, payloadJson));

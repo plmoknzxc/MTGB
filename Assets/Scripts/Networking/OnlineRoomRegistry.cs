@@ -88,6 +88,7 @@ public sealed class OnlineSeriesState
 
 public sealed class OnlineRoomMember
 {
+    public bool isAi;
     public bool IsSpectator => seat > 2;
     public int seat;
     public ulong clientId;
@@ -109,6 +110,8 @@ public sealed class OnlineRoomMember
 
 public sealed class OnlineRoomState : IDisposable
 {
+    public bool aiPending;
+    public long aiRevision;
     public int playDrawChooserSeat;
     public string roomId;
     public int hostSeat;
