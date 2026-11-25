@@ -24,6 +24,8 @@ Assets/_Recovery.meta
 Assets/Resources/UI/CardTemplates/Fonts/*
 !Assets/Resources/UI/CardTemplates/Fonts/README.md
 !Assets/Resources/UI/CardTemplates/Fonts/NameCN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/NameWeiCN.ttf
+!Assets/Resources/UI/CardTemplates/Fonts/NameWeiCN.ttf.meta
 !Assets/Resources/UI/CardTemplates/Fonts/NameWenKaiCN.ttf
 !Assets/Resources/UI/CardTemplates/Fonts/NameWenKaiCN.ttf.meta
 !Assets/Resources/UI/CardTemplates/Fonts/NameJP.otf*
