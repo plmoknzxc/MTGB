@@ -4,15 +4,33 @@ public sealed partial class ForgeBattlefieldController
 {
     private static readonly Color GrantedKeywordColor=new Color(.44f,.75f,1f);
     public static string ModifiedStatsText(ForgeCardView card,bool darkBackground)
+        =>FormatStatsText(card,darkBackground,false);
+
+    public static string WorldStatsText(ForgeCardView card,bool darkBackground)
+        =>FormatStatsText(card,darkBackground,true);
+
+    private static string FormatStatsText(ForgeCardView card,bool darkBackground,bool battlefield)
     {
         string Value(int value,int baseline,bool baseChanged,int effectiveBase) {
             if(!card.hasStatBaseline || value==baseline&&!baseChanged)return value.ToString();
             bool rewriteOnly=baseChanged&&value==effectiveBase;
             int boostBaseline=baseChanged?effectiveBase:baseline;
-            string color=rewriteOnly?(darkBackground?"70BFFF":"216D9E"):value>boostBaseline?(darkBackground?"63E69B":"16894C"):(darkBackground?"FF7184":"D12D46");
+            string color;
+            if(rewriteOnly)color=darkBackground?"70BFFF":"216D9E";
+            else if(value>boostBaseline)color=darkBackground?"63E69B":"16894C";
+            else if(battlefield)color=darkBackground?"85CFFF":"175B86";
+            else color=darkBackground?"FF7184":"D12D46";
             return "<color=#"+color+">"+value+"</color>";
         }
-        return Value(card.power,card.basePower,card.powerBaseChanged,card.effectiveBasePower)+"/"+Value(card.toughness,card.baseToughness,card.toughnessBaseChanged,card.effectiveBaseToughness);
+        string toughness=Value(card.toughness,card.baseToughness,card.toughnessBaseChanged,card.effectiveBaseToughness);
+        if(battlefield&&card.creature&&!card.faceDown&&card.damage>0){
+            // Remaining toughness is a battlefield display value only. Keep the
+            // native toughness and marked damage separate for rules and inspection.
+            long remaining=(long)card.toughness-card.damage;
+            string damageInk=darkBackground?"FF827C":"9D192A";
+            toughness="<color=#"+damageInk+">"+remaining+"</color>";
+        }
+        return Value(card.power,card.basePower,card.powerBaseChanged,card.effectiveBasePower)+"/"+toughness;
     }
     private static string KeywordDetailLabel(string detail,string name)
     {

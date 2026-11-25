@@ -41,11 +41,10 @@ public static class CombatPhaseBoundaryPresentationValidation
     static IEnumerator Guard(ForgeBattlefieldController ui) {
         string language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var input=EventSystem.current.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();bool inputEnabled=input!=null&&input.enabled;if(input!=null)input.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var states=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try {
             var work=Validate(ui);while(true){object next;try{if(!work.MoveNext())break;next=work.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"result.txt","PASS "+checks+" actual native input replays: real source/defender rays to player, opposing planeswalker and own battle; exact option IDs, duplicate/stale/nonacting guards; fresh second-combat selection; both payer seats combat tax dock auto/cancel rays, native cost symbols/three locale labels and priority cleanup. Engine results registered separately; no multiplayer/live-network/full PASS.");
-        } finally {ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(input!=null)input.enabled=inputEnabled;GamePreferences.SetLanguage(language);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=states[i];running=false;}
+        } finally {ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(input!=null)input.enabled=inputEnabled;GamePreferences.SetLanguage(language);running=false;}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui) {
         GamePreferences.SetLanguage("zh-CN");float deadline=Time.realtimeSinceStartup+8;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Check(GamePreferences.Ready,"Locale ready");

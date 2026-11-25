@@ -31,6 +31,7 @@ public sealed partial class MainMenuController
         rect.anchoredPosition = new Vector2(-8, 0);
         rect.sizeDelta = new Vector2(148, 38);
         PreferenceText.SetSize(auxiliaryEntry.GetComponentInChildren<Text>(),17);
+        MenuVisualTheme.StyleDeckTool(auxiliaryEntry);
     }
 
     void AddSelectedAuxiliary()
@@ -57,10 +58,6 @@ public sealed partial class MainMenuController
     void RenderAuxiliaryDeck()
     {
         if (currentDeck == null) return;
-        var panel = PickerPanel("AuxiliaryDeck","辅助牌组", new Vector2(1120, 1020));
-        panel.Find("Heading").GetComponent<RectTransform>().sizeDelta = new Vector2(1060, 54);
-        exchangeDialog.name = "AuxiliaryDeck";
-        auxiliaryDialogOpen = true;
         var section = DeckAuxiliary.Entries(currentDeck, auxiliaryAttractions);
         if(attractionCandidates==null){attractionCandidates=cards.Where(c=>!c.forgeAmbiguous&&DeckAuxiliary.IsAttraction(c)).ToList();contraptionCandidates=cards.Where(c=>!c.forgeAmbiguous&&DeckAuxiliary.IsContraption(c)).ToList();}
         var choices = auxiliaryRegisteredOnly
@@ -68,48 +65,62 @@ public sealed partial class MainMenuController
             : (auxiliaryAttractions ? attractionCandidates : contraptionCandidates);
         int pages = Mathf.Max(1, (choices.Count + AuxiliaryPageSize - 1) / AuxiliaryPageSize);
         auxiliaryPage = Mathf.Clamp(auxiliaryPage, 0, pages - 1);
-        var attractionTab = PickerButton(panel, "Attractions", "游乐设施", new Vector2(-390, 409), new Vector2(240, 44),
+        bool empty = choices.Count == 0;
+        var size = empty ? new Vector2(900,482) : new Vector2(1240,694);
+        var panel = PickerPanel("AuxiliaryDeck",GamePreferences.T("辅助牌组"),size);
+        auxiliaryDialogOpen = true;
+        float left = -size.x*.5f+36, top = size.y*.5f, footer = -top+54;
+        var attractionTab = PickerButton(panel, "Attractions", "游乐设施", new Vector2(left+96,top-123), new Vector2(192, 44),
             () => { auxiliaryAttractions = true; auxiliaryPage = 0; RenderAuxiliaryDeck(); });
-        var contraptionTab = PickerButton(panel, "Contraptions", "装置", new Vector2(-130, 409), new Vector2(240, 44),
+        var contraptionTab = PickerButton(panel, "Contraptions", "装置", new Vector2(left+294,top-123), new Vector2(192, 44),
             () => { auxiliaryAttractions = false; auxiliaryPage = 0; RenderAuxiliaryDeck(); });
-        (auxiliaryAttractions ? attractionTab : contraptionTab).GetComponent<Image>().color = MenuVisualTheme.Primary;
+        MenuVisualTheme.StyleDeckTool(auxiliaryAttractions ? attractionTab : contraptionTab,true);
         PickerButton(panel, "ToggleRegistered", auxiliaryRegisteredOnly ? "浏览可加入的牌" : "查看已加入的牌",
-            new Vector2(260, 409), new Vector2(440, 44),
+            empty ? new Vector2(0,-66) : new Vector2(-left-139,top-123), new Vector2(278, 44),
             () => { auxiliaryRegisteredOnly = !auxiliaryRegisteredOnly; auxiliaryPage = 0; RenderAuxiliaryDeck(); });
         string label = GamePreferences.T(auxiliaryAttractions ? "游乐设施" : "装置");
         var summary = PickerText(panel, "Summary", string.Format(GamePreferences.T("{0}：{1} 张 · 至少 {2} 张，每种牌名只能一张"),
             label, section.Sum(entry => Mathf.Max(0, entry?.count ?? 0)), auxiliaryAttractions ? 10 : 15), 19,
-            MenuVisualTheme.Paper, TextAnchor.MiddleLeft);
-        Place(summary.rectTransform, new Vector2(0, 352), new Vector2(1020, 46));
+            MenuVisualTheme.ArchivePaper, TextAnchor.MiddleLeft);
+        Place(summary.rectTransform, new Vector2(0,top-177), new Vector2(-2*left,46));
+        if(empty)
+        {
+            string message=auxiliaryRegisteredOnly ? DeckCompanion.Text("尚未加入任何牌","No cards registered","登録されているカードはありません") :
+                DeckCompanion.Text("没有可加入的牌","No cards available","追加できるカードはありません");
+            var emptyLabel=PickerText(panel,"EmptySection",message,23,MenuVisualTheme.Stone,TextAnchor.MiddleCenter);
+            Place(emptyLabel.rectTransform,new Vector2(0,-5),new Vector2(-2*left,56));
+        }
         for (int i = 0; i < AuxiliaryPageSize && auxiliaryPage * AuxiliaryPageSize + i < choices.Count; i++)
         {
             CardDefinition card = choices[auxiliaryPage * AuxiliaryPageSize + i];
             DeckEntry registered = auxiliaryRegisteredOnly ? section[auxiliaryPage * AuxiliaryPageSize + i] : null;
             string printingKey = card?.PrintingKey ?? registered?.PrintingKey ?? "";
-            float x = (i % 3 - 1) * 340;
-            float y = i < 3 ? 195 : -190;
+            var slot=PickerCardSlot(panel,i);
             var art = PickerImage(panel, "AuxiliaryCard_" + i, card == null ? MenuVisualTheme.Ink : Color.white);
-            Place(art.rectTransform, new Vector2(x, y), new Vector2(156, 218));
+            Place(art.rectTransform, slot+new Vector2(-121,0), new Vector2(118,165));
             PickerArt(art,card);
             art.preserveAspect = true;
-            var name = PickerText(panel, "CardName_" + i, card == null ? GamePreferences.T("无法识别的印次") : GamePreferences.CardName(card), 20, MenuVisualTheme.Paper, TextAnchor.MiddleCenter);
-            Place(name.rectTransform, new Vector2(x, y - 148), new Vector2(320, 62));
-            var printing = PickerText(panel, "Printing_" + i, printingKey, 15, MenuVisualTheme.Muted, TextAnchor.MiddleCenter);
-            Place(printing.rectTransform, new Vector2(x, y - 192), new Vector2(300, 22));
+            var name = PickerText(panel, "CardName_" + i, card == null ? GamePreferences.T("无法识别的印次") : GamePreferences.CardName(card), 20, MenuVisualTheme.ArchivePaper, TextAnchor.MiddleLeft);
+            Place(name.rectTransform, slot+new Vector2(65,40), new Vector2(216,82));
+            var printing = PickerText(panel, "Printing_" + i, printingKey, 16, MenuVisualTheme.Stone, TextAnchor.MiddleLeft);
+            Place(printing.rectTransform, slot+new Vector2(65,-14), new Vector2(216,28));
             PickerButton(panel, "ChangeAuxiliary_" + i, auxiliaryRegisteredOnly ? "移除" : "加入",
-                new Vector2(x, y - 232), new Vector2(284, 38), () => {
+                slot+new Vector2(62,-56), new Vector2(206,42), () => {
                     bool changed = auxiliaryRegisteredOnly ? section.Remove(registered) : DeckAuxiliary.Add(currentDeck, card, cards);
                     if (changed) MarkDeckDirty();
                     RenderAuxiliaryDeck();
                 },auxiliaryRegisteredOnly || !DeckAuxiliary.ContainsName(currentDeck, card, cards));
         }
-        var page = PickerText(panel, "Page", (auxiliaryPage + 1) + " / " + pages, 18, MenuVisualTheme.Paper, TextAnchor.MiddleCenter);
-        Place(page.rectTransform, new Vector2(-205, -480), new Vector2(160, 34));
-        PickerButton(panel, "Previous", "‹", new Vector2(-355, -480), new Vector2(86, 38),
-            () => { auxiliaryPage--; RenderAuxiliaryDeck(); },auxiliaryPage > 0);
-        PickerButton(panel, "Next", "›", new Vector2(-55, -480), new Vector2(86, 38),
-            () => { auxiliaryPage++; RenderAuxiliaryDeck(); },auxiliaryPage + 1 < pages);
-        PickerButton(panel, "Close", "完成", new Vector2(345, -480), new Vector2(330, 40),
+        if (pages > 1)
+        {
+            var page = PickerText(panel, "Page", (auxiliaryPage + 1) + " / " + pages, 17, MenuVisualTheme.Stone, TextAnchor.MiddleCenter);
+            Place(page.rectTransform, new Vector2(0,footer), new Vector2(86,42));
+            PickerButton(panel, "Previous", "‹", new Vector2(-76,footer), new Vector2(50,42),
+                () => { auxiliaryPage--; RenderAuxiliaryDeck(); },auxiliaryPage > 0);
+            PickerButton(panel, "Next", "›", new Vector2(76,footer), new Vector2(50,42),
+                () => { auxiliaryPage++; RenderAuxiliaryDeck(); },auxiliaryPage + 1 < pages);
+        }
+        PickerButton(panel, "Close", "完成", new Vector2(-left-72,footer), new Vector2(144,44),
             () => { auxiliaryDialogOpen = false; CloseDeckExchange(); RefreshDeckGrids(); RefreshSelectedCardInfo(); });
         FinishPicker(panel);
     }

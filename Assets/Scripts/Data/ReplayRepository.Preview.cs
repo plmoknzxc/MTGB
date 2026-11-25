@@ -70,7 +70,7 @@ public static partial class ReplayRepository
             }
         }
         Complete:
-        if(version!=1||!foundFrames||result.players==null||result.players.Length!=2
+        if(version!=1||!foundFrames||result.players==null||result.players.Length is not (2 or 4)
             ||!DateTime.TryParse(result.startedUtc,CultureInfo.InvariantCulture,DateTimeStyles.RoundtripKind,out _)
             ||double.IsNaN(result.duration)||double.IsInfinity(result.duration)||result.duration < -1||result.duration>86400)
             throw new InvalidDataException("录像缺失内容或版本不受支持。");

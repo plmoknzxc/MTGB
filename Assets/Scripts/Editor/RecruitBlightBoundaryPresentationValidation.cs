@@ -28,7 +28,6 @@ public static class RecruitBlightBoundaryPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {
         string locale=GamePreferences.Language;float scale=GamePreferences.TextScale;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             var meta=JsonUtility.FromJson<Meta>(File.ReadAllText(Base+"/blight-latest.json"));Check(meta.status=="PASS"&&meta.runtimeHash==JsonUtility.FromJson<Meta>(File.ReadAllText("ForgeRuntime/runtime.json")).runtimeHash,"Exact actual native Blight producer/runtime");
             foreach(string language in new[]{"zh-CN","en-US","ja-JP"}){
@@ -50,7 +49,7 @@ public static class RecruitBlightBoundaryPresentationValidation
             }
             GamePreferences.SetLanguage("zh-CN");float ready=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<ready)yield return null;GamePreferences.SetScale(1.3f);var max=Read(meta.directory,"choice-1",1);ui.Present(max,1,true,null,null,"");yield return Frame();var text=GameObject.Find("CardSelection/Instruction").GetComponent<Text>();Check(!text.resizeTextForBestFit&&text.preferredHeight<=text.rectTransform.rect.height+1,"Maxscale actual cost instruction fits fixed size");
             var method=typeof(ForgeBattlefieldController).GetMethod("ResolutionChoiceInstruction",BindingFlags.Instance|BindingFlags.NonPublic);string unknown="Put 2 -1/-1 counter on a creature you control with a different condition";Check((string)method.Invoke(ui,new object[]{unknown})==unknown,"Unknown extended native instruction keeps full fallback");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetScale(scale);GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetScale(scale);GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
     }
 }
 #endif

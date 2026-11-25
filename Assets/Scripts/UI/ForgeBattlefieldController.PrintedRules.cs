@@ -111,6 +111,10 @@ public sealed partial class ForgeBattlefieldController
             // Its live trigger and localized faces use Boggart Trawler.
             if(canonical=="Boggart Trawler")value=Regex.Replace(value,@"\bGoblin Trawler\b",canonical);
             value=Regex.Replace(value.Trim(),@"^(?:-\s+|[•●]\s*)","");
+            // The printed loyalty cost is bracketed ([-1]:); a stack ability uses -1:.
+            // Keep the signed cost and require the rest of the printed line to match.
+            if(value.StartsWith("[",StringComparison.Ordinal))
+                value=Regex.Replace(value,@"^\[([+\-−]?(?:\d+|X))\](?=\s*[:：])","$1");
             if(!string.IsNullOrEmpty(source.name)&&source.name!=canonical)
                 value=Regex.Replace(value,@"(?<![\p{L}\p{N}])"+Regex.Escape(source.name)+@"(?![\p{L}\p{N}])",_=>canonical);
             // Forge's generated trigger text uses "enters" while older Oracle
@@ -133,6 +137,21 @@ public sealed partial class ForgeBattlefieldController
         string aligned=GamePreferences.Language=="ja-JP"?Regex.Replace((translated??"").Replace("\\n","\n"),@"(?<=[^。！？）)\n])\n(?=[をにがはへともでやの])",""):translated;
         var localized=Lines(aligned);
         string match=Key(paragraph);
+        // Forge joins a modal trigger's condition directly to the selected
+        // bullet. Bind both halves to the same printed choice block.
+        if(GamePreferences.Language=="zh-CN" && native.Length==localized.Length && match.StartsWith("When",StringComparison.Ordinal)) {
+            for(int i=0;i<native.Length-1;i++) {
+                var header=Regex.Match(native[i],@"^(When(?:ever)? .+, )choose one\s*[—-]$");
+                var localHeader=Regex.Match(localized[i],@"^(.+[，,])\s*选择一项\s*[～〜—－-]$");
+                if(!header.Success||!localHeader.Success)continue;
+                for(int j=i+1;j<native.Length && native[j].StartsWith("•",StringComparison.Ordinal);j++) {
+                    string body=StackModeBody(native[j]);
+                    if(string.Equals(Key(header.Groups[1].Value+body),match,StringComparison.OrdinalIgnoreCase)
+                        && localized[j].StartsWith("•",StringComparison.Ordinal))
+                        return localHeader.Groups[1].Value+StackModeBody(localized[j]);
+                }
+            }
+        }
         // Chapters can grant a quoted activation. Its live ability is the
         // quoted text, rather than the entire printed chapter sentence.
         string QuoteKey(string value)=>Key(value).Replace('"','\'').TrimEnd('.');
@@ -153,6 +172,20 @@ public sealed partial class ForgeBattlefieldController
         }
         // Whole rules do not require identical editorial line breaks.
         if(native.Length>0&&Key(string.Join("\n",native))==match)return translated;
+        // Prefer a complete printed paragraph over sentence fragments. A
+        // generated activation may omit both its reminder and its tap cost;
+        // sentence matching below can otherwise produce several candidates
+        // and leave this exact ability in English.
+        if(native.Length==localized.Length){
+            var exact=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+            for(int i=0;i<native.Length;i++){
+                string original=WithoutPrintedReminder(native[i]);
+                string local=WithoutPrintedReminder(localized[i]);
+                if(Key(original)==match)exact.Add(local);
+                if(Key(WithoutPrintedCost(original))==match)exact.Add(WithoutPrintedCost(local));
+            }
+            if(exact.Count==1)return exact.Single();
+        }
         var variants=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
         void MatchVariants(string original,string local) {
             if(Key(original)==match)variants.Add(local);
@@ -281,6 +314,11 @@ public sealed partial class ForgeBattlefieldController
         var recipes=AbilityRecipes(source,effect);
         if(recipes.Length!=1)return fallback;
         string recipe=recipes[0].text;var origin=recipes[0].origin;
+        // Wrapped triggers can echo their target list inside rulesText.
+        // AbilityEffectText already renders that list from the live effect.
+        var recipeTargets=Regex.Match(recipe,@"\s+\(Targeting: [^\r\n]*\)$");
+        if(recipeTargets.Success && effect.Contains(recipeTargets.Value))
+            recipe=recipe.Substring(0,recipeTargets.Index);
         if(recipe=="When you do, exile that card.") {
             string translated=TapPaymentText("当你如此作时，放逐该牌。",recipe,"そうしたとき、そのカードを追放する。");
             if(effect==recipe)return translated;

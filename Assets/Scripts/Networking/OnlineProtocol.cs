@@ -7,7 +7,7 @@ public static class OnlineProtocol
     // v20 adds a room-wide shuffle rule that every player must be able to see.
     // v21 enables Duel Commander/Arena Brawl and public command-zone snapshots.
     // v22 adds authority-controlled AI room seats and their lobby identity.
-    public const int Version = 22;
+    public const int Version = 23;
     public const string MessageName = "mtgb.protocol.v15";
 
     public const string Hello = "hello";
@@ -17,6 +17,7 @@ public static class OnlineProtocol
     public const string ConfigureAi = "configure-ai";
     public const string SetSpectator = "set-spectator";
     public const string SetReady = "set-ready";
+    public const string SetAvatar = "set-avatar";
     public const string RequestStartMatch = "request-start-match";
     public const string ChoosePlayDraw = "choose-play-draw";
     public const string StartMatch = "start-match";
@@ -50,6 +51,10 @@ public sealed class OnlineEnvelope
 [Serializable]
 public sealed class OnlineHelloMessage
 {
+    public string avatarId;
+    public bool supportsFourSeats;
+    public bool supportsCommanderEvents;
+    public bool supportsNauctis;
     public string roomAction;
     public string displayName;
     public string reconnectToken;
@@ -61,6 +66,9 @@ public sealed class OnlineHelloMessage
 [Serializable]
 public sealed class OnlineWelcomeMessage
 {
+    public bool supportsCommanderEvents;
+    public bool supportsNauctis;
+    public int playerCapacity;
     public int seat;
     public string reconnectToken;
     public string serverName;
@@ -75,6 +83,7 @@ public sealed class OnlineWelcomeMessage
 [Serializable]
 public sealed class OnlineLobbyPlayer
 {
+    public string avatarId;
     public bool isAi;
     public int seat;
     public string displayName;
@@ -87,6 +96,8 @@ public sealed class OnlineLobbyPlayer
 public sealed class OnlineLobbyState
 {
     public bool aiPending;
+    // Only the participating host receives the identity of the accepted AI deck.
+    public string aiDeckName, aiDeckFingerprint;
     public int playDrawChooserSeat;
     public string roomId;
     public int hostSeat;
@@ -106,6 +117,12 @@ public sealed class OnlineAiMessage
 {
     public bool remove;
     public DeckDefinition deck;
+}
+
+[Serializable]
+public sealed class OnlineAvatarMessage
+{
+    public string avatarId;
 }
 
 [Serializable]

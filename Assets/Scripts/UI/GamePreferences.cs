@@ -22,6 +22,67 @@ public sealed class GamePreferences : MonoBehaviour
     public static TMP_FontAsset TmpFont { get; private set; }
     public static float TextScale => Mathf.Clamp(ReplayExportWorker.IsWorker?ReplayExportWorker.TextScale:PlayerPrefs.GetFloat("UI.TextScale", 1), .85f, 1.3f);
     public static bool AutoSaveReplays => PlayerPrefs.GetInt("Replay.AutoSave", 0) == 1;
+    const string FourSeatModeKey = "UI.ResizableFourSeats";
+    public static bool ResizableFourSeats => PlayerPrefs.GetInt(FourSeatModeKey,1)!=0;
+    public static void SetResizableFourSeats(bool enabled)
+    {
+        if(ResizableFourSeats==enabled)return;
+        PlayerPrefs.SetInt(FourSeatModeKey,enabled ? 1 : 0);
+        PlayerPrefs.Save();
+        Notify();
+    }
+    public static bool HoverCardDetails => PlayerPrefs.GetInt("UI.HoverCardDetails", 0) == 1;
+    const string MenuThemeKey = "UI.MenuTheme";
+    const string MenuMotionKey = "UI.MenuMotion";
+    internal static string AvatarId {
+        get { var id=PlayerPrefs.GetString("Player.Avatar",PlayerAvatarGraphic.DefaultId); return PlayerAvatarGraphic.Valid(id)?id:PlayerAvatarGraphic.DefaultId; }
+    }
+    internal static event Action AvatarChanged;
+    internal static void SetAvatar(string id)
+    {
+        if(!PlayerAvatarGraphic.Valid(id)||AvatarId==id)return;
+        PlayerPrefs.SetString("Player.Avatar",id);
+        PlayerPrefs.Save();
+        AvatarChanged?.Invoke();
+        Notify();
+    }
+    internal static bool MenuMotionEnabled => PlayerPrefs.GetInt(MenuMotionKey, 1) != 0;
+    internal static event Action MenuMotionChanged;
+    internal static MenuThemeStyle MenuTheme => MenuThemeCatalog.Find(PlayerPrefs.GetString(MenuThemeKey, MenuThemeCatalog.Default.Id)) ?? MenuThemeCatalog.Default;
+    internal static MenuThemeStyle ResolveInstalledMenuTheme()
+    {
+        var id=PlayerPrefs.GetString(MenuThemeKey,MenuThemeCatalog.Default.Id);
+        var installed=MenuThemeCatalog.Find(id);
+        if(installed!=null)return installed;
+        if(Application.isPlaying && !ReplayExportWorker.IsWorker)
+        {
+            PlayerPrefs.DeleteKey(MenuThemeKey);
+            PlayerPrefs.Save();
+        }
+        return MenuThemeCatalog.Default;
+    }
+    internal static void SetMenuTheme(string id)
+    {
+        var theme = MenuThemeCatalog.Find(id);
+        if (theme == null || theme == MenuThemeCatalog.Current) return;
+        PlayerPrefs.SetString(MenuThemeKey, id);
+        PlayerPrefs.Save();
+        MenuThemeCatalog.Activate(theme);
+        Notify();
+    }
+    internal static void SetMenuMotionEnabled(bool value)
+    {
+        if (MenuMotionEnabled == value) return;
+        PlayerPrefs.SetInt(MenuMotionKey, value ? 1 : 0);
+        PlayerPrefs.Save();
+        MenuThemeArtwork.RefreshStartMotion();
+        MenuMotionChanged?.Invoke();
+    }
+    public static void SetHoverCardDetails(bool value)
+    {
+        if(HoverCardDetails==value)return;
+        PlayerPrefs.SetInt("UI.HoverCardDetails",value?1:0);PlayerPrefs.Save();Notify();
+    }
     // Developer switch: set true to restore both language pickers and the saved
     // startup locale. Keep localization resources and SetLanguage for code/tools.
     public static bool LanguageSelectionEnabled => false;
@@ -50,7 +111,7 @@ public sealed class GamePreferences : MonoBehaviour
             return value == DeckFormatLegality.Current ? DeckFormatLegality.Latest(DeckFormat) : value;
         }
     }
-#if UNITY_SERVER
+#if UNITY_SERVER && !UNITY_EDITOR
     public static string Language => "zh-CN";
 #else
     public static string Language => LocalizationSettings.SelectedLocale?.Identifier.Code ?? "zh-CN";
@@ -66,16 +127,40 @@ public sealed class GamePreferences : MonoBehaviour
     public static IEnumerable<string> UntranslatedInterfaceMessages => untranslatedInterface;
     public static void ClearLanguageDiagnostics() {untranslatedNative.Clear();untranslatedInterface.Clear();}
     static Dictionary<string, string[]> cards = new Dictionary<string, string[]>(StringComparer.Ordinal);
+    static Dictionary<string, CardFlavorCatalog.Entry> localizedFlavors = new Dictionary<string, CardFlavorCatalog.Entry>(StringComparer.OrdinalIgnoreCase);
     readonly Dictionary<string, Dictionary<string, string[]>> catalogs = new Dictionary<string, Dictionary<string, string[]>>();
+    readonly Dictionary<string, Dictionary<string, CardFlavorCatalog.Entry>> flavorCatalogs = new Dictionary<string, Dictionary<string, CardFlavorCatalog.Entry>>(StringComparer.Ordinal);
     int generation;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void Reset() { instance=null; Ready=false; table=null; formats.Clear(); aliases.Clear(); textCache.Clear(); untranslatedNative.Clear();untranslatedInterface.Clear(); Font=null; TmpFont=null; Changed=null; Revision=0; cards=new Dictionary<string,string[]>(); UseComponentCardFaces=DefaultComponentCardFaces; }
+    static void Reset() { instance=null; Ready=false; table=null; formats.Clear(); aliases.Clear(); textCache.Clear(); untranslatedNative.Clear();untranslatedInterface.Clear(); Font=null; TmpFont=null; Changed=null; MenuMotionChanged=null; AvatarChanged=null; Revision=0; cards=new Dictionary<string,string[]>(); localizedFlavors=new Dictionary<string,CardFlavorCatalog.Entry>(StringComparer.OrdinalIgnoreCase); UseComponentCardFaces=DefaultComponentCardFaces; }
+
+#if UNITY_EDITOR
+    public static void PrepareEditorPreview()
+    {
+        if(Application.isPlaying||Ready)return;
+        MenuThemeCatalog.Load();
+        var battlefield=UnityEngine.Object.FindFirstObjectByType<BattlefieldWorldTable>();
+        TmpFont=battlefield!=null?battlefield.font:null;
+        Font=battlefield!=null?battlefield.GetComponentsInChildren<Text>(true)
+            .Select(text=>text.font).FirstOrDefault(font=>font!=null&&font.name=="NotoSansCJKsc-Regular"):null;
+        textCache.Clear();
+        Ready=true;
+    }
+    public static void ClearEditorPreview()
+    {
+        if(Application.isPlaying||instance!=null)return;
+        cards=new Dictionary<string,string[]>(StringComparer.Ordinal);
+        Font=null;TmpFont=null;
+        textCache.Clear();
+        Ready=false;
+    }
+#endif
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Create()
     {
-#if UNITY_SERVER
+#if UNITY_SERVER && !UNITY_EDITOR
         // The authority sends canonical card identities; clients localize and render them.
         Ready = true;
         return;
@@ -163,6 +248,13 @@ public sealed class GamePreferences : MonoBehaviour
                 if(this==null || request!=generation) return;
                 catalogs[code]=translated;
             }
+            if(!flavorCatalogs.TryGetValue(code,out var translatedFlavors))
+            {
+                string path=Path.Combine(Application.streamingAssetsPath,"CardFlavor."+code+".jsonl");
+                translatedFlavors=await Task.Run(()=>CardFlavorCatalog.ReadLocalized(path));
+                if(this==null || request!=generation) return;
+                flavorCatalogs[code]=translatedFlavors;
+            }
             // Publish one complete locale, rather than mixing its interface with
             // the previous locale's card catalog while a read is still pending.
             table=nextTable; Font=font.Result; TmpFont=tmp.Result;
@@ -170,6 +262,7 @@ public sealed class GamePreferences : MonoBehaviour
             aliases.Clear();foreach(var pair in nextAliases)aliases[pair.Key]=pair.Value;
             textCache.Clear();ClearLanguageDiagnostics();
             cards=translated;
+            localizedFlavors=translatedFlavors;
             Ready=true; Notify(); BindScene();
         }
         catch(Exception error)
@@ -184,6 +277,8 @@ public sealed class GamePreferences : MonoBehaviour
                 // the canonical definition until the requested catalog reloads.
                 table=null; formats.Clear();aliases.Clear();textCache.Clear();
                 cards=catalogs.TryGetValue(code,out var cached) ? cached : new Dictionary<string,string[]>(StringComparer.Ordinal);
+                localizedFlavors=flavorCatalogs.TryGetValue(code,out var cachedFlavors) ? cachedFlavors
+                    : new Dictionary<string,CardFlavorCatalog.Entry>(StringComparer.OrdinalIgnoreCase);
                 if(LanguageSelectionEnabled) {PlayerPrefs.SetString("UI.Language",code); PlayerPrefs.Save();}
                 Ready=true; Notify(); BindScene();
             }
@@ -307,11 +402,19 @@ public sealed class GamePreferences : MonoBehaviour
         var mana=Regex.Match(source,@"^(?<cost>(?:\{[^{}]+\}\s*[,，]?\s*)*:\s*)?Add (?<symbols>(?:\{[^{}]+\}\s*)+)\.?$");
         if(mana.Success && Language!="en-US")
             return mana.Groups["cost"].Value+(Language=="ja-JP"?mana.Groups["symbols"].Value.Trim()+"を加える。":"加"+mana.Groups["symbols"].Value.Trim()+"。");
-        var identity=Regex.Match(source,@"^(.+) \(([0-9]+)\)$");
-        if(identity.Success)return CardFaceName(identity.Groups[1].Value)+" ("+identity.Groups[2].Value+")";
-        string name=CardFaceName(source);
+        string name=TranslateNativeIdentity(source);
         if(Ready&&Language!="en-US"&&name==source&&Regex.IsMatch(Regex.Replace(source,@"\{[^}]*\}|<[^>]*>",""),@"[A-Za-z]{2,}"))RememberUntranslated(source);
         return name;
+    }
+    // NativeText also receives whole sentences. Only card identities belong in
+    // the display-name registry; a trailing number may be a choice or a count.
+    static string TranslateNativeIdentity(string value)
+    {
+        if(cards.ContainsKey(value))return CardFaceName(value);
+        var suffix=Regex.Match(value,@" \([0-9]+\)\z");
+        string bare=suffix.Success?value.Substring(0,suffix.Index):value;
+        if(cards.ContainsKey(bare))return CardFaceName(bare);
+        return DeckTokenLinks.GeneratedTokenName(bare)??value;
     }
     // Display boundary only: request predicates and response IDs remain native.
     // Unknown prose is retained with diagnostics, never silently replaced by a
@@ -328,12 +431,10 @@ public sealed class GamePreferences : MonoBehaviour
                 string line=lines[i].TrimEnd();
                 if(line.StartsWith("one: ",StringComparison.Ordinal))line=line.Substring(5);
                 else if(line.StartsWith("oneOrNone: ",StringComparison.Ordinal))line=line.Substring(11);
-                string translated=TranslateText(line,0,true);
+                string translated=line==source?value:TranslateText(line,0,true);
                 if(translated==line) {
-                    var identity=Regex.Match(line,@"^(.+) \(([0-9]+)\)$");
-                    translated=identity.Success?CardFaceName(identity.Groups[1].Value)+" ("+identity.Groups[2].Value+")":CardFaceName(line);
                     var zone=Regex.Match(line,@"^(.+) \[(Hand|Graveyard|Exile|Library|Battlefield|Command)\]$");
-                    if(zone.Success)translated=CardFaceName(zone.Groups[1].Value)+" ["+T(zone.Groups[2].Value)+"]";
+                    if(zone.Success)translated=TranslateNativeIdentity(zone.Groups[1].Value)+" ["+T(zone.Groups[2].Value)+"]";
                 }
                 lines[i]=translated;
                 if(Ready&&Language!="en-US"&&translated==line&&Regex.IsMatch(line,@"[A-Za-z]{2,}"))
@@ -384,6 +485,13 @@ public sealed class GamePreferences : MonoBehaviour
         }
     }
     public static string CardName(CardDefinition card) => Field(card,1,card?.cardName ?? "");
+    public static string CardFlavor(CardDefinition card)
+    {
+        if(card==null)return string.Empty;
+        if(localizedFlavors.TryGetValue(card.PrintingKey,out var entry)
+            &&string.Equals(entry.name,card.cardName,StringComparison.Ordinal))return entry.text;
+        return card.flavorText??string.Empty;
+    }
     public static string CardType(CardDefinition card) => CardTypeText.Line(Field(card,2,card?.GetTypeLine() ?? ""));
     public static string CardRules(CardDefinition card) => LocalizedRules(card?.cardName,card?.description,card?.PrintingKey,
         DisplayRules(Field(card,3,card?.description ?? ""),card!=null&&card.cardTypes.Has(global::CardType.Planeswalker)));
@@ -393,7 +501,15 @@ public sealed class GamePreferences : MonoBehaviour
         string name=canonicalName??"";
         if(!cards.ContainsKey(name))name=Regex.Replace(name,@" \([0-9]+\)$","");
         string localized=Field(name,1,name);
-        if(localized==name&&!cards.ContainsKey(name))localized=DeckTokenLinks.GeneratedTokenName(name)??localized;
+        if(localized==name&&!cards.ContainsKey(name)) {
+            if(Language!="en-US"&&name=="Commander Effect")localized=NativeText(name);
+            else if(Language!="en-US"&&name.EndsWith("'s Effect",StringComparison.Ordinal)) {
+                var helper=Regex.Match(name,@"^(.+) \(\d+\)'s Effect\z");
+                if(helper.Success&&IsCardIdentity(helper.Groups[1].Value))
+                    localized=CardFaceName(helper.Groups[1].Value)+(Language=="ja-JP"?"の効果":"的效果");
+            }
+            if(localized==name)localized=DeckTokenLinks.GeneratedTokenName(name)??name;
+        }
         EnsureIdentityNames();identityNames.Add(name);identityNames.Add(localized);
         string display=DisplayCardIdentities(localized);identityNames.Add(display);return display;
     }

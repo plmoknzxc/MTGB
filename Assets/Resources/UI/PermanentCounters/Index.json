@@ -1,0 +1,606 @@
+{
+  "entries": [
+    {
+      "kind": "P1P1",
+      "x": 4,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "M1M1",
+      "x": 76,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "SHIELD",
+      "x": 148,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "STUN",
+      "x": 220,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "CHARGE",
+      "x": 292,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "OIL",
+      "x": 364,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "LORE",
+      "x": 436,
+      "y": 4,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "TIME",
+      "x": 4,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "AGE",
+      "x": 76,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "QUEST",
+      "x": 148,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "VERSE",
+      "x": 220,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "POISON",
+      "x": 292,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "FINALITY",
+      "x": 364,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "ICE",
+      "x": 436,
+      "y": 76,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "LOYALTY",
+      "x": 4,
+      "y": 148,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "DEFENSE",
+      "x": 76,
+      "y": 148,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "MORE",
+      "x": 148,
+      "y": 148,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "kind": "PLATE_NEUTRAL",
+      "x": 4,
+      "y": 236,
+      "width": 144,
+      "height": 64
+    },
+    {
+      "kind": "PLATE_P1P1",
+      "x": 164,
+      "y": 236,
+      "width": 144,
+      "height": 64
+    },
+    {
+      "kind": "PLATE_M1M1",
+      "x": 324,
+      "y": 236,
+      "width": 144,
+      "height": 64
+    },
+    {
+      "kind": "PLATE_LORE",
+      "x": 4,
+      "y": 316,
+      "width": 144,
+      "height": 64
+    },
+    {
+      "kind": "PLATE_MORE",
+      "x": 164,
+      "y": 316,
+      "width": 144,
+      "height": 64
+    },
+    {
+      "kind": "SEAL_0",
+      "x": 2,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_1",
+      "x": 34,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_2",
+      "x": 66,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_3",
+      "x": 98,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_4",
+      "x": 130,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_5",
+      "x": 162,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_6",
+      "x": 194,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_7",
+      "x": 226,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_8",
+      "x": 258,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_9",
+      "x": 290,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_10",
+      "x": 322,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_11",
+      "x": 354,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_12",
+      "x": 386,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_13",
+      "x": 418,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_14",
+      "x": 450,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_15",
+      "x": 482,
+      "y": 384,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_16",
+      "x": 2,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_17",
+      "x": 34,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_18",
+      "x": 66,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_19",
+      "x": 98,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_20",
+      "x": 130,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_21",
+      "x": 162,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_22",
+      "x": 194,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_23",
+      "x": 226,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_24",
+      "x": 258,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_25",
+      "x": 290,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_26",
+      "x": 322,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_27",
+      "x": 354,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_28",
+      "x": 386,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_29",
+      "x": 418,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_30",
+      "x": 450,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_31",
+      "x": 482,
+      "y": 416,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_32",
+      "x": 2,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_33",
+      "x": 34,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_34",
+      "x": 66,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_35",
+      "x": 98,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_36",
+      "x": 130,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_37",
+      "x": 162,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_38",
+      "x": 194,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_39",
+      "x": 226,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_40",
+      "x": 258,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_41",
+      "x": 290,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_42",
+      "x": 322,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_43",
+      "x": 354,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_44",
+      "x": 386,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_45",
+      "x": 418,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_46",
+      "x": 450,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_47",
+      "x": 482,
+      "y": 448,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_48",
+      "x": 2,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_49",
+      "x": 34,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_50",
+      "x": 66,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_51",
+      "x": 98,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_52",
+      "x": 130,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_53",
+      "x": 162,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_54",
+      "x": 194,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_55",
+      "x": 226,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_56",
+      "x": 258,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_57",
+      "x": 290,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_58",
+      "x": 322,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_59",
+      "x": 354,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_60",
+      "x": 386,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_61",
+      "x": 418,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_62",
+      "x": 450,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "kind": "SEAL_63",
+      "x": 482,
+      "y": 480,
+      "width": 28,
+      "height": 28
+    }
+  ]
+}

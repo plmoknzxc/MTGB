@@ -1,0 +1,1 @@
+PASS actual Unity IntegratedBattlefield rendering from the same recorded seat view; transient CardNotice overlays suppressed for stable visual comparison; presentation only, no native gameplay.

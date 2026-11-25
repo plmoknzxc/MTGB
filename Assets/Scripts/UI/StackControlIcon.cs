@@ -6,17 +6,24 @@ using UnityEngine.UI;
 public sealed class StackControlIcon : MaskableGraphic
 {
     public bool SmoothEdges;
-    public enum Kind { View,Right,Left,Close }
+    public enum Kind { View,Right,Left,Close,Up,Down }
     [field: SerializeField] public Kind Current {get;private set;}
     public void SetKind(Kind kind){if(Current==kind)return;Current=kind;SetVerticesDirty();}
     protected override void OnPopulateMesh(VertexHelper vh)
     {
-        vh.Clear();float scale=Mathf.Min(rectTransform.rect.width,rectTransform.rect.height)/22;
+        vh.Clear();
+        // A journal rebuild can detach the old row before uGUI drains its geometry queue.
+        if(canvas==null)return;
+        float scale=Mathf.Min(rectTransform.rect.width,rectTransform.rect.height)/22;
         if(Current==Kind.View) {
             for(int i=0;i<32;i++){float a=i*Mathf.PI/16,b=(i+1)*Mathf.PI/16;Line(vh,new Vector2(-2,2)+new Vector2(Mathf.Cos(a),Mathf.Sin(a))*6,new Vector2(-2,2)+new Vector2(Mathf.Cos(b),Mathf.Sin(b))*6,scale);}
             Line(vh,new Vector2(2,-2),new Vector2(8,-8),scale);
         }else if(Current==Kind.Close){Line(vh,new Vector2(-6,6),new Vector2(6,-6),scale);Line(vh,new Vector2(-6,-6),new Vector2(6,6),scale);}
-        else {float sign=Current==Kind.Right?1:-1;Line(vh,new Vector2(-3*sign,7),new Vector2(4*sign,0),scale);Line(vh,new Vector2(4*sign,0),new Vector2(-3*sign,-7),scale);}
+        else if(Current is Kind.Up or Kind.Down){
+            float sign=Current==Kind.Up?1:-1;
+            Line(vh,new Vector2(-7,-3*sign),new Vector2(0,4*sign),scale);
+            Line(vh,new Vector2(0,4*sign),new Vector2(7,-3*sign),scale);
+        }else {float sign=Current==Kind.Right?1:-1;Line(vh,new Vector2(-3*sign,7),new Vector2(4*sign,0),scale);Line(vh,new Vector2(4*sign,0),new Vector2(-3*sign,-7),scale);}
     }
     private void Line(VertexHelper vh,Vector2 a,Vector2 b,float scale)
     {

@@ -820,7 +820,7 @@
       "zh": "死触",
       "ja": "接死",
       "enHelp": "Any amount of damage it deals to a creature is lethal damage.",
-      "zhHelp": "对生物造成的任意数量伤害都视为致命伤害。",
+      "zhHelp": "它对生物造成的任何数量伤害都足以消灭后者。",
       "jaHelp": "クリーチャーに与えるダメージは、１点でも致死ダメージとなる。",
       "aliases": [
         "接死"
@@ -875,6 +875,20 @@
       "aliases": [
         "実演",
         "示范"
+      ],
+      "autoDisplay": true
+    },
+    {
+      "en": "Descend 20",
+      "zh": "落坟20",
+      "ja": "落魄20",
+      "enHelp": "Count permanent cards in your own graveyard. Descend 20 is satisfied when there are twenty or more.",
+      "zhHelp": "在你位于广袤海域期间，只要你坟墓场中有二十张或更多永久物牌，你便进入雄伟大洋。",
+      "jaHelp": "あなたの墓地にあるパーマネント・カードが20枚以上なら、この条件を満たす。",
+      "aliases": [
+        "落坟 20",
+        "落坟20",
+        "落魄20"
       ],
       "autoDisplay": true
     },
@@ -946,6 +960,20 @@
       "autoDisplay": true
     },
     {
+      "en": "Devour 3",
+      "zh": "吞噬3",
+      "ja": "貪食３",
+      "enHelp": "As this enters, you may sacrifice any number of creatures. This creature enters with three times that many +1/+1 counters on it.",
+      "zhHelp": "于它进场时，你可以牺牲任意数量的生物。此生物进场时上面有该数量三倍的+1/+1指示物。",
+      "jaHelp": "これが場に出るに際し、あなたは望む数のクリーチャーを生け贄に捧げてもよい。このクリーチャーはその数の３倍に等しい＋１/＋１カウンターが置かれた状態で場に出る。",
+      "aliases": [
+        "吞噬 3",
+        "吞噬3",
+        "貪食３"
+      ],
+      "autoDisplay": true
+    },
+    {
       "en": "Discard",
       "zh": "弃牌",
       "ja": "捨てる",
@@ -999,6 +1027,19 @@
       "autoDisplay": true
     },
     {
+      "en": "Dive",
+      "zh": "深潜",
+      "ja": "潜水",
+      "enHelp": "A creature that dives cannot be blocked until it deals combat damage while attacking.",
+      "zhHelp": "其无法被阻挡，直到其在攻击时造成战斗伤害为止。",
+      "jaHelp": "潜水したクリーチャーは、それが攻撃中に戦闘ダメージを与えるまでブロックされない。",
+      "aliases": [
+        "深潜",
+        "潜水"
+      ],
+      "autoDisplay": true
+    },
+    {
       "en": "Doctor's companion",
       "enHelp": "You can have two commanders if the other is the Doctor.",
       "zh": "博士伙伴",
@@ -1045,7 +1086,7 @@
       "zh": "连击",
       "ja": "二段攻撃",
       "enHelp": "Deals combat damage in both the first-strike and regular combat damage steps.",
-      "zhHelp": "在先攻和正常两个战斗伤害步骤都造成伤害。",
+      "zhHelp": "此生物能造成先攻伤害以及普通战斗伤害。",
       "jaHelp": "先制攻撃と通常の両方の戦闘ダメージ・ステップでダメージを与える。",
       "aliases": [
         "二段攻撃"
@@ -1515,7 +1556,7 @@
       "zh": "先攻",
       "ja": "先制攻撃",
       "enHelp": "Deals combat damage before creatures without first strike or double strike.",
-      "zhHelp": "在不具先攻或连击的生物之前造成战斗伤害。",
+      "zhHelp": "此生物会比不具先攻异能的生物提前造成战斗伤害。",
       "jaHelp": "先制攻撃や二段攻撃を持たないクリーチャーより先に戦闘ダメージを与える。",
       "aliases": [
         "先制攻撃"
@@ -1540,7 +1581,7 @@
       "zh": "闪现",
       "ja": "瞬速",
       "enHelp": "May be cast any time you could cast an instant.",
-      "zhHelp": "可以在你能施放瞬间的时机施放。",
+      "zhHelp": "你可以于你能够施放瞬间的时机下施放此咒语。",
       "jaHelp": "インスタントを唱えられるときならいつでも唱えられる。",
       "aliases": [
         "瞬速"
@@ -1565,7 +1606,7 @@
       "zh": "飞行",
       "ja": "飛行",
       "enHelp": "Can be blocked only by creatures with flying or reach.",
-      "zhHelp": "只能被具飞行或延势的生物阻挡。",
+      "zhHelp": "此生物只能被具飞行或延势异能的生物阻挡。",
       "jaHelp": "飛行か到達を持つクリーチャーにしかブロックされない。",
       "aliases": [
         "飛行"
@@ -1807,7 +1848,7 @@
       "zh": "辟邪",
       "ja": "呪禁",
       "enHelp": "Can't be the target of spells or abilities your opponents control.",
-      "zhHelp": "不能成为对手操控的咒语或异能的目标。",
+      "zhHelp": "此生物不能成为由对手操控之咒语或异能的目标。",
       "jaHelp": "対戦相手がコントロールする呪文や能力の対象にならない。",
       "aliases": [
         "呪禁"
@@ -2093,7 +2134,7 @@
       "zh": "系命",
       "ja": "絆魂",
       "enHelp": "Damage it deals also causes its controller to gain that much life.",
-      "zhHelp": "它造成伤害时，其操控者同时获得等量生命。",
+      "zhHelp": "此生物所造成的伤害会让你获得等量的生命。",
       "jaHelp": "これがダメージを与えると、そのコントローラーは同じ点数のライフを得る。",
       "aliases": [
         "絆魂",
@@ -2241,7 +2282,7 @@
       "zh": "威慑",
       "ja": "威迫",
       "enHelp": "Can't be blocked except by two or more creatures.",
-      "zhHelp": "只能被两个或更多生物阻挡。",
+      "zhHelp": "此生物只能被两个或更多生物阻挡。",
       "jaHelp": "２体以上のクリーチャーにしかブロックされない。",
       "aliases": [
         "威迫"
@@ -2672,6 +2713,19 @@
       "autoDisplay": true
     },
     {
+      "en": "Prismatic",
+      "enHelp": "You may spend mana as though it were mana of any color to cast this spell.",
+      "zh": "虹彩",
+      "zhHelp": "施放此咒语时，你可以将法术力视同任意颜色来支付。",
+      "ja": "虹色",
+      "jaHelp": "この呪文を唱えるためのマナは、好きな色のマナであるかのように支払ってもよい。",
+      "aliases": [
+        "虹彩",
+        "虹色"
+      ],
+      "autoDisplay": true
+    },
+    {
       "en": "Proliferate",
       "zh": "增殖",
       "ja": "増殖を行う",
@@ -2780,7 +2834,7 @@
       "zh": "延势",
       "ja": "到達",
       "enHelp": "Can block creatures with flying.",
-      "zhHelp": "可以阻挡具飞行的生物。",
+      "zhHelp": "此生物能阻挡具飞行异能的生物。",
       "jaHelp": "飛行を持つクリーチャーをブロックできる。",
       "aliases": [
         "到達"

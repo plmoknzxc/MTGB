@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MTGB · 详情与历史</title>
+<link rel="stylesheet" href="fonts.css">
+<!--
+  沉浸牌桌：真实录像场面，不执行规则。
+  用户新增方向：详情与历史共享左侧固定侧栏，用标签页切换；右侧堆叠保留。
+  横排手牌独占底部；历史悬停不抢标签，明确点击卡牌才打开详情。
+  本版从 C 派生，旧 C 保留比较。原探索：
+  不再向战场里堆弹窗。对手在上、你在下，右侧保留反击链和优先权。
+  这里刻意保留己方没有生物时的留白，不用虚构永久物填满画面。
+  用户校正：视频只参考横排手牌。中央独立设计为有厚度的石质竞技场，
+  原有景观只在边缘显露；所有景观、地面与边缘层均不参与指针命中。
+-->
+<style>
+:root{--bg:#151716;--ink:#ece8df;--muted:#8f958f;--line:#393c36;--blue:#71a8de;--red:#d47b80;--gold:#c6b181}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0d100f;color:var(--ink)}
+button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid #e6d4a8;outline-offset:4px}
+button{border:0;background:none}button:disabled{cursor:default}#fit{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center}
+#table{position:relative;width:1600px;height:900px;overflow:hidden;background:#071015;isolation:isolate}
+/* Landscape is restricted to the arena edge; the play surface stays quiet. */
+#table::before{content:"";position:absolute;inset:0;background-image:var(--mat);background-size:cover;background-position:center;opacity:.78;z-index:-4;filter:saturate(.48) brightness(.64);mask-image:radial-gradient(ellipse at 48% 42%,transparent 0%,#0002 30%,#000 77%);pointer-events:none}
+#table::after{content:"";position:absolute;inset:0;z-index:-3;background:radial-gradient(ellipse at 46% 32%,#acc1bc0c,transparent 54%),linear-gradient(90deg,#020810e8,transparent 15%,transparent 72%,#050d16e8 88%),linear-gradient(0deg,#030a12f5 0%,#06101966 33%,transparent 68%,#030912b0);pointer-events:none}
+.arena-world{position:absolute;left:194px;top:90px;width:1038px;height:537px;z-index:-2;pointer-events:none;perspective:1100px}
+.arena-horizon{position:absolute;left:-73px;right:-43px;top:-55px;height:168px;z-index:-1;background-image:var(--mat);background-size:1260px auto;background-position:50% 10%;filter:saturate(.55) brightness(.55);mask-image:linear-gradient(transparent,#000b 30%,#000 60%,transparent);pointer-events:none}
+.arena-ground{position:absolute;inset:8px 0 0;transform:rotateX(9deg);transform-origin:50% 100%;border-radius:92px 92px 36px 36px;border:1px solid #7e969755;background:radial-gradient(ellipse at 48% 28%,#33464bdb 0%,#23343be8 41%,#14252df2 76%,#0b1a23f5),var(--mat);background-size:cover;background-position:50% 58%;box-shadow:inset 0 3px 2px #c6d6c31a,inset 0 0 0 8px #080f174d,inset 0 -16px 22px #020810a0,0 18px 3px #020a10e0,0 34px 38px #01050ccc}
+.arena-ground::before{content:"";position:absolute;inset:12px;border:1px solid #b2bda41d;border-radius:79px 79px 27px 27px;box-shadow:inset 0 1px #040b12;pointer-events:none}
+.arena-ground::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(ellipse at 15% 7%,#ecd2a524,transparent 49%),radial-gradient(ellipse at 88% 84%,#7bb9d01d,transparent 48%),repeating-linear-gradient(8deg,transparent 0 23px,#b9c9bc03 24px,transparent 25px 51px);pointer-events:none}
+.arena-apron{position:absolute;left:18px;right:18px;bottom:-5px;height:20px;border-bottom:1px solid #758a7e40;border-radius:0 0 35px 35px;background:linear-gradient(#1f333b,#0b1d28 40%,#050e18);box-shadow:0 10px 16px #01050ab0}
+.arena-rim{position:absolute;top:48px;bottom:17px;width:25px;opacity:.82;border-left:1px solid #aec5be2e;border-right:1px solid #01070c;background:linear-gradient(90deg,#020a12db,#3549528c 45%,#071421d9),var(--mat);background-size:cover;background-position:11% 50%;box-shadow:7px 3px 13px #02070bb3,inset 3px 0 3px #bed0c41c;border-radius:4px;pointer-events:none}.arena-rim.left{left:-15px;transform:rotate(7deg)}.arena-rim.right{right:-15px;transform:rotate(-7deg);background-position:89% 50%;box-shadow:-7px 3px 13px #02070bb3,inset -3px 0 3px #bed0c41c}
+.arena-light{position:absolute;left:111px;top:-33px;width:190px;height:402px;transform:skewX(-28deg);background:linear-gradient(180deg,#d7d5b31c,#bbc6bc06 67%,transparent);filter:blur(22px);opacity:.7;pointer-events:none}
+.head{position:absolute;left:205px;right:36px;top:28px;height:55px;display:flex;justify-content:space-between;align-items:flex-start}
+.wordmark{font-family:GameSerif,serif;font-size:25px;letter-spacing:4px;line-height:1}.wordmark small{font-family:GameSans,sans-serif;font-size:11px;letter-spacing:2px;color:#8f978d;margin-left:17px}
+.round{font-size:14px;color:#899c9d;padding-top:4px;display:flex;align-items:center;gap:20px}.round strong{font-weight:400;color:#e0d1b1;border-bottom:1px solid #b39f6c80;padding-bottom:9px;text-shadow:0 2px 4px #000}
+.tools{position:absolute;top:22px;left:24px;display:flex;gap:14px}.tools button{color:#b5b9af;font-size:15px;line-height:32px;padding:0 5px}.tools button:hover{color:var(--ink)}
+.tools .dots{font-size:25px;line-height:27px}.view-menu{position:absolute;left:24px;top:67px;z-index:40;width:155px;padding:8px;background:#1b2519;border:1px solid #485442;box-shadow:0 10px 25px #0007}.view-menu[hidden]{display:none}.view-menu button{display:block;text-align:left;padding:10px 11px;font-size:13px;color:#bec8b3;width:100%}.view-menu button:hover{background:#ffffff09;color:#f3ecdb}
+.rail-rule{position:absolute;top:102px;bottom:42px;left:183px;width:1px;background:linear-gradient(transparent,#84968e55 12%,#445f6a55 82%,transparent);box-shadow:2px 0 8px #0009}
+.player{position:absolute;left:26px;width:136px;isolation:isolate}.player::before{content:"";position:absolute;inset:-17px -10px -8px;z-index:-1;pointer-events:none;border-radius:40px 4px 12px 4px;background:linear-gradient(135deg,#21303970,#07131bbf 70%);box-shadow:inset 1px 1px #b9ccc51c,0 13px 22px #01050a65}.player.opponent{top:112px}.player.you{top:601px}
+.identity{display:flex;gap:11px;align-items:center;margin-bottom:13px}.monogram{display:grid;place-items:center;width:33px;height:33px;border:1px solid #855c60;color:#e0a0a2;border-radius:50%;font-size:13px;background:radial-gradient(circle at 35% 25%,#6c4c4a,#1f2025 65%);box-shadow:inset 0 1px #c7a08b55,0 4px 6px #0007}.you .monogram{border-color:#577d95;color:#a1c9ed;background:radial-gradient(circle at 35% 25%,#35566b,#111f2c 65%)}
+.player-name{font-size:16px;color:var(--red)}.you .player-name{color:var(--blue)}.life{font-family:GameSerif,serif;font-size:69px;line-height:1;letter-spacing:-2px;padding:0 0 17px 1px;margin-bottom:13px;border-bottom:1px solid #3d3f36}
+.zones{display:grid;gap:2px}.zone-link{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:14px;color:#a5aba2;padding:8px 2px;white-space:nowrap;text-align:left}.zone-link b{font-weight:400;font-size:16px;color:#d9dcd4;min-width:27px;text-align:right}.zone-link:hover{color:#fff;background:#ffffff06}.zone-link:disabled{opacity:.55}
+.private-hand{position:absolute;left:715px;top:97px;display:flex;gap:7px;align-items:center}.private-hand img{width:39px;height:55px;object-fit:cover;border:1px solid #666650;border-radius:3px}.private-hand span{font-size:12px;color:#879084;margin-left:6px}
+.zone-title{font-size:12px;letter-spacing:2px;color:#7a8377;display:flex;align-items:center;gap:14px}.zone-title::after{content:"";height:1px;background:#353b33;flex:1}
+.enemy-land-section{position:absolute;left:214px;top:105px;width:471px}.land-line{display:flex;gap:9px;align-items:flex-start;overflow:auto;scrollbar-width:none;padding-top:18px}.land-line::-webkit-scrollbar{display:none}
+.land-card{position:relative;width:108px;height:104px;flex:0 0 108px;padding:0;transition:filter .15s}.land-art{position:relative;display:block;width:108px;height:77px;overflow:hidden;border-radius:3px;background:#17242b;box-shadow:0 2px 0 #050a0ee0,0 7px 10px #0008,0 0 0 1px #8c9a8e40}
+.land-art img{width:108px;height:150px;object-fit:cover;object-position:50% 22%;transform-origin:center;position:absolute;left:0;top:0;filter:saturate(.8)}
+.land-card.tapped .land-art img{width:77px;height:108px;left:15px;top:-15px;transform:rotate(90deg);filter:saturate(.52) brightness(.84)}
+.land-card .land-name{display:block;font-size:12px;line-height:22px;white-space:nowrap;color:#b2bcaf;max-width:108px;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 3px #02080c}
+.land-card.tapped .land-art::after{content:"↷";position:absolute;right:4px;bottom:1px;font-size:22px;color:#e8e6d1b0;text-shadow:0 1px 3px #000}
+.land-card:hover .land-art{outline:1px solid #d7d4ba}.land-card:hover .land-name{color:#eeeee4}
+.enemy-section{position:absolute;left:234px;top:259px;width:946px}.creature-line{display:flex;gap:24px;overflow-x:auto;scrollbar-width:none;padding:16px 1px 11px;align-items:flex-start}.creature-line::-webkit-scrollbar{display:none}
+.permanent{position:relative;display:block;padding:0;width:144px;flex:0 0 144px;text-align:left;transition:transform .18s;isolation:isolate}.permanent::before{content:"";position:absolute;left:3px;right:-2px;top:4px;height:201px;border-radius:5px;z-index:-1;background:linear-gradient(90deg,#02070b,#5d6c6170);box-shadow:0 10px 14px #000b;pointer-events:none}.permanent img{width:144px;height:201px;display:block;object-fit:cover;border-radius:4px;box-shadow:0 2px 1px #e2ddc12e,0 5px 1px #03080cdc,0 17px 22px #0009,0 0 0 1px #bac7bc66;filter:saturate(.98) contrast(1.02)}
+.permanent:hover{transform:translateY(-4px)}.permanent:hover img{outline:1px solid #e4dfcc}
+.permanent-name{display:block;color:#d1d7c9;font-size:14px;line-height:24px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:4px;text-shadow:0 2px 3px #02080d}
+.power{position:absolute;right:-5px;top:180px;min-width:48px;height:25px;line-height:25px;text-align:center;background:#e8e6db;color:#161b15;font:17px/25px GameSerif,serif;border-radius:2px;box-shadow:0 1px 5px #0005}
+.support{margin-left:33px;padding-left:33px;border-left:1px solid #778b7b3b;min-height:205px}.support .permanent{width:104px;flex-basis:104px;margin-top:34px}.support .permanent img{width:104px;height:145px}.support .permanent::before{height:145px}.support .permanent-name{font-size:13px}
+.center-seam{position:absolute;left:214px;right:411px;top:529px;height:1px;background:linear-gradient(90deg,transparent,#555c46 30%,#555c46 65%,transparent);opacity:.52}
+/* Put the land caption beside its row: it must not cross enemy card names. */
+.own-section{position:absolute;left:226px;top:509px;width:717px;z-index:1;pointer-events:none}.own-section .land-line{padding-top:26px;gap:19px}.own-section .land-card{width:124px;flex-basis:124px;height:82px;pointer-events:auto}.own-section .land-art{width:124px;height:62px}.own-section .land-art img{left:22px;top:-23px}.own-section .land-name{font-size:11px;line-height:20px;max-width:124px}.own-section .zone-title{position:absolute;left:744px;top:60px;width:170px;font-size:10px;color:#727d6e}.own-section .land-pager{pointer-events:auto}
+.stack-area{position:absolute;left:1261px;top:112px;width:301px;isolation:isolate}.stack-area::before{content:"";position:absolute;inset:-18px -14px -8px;z-index:-1;border:1px solid #71817d36;border-radius:7px;background:linear-gradient(145deg,#263139c4,#09151edb);box-shadow:inset 0 1px #cfdfce10,inset 0 0 0 5px #0a141a30,0 14px 24px #0007;pointer-events:none}.stack-heading{display:flex;align-items:center;justify-content:space-between;font-size:15px;color:#d0d2c5;letter-spacing:1px;margin-bottom:20px}.stack-heading span{font-size:12px;color:#7f8979;letter-spacing:0}.stack-item{position:relative;width:100%;padding:13px 0 16px;border-top:1px solid #76827b45;display:flex;gap:14px;text-align:left;min-height:145px}.stack-item::before{content:"";position:absolute;left:-10px;top:13px;bottom:17px;width:2px;background:var(--red);opacity:.7}.stack-item.self::before{background:var(--blue)}
+.stack-thumb{width:74px;height:103px;object-fit:cover;border-radius:2px;opacity:.9;flex:none}.stack-copy{display:flex;flex:1;flex-direction:column;min-width:0;padding-top:0}.stack-owner{font-size:11px;color:var(--red);letter-spacing:1px;line-height:20px}.stack-item.self .stack-owner{color:var(--blue)}.stack-name{font-family:GameSerif,serif;font-size:21px;color:#e7e4d8;line-height:32px;white-space:nowrap;letter-spacing:.4px}.stack-note{font-size:13px;color:#929a89;line-height:21px;margin-top:5px}.target-note{font-size:12px;line-height:21px;color:var(--red);margin-top:5px}.targeted{background:#b6535d0c}.targeted::after{content:"";position:absolute;left:-10px;right:-3px;top:-1px;bottom:6px;border:1px solid #b8666b75;border-radius:2px;pointer-events:none}.stack-item.selected .stack-thumb{outline:1px solid #d9c5a6}.stack-item:hover .stack-name{color:#fff}.stack-arrow{font-size:15px;margin-right:4px}
+.priority{position:absolute;left:1261px;top:487px;width:301px;text-align:left}.priority-message{display:block;font-size:13px;color:var(--gold);margin-bottom:13px;letter-spacing:.5px}.pass-button{display:flex;align-items:center;justify-content:space-between;width:100%;height:53px;border:1px solid #b39e76;color:#eee3ce;background:#a18b5521;padding:0 19px;font-size:18px;transition:background .18s}.pass-button:hover{background:#ad966d38}.pass-button span{font:24px GameSerif,serif}.mode-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#889180;margin-top:13px}.mode-row button{font-size:12px;color:#aaa995;padding:4px 0}.mode-row button[aria-pressed=true]{color:#d9d3be}
+.dock{position:absolute;left:205px;right:33px;bottom:28px;height:243px;border-top:1px solid #a9b7a353;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#233038ed,#0b1820f5 24%,#0b141cf5);box-shadow:inset 0 2px #dce4d01a,inset 0 -4px #020810c9,0 10px 28px #01050bcc}
+.hand-region{position:absolute;left:13px;top:13px;width:744px;height:230px}.hand-heading{display:flex;align-items:center;gap:12px;color:#afb6a5;font-size:12px;height:22px}.hand-heading b{font-weight:400;color:var(--blue)}.hand-heading .hint{margin-left:auto;font-size:11px;color:#697562;margin-right:15px}
+.hand-line{display:flex;gap:13px;padding-top:14px;position:relative}.hand-card{position:relative;display:block;flex:0 0 132px;width:132px;padding:0;text-align:left;transform-origin:50% 100%;transition:transform .18s;z-index:1}.hand-card img{display:block;width:132px;height:184px;object-fit:cover;border-radius:4px;box-shadow:0 6px 12px #0007;filter:saturate(.86) brightness(.93)}.hand-card:hover,.hand-card:focus-visible{transform:translateY(-18px) scale(1.085);z-index:4}.hand-card:hover img,.hand-card:focus-visible img{filter:saturate(1) brightness(1.05);outline:1px solid #d9d5c2}.hand-card.picked img{outline:1px solid #c3c3b0}
+.hand-cost{position:absolute;left:5px;right:5px;top:-9px;height:20px;display:none;justify-content:flex-end;align-items:center;pointer-events:none}.hand-card:hover .hand-cost{display:flex}.mana{display:inline-flex;align-items:center;gap:2px}.mana img{width:17px;height:17px;border:0;box-shadow:none;filter:none}.mana .generic{display:inline-grid;place-items:center;min-width:17px;height:17px;border-radius:50%;font:12px/17px GameSans,sans-serif;background:#b8b8aa;color:#1d241d;padding:0 3px}.mana.no-cost{color:#8d9684;font-size:12px}
+.reader{position:absolute;left:779px;top:15px;right:8px;bottom:0;display:grid;grid-template-columns:145px 1fr;gap:19px;transition:opacity .15s}.reader::before{content:"";position:absolute;left:-17px;top:6px;bottom:14px;width:1px;background:linear-gradient(transparent,#a7b2a24d 15%,#8eaaad36 82%,transparent);box-shadow:1px 0 #020b12;pointer-events:none}.reader[hidden]{display:none}.reader-photo{width:145px;height:203px;position:relative;padding:0;align-self:center}.reader-photo img{width:145px;height:203px;object-fit:cover;display:block;border-radius:3px;box-shadow:0 2px 1px #dfe8cb3d,0 4px 1px #02070cdf,0 12px 17px #0009}.reader-photo:hover img{outline:1px solid #ddd6be}.reader-photo::after{content:"查看原卡";position:absolute;bottom:0;left:0;right:0;line-height:25px;font-size:11px;text-align:center;background:#111b12cf;color:#ddd;opacity:0;transition:opacity .15s}.reader-photo:hover::after{opacity:1}
+.reading{padding:0 0 0 1px;min-width:0}.reader-toolbar{height:25px;display:flex;align-items:center;gap:10px;justify-content:flex-end}.reader-toolbar button{font-size:11px;color:#8c9684;padding:0 3px;line-height:20px}.reader-toolbar button:hover{color:#eae5d3}.reader-toolbar .close{font-size:24px;line-height:20px;margin-left:9px;color:#9aa28f}.reader-toolbar .pinned{color:var(--gold)}
+.reader-title{font-family:GameSerif,serif;font-size:23px;line-height:33px;color:#e9e3d6;margin:1px 0 0}.reader-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#828e78;font-size:11px;border-bottom:1px solid #383f30;padding:4px 0 8px;min-height:28px}.reader-rules{font-size:15px;line-height:1.55;color:#bec5b3;margin:8px 0 0;max-height:117px;overflow:auto;scrollbar-width:thin;scrollbar-color:#5f6854 transparent;white-space:pre-line}.reader-cost-change{font-size:11px;color:#c9bf9f;margin-top:4px;display:none;align-items:center;gap:8px}.reader-empty{position:absolute;left:850px;right:22px;top:99px;text-align:center;font-size:13px;color:#707d67}
+.drawer{position:absolute;left:206px;top:103px;width:550px;height:516px;background:#151c14f5;border:1px solid #4b5142;box-shadow:0 18px 45px #0008;z-index:25;padding:22px 25px;backdrop-filter:blur(14px)}.drawer[hidden]{display:none}.drawer-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #424938;padding-bottom:14px}.drawer-header h2{font-family:GameSerif,serif;font-size:24px;font-weight:400;margin:0;color:#e5dec9}.drawer-close{font-size:25px;color:#99a18b;line-height:1}.drawer-list{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 12px;max-height:403px;overflow:auto;padding:21px 0 0;scrollbar-width:thin;scrollbar-color:#566148 transparent}.browse-card{padding:0;text-align:center;display:block}.browse-card img{width:105px;height:147px;object-fit:cover;display:block;border-radius:3px}.browse-card span{display:block;font-size:11px;color:#c3c9b8;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:105px}.browse-card:hover img{outline:1px solid #e5d7ad}.empty-zone{padding-top:80px;text-align:center;color:#8b977f;font-size:15px}
+.history-drawer{width:370px}.history-list{padding-top:25px;list-style:none;margin:0}.history-list li{position:relative;margin:0 0 24px 0;padding:0 0 0 19px;border-left:1px solid #45523b;font-size:15px;line-height:1.8;color:#c1c9b3}.history-list small{display:block;font-size:11px;color:#798a6c;margin-bottom:6px}.history-list li.enemy{border-color:#88585b}.history-list li.mine{border-color:#4d7590}
+.zoom{position:absolute;inset:0;background:#090d09db;z-index:50;display:flex;align-items:center;justify-content:center;gap:34px;backdrop-filter:blur(6px)}.zoom[hidden]{display:none}.zoom>img{width:420px;height:586px;object-fit:contain;border-radius:10px;box-shadow:0 20px 80px #000b}.zoom-copy{width:330px}.zoom-copy h2{font:32px/1.4 GameSerif,serif;margin:0 0 19px}.zoom-copy p{font-size:18px;line-height:1.9;color:#cbd3bf;white-space:pre-line}.zoom-copy small{font-size:13px;color:#8d9b7e}.zoom-close{position:absolute;top:64px;right:80px;color:#c1c8b4;font-size:34px}.land-pager{display:none;position:absolute;right:-34px;top:40px;color:#bbc5ae;font-size:26px;z-index:5}#table.dense .land-pager{display:block}.creature-pager{display:none;position:absolute;right:-33px;top:111px;color:#bbc5ae;font-size:27px}#table.dense .creature-pager{display:block}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* D: shared information rail. The stack retains C's position and presentation. */
+.head{left:354px}.tools{left:22px;gap:13px}.tools button{font-size:13px}
+.arena-world{left:354px;width:878px}.rail-rule{left:342px}
+.enemy-land-section{left:380px}.enemy-section{left:380px;width:800px}
+.own-section{left:380px}.own-section .zone-title{left:744px;width:100px}
+.center-seam{left:380px}.private-hand{left:1090px;top:31px}
+/* Players are primary anchors again, separate from the details/history rail. */
+.player{display:grid;grid-template-columns:54px minmax(0,1fr) 70px;grid-template-rows:27px 25px 33px;column-gap:10px;row-gap:8px;align-content:center;align-items:center;isolation:isolate;padding:16px;border:1px solid #8296a45c;border-radius:5px;background:linear-gradient(135deg,#27333fee,#101921f5);box-shadow:inset 0 1px #d5e2e21c,0 8px 18px #0007}
+.player::before{display:none}.player::after{content:"";position:absolute;left:16px;right:16px;top:0;height:2px;background:var(--red);opacity:.8;pointer-events:none}.player.you::after{background:var(--blue)}
+.player.opponent{left:889px;top:101px;width:330px;height:145px;z-index:2;background:linear-gradient(135deg,#332e39ef,#151a24f5)}
+.player.you{left:371px;top:684px;width:282px;height:159px;z-index:2;background:linear-gradient(135deg,#243c52ef,#111f2cf5)}
+.player .identity{display:contents}.player .monogram{grid-column:1;grid-row:1/3;width:54px;height:54px;font-size:20px;box-shadow:inset 0 1px #e6d9c83d,0 5px 8px #0008}
+.player .player-name{grid-column:2;grid-row:1;font-size:18px;line-height:25px;align-self:end;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#eedee1}
+.player.you .player-name{color:#d8e9f8}.player .seat-state{grid-column:2;grid-row:2;font-size:12px;line-height:20px;align-self:start;color:#ab9ca7}.player.you .seat-state{color:#9dbbd4}
+.player .life{grid-column:3;grid-row:1/3;font-size:61px;line-height:59px;letter-spacing:-2px;padding:0;margin:0;border:0;text-align:right;color:#f4f0e4;text-shadow:0 3px 6px #0008}
+.player .life::after{content:"生命";display:block;font:11px/18px GameSans,sans-serif;letter-spacing:2px;color:#aeb5bb;padding-top:2px}
+.player .zones{grid-column:1/-1;grid-row:3;display:flex;gap:14px;justify-content:space-between;border-top:1px solid #9fadb63b;padding-top:9px}
+.player .zone-link{gap:6px;font-size:13px;padding:3px 0;width:auto;color:#acb8c3}
+.player .zone-link b{font-size:17px;min-width:17px;color:#e4e8eb}.player .zone-link:disabled{opacity:.78}
+.dock{left:354px}.hand-region{left:338px;width:calc(100% - 358px)}.hand-heading{justify-content:flex-end;padding-right:5px}
+.hand-heading .hint{margin-left:15px;margin-right:0}.hand-line{justify-content:center;gap:20px;overflow-x:auto;overflow-y:visible;scrollbar-width:thin;scrollbar-color:#526777 transparent;padding-bottom:14px}
+#table.dense .hand-line{justify-content:flex-start}
+.info-rail{position:absolute;left:22px;top:90px;width:300px;bottom:28px;z-index:6;display:flex;flex-direction:column;overflow:hidden;border:1px solid #71817d55;border-radius:5px;background:linear-gradient(150deg,#1e2b34f5,#0a141df7 65%);box-shadow:inset 0 1px #d3e4e01a,0 12px 26px #0008}
+.info-rail[hidden]{display:none}.info-tabs{display:flex;height:48px;flex:none;border-bottom:1px solid #566b7c65;background:#080f17a6}
+.info-tabs button{width:50%;font-size:16px;color:#8c9eae;position:relative;letter-spacing:3px}
+.info-tabs button[aria-selected=true]{color:#f0e9dc;background:#293b4d66}
+.info-tabs button[aria-selected=true]::after{content:"";position:absolute;left:22px;right:22px;bottom:0;height:2px;background:#a5b9cc;pointer-events:none}
+.info-tabs button:focus-visible{outline-offset:-5px}.info-panel{position:relative;flex:1;min-height:0;overflow:hidden}
+.info-panel[hidden]{display:none}
+.reader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:stretch;gap:0;padding:15px 18px 22px;overflow:auto;scrollbar-width:thin;scrollbar-color:#536c80 transparent}
+.reader::before{display:none}.reader[hidden]{display:none}.reading{display:contents}
+.reader-toolbar{order:0;flex:none;height:23px;margin-bottom:4px}.reader-toolbar button{font-size:12px;color:#a4b2bf}.reader-toolbar .close{font-size:22px}
+.reader-title{order:1;flex:none;font-size:24px;line-height:1.4;margin:0 0 15px;overflow-wrap:anywhere}
+.reader-photo{order:2;align-self:center;flex:none;width:216px;height:302px;margin-bottom:19px}
+.reader-photo img{width:216px;height:302px}.reader-photo::after{font-size:12px;line-height:28px}
+.reader-meta{order:3;flex:none;align-items:flex-start;padding:0 0 13px;min-height:0;font-size:13px;color:#a4b1ba;border-color:#6c7e8b45;line-height:1.8}
+.reader-meta .mana{padding-top:3px;flex-shrink:0}.reader-meta .mana img{width:18px;height:18px}
+.reader-cost-change{order:4;flex:none;font-size:13px;line-height:1.8;color:#c5b894;margin:12px 0 0;flex-wrap:wrap}
+.reader-rules{order:5;flex:none;font-size:17px;line-height:1.75;color:#d9dfdf;margin-top:16px;max-height:none;overflow:visible}
+.reader-empty{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-size:14px;color:#8b9ba7;padding:25px;line-height:1.8}
+.reader-empty[hidden]{display:none}
+.history-panel{padding:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#536c80 transparent}
+.history-turn{padding:17px 16px;border-bottom:1px solid #6c7e8b45;display:flex;flex-direction:column;gap:7px;position:sticky;top:0;background:#17242eef;z-index:2;backdrop-filter:blur(10px)}
+.history-turn strong{font-size:15px;font-weight:400;color:#eee8da}.history-turn small{font-size:12px;color:#9baab6}
+.history-list{padding:0;margin:0;list-style:none}
+.history-list .history-event{padding:15px 14px 17px;margin:0;border:0;border-bottom:1px solid #73869736;background:linear-gradient(100deg,#21415c42,transparent 90%);font-size:14px;line-height:1.6;color:#d4e1eb}
+.history-list .history-event.enemy{background:linear-gradient(100deg,#59323e47,transparent 90%)}
+.event-heading{display:flex;gap:10px;align-items:center;margin-bottom:12px}.event-heading strong{font-weight:400;font-size:15px;color:#e4e7e8}
+.event-owner{font-size:11px;line-height:21px;padding:0 7px;color:#a9cff1;border:1px solid #6d9dc869;background:#17385070}
+.enemy .event-owner{color:#efafb8;border-color:#ca79886e;background:#4d202f75}
+.history-card{display:flex;align-items:center;gap:12px;padding:0;text-align:left;width:100%;border:0;background:none}
+.history-card img{width:55px;height:77px;object-fit:cover;border-radius:2px;flex:none;box-shadow:0 3px 6px #0008}
+.history-card>span{display:flex;flex-direction:column;gap:6px;min-width:0}.history-card b{font-size:16px;font-weight:400;color:#e9e6dd;line-height:1.45}
+.history-card small{font-size:12px;color:#a1b3c2;line-height:1.6;margin:0}.enemy .history-card small{color:#c7a8af}
+.history-card:hover b{text-decoration:underline;text-underline-offset:4px}.history-card:focus-visible{outline-offset:4px}
+.history-target{margin-top:14px;padding:12px 0 0 13px;border-top:1px solid #a2747d44;border-left:2px solid #ce8a96}
+.history-target .history-card img{width:44px;height:62px}.history-target .history-card b{font-size:14px}.history-target small{color:#e4a4af!important}
+.history-end{padding:18px;font-size:11px;line-height:1.7;color:#7e919f;text-align:center}
+.drawer{left:366px;width:820px;top:111px;background:#13212bf7;border-color:#70869466}.drawer-list{grid-template-columns:repeat(6,1fr)}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body><div id="fit"><main id="table" aria-label="沉浸牌桌">
+<div class="arena-world" aria-hidden="true"><div class="arena-horizon"></div><div class="arena-ground"></div><div class="arena-apron"></div><div class="arena-rim left"></div><div class="arena-rim right"></div><div class="arena-light"></div></div>
+<div class="tools"><button data-action="info-open" aria-label="打开详情与历史">详情 / 历史</button><button class="dots" data-action="menu" aria-label="对局菜单" title="对局菜单" aria-expanded="false">⋯</button></div>
+<div class="view-menu" id="menu" hidden><button data-action="view-battlefield">查看战场</button><button data-action="reset-view">重置视图</button></div>
+<div class="head"><div class="wordmark">MTGB<small>牌桌</small></div><div class="round"><span>第 <b id="turn">10</b> 回合</span><strong id="phase">战斗前主要阶段</strong></div></div>
+<div class="rail-rule"></div>
+<section class="player opponent" aria-label="对手资料"><div class="identity"><span class="monogram">对</span><span class="player-name">对手</span></div><span class="seat-state" id="their-hand-summary">手牌 2</span><div class="life" id="their-life">20</div><div class="zones" id="their-zones"></div></section>
+<section class="player you" aria-label="你的资料"><div class="identity"><span class="monogram">你</span><span class="player-name">你</span></div><span class="seat-state">你的回合</span><div class="life" id="our-life">16</div><div class="zones" id="our-zones"></div></section>
+<div class="private-hand" id="private-hand" aria-label="对手的隐藏手牌"></div>
+<section class="enemy-land-section"><div class="zone-title">对手的地</div><div class="land-line" id="enemy-lands"></div><button class="land-pager" aria-label="浏览更多对手地牌" data-scroll="enemy-lands">›</button></section>
+<section class="enemy-section"><div class="zone-title">对手的战场</div><div class="creature-line" id="enemy-permanents"></div><button class="creature-pager" aria-label="浏览更多永久物" data-scroll="enemy-permanents">›</button></section>
+<div class="center-seam"></div>
+<section class="own-section"><div class="zone-title">你的地</div><div class="land-line" id="own-lands"></div><button class="land-pager" aria-label="浏览更多你的地牌" data-scroll="own-lands">›</button></section>
+<aside class="stack-area" aria-label="堆叠"><div class="stack-heading">堆叠<span>从上到下结算</span></div><div id="stack-list"></div></aside>
+<section class="priority"><span class="priority-message" id="priority-message">轮到你响应</span><button class="pass-button" data-action="pass" id="pass-button">让过优先权<span>→</span></button><div class="mode-row"><span>第10回合 · 你的回合</span><button data-action="auto" aria-pressed="false">手动</button></div></section>
+<section class="dock" aria-label="你的横排手牌"><div class="hand-region"><div class="hand-heading">手牌 <b id="hand-count">5</b><span class="hint">当前无可施放的牌</span></div><div class="hand-line" id="hand"></div></div></section>
+<aside class="info-rail" id="info-rail" aria-label="卡牌详情与对局历史">
+  <div class="info-tabs" role="tablist" aria-label="信息侧栏">
+    <button id="details-tab" role="tab" aria-selected="true" aria-controls="details-panel" data-action="info-tab" data-tab="details" tabindex="0">详情</button>
+    <button id="history-tab" role="tab" aria-selected="false" aria-controls="history" data-action="info-tab" data-tab="history" tabindex="-1">历史</button>
+  </div>
+  <section class="info-panel" id="details-panel" role="tabpanel" aria-labelledby="details-tab">
+    <span class="reader-empty" id="reader-empty" hidden>悬停卡牌查看详情<br>也可以点击卡牌固定</span>
+    <aside class="reader" id="reader" aria-label="卡牌详情"><button class="reader-photo" data-action="zoom" aria-label="查看完整牌面"><img id="reader-image" alt=""></button><div class="reading"><div class="reader-toolbar"><button data-action="pin" aria-pressed="false">固定</button><button data-action="inspect-close" class="close" aria-label="关闭卡牌详情">×</button></div><h2 class="reader-title" id="reader-title"></h2><div class="reader-meta"><span id="reader-type"></span><span id="reader-cost" class="mana"></span></div><div class="reader-rules" id="reader-rules"></div><div class="reader-cost-change" id="reader-cost-change"></div></div></aside>
+  </section>
+  <section class="info-panel history-panel" id="history" role="tabpanel" aria-labelledby="history-tab" hidden>
+    <div class="history-turn"><strong>第 10 回合</strong><small>你的回合 · 战斗前主要阶段</small></div>
+    <ol class="history-list" id="history-list"></ol>
+    <div class="history-end">当前记录到对手指定目标</div>
+  </section>
+</aside>
+<aside class="drawer" id="browser" hidden aria-label="公开区域浏览"><div class="drawer-header"><h2 id="browser-title"></h2><button data-action="browser-close" class="drawer-close" aria-label="关闭区域浏览">×</button></div><div id="browser-list" class="drawer-list"></div></aside>
+<div class="zoom" id="zoom" hidden role="dialog" aria-modal="true" aria-label="完整牌面"><button class="zoom-close" data-action="zoom-close" aria-label="关闭完整牌面">×</button><img id="zoom-image" alt=""><div class="zoom-copy"><small id="zoom-type"></small><h2 id="zoom-name"></h2><p id="zoom-rules"></p></div></div>
+</main></div><script src="scene-data.js"></script><script>
+(()=>{
+'use strict';const D=window.MTGB_DATA,$=s=>document.querySelector(s),cards=D.cards;const own=D.players.find(p=>p.seat===1),other=D.players.find(p=>p.seat===2);
+let activeCard=D.initialInspect,pinned=false,selectedStack=D.stack[0].id,dense=false,activeInfoTab='details';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function mana(cost){if(!cost||cost==='no cost')return'';return[...cost.matchAll(/\{([^}]+)\}/g)].map(([,s])=>D.assets.mana[s]?`<img src="${D.assets.mana[s]}" alt="${esc(s)}">`:`<span class="generic">${esc(s)}</span>`).join('');}
+function rules(text){return esc(text).replace(/\{([^}]+)\}/g,(_,s)=>({W:'白',U:'蓝',B:'黑',R:'红',G:'绿',T:'横置',E:'能量'}[s]||s));}
+function fit(){const scale=Math.min(innerWidth/1600,innerHeight/900);$('#fit').style.transform=`translate(-50%,-50%) scale(${scale})`;}
+addEventListener('resize',fit);fit();$('#table').style.setProperty('--mat',`url("${'assets/battlefield-source.png'}")`);
+$('#turn').textContent=D.turn;$('#phase').textContent=D.phase;$('#our-life').textContent=own.life;$('#their-life').textContent=other.life;$('#hand-count').textContent=own.hand.length;$('#their-hand-summary').textContent='手牌 '+other.handCount;
+$('#private-hand').innerHTML=Array.from({length:other.handCount},()=>`<img src="${D.assets.back}" alt="对手的隐藏手牌">`).join('')+`<span>${other.handCount} 张</span>`;
+function zones(p,target){$(target).innerHTML=`<button class="zone-link" disabled aria-label="${p.name}的牌库${p.library}张"><span>牌库</span><b>${p.library}</b></button><button class="zone-link" data-action="graveyard" data-seat="${p.seat}" aria-label="查看${p.name}的坟墓场"><span>坟墓场</span><b>${p.graveyard.length}</b></button><button class="zone-link" data-action="exile" data-seat="${p.seat}" aria-label="查看${p.name}的放逐区"><span>放逐</span><b>${p.exile.length}</b></button>`;}
+zones(own,'#our-zones');zones(other,'#their-zones');
+function land(id){const c=cards[id];return`<button class="land-card ${c.tapped?'tapped':''}" data-card-id="${id}" data-zone="battlefield" aria-label="${esc(c.name)}${c.tapped?'，已横置':''}"><span class="land-art"><img src="${c.image}" alt="${esc(c.name)}"></span><span class="land-name">${esc(c.name)}</span></button>`;}
+function permanent(id){const c=cards[id];return`<button class="permanent" data-card-id="${id}" data-zone="battlefield" aria-label="${esc(c.name)}${c.creature?'，'+c.power+'/'+c.toughness:''}"><img src="${c.image}" alt="${esc(c.name)}">${c.creature?`<span class="power">${c.power}/${c.toughness}</span>`:''}<span class="permanent-name">${esc(c.name)}</span></button>`;}
+function renderBoard(){const enemyLands=other.battlefield.filter(id=>cards[id].land),ourLands=own.battlefield.filter(id=>cards[id].land),creatures=other.battlefield.filter(id=>cards[id].creature),supports=other.battlefield.filter(id=>!cards[id].creature&&!cards[id].land);$('#enemy-lands').innerHTML=(dense?[...enemyLands,...enemyLands,...enemyLands]:enemyLands).map(land).join('');$('#own-lands').innerHTML=(dense?[...ourLands,...ourLands,...ourLands]:ourLands).map(land).join('');$('#enemy-permanents').innerHTML=(dense?[...creatures,...creatures,...creatures]:creatures).map(permanent).join('')+`<div class="support">${supports.map(permanent).join('')}</div>`;$('#table').classList.toggle('dense',dense);}
+renderBoard();
+$('#hand').innerHTML=own.hand.map(id=>{const c=cards[id];return`<button class="hand-card" data-card-id="${id}" data-zone="hand" aria-label="查看手牌${esc(c.name)}"><img src="${c.image}" alt="${esc(c.name)}"><span class="hand-cost mana">${mana(c.cost)}</span></button>`;}).join('');
+function showCard(id,force=false){if(!cards[id]||(pinned&&!force))return;activeCard=id;const c=cards[id];$('#reader').hidden=false;$('#reader-empty').hidden=true;$('#reader-image').src=c.image;$('#reader-image').alt=c.name;$('#reader-title').textContent=c.name;$('#reader-type').textContent=c.type;$('#reader-cost').innerHTML=mana(c.cost);$('#reader-rules').innerHTML=rules(c.rules);const diff=c.cost!==c.printedCost&&c.printedCost!=='no cost';$('#reader-cost-change').style.display=diff?'flex':'none';$('#reader-cost-change').innerHTML=diff?'印刷费用 <span class="mana">'+mana(c.printedCost)+'</span>':'';document.querySelectorAll('.hand-card').forEach(el=>el.classList.toggle('picked',el.dataset.cardId===id));}
+function renderStack(){const selected=D.stack.find(s=>s.id===selectedStack);$('#stack-list').innerHTML=D.stack.map((s,i)=>{const c=cards[s.cardId],targeted=selected?.targets.includes(s.id);return`<button class="stack-item ${s.owner===1?'self':''} ${s.id===selectedStack?'selected':''} ${targeted?'targeted':''}" data-action="stack" data-stack-id="${s.id}" data-card-id="${s.cardId}" aria-label="${s.owner===1?'你的':'对手的'}${esc(s.name)}${i===0?'，先结算':''}"><img class="stack-thumb" src="${c.image}" alt=""><span class="stack-copy"><span class="stack-owner">${s.owner===1?'你':'对手'} · ${i===0?'先结算':'后结算'}</span><span class="stack-name">${esc(s.name)}</span><span class="stack-note">${esc(s.note)}</span>${s.targets.length?`<span class="target-note"><span class="stack-arrow">↳</span>指向 ${esc(cards[D.stack.find(x=>x.id===s.targets[0]).cardId].name)}</span>`:''}${targeted?'<span class="target-note">对手咒语的目标</span>':''}</span></button>`;}).join('');}
+renderStack();showCard(activeCard);
+function selectInfoTab(tab,focus=false){
+ activeInfoTab=tab;$('#info-rail').hidden=false;$('#details-panel').hidden=tab!=='details';$('#history').hidden=tab!=='history';
+ document.querySelectorAll('[data-action="info-tab"]').forEach(el=>{const selected=el.dataset.tab===tab;el.setAttribute('aria-selected',String(selected));el.tabIndex=selected?0:-1;if(selected&&focus)el.focus();});
+}
+function togglePin(){pinned=!pinned;const p=$('[data-action=pin]');p.classList.toggle('pinned',pinned);p.textContent=pinned?'已固定':'固定';p.setAttribute('aria-pressed',String(pinned));}
+function browse(seat,zone){const p=D.players.find(p=>p.seat===Number(seat)),list=p[zone];$('#browser').hidden=false;$('#browser-title').textContent=`${p.seat===1?'你的':'对手的'}${zone==='graveyard'?'坟墓场':'放逐区'} · ${list.length}`;$('#browser-list').className=list.length?'drawer-list':'empty-zone';$('#browser-list').innerHTML=list.length?list.map(id=>`<button class="browse-card" data-card-id="${id}" aria-label="查看${esc(cards[id].name)}"><img src="${cards[id].image}" alt="${esc(cards[id].name)}"><span>${esc(cards[id].name)}</span></button>`).join(''):'当前没有牌';}
+function historyCard(id,note){const c=cards[id];return `<button class="history-card" data-card-id="${id}" aria-label="查看历史中的${esc(c.name)}"><img src="${c.image}" alt=""><span><b>${esc(c.name)}</b><small>${esc(note)}</small></span></button>`;}
+const top=D.stack[0],bottom=D.stack[1];
+$('#history-list').innerHTML=`<li class="history-event mine"><div class="event-heading"><span class="event-owner">你</span><strong>施放咒语</strong></div>${historyCard(bottom.cardId,'X = 2 · 进入堆叠')}</li><li class="history-event enemy"><div class="event-heading"><span class="event-owner">对手</span><strong>施放咒语</strong></div>${historyCard(top.cardId,'进入堆叠 · 先结算')}</li><li class="history-event enemy"><div class="event-heading"><span class="event-owner">对手</span><strong>指定目标</strong></div>${historyCard(top.cardId,'来源咒语')}<div class="history-target">${historyCard(bottom.cardId,'↳ 成为对手咒语的目标')}</div></li>`;
+document.addEventListener('pointerover',e=>{const el=e.target.closest('[data-card-id]');if(el)showCard(el.dataset.cardId);});
+document.addEventListener('focusin',e=>{const el=e.target.closest('[data-card-id]');if(el)showCard(el.dataset.cardId);});
+document.addEventListener('click',e=>{const el=e.target.closest('button');if(!el)return;const action=el.dataset.action;
+if(action==='info-tab')selectInfoTab(el.dataset.tab);
+else if(action==='info-open')selectInfoTab(activeInfoTab);
+else if(action==='history'){selectInfoTab('history');$('#browser').hidden=true;}
+else if(action==='menu'){$('#menu').hidden=!$('#menu').hidden;el.setAttribute('aria-expanded',String(!$('#menu').hidden));}
+else if(action==='view-battlefield'){$('#menu').hidden=true;$('#info-rail').hidden=true;$('#browser').hidden=true;}
+else if(action==='reset-view'){$('#menu').hidden=true;selectInfoTab('details');$('#browser').hidden=true;$('#zoom').hidden=true;if(pinned)togglePin();selectedStack=D.stack[0].id;renderStack();showCard(D.initialInspect,true);}
+else if(action==='history-close')selectInfoTab('details');
+else if(action==='browser-close')$('#browser').hidden=true;
+else if(action==='graveyard'||action==='exile')browse(el.dataset.seat,action);
+else if(action==='stack'){selectedStack=el.dataset.stackId;renderStack();selectInfoTab('details');showCard(el.dataset.cardId,true);}
+else if(action==='pin')togglePin();
+else if(action==='inspect-close'){$('#reader').hidden=true;$('#reader-empty').hidden=false;if(pinned)togglePin();}
+else if(action==='zoom'){const c=cards[activeCard];$('#zoom-image').src=c.image;$('#zoom-image').alt=c.name;$('#zoom-name').textContent=c.name;$('#zoom-type').textContent=c.type;$('#zoom-rules').innerHTML=rules(c.rules);$('#zoom').hidden=false;}
+else if(action==='zoom-close')$('#zoom').hidden=true;
+else if(action==='pass'){$('#priority-message').textContent=$('#priority-message').textContent==='轮到你响应'?'对手响应中':'轮到你响应';$('#pass-button').childNodes[0].textContent=$('#priority-message').textContent==='轮到你响应'?'让过优先权':'等待对手';}
+else if(action==='auto'){const on=el.getAttribute('aria-pressed')==='true';el.setAttribute('aria-pressed',String(!on));el.textContent=on?'手动':'自动';}
+else if(el.dataset.scroll)document.getElementById(el.dataset.scroll).scrollBy({left:400,behavior:'smooth'});
+else if(el.dataset.cardId){selectInfoTab('details');showCard(el.dataset.cardId,true);if(!pinned)togglePin();}
+});
+document.addEventListener('keydown',e=>{if(e.target.closest('[role=tab]')&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();selectInfoTab(e.key==='Home'?'details':e.key==='End'?'history':activeInfoTab==='details'?'history':'details',true);return;}if(e.key==='Escape'){if(!$('#zoom').hidden)$('#zoom').hidden=true;else if(!$('#menu').hidden)$('#menu').hidden=true;else if(!$('#browser').hidden)$('#browser').hidden=true;else if(!$('#history').hidden)selectInfoTab('details');else if(pinned)togglePin();}});
+window.setDense=value=>{dense=!!value;renderBoard();};
+})();
+</script></body></html>

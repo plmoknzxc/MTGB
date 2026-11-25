@@ -64,6 +64,30 @@ public static class NativeMessageValidation
             Check(unknown.Contains("5")&&unknown.Contains("Additional unknown effect stays here."),"Unknown clauses remain visible without being swallowed");
             string malformed=GamePreferences.NativeText("Pyroclasm deals banana damage to each creature.");
             Check(malformed.Contains("banana"),"Unknown amount is not rewritten as a known damage rule");
+            const string countLabel="Uncatalogued choice count (17)";
+            Check(GamePreferences.NativeText(countLabel)==countLabel,"Unrecognized instructions keep counts in parentheses");
+            foreach(string color in new[]{"White","Blue","Black","Red","Green"}) {
+                string raw=$"Select 2 more Card.{color} card(s) to reveal.";
+                string actual=GamePreferences.NativeText(raw);
+                Check(language=="en-US"?actual.Contains("Card."+color):actual.Contains("2")&&actual.Contains(GamePreferences.T(color))&&!actual.Contains("Card."),"Remaining reveal count and color: "+color);
+            }
+            string seek=GamePreferences.NativeText("Seek failed: Creature.cmcLE2");
+            Check(language=="en-US"?seek.Contains("Creature.cmcLE2"):seek.Contains("2")&&seek.Contains(GamePreferences.T("Creature"))&&!seek.Contains("cmc"),"Seek reports the card type and mana-value limit");
+            string mandatory=GamePreferences.NativeText("Giant Spider (203) must still block Crashing Boars (161).");
+            Check(mandatory.Contains(GamePreferences.CardFaceName("Giant Spider"))&&mandatory.Contains(GamePreferences.CardFaceName("Crashing Boars"))&&
+                (language=="en-US"?mandatory.Contains("must still block"):!mandatory.Contains("still block")),"Required blocker and attacker are both identified");
+            Check(BattleTextDiagnostics.IsUntranslatedDisplay("Select one"),"Short selection instructions are audited");
+            foreach(string card in new[]{"Arcbound Worker","Arcbound Ravager","Arcbound Stinger"}) {
+                var source=new ForgeCardView{name=card};
+                string trigger=$"When {card} dies, you may put a +1/+1 counter on target artifact creature for each +1/+1 counter on {card}";
+                var rendered=(string)method.Invoke(ui,new object[]{source,trigger});
+                Check(language=="en-US"?rendered==trigger:rendered.Contains("+1/+1")||rendered.Contains("＋1/＋1"),card+" modular counter text");
+                Check(language=="en-US"||(!BattleTextDiagnostics.HasEnglishProse(rendered)&&rendered.Contains(GamePreferences.CardFaceName(card))),card+" trigger uses active locale");
+            }
+            foreach(string message in new[]{" Attach to Stonecoil Serpent"," - Kappa Cannoneer - Creature 4 / 4 by Emry, Lurker of the Loch"}) {
+                string actual=GamePreferences.NativeText(message);
+                Check(language=="en-US"?actual.Trim()==message.Trim():!BattleTextDiagnostics.HasEnglishProse(actual),"Generated attachment or attributed payment: "+message);
+            }
         }
         finally {UnityEngine.Object.Destroy(go);}
         Directory.CreateDirectory(".tools/battle-text-fix-1016/regression");

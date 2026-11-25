@@ -25,6 +25,7 @@ public sealed class SetBrowserPanel : MonoBehaviour
     readonly Dictionary<string, Sprite> symbols = new Dictionary<string, Sprite>();
     static Entry[] catalog;
     static Entry[] LoadCatalog() => catalog ?? (catalog=JsonUtility.FromJson<Catalog>(Resources.Load<TextAsset>("SetBrowser/Catalog").text).entries);
+    internal static IReadOnlyList<Entry> Entries => LoadCatalog();
     public static string DisplayName(Entry e) => GamePreferences.Language=="zh-CN"&&!string.IsNullOrEmpty(e.zh)?e.zh:
         GamePreferences.Language=="ja-JP"&&!string.IsNullOrEmpty(e.ja)?e.ja:e.name;
     static bool Contains(string text,string query) => (text??"").IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0;
@@ -32,7 +33,7 @@ public sealed class SetBrowserPanel : MonoBehaviour
 
     public static GameObject Show(Transform parent, InputField target)
     {
-        var root = ReplayWidgets.Panel(parent, "SeriesPicker", 0, 0, 0, 0, new Color(0, 0, 0, .8f));
+        var root = ReplayWidgets.Panel(parent, "SeriesPicker", 0, 0, 0, 0, MenuVisualTheme.DialogShade);
         root.anchorMin = Vector2.zero; root.anchorMax = Vector2.one;
         root.offsetMin = root.offsetMax = Vector2.zero;
         root.gameObject.AddComponent<SetBrowserPanel>().Build(target);
@@ -45,10 +46,12 @@ public sealed class SetBrowserPanel : MonoBehaviour
         var known = new HashSet<string>(entries.Select(e => e.code));
         children = entries.Where(e => !string.IsNullOrEmpty(e.parent) && known.Contains(e.parent))
             .GroupBy(e => e.parent).ToDictionary(g => g.Key, g => g.OrderBy(e => e.code).ToList());
-        selected = new HashSet<string>(target.text.Split(new[] { ',', '，', ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()), StringComparer.OrdinalIgnoreCase);
+        selected = new HashSet<string>(AdvancedCardSearch.SetTerms(target.text), StringComparer.OrdinalIgnoreCase);
         var panel = ReplayWidgets.Panel(transform, "SeriesPanel", 0, 0, 1000, 850, MenuVisualTheme.Panel);
-        ReplayWidgets.Label(panel, "所有系列", 0, 376, 920, 44, 28);
+        var title = ReplayWidgets.Label(panel, "所有系列", 0, 376, 920, 44, 30);
+        MenuVisualTheme.StyleDeckDialogSurface(panel, title);
         search = ReplayWidgets.Input(panel, "", 0, 310, 920);
+        MenuVisualTheme.StyleSearchInput(search);
         ReplayWidgets.Label(panel, "搜索代码或名称 · 箭头展开附属系列 · 点击行选择", 0, 260, 920, 32, 17);
         var viewport = ReplayWidgets.Panel(panel, "Viewport", 0, -12, 920, 492, MenuVisualTheme.Ink);
         viewport.gameObject.AddComponent<RectMask2D>();
@@ -57,24 +60,29 @@ public sealed class SetBrowserPanel : MonoBehaviour
         scroll = viewport.gameObject.AddComponent<ScrollRect>();
         scroll.viewport = viewport; scroll.content = rows; scroll.horizontal = false;
         scroll.movementType = ScrollRect.MovementType.Clamped; scroll.scrollSensitivity = 42;
-        var track = ReplayWidgets.Panel(viewport, "ScrollTrack", 452, 0, 8, 492, MenuVisualTheme.Panel);
+        var track = ReplayWidgets.Panel(viewport, "ScrollTrack", 450, 0, 18, 492, MenuVisualTheme.Recess);
         var bar = track.gameObject.AddComponent<Scrollbar>();
         var handle = ReplayWidgets.Panel(track, "Handle", 0, 0, 8, 0, MenuVisualTheme.Muted);
         bar.handleRect = handle; bar.targetGraphic = handle.GetComponent<Image>(); bar.direction = Scrollbar.Direction.BottomToTop;
         scroll.verticalScrollbar = bar;
+        MenuVisualTheme.StyleDeckScrollThumb(bar);
         status = ReplayWidgets.Label(panel, "", -320, -292, 280, 34, 18);
         previous = ReplayWidgets.Button(panel, "上一页", 30, -292, 130, () => { page--; Render(); scroll.verticalNormalizedPosition = 1; });
         pageLabel = ReplayWidgets.Label(panel, "", 210, -292, 200, 34, 18, TextAnchor.MiddleCenter);
         next = ReplayWidgets.Button(panel, "下一页", 395, -292, 130, () => { page++; Render(); scroll.verticalNormalizedPosition = 1; });
-        ReplayWidgets.Panel(panel, "Divider", 0, -327, 920, 1, MenuVisualTheme.Muted);
+        ReplayWidgets.Panel(panel, "Divider", 0, -327, 920, 1, MenuVisualTheme.Etching);
         ReplayWidgets.Button(panel, "清空选择", -365, -376, 190, () => { selected.Clear(); Render(); });
         ReplayWidgets.Button(panel, "取消", 155, -376, 190, () => Destroy(gameObject));
-        ReplayWidgets.Button(panel, "确定", 365, -376, 190, () =>
+        var confirm = ReplayWidgets.Button(panel, "确定", 365, -376, 190, () =>
         {
             if (target != null) { target.characterLimit = 0; target.text = string.Join(", ", selected.OrderBy(s => s)); }
             Destroy(gameObject);
         }, true);
-        foreach (var button in panel.GetComponentsInChildren<Button>()) FixedButtonText(button);
+        foreach (var button in panel.GetComponentsInChildren<Button>())
+        {
+            MenuVisualTheme.StyleDeckTool(button, button == confirm);
+            FixedButtonText(button);
+        }
         search.onValueChanged.AddListener(_ => { page = 0; collapsedSearch.Clear(); Render(); scroll.verticalNormalizedPosition = 1; });
         Render();
     }
@@ -96,13 +104,13 @@ public sealed class SetBrowserPanel : MonoBehaviour
             row = ReplayWidgets.Button(rows, "", -4, 0, 884, () =>
             {
                 if (!selected.Add(e.code)) selected.Remove(e.code);
-                row.GetComponent<Image>().color = selected.Contains(e.code) ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
+                MenuVisualTheme.StyleDeckOption(row, selected.Contains(e.code));
                 status.text = $"已选 {selected.Count} 个系列";
             });
             FixedButtonText(row);
             var rect = (RectTransform)row.transform; rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1);
             row.name = "Set_" + e.code;
-            row.GetComponent<Image>().color = selected.Contains(e.code) ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
+            MenuVisualTheme.StyleDeckOption(row, selected.Contains(e.code));
             int indent = Math.Min(depth, 4) * 24;
             if (hasChildren)
             {
@@ -113,6 +121,7 @@ public sealed class SetBrowserPanel : MonoBehaviour
                     Render();
                 });
                 arrow.name = "Expand_" + e.code;
+                MenuVisualTheme.StyleDeckTool(arrow);
                 FixedButtonText(arrow);
             }
             if (!string.IsNullOrEmpty(e.icon))
@@ -129,6 +138,7 @@ public sealed class SetBrowserPanel : MonoBehaviour
             }
             float left = -338 + indent;
             var title = ReplayWidgets.Label(rect, RowName(e), (left + 286) / 2, 0, 286 - left, 46, 18);
+            MenuTypography.Use(title, MenuTypography.Face.Control);
             title.horizontalOverflow = HorizontalWrapMode.Wrap;
             float height=Mathf.Max(52,Mathf.Ceil(title.preferredHeight)+14);
             rect.sizeDelta=new Vector2(884,height);

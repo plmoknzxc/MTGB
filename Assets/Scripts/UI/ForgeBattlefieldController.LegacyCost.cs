@@ -15,11 +15,8 @@ public sealed partial class ForgeBattlefieldController
             &&((card.previewManaCost??card.manaCost??d.manaCost??"").Contains('{')
                 ||d.features.Any(f=>(f.manaCost??"").Contains('{')));
     }
-    private void PresentLegacyCost(RectTransform parent,ForgeCardView card)
+    private (string printed,string current,string printedSecond,string second,bool highTitle,bool primaryFirst,bool pair,bool rotated,bool back) LegacyCosts(ForgeCardView card)
     {
-        var existing=parent.GetComponent<LegacyCardCost>();
-        var image=parent.GetComponent<Image>();
-        if(!HasLegacyCost(card)||image==null||image.sprite==null||image.color.a==0){if(existing!=null)existing.Hide();return;}
         var d=ComponentDefinition(card,false);
         var f=d.features?.FirstOrDefault(x=>x.cardName==card.name&&x.faceIndex==(card.backFace?1:0))
             ??d.features?.FirstOrDefault(x=>x.faceIndex==(card.backFace?1:0));
@@ -45,9 +42,35 @@ public sealed partial class ForgeBattlefieldController
         bool inset=d.forgeSplitType is "Adventure" or "Omen";
         bool rotated=d.forgeSplitType is "Split" or "Room";
         string printed=inset?primary?.manaCost:f?.manaCost??d.manaCost;
-        if(existing==null)existing=parent.gameObject.AddComponent<LegacyCardCost>();
-        existing.Bind(image.sprite,rotated?primary?.manaCost:printed,Cost(pair?primary:f),
+        return (rotated?primary?.manaCost:printed,Cost(pair?primary:f),
             pair&&(inset||rotated)?secondary.manaCost:null,pair?Cost(secondary):null,
             ((f?.cardTypes??d.cardTypes)&CardType.Planeswalker)!=0,!inset,pair,rotated,pair&&!inset&&!rotated&&f==secondary);
+    }
+
+    private string PickerAuthoritySignature()
+    {
+        var options=view?.request?.options??Array.Empty<ForgeOption>();
+        return string.Join(",",(view?.playableExile??Array.Empty<ForgeCardView>()).Select(c=>c.id))+"/"+
+            string.Join(",",(view?.playableGraveyard??Array.Empty<ForgeCardView>()).Select(c=>c.id))+"/"+
+            string.Join("|",options.Where(o=>o.castingFace!=null).Select(o=>o.castingFace.id+":"+o.castingFace.name+":"+o.castingFace.previewManaCost));
+    }
+    private string PickerCostText(ForgeCardView card)
+    {
+        if(!HasLegacyCost(card))return "";
+        var cost=LegacyCosts(card);
+        string Shown(string text)=>string.IsNullOrWhiteSpace(text)||text=="no cost"?"—":text;
+        if(cost.pair)return Shown(cost.current)+" / "+Shown(cost.second);
+        return LegacyCardCost.SameCost(cost.printed,cost.current)?"":Shown(cost.current);
+    }
+
+    private void PresentLegacyCost(RectTransform parent,ForgeCardView card,float clearance=2)
+    {
+        var existing=parent.GetComponent<LegacyCardCost>();
+        var image=parent.GetComponent<Image>();
+        if(!HasLegacyCost(card)||image==null||image.sprite==null||image.color.a==0){if(existing!=null)existing.Hide();return;}
+        var cost=LegacyCosts(card);
+        if(existing==null)existing=parent.gameObject.AddComponent<LegacyCardCost>();
+        existing.Clearance=clearance;
+        existing.Bind(image.sprite,cost.printed,cost.current,cost.printedSecond,cost.second,cost.highTitle,cost.primaryFirst,cost.pair,cost.rotated,cost.back);
     }
 }

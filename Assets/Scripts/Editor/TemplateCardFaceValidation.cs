@@ -50,12 +50,11 @@ public static class TemplateCardFaceValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool prior=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
         var test=Validate(ui);
         try {
             while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"result.txt","PASS: two PSD 2D faces, native hand/main/adventure costs, real stack/field and public zone views, production cast rays/IDs, component reuse and three localized layouts. Two-card pilot; no all-card or live-network claim.");
-        }finally{running=false;GamePreferences.SetLanguage("zh-CN");if(notice!=null)notice.enabled=prior;}
+        }finally{running=false;GamePreferences.SetLanguage("zh-CN");}
     }
     static IEnumerator Language(string language)
     {

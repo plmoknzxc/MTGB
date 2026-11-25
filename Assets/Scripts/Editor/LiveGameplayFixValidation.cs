@@ -60,7 +60,6 @@ public static class LiveGameplayFixValidation
     static IEnumerator Exercise()
     {
         float until=Time.realtimeSinceStartup+30;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))notice.enabled=false;
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("LiveGameplayBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;
         var data=CardDatabaseRepository.LoadAll();var creature=data.First(d=>d.cardName=="Pinnacle Emissary");
         var request=new ForgeRequest{kind="InputPassPriority",seat=1,playerSeat=1,requestId=100,options=new[]{new ForgeOption{id="ok",label="OK"}}};
@@ -164,7 +163,7 @@ public static class LiveGameplayFixValidation
         var localField=typeof(OnlineMatchService).GetField("<LocalSeat>k__BackingField",Private);int priorSeat=(int)localField.GetValue(service);
         stateField.SetValue(service,new OnlineLobbyState{playDrawChooserSeat=1,config=new OnlineRoomConfig{startingLife=20},players=new List<OnlineLobbyPlayer>{new(){seat=1,displayName="甲"},new(){seat=2,displayName="乙"}}});
         Set(ui,"service",service);localField.SetValue(service,1);Call(ui,"PresentMatchPreparation");yield return Frame();
-        Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName&&GameObject.Find("BattlefieldPlayDraw")!=null,"play/draw is presented in battlefield scene");
+        Check(ForgeBattlefieldController.IsBattlefieldSceneActive&&GameObject.Find("BattlefieldPlayDraw")!=null,"play/draw is presented in battlefield scene");
         var firstBoard=(ForgeSeatView)typeof(ForgeBattlefieldController).GetField("view",Private).GetValue(ui);Check(firstBoard.players.All(p=>p.hand.Length==0&&p.handCount==0),"preparation board exposes no opening hands before choice");
         Check(GameObject.Find("BattlefieldPlayDraw").GetComponentsInChildren<Button>().Length==2,"chooser alone sees play/draw actions");
         ScreenCapture.CaptureScreenshot(Path.GetFullPath(Output+"/play-draw.png"));yield return Frame();

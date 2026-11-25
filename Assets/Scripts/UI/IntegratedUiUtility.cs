@@ -17,6 +17,7 @@ public static class IntegratedUiUtility
     // Opaque raised controls stay legible over both a window and battlefield art.
     public static void StyleButton(Button button, Color requested)
     {
+        ButtonPressSound.Bind(button);
         var image=button.GetComponent<Image>();if(image==null)return;
         var rect=(RectTransform)button.transform;
         image.sprite=RoundedRect(Mathf.Max(36,rect.rect.width),Mathf.Max(28,rect.rect.height),6);
@@ -62,6 +63,21 @@ public static class IntegratedUiUtility
         }
 
         return CacheSprite(key, pixels, w, h);
+    }
+
+    public static Sprite SlicedRoundedRect(int radius)
+    {
+        string key = $"sliced-round-{radius}";
+        if (SpriteCache.TryGetValue(key, out var cached) && cached != null) return cached;
+        int border = radius + 2;
+        int size = border * 2 + 2;
+        var source = RoundedRect(size, size, radius);
+        var sprite = Sprite.Create(source.texture, source.rect, new Vector2(.5f, .5f),
+            source.pixelsPerUnit, 0, SpriteMeshType.FullRect, Vector4.one * border);
+        sprite.name = key;
+        sprite.hideFlags = HideFlags.HideAndDontSave;
+        SpriteCache[key] = sprite;
+        return sprite;
     }
 
     /// <summary>圆角矩形描边（边框线宽 border，内部透明），用于卡牌描边/辉光。</summary>

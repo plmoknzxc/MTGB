@@ -33,7 +33,6 @@ public static class SplitCopyPresentationValidation {
     [Serializable] public class Sample{public string caseName,label;public int cardId,sourceId;}
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             float until=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;yield return Frame();GamePreferences.SetLanguage("en-US");yield return Frame();until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||GamePreferences.Language!="en-US")&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language=="en-US","English preferences initialized");
             foreach(int seat in new[]{1,2})foreach(string label in new[]{"original-ice","copied-ice","copy-resolved","finished"}){
@@ -54,7 +53,7 @@ public static class SplitCopyPresentationValidation {
                 if(label=="copied-ice"&&seat==1){ScreenCapture.CaptureScreenshot(Output+"/split-copy.png");yield return Frame();}
                 if(label=="finished")Check(v.players[0].graveyardCards.Any(c=>c.name=="Fire // Ice"&&c.stateName=="Original")&&stack.Count==0,"Physical split card restored and resolved copy removed "+seat);
             }
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);}
     }
 }
 #endif

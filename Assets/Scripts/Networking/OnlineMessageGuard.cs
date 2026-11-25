@@ -144,7 +144,7 @@ public sealed class OnlineMessageGuard
         return true;
     }
 
-    public static bool ValidateActionShape(GameAction action, out string error)
+    public static bool ValidateActionShape(GameAction action, out string error, int playerCapacity = 2)
     {
         if (action == null)
         {
@@ -167,7 +167,7 @@ public sealed class OnlineMessageGuard
             || action.choiceRequestId < 0
             || action.sourceObjectId < 0 || action.sourceObjectId > 1000000000L
             || action.targetObjectId < 0 || action.targetObjectId > 1000000000L
-            || action.targetPlayerId < 0 || action.targetPlayerId > 2
+            || action.targetPlayerId < 0 || action.targetPlayerId > playerCapacity
             || action.value < -1000000 || action.value > 1000000)
         {
             error = "操作字段超出允许范围。";

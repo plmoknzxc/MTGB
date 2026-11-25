@@ -1,0 +1,133 @@
+{
+  "scope": "D版玩家信息突出与布局验证；只修改HTML原型",
+  "entries": [
+    {
+      "label": "details-1600",
+      "brokenImages": [],
+      "height": 900,
+      "privateHandCardOverlaps": [],
+      "profileCardOverlaps": [],
+      "profiles": [
+        {
+          "lifeFont": "61px",
+          "name": "对手资料",
+          "rect": {
+            "bottom": 246,
+            "right": 1219,
+            "x": 889,
+            "y": 101
+          }
+        },
+        {
+          "lifeFont": "61px",
+          "name": "你的资料",
+          "rect": {
+            "bottom": 843,
+            "right": 653,
+            "x": 371,
+            "y": 684
+          }
+        }
+      ],
+      "visibleCards": 18,
+      "width": 1600
+    },
+    {
+      "label": "history-1280",
+      "brokenImages": [],
+      "height": 720,
+      "privateHandCardOverlaps": [],
+      "profileCardOverlaps": [],
+      "profiles": [
+        {
+          "lifeFont": "61px",
+          "name": "对手资料",
+          "rect": {
+            "bottom": 196.8000030517578,
+            "right": 975.2000732421876,
+            "x": 711.2000732421875,
+            "y": 80.80000305175781
+          }
+        },
+        {
+          "lifeFont": "61px",
+          "name": "你的资料",
+          "rect": {
+            "bottom": 674.4000473022461,
+            "right": 522.4000396728516,
+            "x": 296.8000183105469,
+            "y": 547.2000122070312
+          }
+        }
+      ],
+      "visibleCards": 18,
+      "width": 1280
+    },
+    {
+      "label": "dense-gallery-1280",
+      "brokenImages": [],
+      "height": 612,
+      "privateHandCardOverlaps": [],
+      "profileCardOverlaps": [],
+      "profiles": [
+        {
+          "lifeFont": "61px",
+          "name": "对手资料",
+          "rect": {
+            "bottom": 167.2800064086914,
+            "right": 924.9200134277344,
+            "x": 700.52001953125,
+            "y": 68.68000793457031
+          }
+        },
+        {
+          "lifeFont": "61px",
+          "name": "你的资料",
+          "rect": {
+            "bottom": 573.239990234375,
+            "right": 540.0400085449219,
+            "x": 348.280029296875,
+            "y": 465.1199951171875
+          }
+        }
+      ],
+      "visibleCards": 21,
+      "width": 1280
+    },
+    {
+      "label": "dense-gallery-1600",
+      "brokenImages": [],
+      "height": 792,
+      "privateHandCardOverlaps": [],
+      "profileCardOverlaps": [],
+      "profiles": [
+        {
+          "lifeFont": "61px",
+          "name": "对手资料",
+          "rect": {
+            "bottom": 216.4800033569336,
+            "right": 1168.7200012207031,
+            "x": 878.3200073242188,
+            "y": 88.87999725341797
+          }
+        },
+        {
+          "lifeFont": "61px",
+          "name": "你的资料",
+          "rect": {
+            "bottom": 741.8400573730469,
+            "right": 670.6400146484375,
+            "x": 422.47998046875,
+            "y": 601.9200439453125
+          }
+        }
+      ],
+      "visibleCards": 21,
+      "width": 1600
+    },
+    {
+      "label": "history-tab-still-operates",
+      "selected": "true"
+    }
+  ]
+}

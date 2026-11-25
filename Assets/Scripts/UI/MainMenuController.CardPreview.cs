@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,133 +7,187 @@ public sealed partial class MainMenuController
 {
     private CardDefinition previewFaceCard;
     private readonly List<int> previewFaceIndexes = new List<int>();
-    private RectTransform previewPanelRect, previewFrontRect, previewBackRect, previewFrontPlate, previewBackPlate, previewDetailsRect;
-    private Image previewBackImage;
-    private Text previewMissingLabel;
-    private float previewLayoutWidth = -1f;
-    private bool previewLayoutDual;
+    private int previewFacePosition;
+    private int CurrentPreviewFace => previewFaceIndexes.Count == 0 ? 0 : previewFaceIndexes[previewFacePosition];
+    private RectTransform previewPanelRect, previewDetailsRect;
+    private RectTransform previewMat, previewGallery;
+    internal const float InspectorToolSize=36, InspectorToolGap=6, InspectorToolInset=10;
+    private Button previewFlipButton;
+    private Image previewFlipIcon;
+    private Text previewMissingLabel, previewHeading;
+    private Coroutine previewFlipAnimation;
+    private Vector2 previewLayoutSize;
+    private bool previewHadSwitch, previewWasGallery;
+    private int previewRevision = -1;
 
     private void CreateCardPreviewChrome()
     {
         if (cardPreviewImage == null || cardPreviewGroup == null) return;
-        Transform panel = cardPreviewGroup.transform;
-        previewPanelRect = panel as RectTransform;
-        previewFrontRect = cardPreviewImage.rectTransform;
-        previewDetailsRect = panel.Find("CardInfoScroll") as RectTransform;
-        previewFrontPlate = CreatePreviewPlate(panel, "CardPreviewPlate");
-        previewFrontPlate.SetSiblingIndex(previewFrontRect.GetSiblingIndex());
-        previewBackPlate = CreatePreviewPlate(panel, "CardPreviewBackPlate");
-        previewBackPlate.SetSiblingIndex(previewFrontRect.GetSiblingIndex());
+        previewPanelRect = (RectTransform)cardPreviewGroup.transform;
+        previewDetailsRect = previewPanelRect.Find("CardInfoScroll") as RectTransform;
+        previewHeading=AddText(previewPanelRect,"CardDetailsHeading","卡牌详情",21,MenuVisualTheme.ArchivePaper,TextAnchor.MiddleLeft);
+        MenuTypography.Use(previewHeading,MenuTypography.Face.Heading);
+        previewMat=MenuVisualTheme.Detail(previewPanelRect,"PortraitMat",MenuVisualTheme.Recess).rectTransform;
+        previewMat.SetAsFirstSibling();
+        previewMat.gameObject.AddComponent<RectMask2D>();
+        MenuVisualTheme.Background(previewMat,MenuThemeArtwork.Role.Hall,.11f);
+        previewGallery=(RectTransform)new GameObject("DeckEditorArtContent",typeof(RectTransform)).transform;
+        previewGallery.SetParent(previewPanelRect,false);
+        previewGallery.anchorMin=Vector2.zero;previewGallery.anchorMax=Vector2.one;
+        previewGallery.gameObject.SetActive(false);
+        cardPreviewImage.preserveAspect = true;
+        cardPreviewImage.raycastTarget = false;
 
-        var back = new GameObject("CardPreviewBackImage", typeof(RectTransform), typeof(Image));
-        back.transform.SetParent(panel, false);
-        previewBackRect = (RectTransform)back.transform;
-        previewBackRect.SetSiblingIndex(previewFrontRect.GetSiblingIndex() + 1);
-        previewBackImage = back.GetComponent<Image>();
-        previewBackImage.preserveAspect = true;
-        previewBackImage.raycastTarget = false;
-
-        var missing = new GameObject("MissingFaceImage", typeof(RectTransform), typeof(Text));
-        missing.transform.SetParent(panel, false);
-        previewMissingLabel = missing.GetComponent<Text>();
-        previewMissingLabel.font = cardInfoText.font;
-        PreferenceText.SetSize(previewMissingLabel, 15);
-        previewMissingLabel.color = new Color(.73f, .79f, .84f);
-        previewMissingLabel.alignment = TextAnchor.MiddleCenter;
-        previewMissingLabel.raycastTarget = false;
-        missing.SetActive(false);
-        previewBackRect.gameObject.SetActive(false);
-        previewBackPlate.gameObject.SetActive(false);
+        previewMissingLabel = AddText(previewPanelRect,"MissingFaceImage","",17,MenuVisualTheme.Muted,TextAnchor.MiddleCenter);
+        previewMissingLabel.gameObject.SetActive(false);
+        var flip = ReplayWidgets.Panel(previewPanelRect, "FlipPreviewFace", 0, 0, 46, 40, MenuVisualTheme.Slate);
+        previewFlipButton = flip.gameObject.AddComponent<Button>();
+        MenuVisualTheme.StyleArchiveControl(previewFlipButton);
+        previewFlipButton.onClick.AddListener(CyclePreviewFace);
+        previewFlipIcon = MenuVisualTheme.Detail(flip, "FlipIcon", MenuVisualTheme.Silver);
+        previewFlipIcon.sprite = Resources.Load<Sprite>("Menu/FlipCard");
+        previewFlipIcon.preserveAspect = true;
+        previewFlipIcon.rectTransform.sizeDelta = new Vector2(34, 34);
+        previewFlipButton.gameObject.SetActive(false);
         RefreshPreviewLayout();
-    }
-
-    private static RectTransform CreatePreviewPlate(Transform panel, string name)
-    {
-        var plate = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Outline));
-        plate.transform.SetParent(panel, false);
-        var rect = (RectTransform)plate.transform;
-        rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1);
-        rect.pivot = new Vector2(.5f, 1);
-        var image = plate.GetComponent<Image>();
-        image.sprite = IntegratedUiUtility.RoundedRect(303, 414, 9);
-        image.color = new Color(.025f, .04f, .06f);
-        image.raycastTarget = false;
-        var outline = plate.GetComponent<Outline>();
-        outline.effectColor = new Color(.48f, .54f, .59f, .85f);
-        outline.effectDistance = new Vector2(1, -1);
-        return rect;
     }
 
     private void RefreshAvailablePreviewFaces(CardDefinition card)
     {
+        int previous = CurrentPreviewFace;
         previewFaceIndexes.Clear();
+        previewFacePosition = 0;
         if (card == null) return;
         previewFaceIndexes.Add(0);
         if (card.features != null)
-            foreach (CardFeatureDefinition feature in card.features)
+            foreach (var feature in card.features)
                 if (feature != null && feature.faceIndex > 0 && !previewFaceIndexes.Contains(feature.faceIndex))
                     previewFaceIndexes.Add(feature.faceIndex);
-        if (CardImageLibrary.HasBackFace(card) && !previewFaceIndexes.Contains(1)) previewFaceIndexes.Add(1);
+        if (!previewFaceIndexes.Contains(1) && (CardImageLibrary.HasBackFace(card) || card.forgeSplitType is "Modal" or "Transform"))
+            previewFaceIndexes.Add(1);
         previewFaceIndexes.Sort();
+        previewFacePosition = Mathf.Max(0,previewFaceIndexes.IndexOf(previous));
     }
+
+    private void CyclePreviewFace()
+    {
+        if (previewFaceCard == null || previewFaceIndexes.Count < 2 || previewFlipAnimation != null) return;
+        previewFlipAnimation = StartCoroutine(FlipPreview());
+    }
+
+    private IEnumerator FlipPreview()
+    {
+        yield return TurnPreview(0, 88);
+        if (previewFaceIndexes.Count > 1)
+        {
+            previewFacePosition = (previewFacePosition + 1) % previewFaceIndexes.Count;
+            RenderCardDetail(previewFaceCard);
+        }
+        yield return TurnPreview(-88, 0);
+        previewFlipAnimation = null;
+    }
+
+    private IEnumerator TurnPreview(float start, float end)
+    {
+        const float halfDuration = .12f;
+        float began = Time.unscaledTime;
+        for (float t = 0; t < 1; t = (Time.unscaledTime - began) / halfDuration)
+        {
+            float angle = Mathf.Lerp(start, end, Mathf.SmoothStep(0, 1, t));
+            SetPreviewRotation(angle);
+            yield return null;
+        }
+        SetPreviewRotation(end);
+    }
+
+    private void SetPreviewRotation(float angle)
+    {
+        var rotation = Quaternion.Euler(0, angle, 0);
+        cardPreviewImage.rectTransform.localRotation = rotation;
+        previewMissingLabel.rectTransform.localRotation = rotation;
+    }
+
+    private void CancelPreviewFlip()
+    {
+        if (previewFlipAnimation == null) return;
+        StopCoroutine(previewFlipAnimation);
+        previewFlipAnimation = null;
+        SetPreviewRotation(0);
+    }
+
+    private void OnDisable() => CancelPreviewFlip();
 
     private void RefreshPreviewImages(CardDefinition card)
     {
-        if (cardPreviewImage == null) return;
-        Sprite front = card == null ? null : LoadCardSprite(card);
-        cardPreviewImage.sprite = front;
-        cardPreviewImage.color = front == null ? GetFallbackColor(card) : Color.white;
-        cardPreviewImage.preserveAspect = true;
-        bool dual = card != null && previewFaceIndexes.Count > 1;
-        previewBackRect.gameObject.SetActive(dual);
-        previewBackPlate.gameObject.SetActive(dual);
-        Sprite back = dual && CardImageLibrary.TryLoadFullCard(card, previewFaceIndexes[1], out Sprite faceSprite)
-            ? faceSprite : null;
-        previewBackImage.sprite = back;
-        previewBackImage.color = back == null ? new Color(.10f, .14f, .18f) : Color.white;
-        previewMissingLabel.gameObject.SetActive(dual && back == null);
-        if (dual && back == null)
-            previewMissingLabel.text = GamePreferences.Language.StartsWith("zh") ? "这一面暂无卡图"
-                : GamePreferences.Language.StartsWith("ja") ? "この面の画像は未取得" : "No image for this face";
-        previewLayoutWidth = -1f;
+        if (cardPreviewImage == null || previewFlipButton == null) return;
+        int index = CurrentPreviewFace;
+        Sprite art = null;
+        if (card != null)
+        {
+            if (index == 0) art = LoadCardSprite(card);
+            else CardImageLibrary.TryLoadFullCard(card,index,out art);
+        }
+        cardPreviewImage.sprite = art;
+        cardPreviewImage.enabled = art != null;
+        cardPreviewImage.color = Color.white;
+        bool missing = card != null && art == null;
+        previewMissingLabel.gameObject.SetActive(missing && !previewGallery.gameObject.activeSelf);
+        if (missing) previewMissingLabel.text = DeckCompanion.Text("此面暂无卡图","No artwork for this face","この面の画像は未取得");
+        previewFlipIcon.rectTransform.localScale = index == 0 ? Vector3.one : new Vector3(-1, 1, 1);
         RefreshPreviewLayout();
     }
 
     private void LateUpdate()
     {
+        if (previewFlipAnimation != null && !IsDeckBuilderVisible()) CancelPreviewFlip();
         UpdateDeckCollapseLayout();
-        if (previewPanelRect != null && Mathf.Abs(previewPanelRect.rect.width - previewLayoutWidth) > .5f)
-            RefreshPreviewLayout();
+        RefreshPreviewLayout();
     }
 
     private void RefreshPreviewLayout()
     {
-        if (previewPanelRect == null || previewFrontRect == null) return;
-        float panelWidth = previewPanelRect.rect.width;
-        if (panelWidth <= 0) return;
-        bool dual = previewFaceCard != null && previewFaceIndexes.Count > 1;
-        if (Mathf.Abs(panelWidth - previewLayoutWidth) < .5f && dual == previewLayoutDual) return;
-        previewLayoutWidth = panelWidth;
-        previewLayoutDual = dual;
-        float width = dual ? Mathf.Min(260f, Mathf.Max(1f, (panelWidth - 48f) * .5f)) : Mathf.Min(287f, panelWidth - 36f);
-        float height = width * 402f / 287f;
-        float centerOffset = dual ? (width + 12f) * .5f : 0f;
-        PlacePreviewRect(previewFrontRect, -centerOffset, -18f, width, height);
-        PlacePreviewRect(previewFrontPlate, -centerOffset, -12f, width + 12f, height + 12f);
-        PlacePreviewRect(previewBackRect, centerOffset, -18f, width, height);
-        PlacePreviewRect(previewBackPlate, centerOffset, -12f, width + 12f, height + 12f);
-        var missing = previewMissingLabel.rectTransform;
-        PlacePreviewRect(missing, centerOffset, -18f - height * .5f + 35f, width - 12f, 70f);
-        if (previewDetailsRect != null)
-            previewDetailsRect.offsetMax = new Vector2(-12f, -height - 30f);
-    }
-
-    private static void PlacePreviewRect(RectTransform rect, float x, float y, float width, float height)
-    {
-        if (rect == null) return;
-        rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1f);
-        rect.pivot = new Vector2(.5f, 1f);
-        rect.anchoredPosition = new Vector2(x, y);
-        rect.sizeDelta = new Vector2(width, height);
+        if (previewPanelRect == null || previewFlipButton == null) return;
+        Vector2 panel = previewPanelRect.rect.size;
+        bool gallery=previewGallery.gameObject.activeSelf;
+        bool canFlip=previewFaceIndexes.Count>1;
+        if (panel == previewLayoutSize && canFlip == previewHadSwitch && gallery==previewWasGallery && previewRevision==GamePreferences.Revision) return;
+        previewLayoutSize = panel;
+        previewHadSwitch = canFlip;
+        previewWasGallery=gallery;
+        previewMat.gameObject.SetActive(!gallery);
+        cardPreviewImage.gameObject.SetActive(!gallery);
+        previewFlipButton.gameObject.SetActive(!gallery && canFlip);
+        previewMissingLabel.gameObject.SetActive(!gallery && previewFaceCard!=null && cardPreviewImage.sprite==null);
+        previewDetailsRect.gameObject.SetActive(!gallery);
+        previewRevision=GamePreferences.Revision;
+        previewHeading.text = DeckCompanion.Text("卡牌详情","Card details","カード詳細");
+        float width = Mathf.Max(1,Mathf.Min(242,panel.x-32,panel.y*.355f/1.4f));
+        float height = width*1.4f;
+        void AtTop(RectTransform rect,float y,float w,float h)
+        {
+            rect.anchorMin=rect.anchorMax=new Vector2(.5f,1);
+            rect.pivot=new Vector2(.5f,1);
+            rect.anchoredPosition=new Vector2(0,-y);
+            rect.sizeDelta=new Vector2(w,h);
+        }
+        float headerHeight=2*InspectorToolInset+InspectorToolSize;
+        float collapseSlot=InspectorToolSize+InspectorToolGap;
+        AtTop(previewHeading.rectTransform,InspectorToolInset,panel.x-2*InspectorToolInset-collapseSlot,InspectorToolSize);
+        previewHeading.rectTransform.anchoredPosition+=Vector2.left*(collapseSlot*.5f);
+        previewGallery.offsetMin=new Vector2(3,4);
+        previewGallery.offsetMax=new Vector2(-3,-headerHeight);
+        float artTop=headerHeight+12;
+        AtTop(cardPreviewImage.rectTransform,artTop,width,height);
+        AtTop(previewMissingLabel.rectTransform,artTop,width,height);
+        float bottom = artTop+height;
+        AtTop(previewMat,headerHeight,panel.x-2,height+24);
+        if (canFlip)
+        {
+            var flip = (RectTransform)previewFlipButton.transform;
+            AtTop(flip, bottom + 15, flip.sizeDelta.x, flip.sizeDelta.y);
+            bottom += 15 + flip.sizeDelta.y;
+        }
+        previewDetailsRect.offsetMin = new Vector2(7,8);
+        previewDetailsRect.offsetMax = new Vector2(-5,-bottom-18);
     }
 }

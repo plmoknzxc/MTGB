@@ -25,12 +25,11 @@ public static class ReplacementPresentationValidation
     }
     static IEnumerator Guard(IEnumerator iterator)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;
-        if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt","PASS: actual replacement request replay in zh-CN/en-US/ja-JP; native source/effect identities, affected player, first-only/full confirmation, reset and cached order, stable cards/panel/fonts, translated exact unchanged paragraphs with scrollable complete body, actual pointer/index and independent stale/duplicate/nonacting guards; exact counter/token/exile end states. Native effect proof remains separate; not all replacements, languages, network or animation timing.");
-        }finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return new WaitForSecondsRealtime(.3f);yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

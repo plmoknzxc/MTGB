@@ -4,6 +4,7 @@ using UnityEngine.UI;
 // Presentation only: existing controls retain their listeners and serialized references.
 public static class MenuVisualTheme
 {
+    private static Texture2D deckToolbarShade;
     public static readonly Color Ink = new Color(.055f, .067f, .09f, 1);
     public static readonly Color Panel = new Color(.09f, .11f, .145f, 1);
     public static readonly Color Raised = new Color(.14f, .175f, .23f, 1);
@@ -42,18 +43,18 @@ public static class MenuVisualTheme
         t.text = value; PreferenceText.SetSize(t,size); t.color = Paper;
     }
 
-    private static void Background(Transform root, float opacity)
+    internal static void Background(Transform root, MenuThemeArtwork.Role role, float opacity)
     {
-        if (root.Find("SanctumArtwork") != null) return;
-        var go = new GameObject("SanctumArtwork", typeof(RectTransform), typeof(RawImage), typeof(AspectRatioFitter));
-        go.transform.SetParent(root, false); go.transform.SetAsFirstSibling();
+        var existing = root.Find("SanctumArtwork");
+        var go = existing != null ? existing.gameObject : new GameObject("SanctumArtwork", typeof(RectTransform), typeof(RawImage), typeof(AspectRatioFitter));
+        if (existing == null) go.transform.SetParent(root, false);
+        go.transform.SetAsFirstSibling();
         Stretch((RectTransform)go.transform);
         var image = go.GetComponent<RawImage>();
-        image.texture = Resources.Load<Texture2D>("Menu/ArchiveSanctum");
-        image.color = new Color(.68f, .79f, 1f, opacity); image.raycastTarget = false;
+        image.color = new Color(1f, 1f, 1f, opacity); image.raycastTarget = false;
         var fit = go.GetComponent<AspectRatioFitter>();
         fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-        fit.aspectRatio = image.texture != null ? (float)image.texture.width / image.texture.height : 16f / 9;
+        MenuThemeArtwork.Bind(image, role);
     }
 
     private static void Style(Transform root)
@@ -92,8 +93,9 @@ public static class MenuVisualTheme
     // Shared by the authored scene and runtime so the start screen has one layout.
     public static void ApplyStartScreen(Transform start)
     {
+        MenuTypography.Scope(start);
         Style(start);
-        Background(start, .58f);
+        Background(start, MenuThemeArtwork.Role.Start, .96f);
         var content = start.Find("StartMenuContent");
         if (content == null)
         {
@@ -103,45 +105,390 @@ public static class MenuVisualTheme
             foreach (string name in new[] { "StartLogoSlot", "OnlineMatchButton", "SettingsButton", "DeckEditorButton" })
                 Find(start, name).SetParent(content, false);
         }
-        Place(start, "StartLogoSlot", -570, 235, 570, 220);
+        Place(start, "StartLogoSlot", -555, 186, 570, 220);
         Place(start, "StartTitle", 0, 28, 570, 180);
-        Text(start, "StartTitle", "MTGB", 112);
+        Text(start, "StartTitle", "MTGB", 104);
         var title = Find(start, "StartTitle").GetComponent<Text>();
+        title.GetComponent<PreferenceText>().KeepFont = false;
+        MenuTypography.Use(title, MenuTypography.Face.Wordmark);
+        title.color = ArchivePaper;
         title.resizeTextForBestFit = false;
         title.horizontalOverflow = HorizontalWrapMode.Overflow;
         Find(start, "SettingsButton").GetComponentInChildren<Text>(true).text = "观看录像";
         ApplyStartNavigation(start);
+        StyleStartIcon<ForgeGearIcon>(content,"StartSettingsButton","GearIcon",28);
+        StyleStartIcon<ClientUpdateIcon>(content,"StartUpdateButton","UpdateIcon",104);
+    }
+
+    static void StyleStartIcon<T>(Transform content,string name,string iconName,float inset) where T : MaskableGraphic
+    {
+        var rect = content.Find(name) as RectTransform;
+        if (rect == null)
+        {
+            rect = (RectTransform)new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button)).transform;
+            rect.SetParent(content, false);
+            var icon = new GameObject(iconName, typeof(RectTransform), typeof(T)).GetComponent<T>();
+            icon.rectTransform.SetParent(rect, false);
+            icon.rectTransform.sizeDelta = new Vector2(34, 34);
+            icon.raycastTarget = false;
+        }
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one;
+        rect.sizeDelta = new Vector2(64, 64);
+        rect.anchoredPosition = new Vector2(-inset, -24);
+        var button = rect.GetComponent<Button>();
+        StyleArchiveControl(button);
+        Stretch(button.targetGraphic.rectTransform, 2.5f);
+        rect.GetComponentInChildren<T>(true).color = ArchivePaper;
     }
 
     public static void ApplyStartNavigation(Transform start)
     {
         EnsureLocalPlayButton(start);
         string[] names={"OnlineMatchButton","LocalAiButton","SettingsButton","DeckEditorButton"};
-        float[] rows={40,-56,-172,-268};
-        var normal=new Color(.075f,.10f,.13f,.96f);
-        for(int index=0;index<names.Length;index++)
+        float[] rows = {74, -11, -113, -198};
+        for (int i = 0; i < names.Length; i++)
         {
-            var target=Find(start,names[index]);if(target==null)continue;
-            var button=target.GetComponent<Button>();var image=button.GetComponent<Image>();
-            Place(start,names[index],-595,rows[index],520,76);
-            image.sprite=IntegratedUiUtility.RoundedRect(520,76,8);image.color=Color.white;
-            var outline=button.GetComponent<Outline>();if(outline==null)outline=button.gameObject.AddComponent<Outline>();
-            outline.effectColor=new Color(.30f,.38f,.44f,.6f);outline.effectDistance=new Vector2(1,-1);
-            button.transition=Selectable.Transition.ColorTint;
-            var colors=button.colors;colors.normalColor=normal;colors.selectedColor=new Color(.105f,.145f,.18f,1);
-            colors.highlightedColor=new Color(.14f,.20f,.25f,1);colors.pressedColor=new Color(.05f,.075f,.10f,1);
-            colors.disabledColor=new Color(.055f,.07f,.09f,.7f);colors.fadeDuration=.12f;button.colors=colors;
-            image.CrossFadeColor(normal,0,true,true);
-            var label=button.GetComponentInChildren<Text>();
-            Stretch(label.rectTransform);label.rectTransform.offsetMin=new Vector2(26,8);label.rectTransform.offsetMax=new Vector2(-68,-8);
-            label.alignment=TextAnchor.MiddleLeft;label.fontStyle=FontStyle.Normal;label.color=Paper;
-            label.resizeTextForBestFit=false;PreferenceText.SetSize(label,26);label.raycastTarget=false;
-            var arrow=target.Find("MenuArrow");
-            if(arrow==null){arrow=new GameObject("MenuArrow",typeof(RectTransform),typeof(Text)).transform;arrow.SetParent(target,false);}
-            var ar=(RectTransform)arrow;ar.anchorMin=ar.anchorMax=new Vector2(1,.5f);ar.pivot=new Vector2(.5f,.5f);ar.anchoredPosition=new Vector2(-30,0);ar.sizeDelta=new Vector2(32,48);
-            var glyph=arrow.GetComponent<Text>();glyph.font=GamePreferences.Font??IntegratedUiUtility.Font;glyph.text="›";glyph.color=Muted;glyph.alignment=TextAnchor.MiddleCenter;glyph.raycastTarget=false;
-            PreferenceText.SetSize(glyph,26);glyph.GetComponent<PreferenceText>().Literal=true;
+            var target = Find(start, names[i]);
+            if (target == null) continue;
+            Place(start, names[i], -638, rows[i], 404, 69);
+            var button = target.GetComponent<Button>();
+            var label = button.GetComponentInChildren<Text>();
+            var arrow = target.Find("MenuArrow");
+            if (arrow != null) arrow.gameObject.SetActive(false);
+            Stretch(label.rectTransform);
+            label.rectTransform.offsetMin = new Vector2(28, 2);
+            label.alignment = TextAnchor.MiddleLeft;
+            label.color = Color.white;
+            label.resizeTextForBestFit = false;
+            label.raycastTarget = false;
+            PreferenceText.SetSize(label, 29);
+            StyleArchiveButton(button, label, i == 0);
+            button.GetComponent<Image>().color = i == 0 ? MenuThemeCatalog.Current.NavigationEdge : Silver;
+            Stretch(button.targetGraphic.rectTransform, 3.5f);
         }
+    }
+
+    static Sprite archiveButtonFace;
+    static MenuThemeStyle buttonStyle;
+    static Sprite ArchiveButtonFace
+    {
+        get
+        {
+            if (archiveButtonFace == null || buttonStyle != MenuThemeCatalog.Current)
+            {
+                buttonStyle = MenuThemeCatalog.Current;
+                archiveButtonFace = buttonStyle.Load<Sprite>(buttonStyle.ButtonSprite) ?? MenuThemeCatalog.Default.Load<Sprite>(MenuThemeCatalog.Default.ButtonSprite);
+            }
+            return archiveButtonFace;
+        }
+    }
+    static Sprite MoonlitFrieze => MenuThemeCatalog.Current.Load<Sprite>(MenuThemeCatalog.Current.HeaderArt)
+        ?? Resources.Load<Sprite>(MenuThemeCatalog.Default.HeaderArt);
+    internal static Color DialogShade => MenuThemeCatalog.Current.DialogShade;
+    internal static Color ArchivePaper => MenuThemeCatalog.Current.ArchivePaper;
+    internal static Color ArchivePanel => MenuThemeCatalog.Current.ArchivePanel;
+    internal static Color Recess => MenuThemeCatalog.Current.Recess;
+    internal static Color Slate => MenuThemeCatalog.Current.Slate;
+    internal static Color LitSlate => MenuThemeCatalog.Current.LitSlate;
+    internal static Color MistBlue => MenuThemeCatalog.Current.MistBlue;
+    internal static Color Silver => MenuThemeCatalog.Current.Silver;
+    internal static Color Stone => MenuThemeCatalog.Current.Stone;
+    internal static Color Etching => MenuThemeCatalog.Current.Etching;
+    static Color ActionFill => MenuThemeCatalog.Current.ActionFill;
+    static Color ActionHover => MenuThemeCatalog.Current.ActionHover;
+    static Color ActionPressed => MenuThemeCatalog.Current.ActionPressed;
+    static Color ActionEdge => MenuThemeCatalog.Current.ActionEdge;
+    static Color ActionText => MenuThemeCatalog.Current.ActionText;
+    internal static Color Warning => MenuThemeCatalog.Current.Warning;
+    internal static Color MainAccent => MenuThemeCatalog.Current.MainAccent;
+    internal static Color SideAccent => MenuThemeCatalog.Current.SideAccent;
+    internal static Color LibraryAccent => MenuThemeCatalog.Current.LibraryAccent;
+    internal static Color SideSurface => MenuThemeCatalog.Current.SideSurface;
+    static Color ControlEdge => MenuThemeCatalog.Current.ControlEdge;
+    static Sprite deckStoneWash;
+
+    internal static Sprite StoneWash()
+    {
+        if (deckStoneWash != null) return deckStoneWash;
+        var texture = new Texture2D(2,2,TextureFormat.RGBA32,false)
+        {
+            name = "Observatory slate", wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear,
+            hideFlags = HideFlags.HideAndDontSave
+        };
+        texture.SetPixels32(new Color32[] { new(19,30,39,255), new(24,39,48,255),
+            new(38,56,66,255), new(51,66,72,255) });
+        texture.Apply(false,true);
+        deckStoneWash = Sprite.Create(texture,new Rect(0,0,2,2),new Vector2(.5f,.5f),100,0,SpriteMeshType.FullRect);
+        deckStoneWash.hideFlags = HideFlags.HideAndDontSave;
+        return deckStoneWash;
+    }
+
+    private static void TintMenuControl(Selectable control, bool primary = false, bool recessed = false)
+    {
+        var colors = control.colors;
+        colors.colorMultiplier = 1;
+        colors.fadeDuration = .10f;
+        colors.normalColor = primary ? ActionFill : recessed ? Recess : MenuThemeCatalog.Current.ControlFill;
+        colors.highlightedColor = colors.selectedColor = primary ? ActionHover : recessed ? MenuThemeCatalog.Current.InputFocus : MenuThemeCatalog.Current.ControlHover;
+        colors.pressedColor = primary ? ActionPressed : MenuThemeCatalog.Current.ControlPressed;
+        colors.disabledColor = MenuThemeCatalog.Current.ControlDisabled;
+        control.colors = colors;
+        control.targetGraphic.CrossFadeColor(control.IsInteractable() ? colors.normalColor : colors.disabledColor, 0, true, true);
+    }
+
+    internal static Image Detail(Transform parent, string name, Color color)
+    {
+        var child = parent.Find(name);
+        var image = child == null ? new GameObject(name, typeof(RectTransform), typeof(Image)).GetComponent<Image>() : child.GetComponent<Image>();
+        if (child == null) image.transform.SetParent(parent, false);
+        image.color = color;
+        image.raycastTarget = false;
+        return image;
+    }
+
+    internal static void SectionTop(Transform parent,Color accent)
+    {
+        var line=Detail(parent,"SectionTop",accent).rectTransform;
+        line.anchorMin=Vector2.up;line.anchorMax=Vector2.one;
+        line.offsetMin=new Vector2(0,-3);line.offsetMax=Vector2.zero;
+    }
+
+    internal static RectTransform ArchivePage(Canvas canvas, string name, string title, string back, System.Action close)
+    {
+        var scaler = canvas.GetComponent<CanvasScaler>();
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+        var surface = ReplayWidgets.Panel(canvas.transform, "Background", 0, 0, 0, 0, Ink);
+        Stretch(surface);
+        Background(surface, MenuThemeArtwork.Role.Hall, .63f);
+        var root = ReplayWidgets.Rect(canvas.transform, name, 0, 0, 1640, 900);
+        MenuTypography.Scope(root);
+        var heading = ReplayWidgets.Label(root, title, -320, 401, 1000, 90, 50);
+        MenuTypography.Use(heading, MenuTypography.Face.Heading);
+        var rule = ReplayWidgets.Panel(root, "HeaderRule", 0, 342, 1640, 2, Etching);
+        rule.GetComponent<Image>().raycastTarget = false;
+        var button = ReplayWidgets.Button(root, back, 710, 401, 220, close);
+        StyleDeckTool(button);
+        return root;
+    }
+
+    internal static RectTransform ArchiveSection(Transform root, string name, string title, float x, float y,
+        float width, float height, Color accent)
+    {
+        var panel = ReplayWidgets.Panel(root, name, x, y, width, height, ArchivePanel);
+        StyleArchiveSection(panel.GetComponent<Image>(), accent);
+        var header = ReplayWidgets.Label(panel, title, 0, height / 2 - 46, width - 64, 66, 31);
+        header.color = accent;
+        MenuTypography.Use(header, MenuTypography.Face.Heading);
+        var line = ReplayWidgets.Panel(panel, "HeaderRule", 0, height / 2 - 86, width - 64, 1, Etching);
+        line.GetComponent<Image>().raycastTarget = false;
+        return panel;
+    }
+
+    internal static void StyleArchiveSection(Image panel, Color accent)
+    {
+        panel.color = MenuThemeCatalog.Current.SectionFill;
+        ObsidianArenaTheme.EnsureOutline(panel, Etching, Vector2.one);
+        SectionTop(panel.transform, accent);
+    }
+
+    internal static void StyleDeckDialogSurface(RectTransform panel, Text heading, float headerHeight = 72)
+    {
+        MenuTypography.Scope(panel);
+        var surface = panel.GetComponent<Image>();
+        surface.sprite = StoneWash();
+        surface.color = MenuThemeCatalog.Current.DialogTint;
+        StyleArchiveLintel(panel, headerHeight);
+
+        var rim = DialogRim(panel, "DialogFrame", 0, 3.5f, MistBlue);
+        DialogRim(rim, "InnerRim", 6, 1.5f, Etching);
+        var title = heading.rectTransform;
+        title.anchorMin = Vector2.up;
+        title.anchorMax = Vector2.one;
+        title.offsetMin = new Vector2(36, -headerHeight);
+        title.offsetMax = new Vector2(-60, 0);
+        heading.alignment = TextAnchor.MiddleLeft;
+        heading.color = ArchivePaper;
+        MenuTypography.Use(heading, MenuTypography.Face.Heading);
+        ObsidianArenaTheme.EnsureOutline(heading, new Color(.035f, .04f, .065f, .94f), new Vector2(1.5f, -1.5f));
+    }
+
+    internal static void StyleArchiveLintel(RectTransform panel, float headerHeight, float artworkOpacity = 1f)
+    {
+        // Crop the same panorama as the deck toolbar while keeping the moon round
+        // when a picker changes width between its empty and populated layouts.
+        var band = Detail(panel, "DialogLintel", Recess);
+        band.transform.SetAsFirstSibling();
+        band.rectTransform.anchorMin = Vector2.up;
+        band.rectTransform.anchorMax = Vector2.one;
+        band.rectTransform.offsetMin = new Vector2(0, -headerHeight);
+        band.rectTransform.offsetMax = Vector2.zero;
+        if (!band.TryGetComponent<RectMask2D>(out _)) band.gameObject.AddComponent<RectMask2D>();
+        var art = Detail(band.transform, "Panorama", new Color(1, 1, 1, artworkOpacity));
+        art.sprite = MoonlitFrieze;
+        var fitter = art.GetComponent<AspectRatioFitter>() ?? art.gameObject.AddComponent<AspectRatioFitter>();
+        fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+        fitter.aspectRatio = art.sprite.rect.width / art.sprite.rect.height;
+        var rule = Detail(band.transform, "Rule", MistBlue).rectTransform;
+        rule.anchorMin = Vector2.zero;
+        rule.anchorMax = Vector2.right;
+        rule.offsetMin = Vector2.zero;
+        rule.offsetMax = Vector2.up * 2;
+
+    }
+
+    static RectTransform DialogRim(Transform parent, string name, float inset, float thickness, Color color)
+    {
+        var existing = parent.Find(name);
+        var rim = existing != null ? existing.GetComponent<BattlefieldStackFrameGraphic>()
+            : new GameObject(name, typeof(RectTransform), typeof(BattlefieldStackFrameGraphic)).GetComponent<BattlefieldStackFrameGraphic>();
+        if (existing == null) rim.transform.SetParent(parent, false);
+        Stretch(rim.rectTransform, inset);
+        rim.Radius = thickness + 1;
+        rim.Thickness = thickness;
+        rim.color = color;
+        rim.raycastTarget = false;
+        return rim.rectTransform;
+    }
+
+    internal static void StylePreferenceToggle(Toggle toggle)
+    {
+        var box = (Image)toggle.targetGraphic;
+        bool available = toggle.interactable;
+        var muted = Color.Lerp(Color.black, Color.white, Mathf.Lerp(Recess.grayscale, ArchivePaper.grayscale, .55f));
+        box.color = available ? Recess : Color.Lerp(Color.black, Color.white, Recess.grayscale);
+        ObsidianArenaTheme.EnsureOutline(box, available ? MistBlue : muted, Vector2.one);
+        toggle.graphic.color = available ? SideAccent : muted;
+        toggle.GetComponentInChildren<Text>(true).color = available ? ArchivePaper : muted;
+    }
+
+    internal static void StyleDeckTool(Button button, bool primary = false)
+    {
+        var label = button.GetComponentInChildren<Text>(true);
+        StyleArchiveControl(button,primary);
+        MenuTypography.Use(label,MenuTypography.Face.Control);
+        label.color = primary ? ActionText : ArchivePaper;
+        label.raycastTarget = false;
+        label.fontStyle = FontStyle.Normal;
+    }
+
+    internal static void StyleSearchButton(Button button, bool active)
+    {
+        StyleDeckTool(button, active);
+        if (!active) return;
+        button.GetComponent<Image>().color = MenuThemeCatalog.Current.SearchEdge;
+        Stretch(button.targetGraphic.rectTransform, 2.5f);
+        var colors = button.colors;
+        colors.normalColor = MenuThemeCatalog.Current.SearchFill;
+        colors.highlightedColor = colors.selectedColor = MenuThemeCatalog.Current.SearchHover;
+        button.colors = colors;
+        button.targetGraphic.CrossFadeColor(colors.normalColor, 0, true, true);
+    }
+
+    // Long search-result lists use one tinted graphic per option.
+    internal static void StyleDeckOption(Button button, bool selected = false)
+    {
+        var face = button.GetComponent<Image>();
+        face.sprite = ArchiveButtonFace;
+        face.type = Image.Type.Sliced;
+        face.color = Color.white;
+        button.targetGraphic = face;
+        if (button.TryGetComponent<Outline>(out var rim)) rim.enabled = false;
+        TintMenuControl(button, selected);
+        var label = button.GetComponentInChildren<Text>();
+        MenuTypography.Use(label, MenuTypography.Face.Control);
+        label.color = selected ? ActionText : ArchivePaper;
+        label.raycastTarget = false;
+    }
+
+    internal static void StyleArchiveButton(Button button, Text label, bool primary = false)
+    {
+        StyleArchiveControl(button, primary);
+        MenuTypography.Use(label,MenuTypography.Face.Control);
+        label.color = primary ? ActionText : ArchivePaper;
+        label.fontStyle = FontStyle.Normal;
+        label.raycastTarget = false;
+        label.canvasRenderer.SetColor(Color.white);
+    }
+
+    internal static void StyleArchiveControl(Selectable control, bool primary = false, bool recessed = false)
+    {
+        if (control is Button button) ButtonPressSound.Bind(button);
+        var face = control.GetComponent<Image>();
+        face.sprite = ArchiveButtonFace;
+        face.type = Image.Type.Sliced;
+        face.raycastTarget = true;
+        control.transition = Selectable.Transition.ColorTint;
+        if (recessed)
+        {
+            // InputField inserts the caret as the first sibling of its text. Paint the
+            // background on the parent so both the caret and the selection stay above it.
+            face.color = Color.white;
+            var edge = control.GetComponent<Outline>() ?? control.gameObject.AddComponent<Outline>();
+            edge.enabled = true;
+            edge.effectColor = ControlEdge;
+            edge.effectDistance = new Vector2(1,-1);
+            control.targetGraphic = face;
+            TintMenuControl(control,recessed:true);
+            return;
+        }
+        face.color = primary ? ActionEdge : ControlEdge;
+        if (control.TryGetComponent<Outline>(out var outline)) outline.enabled = false;
+        var fill = Detail(control.transform,"ControlFill",Color.white);
+        fill.transform.SetAsFirstSibling();
+        fill.sprite = face.sprite;
+        fill.type = Image.Type.Sliced;
+        Stretch(fill.rectTransform,1.5f);
+        control.targetGraphic = fill;
+        TintMenuControl(control,primary);
+    }
+
+    internal static void StyleArchiveDropdown(Dropdown dropdown)
+    {
+        StyleArchiveControl(dropdown);
+        dropdown.captionText.color = ArchivePaper;
+        MenuTypography.Use(dropdown.captionText,MenuTypography.Face.Control);
+        MenuTypography.Use(dropdown.itemText,MenuTypography.Face.Control);
+        dropdown.captionText.fontStyle = FontStyle.Normal;
+        var clip = (RectTransform)dropdown.captionText.transform.parent;
+        clip.anchorMin = Vector2.zero; clip.anchorMax = Vector2.one;
+        clip.offsetMin = new Vector2(12,0); clip.offsetMax = new Vector2(-34,0);
+        dropdown.captionText.alignment = TextAnchor.MiddleLeft;
+        var arrow = dropdown.transform.Find("DropdownChevron")?.GetComponent<Graphic>();
+        if (arrow != null) arrow.color = Stone;
+        var popup = dropdown.template;
+        popup.GetComponent<Image>().color = ArchivePanel;
+        var border = popup.GetComponent<Outline>();
+        if (border != null) { border.effectColor = Etching; border.effectDistance = new Vector2(1,-1); }
+        var item = popup.GetComponentInChildren<Toggle>(true);
+        var colors = item.colors;
+        colors.normalColor = ArchivePanel;
+        colors.highlightedColor = colors.selectedColor = LitSlate;
+        colors.pressedColor = Slate;
+        item.colors = colors;
+        if (item.graphic != null) item.graphic.color = MistBlue;
+        dropdown.itemText.color = ArchivePaper;
+    }
+
+    internal static void StyleDeckInput(InputField field)
+    {
+        StyleArchiveControl(field,recessed:true);
+        MenuTypography.Use(field.textComponent,MenuTypography.Face.Control);
+        field.textComponent.color = ArchivePaper;
+        if (field.placeholder != null) field.placeholder.color = Stone;
+        if (field.placeholder is Text hint) MenuTypography.Use(hint,MenuTypography.Face.Control);
+        field.customCaretColor = true;
+        field.caretColor = Silver;
+        field.caretWidth = 3;
+        field.caretBlinkRate = .85f;
+        field.selectionColor = MenuThemeCatalog.Current.Selection;
+    }
+
+    internal static void StyleSearchInput(InputField field)
+    {
+        StyleDeckInput(field);
+        // A separate rim stays legible while the recessed face tints on focus.
+        // Its empty centre leaves the native caret and selection visible.
+        DialogRim(field.transform, "InputRim", 0, 1.5f, MenuThemeCatalog.Current.InputRim).SetAsFirstSibling();
     }
 
     public static Button EnsureLocalPlayButton(Transform start)
@@ -165,11 +512,22 @@ public static class MenuVisualTheme
         Style(root);
         ApplyStartScreen(Find(root, "StartScreen"));
         var deck = Find(root, "DeckBuilderScreen");
+        MenuTypography.Scope(deck);
         var toolbarBand = Find(deck, "TopControlBand") as RectTransform;
         toolbarBand.anchorMin = new Vector2(0, 1); toolbarBand.anchorMax = Vector2.one;
-        toolbarBand.offsetMin = new Vector2(0, -96); toolbarBand.offsetMax = Vector2.zero;
-        toolbarBand.GetComponent<Image>().color = new Color(.105f, .13f, .17f);
+        toolbarBand.offsetMin = new Vector2(0,-82); toolbarBand.offsetMax = Vector2.zero;
+        DeckSurface(deck, "TopControlBand", Color.white, MoonlitFrieze);
         toolbarBand.GetComponent<Image>().raycastTarget = false;
+        var shade=new GameObject("ToolbarShade",typeof(RectTransform),typeof(RawImage)).GetComponent<RawImage>();
+        shade.transform.SetParent(toolbarBand,false);
+        Stretch(shade.rectTransform);
+        if(deckToolbarShade==null)
+            deckToolbarShade=IntegratedUiUtility.HorizontalGradientTexture(128,1,new (float,Color)[]{
+                (0,new Color(1,1,1,.93f)),(.29f,new Color(1,1,1,.81f)),
+                (.53f,new Color(1,1,1,.2f)),(.70f,new Color(1,1,1,.16f)),(.88f,new Color(1,1,1,.90f))});
+        shade.texture=deckToolbarShade;
+        shade.color=Recess;
+        shade.raycastTarget=false;
         Place(deck, "BackToTitleButton", -864, 482, 120, 44);
         Place(deck, "DeckDropdown", -550, 482, 440, 44);
         Place(deck, "DeckNameInput", -550, 482, 440, 44);
@@ -178,6 +536,9 @@ public static class MenuVisualTheme
         Stretch(dropdown.captionText.rectTransform, 10);
         dropdown.captionText.rectTransform.offsetMax = new Vector2(-38, -4);
         DropdownChevron.Apply(dropdown);
+        StyleArchiveDropdown(dropdown);
+        StyleDeckInput(Find(deck,"DeckNameInput").GetComponent<InputField>());
+        StyleDeckInput(Find(deck,"CollectionSearchInput").GetComponent<InputField>());
         var template = dropdown.template;
         template.anchorMin = new Vector2(0, 0); template.anchorMax = new Vector2(1, 0);
         template.pivot = new Vector2(.5f, 1); template.anchoredPosition = new Vector2(0, -4);
@@ -193,60 +554,57 @@ public static class MenuVisualTheme
         dropdown.itemText.rectTransform.offsetMax = new Vector2(-12, -2);
         dropdown.itemText.verticalOverflow = VerticalWrapMode.Overflow;
         dropdown.itemText.alignment = TextAnchor.MiddleLeft;
-        dropdown.itemText.color = Paper;
+        dropdown.itemText.color = ArchivePaper;
         PreferenceText.SetSize(dropdown.itemText,20);
         // Stencil masks need opaque pixels even when the mask graphic is hidden.
         var viewport = template.GetComponent<ScrollRect>().viewport;
         viewport.GetComponent<Image>().color = Color.white;
         viewport.GetComponent<Mask>().showMaskGraphic = false;
         dropdown.template.GetComponent<ScrollRect>().scrollSensitivity = 40;
-        Place(deck, "RenameDeckButton", -100, 482, 148, 44);
         Place(deck, "NewDeckButton", 40, 482, 92, 44);
         Place(deck, "SaveDeckButton", 144, 482, 92, 44);
         Place(deck, "ReloadButton", 248, 482, 92, 44);
         Place(deck, "CollectionSearchInput", 470, 482, 300, 44);
         Place(deck, "CollectionSearchButton", 676, 482, 88, 44);
         Place(deck, "AdvancedSearchButton", 824, 482, 184, 44);
-        Place(deck, "CardPreviewPanel", -760, -20, 352, 878);
-        Place(deck, "CardPreviewImage", 0, 204, 302, 423);
-        Place(deck, "CardInfoScroll", 0, -215, 378, 372);
-        Region(deck, "CardPreviewPanel", .005f, .01f, .245f, .90f);
-        Region(deck, "DeckBackplate", .25f, .01f, .745f, .90f);
-        Region(deck, "MainDeckCountText", .26f, .86f, .735f, .90f);
-        Region(deck, "MainDeckScroll", .255f, .315f, .74f, .855f);
-        Region(deck, "SideboardCountText", .26f, .275f, .735f, .31f);
-        Region(deck, "SideboardScroll", .255f, .01f, .74f, .27f);
-        Region(deck, "CollectionBackplate", .75f, .01f, .995f, .90f);
-        Region(deck, "CollectionCountText", .76f, .86f, .985f, .90f);
-        Region(deck, "CollectionScroll", .755f, .075f, .99f, .855f);
-        Grid(deck, "CollectionContent", 2, 180, 252);
-        Grid(deck, "MainDeckContent", 4, 180, 252);
-        Grid(deck, "SideboardContent", 4, 170, 238);
-        ConfigureScrolling(deck);
-        // Four fixed-size cards need a fixed-width deck area. Give surplus width to details.
-        var deckGrid = Find(deck, "MainDeckContent").GetComponent<GridLayoutGroup>();
-        float deckWidth = deckGrid.cellSize.x * 4 + deckGrid.spacing.x * 3
-            + deckGrid.padding.horizontal + 44 + 30;
-        foreach (string name in new[] { "DeckBackplate", "MainDeckScroll", "SideboardScroll", "MainDeckCountText", "SideboardCountText" })
+        var catalogue = Find(deck, "CollectionBackplate");
+        Find(deck, "CollectionScroll").SetParent(catalogue, false);
+        Region(deck, "CollectionBackplate", .717f, .012f, .992f, .924f);
+        Region(catalogue, "CollectionScroll", .016f, .067f, .986f, .828f);
+        var libraryScroll = (RectTransform)Find(catalogue,"CollectionScroll");
+        libraryScroll.anchorMax = new Vector2(.986f,1);
+        libraryScroll.offsetMax = new Vector2(-5,-104);
+        Region(deck, "CardPreviewPanel", .008f, .012f, .203f, .924f);
+        Grid(deck, "CollectionContent", 2, 232, 325);
+        foreach (string name in new[] { "MainDeckContent", "SideboardContent" })
         {
-            var area = (RectTransform)Find(deck, name);
-            area.anchorMin = new Vector2(.745f, area.anchorMin.y);
-            area.anchorMax = new Vector2(.745f, area.anchorMax.y);
-            float inset = name == "DeckBackplate" ? 0 : 10;
-            area.offsetMin = new Vector2(-deckWidth + inset, 0);
-            area.offsetMax = new Vector2(-inset, 0);
+            Grid(deck, name, 5, 202, 283);
         }
-        var detailPanel = (RectTransform)Find(deck, "CardPreviewPanel");
-        detailPanel.anchorMax = new Vector2(.745f, detailPanel.anchorMax.y);
-        detailPanel.offsetMax = new Vector2(-deckWidth - 10, 0);
-        // A quiet slate frame gives the artwork and rules their own visual hierarchy.
-        Tint(deck, "CardPreviewPanel", new Color(.075f, .105f, .14f));
-        Tint(deck, "CardInfoScroll", new Color(.105f, .14f, .18f));
-        Tint(deck, "DeckBackplate", new Color(.105f, .13f, .175f));
-        Tint(deck, "MainDeckScroll", new Color(.08f, .10f, .14f));
-        Tint(deck, "SideboardScroll", new Color(.08f, .10f, .14f));
-        Tint(deck, "CollectionBackplate", new Color(.095f, .155f, .16f));
-        Tint(deck, "CollectionScroll", new Color(.065f, .115f, .125f));
+        var workspace = deck.Find("Background");
+        workspace.GetComponent<Image>().color = Recess;
+        Background(workspace, MenuThemeArtwork.Role.Deck, .08f);
+        DeckSurface(deck,"CardPreviewPanel",MenuThemeCatalog.Current.PreviewFill);
+        DeckSurface(deck,"CardInfoScroll",MenuThemeCatalog.Current.DetailFill);
+        DeckSurface(deck,"DeckBackplate",MenuThemeCatalog.Current.MainSurface);
+        DeckSurface(deck,"MainDeckScroll",MenuThemeCatalog.Current.MainWell);
+        DeckSurface(deck,"SideboardScroll",MenuThemeCatalog.Current.SideWell);
+        DeckSurface(deck,"CollectionBackplate",MenuThemeCatalog.Current.LibrarySurface);
+        DeckSurface(deck,"CollectionScroll",MenuThemeCatalog.Current.LibraryWell);
+        SectionTop(Find(deck,"CardPreviewPanel"),Stone);
+        SectionTop(Find(deck,"DeckBackplate"),MainAccent);
+        SectionTop(catalogue,LibraryAccent);
+        ConfigureScrolling(deck, Stone, true);
+        var mainTitle=Find(deck,"MainDeckCountText").GetComponent<Text>();
+        var sideTitle=Find(deck,"SideboardCountText").GetComponent<Text>();
+        MenuTypography.Use(mainTitle,MenuTypography.Face.Heading);
+        MenuTypography.Use(sideTitle,MenuTypography.Face.Heading);
+        mainTitle.color=MainAccent;
+        sideTitle.color=SideAccent;
+        var catalogueTitle = Find(deck, "CollectionCountText").GetComponent<Text>();
+        MenuTypography.Use(catalogueTitle,MenuTypography.Face.Heading);
+        catalogueTitle.color = LibraryAccent;
+        catalogueTitle.alignment = TextAnchor.MiddleLeft;
+        PreferenceText.SetSize(catalogueTitle, 26);
 
         var preview = Find(deck, "CardPreviewImage") as RectTransform;
         preview.anchorMin = preview.anchorMax = new Vector2(.5f, 1);
@@ -260,10 +618,46 @@ public static class MenuVisualTheme
         details.offsetMax = new Vector2(-12, -451);
     }
 
-    private static void Tint(Transform root, string name, Color color)
+    private static void DeckSurface(Transform root, string name, Color color, Sprite artwork = null)
     {
-        var image = Find(root, name)?.GetComponent<Image>();
-        if (image != null) image.color = color;
+        var image = Find(root, name).GetComponent<Image>();
+        image.color = color;
+        image.sprite = artwork;
+        image.type = Image.Type.Simple;
+        if (image.TryGetComponent<Outline>(out var border)) border.enabled = false;
+    }
+
+    internal static void StyleDeckScrollbar(ScrollRect scroll)
+    {
+        var bar = scroll.verticalScrollbar;
+        var track = (RectTransform)bar.transform;
+        track.anchorMin = new Vector2(1,0); track.anchorMax = Vector2.one;
+        track.offsetMin = new Vector2(-20,5); track.offsetMax = new Vector2(0,-5);
+        scroll.viewport.offsetMax = new Vector2(-20,scroll.viewport.offsetMax.y);
+        StyleDeckScrollThumb(bar);
+        scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+    }
+
+    internal static void StyleDeckScrollThumb(Scrollbar bar)
+    {
+        var track = (RectTransform)bar.transform;
+        bar.GetComponent<Image>().color = Color.clear;
+        var rail = Detail(track,"Rail",Etching).rectTransform;
+        rail.SetAsFirstSibling();
+        rail.anchorMin = new Vector2(.5f,0); rail.anchorMax = new Vector2(.5f,1);
+        rail.sizeDelta = new Vector2(1,0); rail.anchoredPosition = Vector2.zero;
+        var handle = bar.handleRect;
+        handle.offsetMin = new Vector2(0,handle.offsetMin.y);
+        handle.offsetMax = new Vector2(0,handle.offsetMax.y);
+        handle.GetComponent<Image>().color = Color.clear;
+        var grip = Detail(handle,"Thumb",Color.white);
+        grip.rectTransform.anchorMin = new Vector2(.5f,0); grip.rectTransform.anchorMax = new Vector2(.5f,1);
+        grip.rectTransform.sizeDelta = new Vector2(4,0); grip.rectTransform.anchoredPosition = Vector2.zero;
+        bar.targetGraphic = grip;
+        var colors = bar.colors; colors.normalColor = MenuThemeCatalog.Current.ScrollThumb;
+        colors.highlightedColor = colors.selectedColor = Stone;
+        colors.pressedColor = Silver; bar.colors = colors;
+        grip.CrossFadeColor(colors.normalColor,0,true,true);
     }
 
     private static void Region(Transform root, string name, float left, float bottom, float right, float top)
@@ -275,7 +669,7 @@ public static class MenuVisualTheme
         rect.offsetMin = rect.offsetMax = Vector2.zero;
     }
 
-    private static void ConfigureScrolling(Transform root)
+    private static void ConfigureScrolling(Transform root, Color handleColor, bool deckWorkspace = false)
     {
         foreach (var scroll in root.GetComponentsInChildren<UnityEngine.UI.ScrollRect>(true))
         {
@@ -287,12 +681,14 @@ public static class MenuVisualTheme
             bool isCardDetail = scroll.name == "CardInfoScroll";
             // Keep the track outside the card hit areas so grabbing it never starts a card drag.
             scroll.viewport.offsetMax = new Vector2(isCardDetail ? -26f : -44f, scroll.viewport.offsetMax.y);
+            var trackInset = new Vector2(isCardDetail ? -20 : -36, 10);
             if (scroll.verticalScrollbar != null)
             {
                 var existingTrack = scroll.verticalScrollbar.GetComponent<UnityEngine.UI.Image>();
                 if (existingTrack != null) existingTrack.color = Ink;
                 if (scroll.verticalScrollbar.targetGraphic != null)
-                    scroll.verticalScrollbar.targetGraphic.color = new Color(.36f, .47f, .63f);
+                    scroll.verticalScrollbar.targetGraphic.color = handleColor;
+                if (deckWorkspace) StyleDeckScrollbar(scroll);
                 continue;
             }
             var track = new GameObject("VerticalScrollbar", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Scrollbar));
@@ -300,12 +696,12 @@ public static class MenuVisualTheme
             var rect = (RectTransform)track.transform;
             rect.anchorMin = new Vector2(1, 0); rect.anchorMax = Vector2.one;
             rect.pivot = new Vector2(1, .5f);
-            rect.offsetMin = new Vector2(isCardDetail ? -20 : -36, 10); rect.offsetMax = new Vector2(-4, -10);
+            rect.offsetMin = trackInset; rect.offsetMax = new Vector2(-4, -10);
             track.GetComponent<UnityEngine.UI.Image>().color = Ink;
             var handle = new GameObject("Handle", typeof(RectTransform), typeof(UnityEngine.UI.Image));
             handle.transform.SetParent(track.transform, false);
             Stretch((RectTransform)handle.transform, 4);
-            var image = handle.GetComponent<UnityEngine.UI.Image>(); image.color = new Color(.36f, .47f, .63f);
+            var image = handle.GetComponent<UnityEngine.UI.Image>(); image.color = handleColor;
             var bar = track.GetComponent<UnityEngine.UI.Scrollbar>();
             bar.handleRect = (RectTransform)handle.transform; bar.targetGraphic = image;
             bar.direction = UnityEngine.UI.Scrollbar.Direction.BottomToTop;
@@ -313,6 +709,7 @@ public static class MenuVisualTheme
             scroll.verticalScrollbarVisibility = isCardDetail
                 ? UnityEngine.UI.ScrollRect.ScrollbarVisibility.AutoHide
                 : UnityEngine.UI.ScrollRect.ScrollbarVisibility.Permanent;
+            if (deckWorkspace) StyleDeckScrollbar(scroll);
         }
     }
 
@@ -327,18 +724,15 @@ public static class MenuVisualTheme
     public static void ApplyLobby(Transform root)
     {
         Style(root);
-        // A quiet, opaque room surface keeps the focus on players and readiness.
-        root.GetComponent<Image>().color = new Color(.065f, .065f, .08f);
+        Background(root, MenuThemeArtwork.Role.Hall, .62f);
         var content = Find(root, "Content");
         Find(content, "HeaderBlueRule").gameObject.SetActive(false);
         Find(content, "HeaderRedRule").gameObject.SetActive(false);
-        Place(content, "HeaderBand", 0, 437, 1560, 100);
-        Place(content, "BackButton", -714, 437, 132, 48);
-        Place(content, "Title", -360, 452, 510, 48);
-        Place(content, "Subtitle", -360, 410, 510, 28);
-        Place(content, "ConnectionBadge", 660, 437, 240, 42);
-        Text(content, "Title", "联机对战", 32);
-        Text(content, "Subtitle", "连接房间，选择牌组，准备对局", 17);
+        Place(content, "HeaderBand", 0, 377, 1560, 2);
+        Place(content, "BackButton", -714, 433, 132, 50);
+        Place(content, "Title", -328, 433, 554, 76);
+        Place(content, "ConnectionBadge", 655, 433, 248, 52);
+        Text(content, "Title", "联机对战", 46);
 
         var connection = Find(root, "ConnectionCard");
         var setup = Find(root, "MatchSetupCard");
@@ -410,44 +804,9 @@ public static class MenuVisualTheme
         Place(room, "LeaveRoomButton", -215, -308, 218, 50);
         Text(prep, "Kicker", "准备", 14);
         Text(prep, "Heading", "选择出战牌组", 30);
-        Place(prep, "DeckLabel", 0, 200, 648, 30);
-        Place(prep, "DeckDropdown", 0, 148, 648, 56);
-        Place(prep, "SelectedDeckSummary", 0, 36, 648, 112);
-        Place(prep, "DeckValue", 0, 0, 600, 82);
-        Place(prep, "PreparationInfo", 0, -127, 648, 174);
-        var info = Find(prep, "PreparationInfo");
-        Place(info, "Title", 0, 55, 604, 32);
-        Place(info, "Body", 0, -22, 604, 98);
-        Text(info, "Title", "准备与开局", 18);
-        Text(info, "Body", "双方提交牌组并准备后，由房主开始比赛。\nBO3 每局结束后可调整备牌。", 17);
-        info.Find("Body").GetComponent<UnityEngine.UI.Text>().alignment=TextAnchor.UpperLeft;
-        Place(prep, "ReadyButton", -170, -260, 308, 58);
-        Place(prep, "StartMatchButton", 170, -260, 308, 58);
-        Place(prep, "ReadyHelp", 0, -317, 648, 38);
-        Text(prep, "ReadyHelp", "需要更换牌组时，请先取消准备。", 16);
         ApplyLobbyColors(root);
 
-        var side = Find(root, "SideboardPage");
-        Place(side, "SideboardHeader", 0, 322, 1720, 120);
-        Place(side, "Kicker", -520, 32, 680, 24);
-        Place(side, "Heading", -520, -14, 680, 48);
-        Text(side, "Kicker", "局间调整   /   换备", 16);
-        foreach (string name in new[] { "MainDeckCard", "SideboardCard" })
-        {
-            var card = Find(side, name);
-            Place(side, name, name == "MainDeckCard" ? -430 : 430, -52, 820, 584);
-            Place(card, "Heading", 0, 248, 740, 40);
-            string scroll = name == "MainDeckCard" ? "MainDeckScroll" : "SideboardScroll";
-            Place(card, scroll, 0, -24, 780, 484);
-        }
-        Grid(side, "MainDeckContent", 4, 170, 238);
-        Grid(side, "SideboardContent", 4, 170, 238);
-        Place(side, "DeckSummary", -500, -391, 720, 44);
-        Place(side, "ResetSideboardButton", 205, -391, 220, 54);
-        Place(side, "SideboardReadyButton", 462, -391, 260, 54);
-        Place(side, "SideboardStartButton", 745, -391, 260, 54);
-        Place(side, "SideboardStatus", 0, -450, 1640, 40);
-        ConfigureScrolling(side);
+        ConfigureScrolling(Find(root,"SideboardPage"),Stone);
     }
 
     private static void ApplyLobbyColors(Transform root)
@@ -462,7 +821,7 @@ public static class MenuVisualTheme
             if (image.transform == root || image.sprite != null) continue;
             image.color = surface;
             string name = image.name;
-            if (name.EndsWith("Input") || name.EndsWith("Dropdown") || name == "SelectedDeckSummary"
+            if (name.EndsWith("Input") || name.EndsWith("Dropdown") || name == "DeckNotice"
                 || name == "DeckStepHint" || name == "Seat1" || name == "Seat2") image.color = field;
             if (name == "HeaderBand" || name == "PlayersPanel") image.color = Color.clear;
             if (name == "Divider") image.color = edge;

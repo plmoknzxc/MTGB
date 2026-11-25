@@ -12,7 +12,13 @@ public sealed partial class ForgeBattlefieldController
         public readonly ForgeBattlefieldCardPointer.HandHitLayout hits;
         public ForgeHandFanNavigation navigation;
         public UnityEngine.UI.Button previous,next;
+        public string browsedSource;
+        public bool browseSources;
+        public RectTransform sourcePager;
+        public UnityEngine.UI.Button sourcePrevious,sourceNext;
+        public UnityEngine.UI.Text sourceRange;
         public float available,radius,radians,travel;
+        public float headerTrimBudget,pageTrim;
         public Rect restingBounds;
     }
     private sealed class HandFanSlot {public ArenaCard item;public RectTransform region;public float x,opacity;}
@@ -75,7 +81,9 @@ public sealed partial class ForgeBattlefieldController
     // sizes and hover magnification intact; tuck only the resting fan towards its edge.
     private void ReserveRestingHandSpace(HandFanState fan)
     {
-        if (IsRedesignLayout && !fan.opponent) return;
+        // The redesigned trays have their own bounded expanded/tucked poses.
+        // Battlefield clearance must not push an active hand choice offscreen.
+        if (IsRedesignLayout) return;
         var root=fan.opponent?otherHand:ownHand;
         if(root==null||surface==null)return;
         root.anchoredPosition=new Vector2(root.anchoredPosition.x,0);
@@ -126,6 +134,7 @@ public sealed partial class ForgeBattlefieldController
         if(!fan.opponent)cards=PresentHandSources(cards,choosingHand);
         else if(IsRedesignLayout)cards=PresentRedesignSources(cards,fan,choosingHand);
         if(choosingHand)SetOverlayLayer(parent,DecisionLayerOffset,true);
+        else if(IsRedesignLayout)SetOverlayLayer(parent,HandFaceLayer,true);
         else if(parent.TryGetComponent<Canvas>(out var handCanvas))
             // An overriding canvas at the root canvas's order can render behind
             // its background. Return the fan to the parent's normal draw order.

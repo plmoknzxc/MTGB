@@ -6,9 +6,23 @@ using UnityEngine.UI;
 public sealed class ForgeTappedIndicator : MaskableGraphic
 {
     protected override void OnPopulateMesh(VertexHelper mesh)
+        => Populate(mesh,Mathf.Min(rectTransform.rect.width,rectTransform.rect.height)*.33f,color);
+
+    // The scene renderer uses the same clockwise-arrow geometry, without a Canvas.
+    public static Mesh CreateWorldMesh()
+    {
+        using(var helper=new VertexHelper()){
+            Populate(helper,.33f,Color.white);
+            var result=new Mesh{name="World tapped arrow"};helper.FillMesh(result);
+            var uv=new Vector2[result.vertexCount];
+            for(int i=0;i<uv.Length;i++)uv[i]=Vector2.one*.5f;
+            result.uv=uv;result.RecalculateBounds();return result;
+        }
+    }
+
+    static void Populate(VertexHelper mesh,float radius,Color color)
     {
         mesh.Clear();
-        float radius=Mathf.Min(rectTransform.rect.width,rectTransform.rect.height)*.33f;
         float half=radius*.19f;
         const int segments=30;
         for(int i=0;i<=segments;i++)

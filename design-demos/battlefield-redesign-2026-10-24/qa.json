@@ -1,0 +1,347 @@
+{
+  "scope": "HTML交互与布局原型；不等同于Unity或Forge规则验证",
+  "entries": [
+    {
+      "label": "A-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "A-hover",
+      "detail": "黯潮龙侯",
+      "history": "最近发生×你施放天空之怒，X=2对手施放否认之力目标：天空之怒",
+      "printed": "当前费用 　／　印刷费用 5"
+    },
+    {
+      "label": "A-graveyard",
+      "title": "你的坟墓场 · 5"
+    },
+    {
+      "label": "A-pinned",
+      "title": "黯潮龙侯"
+    },
+    {
+      "label": "A-stack-target",
+      "rows": [
+        {
+          "cls": "stack-entry foe selected",
+          "text": "否认之力\n对手\n先结算 · 瞬间\n目标：天空之怒"
+        },
+        {
+          "cls": "stack-entry self is-target",
+          "text": "天空之怒\n你\n后结算 · 法术\n被对手指定为目标"
+        }
+      ]
+    },
+    {
+      "label": "B-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "B-hover",
+      "title": "黯潮龙侯"
+    },
+    {
+      "label": "B-history",
+      "text": "对局记录\n×\n第10回合 · 战斗前主要阶段\n你\n你施放天空之怒，X=2\n对手\n对手施放否认之力\n对手\n目标：天空之怒"
+    },
+    {
+      "label": "B-graveyard",
+      "title": "你的坟墓场 · 5张"
+    },
+    {
+      "label": "B-pinned",
+      "title": "黯潮龙侯"
+    },
+    {
+      "label": "B-stack-target",
+      "rows": [
+        {
+          "cls": "stack-item enemy selected",
+          "text": "对手 · 咒语\n先结算\n否认之力\n1\n反击目标非生物咒语\n目标：天空之怒"
+        },
+        {
+          "cls": "stack-item own targeted",
+          "text": "你 · 咒语\n天空之怒\n2\nX = 2\n被对手的否认之力指定为目标"
+        }
+      ]
+    },
+    {
+      "label": "C-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [
+        "树篱迷宫，已横置",
+        "商贸城区，已横置",
+        "滋生之池",
+        "雷鸣瀑布，已横置"
+      ],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "C-hover",
+      "title": "黯潮龙侯"
+    },
+    {
+      "label": "C-large-detail",
+      "title": "黯潮龙侯"
+    },
+    {
+      "label": "C-pinned",
+      "title": "黯潮龙侯"
+    },
+    {
+      "label": "C-stack-target",
+      "rows": [
+        {
+          "cls": "stack-item  selected ",
+          "text": "对手 · 先结算\n否认之力\n反击目标非生物咒语\n↳指向 天空之怒"
+        },
+        {
+          "cls": "stack-item self  targeted",
+          "text": "你 · 后结算\n天空之怒\nX = 2\n对手咒语的目标"
+        }
+      ]
+    },
+    {
+      "label": "C-history",
+      "text": "对局记录\n×\n刚刚\n目标：天空之怒\n第10回合\n对手施放否认之力\n第10回合\n你施放天空之怒，X=2"
+    },
+    {
+      "label": "C-graveyard",
+      "title": "你的坟墓场 · 5"
+    },
+    {
+      "label": "C-final-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [
+        "慷慨恩特，5/7",
+        "护谜史芬斯，4/4",
+        "毛象，6/4"
+      ],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "C-final-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [
+        "慷慨恩特，5/7",
+        "护谜史芬斯，4/4",
+        "毛象，6/4"
+      ],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "B-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "B-history-final",
+      "text": "对局记录\n×\n第10回合 · 战斗前主要阶段\n你\n施放天空之怒，X=2\n对手\n施放否认之力\n对手\n目标：天空之怒"
+    },
+    {
+      "label": "A-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "C-final-v3-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "C-final-v3-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "A-gallery-dense",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 28,
+      "visibleHand": 5,
+      "width": 1600
+    },
+    {
+      "label": "B-gallery-dense",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 16,
+      "visibleHand": 7,
+      "width": 1600
+    },
+    {
+      "label": "C-gallery-dense",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 15,
+      "visibleHand": 5,
+      "width": 1600
+    },
+    {
+      "label": "A-gallery-dense-1280",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 28,
+      "visibleHand": 5,
+      "width": 1280
+    },
+    {
+      "label": "B-gallery-dense-1280",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 16,
+      "visibleHand": 7,
+      "width": 1280
+    },
+    {
+      "label": "C-gallery-dense-1280",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 15,
+      "visibleHand": 5,
+      "width": 1280
+    }
+  ],
+  "finalSummary": {
+    "normalStandaloneSizes": [
+      "1600x900",
+      "1280x720"
+    ],
+    "denseGalleryViewports": [
+      "1600x900 (iframe 1600x792)",
+      "1280x720 (iframe 1280x612)"
+    ],
+    "finalNormalHandBoardOverlap": false,
+    "finalNormalCoveredBoardBottom": false,
+    "denseVisibleHandBoardOverlap": false,
+    "consoleErrorsAtFinalGallery": [],
+    "galleryCurrentAndCompare": true,
+    "limitations": [
+      "拥挤模式复制现有卡牌，只用于布局压力比较",
+      "机制与联机交互未由HTML原型验证",
+      "完整B站视频未播放，仅看免登录开头片段"
+    ]
+  }
+}

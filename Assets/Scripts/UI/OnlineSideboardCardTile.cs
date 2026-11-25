@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -57,7 +57,7 @@ public sealed class OnlineSideboardCardTile : MonoBehaviour, IPointerClickHandle
     {
         if (outline == null) outline = GetComponent<Outline>();
         if (outline == null) return;
-        outline.effectColor = dragging ? ObsidianArenaTheme.Blue : ObsidianArenaTheme.LineSoft;
+        outline.effectColor = dragging ? (IsSideboard?MenuVisualTheme.SideAccent:MenuVisualTheme.MainAccent) : MenuVisualTheme.Etching;
         outline.effectDistance = dragging ? new Vector2(3f, 3f) : new Vector2(1.5f, -1.5f);
     }
 

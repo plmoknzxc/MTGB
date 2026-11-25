@@ -11,12 +11,17 @@ using UnityEngine;
 [Serializable] public sealed class OnlineRoomListing
 {
     public string roomId, hostName, format, state;
+    public int PlayerCapacity => format == "commander" ? 4 : 2;
     public int players, bestOf, aiPlayers;
     public bool inMatch, lanHosted, allowCustomContent;
     public int spectators;
     public int startingLife, rulesVersion;
+    public int commanderBracket;
+    public bool noCommanderBanlist;
+    public string commanderEvent;
     public bool useAnte;
     public bool noShuffle;
+    public bool useLegacyBattlefield;
     [NonSerialized] public string address, source, serverId;
     [NonSerialized] public int port;
     public static OnlineRoomListing FromRoom(OnlineRoomState room,bool lanHosted)=>new OnlineRoomListing{
@@ -24,8 +29,11 @@ using UnityEngine;
         players=room.members.Values.Count(m=>!m.IsSpectator),spectators=room.members.Values.Count(m=>m.IsSpectator),
         aiPlayers=room.members.Values.Count(m=>m.isAi),
         lanHosted=lanHosted,allowCustomContent=room.config.allowCustomContent,format=room.config.formatId,
+        commanderBracket=DeckCommander.EffectiveBracket(room.config.formatId, room.config.commanderBracket),
+        noCommanderBanlist=room.config.noCommanderBanlist, commanderEvent=room.config.commanderEvent,
         bestOf=room.config.bestOf,inMatch=room.SpectatorOnly,state=room.DirectoryState,
-        startingLife=room.config.startingLife,useAnte=room.config.useAnte,noShuffle=room.config.noShuffle,rulesVersion=2
+        startingLife=room.config.startingLife,useAnte=room.config.useAnte,noShuffle=room.config.noShuffle,
+        rulesVersion=3
     };
 }
 [Serializable] public sealed class OnlineRoomDirectory

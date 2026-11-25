@@ -30,7 +30,9 @@ public static class DuelLayoutPresentationValidation
     static ForgeCardView Card(string name,int id,int owner,bool land=false,bool creature=false,bool walker=false,bool battle=false)
     {
         var definition=CardDatabaseRepository.LoadAll().First(c=>c.cardName==name&&!c.forgeAmbiguous);
-        return new ForgeCardView{id=id,ownerSeat=owner,name=name,printingKey=definition.PrintingKey,zone="Battlefield",land=land,creature=creature,planeswalker=walker,battle=battle,power=2,toughness=2,loyalty=4,defense=4};
+        int colors=(int)definition.GetColors();
+        return new ForgeCardView{id=id,ownerSeat=owner,name=name,printingKey=definition.PrintingKey,manaCost=definition.manaCost,
+            hasColorBaseline=true,originalColors=colors,currentColors=colors,zone="Battlefield",land=land,creature=creature,planeswalker=walker,battle=battle,power=2,toughness=2,loyalty=4,defense=4};
     }
     public static ForgeSeatView DensityFixture(bool dense)
     {
@@ -39,6 +41,8 @@ public static class DuelLayoutPresentationValidation
         var blessing=Read("CommonMechanics/ascend-persistent").players[0].effectMarkers.First();
         var dungeon=Read("CommonMechanics/dungeon-dialog-4").players.SelectMany(p=>p.effectMarkers).First(c=>c.markerKind=="dungeon");
         var emblem=Read("EmblemFaceDown/emblem").players.SelectMany(p=>p.emblems).First();
+        var rebound=Read("EffectMarkers/rebound").players.SelectMany(p=>p.effectMarkers).First(c=>c.markerKind=="delayed");
+        var gift=Read("CastChoiceFamilies/gift-base-resolved-seat1").players.SelectMany(p=>p.effectMarkers).First(c=>c.markerKind=="delayed");
         foreach(var player in view.players) {
             int next=30000+player.seat*1000;
             var field=new List<ForgeCardView>();
@@ -52,9 +56,7 @@ public static class DuelLayoutPresentationValidation
             player.counters=new[]{new ForgeCardCounter{kind="ENERGY",count=4,label="能量"},new ForgeCardCounter{kind="POISON",count=2,label="中毒"}};
             player.emblems=Enumerable.Range(0,dense?4:1).Select(_=>Copy(emblem,next++,player.seat)).ToArray();
             var markers=new List<ForgeCardView>{Copy(ring,next++,player.seat),Copy(blessing,next++,player.seat),Copy(dungeon,next++,player.seat)};
-            foreach(int i in Enumerable.Range(0,dense?3:1)) {
-                var delayed=Card("Boros Charm",next++,player.seat);delayed.effectMarker=true;delayed.markerKind="delayed";delayed.creature=false;delayed.zone="Command";markers.Add(delayed);
-            }
+            foreach(int i in Enumerable.Range(0,dense?3:1))markers.Add(Copy(i%2==0?rebound:gift,next++,player.seat));
             player.effectMarkers=markers.ToArray();
         }
         view.globalEffects=new[]{new ForgeCardView{id=-2000001,name="Day",helperArtName="Day",effectMarker=true,markerKind="game",zone="Command"}};
@@ -64,7 +66,6 @@ public static class DuelLayoutPresentationValidation
     public static void Preview(bool dense)
     {
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("DuelLayoutPreview").AddComponent<ForgeBattlefieldController>();
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;
         var v=DensityFixture(dense);ui.Present(v,v.seat,true,_=>{},null,"");
     }
     public static void Run()
@@ -75,7 +76,7 @@ public static class DuelLayoutPresentationValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        string original=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;
+        string original=GamePreferences.Language;
         var iterator=Validate(ui);
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}

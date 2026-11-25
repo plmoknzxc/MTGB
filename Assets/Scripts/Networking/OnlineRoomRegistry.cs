@@ -6,15 +6,32 @@ public sealed class OnlineRoomConfig
 {
     public static bool AllowsAnte(string formatId, bool allowCustomContent)
         => allowCustomContent && string.Equals(formatId, "none", StringComparison.Ordinal);
+    public int PlayerCapacity => formatId == "commander" ? 4 : 2;
     public int startingLife = 20;
     public int firstPlayerSeat;
     public int bestOf = 1;
     public string formatId = "none";
+    public int commanderBracket;
+    public bool noCommanderBanlist;
+    public string commanderEvent;
+    public bool UsesCommanderEventSettings => formatId=="commander" && (noCommanderBanlist || !string.IsNullOrEmpty(commanderEvent));
+    public const string Arkenstone = "heart-of-the-mountain";
+    public const string Nauctis = "nauctis-grand-marine-preview";
+    public const string Loki = "god-of-mischief";
+    public static string EventFor(string format, string id) =>
+        format == "commander" && (id == Arkenstone || id == Loki || id == Nauctis) ? id : "";
+    public static string WinnerLabel(ForgeSeatView view, int seat, string playerName) =>
+        seat <= 0 || view?.commanderEvent != Loki || view.lokiSeat < 1 ? playerName :
+        seat == view.lokiSeat ? DeckCompanion.Text("洛基","Loki","ロキ") : DeckCompanion.Text("英雄阵营","The Heroes","ヒーローチーム");
+    public static bool SeatWon(ForgeSeatView view, int winner, int seat) =>
+        winner > 0 && seat > 0 && (winner == seat || (view?.commanderEvent == Loki &&
+            view.lokiSeat > 0 && seat <= 4 && winner <= 4 && winner != view.lokiSeat && seat != view.lokiSeat));
     public int minimumMainDeckSize = 60;
     public int maximumSideboardSize = 15;
     public bool allowCustomContent;
     public bool useAnte;
     public bool noShuffle;
+    public bool useLegacyBattlefield;
     // Host-only authorization; never accepted from a client's serialized configuration.
     [NonSerialized] internal DeckDefinition authorizedSeriesPool;
     [NonSerialized] internal DeckDefinition[] authorizedAuxiliarySeriesPools;
@@ -88,13 +105,19 @@ public sealed class OnlineSeriesState
 
 public sealed class OnlineRoomMember
 {
+    public string aiDeckFingerprint;
     public bool isAi;
-    public bool IsSpectator => seat > 2;
+    public int playerCapacity = 2;
+    public bool concededOnTimeout;
+    public bool IsSpectator => seat > playerCapacity;
     public int seat;
     public ulong clientId;
     public string displayName;
+    public string avatarId;
     public string reconnectToken;
     public DeckDefinition deck;
+    public bool deckAwaitingAcceptance;
+    public bool HasAcceptedDeck => deck != null && !deckAwaitingAcceptance;
     public DeckDefinition registeredDeck;
     public DeckDefinition seriesOriginalDeck;
     public bool seriesDeckChanged;
@@ -127,11 +150,13 @@ public sealed class OnlineRoomState : IDisposable
     public string DirectoryState => match!=null ? "playing" : series.betweenGames&&members.ContainsKey(1)&&members.ContainsKey(2) ? "sideboarding" : HasReviewers||series.betweenGames&&publicReview!=null ? "review" : "waiting";
     public OnlineMatchEndedMessage SpectatorReview(int seat)
     {
-        if(publicReview?.finalView?.forge==null||seat<=2)return null;
+        if(publicReview?.finalView?.forge==null||seat<=config.PlayerCapacity)return null;
         var copy=ServerSnapshotJson.Copy(publicReview);
         copy.ownDeck=null;copy.finalView=OnlineSpectatorView.Create(publicReview.finalView,seat);
         return copy;
     }
+
+    public int FreePlayerSeat() => System.Linq.Enumerable.FirstOrDefault(System.Linq.Enumerable.Range(1, config.PlayerCapacity), s => !members.ContainsKey(s));
 
     public bool IsEmpty => members.Count == 0;
 

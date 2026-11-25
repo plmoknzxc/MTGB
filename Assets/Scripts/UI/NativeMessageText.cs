@@ -68,6 +68,70 @@ internal static class NativeMessageText
     {
         translated = source;
         if(NativeGeneratedText.TryTranslate(source,out translated))return true;
+        if (source.StartsWith("At the beginning of your next upkeep, pay ", StringComparison.Ordinal))
+        {
+            var pact = Regex.Match(source, @"^At the beginning of your next upkeep, pay ((?:\{[0-9WUBRG]+\})+)\. If you don['’]t, you lose the game\.\z");
+            if (pact.Success)
+            {
+                string cost = pact.Groups[1].Value;
+                translated = L($"在你的下一个维持开始时，支付{cost}。若你未如此作，则你输掉这盘游戏。",
+                    $"あなたの次のアップキープの開始時に{cost}を支払う。そうしない場合、あなたはこのゲームに敗北する。");
+                return true;
+            }
+        }
+        if(source.StartsWith("Select ",StringComparison.Ordinal)) {
+            var reveal=Regex.Match(source,@"^Select (\d+) more Card\.(White|Blue|Black|Red|Green) card\(s\) to reveal\.\z");
+            if(reveal.Success) {
+                string n=reveal.Groups[1].Value,color=NativeGeneratedText.ColorName(reveal.Groups[2].Value);
+                translated=L($"再选择 {n} 张{color}牌展示。",$"公開する{color}のカードをあと{n}枚選ぶ。");
+                return true;
+            }
+        }
+        if(source.StartsWith("Seek failed: ",StringComparison.Ordinal)) {
+            var filter=Regex.Match(source,@"^Seek failed: (Artifact|Creature|Enchantment|Instant|Land|Planeswalker|Sorcery)\.cmcLE(\d+)\z");
+            if(filter.Success) {
+                string type=GamePreferences.T(filter.Groups[1].Value),n=filter.Groups[2].Value;
+                translated=L($"未能取出法术力值不大于 {n} 的{type}牌。",$"マナ総量が{n}以下の{type}・カードを抽出できなかった。");
+                return true;
+            }
+        }
+        if(source.Contains(" must still block ")) {
+            var block=Regex.Match(source,@"^(.+) must still block (.+)\.\z");
+            if(block.Success&&Entity(block.Groups[1].Value) is string blocker&&Entity(block.Groups[2].Value) is string attacker) {
+                translated=L($"{blocker}仍须阻挡{attacker}。",$"{blocker}は引き続き{attacker}をブロックしなければならない。");
+                return true;
+            }
+        }
+        if(source.StartsWith("A spell or permanent chosen at random becomes ",StringComparison.Ordinal)) {
+            var colorChange=Regex.Match(source,@"^A spell or permanent chosen at random becomes (white|blue|black|red|green)\. \(Mana symbols on that permanent remain unchanged\.\)\z");
+            if(colorChange.Success) {
+                string color=NativeGeneratedText.ColorName(colorChange.Groups[1].Value);
+                translated=L($"随机选择一个咒语或永久物，它成为{color}。（该永久物上的法术力符号维持原样。）",$"無作為に選んだ呪文かパーマネント１つは{color}になる。（そのパーマネントのマナ・シンボルは変化しない。）");
+                return true;
+            }
+        }
+        if(source.StartsWith("Whenever ",StringComparison.Ordinal)&&source.Contains(" perpetually loses this ability.")) {
+            var granted=Regex.Match(source,@"^Whenever (.+) deals combat damage to a player, you may cast target card named (.+) from your graveyard without paying its mana cost\. If you do, this creature perpetually loses this ability\.\z");
+            if(granted.Success&&Entity(granted.Groups[1].Value) is string creature&&Entity(granted.Groups[2].Value) is string spell) {
+                translated=L($"每当{creature}对牌手造成战斗伤害时，你可以从你的坟墓场施放目标名称为「{spell}」的牌，且无需支付其法术力费用。若如此作，此生物永久失去此异能。",
+                    $"{creature}がプレイヤー１人に戦闘ダメージを与えるたび、あなたの墓地にあり「{spell}」という名前のカード１枚を対象とする。あなたはマナ・コストを支払わずにそれを唱えてもよい。そうしたなら、このクリーチャーは永久にこの能力を失う。");
+                return true;
+            }
+        }
+        if (source.StartsWith("When ", StringComparison.Ordinal)) {
+            var modular = Regex.Match(source, @"^When (?<card>[^\r\n]+?) dies, you may put a \+1/\+1 counter on target artifact creature for each \+1/\+1 counter on \k<card>\.?\z");
+            if (modular.Success && Entity(modular.Groups["card"].Value) is string card) {
+                translated = L($"当{card}死去时，你可以在目标神器生物上放置等同于{card}死去时其上 +1/+1 指示物数量的 +1/+1 指示物。",
+                    $"{card}が死亡したとき、アーティファクト・クリーチャー１体を対象とする。あなたはそれの上に、{card}の上に置かれていた＋1/＋1カウンターの数に等しい個数の＋1/＋1カウンターを置いてもよい。");
+                return true;
+            }
+        }
+        const string attach = "Attach to ";
+        string action = source.Trim();
+        if (action.StartsWith(attach, StringComparison.Ordinal) && Entity(action.Substring(attach.Length)) is string recipient) {
+            translated = L("贴附于" + recipient, recipient + "につける");
+            return true;
+        }
         var perPermanent=Regex.Match(source,@"^This creature gets ([+-][0-9]+)/([+-][0-9]+) for each (artifact|creature|enchantment|land|permanent) you control\.$");
         if(perPermanent.Success) {
             string kind=perPermanent.Groups[3].Value;
@@ -89,10 +153,15 @@ internal static class NativeMessageText
             string name=Entity(rejectedMana.Groups[1].Value);
             if(name!=null){translated=L("所选的"+name+"产生的颜色不能支付法术力费用 ","選択した"+name+"が生み出す色では、マナ・コスト ")+rejectedMana.Groups[2].Value+L("。","を支払えません。");return true;}
         }
-        var objectLine=Regex.Match(source,@"^(.+) - ((?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*) (-?[0-9]+|\*) / (-?[0-9]+|\*)$");
+        var objectLine=Regex.Match(source.Trim(),@"^(?:- )?(.+) - ((?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*) (-?[0-9]+|\*) / (-?[0-9]+|\*)(?: by (.+))?\z");
         if(objectLine.Success) {
             string name=Entity(objectLine.Groups[1].Value);
-            if(name!=null){translated=name+" - "+string.Join(" ",objectLine.Groups[2].Value.Split(' ').Select(GamePreferences.T))+" "+objectLine.Groups[3].Value+" / "+objectLine.Groups[4].Value;return true;}
+            string origin=objectLine.Groups[5].Success?Entity(objectLine.Groups[5].Value):"";
+            if(name!=null && origin!=null){
+                translated=name+" - "+string.Join(" ",objectLine.Groups[2].Value.Split(' ').Select(GamePreferences.T))+" "+objectLine.Groups[3].Value+" / "+objectLine.Groups[4].Value;
+                if(origin.Length!=0)translated+=L("（来源："+origin+"）","（発生源："+origin+"）");
+                return true;
+            }
         }
         var targetPrompt=Regex.Match(source,@"^Select target (artifact|creature|enchantment|instant|land|planeswalker|sorcery) card in your (graveyard|hand|library|exile)\.?$");
         if(targetPrompt.Success) {
@@ -132,6 +201,10 @@ internal static class NativeMessageText
                 string amount = resource.Groups[6].Value; bool gain = resource.Groups[5].Value == "gains";
                 translated = L(actor + (gain ? "获得 " : "失去 ") + amount + " 点生命。", actor + "は" + amount + "点のライフを" + (gain ? "得る。" : "失う。"));
             }
+            return true;
+        }
+        if(source=="At the beginning of the next end step, destroy that creature if it attacked this turn.") {
+            translated=L("在下一个结束步骤开始时，若该生物本回合攻击过，消灭它。","次の終了ステップの開始時に、そのクリーチャーがこのターンに攻撃していたなら、それを破壊する。");
             return true;
         }
         var departure = Regex.Match(source, @"^(Sacrifice|Exile) (.+) at the beginning of the next end step\.$");

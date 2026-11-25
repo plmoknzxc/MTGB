@@ -42,9 +42,10 @@ public static partial class CardImageLibrary
         missingRevision=revision;
         MissingImages[key]=Time.realtimeSinceStartupAsDouble+1;
     }
-    private static string[] ImageRoots()
+    internal static string[] ImageRoots()
     {
         if(imageRoots!=null)return imageRoots;
+        if(ReplayExportWorker.ImageRoots is { Length: > 0 } roots)return imageRoots=roots;
         string external=ExternalRoot,persistent=PersistentRoot;
         return imageRoots=string.Equals(external,persistent,StringComparison.OrdinalIgnoreCase)
             ?new[]{external,AlternateExternalRoot}:new[]{external,AlternateExternalRoot,persistent};

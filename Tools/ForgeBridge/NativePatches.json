@@ -2,6 +2,82 @@
   "schema": 1,
   "patches": [
     {
+      "id": "per-controller-target-availability",
+      "reason": "Refresh per-controller eligibility as the target draft changes so all clients offer only legal additional cards.",
+      "source": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java",
+      "sourceSha256": "edb3be83ca395a7ff56742032dbf0b1d448022718ca65d4528d986582a5286f6",
+      "javaPath": "forge/gamemodes/match/input/InputSelectTargets.java",
+      "changes": [
+        {
+          "before": "        if (choices.contains(card)) {\n            return \"select card as target\";\n        }",
+          "after": "        if (choices.contains(card)) {\n            if (!targets.isEmpty() && !targets.contains(card)\n                    && (tgt.isDifferentControllers() || tgt.isForEachPlayer()) && !sa.canTarget(card)) {\n                return null;\n            }\n            return \"select card as target\";\n        }"
+        }
+      ]
+    },
+    {
+      "id": "first-draw-in-shared-commander",
+      "reason": "CR 103.8: only two-player games and Two-Headed Giant skip the starting player's first draw step. The solo Loki draws on turn one.",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
+      "javaPath": "forge/game/phase/PhaseHandler.java",
+      "changes": [
+        {
+          "before": "return turn == 1 && (game.getPlayers().size() == 2 || game.getRules().hasSharedTeamTurns());",
+          "after": "return turn == 1 && (game.getPlayers().size() == 2 || game.getRules().hasAppliedVariant(GameType.TwoHeadedGiant));"
+        }
+      ]
+    },
+    {
+      "id": "combat-damage-assigned-presentation",
+      "reason": "Announce completed combat damage assignments immediately before prevention and damage, so the table can play its strike after blockers and all assignment choices.",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/combat/Combat.java",
+      "sourceSha256": "b7e4048e8be05e2be710f6b6351af50b7a441e33f5a34b06b9f02540fa5c3508",
+      "javaPath": "forge/game/combat/Combat.java",
+      "changes": [
+        {
+          "before": "    public void dealAssignedDamage() {",
+          "after": "    public record DamageAssigned(Combat combat, CardDamageTable assignments) implements forge.game.event.Event {}\n\n    public void dealAssignedDamage() {"
+        },
+        {
+          "before": "        game.getAction().dealDamage(true, damageMap.get(), preventMap, counterTable, null);",
+          "after": "        game.fireEvent(new DamageAssigned(this, damageMap.get()));\n        game.getAction().dealDamage(true, damageMap.get(), preventMap, counterTable, null);"
+        }
+      ]
+    },
+    {
+      "id": "puzzle-cross-seat-battlefield-order",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameState.java",
+      "sourceSha256": "8208e49ec3219b001743b0e3f4ee54ce36ba12b53a38f7062f4369b56f39cf85",
+      "javaPath": "forge/game/GameState.java",
+      "reason": "Restore explicitly ordered puzzle permanents across both players before attachments, state-based actions and the first priority. Ordinary puzzle files retain the original per-player ordering. Grouped opening permanents share an arrival instant, with a stable APNAP order for layers.",
+      "changes": [
+        {
+          "before": "    private final Map<Integer, Card> idToCard = new HashMap<>();",
+          "after": "    private final Map<Integer, Card> idToCard = new HashMap<>();\n    private final Map<Card, Integer> puzzleEntryRanks = new HashMap<>();\n    private final SortedMap<Integer, Card> pendingPuzzleEntries = new TreeMap<>();\n    private final Map<Card, Integer> puzzleBatches = new HashMap<>();"
+        },
+        {
+          "before": "        idToCard.clear();",
+          "after": "        idToCard.clear();\n        puzzleEntryRanks.clear();\n        pendingPuzzleEntries.clear();\n        puzzleBatches.clear();"
+        },
+        {
+          "before": "        handleCardAttachments();",
+          "after": "        Map<Integer, Long> batchTimes = new HashMap<>();\n        Map<Card, Long> layerTimes = new HashMap<>();\n        for (Card card : pendingPuzzleEntries.values()) {\n            Integer batch = puzzleBatches.get(card);\n            long arrival = batch == null ? game.getNextTimestamp()\n                    : batchTimes.computeIfAbsent(batch, key -> game.getNextTimestamp());\n            // Simultaneous entries share their arrival, but continuous effects\n            // still need relative timestamps (active player first).\n            card.setGameTimestamp(arrival);\n            long layer = batch == null ? arrival : game.getNextTimestamp();\n            card.setLayerTimestamp(layer);\n            layerTimes.put(card, layer);\n            restorePuzzlePermanent(card.getOwner(), card);\n            card.updateWorldTimestamp(arrival);\n        }\n        handleCardAttachments();\n        // These attachments start attached; the restoration pass is not a later equip event.\n        for (Card card : pendingPuzzleEntries.values()) {\n            if (card.getEntityAttachedTo() != null) card.setLayerTimestamp(layerTimes.get(card));\n        }\n        pendingPuzzleEntries.clear();"
+        },
+        {
+          "before": "                } else if (info.equals(\"NoETBTrigs\")) {",
+          "after": "                } else if (info.startsWith(\"PuzzleEntry:\")) {\n                    puzzleEntryRanks.put(c, Integer.parseInt(info.substring(\"PuzzleEntry:\".length())));\n                } else if (info.startsWith(\"PuzzleBatch:\")) {\n                    puzzleBatches.put(c, Integer.parseInt(info.substring(\"PuzzleBatch:\".length())));\n                } else if (info.equals(\"NoETBTrigs\")) {"
+        },
+        {
+          "before": "                    boolean tapped = c.isTapped();\n                    boolean sickness = c.hasSickness();\n                    Multiset<CounterType> counters = c.getCounters();\n                    // Note: Not clearCounters() since we want to keep the counters var as-is.\n                    c.setCounters(HashMultiset.create());\n                    if (c.isAura()) {\n                        // dummy \"enchanting\" to indicate that the card will be force-attached elsewhere\n                        // (will be overridden later, so the actual value shouldn't matter)\n\n                        //FIXME it shouldn't be able to attach itself\n                        c.setEntityAttachedTo(new CardCopyService(c).copyCard(true));\n                    }\n\n                    if (cardsWithoutETBTrigs.contains(c)) {\n                        p.getGame().getAction().moveTo(ZoneType.Battlefield, c, null, null);\n                    } else {\n                        p.getZone(ZoneType.Hand).add(c);\n                        p.getGame().getAction().moveToPlay(c, null, null);\n                    }\n\n                    c.setTapped(tapped);\n                    c.setSickness(sickness);\n                    c.setCounters(counters);",
+          "after": "                    Integer rank = puzzleEntryRanks.get(c);\n                    if (rank == null) {\n                        restorePuzzlePermanent(p, c);\n                    } else if (pendingPuzzleEntries.put(rank, c) != null) {\n                        throw new IllegalArgumentException(\"Duplicate puzzle battlefield entry \" + rank);\n                    }"
+        },
+        {
+          "before": "    private void setupPlayerState(final Player p, final PlayerState state) {",
+          "after": "    private void restorePuzzlePermanent(final Player p, final Card c) {\n        boolean tapped = c.isTapped();\n        boolean sickness = c.hasSickness();\n        Multiset<CounterType> counters = c.getCounters();\n        // Note: Not clearCounters() since we want to keep the counters var as-is.\n        c.setCounters(HashMultiset.create());\n        if (c.isAura()) {\n            // dummy \"enchanting\" to indicate that the card will be force-attached elsewhere\n            // (will be overridden later, so the actual value shouldn't matter)\n\n            //FIXME it shouldn't be able to attach itself\n            c.setEntityAttachedTo(new CardCopyService(c).copyCard(true));\n        }\n\n        if (cardsWithoutETBTrigs.contains(c)) {\n            p.getGame().getAction().moveTo(ZoneType.Battlefield, c, null, null);\n        } else {\n            p.getZone(ZoneType.Hand).add(c);\n            p.getGame().getAction().moveToPlay(c, null, null);\n        }\n\n        c.setTapped(tapped);\n        c.setSickness(sickness);\n        c.setCounters(counters);\n    }\n\n    private void setupPlayerState(final Player p, final PlayerState state) {"
+        }
+      ]
+    },
+    {
       "id": "snow-mana-provenance-equality",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/mana/Mana.java",
       "sourceSha256": "d41a75de04e3681a120ff500131ff345feda04c9a63a60878986f6f53e1a10f8",
@@ -17,7 +93,7 @@
     {
       "id": "same-graveyard-cost-cancellation",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java",
-      "sourceSha256": "65988ae54fdafe83562b5b70e79404af09a83f642958aacc32ea43ffc53c1311",
+      "sourceSha256": "0ac48e3c3cb1c182c14eedf7743576106aa8507680448bdfd730fcee38e44ac1",
       "javaPath": "forge/game/player/PlaySpellAbility.java",
       "reason": "Native Jotun Grunt cumulative upkeep cancellation returned null, then orderCardsByTheirOwners dereferenced it. Decline payment before sorting or moving any cards. Also capture adjusted X casting mana cost before payment, excluding later effect payments. Assist boundary: honor CostAdjustment.adjust false; helper cancellation otherwise continues caster payment.",
       "changes": [
@@ -75,7 +151,7 @@
     {
       "id": "phyrexian-minimum-cost-adjustment",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
-      "sourceSha256": "c59dd2afb0c2d276e1ce2a88c9a1463c5ff00a93634565ee34a56e5ed35a79b7",
+      "sourceSha256": "22b605c9be1020e833e6caf6c545a4345d6450165575d7bffa5eb8135e21fd37",
       "javaPath": "forge/game/cost/CostAdjustment.java",
       "reason": "A validated native RaiseTo minimum is captured after taxes/reductions and before convoke/delve; later Phyrexian life choices must maintain that floor. Applies the static ability requirements, including untapped Trinisphere, rather than matching card names. Predictive test adjustment must not clear live delve history or reserve live offering/emerge material; preview reservations are scoped by the bridge.",
       "changes": [
@@ -84,8 +160,8 @@
           "after": "        manaCost.increaseGenericMana(value);\n        if (staticAbility.hasParam(\"RaiseTo\") && ((((((manaCost.containsPhyrexianMana() || java.util.stream.StreamSupport.stream(manaCost.toManaCost().spliterator(), false).anyMatch(s -> s.isOr2Generic())) || java.util.stream.StreamSupport.stream(manaCost.toManaCost().spliterator(), false).anyMatch(s -> s.isOr2Generic())) || java.util.stream.StreamSupport.stream(manaCost.toManaCost().spliterator(), false).anyMatch(s -> s.isOr2Generic())) || java.util.stream.StreamSupport.stream(manaCost.toManaCost().spliterator(), false).anyMatch(s -> s.isOr2Generic())) || java.util.stream.StreamSupport.stream(manaCost.toManaCost().spliterator(), false).anyMatch(s -> s.isOr2Generic())) || java.util.stream.StreamSupport.stream(manaCost.toManaCost().spliterator(), false).anyMatch(s -> s.isOr2Generic()))) {\n            manaCost.setPhyrexianMinimumMana(Integer.parseInt(amount));\n        }\n    }\n\n    /**\n     * Applies applyReduceCostAbility ability."
         },
         {
-          "before": "                if (c.tap(true, sa, payer)) tapped.add(c);",
-          "after": "                if (c.tap(true, sa, payer)) {\n                    tapped.add(c);\n                    sa.setSVar(\"MTGBNonmanaTapped\", sa.getSVar(\"MTGBNonmanaTapped\") + c.getId() + \",\");\n                }"
+          "before": "                if (c.tap(sa, payer)) tapped.add(c);",
+          "after": "                if (c.tap(sa, payer)) {\n                    tapped.add(c);\n                    sa.setSVar(\"MTGBNonmanaTapped\", sa.getSVar(\"MTGBNonmanaTapped\") + c.getId() + \",\");\n                }"
         },
         {
           "before": "                host.clearDelved();",
@@ -132,7 +208,7 @@
     {
       "id": "human-phyrexian-affordability",
       "source": ".tools/forge-proof/upstream/forge-ai/src/main/java/forge/ai/AvailableActions.java",
-      "sourceSha256": "d5357b60a310a709cce68fd79e92ef4ca2b4d708b82a56aa123000988f5af89d",
+      "sourceSha256": "36e7a9f601dec2a23aadd71e2a46c865ff9843ae43e8d0036b66435e01f84e3e",
       "javaPath": "forge/ai/AvailableActions.java",
       "reason": "Gut Shot human availability was blocked by AIPhyrexianPayment OnFatalDamage.1. Ignore this AI-only spending preference on a copied predictive ability; preserve actual rules, life restrictions, minimum costs and targets. Also test native optional colored-reduction intents instead of vetoing legal life additional costs. Also test native optional colored-reduction intents instead of vetoing legal life additional costs. Also test native optional colored-reduction intents instead of vetoing legal life additional costs.",
       "changes": [
@@ -170,7 +246,7 @@
     {
       "id": "human-life-payment-estimate",
       "source": ".tools/forge-proof/upstream/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
-      "sourceSha256": "1dd94ff92080014f5fd0a0744a10eccf208815b2e7a8abe92e9a508aff3b2f6b",
+      "sourceSha256": "2284ea3b046cb74ef0ffa52e0ffd9011193be7be808b8a8406013547654d177c",
       "javaPath": "forge/ai/ComputerUtilMana.java",
       "reason": "Human native affordability may pay the last life, and may pay an all-black cost with Krrik without mana sources. AI spending strategy stays unchanged.",
       "changes": [
@@ -191,7 +267,7 @@
     {
       "id": "human-auto-preview-preserves-intent",
       "source": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java",
-      "sourceSha256": "b8456dce4d63882be37da6fa4197d8b483932b5ec7d7cf16e0d1f548db029248",
+      "sourceSha256": "563f3d0994687de4cdf2af0cb685dc35cdb91e1ce83d34f1b1cca954d6a4e62b",
       "javaPath": "forge/gamemodes/match/input/InputPayMana.java",
       "reason": "The native Auto preview resets Offering/Emerge sacrifice reservations. Preview a copied intent and restore shared usedToPay markers so actual Auto and cancellation retain the human choice. Native combat attack/block taxes use non-Cloneable EmptySa; preserve the original preview for that placeholder instead of copying it to null. Real spell intents still use isolated copies and reservation restoration. Availability probes for all battlefield cards must restore each original activator; probing a foreign Rhystic Cave while paying its UnlessCost otherwise redirects its resolving Mana subability to the last payer.",
       "changes": [
@@ -200,8 +276,8 @@
           "after": "                Card offering = saPaidFor.getSacrificedAsOffering();\n                Card emerge = saPaidFor.getSacrificedAsEmerge();\n                boolean offeringUsed = offering != null && offering.isUsedToPay();\n                boolean emergeUsed = emerge != null && emerge.isUsedToPay();\n                // Native combat taxes use non-Cloneable EmptySa, which has no\n                // Offering/Emerge reservation. Retain its native preview path.\n                SpellAbility preview = saPaidFor instanceof SpellAbility.EmptySa\n                        ? saPaidFor : saPaidFor.copy(player);\n                try {\n                    return ComputerUtilMana.getManaSourcesToPayCost(costCopy, preview, player, effect);\n                } finally {\n                    if (offering != null) offering.setUsedToPay(offeringUsed);\n                    if (emerge != null) emerge.setUsedToPay(emergeUsed);\n                }"
         },
         {
-          "before": "            sa.setActivatingPlayer(player);\n            if (sa.canPlay(true)) {\n                continue;\n            }\n            toRemove.add(sa);",
-          "after": "            // Eligibility is a preview, not a change to a resolving ability.\n            Player previousActivator = sa.getActivatingPlayer();\n            boolean playable;\n            try {\n                sa.setActivatingPlayer(player);\n                playable = sa.canPlay(true);\n            } finally {\n                sa.setActivatingPlayer(previousActivator);\n            }\n            if (playable) {\n                continue;\n            }\n            toRemove.add(sa);"
+          "before": "            sa.setActivatingPlayer(activator);\n            if (sa.canPlay(true)) {\n                continue;\n            }\n            toRemove.add(sa);",
+          "after": "            // Eligibility is a preview, not a change to a resolving ability.\n            Player previousActivator = sa.getActivatingPlayer();\n            boolean playable;\n            try {\n                sa.setActivatingPlayer(activator);\n                playable = sa.canPlay(true);\n            } finally {\n                sa.setActivatingPlayer(previousActivator);\n            }\n            if (playable) {\n                continue;\n            }\n            toRemove.add(sa);"
         }
       ]
     },
@@ -331,7 +407,7 @@
     {
       "id": "multipart-rollback-before-source-zone",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameActionUtil.java",
-      "sourceSha256": "16876282776a20192c1f4461383e438fd7685c717efca8c7eb846b0becb09f08",
+      "sourceSha256": "dc6789faf68842fc58e1bdeb92d3b0533ca81187a0ebb7f10148e7ae5935d2f6",
       "javaPath": "forge/game/GameActionUtil.java",
       "reason": "Restore the per-payment transaction before returning a cancelled spell from Stack; restoring afterwards would put the cancelled source back onto Stack and double-refund mana.",
       "changes": [
@@ -344,7 +420,7 @@
     {
       "id": "library-exile-cost-confirm-quantity",
       "source": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java",
-      "sourceSha256": "7bc42c5748f6586b243f92a452059f6e9c0a91d8bf852db64463bee949e2704f",
+      "sourceSha256": "05f084ba890c9d9b4b6494e557afd7a472a0d803a92355d00a1f0b2739b3b28e",
       "javaPath": "forge/player/HumanCostDecision.java",
       "reason": "CostExile from library-top confirmation omitted nNeeded and exposed literal {0}. Supply the already-computed native amount; no payment/legality changes. BeholdInput preserves the actual currently visited Behold/BeholdExile cost kind for bridge display; selection/payment behavior remains inherited unchanged.",
       "changes": [
@@ -361,28 +437,15 @@
           "after": "        InputSelectCardsFromList inp = new BeholdInput(controller, num, hand, ability, cost instanceof CostBeholdExile);\n        inp.setMessage(Localizer.getInstance().getMessage(\"lblSelectNMoreTypeCardsTpReveal\", \"%d\", cost.getDescriptiveType()));\n        inp.setCancelAllowed(!mandatory);\n        inp.showAndWait();\n        if (inp.hasCancelled()) {\n            return null;\n        }\n        return PaymentDecision.card(inp.getSelected());\n    }\n\n\n    @Override\n    public PaymentDecision visit(final CostBeholdExile cost)"
         },
         {
-          "before": "confirmAction(cost, \"Sacrifice Food\")",
-          "after": "confirmAction(cost, exile.size() >= 3 ? \"Choose forage payment: Food or graveyard\" : \"Choose forage payment: Food only\")"
-        }
-      ]
-    },
-    {
-      "id": "mill-cost-exact-library",
-      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/cost/CostMill.java",
-      "sourceSha256": "39f6dd524af67a1fc593366a8455b3b290e71ecd23e35a92c2e98a35100c1d7e",
-      "javaPath": "forge/game/cost/CostMill.java",
-      "reason": "Real Rot Farm Skeleton activation was absent with exactly four cards for Mill<4>. Costs require at least the stated quantity, not a spare library card; allow equality and retain refusal below quantity. No effect/rollback/confirmation changes.",
-      "changes": [
-        {
-          "before": "return getAbilityAmount(ability) < payer.getZone(ZoneType.Library).size();",
-          "after": "return getAbilityAmount(ability) <= payer.getZone(ZoneType.Library).size();"
+          "before": "controller.confirmPayment(cost, \"Sacrifice Food\", ability)",
+          "after": "controller.confirmPayment(cost, exile.size() >= 3 ? \"Choose forage payment: Food or graveyard\" : \"Choose forage payment: Food only\", ability)"
         }
       ]
     },
     {
       "id": "payment-local-exert-state-restore",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/Card.java",
-      "sourceSha256": "34994c349cf22a2ab0a0fb091ad81539410e6ebfb878e594b1edc201a7ca143f",
+      "sourceSha256": "3fde7227f3dbc602c92b2478b8c31b3921c5f0ddcec9e7c39ae722e37c8889f1",
       "javaPath": "forge/game/card/Card.java",
       "reason": "Payment-local helper used only by the CostPayment exert journal; sets exact count and exerting players without trigger events, updates the existing view flag. Other card/copy/phase paths unchanged. N24 ordinary pending-spell cancellation preserves exact original game/achievement cast counters and deep copied hidden keyword timestamp/static-ID tables within the existing supported local transaction. Fallback/manual irreversible paths remain unchanged.",
       "changes": [
@@ -399,7 +462,7 @@
     {
       "id": "payment-local-original-stack-restore",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/zone/MagicStack.java",
-      "sourceSha256": "7f73737b3a58354c6f6bd70f019fc03c45fba4cc32669403dae232717340769f",
+      "sourceSha256": "7c39bee0d80ab94792360e39b68f882d90cbbe576c8a8b4f6546e0310564df2c",
       "javaPath": "forge/game/zone/MagicStack.java",
       "reason": "Only called from CostPayment stack-exile journal: restore original pending stack objects/order and source-card identities without re-casting, freezing, cast history or trigger events. Existing global stack add/resolve/snapshot behavior unchanged.",
       "changes": [
@@ -412,7 +475,7 @@
     {
       "id": "optional-companion-startup-decline",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/Player.java",
-      "sourceSha256": "0dffd8d0384daeba7b0ea1665343c1c424a71a9487d3b4c540741d4a4b4e33b8",
+      "sourceSha256": "c2f5a3c52f7f29738186c82d7c2df73d622d6463e21d1e9b14bdfa60ace43003",
       "javaPath": "forge/game/player/Player.java",
       "reason": "Optional Companion selection returns null on cancel. Match.prepareAllZones then passed null to moveTo and fatally aborted startup. Return before any command-zone movement/effect construction when the player declines; accepted Companion setup and child-game callers retain the same native path. Passive library audit. Observe shuffle before/after and individual draw attempts without consuming random numbers or changing engine results. Finite physical shuffle. Allow the MTGB host to install five card-agnostic riffles and a cut for every native library shuffle; leave standalone Forge default behavior and passive audit boundaries intact.",
       "changes": [
@@ -449,7 +512,7 @@
     {
       "id": "bounded-payment-event-subscription",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/Game.java",
-      "sourceSha256": "87859afb8e45a8ff5335b63d404051e0224254dfa708e58eb863ef7352432033",
+      "sourceSha256": "77552c7971a8fb379f108ba495918cbd362fea732ef62b3bae1a480a4d4f7491",
       "javaPath": "forge/game/Game.java",
       "reason": "Expose matching unsubscribe for temporary native payment observers. Existing event publication/registration and all other Game behavior unchanged.",
       "changes": [
@@ -462,67 +525,20 @@
     {
       "id": "quasi-search-found-card-replacement",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java",
-      "sourceSha256": "bfbfafcbc06951e5491a51968a50316bd8f8f8bd3457181025737111a27f3678",
+      "sourceSha256": "17c2b1bb27c57919c0243e2154a8188be966eda70829c910498315dcd21a0a9f",
       "javaPath": "forge/game/ability/effects/ChangeZoneEffect.java",
-      "reason": "Actual paid Doubling Chant under Opposition Agent routed selection correctly but put the found card onto the battlefield: Searched reset erased FoundSearchingLibrary. Preserve this flag for own-library QuasiLibrarySearch; opponent-library Dichotomancy is not the library owner searching.",
+      "reason": "Opposition Agent only replaces finds while an opponent searches their own library. Forge now handles SameNameAsEach through ChangeZone and removes temporary control in the shared search path.",
       "changes": [
         {
-          "before": "            if (searchedLibrary && sa.hasParam(\"Searched\")) {\n                searchedLibrary = false;\n            }",
-          "after": "            if (searchedLibrary && sa.hasParam(\"Searched\")) {\n                // QuasiLibrarySearch already chose these cards, but own-library\n                // finds still need FoundSearchingLibrary for replacement effects.\n                // Searching another player's library is not their own search.\n                searchedLibrary = decider.equals(player);\n            }"
-        }
-      ]
-    },
-    {
-      "id": "quasi-search-controller-scope",
-      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChooseCardEffect.java",
-      "sourceSha256": "dad1862b61f04db860eb2cdfa8c86beac8180cc425839a259378867e541d9844",
-      "javaPath": "forge/game/ability/effects/ChooseCardEffect.java",
-      "reason": "Actual paid Dichotomancy searches opponent library but applied its caster own-library Opposition Agent restriction and leaked private caster hand. Scope temporary control to own-library search; ensure optional decline restores locally in finally.",
-      "changes": [
-        {
-          "before": "                if (sa.hasParam(\"QuasiLibrarySearch\")) {\n                    Long controlTimestamp = null;\n                    if (activator.equals(p)) {",
-          "after": "                if (sa.hasParam(\"QuasiLibrarySearch\")) {\n                    final Player searched = AbilityUtils.getDefinedPlayers(host, sa.getParam(\"QuasiLibrarySearch\"), sa).get(0);\n                    Long controlTimestamp = null;\n                    // This restriction controls opponents searching THEIR library,\n                    // not this player searching somebody else's library.\n                    if (activator.equals(p) && p.equals(searched)) {"
-        },
-        {
-          "before": "                    final Player searched = AbilityUtils.getDefinedPlayers(host, sa.getParam(\"QuasiLibrarySearch\"), sa).get(0);\n                    final int fetchNum",
-          "after": "                    final int fetchNum"
-        },
-        {
-          "before": "                    Card choice = p.getController().chooseSingleEntityForEffect(pChoices, delayedReveal, sa, title,\n                            !sa.hasParam(\"Mandatory\"), p, null);\n                    if (choice == null) {\n                        return;\n                    }\n                    chosen.add(choice);\n\n                    if (controlTimestamp != null) {\n                        p.removeController(controlTimestamp);\n                    }",
-          "after": "                    try {\n                        Card choice = p.getController().chooseSingleEntityForEffect(pChoices, delayedReveal, sa, title,\n                                !sa.hasParam(\"Mandatory\"), p, null);\n                        if (choice == null) {\n                            return;\n                        }\n                        chosen.add(choice);\n                    } finally {\n                        // Optional decline must restore before the next repeated\n                        // picker, rather than depend on a later ChangeZone.\n                        if (controlTimestamp != null) {\n                            p.removeController(controlTimestamp);\n                        }\n                    }"
-        }
-      ]
-    },
-    {
-      "id": "controlled-vote-original-player-other",
-      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/VoteEffect.java",
-      "sourceSha256": "6ca6d7ea3d8c01164e94c737e36a2eeadff1df297fbdba8daa76c156661cc08c",
-      "javaPath": "forge/game/ability/effects/VoteEffect.java",
-      "reason": "Real Illusion of Choice then Mob Verdict: controlling voter excluded itself for every original ballot, permitting original voter self-vote and withholding legal votes for controller. Other is relative to original credited player p, not the player choosing how p votes. Original tally remains votes.put(result,p).",
-      "changes": [
-        {
-          "before": "                voteOpts.remove(realVoter);",
-          "after": "                // Another player is relative to the credited voter, even\n                // when Illusion of Choice lets somebody else choose their vote.\n                voteOpts.remove(p);"
-        }
-      ]
-    },
-    {
-      "id": "camouflage-safe-ineligible-blocker-filter",
-      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/CamouflageEffect.java",
-      "sourceSha256": "2a93037acd8f33a18dca56d56adb777ed610c6bbc17d0d5c8f3f99d0faf85702",
-      "javaPath": "forge/game/ability/effects/CamouflageEffect.java",
-      "reason": "Actual Camouflage pile1 retains tapped Llanowar Elves immediately following removed cannot-block Vampire Interloper. Mutating ArrayList-backed CardCollection during foreach skips adjacent last candidates or throws for later candidates; reverse indexed removal filters all original candidates without changing legal pool order, choices, RNG, min/max or combat rules.",
-      "changes": [
-        {
-          "before": "            for (final Card blocker : pool) {\n                if (!CombatUtil.canBlock(blocker)) {\n                    pool.remove(blocker);\n                }\n            }",
-          "after": "            // CardCollection is backed by an ArrayList. Removing through a\n            // foreach loop skips an adjacent candidate or invalidates its iterator.\n            // Walk backwards so every original candidate is checked exactly once.\n            for (int i = pool.size() - 1; i >= 0; i--) {\n                if (!CombatUtil.canBlock(pool.get(i))) {\n                    pool.remove(i);\n                }\n            }"
+          "before": "moveParams.put(AbilityKey.FoundSearchingLibrary, searchedLibrary);",
+          "after": "moveParams.put(AbilityKey.FoundSearchingLibrary, searchedLibrary && decider.equals(player));"
         }
       ]
     },
     {
       "id": "switchblock-unlimited-receiving-capacity",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java",
-      "sourceSha256": "1663a2902b4010dd3b685fa52eab17e6bb6538cb3c355d918cc0569a2c05776f",
+      "sourceSha256": "ee490daed80502cdc5b41403dd74a01c246ce6c69e5b45bb5463c815537c655e",
       "javaPath": "forge/game/ability/effects/SwitchBlockEffect.java",
       "reason": "Actual Sorrow's Path resolves without swapping Wall of Glare blocking two and Palace Guard blocking one. Both have native CanBlockAny, whereas canBlockAdditional()==0; original finite guard falsely rejects legal transfer. Bypass only each receiving blocker's finite-capacity comparison when it canBlockAny; preserve finite-capacity rejection, pair legality and remove/reblock semantics.",
       "changes": [
@@ -552,7 +568,7 @@
     {
       "id": "self-endstep-valid-player",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
-      "sourceSha256": "519e78380c2d0936f353d6d58e46f6d102caca72da56c42d94fcb38ec0b7f4e4",
+      "sourceSha256": "9fcac641896451036ed9e5856a01e9cffa11e6d0b46222c5d2bfbb4e6b34f7a1",
       "javaPath": "forge/game/ability/SpellAbilityEffect.java",
       "reason": "Actual Gut Red Specialize creates an original Bear token, then Sundial skips own END. The token incorrectly sacrifices on opponent END because addSelfTrigger emitted Player instead of TriggerPhase ValidPlayer. Correct only the nonempty self-trigger player guard; ordinary unqualified self triggers and external one-shot registration remain unchanged.",
       "changes": [
@@ -565,7 +581,7 @@
     {
       "id": "counter-removal-consume-selected-type",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/CountersRemoveEffect.java",
-      "sourceSha256": "6658e701cbeff1e51bf4c8507454079dcc04ec6379b1afc95b812abb5de5109e",
+      "sourceSha256": "e6fbeee9f0d77b507626c156f26133937356345e77d1d5def583ed3cf765187c",
       "javaPath": "forge/game/ability/effects/CountersRemoveEffect.java",
       "reason": "Actual Eventides Shadow drew3/lost3 despite only2 +1/+1 counters. Consume the whole chosen or unremovable type in the working multiset, not one occurrence, to prevent a repeated type and phantom removal in downstream payloads.",
       "changes": [
@@ -582,7 +598,7 @@
     {
       "id": "counter-add-remove-check-chosen-type",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/CountersPutOrRemoveEffect.java",
-      "sourceSha256": "192b7ace4e6b3f0756b02188f46b8bf88716692ef9920bdf91f29a5813ff762a",
+      "sourceSha256": "c27fabe0c0ac59c546dfebb316c3ef3f4be74b5bf31d9f861af0744ef5b2d56c",
       "javaPath": "forge/game/ability/effects/CountersPutOrRemoveEffect.java",
       "reason": "Actual Clockspinning selecting -1/-1 with Melira crashes because permission checks receive null ctype. Check the actual chosen type for both receive and removal permissions, including type-specific removal prevention.",
       "changes": [
@@ -625,7 +641,7 @@
     {
       "id": "random-conjure-main-card-candidates",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChooseCardNameEffect.java",
-      "sourceSha256": "9751b7c96a8e23b5339106e76ab16c51bd3055e01dc2cf9616c8e85df9bb17e7",
+      "sourceSha256": "bfb09f5f442de710573ac9b664f60d5f0e9fbcf94fa4b51d163d0a2a11563926",
       "javaPath": "forge/game/ability/effects/ChooseCardNameEffect.java",
       "reason": "Random unrestricted naming immediately consumed by MakeCard Conjure ChosenName selects creature cards, not alternate faces treated as zero printed mana. A transformed Henrika at X0 has native MV4. Filter to main card faces only on this actual random-conjure child path; manual naming, explicit lists and other random-name consumers remain unchanged.",
       "changes": [
@@ -636,9 +652,22 @@
       ]
     },
     {
+      "id": "shared-team-loss-source",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
+      "sourceSha256": "17eff192e1b1f0ddba002f305dd91c8fac7af1fd43840049198426d0b63dc29e",
+      "javaPath": "forge/game/GameAction.java",
+      "reason": "A teammate inherits the losing player's reason and its spell source. Forge renders SpellEffect and OpponentWon outcomes using that name when it creates the final game event.",
+      "changes": [
+        {
+          "before": "mate.loseConditionMet(p.getOutcome().lossState, null)",
+          "after": "mate.loseConditionMet(p.getOutcome().lossState, p.getOutcome().loseConditionSpell)"
+        }
+      ]
+    },
+    {
       "id": "craft-materials-before-etb-replacements",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
-      "sourceSha256": "1d53cdcb0974825f7fc0310e5def0131e8b8a15ccb30fc009569b4efb62ce255",
+      "sourceSha256": "17eff192e1b1f0ddba002f305dd91c8fac7af1fd43840049198426d0b63dc29e",
       "javaPath": "forge/game/GameAction.java",
       "reason": "Actual Apex Observatory craft skipped Shared as-enters selection because paid materials were retained only after replacement processing. Move the existing craft-only retention earlier; native cost and material IDs unchanged. Actual Meld split offered no native owner order. Reuse native orderMoveToZoneList, retain transient component DTOs and insert the linked card at its selected relative position. Library and graveyard list directions differ; actual top/bottom and ordered-graveyard results checked. Library knowledge observers receive the exact synchronous move subability; scoped notification context restores after nested events and exceptions without changing move resolution.",
       "changes": [
@@ -651,8 +680,8 @@
           "after": "        // Craft's linked materials must already be available to as-enters replacements.\n        if (cause != null && cause.isCraft() && toBattlefield) {\n            copied.retainPaidList(cause, \"ExiledCards\");\n        }\n\n        if (!suppress) {\n            // Temporary disable commander replacement effect"
         },
         {
-          "before": "                if (unmeldPosition != null && (zoneTo.is(ZoneType.Library) || zoneTo.is(ZoneType.Graveyard))) {\n                    // Ask controller if it wants to be on top or bottom of other meld.\n                    unmeldPosition++;\n                }\n                unmeld = changeZone(null, zoneTo, unmeld, position, cause, params);",
-          "after": "                if (zoneTo.is(ZoneType.Library) || zoneTo.is(ZoneType.Graveyard)) {\n                    // The copied primary is already in its destination and has its\n                    // original front face. Let the owner order both physical cards.\n                    final CardCollection parts = new CardCollection();\n                    parts.add(copied);\n                    parts.add(unmeld);\n                    final CardCollectionView ordered = c.getOwner().getController()\n                            .orderMoveToZoneList(parts, zoneTo.getZoneType(), cause);\n                    final int primaryPosition = zoneTo.getCards().indexOf(copied);\n                    if (primaryPosition >= 0) {\n                        // Native choices are bottom-first (top-library choices\n                        // are reversed upstream), but graveyard lists grow upward.\n                        final boolean primaryFirst = ordered.getFirst().equals(copied);\n                        final boolean insertAfter = zoneTo.is(ZoneType.Graveyard)\n                                ? primaryFirst : !primaryFirst;\n                        unmeldPosition = primaryPosition + (insertAfter ? 1 : 0);\n                    }\n                }\n                unmeld = changeZone(null, zoneTo, unmeld, unmeldPosition, cause, params);"
+          "before": "                if (unmeldPosition != null && (zoneTo.is(ZoneType.Library) || zoneTo.is(ZoneType.Graveyard))) {\n                    // Ask controller if it wants to be on top or bottom of other meld.\n                    unmeldPosition++;\n                }\n                // CR 123.5c\n                boolean unmeldKeepsStickers = copied.isStickered() && c.getOwner().getController()\n                        .chooseCardToKeepStickers(new CardCollection(List.of(copied, unmeld))) == unmeld;\n                unmeld = changeZone(null, zoneTo, unmeld, position, cause, params);",
+          "after": "                if (zoneTo.is(ZoneType.Library) || zoneTo.is(ZoneType.Graveyard)) {\n                    // The copied primary is already in its destination and has its\n                    // original front face. Let the owner order both physical cards.\n                    final CardCollection parts = new CardCollection();\n                    parts.add(copied);\n                    parts.add(unmeld);\n                    final CardCollectionView ordered = c.getOwner().getController()\n                            .orderMoveToZoneList(parts, zoneTo.getZoneType(), cause);\n                    final int primaryPosition = zoneTo.getCards().indexOf(copied);\n                    if (primaryPosition >= 0) {\n                        // Native choices are bottom-first (top-library choices\n                        // are reversed upstream), but graveyard lists grow upward.\n                        final boolean primaryFirst = ordered.getFirst().equals(copied);\n                        final boolean insertAfter = zoneTo.is(ZoneType.Graveyard)\n                                ? primaryFirst : !primaryFirst;\n                        unmeldPosition = primaryPosition + (insertAfter ? 1 : 0);\n                    }\n                }\n                // CR 123.5c\n                boolean unmeldKeepsStickers = copied.isStickered() && c.getOwner().getController()\n                        .chooseCardToKeepStickers(new CardCollection(List.of(copied, unmeld))) == unmeld;\n                unmeld = changeZone(null, zoneTo, unmeld, unmeldPosition, cause, params);"
         },
         {
           "before": "    private Card changeZone(final Zone zoneFrom, Zone zoneTo, final Card c, Integer position, SpellAbility cause, Map<AbilityKey, Object> params) {",
@@ -697,7 +726,7 @@
     {
       "id": "flip-empty-battlefield-location",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/FlipOntoBattlefieldEffect.java",
-      "sourceSha256": "f63de4f595137b48c640946097f032d0704fffe822040817b535bdc49f89babb",
+      "sourceSha256": "63ccc50db7d5def26d7171a9db9aee13f1acbe4d4bea1e22833c2c9ddaf80271",
       "javaPath": "forge/game/ability/effects/FlipOntoBattlefieldEffect.java",
       "reason": "Actual Falling Star paid3 through sacrificed Black Lotus left an empty battlefield and native getFirst failed. Empty landing list sets TimesFlipped0, reports no landing and returns normally with no hits; original child effects continue. Nonempty RNG/location behavior is unchanged.",
       "changes": [
@@ -710,7 +739,7 @@
     {
       "id": "end-combat-phase-native-pool-loss",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
-      "sourceSha256": "3eb777c1c1caf5489ae02a3ab37c617deeb6b536f4a76e4edb2a6d5a81f23766",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
       "javaPath": "forge/game/phase/PhaseHandler.java",
       "reason": "Actual paid Mandate of Peace reached MAIN2 with ordinary and CombatMana still floating. Run normal end-phase loss after combat expiry so retention, conversion, burn and original events remain native; the skipped end-of-combat step is not begun.",
       "changes": [
@@ -723,7 +752,7 @@
     {
       "id": "count-svar-plain-dice-number",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/AbilityUtils.java",
-      "sourceSha256": "63e09d1cc36ea1b474956071ef3d1a4bffedfa05ce5fe077365b3434ccecbb66",
+      "sourceSha256": "423496c936555ea1a98e2213a52b139f9cc55b91d7193f49fe54a48f1624c4c9",
       "javaPath": "forge/game/ability/AbilityUtils.java",
       "changes": [
         {
@@ -736,7 +765,7 @@
     {
       "id": "random-spellbook-draw-with-replacement",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/MakeCardEffect.java",
-      "sourceSha256": "c72afe91a3e4363ea5b5a3eee8628d85e951982cf2e0a65b805222f06804259c",
+      "sourceSha256": "2dafe09e4880038d717e9136a16c6e584be1f6999609713cbb47292fddab5019",
       "javaPath": "forge/game/ability/effects/MakeCardEffect.java",
       "reason": "Real Giant Secrets X14 paid16 mana resolves against a13face spellbook and crashes when random draw sees an exhausted list. Keep the original spellbook for each AtRandom draw, allowing independent repeated names and distinct conjured card identities. Nonrandom choices continue removing selected names; ordinary one-draw random producers retain their path. No card data or other MakeCard effect change. Repetition policy inferred from unconstrained X and official random-spellbook wording; source review discloses the inference. N41 actual Booster Tutor revealed only the chosen card. Its Booster-only branch now constructs and publicly reveals the whole exact pack before the existing native name choice, keeps the chosen revealed physical ID and exact printing, and removes unchosen transient members. Non-Booster generation/random draw logic unchanged.",
       "changes": [
@@ -875,7 +904,7 @@
     {
       "id": "explicit-multitarget-completion",
       "source": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java",
-      "sourceSha256": "db5e7eb513e67da304a1d20a732ea642f8695b80339d7bbbfe55ed4b8823cae3",
+      "sourceSha256": "edb3be83ca395a7ff56742032dbf0b1d448022718ca65d4528d986582a5286f6",
       "javaPath": "forge/gamemodes/match/input/InputSelectTargets.java",
       "reason": "Keep a full multi-target native selection open for explicit Next, preserving targeting restrictions, divided allocation, deselection and cancellation. Single-target bridge staging retains one confirmation.",
       "changes": [
@@ -888,7 +917,7 @@
     {
       "id": "explicit-cost-selection-completion",
       "source": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java",
-      "sourceSha256": "cad820852e035c6f8784fbef95f7a4caf71fac80d399d8192c22eb7407abeb0b",
+      "sourceSha256": "c992e038760119c2d1e5ac3b29b84fb73cd7f91fac46890501421f9cdd7ff105",
       "javaPath": "forge/gamemodes/match/input/InputSelectManyBase.java",
       "reason": "Keep actual selectable nonmana costs open until explicit Next; no new input for fixed costs or resolution choices.",
       "changes": [
@@ -901,7 +930,7 @@
     {
       "id": "lazy-card-edition-name-index",
       "source": ".tools/forge-proof/upstream/forge-core/src/main/java/forge/card/CardEdition.java",
-      "sourceSha256": "a3ce937b97364577be3d1f4a0df5d9cd8571ea5435d156cb440348f673dfd674",
+      "sourceSha256": "0702530f0c7dca74f40b3da6f54105df8e299db6c38ce1b4e2c508ba733d5f3f",
       "javaPath": "forge/card/CardEdition.java",
       "reason": "Index only series containing each native case-insensitive edition name. Share the index across common and variant databases, preserve original iteration order, and invalidate it when custom editions are added.",
       "changes": [
@@ -922,7 +951,7 @@
     {
       "id": "lazy-card-relevant-editions-only",
       "source": ".tools/forge-proof/upstream/forge-core/src/main/java/forge/card/CardDb.java",
-      "sourceSha256": "c05311c4df222bc9a77ae1c4c83759f08f8878652cbd3530d2f627abf3fbf76e",
+      "sourceSha256": "cebcf7e6f6888945f1ecd606a7beb3af9346c0c8fb6cd03c48cd3bbe2ffafd9e",
       "javaPath": "forge/card/CardDb.java",
       "reason": "Avoid scanning every edition for every lazy card load. Use all the exact names that addFromSetByAnyName probes, retaining its native filtering, printing identity, art order and unique-print selection.",
       "changes": [
@@ -935,7 +964,7 @@
     {
       "id": "independent-predictive-payment-lists",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/spellability/SpellAbility.java",
-      "sourceSha256": "178ffb6e39ab4dd720964a9ba6e177b76bdd026a36bf9fabaeafb6e518cf267b",
+      "sourceSha256": "a77a302cc46677c8c19ad0fd359df020ff591babdfa0b86f4f8b086242bea519",
       "javaPath": "forge/game/spellability/SpellAbility.java",
       "reason": "Native shallow copies share lazy pipsToReduce and tappedForConvoke suppliers. Cost/controller predictions for one card can overwrite live scratch payment state on a different card. Copy these collections at the existing ability-copy boundary; do not change actual cost choices or rules.",
       "changes": [
@@ -969,7 +998,7 @@
     {
       "id": "duel-commander-game-rules",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameRules.java",
-      "sourceSha256": "ae575ae3ce23fcd707611b38051c1344d9a29bd6e1c15942b0a81db0e66a1ecd",
+      "sourceSha256": "7ad9143e5cf20f37ad1c46311a1883143279e5a5070c87d51c3cae7840a72405",
       "javaPath": "forge/game/GameRules.java",
       "reason": "Room-scoped Duel Commander rule profile; default native formats retain prior behavior.",
       "changes": [
@@ -982,7 +1011,7 @@
     {
       "id": "duel-commander-damage-and-cast-lock",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/Player.java",
-      "sourceSha256": "0dffd8d0384daeba7b0ea1665343c1c424a71a9487d3b4c540741d4a4b4e33b8",
+      "sourceSha256": "c2f5a3c52f7f29738186c82d7c2df73d622d6463e21d1e9b14bdfa60ace43003",
       "javaPath": "forge/game/player/Player.java",
       "reason": "Duel Commander has no commander-damage loss and only the first own commander cast from Command is available from Command this game. Native actual casts/tax map and restart reset remain authoritative.",
       "changes": [
@@ -1003,7 +1032,7 @@
     {
       "id": "duel-commander-native-cast-restriction",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/spellability/SpellAbilityRestriction.java",
-      "sourceSha256": "ec42584664e06209d4c4eb9a8bb16ed6e5d21126690dbb5ffa1964f292a66386",
+      "sourceSha256": "34102059209bdfbd68512d3a21caab82c690c829e21ba93daad1e0742cd86052",
       "javaPath": "forge/game/spellability/SpellAbilityRestriction.java",
       "reason": "Apply the partner cast lock only to casting an owned commander from Command. Activated abilities, casts from hand, ordinary Commander and Brawl are unchanged.",
       "changes": [
@@ -1016,32 +1045,28 @@
     {
       "id": "arena-brawl-hundred-card-deck",
       "source": ".tools/forge-proof/upstream/forge-core/src/main/java/forge/deck/DeckFormat.java",
-      "sourceSha256": "6a655ef78ddecf2bdf8bb2274d8cdccbbaffae078c0631be08f5021a047d1eec",
+      "sourceSha256": "1de95a207138f2f0c074f90d35f6fffc2b2073d4a4ee5fecba5881274e83903c",
       "javaPath": "forge/deck/DeckFormat.java",
       "reason": "The project Brawl pool is Arena Brawl, explicitly selected by the user: one commander plus 99 cards. Other formats and special copy/color-identity rules retain their native behavior.",
       "changes": [
         {
-          "before": "    Brawl      ( Range.is(59), Range.of(0, 15), 1, null,",
-          "after": "    Brawl      ( Range.is(99), Range.of(0, 15), 1, null,"
+          "before": "            if (commanders.size() > 2) {",
+          "after": "            if (commanders.size() > 2 || this == DeckFormat.Brawl && commanders.size() != 1) {"
         },
         {
-          "before": "                if (commanders.size() > 2) {",
-          "after": "                if (commanders.size() > 2 || this == DeckFormat.Brawl && commanders.size() != 1) {"
+          "before": "            if (cmdCI == 0 && cp.getKey().getRules().getType().isBasicLand()){",
+          "after": "            if (this == DeckFormat.Brawl && cmdCI == 0 && cp.getKey().getRules().getType().isBasicLand()){"
         },
         {
-          "before": "                if (cmdCI == 0 && cp.getKey().getRules().getType().isBasicLand()){",
-          "after": "                if (this == DeckFormat.Brawl && cmdCI == 0 && cp.getKey().getRules().getType().isBasicLand()){"
-        },
-        {
-          "before": "                    if (!isLegalCommander(pc.getRules())) {",
-          "after": "                    // Background eligibility permits the second commander of a\n                    // legal pair; it does not make a noncreature Background a\n                    // legal sole commander. Creature Backgrounds remain valid.\n                    if (!isLegalCommander(pc.getRules()) || commanders.size() == 1\n                            && pc.getRules().canBeBackground() && !pc.getRules().canBeCreature()\n                            && !pc.getRules().getMainPart().getOracleText().contains(\"can be your commander\")) {"
+          "before": "                if (!isLegalCommander(pc.getRules())) {",
+          "after": "                // Background eligibility permits the second commander of a\n                // legal pair; it does not make a noncreature Background a\n                // legal sole commander. Creature Backgrounds remain valid.\n                if (!isLegalCommander(pc.getRules()) || commanders.size() == 1\n                        && pc.getRules().canBeBackground() && !pc.getRules().canBeCreature()\n                        && !pc.getRules().getMainPart().getOracleText().contains(\"can be your commander\")) {"
         }
       ]
     },
     {
       "id": "duel-brawl-no-wish-board",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java",
-      "sourceSha256": "bfbfafcbc06951e5491a51968a50316bd8f8f8bd3457181025737111a27f3678",
+      "sourceSha256": "17c2b1bb27c57919c0243e2154a8188be966eda70829c910498315dcd21a0a9f",
       "javaPath": "forge/game/ability/effects/ChangeZoneEffect.java",
       "reason": "No wish-board in Duel Commander or Arena Brawl; companion uses its native self-referencing special action. Other formats retain previous sideboard behavior.",
       "changes": [
@@ -1071,7 +1096,7 @@
     {
       "id": "arena-brawl-commander-perpetual-reset-state",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/Card.java",
-      "sourceSha256": "34994c349cf22a2ab0a0fb091ad81539410e6ebfb878e594b1edc201a7ca143f",
+      "sourceSha256": "3fde7227f3dbc602c92b2478b8c31b3921c5f0ddcec9e7c39ae722e37c8889f1",
       "javaPath": "forge/game/card/Card.java",
       "reason": "Arena Brawl June 2022 rule: commander entering Command may have all perpetual modifications removed by owner. Preserve normal commander tax, nonperpetual state and LKI; retain option is unchanged.",
       "changes": [
@@ -1084,7 +1109,7 @@
     {
       "id": "arena-brawl-commander-perpetual-reset-choice",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
-      "sourceSha256": "1d53cdcb0974825f7fc0310e5def0131e8b8a15ccb30fc009569b4efb62ce255",
+      "sourceSha256": "17eff192e1b1f0ddba002f305dd91c8fac7af1fd43840049198426d0b63dc29e",
       "javaPath": "forge/game/GameAction.java",
       "reason": "Arena Brawl June 2022 rule: commander entering Command may have all perpetual modifications removed by owner. Preserve normal commander tax, nonperpetual state and LKI; retain option is unchanged.",
       "changes": [
@@ -1097,7 +1122,7 @@
     {
       "id": "defined-mana-replaces-zero-placeholder",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/cost/Cost.java",
-      "sourceSha256": "f9b3c74ee294c30235a6957525dffcb2a4863097845f73202df110d703fd9fc9",
+      "sourceSha256": "08593dc5f1c0839bf45610830ad56770fb2a1d7fbf17882b75b81c47d790a76b",
       "javaPath": "forge/game/cost/Cost.java",
       "reason": "Perpetual reset exposed copyWithDefinedMana appending real mana after a zero placeholder from copyWithNoMana; getCostMana reads zero and commander recast preview lost printed cost. Replace that placeholder only; preserve free casting copyWithNoMana and nonmana cost parts.",
       "changes": [
@@ -1110,13 +1135,272 @@
     {
       "id": "perpetual-adjusted-mana-cache-reset",
       "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/card/CardState.java",
-      "sourceSha256": "ba29cb718f13d6d6944a212ddec7ee009b7ed3ba146865c2f6416dadde79c254",
+      "sourceSha256": "7f5dc2659a3ff52f2281f20c6bb13f4b0d32dcc8a7f67f21bd4d13b4f0c794a9",
       "javaPath": "forge/game/card/CardState.java",
       "reason": "Eight-family perpetual reset adapter reproduced stale reduced mana display after removing all traits. Recalculation must invalidate prior perpetual-adjusted cache even when no modifier remains.",
       "changes": [
         {
           "before": "    public void calculatePerpetualAdjustedManaCost() {\n        // If the total amount reduced",
           "after": "    public void calculatePerpetualAdjustedManaCost() {\n        perpetualAdjustedManaCost = null;\n        // If the total amount reduced"
+        }
+      ]
+    },
+    {
+      "id": "bridge-strategy-playercontrollerai",
+      "source": ".tools/forge-proof/upstream/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+      "sourceSha256": "3eec0312ee37b3acbec73d89b6c153590cefe19ba7438fd351540104a9a547ab",
+      "javaPath": "forge/ai/PlayerControllerAi.java",
+      "reason": "Expose additive per-controller AI preferences. Preserve native legal candidates, costs, timing, specialised card logic and unchanged defaults for non-bridge controllers.",
+      "changes": [
+        {
+          "before": "    public boolean pilotsNonAggroDeck() {",
+          "after": "    /** Optional bridge strategy preferences. Native controllers keep the original AI. */\n    public int getStrategicSpellPriority(SpellAbility ability) { return 0; }\n    public int getStrategicRemovalPriority(Card card) { return 0; }\n\n    public boolean pilotsNonAggroDeck() {"
+        }
+      ]
+    },
+    {
+      "id": "bridge-strategy-computerutilability",
+      "source": ".tools/forge-proof/upstream/forge-ai/src/main/java/forge/ai/ComputerUtilAbility.java",
+      "sourceSha256": "23ce38a88283568641b51b815e550512de0584a6aa1608ccecc88cd4eac5e8b4",
+      "javaPath": "forge/ai/ComputerUtilAbility.java",
+      "reason": "Expose additive per-controller AI preferences. Preserve native legal candidates, costs, timing, specialised card logic and unchanged defaults for non-bridge controllers.",
+      "changes": [
+        {
+          "before": "            return p;\n        }\n    }",
+          "after": "            if (ai.getController() instanceof PlayerControllerAi controller) {\n                p += controller.getStrategicSpellPriority(sa);\n            }\n            return p;\n        }\n    }"
+        }
+      ]
+    },
+    {
+      "id": "bridge-strategy-computerutilcard",
+      "source": ".tools/forge-proof/upstream/forge-ai/src/main/java/forge/ai/ComputerUtilCard.java",
+      "sourceSha256": "778e4ce821de6cd7ad332c440714761a8315482acb143b92866c63264a0d8cc6",
+      "javaPath": "forge/ai/ComputerUtilCard.java",
+      "reason": "Expose additive per-controller AI preferences. Preserve native legal candidates, costs, timing, specialised card logic and unchanged defaults for non-bridge controllers.",
+      "changes": [
+        {
+          "before": "        return Aggregates.itemWithMax(list, c -> evaluateRemovalTargetPriority(ai, c));",
+          "after": "        return Aggregates.itemWithMax(list, c -> evaluateRemovalTargetPriority(ai, c)\n                + (ai.getController() instanceof PlayerControllerAi controller\n                    ? controller.getStrategicRemovalPriority(c) : 0));"
+        },
+        {
+          "before": "        final float valueNow = Math.max(valueTempo, threat);",
+          "after": "        // Ranking an engine highest is insufficient if the generic body/CMC heuristic\n        // then declines to remove it. Apply the same public-state urgency to timing.\n        if (ai.getController() instanceof PlayerControllerAi controller) {\n            int strategic = controller.getStrategicRemovalPriority(c);\n            if (strategic >= 1000 || destination == ZoneType.Graveyard || destination == ZoneType.Exile) {\n                threat += strategic / 100.0f;\n            }\n        }\n        final float valueNow = Math.max(valueTempo, threat);"
+        }
+      ]
+    },
+    {
+      "id": "starting-deck-Player",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/Player.java",
+      "sourceSha256": "c2f5a3c52f7f29738186c82d7c2df73d622d6463e21d1e9b14bdfa60ace43003",
+      "javaPath": "forge/game/player/Player.java",
+      "reason": "Track physical cards per player after sideboarding, including commanders. A drafted copy of a registered name must remain distinct.",
+      "changes": [
+        {
+          "before": "    private Map<Card, Card> maingameCardsMap = Maps.newHashMap();",
+          "after": "    private Map<Card, Card> maingameCardsMap = Maps.newHashMap();\n    private final Set<Integer> startingDeckIds = new HashSet<>();"
+        },
+        {
+          "before": "    public final ManaPool getManaPool() {",
+          "after": "    public void recordStartingDeck() {\n        startingDeckIds.clear();\n        for (Card card : getCardsIn(ZoneType.Library)) startingDeckIds.add(card.getId());\n        for (Card card : getCardsIn(ZoneType.Ante)) startingDeckIds.add(card.getId());\n        for (Card card : getCommanders()) startingDeckIds.add(card.getId());\n    }\n\n    public boolean startedWith(Card card) {\n        return startingDeckIds.contains(card.getId());\n    }\n\n    public final ManaPool getManaPool() {"
+        }
+      ]
+    },
+    {
+      "id": "starting-deck-GameAction",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
+      "sourceSha256": "17eff192e1b1f0ddba002f305dd91c8fac7af1fd43840049198426d0b63dc29e",
+      "javaPath": "forge/game/GameAction.java",
+      "reason": "Snapshot before opening hands for each game, including restart and subgame.",
+      "changes": [
+        {
+          "before": "            runPreOpeningHandActions(first);",
+          "after": "            for (Player player : game.getPlayers()) {\n                player.recordStartingDeck();\n            }\n            runPreOpeningHandActions(first);"
+        }
+      ]
+    },
+    {
+      "id": "starting-deck-AbilityManaPart",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java",
+      "sourceSha256": "195ecaa51b2be1aa63d7ea9f1f6ebdbd542f78849dc110880246aa65c69e3de2",
+      "javaPath": "forge/game/spellability/AbilityManaPart.java",
+      "reason": "YSOS/30 restricted mana may pay only for casting spells outside the caster's starting deck, even if control of the land changes.",
+      "changes": [
+        {
+          "before": "            if (sa.isValid(restriction, this.getSourceCard().getController(), this.getSourceCard(), null)) {",
+          "after": "            if (restriction.equals(\"SpellNotFromStartingDeck\")) {\n                if (sa.isSpell() && sa.getActivatingPlayer() != null && !sa.getActivatingPlayer().startedWith(sa.getHostCard())) {\n                    return true;\n                }\n                continue;\n            }\n\n            if (sa.isValid(restriction, this.getSourceCard().getController(), this.getSourceCard(), null)) {"
+        }
+      ]
+    },
+    {
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
+      "javaPath": "forge/game/phase/PhaseHandler.java",
+      "id": "commander-team-priority-passes",
+      "reason": "Poll every member of a team before yielding to an opposing team, including after a teammate acts from a non-adjacent seat.",
+      "changes": [
+        {
+          "before": "        pFirstPriority = p;\n        pPlayerPriority = p;",
+          "after": "        pFirstPriority = p == null ? null : teamLead(p);\n        pPlayerPriority = pFirstPriority;"
+        },
+        {
+          "before": "    private Player nextTurnLead() {",
+          "after": "    // Team members get individual input windows, but the opposing team cannot\n    // receive priority until every member has declined since the last action.\n    private Player nextPriorityPlayer(final Player current) {\n        if (!game.getRules().hasSharedTeamTurns() || !current.isInGame()) {\n            return game.getNextPlayerAfter(current);\n        }\n        final PlayerCollection order = game.getPlayersInTurnOrder();\n        boolean foundCurrent = false;\n        for (final Player teammate : order.filter(current::sameTeam)) {\n            if (foundCurrent) return teammate;\n            foundCurrent = teammate == current;\n        }\n        // Begin the next team at its first member. Team order follows the\n        // first occupied seat of each team in turn order, including wraparound.\n        final java.util.List<Player> leads = new java.util.ArrayList<>();\n        for (final Player candidate : order) {\n            if (leads.stream().noneMatch(candidate::sameTeam)) leads.add(candidate);\n        }\n        return leads.get((leads.indexOf(teamLead(current)) + 1) % leads.size());\n    }\n\n    private Player nextTurnLead() {"
+        },
+        {
+          "before": "Player nextPlayer = game.getNextPlayerAfter(getPriorityPlayer());",
+          "after": "Player nextPlayer = nextPriorityPlayer(getPriorityPlayer());"
+        }
+      ]
+    },
+    {
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
+      "javaPath": "forge/game/phase/PhaseHandler.java",
+      "id": "loki-return-to-next-hero",
+      "reason": "Resume a cleared hero-initiated stack at the next living hero. Keep ordinary priority for responses, triggers and other formats.",
+      "changes": [
+        {
+          "before": "    // Team members get individual input windows",
+          "after": "    // Only the Loki event opts in. The opener stays fixed through responses,\n    // nested triggers and partial resolutions until a real empty-stack window.\n    private Player soloLoki;\n    private Player heroStackOpener;\n\n    public void enableLokiHeroRotation(final Player loki) {\n        soloLoki = loki;\n    }\n\n    public void recordEmptyStackAction(final Player actor) {\n        if (soloLoki != null && heroStackOpener == null && actor != null\n                && !soloLoki.sameTeam(actor) && isPlayerTurn(actor)) {\n            heroStackOpener = actor;\n        }\n    }\n\n    private Player nextLivingTeammate(final Player player) {\n        Player candidate = player;\n        for (int i = 0; i < game.getPlayers().size(); i++) {\n            candidate = game.getNextPlayerAfter(candidate);\n            if (candidate.sameTeam(player)) return candidate;\n        }\n        return null;\n    }\n\n    public Player getHeroAfterStack() {\n        return heroStackOpener == null ? null : nextLivingTeammate(heroStackOpener);\n    }\n\n    private void resumeHeroesOnEmptyStack() {\n        if (heroStackOpener == null || !game.getStack().isEmpty()) return;\n        final Player next = getHeroAfterStack();\n        heroStackOpener = null;\n        if (next != null && isPlayerTurn(next)) {\n            pFirstPriority = next;\n            pPlayerPriority = next;\n        }\n    }\n\n    // Team members get individual input windows"
+        },
+        {
+          "before": "        boolean foundCurrent = false;",
+          "after": "        // When the empty-stack round starts mid-team, visit all heroes from\n        // that seat before passing to Loki, then wrap to that exact first seat.\n        if (soloLoki != null && pFirstPriority != null && pFirstPriority.isInGame()\n                && pFirstPriority != teamLead(pFirstPriority)) {\n            if (!current.sameTeam(pFirstPriority)) return pFirstPriority;\n            final Player teammate = nextLivingTeammate(current);\n            if (teammate != pFirstPriority) return teammate;\n            for (final Player rival : order) {\n                if (!rival.sameTeam(current)) return rival;\n            }\n            return pFirstPriority;\n        }\n        boolean foundCurrent = false;"
+        },
+        {
+          "before": "        phase = phase0;",
+          "after": "        heroStackOpener = null;\n        phase = phase0;"
+        },
+        {
+          "before": "        playerTurn = playerTurn0;",
+          "after": "        heroStackOpener = null;\n        playerTurn = playerTurn0;"
+        },
+        {
+          "before": "                if (pPlayerPriority.hasLost()) {",
+          "after": "                resumeHeroesOnEmptyStack();\n                if (pPlayerPriority.hasLost()) {"
+        },
+        {
+          "before": "                    setPriority(teamLead(pPlayerPriority));",
+          "after": "                    if (soloLoki != null && game.getStack().isEmpty() && isPlayerTurn(pPlayerPriority)\n                            && !soloLoki.sameTeam(pPlayerPriority)) {\n                        // Playing a land or using a mana ability doesn't spend the hero's window.\n                        pFirstPriority = pPlayerPriority;\n                    } else {\n                        setPriority(teamLead(pPlayerPriority));\n                    }"
+        }
+      ]
+    },
+    {
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/zone/MagicStack.java",
+      "sourceSha256": "7c39bee0d80ab94792360e39b68f882d90cbbe576c8a8b4f6546e0310564df2c",
+      "javaPath": "forge/game/zone/MagicStack.java",
+      "id": "loki-record-first-stack-action",
+      "reason": "Record the activating player only when a paid spell or nonmana activation starts a new stack outside resolution.",
+      "changes": [
+        {
+          "before": "        stack.addFirst(si);",
+          "after": "        if (stack.isEmpty() && !isResolving() && !sp.isCopied() && !sp.isTrigger()\n                && (sp.isSpell() || sp.isActivatedAbility()) && !sp.isManaAbility()) {\n            game.getPhaseHandler().recordEmptyStackAction(sp.getActivatingPlayer());\n        }\n        stack.addFirst(si);"
+        }
+      ]
+    },
+    {
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
+      "javaPath": "forge/game/phase/PhaseHandler.java",
+      "id": "loki-yield-without-ending-step",
+      "reason": "An empty-stack seat handoff while the heroes are still voting is not a team pass.",
+      "changes": [
+        {
+          "before": "    private Player soloLoki;",
+          "after": "    private volatile Player heroHandingOff;\n\n    public void handOffHeroWindow(Player actor) {\n        if (soloLoki != null && actor != null && actor == pPlayerPriority && isPlayerTurn(actor)\n                && !actor.sameTeam(soloLoki) && game.getStack().isEmpty()) heroHandingOff = actor;\n    }\n\n    private Player soloLoki;"
+        },
+        {
+          "before": "                if (chosenSa == null) {\n                    break; // that means 'I pass'",
+          "after": "                if (chosenSa == null) {\n                    if (heroHandingOff != null) {\n                        final boolean handoff = heroHandingOff == pPlayerPriority;\n                        heroHandingOff = null;\n                        final Player teammate = handoff ? nextLivingTeammate(pPlayerPriority) : null;\n                        if (teammate != null) {\n                            pFirstPriority = teammate;\n                            pPlayerPriority = teammate;\n                            continue;\n                        }\n                    }\n                    break; // that means 'I pass'"
+        }
+      ]
+    },
+    {
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
+      "javaPath": "forge/game/phase/PhaseHandler.java",
+      "id": "loki-response-order-per-stack-item",
+      "reason": "Start a fresh pass round for each exposed stack item. Loki answers a hero first, then the other heroes clockwise, with that hero last.",
+      "changes": [
+        {
+          "before": "    private Player heroStackOpener;",
+          "after": "    private Player heroStackOpener;\n    private forge.game.spellability.SpellAbilityStackInstance lokiResponseTop;\n    private Player lokiResponseCaster;\n\n    private void refreshLokiResponseRound() {\n        if (soloLoki == null) return;\n        final var top = game.getStack().peek();\n        if (lokiResponseTop == top) return;\n        lokiResponseTop = top;\n        lokiResponseCaster = top == null ? null : top.getActivatingPlayer();\n        if (lokiResponseCaster == null || !soloLoki.isInGame()) return;\n        // A different top, including one exposed by resolution, needs four fresh passes.\n        pFirstPriority = lokiResponseCaster == soloLoki ? game.getNextPlayerAfter(soloLoki) : soloLoki;\n        pPlayerPriority = pFirstPriority;\n    }"
+        },
+        {
+          "before": "        final PlayerCollection order = game.getPlayersInTurnOrder();\n        // When the empty-stack round",
+          "after": "        if (lokiResponseCaster != null && soloLoki.isInGame()) {\n            if (lokiResponseCaster == soloLoki) return game.getNextPlayerAfter(current);\n            final Player firstHero = nextLivingTeammate(lokiResponseCaster);\n            if (current == soloLoki) return firstHero;\n            final Player next = nextLivingTeammate(current);\n            return next == firstHero ? soloLoki : next;\n        }\n        final PlayerCollection order = game.getPlayersInTurnOrder();\n        // When the empty-stack round"
+        },
+        {
+          "before": "                resumeHeroesOnEmptyStack();",
+          "after": "                refreshLokiResponseRound();\n                resumeHeroesOnEmptyStack();"
+        },
+        {
+          "before": "                if (acted) {\n                    // all opponents",
+          "after": "                if (acted && lokiResponseCaster == null) {\n                    // all opponents"
+        }
+      ]
+    },
+    {
+      "id": "shared-turn-night-spells-per-caster",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/Untap.java",
+      "sourceSha256": "0c1e4a36deb46cf3558c5b640f902c6df9a60d22782efa9ff154f02327dd1ef9",
+      "javaPath": "forge/game/phase/Untap.java",
+      "reason": "CR 730.2b counts spells per active player even on a shared turn. Two heroes casting one spell each must leave it night.",
+      "changes": [
+        {
+          "before": "        } else if (game.isNight() && CardLists.count(casted, castByPrevious) > 1) {\n            game.setDayTime(false);\n        }",
+          "after": "        } else if (game.isNight()) {\n            // Shared turns check each active teammate separately (CR 730.2b).\n            final java.util.Set<Player> casters = new java.util.HashSet<>();\n            for (final Card spell : casted) {\n                if (castByPrevious.test(spell) && !casters.add(spell.getController())) {\n                    game.setDayTime(false);\n                    break;\n                }\n            }\n        }"
+        }
+      ]
+    },
+    {
+      "id": "individual-hero-loss-gameaction",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/GameAction.java",
+      "sourceSha256": "17eff192e1b1f0ddba002f305dd91c8fac7af1fd43840049198426d0b63dc29e",
+      "javaPath": "forge/game/GameAction.java",
+      "reason": "Sharing a turn and life pool does not share individual losses, poison or lose-the-game protection in the Loki event. Keep the team-loss rules specific to Two-Headed Giant.",
+      "changes": [
+        {
+          "before": "if (losers != null) {\n            for (Player p : Lists.newArrayList(losers))",
+          "after": "if (losers != null && game.getRules().hasAppliedVariant(GameType.TwoHeadedGiant)) {\n            for (Player p : Lists.newArrayList(losers))"
+        }
+      ]
+    },
+    {
+      "id": "individual-hero-loss-player",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/Player.java",
+      "sourceSha256": "c2f5a3c52f7f29738186c82d7c2df73d622d6463e21d1e9b14bdfa60ace43003",
+      "javaPath": "forge/game/player/Player.java",
+      "reason": "Sharing a turn and life pool does not share individual losses, poison or lose-the-game protection in the Loki event. Keep the team-loss rules specific to Two-Headed Giant.",
+      "changes": [
+        {
+          "before": "if (getSharedTeam().anyMatch(p -> p != this && p.cantLoseCheck(state)))",
+          "after": "if (game.getRules().hasAppliedVariant(GameType.TwoHeadedGiant) && getSharedTeam().anyMatch(p -> p != this && p.cantLoseCheck(state)))"
+        },
+        {
+          "before": "if (type.is(CounterEnumType.POISON) ?",
+          "after": "if (type.is(CounterEnumType.POISON) && game.getRules().hasAppliedVariant(GameType.TwoHeadedGiant) ?"
+        },
+        {
+          "before": "if (counterType.is(CounterEnumType.POISON)) {\n            for (final Player p : getSharedTeam())",
+          "after": "if (counterType.is(CounterEnumType.POISON) && game.getRules().hasAppliedVariant(GameType.TwoHeadedGiant)) {\n            for (final Player p : getSharedTeam())"
+        }
+      ]
+    },
+    {
+      "id": "loki-surviving-heroes-turn",
+      "source": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/phase/PhaseHandler.java",
+      "sourceSha256": "eea21295ab460c34b9ba5a4fbfbe38840d1a663f0bd28e9cd336655f5c1b75c1",
+      "javaPath": "forge/game/phase/PhaseHandler.java",
+      "reason": "Retain the active hero team and response order when an individual hero leaves.",
+      "changes": [
+        {
+          "before": "if (!game.getRules().hasSharedTeamTurns() || !current.isInGame()) {",
+          "after": "if (!game.getRules().hasSharedTeamTurns() || (!current.isInGame() && lokiResponseCaster == null)) {"
+        },
+        {
+          "before": "                refreshLokiResponseRound();",
+          "after": "                if (soloLoki != null && playerTurn.hasLost() && playerTurn != soloLoki) {\n                    // A shared turn continues with the surviving heroes. Do not reset the stack or priority.\n                    playerTurn = teamLead(playerTurn);\n                    game.updatePlayerTurnForView();\n                }\n                refreshLokiResponseRound();"
         }
       ]
     }
@@ -1153,19 +1437,6 @@
       ]
     },
     {
-      "id": "stick-together-own-party",
-      "source": ".tools/forge-proof/upstream/forge-gui/res/cardsfolder/s/stick_together.txt",
-      "sourceSha256": "3b6cddaf7e29d605cec399881eb10e230d8b0e9981f20eb56dafc992b22191b8",
-      "assetPath": "assets/res/cardsfolder/s/stick_together.txt",
-      "reason": "Actual paid Stick Together offered only the opponent Wizard during own party selection. Native ChooseEach must filter each chooser to their controlled creatures, consistent with printed Oracle.",
-      "changes": [
-        {
-          "before": "Choices$ Creature | ChooseEach$ Party | Reveal$ True",
-          "after": "Choices$ Creature | ChooseEach$ Party | ControlledByPlayer$ Chooser | Reveal$ True"
-        }
-      ]
-    },
-    {
       "id": "lukamina-white-death-triggered-card",
       "source": ".tools/forge-proof/upstream/forge-gui/res/cardsfolder/l/lukamina_moon_druid.txt",
       "sourceSha256": "a412940cb14f8c7d8ec9179da2f8863283780a470a4133a3714657c5ab7c4aa6",
@@ -1198,13 +1469,13 @@
     {
       "id": "viconia-blue-distinct-trigger-description",
       "source": ".tools/forge-proof/upstream/forge-gui/res/cardsfolder/v/viconia_nightsingers_disciple.txt",
-      "sourceSha256": "cf7eb189331c5c01121ebbad511ee043b55cb695adfd0c99b16bb7b2008ea65e",
+      "sourceSha256": "737fdbb638a644a2339a8af7943cb8cfbe7e81ede57b1973e2f7805266ebed11",
       "assetPath": "assets/res/cardsfolder/v/viconia_nightsingers_disciple.txt",
       "reason": "Actual native blue target request85 describes the white single-creature/CMC<=3 effect, while correct blue Oracle and chain select optional creature plus instant/sorcery and conjure both. Correct display text only; all Execute/SVar/target parameters unchanged.",
       "changes": [
         {
-          "before": "T:Mode$ Specializes | ValidCard$ Card.Self | Execute$ TrigTargetC | TriggerDescription$ When this creature specializes, conjure a duplicate of target creature card exiled with this creature into your hand. The duplicate perpetually gains \"You may spend mana as though it were mana of any color to cast this spell.\" If it has mana value 3 or less, you may put it onto the battlefield.",
-          "after": "T:Mode$ Specializes | ValidCard$ Card.Self | Execute$ TrigTargetC | TriggerDescription$ When this creature specializes, choose up to one target creature card and up to one target instant or sorcery card from among cards exiled with this creature. Conjure a duplicate of each of those cards into your hand. The duplicates perpetually gain \"You may spend mana as though it were mana of any color to cast this spell.\""
+          "before": "T:Mode$ Specializes | ValidCard$ Card.Self | Execute$ TrigTargetC | TriggerDescription$ When this creature specializes, conjure a duplicate of target creature card exiled with this creature into your hand. The duplicates perpetually gain prismatic.",
+          "after": "T:Mode$ Specializes | ValidCard$ Card.Self | Execute$ TrigTargetC | TriggerDescription$ When this creature specializes, choose up to one target creature card and up to one target instant or sorcery card from among cards exiled with this creature. Conjure a duplicate of each of those cards into your hand. The duplicates perpetually gain prismatic."
         }
       ]
     },
@@ -1254,6 +1525,14 @@
           "after": "RememberObjects$ TargetedOwner"
         }
       ]
+    },
+    {
+      "id": "ysos-30-the-mystical-archive",
+      "source": "Tools/ForgeBridge/card-scripts/the_mystical_archive.txt",
+      "sourceSha256": "2c68c8b0f40409b6fef64d8d08f31ffb244eff40470adcc8809c55faabae1ded",
+      "assetPath": "assets/res/cardsfolder/t/the_mystical_archive.txt",
+      "reason": "Forge 2.0.16 lists YSOS/30 without rules. Adapted from Card-Forge/forge PR 12525 (ef1bbbd); spellbook checked against Wizards Alchemy: Strixhaven Spellbooks.",
+      "changes": []
     }
   ]
 }

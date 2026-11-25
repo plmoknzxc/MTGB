@@ -36,7 +36,6 @@ public static class StackRestoreListIncrementValidation
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try{
             foreach(string locale in new[]{"zh-CN","en-US","ja-JP"}){
             int revision=GamePreferences.Revision;bool changing=GamePreferences.Language!=locale;GamePreferences.SetLanguage(locale);float until=Time.realtimeSinceStartup+12;while((!GamePreferences.Ready||changing&&GamePreferences.Revision==revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language==locale,"Exact actual language ready");
@@ -59,7 +58,7 @@ public static class StackRestoreListIncrementValidation
                     File.AppendAllText(Output+"/steps.log",locale+" "+scenario+" "+option.id+" index="+index+" PASS\n");
                 }
             }
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

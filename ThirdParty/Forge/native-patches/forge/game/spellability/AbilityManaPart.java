@@ -448,6 +448,13 @@ public class AbilityManaPart implements java.io.Serializable {
                 return false;
             }
 
+            if (restriction.equals("SpellNotFromStartingDeck")) {
+                if (sa.isSpell() && sa.getActivatingPlayer() != null && !sa.getActivatingPlayer().startedWith(sa.getHostCard())) {
+                    return true;
+                }
+                continue;
+            }
+
             if (sa.isValid(restriction, this.getSourceCard().getController(), this.getSourceCard(), null)) {
                 return true;
             }

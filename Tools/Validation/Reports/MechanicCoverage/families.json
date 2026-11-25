@@ -1,11 +1,11 @@
 {
   "provenance": {
-    "revision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
-    "fingerprint": "a5cc7d374e0606bf25764cbb0c1addefccc26c231a080377597a957e6f92e65e",
-    "cardScripts": 33980,
+    "revision": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "fingerprint": "25a8787224273a97ff50d0c453b72406bb0135d7197ce8ef74985bbfa491bdbd",
+    "cardScripts": 34466,
     "scriptRoots": {
-      "cardsfolder": 33980,
-      "tokenscripts": 854,
+      "cardsfolder": 34466,
+      "tokenscripts": 864,
       "effects": 0
     },
     "structuralSources": [
@@ -10847,7 +10847,32 @@
       "evidence": null
     }
   ],
-  "unmappedAPIs": [],
+  "unmappedAPIs": [
+    {
+      "api": "PutSticker",
+      "cards": [
+        "Aerialephant",
+        "Ambassador Blorpityblorpboop",
+        "Baaallerina",
+        "Bioluminary",
+        "Carnival Carnivore",
+        "Chicken Troupe"
+      ],
+      "cardCount": 36
+    },
+    {
+      "api": "Assimilate",
+      "cards": [
+        "Assimilate the Wounded",
+        "Assimilation Assessor",
+        "Borg Cube",
+        "Borg Queen, Perfection Manifest",
+        "Death Is Irrelevant",
+        "Gift of Perfection"
+      ],
+      "cardCount": 8
+    }
+  ],
   "requestFamilies": {
     "AssignAmount": [
       "number",
@@ -10906,6 +10931,7 @@
       "cards",
       "replacements"
     ],
+    "InputSelectStackItems": [],
     "InputSelectTargets": [
       "targets"
     ],
@@ -10953,37 +10979,38 @@
     "InputSelectCardsForConvokeOrImprovise": true,
     "InputSelectCardsFromList": true,
     "InputSelectEntitiesFromList": true,
+    "InputSelectStackItems": false,
     "InputSelectTargets": true
   },
   "bridgeUnsupportedBranches": [
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 634,
+      "line": 724,
       "source": "throw new UnsupportedOperationException(\"IGuiBase.\"+n);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 819,
+      "line": 914,
       "source": "throw new UnsupportedOperationException(\"Unadapted ordering: \"+a[0]);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 836,
+      "line": 931,
       "source": "throw new UnsupportedOperationException(\"Unadapted information or control callback: \"+n);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 842,
+      "line": 937,
       "source": "throw new UnsupportedOperationException(\"IGuiGame.\"+n+\" \"+Arrays.toString(a));"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 1582,
+      "line": 1690,
       "source": "if(!supportedInput(inp)) throw new UnsupportedOperationException(\"Unadapted input: \"+kind);"
     },
     {
       "path": "Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java",
-      "line": 1583,
+      "line": 1691,
       "source": "if(opts.isEmpty()) throw new UnsupportedOperationException(\"No supported options for \"+kind+\": \"+g.message);"
     },
     {

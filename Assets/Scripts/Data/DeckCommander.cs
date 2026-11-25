@@ -5,6 +5,31 @@ using System.Linq;
 /// <summary>Editor designation operations; physical copies move between sections.</summary>
 public static class DeckCommander
 {
+    public const int MaxBracket = 5;
+
+    public static int EffectiveBracket(string format, int value) =>
+        format == "commander" && value >= 1 && value <= MaxBracket ? value : 0;
+
+    public static string BracketLabel(int value)
+    {
+        return value switch
+        {
+            1 => DeckCompanion.Text("1级 · 展示", "1 · Exhibition", "1 · エキシビション"),
+            2 => DeckCompanion.Text("2级 · 核心", "2 · Core", "2 · コア"),
+            3 => DeckCompanion.Text("3级 · 升级", "3 · Upgraded", "3 · アップグレード"),
+            4 => DeckCompanion.Text("4级 · 优化", "4 · Optimized", "4 · オプティマイズ"),
+            5 => DeckCompanion.Text("5级 · cEDH", "5 · cEDH", "5 · cEDH"),
+            _ => DeckCompanion.Text("不分级", "Unbracketed", "指定なし")
+        };
+    }
+
+    public static List<string> BracketOptions()
+    {
+        var options = new List<string>(MaxBracket + 1);
+        for (int i = 0; i <= MaxBracket; i++) options.Add(BracketLabel(i));
+        return options;
+    }
+
     public static bool IsFormat(string format)=>format=="commander"||format=="duelcommander"||format=="brawl";
     public static bool Has(DeckDefinition deck)=>deck?.commanders?.Any(e=>e!=null&&e.count>0)==true;
     public static bool TryAdapt(DeckDefinition deck,IEnumerable<string> legal)

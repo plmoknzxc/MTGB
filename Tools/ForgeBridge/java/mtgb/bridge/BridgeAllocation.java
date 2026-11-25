@@ -59,8 +59,13 @@ final class BridgeAllocation {
                 item.put("label",target instanceof CardView c?c.getCurrentState().getName():target instanceof PlayerView p?p.getName():String.valueOf(target));
                 item.put("card",gui.choiceCard(target));request.allocations.add(item);
                 if(target instanceof GameEntityView entity){item.put("targetId",entity.getId());item.put("targetKind",target instanceof PlayerView?"player":"card");}
-                if(target instanceof PlayerView player)for(int seat=0;seat<ForgeBridge.game.getPlayers().size();seat++)
-                    if(ForgeBridge.game.getPlayers().get(seat).getView().getId()==player.getId())item.put("playerSeat",seat+1);
+                if(target instanceof PlayerView player) {
+                    var seats=ForgeBridge.game.getRegisteredPlayers();
+                    for(int seat=0;seat<seats.size();seat++)if(seats.get(seat).getId()==player.getId()) {
+                        item.put("playerSeat",seat+1);
+                        break;
+                    }
+                }
                 if(lethal!=null&&i<lethal.length){item.put("hasLethal",true);item.put("lethal",lethal[i]);}
             }
             ForgeBridge.publish(request);

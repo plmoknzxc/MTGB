@@ -34,7 +34,7 @@ public static class StateBranchPresentationValidation
     static IEnumerator Guard(ForgeBattlefieldController ui){var e=Validate(ui);try{while(true){object c;try{if(!e.MoveNext())break;c=e.Current;}catch(Exception error){File.WriteAllText(Output+"/result.txt","FAIL "+error);throw;}yield return c;}File.WriteAllText(Output+"/result.txt","PASS: actual native Recruit hand/discard and Blight creature-picker requests clicked in three locales; second-seat Recruit and Blight death sampled in zh-CN; native selected confirmation, exact ID/index, stale/duplicate/nonacting guards, View/Return font stability, native next-priority cleanup and forced/empty Blight no-picker. Intensify real 3->4->5 and self 1->2 snapshots inspected in three locales with changed values blue, original toggle and same-ID refresh. Equal/different intensity grouping and face-up/face-down spectator filtering are adapters. Native effect assertions and real networking are separate.");}finally{(e as IDisposable)?.Dispose();Running=false;Handle=null;}}
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {
-        string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+        string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         try{foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}){
             GamePreferences.SetLanguage(lang);float deadline=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Check(GamePreferences.Ready,"Language unavailable");yield return Frame();
             foreach(string name in lang=="zh-CN"?new[]{"recruit-nonland","recruit-seat-two","blight-select","blight-death"}:new[]{"recruit-nonland","blight-select"}){
@@ -59,7 +59,7 @@ public static class StateBranchPresentationValidation
                 var method=typeof(OnlineSpectatorView).GetMethod("PublicCard",BindingFlags.Static|BindingFlags.NonPublic);var publicCard=(ForgeCardView)method.Invoke(null,new object[]{aura});Check(publicCard.hasIntensity&&publicCard.intensity==2&&publicCard.originalIntensity==1,"Public intensity lost");same.faceDown=true;publicCard=(ForgeCardView)method.Invoke(null,new object[]{same});Check(!publicCard.hasIntensity&&publicCard.intensity==0&&publicCard.originalIntensity==0,"Face-down intensity leaked");
                 foreach(string name in new[]{"recruit-no-draw","blight-forced","blight-ineligible"}){ui.Present(Read(name,"resolved"),1,true,_=>{},null,"");yield return Frame();Check(GameObject.Find("CardSelection")==null,"Forced/empty branch invents picker");}
             }
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=moduleEnabled;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=moduleEnabled;}
     }
 }
 #endif

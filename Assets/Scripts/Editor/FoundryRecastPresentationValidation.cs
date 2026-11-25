@@ -40,7 +40,6 @@ public static class FoundryRecastPresentationValidation {
     static IEnumerator Validate(ForgeBattlefieldController ui,bool chineseTextOnly){
         string language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             float until=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Preferences ready");
             foreach(string lang in chineseTextOnly?new[]{"zh-CN"}:new[]{"zh-CN","en-US","ja-JP"}){
@@ -65,7 +64,7 @@ public static class FoundryRecastPresentationValidation {
                 ui.Present(v,1,false,submit,null,"");yield return Frame();Check(!ui.TrySubmitPresentedOption(expected,v.request.requestId),"Read-only cannot act "+sample);
                 ui.Present(Read(sample+"-resolved"),1,true,submit,null,"");yield return Frame();Check(!panel.activeInHierarchy&&calls==1,"Next priority clears modal "+sample);
             }}
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(language);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

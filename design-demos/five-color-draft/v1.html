@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#232520">
+  <title>五色战棋 · 铜门邀请赛</title>
+  <link rel="stylesheet" href="table.css">
+  <script defer src="game.js"></script>
+  <script defer src="table.js"></script>
+</head>
+<body>
+  <!-- 四席六轮使配对与最终胜负容易核对。商店用金币，部署与战术共用本轮的地。 -->
+  <header class="mast"><div class="mast-inner">
+    <div class="brand"><span class="crest" aria-hidden="true">✦</span><b>五色战棋</b><span class="project">MTGB</span></div>
+    <nav aria-label="对局导航"><button class="nav-current" data-act="desk">对战桌</button><button data-act="schedule">赛程榜</button><button data-act="rules">规则手册</button></nav>
+    <button class="reset" data-act="reset"><span aria-hidden="true">↺</span> 重新开局</button>
+  </div></header>
+  <main>
+    <section class="hero" aria-label="赛事进度">
+      <div class="hero-art"></div>
+      <div class="hero-copy"><div class="eyebrow"><i></i>四席部族轮战</div><h1>铜门邀请赛</h1><p>招募部族，铺设法术力，与三位牌手各交手两次。</p></div>
+      <div class="round-panel" id="round-panel"></div>
+    </section>
+    <div class="layout">
+      <div class="play-column">
+        <section class="market" aria-labelledby="market-title">
+          <div class="section-head"><div><div class="section-mark">招募阶段</div><h2 id="market-title">招募市场</h2></div><div id="purse" class="market-tools"></div></div>
+          <div id="lands"></div>
+          <div id="shop" class="shop-grid"></div>
+        </section>
+        <section class="collection" aria-labelledby="army-title"><div class="section-head compact"><div><div class="section-mark">部署阶段</div><h2 id="army-title">我的阵容</h2></div><button data-act="tactics" id="trick-button" class="subtle">预设战术</button></div>
+          <div id="bench"></div><div id="board"></div><div id="synergies"></div>
+        </section>
+      </div>
+      <aside><section class="enemy" aria-label="本轮对手" id="enemy"></section>
+        <section class="camp side-box" aria-label="营地升级" id="camp"></section>
+        <section class="side-box ladder" aria-label="赛事积分" id="ladder"></section>
+      </aside>
+    </div>
+    <footer><span>MTGB · 五色战棋</span><span>本地规则试玩版 <b>01</b></span></footer>
+  </main>
+  <dialog id="dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span>铜门邀请赛</span><button aria-label="关闭窗口" data-act="close">×</button></div><div class="dialog-content" id="dialog-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body></html>

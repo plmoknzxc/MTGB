@@ -4,7 +4,11 @@ $repo = (Resolve-Path "$PSScriptRoot/../..").Path
 $proof = Join-Path $repo '.tools/forge-proof'
 $upstream = Join-Path $proof 'upstream'
 $revision = (Get-Content "$repo/Tools/ForgeProof/forge-version.txt" -Raw).Trim()
-if ($BuildUpstream -or !(Test-Path "$proof/runtime/bridge-config.json")) {
+$proofConfigPath = Join-Path $proof 'runtime/bridge-config.json'
+$proofRevision = if (Test-Path -LiteralPath $proofConfigPath) {
+    (Get-Content -LiteralPath $proofConfigPath -Raw | ConvertFrom-Json).revision
+}
+if ($BuildUpstream -or $proofRevision -ne $revision) {
     & "$repo/Tools/ForgeProof/Build-Bridge.ps1"
     if ($LASTEXITCODE) { throw 'Forge prerequisites failed.' }
 }
@@ -27,19 +31,6 @@ if ($LASTEXITCODE) { throw 'Reviewed native Forge fix failed to apply or compile
 $sources = @(Get-ChildItem "$PSScriptRoot/java/mtgb/bridge/*.java" | ForEach-Object FullName)
 & javac -encoding UTF-8 -cp "$runtime/classes;$runtime/lib/*" -d "$runtime/classes" @sources
 if ($LASTEXITCODE) { throw 'Forge bridge compilation failed.' }
-$config = Get-Content "$proof/runtime/bridge-config.json" -Raw | ConvertFrom-Json
-Push-Location "$upstream/forge-gui"
-try {
-    & $config.java '-Djava.awt.headless=true' -cp "$runtime/classes;$runtime/lib/*" mtgb.bridge.ForgeCatalog "$upstream/forge-gui" "$runtime/catalog.jsonl" 2> "$runtime/catalog-build.log"
-    if ($LASTEXITCODE) { throw "Catalog export failed; see $runtime/catalog-build.log" }
-} finally { Pop-Location }
-$hash = (Get-FileHash "$runtime/catalog.jsonl" -Algorithm SHA256).Hash.ToLowerInvariant()
-$runtimeFiles = @(Get-ChildItem "$runtime/classes", "$runtime/lib" -File -Recurse | Sort-Object FullName)
-$hashLines = @($runtimeFiles | ForEach-Object { $_.FullName.Substring($runtime.Length).Replace('\','/') + ':' + (Get-FileHash $_.FullName -Algorithm SHA256).Hash })
-$runtimeHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes(($hashLines -join "`n")))).ToLowerInvariant()
-@{java=$config.java; assets="$upstream/forge-gui"; revision=$revision; protocol=1; catalogHash=$hash; runtimeHash=$runtimeHash} |
-    ConvertTo-Json | Set-Content "$runtime/runtime.json" -Encoding utf8NoBOM
-Write-Output "Forge runtime built: $runtime"
 & python -X utf8 "$PSScriptRoot/Package-Runtime.py"
 if ($LASTEXITCODE) { throw 'Portable Forge runtime packaging failed.' }
 & python -X utf8 "$PSScriptRoot/Build-DeckEditorRules.py"

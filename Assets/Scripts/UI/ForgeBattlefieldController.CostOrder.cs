@@ -41,6 +41,7 @@ public sealed partial class ForgeBattlefieldController
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;
         landChoiceMenu.GetComponent<Image>().color=Ink;
         landChoiceMenu.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(620,430,14);
+        if(HudTheme!=null)StyleHudSurface(landChoiceMenu,HudInk,HudEdge);
         var request=view.request;long captured=requestId;
         Label(landChoiceMenu,"CostOrderTitle",TapPaymentText("排列费用支付顺序","Order cost payments","コストの支払い順を選択"),new Vector2(0,height/2-34),new Vector2(width-40,42),20,Paper);
         Label(landChoiceMenu,"CostOrderProgress",TapPaymentText(

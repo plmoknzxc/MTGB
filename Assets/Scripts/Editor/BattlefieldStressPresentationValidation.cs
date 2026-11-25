@@ -51,10 +51,10 @@ public static class BattlefieldStressPresentationValidation
         }
         return view;
     }
-    public static void Preview(){var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;var v=Fixture();ui.Present(v,v.seat,true,_=>{},null,"");}
+    public static void Preview(){var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();var v=Fixture();ui.Present(v,v.seat,true,_=>{},null,"");}
     public static void Run(){Check(Application.isPlaying,"Play Mode required");if(running)return;running=true;Directory.CreateDirectory(Output);File.WriteAllText(Output+"/result.txt","RUNNING");var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("StressValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(ui));}
     static IEnumerator Guard(ForgeBattlefieldController ui){
-        string original=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;
+        string original=GamePreferences.Language;
         var test=Validate(ui);
         try{while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: zh/en/ja native triggered-ability faces and synthetic long text stay masked and can scroll to the end; shape shared by stack and browse rim; all five mapped player counter types, white serif numerals, paging and view/restore; 575 exact permanent IDs per player and 20x10 creatures/lands, 10x5 artifacts/enchantments/planeswalkers, 5x5 battles; overflow regions retain last card, scroll, hover and refresh position; dense-to-normal reparent cleanup. Display adapters are not card effect evidence.");}
         finally{running=false;GamePreferences.SetLanguage(original);ui.RestoreBattlefieldWindows();}

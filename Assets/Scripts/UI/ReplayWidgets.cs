@@ -61,20 +61,28 @@ public static class ReplayWidgets
     }
     public static Toggle AutoSaveToggle(Transform parent)
     {
-        var row = Rect(parent, "AutoSaveReplays", 0, 0, 680, 44);
+        var toggle = PreferenceToggle(parent, "AutoSaveReplays", "自动保存所有录像",
+            GamePreferences.AutoSaveReplays, GamePreferences.SetAutoSaveReplays);
+        toggle.gameObject.AddComponent<ReplayPreferenceToggle>();
+        return toggle;
+    }
+
+    internal static Toggle PreferenceToggle(Transform parent, string name, string caption, bool value,
+        UnityEngine.Events.UnityAction<bool> changed)
+    {
+        var row = Rect(parent, name, 0, 0, 680, 44);
         row.gameObject.AddComponent<Image>().color = Color.clear;
         row.gameObject.AddComponent<LayoutElement>().preferredHeight = 46;
         var toggle = row.gameObject.AddComponent<Toggle>();
         var box = Panel(row, "Box", 0, 0, 28, 28, MenuVisualTheme.Raised);
         box.anchorMin = box.anchorMax = new Vector2(0, .5f); box.anchoredPosition = new Vector2(18, 0);
         var check = Panel(box, "Check", 0, 0, 16, 16, MenuVisualTheme.Accent);
-        var label = Label(row, "自动保存所有录像", 0, 0, 550, 44, 19);
+        var label = Label(row, caption, 0, 0, 550, 44, 19);
         label.rectTransform.anchorMin = new Vector2(0, 0); label.rectTransform.anchorMax = Vector2.one;
         label.rectTransform.offsetMin = new Vector2(46, 0); label.rectTransform.offsetMax = Vector2.zero;
         toggle.targetGraphic = box.GetComponent<Image>(); toggle.graphic = check.GetComponent<Image>();
-        toggle.SetIsOnWithoutNotify(GamePreferences.AutoSaveReplays);
-        toggle.onValueChanged.AddListener(GamePreferences.SetAutoSaveReplays);
-        row.gameObject.AddComponent<ReplayPreferenceToggle>();
+        toggle.SetIsOnWithoutNotify(value);
+        toggle.onValueChanged.AddListener(changed);
         return toggle;
     }
     public static string TimeText(double seconds) => TimeSpan.FromSeconds(Math.Max(0, seconds)).ToString(seconds >= 3600 ? @"hh\:mm\:ss" : @"mm\:ss");

@@ -21,7 +21,7 @@ public sealed partial class ForgeBattlefieldController
         float rowsHeight=height-172,cellWidth=(width-40)/3;
         int rowsPerPage=Math.Max(1,Mathf.FloorToInt(rowsHeight/54)),pageSize=rowsPerPage*3;
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         Label(landChoiceMenu,"TypeTitle",TapPaymentText("选择生物类别","Choose a creature type","クリーチャー・タイプを選ぶ"),
             new Vector2(0,height/2-28),new Vector2(width-40,34),23,Paper);
         var searchRoot=Panel(landChoiceMenu,"TypeSearch",new Vector2(0,height/2-78),new Vector2(width-40,40),new Color(.025f,.035f,.05f));
@@ -32,6 +32,7 @@ public sealed partial class ForgeBattlefieldController
         placeholder.supportRichText=false;placeholder.alignment=TextAnchor.MiddleLeft;
         var input=searchRoot.gameObject.AddComponent<InputField>();input.textComponent=text;input.placeholder=placeholder;
         input.lineType=InputField.LineType.SingleLine;input.characterLimit=120;input.SetTextWithoutNotify(creatureTypeQuery);
+        if(HudTheme!=null)MenuVisualTheme.StyleSearchInput(input);
         input.interactable=canAct&&!submitted;
         var rows=Rect(landChoiceMenu,"TypeRows",new Vector2(0,-18),new Vector2(width-40,rowsHeight));
         var status=Label(landChoiceMenu,"TypePage","",new Vector2(0,-height/2+32),new Vector2(width-170,28),16,Paper);
@@ -39,7 +40,7 @@ public sealed partial class ForgeBattlefieldController
         Action render=()=>{
             Clear(rows);
             string term=creatureTypeQuery.Trim();
-            var entries=view.request.options.Select((o,i)=>new {o,i,label=SearchInsertionMenu.Label(o.label)})
+            var entries=view.request.options.Select((o,i)=>new {o,i,label=CardTypeText.Term(o.label)})
                 .Where(e=>e.o.id.StartsWith("choice:")&&(term.Length==0||e.o.label.IndexOf(term,StringComparison.OrdinalIgnoreCase)>=0||e.label.IndexOf(term,StringComparison.OrdinalIgnoreCase)>=0)).ToArray();
             int pages=Math.Max(1,(entries.Length+pageSize-1)/pageSize);creatureTypePage=Mathf.Clamp(creatureTypePage,0,pages-1);
             var visible=entries.Skip(creatureTypePage*pageSize).Take(pageSize).ToArray();
@@ -47,7 +48,8 @@ public sealed partial class ForgeBattlefieldController
                 var entry=visible[n];
                 var button=Button(rows,"TypeOption_"+entry.i,entry.label,
                     new Vector2((n%3-1)*cellWidth,rowsHeight/2-24-n/3*54),new Vector2(cellWidth-8,46),()=>Choose(entry.i,captured),entry.o.selected?Gold:new Color(.13f,.19f,.25f));
-                button.interactable=canAct&&!submitted;
+                if(HudTheme!=null)StyleZoneButton(button,entry.o.selected);
+                button.interactable=canAct&&!submitted&&!entry.o.disabled;
                 var label=button.GetComponentInChildren<Text>();PreferenceText.SetSize(label,17);
                 label.resizeTextForBestFit=false;label.supportRichText=false;
             }
@@ -58,6 +60,7 @@ public sealed partial class ForgeBattlefieldController
         };
         previous=Button(landChoiceMenu,"TypePrevious","‹",new Vector2(-width/2+42,-height/2+32),new Vector2(44,32),()=>{creatureTypePage--;render();},Ink);
         next=Button(landChoiceMenu,"TypeNext","›",new Vector2(width/2-42,-height/2+32),new Vector2(44,32),()=>{creatureTypePage++;render();},Ink);
+        if(HudTheme!=null){StyleZoneButton(previous);StyleZoneButton(next);}
         input.onValueChanged.AddListener(value=>{creatureTypeQuery=value;creatureTypePage=0;render();});
         render();landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
     }

@@ -1,0 +1,1 @@
+PASS: captured 69 native UI projections; undo adapter separately marked.

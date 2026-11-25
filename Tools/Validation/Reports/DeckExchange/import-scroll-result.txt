@@ -1,0 +1,1 @@
+PASS: long MTGA import text and error list show scrollbars and respond to wheel events.

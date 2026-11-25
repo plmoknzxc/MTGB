@@ -11,6 +11,7 @@ public sealed class PreferenceText : MonoBehaviour
     public bool Literal;
     public bool KeepVerticalBounds;
     public bool FitSingleLineHeight;
+    [SerializeField] MenuTypography.Face menuFace;
     Text text;
     TMP_Text tmp;
     string source,last;
@@ -32,6 +33,7 @@ public sealed class PreferenceText : MonoBehaviour
         inputText=input!=null && input.textComponent==text || tmpInput!=null&&tmpInput.textComponent==tmp;
         userText=inputText || dropdown!=null;
         source=Current;
+        if(GetComponentInParent<MenuTypography>(true)!=null) InheritMenuFace();
         initialized=true;
         return true;
     }
@@ -54,6 +56,18 @@ public sealed class PreferenceText : MonoBehaviour
     {
         baseSize=size;
         Apply();
+    }
+    internal void SetMenuFace(MenuTypography.Face face)
+    {
+        if (menuFace == face) return;
+        menuFace = face;
+        Apply();
+    }
+    internal void InheritMenuFace()
+    {
+        if(!KeepFont && menuFace==MenuTypography.Face.Default && GetComponentInParent<TemplateCardFace>(true)==null)
+            menuFace=transform.parent!=null && transform.parent.TryGetComponent<Button>(out _)
+                ? MenuTypography.Face.Control : MenuTypography.Face.Reading;
     }
     void LateUpdate()
     {
@@ -83,7 +97,11 @@ public sealed class PreferenceText : MonoBehaviour
             // or font scaling, otherwise long ability text grows over adjacent UI.
             if(text.resizeTextForBestFit || KeepVerticalBounds)text.verticalOverflow=VerticalWrapMode.Truncate;
             else if(!userText || inputText)text.verticalOverflow=VerticalWrapMode.Overflow;
-            if(!KeepFont && GamePreferences.Font!=null)text.font=GamePreferences.Font;
+            if(!KeepFont)
+            {
+                var font=menuFace==MenuTypography.Face.Default ? GamePreferences.Font : MenuTypography.Native(menuFace);
+                if(font!=null)text.font=font;
+            }
             if(FitSingleLineHeight){
                 // Font line metrics can exceed a fixed dropdown row even when the
                 // visible glyphs look small. Fit vertically without shrinking long names.
@@ -94,6 +112,14 @@ public sealed class PreferenceText : MonoBehaviour
                 text.resizeTextForBestFit=true;text.resizeTextMinSize=text.resizeTextMaxSize=fit;
             }
         }
-        else {tmp.fontSize=baseSize*GamePreferences.TextScale;if(!KeepFont && GamePreferences.TmpFont!=null) tmp.font=GamePreferences.TmpFont;}
+        else
+        {
+            tmp.fontSize=baseSize*GamePreferences.TextScale;
+            if(!KeepFont)
+            {
+                var font=menuFace==MenuTypography.Face.Default ? GamePreferences.TmpFont : MenuTypography.Sdf(menuFace);
+                if(font!=null)tmp.font=font;
+            }
+        }
     }
 }

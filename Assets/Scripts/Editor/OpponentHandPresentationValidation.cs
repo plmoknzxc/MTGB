@@ -24,12 +24,10 @@ public static class OpponentHandPresentationValidation
     static IEnumerator Guard(IEnumerator iterator)
     {
         string locale=GamePreferences.Language;
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;
-        if(banner!=null)banner.enabled=false;
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt","PASS: zh-CN/en-US/ja-JP actual Thoughtseize/Mind Rot direct hand requests, authorized reveal-only faces and privacy restoration; eligible IDs glow, native index raycast/stale/duplicate/viewer guards; both end cards lift vertically/straighten; explicitly synthetic dense own/opponent hand window fallbacks and 24/zero hidden hand reuse. Screenshot evidence, not a new native effect assertion.");
-        }finally{running=false;GamePreferences.SetLanguage(locale);if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage(locale);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

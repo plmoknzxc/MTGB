@@ -43,7 +43,6 @@ public static class SnowPoolPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {
         string language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool physical=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try{
             foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}) {
                 int revision=GamePreferences.Revision;bool change=GamePreferences.Language!=lang;GamePreferences.SetLanguage(lang);float until=Time.realtimeSinceStartup+15;while((!GamePreferences.Ready||change&&revision==GamePreferences.Revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale unavailable");
@@ -69,7 +68,7 @@ public static class SnowPoolPresentationValidation
                 if(lang=="zh-CN"){ScreenCapture.CaptureScreenshot(Output+"/both-pools-large-counts.png");yield return Frame();}
                 foreach(var p in full.players){p.manaPool=new int[6];p.snowManaPool=new int[6];}ui.Present(full,1,true,null,null,"");yield return Frame();Check(!Root.Find("ManaPoolChips").gameObject.activeSelf&&!Root.Find("PublicManaPool").gameObject.activeSelf,"Zero pool stayed visible");
             }
-        }finally{ui.enabled=enabled;if(module!=null)module.enabled=physical;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }finally{ui.enabled=enabled;if(module!=null)module.enabled=physical;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

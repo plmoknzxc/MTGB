@@ -28,8 +28,6 @@ public static class RandomPresentationValidation
         string original=GamePreferences.Language;
         // Real requests are replayed without a network service. Hide only the
         // no-match editor banner, as in a real active match; preserve gameplay UI.
-        var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool noticeEnabled=notice!=null&&notice.enabled;
-        if(notice!=null)notice.enabled=false;
         try {
             while(true) {
                 object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}
@@ -37,7 +35,7 @@ public static class RandomPresentationValidation
                 yield return next;
             }
             File.WriteAllText(Output+"/result.txt","PASS: real native random requests replayed in zh-CN/en-US/ja-JP; direct native indexes, pointer center raycast, binary heads/tails and increase/decrease, optional roll/swap, mandatory Thumb choice, reroll selection and native confirmation, duplicate/stale/viewer guards. Nonblocking native results, fixed fonts, bounded scroll history, expiry and same-ID deduplication; private notices excluded from spectator projection and hidden source absent (adapter contract fixtures). Real rules remain Test-RandomMechanics.py; not an actual network test.");
-        }finally{running=false;GamePreferences.SetLanguage(original);if(notice!=null)notice.enabled=noticeEnabled;}
+        }finally{running=false;GamePreferences.SetLanguage(original);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static void Click(Button button)

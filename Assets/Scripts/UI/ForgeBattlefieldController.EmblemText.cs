@@ -12,7 +12,11 @@ public sealed partial class ForgeBattlefieldController
     private string EmblemLocalizedName(ForgeCardView card)
     {
         var source=EmblemDefinition(card);
-        return source==null?MarkerName(card):TapPaymentText("徽记 — ","Emblem — ","紋章 — ")+GamePreferences.CardName(source);
+        if(source!=null)return TapPaymentText("徽记 — ","Emblem — ","紋章 — ")+GamePreferences.CardName(source);
+        // Older recordings do not always carry the emblem's source printing.
+        // The generated name still identifies the public source card.
+        var match=Regex.Match(card?.name??"",@"^Emblem\s*[—-]\s*(.+)$");
+        return match.Success?TapPaymentText("徽记 — ","Emblem — ","紋章 — ")+GamePreferences.CardFaceName(match.Groups[1].Value):MarkerName(card);
     }
     private string EmblemLocalizedRules(ForgeCardView card)
     {

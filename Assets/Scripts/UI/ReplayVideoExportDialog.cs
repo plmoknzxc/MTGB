@@ -17,19 +17,20 @@ public sealed class ReplayVideoExportDialog : MonoBehaviour
     private string[] directories=Array.Empty<string>();
     private string overwritePath;
     private int page;
-    public static void Show(string name,Func<string,bool,int,int,int,bool> onStart)
+    private bool archiveStyle;
+    public static void Show(string name,Func<string,bool,int,int,int,bool> onStart, bool archiveStyle = false)
     {
         if(current!=null)return;
         var canvas=ReplayWidgets.Canvas("ReplayExportDialog",900);
         current=canvas.gameObject.AddComponent<ReplayVideoExportDialog>();
-        current.start=onStart;current.Build(name);
+        current.start=onStart;current.archiveStyle=archiveStyle;current.Build(name);
     }
     private void Build(string name)
     {
         var shade=ReplayWidgets.Panel(transform,"Shade",0,0,1920,1080,new Color(0,0,0,.75f));
         shade.anchorMin=Vector2.zero;shade.anchorMax=Vector2.one;shade.offsetMin=shade.offsetMax=Vector2.zero;
         var box=ReplayWidgets.Panel(transform,"ExportVideo",0,0,900,780,MenuVisualTheme.Panel);
-        ReplayWidgets.Label(box,"导出视频",0,325,820,50,30);
+        var heading=ReplayWidgets.Label(box,"导出视频",0,325,820,50,30);
         ReplayWidgets.Label(box,"输出目录",-320,265,180,40,20);
         string initial=PlayerPrefs.GetString("Replay.VideoDirectory",ReplayRepository.VideoRoot);
         try{Directory.CreateDirectory(ReplayRepository.VideoRoot);}catch(Exception e)when(e is IOException||e is UnauthorizedAccessException){}
@@ -52,6 +53,14 @@ public sealed class ReplayVideoExportDialog : MonoBehaviour
         status=ReplayWidgets.Label(box,"",0,-277,820,50,18);status.horizontalOverflow=HorizontalWrapMode.Wrap;
         ReplayWidgets.Button(box,"取消",-210,-342,300,()=>Destroy(gameObject));
         confirm=ReplayWidgets.Button(box,"开始后台导出",180,-342,360,Confirm,true);
+        if (archiveStyle)
+        {
+            shade.GetComponent<Image>().color = MenuVisualTheme.DialogShade;
+            MenuVisualTheme.StyleDeckDialogSurface(box, heading);
+            foreach (var button in box.GetComponentsInChildren<Button>()) MenuVisualTheme.StyleDeckTool(button, button == confirm);
+            MenuVisualTheme.StyleSearchInput(folder);
+            MenuVisualTheme.StyleSearchInput(filename);
+        }
         folder.onEndEdit.AddListener(value=>Browse(value));
         folder.onValueChanged.AddListener(_=>ResetOverwrite());filename.onValueChanged.AddListener(_=>ResetOverwrite());
         Browse(folder.text);
@@ -75,6 +84,7 @@ public sealed class ReplayVideoExportDialog : MonoBehaviour
             int slot=i-page*8;
             var button=ReplayWidgets.Button(entries,label,slot%2==0?-210:210,90-slot/2*60,400,()=>Browse(directory));
             button.name="Folder_"+i;
+            if (archiveStyle) MenuVisualTheme.StyleDeckOption(button);
         }
         pageText.text=(page+1)+" / "+pages;previous.interactable=page>0;next.interactable=page+1<pages;
     }

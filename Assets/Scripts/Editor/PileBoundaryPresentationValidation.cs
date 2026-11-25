@@ -31,7 +31,7 @@ public static class PileBoundaryPresentationValidation
  }
  static IEnumerator Validate(ForgeBattlefieldController ui)
  {
-  string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var migration=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool me=migration!=null&&migration.enabled;if(migration!=null)migration.enabled=false;var module=EventSystem.current.currentInputModule;bool ie=module!=null&&module.enabled;if(module!=null)module.enabled=false;
+  string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool ie=module!=null&&module.enabled;if(module!=null)module.enabled=false;
   try{foreach(string language in new[]{"zh-CN","en-US","ja-JP"}){int revision=GamePreferences.Revision;bool change=GamePreferences.Language!=language;GamePreferences.SetLanguage(language);float until=Time.realtimeSinceStartup+12;while((!GamePreferences.Ready||change&&GamePreferences.Revision==revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale not ready");
    var samples=typographyOnly?new[]{("hostile-left-hidden","pile-1",1,0),("hostile-left-hidden","pile-2",2,1)}:new[]{("hostile-left-hidden","pile-1",1,0),("hostile-left-hidden","pile-2",2,1),("hostile-right-visible","pile-2",2,1),("hostile-empty","pile-1",1,0),("abstract-hidden","pile-1",2,0)};
    foreach(var s in samples)yield return Pile(ui,Read(s.Item1,s.Item2,s.Item3),s.Item1+"-"+s.Item2,s.Item4);
@@ -41,7 +41,7 @@ public static class PileBoundaryPresentationValidation
      var v=Read(s.Item1,s.Item2,s.Item3);int calls=0,last=-1;ui.Present(null,v.seat,false,null,null,"");ui.Present(v,v.seat,true,i=>{calls++;last=i;},null,"");yield return Frame();int index=Array.FindIndex(v.request.options,o=>o.id=="ok");Check(index>=0,"Native split confirm missing");var buttons=UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None).Where(b=>b.gameObject.activeInHierarchy).ToArray();var b=buttons.FirstOrDefault(x=>x.name=="SelectionAction_"+index)??buttons.FirstOrDefault(x=>x.name=="SkipCombatButton");Check(b!=null,"No native split confirmation: "+string.Join(",",buttons.Select(x=>x.name)));Click(b);Check(calls==1&&last==index,"Wrong split confirm");File.AppendAllText(Output+"/steps.log",language+" "+s.Item1+" "+s.Item2+" PASS\n");
     }
    }
-  }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(migration!=null)migration.enabled=me;if(module!=null)module.enabled=ie;GamePreferences.SetLanguage(locale);}
+  }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=ie;GamePreferences.SetLanguage(locale);}
  }
 }
 #endif

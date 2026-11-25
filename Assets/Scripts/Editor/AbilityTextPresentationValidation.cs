@@ -42,7 +42,6 @@ public static class AbilityTextPresentationValidation
     {
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("AbilityTextBattlefield").AddComponent<ForgeBattlefieldController>();bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool active=module!=null&&module.enabled;if(module!=null)module.enabled=false;string locale=GamePreferences.Language;
-        var flags=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None).Select(n=>(n,n.enabled)).ToArray();foreach(var f in flags)f.n.enabled=false;
         try{foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}){
             int revision=GamePreferences.Revision;bool change=locale!=lang;GamePreferences.SetLanguage(lang);float until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||change&&revision==GamePreferences.Revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale unavailable");yield return Frame();
             var view=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(Output+"/inputs/number-final.json"));var entry=view.stackItems.Single();int submits=0;
@@ -72,7 +71,7 @@ public static class AbilityTextPresentationValidation
             // must never be substituted with unchanged printed card rules.
             string changed=entry.description.Replace("an amount of damage of your choice","123 damage");var method=typeof(ForgeBattlefieldController).GetMethod("AbilityEffectText",BindingFlags.Instance|BindingFlags.NonPublic);string result=(string)method.Invoke(ui,new object[]{entry.source,changed});Check(result.Contains("123 damage")&&!result.StartsWith(expected,StringComparison.Ordinal)||lang=="en-US"&&result.Contains("123 damage"),"Changed rule silently replaced");
             ui.Present(JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(Output+"/inputs/resolved.json")),1,false,null,null,"");yield return Frame();Check(face==null||!face.gameObject.activeInHierarchy,"Resolved ability remains");File.AppendAllText(Output+"/steps.log","PASS actual trigger input / scroll / hover / language / unknown-rule adapter "+lang+"\n");
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=active;foreach(var f in flags)if(f.n!=null)f.n.enabled=f.enabled;}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=active;}
     }
 }
 #endif

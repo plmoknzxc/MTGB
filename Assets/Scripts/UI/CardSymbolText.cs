@@ -7,6 +7,9 @@ using UnityEngine.TextCore;
 // Coordinates from the pinned Forge FSkinProp mana atlas, measured from its top-left.
 public static class CardSymbolText
 {
+    // TMP checks the active text font before its sprite asset. This private-use
+    // range is unassigned in the bundled menu fonts (WenKai defines U+E003).
+    private const int SpriteUnicodeBase = 0xEC00;
     private static readonly Dictionary<string, int> indices = new Dictionary<string, int>();
     private static readonly Regex symbol = new Regex(@"\{([^{}]+)\}");
     private static TMP_SpriteAsset atlas;
@@ -59,7 +62,7 @@ public static class CardSymbolText
                 var rect=energy.rect;
                 var glyph=new TMP_SpriteGlyph(0,new GlyphMetrics(80,80,0,68,86),new GlyphRect((int)rect.x,(int)rect.y,(int)rect.width,(int)rect.height),1,0);
                 extra.spriteGlyphTable.Add(glyph);
-                extra.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(0xE000+index),extra,glyph){name="E",scale=1});
+                extra.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(SpriteUnicodeBase+index),extra,glyph){name="E",scale=1});
                 extra.UpdateLookupTables();atlas.fallbackSpriteAssets.Add(extra);indices["E"]=index;
             }
             return atlas;
@@ -82,7 +85,7 @@ public static class CardSymbolText
         var glyph=new TMP_SpriteGlyph((uint)asset.spriteGlyphTable.Count,new GlyphMetrics(80,80,0,68,86),
             new GlyphRect(x,asset.spriteSheet.height-y-199,199,199),1,0);
         asset.spriteGlyphTable.Add(glyph);
-        asset.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(0xE000+index),asset,glyph){name=token,scale=1});
+        asset.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(SpriteUnicodeBase+index),asset,glyph){name=token,scale=1});
     }
 
     private static void Add(string token, int x, int y)
@@ -92,7 +95,7 @@ public static class CardSymbolText
         var glyph = new TMP_SpriteGlyph((uint)index, new GlyphMetrics(80,80,0,68,86),
             new GlyphRect(x, atlas.spriteSheet.height-y-80,80,80), 1, 0);
         atlas.spriteGlyphTable.Add(glyph);
-        atlas.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(0xE000+index), atlas, glyph) { name=token, scale=1 });
+        atlas.spriteCharacterTable.Add(new TMP_SpriteCharacter((uint)(SpriteUnicodeBase+index), atlas, glyph) { name=token, scale=1 });
     }
 
     public static string Format(string text)
@@ -102,7 +105,7 @@ public static class CardSymbolText
         {
             string token = match.Groups[1].Value.Trim().ToUpperInvariant();
             if (!indices.TryGetValue(token, out int index)) return match.Value;
-            return char.ConvertFromUtf32(0xE000+index);
+            return char.ConvertFromUtf32(SpriteUnicodeBase+index);
         });
     }
 

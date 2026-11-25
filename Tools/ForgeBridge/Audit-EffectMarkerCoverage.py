@@ -20,7 +20,7 @@ for path in sorted(game.rglob('*.java')):
 piece=(root/'.tools/forge-proof/upstream/forge-core/src/main/java/forge/card/GamePieceType.java').read_text(encoding='utf8')
 piece=re.sub(r'/\*.*?\*/','',piece,flags=re.S)
 actual=set(re.findall(r'^\s*([A-Z_]+)\s*[,}]',piece,re.M))
-known={'CARD','TOKEN','EFFECT','COPIED_SPELL','ATTRACTION','CONTRAPTION','PLANAR','SCHEME','AVATAR','DUNGEON'}
+known={'CARD','TOKEN','EFFECT','COPIED_SPELL','ATTRACTION','CONTRAPTION','PLANAR','SCHEME','AVATAR','DUNGEON','STICKER_SHEET'}
 report['gamePieceTypes']=sorted(actual)
 if actual!=known:report['unreviewed'].append(dict(path='GamePieceType.java',added=sorted(actual-known),removed=sorted(known-actual)))
 report['status']='FAIL' if report['unreviewed'] else 'PASS'

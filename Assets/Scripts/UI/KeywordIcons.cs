@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-/// <summary>Exact Forge ability atlas regions; native keyword identities stay unchanged.</summary>
+/// <summary>Battlefield pictograms indexed by Forge keyword identity.</summary>
 public static class KeywordIcons
 {
     [Serializable] private sealed class Entry { public string kind; public int x,y,width,height; }
@@ -12,19 +12,32 @@ public static class KeywordIcons
     private static readonly Dictionary<string,Sprite> icons=new(StringComparer.OrdinalIgnoreCase);
     private static bool loaded;
 
+    // Forge uses this enum value when an ability has no keyword identity.
+    // It is not a visible ability and must not occupy a battlefield badge.
+    public static bool IsDisplayable(string kind)
+        =>!string.IsNullOrWhiteSpace(kind)&&!kind.Trim().Equals("UNDEFINED",StringComparison.OrdinalIgnoreCase);
+
     public static bool TryLoad(string kind,out Sprite sprite)
     {
         if(!loaded) {
             loaded=true;
-            var texture=Resources.Load<Texture2D>("UI/KeywordIcons/ForgeAbilities");
-            var index=Resources.Load<TextAsset>("UI/KeywordIcons/Index");
-            if(texture!=null&&index!=null)foreach(var entry in JsonUtility.FromJson<Index>(index.text).entries) {
-                var icon=Sprite.Create(texture,new Rect(entry.x,texture.height-entry.y-entry.height,entry.width,entry.height),new Vector2(.5f,.5f));
-                icon.name=entry.kind;icons[entry.kind]=icon;
-            }
+            LoadAtlas("UI/KeywordIcons/ForgeAbilities","UI/KeywordIcons/Index",icons);
         }
         sprite=null;
         return kind!=null&&icons.TryGetValue(kind,out sprite);
+    }
+
+    internal static void LoadAtlas(string texturePath,string indexPath,Dictionary<string,Sprite> destination)
+    {
+        var texture=Resources.Load<Texture2D>(texturePath);
+        var index=Resources.Load<TextAsset>(indexPath);
+        if(texture==null||index==null)return;
+        foreach(var entry in JsonUtility.FromJson<Index>(index.text).entries) {
+            var rect=new Rect(entry.x,texture.height-entry.y-entry.height,entry.width,entry.height);
+            var icon=Sprite.Create(texture,rect,new Vector2(.5f,.5f),100,0,SpriteMeshType.FullRect);
+            icon.name=entry.kind;
+            destination[entry.kind]=icon;
+        }
     }
 
     // Details, rather than keyword presence, carry amounts/costs. Never infer a

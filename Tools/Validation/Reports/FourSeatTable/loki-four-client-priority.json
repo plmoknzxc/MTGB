@@ -1,0 +1,547 @@
+{
+  "transport": "Unity Transport UDP 127.0.0.1",
+  "processesPerMatch": 4,
+  "hostSeat": 1,
+  "runs": [
+    {
+      "match": "3ff999063c20456fb4ab60f1130f61ec",
+      "pids": [
+        38908,
+        49824,
+        35076,
+        10368
+      ],
+      "race": {
+        "firstSeat": 1,
+        "secondSeat": 3,
+        "loki": 2,
+        "deltaMs": 0,
+        "firstUtcMs": 1795499563412,
+        "secondUtcMs": 1795499563412
+      }
+    },
+    {
+      "match": "8cd6e85cb7604ae79f0142d0322b2196",
+      "pids": [
+        22312,
+        16444,
+        44092,
+        50708
+      ],
+      "race": {
+        "firstSeat": 3,
+        "secondSeat": 4,
+        "loki": 2,
+        "deltaMs": 18,
+        "firstUtcMs": 1795499678603,
+        "secondUtcMs": 1795499678621
+      }
+    },
+    {
+      "match": "b9859eb254594ce7b44c9854eb86b34d",
+      "pids": [
+        2988,
+        44528,
+        25816,
+        44444
+      ],
+      "race": {
+        "firstSeat": 2,
+        "secondSeat": 3,
+        "loki": 4,
+        "deltaMs": 2,
+        "firstUtcMs": 1795499753302,
+        "secondUtcMs": 1795499753304
+      },
+      "priorityPasses": [
+        {
+          "sequence": 62,
+          "seat": 1,
+          "request": 120,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 63,
+          "seat": 2,
+          "request": 122,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 64,
+          "seat": 3,
+          "request": 124,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 65,
+          "seat": 4,
+          "request": 126,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 66,
+          "seat": 1,
+          "request": 128,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 67,
+          "seat": 2,
+          "request": 130,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 68,
+          "seat": 3,
+          "request": 132,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 69,
+          "seat": 4,
+          "request": 134,
+          "stack": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "match": "2b0bd385008946f49f060a468a998a3a",
+      "pids": [
+        36552,
+        44864,
+        52216,
+        16012
+      ],
+      "race": {
+        "firstSeat": 3,
+        "secondSeat": 4,
+        "loki": 2,
+        "deltaMs": 39,
+        "firstUtcMs": 1795500084035,
+        "secondUtcMs": 1795500083996
+      },
+      "priorityPasses": [
+        {
+          "sequence": 62,
+          "seat": 1,
+          "request": 120,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 63,
+          "seat": 3,
+          "request": 122,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 64,
+          "seat": 4,
+          "request": 124,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 65,
+          "seat": 2,
+          "request": 126,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 66,
+          "seat": 1,
+          "request": 128,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 67,
+          "seat": 3,
+          "request": 130,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 68,
+          "seat": 4,
+          "request": 132,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 69,
+          "seat": 2,
+          "request": 134,
+          "stack": [
+            2
+          ]
+        }
+      ],
+      "checkpoints": [
+        {
+          "label": "shared priority before simultaneous drags",
+          "privateDecisionSeat": 3,
+          "clients": [
+            {
+              "pid": 36552,
+              "local": 1,
+              "sequence": 58,
+              "priority": 3,
+              "request": 0,
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 44864,
+              "local": 2,
+              "sequence": 58,
+              "priority": 3,
+              "request": 0,
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 52216,
+              "local": 3,
+              "sequence": 58,
+              "priority": 3,
+              "request": 112,
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16012,
+              "local": 4,
+              "sequence": 58,
+              "priority": 3,
+              "request": 0,
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "teammate may respond; first spell still pending",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 36552,
+              "local": 1,
+              "sequence": 61,
+              "priority": 4,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 44864,
+              "local": 2,
+              "sequence": 61,
+              "priority": 4,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 52216,
+              "local": 3,
+              "sequence": 61,
+              "priority": 4,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16012,
+              "local": 4,
+              "sequence": 61,
+              "priority": 4,
+              "request": 118,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "both spells on stack",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 36552,
+              "local": 1,
+              "sequence": 62,
+              "priority": 1,
+              "request": 120,
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#B896F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 44864,
+              "local": 2,
+              "sequence": 62,
+              "priority": 1,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#F17C7C>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 52216,
+              "local": 3,
+              "sequence": 62,
+              "priority": 1,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#5DB9F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16012,
+              "local": 4,
+              "sequence": 62,
+              "priority": 1,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#B2D452>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "pact resolved; thopter still pending",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 36552,
+              "local": 1,
+              "sequence": 66,
+              "priority": 1,
+              "request": 128,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 44864,
+              "local": 2,
+              "sequence": 66,
+              "priority": 1,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 52216,
+              "local": 3,
+              "sequence": 66,
+              "priority": 1,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16012,
+              "local": 4,
+              "sequence": 66,
+              "priority": 1,
+              "request": 0,
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "thopter resolved; stack empty",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 36552,
+              "local": 1,
+              "sequence": 70,
+              "priority": 1,
+              "request": 136,
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 44864,
+              "local": 2,
+              "sequence": 70,
+              "priority": 1,
+              "request": 0,
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 52216,
+              "local": 3,
+              "sequence": 70,
+              "priority": 1,
+              "request": 0,
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16012,
+              "local": 4,
+              "sequence": 70,
+              "priority": 1,
+              "request": 0,
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

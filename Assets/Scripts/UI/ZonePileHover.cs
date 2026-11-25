@@ -2,34 +2,34 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class ZonePileHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public sealed class ZonePileHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
-    private Text count;
-    private RectTransform face;
-    private bool hovering;
-    private bool showCount=true;
-    private bool available;
-    private Color Tint=>hovering?new Color(.18f,.25f,.3f,.7f):available?new Color(.04f,.29f,.37f,.6f):Color.clear;
-    public void Configure(Text countLabel, RectTransform cardFace, int value,bool showCountOnHover=true,bool hasPlayableCard=false)
+    private Text caption;
+    private Image rule;
+    private Color normal, muted, accent;
+    private bool interactive, playable, hovered, focused;
+
+    public void Configure(Text label, Image underline, bool canOpen, bool hasPlay, Color text, Color disabled, Color highlight)
     {
-        count=countLabel;face=cardFace;count.text=value.ToString();showCount=showCountOnHover;available=hasPlayableCard;
-        count.gameObject.SetActive(hovering&&showCount);
-        var image=GetComponent<Image>();if(image!=null)image.color=Tint;
+        caption=label;rule=underline;
+        interactive=canOpen;playable=hasPlay;
+        normal=text;muted=disabled;accent=highlight;
+        if(!interactive)hovered=focused=false;
+        Paint();
     }
-    public void OnPointerEnter(PointerEventData data)
+
+    public void OnPointerEnter(PointerEventData data){hovered=interactive;Paint();}
+    public void OnPointerExit(PointerEventData data){hovered=false;Paint();}
+    public void OnSelect(BaseEventData data){focused=interactive;Paint();}
+    public void OnDeselect(BaseEventData data){focused=false;Paint();}
+    private void OnDisable(){hovered=focused=false;Paint();}
+
+    private void Paint()
     {
-        hovering=true;if(count!=null)count.gameObject.SetActive(showCount);
+        if(caption==null||rule==null)return;
+        bool emphasized=interactive&&(hovered||focused||playable);
+        caption.color=!interactive?muted:emphasized?accent:normal;
+        rule.enabled=emphasized;
+        if(emphasized)rule.color=accent;
     }
-    public void OnPointerExit(PointerEventData data)
-    {
-        hovering=false;if(count!=null)count.gameObject.SetActive(false);
-    }
-    private void Update()
-    {
-        float amount=1-Mathf.Exp(-16*Time.unscaledDeltaTime);
-        if(face!=null)face.localScale=Vector3.Lerp(face.localScale,Vector3.one*(hovering?1.03f:1),amount);
-        var image=GetComponent<Image>();
-        if(image!=null)image.color=Color.Lerp(image.color,Tint,amount);
-    }
-    private void OnDisable(){hovering=false;if(count!=null)count.gameObject.SetActive(false);}
 }

@@ -6,57 +6,83 @@ public sealed partial class OnlineMatchService
     public OnlineMatchEndedMessage EndReview { get; private set; }
     public string EndReplayStatus { get; private set; }
     public bool EndReplayDecided => endReplayChoice.HasValue || IsSpectator || EndReview?.aborted == true;
+    public enum ReplayChoiceState { Undecided, Waiting, Saving, Saved, Skipped, Unavailable, Failed }
+    public ReplayChoiceState ReplayChoice { get; private set; }
+    internal bool OffersEndReplay => EndReview!=null && !IsSpectator && !EndReview.aborted &&
+        (CurrentPuzzle==null || EndReview.winnerSeat==1);
+    internal bool CanRequestEndReplay => EndReview!=null && (endReplay!=null || expectedReplays.Contains(EndReview.matchId) || decodingReplays.Contains(EndReview.matchId));
     private bool? endReplayChoice;
     private MatchReplay endReplay;
     private byte[] endReplayBytes;
     private readonly System.Collections.Generic.Dictionary<string,bool> replaySaveChoices=new();
     private readonly System.Collections.Generic.HashSet<string> savingReplays=new();
-    private bool endReplaySaved;
-    private readonly System.Collections.Generic.HashSet<string> declinedReviewReplays = new System.Collections.Generic.HashSet<string>();
+    private Action leaveAfterReplaySave;
 
     private void BeginEndReview(OnlineMatchEndedMessage ended)
     {
+        ClearEndReview();
         EndReview = ended;
-        endReplay = null;endReplayBytes=null;
-        endReplaySaved = false;
-        endReplayChoice = GamePreferences.AutoSaveReplays ? true : (bool?)null;
-        EndReplayStatus = IsSpectator || ended?.aborted == true ? "" : GamePreferences.AutoSaveReplays ? "录像接收后自动保存" : "是否保存本局录像？";
+        endReplayChoice = OffersEndReplay && GamePreferences.AutoSaveReplays ? true : (bool?)null;
+        ReplayChoice = endReplayChoice==true ? ReplayChoiceState.Waiting : ReplayChoiceState.Undecided;
+        EndReplayStatus = !OffersEndReplay ? "" : endReplayChoice==true ? "录像接收后自动保存" : "是否保存本局录像？";
     }
 
     private void ClearEndReview()
     {
+        // Chunks can arrive after returning to the lobby or starting the next game.
+        // Keep only decisions that still have a transfer in flight.
+        if(OffersEndReplay && (expectedReplays.Contains(EndReview.matchId)||decodingReplays.Contains(EndReview.matchId)))
+            replaySaveChoices[EndReview.matchId]=endReplayChoice==true;
+        leaveAfterReplaySave=null;
         EndReview = null; endReplay = null;endReplayBytes=null; endReplayChoice = null; EndReplayStatus = "";
+        ReplayChoice = ReplayChoiceState.Undecided;
     }
 
     private bool ReceiveEndReviewReplay(MatchReplay replay,byte[] bytes=null)
     {
         if(replaySaveChoices.TryGetValue(replay.matchId,out bool save)) {
             replaySaveChoices.Remove(replay.matchId);
-            declinedReviewReplays.Remove(replay.matchId);
             if(save)StartCoroutine(SaveReceivedReplay(replay,bytes));
             return true;
         }
-        if (declinedReviewReplays.Remove(replay.matchId)) return true;
         if (EndReview == null || EndReview.matchId != replay.matchId) return false;
         endReplay = replay;endReplayBytes=bytes;
-        if (endReplayChoice.HasValue) DecideEndReplay(endReplayChoice.Value);
+        if (endReplayChoice==true) DecideEndReplay(true);
         return true;
+    }
+
+    private void MarkEndReplayUnavailable(string message)
+    {
+        ReplayChoice=ReplayChoiceState.Unavailable;
+        leaveAfterReplaySave=null;endReplayChoice=false;EndReplayStatus=message;
     }
 
     public void DecideEndReplay(bool save)
     {
-        if (endReplaySaved) return;
-        if (save && EndReview != null) declinedReviewReplays.Remove(EndReview.matchId);
-        if (save && endReplay == null && !expectedReplays.Contains(EndReview?.matchId ?? "")&& !decodingReplays.Contains(EndReview?.matchId??"")&&!savingReplays.Contains(EndReview?.matchId??""))
-        { EndReplayStatus = "录像不可用，可以继续查看或离开"; endReplayChoice = false; return; }
+        if (!OffersEndReplay || ReplayChoice==ReplayChoiceState.Saving || ReplayChoice==ReplayChoiceState.Saved) return;
+        if (save && !CanRequestEndReplay)
+        { MarkEndReplayUnavailable("录像不可用，可以继续查看或离开"); return; }
         endReplayChoice = save;
-        if(EndReview!=null)replaySaveChoices[EndReview.matchId]=save;
-        if (!save && EndReview != null && expectedReplays.Contains(EndReview.matchId)) declinedReviewReplays.Add(EndReview.matchId);
         EndReplayStatus = save ? "正在接收录像，完成后保存…" : "本局录像不保存";
-        if (!save) { endReplay = null;endReplayBytes=null; return; }
+        ReplayChoice=save ? ReplayChoiceState.Waiting : ReplayChoiceState.Skipped;
+        if (!save) { FinishReplayDeparture();return; }
         if (endReplay == null) return;
         var ready=endReplay;var bytes=endReplayBytes;endReplay=null;endReplayBytes=null;
         replaySaveChoices.Remove(ready.matchId);StartCoroutine(SaveReceivedReplay(ready,bytes));
+    }
+
+    private bool WaitForChosenSave(Action leave)
+    {
+        if(ReplayChoice is not (ReplayChoiceState.Waiting or ReplayChoiceState.Saving))return false;
+        leaveAfterReplaySave=leave;
+        return true;
+    }
+
+    private void FinishReplayDeparture()
+    {
+        var leave=leaveAfterReplaySave;
+        leaveAfterReplaySave=null;
+        leave?.Invoke();
     }
 
     private void TickEndReplay(double now)
@@ -69,10 +95,10 @@ public sealed partial class OnlineMatchService
 
     public void LeaveEndReview(bool leaveRoom)
     {
+        if(EndReview==null)return;
+        if(!IsLocalAiMatch&&leaveRoom&&!CanLeaveRoom){EndReplayStatus="本场比赛尚未结束，请前往换备继续比赛。";return;}
+        if(WaitForChosenSave(()=>LeaveEndReview(leaveRoom)))return;
         if(IsLocalAiMatch){LeaveLocalAiReview();return;}
-        if(leaveRoom&&!CanLeaveRoom){EndReplayStatus="本场比赛尚未结束，请前往换备继续比赛。";return;}
-        if (!EndReplayDecided) { EndReplayStatus = "请先选择保存录像或不保存"; return; }
-        if(EndReview!=null&&endReplayChoice.HasValue)replaySaveChoices[EndReview.matchId]=endReplayChoice.Value;
         if(!leaveRoom)SendToServer<object>(OnlineProtocol.LeaveReview,null);
         ClearEndReview();
         ForgeView = null;
@@ -84,13 +110,14 @@ public sealed partial class OnlineMatchService
     private System.Collections.IEnumerator SaveReceivedReplay(MatchReplay replay,byte[] bytes)
     {
         if(!savingReplays.Add(replay.matchId))yield break;
+        if(EndReview?.matchId==replay.matchId)ReplayChoice=ReplayChoiceState.Saving;
         string directory=ReplayRepository.Root;
         var task=System.Threading.Tasks.Task.Run(()=>ReplayRepository.SaveReceived(bytes??ReplayRepository.Encode(replay),replay,directory));
         while(!task.IsCompleted)yield return null;
         savingReplays.Remove(replay.matchId);
         replaySaveChoices.Remove(replay.matchId);
-        if(task.IsFaulted){string reason="录像保存失败："+task.Exception.GetBaseException().Message;UnityEngine.Debug.LogWarning(reason);if(EndReview?.matchId==replay.matchId){endReplayChoice=null;EndReplayStatus=reason;}yield break;}
+        if(task.IsFaulted){string reason="录像保存失败："+task.Exception.GetBaseException().Message;UnityEngine.Debug.LogWarning(reason);if(EndReview?.matchId==replay.matchId){leaveAfterReplaySave=null;endReplay=replay;endReplayBytes=bytes;ReplayChoice=ReplayChoiceState.Failed;endReplayChoice=null;EndReplayStatus=reason;}yield break;}
         ReplayRepository.NotifyChanged();
-        if(EndReview?.matchId==replay.matchId){EndReplayStatus="录像已保存";endReplaySaved=true;}
+        if(EndReview?.matchId==replay.matchId){EndReplayStatus="录像已保存";ReplayChoice=ReplayChoiceState.Saved;FinishReplayDeparture();}
     }
 }

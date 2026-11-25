@@ -1,0 +1,446 @@
+{
+  "scope": "E完整区域HTML组合场面：布局和可见交互；不是Unity或Forge规则验证",
+  "entries": [
+    {
+      "label": "all-regions-normal-1600",
+      "blockedCardCenters": [],
+      "brokenImages": [],
+      "cardHudOverlaps": [],
+      "height": 900,
+      "lanes": [
+        {
+          "cards": 4,
+          "name": "对手地",
+          "visibleCards": 4
+        },
+        {
+          "cards": 4,
+          "name": "对手生物",
+          "visibleCards": 4
+        },
+        {
+          "cards": 3,
+          "name": "对手神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 1,
+          "name": "对手旅法",
+          "visibleCards": 1
+        },
+        {
+          "cards": 1,
+          "name": "对手战役",
+          "visibleCards": 1
+        },
+        {
+          "cards": 5,
+          "name": "你的地",
+          "visibleCards": 5
+        },
+        {
+          "cards": 4,
+          "name": "你的生物",
+          "visibleCards": 4
+        },
+        {
+          "cards": 3,
+          "name": "你的神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 1,
+          "name": "你的旅法",
+          "visibleCards": 1
+        },
+        {
+          "cards": 1,
+          "name": "你的战役",
+          "visibleCards": 1
+        }
+      ],
+      "manaKinds": 12,
+      "playerCounters": 10,
+      "stateGroups": 10,
+      "width": 1600
+    },
+    {
+      "label": "open-1-command",
+      "title": "你的统帅区 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-1-emblems",
+      "title": "你的徽记 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-1-delayed",
+      "title": "你的延迟效果 · 2",
+      "count": 2
+    },
+    {
+      "label": "open-1-states",
+      "title": "你的持续状态 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-1-dungeons",
+      "title": "你的地城 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-2-command",
+      "title": "对手的统帅区 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-2-emblems",
+      "title": "对手的徽记 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-2-delayed",
+      "title": "对手的延迟效果 · 2",
+      "count": 2
+    },
+    {
+      "label": "open-2-states",
+      "title": "对手的持续状态 · 1",
+      "count": 1
+    },
+    {
+      "label": "open-2-dungeons",
+      "title": "对手的地城 · 1",
+      "count": 1
+    },
+    {
+      "label": "dungeon-details",
+      "title": "凡戴尔的失落矿坑",
+      "type": "地城 · 当前房间：黑暗之池"
+    },
+    {
+      "label": "text-only-state-hides-previous-card-art",
+      "title": "君主",
+      "photoVisible": false
+    },
+    {
+      "label": "all-regions-final-normal-1600",
+      "blockedCardCenters": [],
+      "brokenImages": [],
+      "cardHudOverlaps": [],
+      "height": 900,
+      "lanes": [
+        {
+          "cards": 4,
+          "name": "对手地",
+          "visibleCards": 4
+        },
+        {
+          "cards": 4,
+          "name": "对手生物",
+          "visibleCards": 4
+        },
+        {
+          "cards": 3,
+          "name": "对手神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 1,
+          "name": "对手旅法",
+          "visibleCards": 1
+        },
+        {
+          "cards": 1,
+          "name": "对手战役",
+          "visibleCards": 1
+        },
+        {
+          "cards": 5,
+          "name": "你的地",
+          "visibleCards": 5
+        },
+        {
+          "cards": 4,
+          "name": "你的生物",
+          "visibleCards": 4
+        },
+        {
+          "cards": 3,
+          "name": "你的神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 1,
+          "name": "你的旅法",
+          "visibleCards": 1
+        },
+        {
+          "cards": 1,
+          "name": "你的战役",
+          "visibleCards": 1
+        }
+      ],
+      "manaKinds": 12,
+      "playerCounters": 10,
+      "stateGroups": 10,
+      "width": 1600
+    },
+    {
+      "label": "all-regions-normal-1280",
+      "blockedCardCenters": [],
+      "brokenImages": [],
+      "cardHudOverlaps": [],
+      "height": 720,
+      "lanes": [
+        {
+          "cards": 4,
+          "name": "对手地",
+          "visibleCards": 4
+        },
+        {
+          "cards": 4,
+          "name": "对手生物",
+          "visibleCards": 4
+        },
+        {
+          "cards": 3,
+          "name": "对手神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 1,
+          "name": "对手旅法",
+          "visibleCards": 1
+        },
+        {
+          "cards": 1,
+          "name": "对手战役",
+          "visibleCards": 1
+        },
+        {
+          "cards": 5,
+          "name": "你的地",
+          "visibleCards": 5
+        },
+        {
+          "cards": 4,
+          "name": "你的生物",
+          "visibleCards": 4
+        },
+        {
+          "cards": 3,
+          "name": "你的神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 1,
+          "name": "你的旅法",
+          "visibleCards": 1
+        },
+        {
+          "cards": 1,
+          "name": "你的战役",
+          "visibleCards": 1
+        }
+      ],
+      "manaKinds": 12,
+      "playerCounters": 10,
+      "stateGroups": 10,
+      "width": 1280
+    },
+    {
+      "label": "dense-all-regions-gallery-1280",
+      "blockedCardCenters": [],
+      "brokenImages": [],
+      "cardHudOverlaps": [],
+      "height": 612,
+      "lanes": [
+        {
+          "cards": 16,
+          "name": "对手地",
+          "visibleCards": 7
+        },
+        {
+          "cards": 16,
+          "name": "对手生物",
+          "visibleCards": 6
+        },
+        {
+          "cards": 12,
+          "name": "对手神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 4,
+          "name": "对手旅法",
+          "visibleCards": 2
+        },
+        {
+          "cards": 4,
+          "name": "对手战役",
+          "visibleCards": 2
+        },
+        {
+          "cards": 20,
+          "name": "你的地",
+          "visibleCards": 7
+        },
+        {
+          "cards": 16,
+          "name": "你的生物",
+          "visibleCards": 6
+        },
+        {
+          "cards": 12,
+          "name": "你的神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 4,
+          "name": "你的旅法",
+          "visibleCards": 2
+        },
+        {
+          "cards": 4,
+          "name": "你的战役",
+          "visibleCards": 2
+        }
+      ],
+      "manaKinds": 12,
+      "playerCounters": 10,
+      "stateGroups": 10,
+      "width": 1280
+    },
+    {
+      "label": "lane-browse-enemy-lands",
+      "before": 0,
+      "after": 400,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-enemy-creatures",
+      "before": 0,
+      "after": 400,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-enemy-support",
+      "before": 0,
+      "after": 400,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-enemy-walkers",
+      "before": 0,
+      "after": 247.3333282470703,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-enemy-battles",
+      "before": 0,
+      "after": 247.3333282470703,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-own-lands",
+      "before": 0,
+      "after": 400,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-own-creatures",
+      "before": 0,
+      "after": 400,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-own-support",
+      "before": 0,
+      "after": 400,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-own-walkers",
+      "before": 0,
+      "after": 247.3333282470703,
+      "back": 0
+    },
+    {
+      "label": "lane-browse-own-battles",
+      "before": 0,
+      "after": 247.3333282470703,
+      "back": 0
+    },
+    {
+      "label": "dense-all-regions-gallery-1600",
+      "blockedCardCenters": [],
+      "brokenImages": [],
+      "cardHudOverlaps": [],
+      "height": 792,
+      "lanes": [
+        {
+          "cards": 16,
+          "name": "对手地",
+          "visibleCards": 7
+        },
+        {
+          "cards": 16,
+          "name": "对手生物",
+          "visibleCards": 6
+        },
+        {
+          "cards": 12,
+          "name": "对手神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 4,
+          "name": "对手旅法",
+          "visibleCards": 2
+        },
+        {
+          "cards": 4,
+          "name": "对手战役",
+          "visibleCards": 2
+        },
+        {
+          "cards": 20,
+          "name": "你的地",
+          "visibleCards": 7
+        },
+        {
+          "cards": 16,
+          "name": "你的生物",
+          "visibleCards": 6
+        },
+        {
+          "cards": 12,
+          "name": "你的神器 / 结界",
+          "visibleCards": 3
+        },
+        {
+          "cards": 4,
+          "name": "你的旅法",
+          "visibleCards": 2
+        },
+        {
+          "cards": 4,
+          "name": "你的战役",
+          "visibleCards": 2
+        }
+      ],
+      "manaKinds": 12,
+      "playerCounters": 10,
+      "stateGroups": 10,
+      "width": 1600
+    }
+  ],
+  "notes": [
+    "十列左右浏览均移动后返回起点，未逐张点击所有屏外对象",
+    "附属区域为组合展示数据，未生成真实对局状态",
+    "新增展示牌未接入动态费用，正式接入时复用生产数据与选项"
+  ],
+  "consoleErrors": []
+}

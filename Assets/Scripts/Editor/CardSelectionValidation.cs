@@ -29,7 +29,6 @@ public static class CardSelectionValidation
     static IEnumerator Validate()
     {
         yield return SceneManager.LoadSceneAsync(ForgeBattlefieldController.SceneName);
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))UnityEngine.Object.Destroy(notice);
         var ui=new GameObject("SelectionUiValidation").AddComponent<ForgeBattlefieldController>();
         foreach(string name in new[]{"surveil","library","hand","graveyard","exile","order","reveal","multi-library-context","explore-grave","fetch-live"})
         {

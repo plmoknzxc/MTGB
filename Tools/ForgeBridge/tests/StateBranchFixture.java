@@ -21,6 +21,11 @@ public final class StateBranchFixture {
         }
         for(ZoneType z:new ZoneType[]{ZoneType.Hand,ZoneType.Battlefield,ZoneType.Graveyard,ZoneType.Exile})
             if(spec.has(z.name()))for(var n:spec.getAsJsonArray(z.name()))place(n.getAsString(),p,z);
+        if (spec.has("Tapped")) {
+            for (var name : spec.getAsJsonArray("Tapped"))
+                p.getCardsIn(ZoneType.Battlefield).stream().filter(c -> c.getName().equals(name.getAsString()))
+                        .findFirst().orElseThrow().setTapped(true);
+        }
         if(spec.has("Library")) {
             var names=spec.getAsJsonArray("Library");
             for(int i=names.size()-1;i>=0;i--) {

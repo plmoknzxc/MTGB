@@ -26,12 +26,12 @@ public static class XSpellPresentationValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        string locale=GamePreferences.Language;var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
+        string locale=GamePreferences.Language;
         // Isolate replay events from the physical pointer moving over other cards.
         var modules=UnityEngine.Object.FindObjectsByType<BaseInputModule>(FindObjectsSortMode.None);var states=modules.Select(m=>m.enabled).ToArray();foreach(var module in modules)module.enabled=false;
         File.WriteAllText(Output+"/result.txt","RUNNING");var it=Validate(ui);
         try {while(true){object next;try{if(!it.MoveNext())break;next=it.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt",selectedPaths!=null?"PASS: printed X polish only; Song, double-X Ballista and Wrath; zh/en/ja/return-zh stack, hover, read-only list; Only lower rules repainted; printed X/XX mana untouched, no cost controls, rules top below complete type bar; full localized rules retained and scroll reaches bottom. Existing native evidence reused; no new engine/network checks.":"PASS: current native X cost snapshots (normal/reduce/increase, double-X reduce/increase/zero, counterspell tax) plus historical Omen/Wrath/Stomp/Soul Tether; zh/en/ja main cases, zh double-X/tax/non-X; stack/hover/read-only crowded list; preserved printed face and rules pixels, blue X note and separate numeric casting-cost sprites; localized secondary faces, one cost control, no overlay on battlefield hover. Crowded copies are layout adapters; native resolution verified separately, no network proof.");}
-        finally{running=false;selectedPaths=null;Output=".tools/x-stack-insert-1005/ui-final";GamePreferences.SetLanguage(locale);if(notice!=null)notice.enabled=enabled;for(int i=0;i<modules.Length;i++)if(modules[i]!=null)modules[i].enabled=states[i];}
+        finally{running=false;selectedPaths=null;Output=".tools/x-stack-insert-1005/ui-final";GamePreferences.SetLanguage(locale);for(int i=0;i<modules.Length;i++)if(modules[i]!=null)modules[i].enabled=states[i];}
     }
     static void Face(Transform parent,ForgeStackItem entry,string locale)
     {

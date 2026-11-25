@@ -15,7 +15,7 @@ final class ForgeStackTargets {
             Map<String,Object> value=new LinkedHashMap<>();String key;
             if(target instanceof Player player) {
                 key="player:"+player.getId();value.put("kind","player");value.put("id",player.getId());
-                value.put("playerSeat",ForgeBridge.game.getPlayers().indexOf(player)+1);
+                value.put("playerSeat",ForgeBridge.game.getRegisteredPlayers().indexOf(player)+1);
             } else {
                 Card card;
                 if(target instanceof Card c) {
@@ -26,7 +26,7 @@ final class ForgeStackTargets {
                     card=spell.getHostCard();key="stack:"+spell.getId();value.put("kind","stack");value.put("id",spell.getId());
                     for(var item:ForgeBridge.game.getStack())if(item.getSpellAbility()==spell){value.put("stackId",item.getId());break;}
                 } else continue;
-                value.put("ownerSeat",ForgeBridge.game.getPlayers().indexOf(card.getOwner())+1);
+                value.put("ownerSeat",ForgeBridge.game.getRegisteredPlayers().indexOf(card.getOwner())+1);
                 value.put("zone",card.getZone()==null?"":card.getZone().getZoneType().name());
                 // Even an owner preview must not turn a public face-down target
                 // into its private original. Hidden hand/library identities stay hidden.

@@ -2,9 +2,9 @@ public sealed class OnlineServerRequestGate
 {
     public long LastRequestId { get; private set; }
 
-    public bool TryPrepare(long requestId, int authenticatedSeat, GameAction action, out string error)
+    public bool TryPrepare(long requestId, int authenticatedSeat, GameAction action, out string error, int playerCapacity = 2)
     {
-        if (authenticatedSeat != 1 && authenticatedSeat != 2)
+        if (authenticatedSeat < 1 || authenticatedSeat > playerCapacity)
         {
             error = "The authenticated player seat is invalid.";
             return false;

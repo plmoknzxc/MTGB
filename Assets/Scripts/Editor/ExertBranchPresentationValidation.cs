@@ -37,7 +37,7 @@ public static class ExertBranchPresentationValidation
     static IEnumerator Show(ForgeBattlefieldController ui,ForgeSeatView v,bool act,Action<int> submit){ui.Present(null,v.seat,false,null,null,"");ui.Present(v,v.seat,act,submit,null,"");yield return new WaitForSecondsRealtime(.5f);yield return Frame();Clean();}
     static Button ActionButton(int index)=>GameObject.Find("CardSelection").GetComponentsInChildren<Button>().Single(b=>b.name=="SelectionAction_"+index);
     static void Inspect(ForgeBattlefieldController ui,ForgeCardView card)=>typeof(ForgeBattlefieldController).GetMethod("InspectIntegrated",Hidden).Invoke(ui,new object[]{card});
-    static IEnumerator Validate(ForgeBattlefieldController ui){string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+    static IEnumerator Validate(ForgeBattlefieldController ui){string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         try{foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}){
             int rev=GamePreferences.Revision;bool change=GamePreferences.Language!=lang;GamePreferences.SetLanguage(lang);float until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||change&&rev==GamePreferences.Revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale unavailable");yield return Frame();File.AppendAllText(Output+"/steps.log",lang+"\n");
             foreach(int count in new[]{0,1}){
@@ -56,7 +56,7 @@ public static class ExertBranchPresentationValidation
             if(lang=="zh-CN"){
                 var c=Read("mana-exert","effect").players[0].battlefield.Single(c=>!c.land);var clone=JsonUtility.FromJson<ForgeCardView>(JsonUtility.ToJson(c));clone.id++;Check(ForgeBattlefieldController.ArenaGroupKey(c)==ForgeBattlefieldController.ArenaGroupKey(clone),"Equal exert cannot group");clone.exertedBySeats=Array.Empty<int>();Check(ForgeBattlefieldController.ArenaGroupKey(c)!=ForgeBattlefieldController.ArenaGroupKey(clone),"Different pending exert collapses");var method=typeof(OnlineSpectatorView).GetMethod("PublicCard",BindingFlags.Static|BindingFlags.NonPublic);c.faceDown=true;var publicCard=(ForgeCardView)method.Invoke(null,new object[]{c});Check(publicCard.exertedThisTurn==c.exertedThisTurn&&publicCard.exertedBySeats.SequenceEqual(c.exertedBySeats)&&publicCard.printingKey==null,"Public face-down exert loses state/leaks face");
             }
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
     }
 }
 #endif

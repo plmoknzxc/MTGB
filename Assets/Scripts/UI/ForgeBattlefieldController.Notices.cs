@@ -21,6 +21,12 @@ public sealed partial class ForgeBattlefieldController
 
     private void ResetNotices()
     {
+        ResetSidebarHistory();
+        ResetTransientNotices();
+    }
+    private void ResetTransientNotices()
+    {
+        ResetStatusChanges();
         ResetCardNotices();
         lastNoticeId=0;noticeExpires=0;
         noticeLayoutId=long.MinValue;
@@ -34,6 +40,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void UpdateNoticeExpiry()
     {
+        UpdateStatusChange();
         if(viewingBattlefield){noticeExpires+=Time.unscaledDeltaTime;randomResultStarted+=Time.unscaledDeltaTime;return;}
         if(noticeScroll!=null&&noticeScroll.gameObject.activeInHierarchy&&noticeScroll.Reading){noticeExpires+=Time.unscaledDeltaTime;return;}
         // Begin motion on the first displayed frame, after synchronous card/UI
@@ -202,18 +209,19 @@ public sealed partial class ForgeBattlefieldController
             string message=ValueChoicePrompt(out bool namedBid);
             var measure=new TextGenerator();var settings=new TextGenerationSettings{font=GamePreferences.Font,fontSize=Mathf.RoundToInt(16*GamePreferences.TextScale),fontStyle=FontStyle.Normal,lineSpacing=1,generationExtents=new Vector2(compactWidth-36,0),scaleFactor=1,richText=false,verticalOverflow=VerticalWrapMode.Overflow,horizontalOverflow=HorizontalWrapMode.Wrap};
             float titleHeight=Mathf.Max(32,measure.GetPreferredHeight(message,settings)+4),compactHeight=Mathf.Min(surface.rect.height-48,titleHeight+90);
-            landChoiceMenu.sizeDelta=new Vector2(compactWidth,compactHeight);landChoiceMenu.anchoredPosition=Vector2.zero;landChoiceMenu.GetComponent<Image>().color=Ink;
+            landChoiceMenu.sizeDelta=new Vector2(compactWidth,compactHeight);landChoiceMenu.anchoredPosition=Vector2.zero;if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
             var heading=Label(landChoiceMenu,"ValueTitle",message,new Vector2(0,compactHeight*.5f-18-titleHeight*.5f),new Vector2(compactWidth-36,titleHeight),16,Paper);heading.supportRichText=false;heading.raycastTarget=false;
             if(namedBid)SetNamedPlayerText(heading,message);
             for(int i=0;i<options.Length;i++) {
                 float buttonWidth=sharedType?(compactWidth-48)/2:144,buttonOffset=sharedType?(buttonWidth+12)/2:78;
                 int index=OptionIndex(options[i].id);var control=Button(landChoiceMenu,"ValueOption_"+index,RequestOptionLabel(options[i]),new Vector2((i==0?-1:1)*buttonOffset,-compactHeight*.5f+31),new Vector2(buttonWidth,38),()=>Choose(index,captured),new Color(.16f,.29f,.43f));
+                if(HudTheme!=null)StyleZoneButton(control,options[i].id=="ok");
                 PreferenceText.SetSize(control.GetComponentInChildren<Text>(),16);control.interactable=canAct&&!submitted&&!options[i].disabled;
             }
             landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return;
         }
         float width=Mathf.Min(640,surface.rect.width-48),height=Mathf.Min(view.request.message=="one: Choose a basic land type"?464:400,surface.rect.height-48);
-        landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;landChoiceMenu.GetComponent<Image>().color=Ink;
+        landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         var title=Label(landChoiceMenu,"ValueTitle",RandomChoiceTitle()??NativeDisplayText(view.request.message),new Vector2(0,height/2-60),new Vector2(width-40,100),22,Paper);title.supportRichText=false;
         var content=Scroll(landChoiceMenu,"ValueOptions",new Vector2(0,-54),new Vector2(width-30,height-132));
         float offset=0;
@@ -231,6 +239,7 @@ public sealed partial class ForgeBattlefieldController
             }
             else if(option.id=="cancel"&&view.request.kind=="dialog")label=TapPaymentText("保留原值","Keep unchanged","変更しない");
             var button=Button(content,"ValueOption_"+index,label,Vector2.zero,new Vector2(width-56,58),()=>Choose(index,captured),new Color(.16f,.29f,.43f));
+            if(HudTheme!=null)StyleZoneButton(button,option.selected);
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(.5f,1);rect.anchoredPosition=new Vector2(0,-offset);offset+=66;
             PreferenceText.SetSize(button.GetComponentInChildren<Text>(),22);button.GetComponentInChildren<Text>().supportRichText=false;button.interactable=canAct&&!submitted&&!option.disabled;
         }
@@ -264,6 +273,17 @@ public sealed partial class ForgeBattlefieldController
         string title=notice.sourceCard?.id>0?GamePreferences.CardFaceName(notice.sourceCard.name):notice.title;
         string value=notice.value??notice.message??"";
         if(notice.kind=="notice") {
+            if(value=="Attack declaration invalid")
+                return TapPaymentText("攻击宣告未通过，请调整攻击生物或攻击对象后再确认。","Adjust your attackers or their destinations, then confirm the attack.","攻撃クリーチャーまたは攻撃先を変更し、もう一度確定してください。");
+            var pick=Regex.Match(notice.message??value,@"^Player ([1-9][0-9]*) picked (Player ([1-9][0-9]*)|Red|Green|Blue|White|Black|Colorless)$");
+            if(pick.Success&&int.TryParse(pick.Groups[1].Value,out int pickingSeat)&&view?.players?.Any(p=>p.seat==pickingSeat)==true){
+                string selection=RandomChoiceLabel(pick.Groups[2].Value);
+                if(pick.Groups[3].Success&&int.TryParse(pick.Groups[3].Value,out int selectedSeat)&&view.players.Any(p=>p.seat==selectedSeat))
+                    selection=PlayerDisplayName(selectedSeat);
+                string who=PlayerDisplayName(pickingSeat);
+                return (string.IsNullOrWhiteSpace(title)?"":GamePreferences.CardFaceName(title)+"\n")+
+                    TapPaymentText($"{who}选择了{selection}。",$"{who} chose {selection}.",$"{who}は{selection}を選びました。");
+            }
             // CostRevealChosen uses the registered native player names in its
             // public result. Resolve those identities only after the reveal.
             var revealed=Regex.Match(value,@"^Player ([1-9][0-9]*) reveals (.+)$");
@@ -277,8 +297,12 @@ public sealed partial class ForgeBattlefieldController
                 return (string.IsNullOrEmpty(title)?"":GamePreferences.NativeText(title)+"\n")+result;
             }
             var direction=Regex.Match(value,@"^Left \(clockwise\): (\[[^\r\n]*\])\r?\nRight \(anticlockwise\):(\[[^\r\n]*\])$");
-            if(direction.Success)value=TapPaymentText("左（顺时针）：","Left (clockwise): ","左（時計回り）：")+direction.Groups[1].Value+"\n"+
-                TapPaymentText("右（逆时针）：","Right (anticlockwise):","右（反時計回り）：")+direction.Groups[2].Value;
+            if(direction.Success) {
+                string Seats(Group group)=>Regex.Replace(group.Value,@"(?<=\[|, )Player ([1-9][0-9]*)(?=, |\])",m=>
+                    int.TryParse(m.Groups[1].Value,out int seat)?PlayerIdentityName(seat):m.Value);
+                value=TapPaymentText("左（顺时针）：","Left (clockwise): ","左（時計回り）：")+Seats(direction.Groups[1])+"\n"+
+                    TapPaymentText("右（逆时针）：","Right (anticlockwise):","右（反時計回り）：")+Seats(direction.Groups[2]);
+            }
             else value=VoteNoticeText(notice,value)??value;
             var bid=Regex.Match(value,@"^topped bid with (\d+) life$");
             if(bid.Success)value=TapPaymentText($"将生命竞价提高至 {bid.Groups[1].Value}。",$"Raised the life bid to {bid.Groups[1].Value}.",$"ライフの入札額を{bid.Groups[1].Value}に増やしました。");
@@ -334,6 +358,8 @@ public sealed partial class ForgeBattlefieldController
     private void PresentNotices()
     {
         var notes=view?.notices??Array.Empty<ForgeNotice>();
+        ObserveStatusChanges();
+        ObserveSidebarHistory();
         PresentCardNotices(notes);
         if(noticeHistoryButton==null) {
             noticeHistoryButton=Button(surface,"ResultHistoryButton","≡",Vector2.zero,new Vector2(34,34),ShowNoticeHistory,Ink);
@@ -344,12 +370,13 @@ public sealed partial class ForgeBattlefieldController
         noticeHistoryButton.interactable=false;
         if(noticeHistory!=null)noticeHistory.gameObject.SetActive(false);
         if(notes.Length==0)return;
-        if(noticeToast==null&&notes.Any(n=>!IsRandomResult(n)&&!IsCardNotice(n))) {
+        if(noticeToast==null&&notes.Any(n=>!IsRandomResult(n)&&!IsCardNotice(n)&&!IsHistoryOnlyNotice(n))) {
             noticeToast=Panel(surface,"ResultToast",Vector2.zero,new Vector2(660,150),new Color(.035f,.055f,.085f,.98f));
             SetOverlayLayer(noticeToast,NoticeLayerOffset,true);
             noticeToast.anchorMin=noticeToast.anchorMax=noticeToast.pivot=new Vector2(.5f,1);
             noticeToast.anchoredPosition=new Vector2(0,-88);
-            noticeToast.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(660,150,14);
+            if(HudTheme!=null)StyleHudSurface(noticeToast,HudInk,HudEdge);
+            else noticeToast.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(660,150,14);
             var badge=Panel(noticeToast,"ResultBadge",Vector2.zero,new Vector2(96,96),new Color(.14f,.2f,.28f));
             badge.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(96,96,16);
             var symbol=Label(badge,"ResultValue","",Vector2.zero,new Vector2(88,84),30,Gold);symbol.supportRichText=false;symbol.fontStyle=FontStyle.Bold;
@@ -373,7 +400,8 @@ public sealed partial class ForgeBattlefieldController
         // A snapshot may contain several completed flips/rolls. Consume each new
         // native ID once, in order; a later snapshot must not overwrite a result.
         foreach(var notice in notes.Where(n=>n.id>lastNoticeId).OrderBy(n=>n.id)) {
-            if(IsCardNotice(notice))continue;
+            if(hasPreviousZoneView && notice.kind=="cast")GameAudio.Play(TableSound.Cast);
+            if(IsCardNotice(notice)||IsHistoryOnlyNotice(notice))continue;
             if(IsRejectedBlockNotice(notice)) {
                 // A rejected action must explain itself immediately, even while
                 // earlier rolls are being displayed. Resume those results after it.

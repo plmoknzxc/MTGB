@@ -16,7 +16,6 @@ public static class BoltAmberFlowCapture1014 {
  static IEnumerator Guard(IEnumerator e){while(true){bool more;object next;try{more=e.MoveNext();next=more?e.Current:null;}catch(Exception ex){checks.Add("FAIL "+ex);more=false;next=null;}if(!more)break;yield return next;}File.WriteAllLines(Out+"/ui-result.txt",checks);Running=false;}
  static IEnumerator Exercise(){
   while(!GamePreferences.Ready)yield return null;
-  foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))notice.enabled=false;
   var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("BoltAmberFlowBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;
   string[] names={"bolt-01-hand","bolt-02-select-target","bolt-03-target-selected","bolt-04-mana-payment","bolt-06-on-stack","bolt-07-resolved","amber-01-hand","amber-03-on-stack","amber-04-battlefield","amber-05-select-color","amber-06-mana-produced"};
   foreach(string name in names){

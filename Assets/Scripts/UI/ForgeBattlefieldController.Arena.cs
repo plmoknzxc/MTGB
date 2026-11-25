@@ -18,6 +18,7 @@ public sealed partial class ForgeBattlefieldController
         public ForgeCardView card;
         public Vector2 restingPosition;
         public float restingRotation;
+        public BattlefieldWorldCard world;
     }
     private readonly Dictionary<string,ArenaCard> arenaCards=new Dictionary<string,ArenaCard>();
     private readonly HashSet<string> retainedCards=new HashSet<string>();
@@ -141,6 +142,10 @@ public sealed partial class ForgeBattlefieldController
         {
             var item=arenaCards[key];
             if(IsRedesignLayout && view!=null && (item.root.parent==ownHand || item.root.parent==otherHand)) RetireRedesignCard(key,item);
+            else if(IsRedesignLayout&&view!=null&&item.card.zone=="Battlefield"&&!item.groupKey.StartsWith("markers:",StringComparison.Ordinal)&&!zoneFlights.ContainsKey(item.card.id)
+                &&(!fourPlayerScenePrepared || !fourFieldLocations.ContainsKey(item.card.id))
+                &&(!zonePoses.TryGetValue(item.card.id,out var next)||next.zone!="Battlefield") && item.root.gameObject.activeSelf)
+                RetireRedesignCard(key,item);
             else {item.root.gameObject.SetActive(false);Destroy(item.root.gameObject);arenaCards.Remove(key);}
         }
         otherHand.SetAsLastSibling();
@@ -158,7 +163,7 @@ public sealed partial class ForgeBattlefieldController
         if(c.faceDown)return "hidden:"+c.sector+":"+c.detained+":"+c.ringBearer+":"+c.hasStatBaseline+":"+c.basePower+":"+c.baseToughness+":"+string.Join(",",c.grantedKeywords??Array.Empty<string>())+":"+c.id+":"+c.tapped+":"+c.power+":"+c.toughness+":"+c.faceDownKind+":"+string.Join(",",c.exertedBySeats??Array.Empty<int>())+":"+c.exertedThisTurn+":"+c.currentRules+":"+c.damage+":"+c.attacking+":"+c.blocking;
         return string.Join("|",c.contraption,c.sprocket,c.attraction,string.Join(",",c.attractionLights??Array.Empty<int>()),c.functionalVariant,c.sector,c.chosenSector,c.attachedToKind,c.attachedToId,string.Join(",",c.attachedByIds??Array.Empty<int>()),simpleToken?null:c.printingKey,simpleToken?null:c.currentArtPrintingKey,simpleToken?false:c.currentArtBackFace,simpleToken?null:c.effectSourcePrintingKey,simpleToken?null:c.effectSourceName,simpleToken?false:c.effectSourceBackFace,c.genericEffectName,c.ringBearer,c.ownerSeat,c.effectMarker,c.markerKind,c.markerStatus,c.helperArtName,normalizeLand?false:c.stackableSupport,c.stackableStateKnown,normalizeLand?c.landStackable:c.stackablePermanent,c.protectingPlayerSeat,c.devotion,c.devotionRequired,c.token,c.copy,c.merged,simpleToken?null:c.tokenArtKey,simpleToken?null:c.tokenSourcePrintingKey,c.name,c.zone,c.land,c.creature,c.tapped,string.Join(",",c.exertedBySeats??Array.Empty<int>()),c.exertedThisTurn,c.detained,c.harnessed,c.solved,c.suspected,c.saddled,c.plotted,c.attacking,c.blocking,c.hasStatBaseline,c.basePower,c.baseToughness,c.powerBaseChanged,c.toughnessBaseChanged,c.effectiveBasePower,c.effectiveBaseToughness,c.hasIntensity,c.intensity,c.originalIntensity,c.originalName,c.originalManaCost,c.manaCost,c.originalColors,c.currentColors,c.hasAbilityChanges,c.originalAbilityText,c.currentAbilityText,c.hasCopyAbilityChanges,c.copyOriginalAbilityText,c.copyCurrentAbilityText,string.Join(",",c.originalKeywordDetails??Array.Empty<string>()),string.Join(",",c.currentKeywordDetails??Array.Empty<string>()),string.Join(",",c.grantedKeywords??Array.Empty<string>()),c.power,c.toughness,c.damage,c.defenderKind,c.defenderId,c.loyalty,c.defense,c.backFace,c.stateName,c.room,c.leftRoomUnlocked,c.rightRoomUnlocked,c.hasCurrentLandState,c.landTypesChanged,c.originalType,c.originalRules,c.currentType,c.currentRules,
             string.Join(",",c.basicLandTypes??Array.Empty<string>()),string.Join(";",(c.pendingDepartures??Array.Empty<ForgePendingDeparture>()).Select(d=>d.action+":"+d.phase+":"+d.yourTurn+":"+d.condition)),
-            string.Join(",",(c.counters??Array.Empty<ForgeCardCounter>()).Select(x=>x.kind+":"+x.count)),string.Join(",",c.keywords??Array.Empty<string>()),string.Join(",",c.temporaryExileIds??Array.Empty<int>()),c.spentMana,c.qualificationKind,c.qualificationCount,c.qualificationRequired,c.qualificationEarned,c.hasSicknessState,c.summoningSick);
+            string.Join(",",(c.counters??Array.Empty<ForgeCardCounter>()).Select(x=>x.kind+":"+x.count)),string.Join(",",c.keywords??Array.Empty<string>()),string.Join(",",c.temporaryExileIds??Array.Empty<int>()),c.spentMana,c.qualificationKind,c.qualificationCount,c.qualificationRequired,c.qualificationEarned,c.hasSicknessState,c.summoningSick,c.hasColorBaseline,c.landPresentationKnown,c.landManaColors);
     }
     private List<ForgeCardView[]> ArenaVisualGroups(ForgeCardView[] cards,string row)
     {
@@ -188,12 +193,13 @@ public sealed partial class ForgeBattlefieldController
         // Support categories keep the same lane at low and high density. Walkers
         // and battles never fall back into the artifact/enchantment packing.
         if(!hand && groups.Count==0) { SetDenseArenaRowVisible(row,false);return; }
-        float tableWidth=Mathf.Max(320,Mathf.Min(1320,surface.rect.width-560));
-        float sideWidth=Mathf.Min(500,tableWidth*.38f), gap=28;
-        float available=hand?tableWidth:support?sideWidth:tableWidth-sideWidth-gap;
-        float width=hand?182:144;
+        float tableWidth=ArenaTableWidth;
+        float sideWidth=worldTable!=null?FieldLanes(own).supportWidth:Mathf.Min(500,tableWidth*.38f),gap=28;
+        float rightExtension=worldTable!=null?FieldLanes(own).rightExtension:0;
+        float available=hand?tableWidth:support?sideWidth:tableWidth+rightExtension-sideWidth-gap;
+        float width=hand?182:worldTable!=null?FieldLanes(own).cardWidth/.88f:144;
         // Dense fields wrap rather than hiding permanents behind pagination.
-        int columns=hand?Math.Max(1,groups.Count):support?(cards.Any(c=>c.room)?Math.Max(1,Mathf.FloorToInt(sideWidth/180)):Math.Max(1,Math.Min(groups.Count,Mathf.FloorToInt((sideWidth+8)/132)))):Mathf.Clamp(Mathf.FloorToInt((available+8)/(width*.88f+8)),1,6);
+        int columns=hand?Math.Max(1,groups.Count):support?(cards.Any(c=>c.room)?Math.Max(1,Mathf.FloorToInt(sideWidth/180)):Math.Max(1,Math.Min(groups.Count,Mathf.FloorToInt((sideWidth+8)/132)))):worldTable!=null?FieldLanes(own).columns:Mathf.Clamp(Mathf.FloorToInt((available+8)/(width*.88f+8)),1,6);
         // Artifacts/enchantments share rows, tokens first in reading order.
         // Storage is bottom-up for our side, so reverse those rows after packing.
         var supportRows=new List<List<ForgeCardView[]>>();
@@ -218,26 +224,32 @@ public sealed partial class ForgeBattlefieldController
             }
             groups=supportRows.SelectMany(r=>r).ToList();
         }
+        if(IsDuelTable&&!hand&&!support&&groups.Count>columns&&groups.Count<=columns*2)
+            columns=(groups.Count+1)/2;
         int rows=hand?1:Mathf.CeilToInt(groups.Count/(float)columns);
         if(support)rows=supportRows.Count;
-        if(!hand && (support || rows>2 || groups.Count>12)) {
+        if(!hand && (support || rows>2 || worldTable==null&&groups.Count>12)) {
             LayoutDenseArenaRow(parent,groups,row,own,lands,support,tableWidth,sideWidth,available);
             return;
         }
         if(!hand)SetDenseArenaRowVisible(row,false);
-        if(!hand && !support && rows>1)width=Mathf.Min(width,112);
+        if(!hand && !support && rows>1 && worldTable==null)width=Mathf.Min(width,112);
         if(support)width=Mathf.Min(112,(sideWidth-8*(columns-1))/columns);
         // Battlefield tiles expose illustration and name; full rules remain in hover/hand.
         float height=width*(hand?254f/182f:.88f);
         float cardWidth=hand?width:width*.88f;
         float step=hand?Mathf.Min(112,(available-cardWidth-32)/Math.Max(1,cards.Length-1)):cardWidth+8;
         float y=hand?46:lands || support?(own?-(rows>1?292:304):(rows>1?292:304)):(own?-(rows>1?68:102):(rows>1?68:102));
-        float x=hand?0:36+(support?tableWidth*.5f-sideWidth*.5f:-(sideWidth+gap)*.5f);
+        if(lands)y+=(own?1:-1)*WorldMainLaneGapReduction(own,(rows>1?292:304)-102);
+        bool duelRanks=IsDuelTable&&!hand&&!support;
+        if(duelRanks)y=DuelRankCenter(own,lands,1);
+        float rowPitch=duelRanks?FieldLanes(own).rankPitch:height+10;
+        float x=hand?0:36+(support?tableWidth*.5f-sideWidth*.5f:(rightExtension-sideWidth-gap)*.5f);
         if(lands)x+=-available*.5f+cardWidth*.5f+(Math.Min(columns,groups.Count)-1)*step*.5f;
         var supportOffsets=new float[rows];float supportUsed=0;
         if(support)for(int line=0;line<rows;line++) {
             supportOffsets[line]=supportUsed;
-            supportUsed+=supportRows[line].Max(g=>g[0].planeswalker?cardWidth*1.3f:height)+8;
+            supportUsed+=supportRows[line].Max(g=>worldTable==null&&g[0].planeswalker?cardWidth*1.3f:height)+8;
         }
         for(int i=0;i<groups.Count;i++)
         {
@@ -250,44 +262,73 @@ public sealed partial class ForgeBattlefieldController
             }
             float offset=col-((support?columns:n)-1)*.5f;
             float fan=offset/Mathf.Max(1,(n-1)*.5f);
-            var position=new Vector2(x+offset*step,y+(hand?-fan*fan*28:(support?supportOffsets[line]*(own?1:-1):line*(own?-1:1)*(height+10))));
+            var position=new Vector2(x+offset*step,y+(hand?-fan*fan*28:(support?supportOffsets[line]*(own?1:-1):line*(own?-1:1)*rowPitch)));
             if(support)position.x=x-sideWidth*.5f+cardWidth*.5f+supportRows[line].Take(col).Sum(g=>cardWidth+StackOverhang(g)+12)+StackOverhang(groups[i]);
             var member=groups[i][0];string groupKey=row+":"+ArenaPresentationGroupKey(member);
-            if(!hand && member.attacking)position.y+=own?36:-36;
-            float memberHeight=!hand && member.planeswalker?cardWidth*1.3f:height;
+            if(!hand && worldTable==null && member.attacking)position.y+=own?36:-36;
+            float memberHeight=!hand && worldTable==null && member.planeswalker?cardWidth*1.3f:height;
             float memberWidth=!hand&&member.room?Mathf.Min(sideWidth-16,cardWidth*1.7f):cardWidth;
-            bool compactToken=!hand && member.token && !member.faceDown && !member.creature && !member.planeswalker && !member.battle && !member.land && !member.room
+            bool compactToken=worldTable==null && !hand && member.token && !member.faceDown && !member.creature && !member.planeswalker && !member.battle && !member.land && !member.room
                 && ((member.currentType??"").Contains("Artifact") || (member.currentType??"").Contains("Enchantment"));
             if(compactToken){memberWidth=cardWidth*.74f;memberHeight=cardWidth*.65f;}
             if(!hand)position.y+=(own?1:-1)*(memberHeight-height)*.5f;
             DrawArenaCard(parent,member,groups[i].Length,row+":"+member.id,groupKey,position,new Vector2(memberWidth,memberHeight),hand,hand?-fan*Mathf.Min(14,(n-1)*1.5f):member.tapped?(own?-12:12):0,i);
         }
+        if(worldTable!=null&&!hand&&!support)for(int line=0;line<rows;line++) {
+            var items=groups.Skip(line*columns).Take(columns)
+                .Select(group=>arenaCards[row+":"+group[0].id]).ToArray();
+            if(items.Length<2)continue;
+            var bounds=items.Select(item=>FieldFootprint(item,own)).ToArray();
+            float[] gaps=Enumerable.Range(0,items.Length-1)
+                .Select(i=>groups[line*columns+i][0].room||groups[line*columns+i+1][0].room?8f:WorldVisibleGap(cardWidth)).ToArray();
+            float total=bounds.Sum(b=>b.width)+gaps.Sum();
+            float left=lands
+                ?items[0].restingPosition.x+bounds[0].xMin
+                :(items[0].restingPosition.x+bounds[0].xMin
+                    +items[items.Length-1].restingPosition.x+bounds[bounds.Length-1].xMax-total)*.5f;
+            for(int i=0;i<items.Length;i++) {
+                var item=items[i];
+                var position=item.restingPosition;
+                position.x=left-bounds[i].xMin;
+                item.restingPosition=position;
+                item.pointer.SetLayout(position,item.restingRotation,item.face,false,line*columns+i);
+                left+=bounds[i].width+(i<gaps.Length?gaps[i]:0);
+            }
+        }
         if(!hand&&!support) {
             float left=36-tableWidth*.5f+32,inset=InformationLaneInset(parent,own,left);
             if(inset>0) {
                 var items=groups.Select(group=>arenaCards[row+":"+group[0].id]).ToArray();
-                float first=items.Min(item=>item.restingPosition.x+DenseFieldViewport.LayoutFootprint(item.root,item.restingRotation).xMin);
+                float first=items.Min(item=>item.restingPosition.x+FieldFootprint(item,own).xMin);
                 // Ordinary rows do not need the overflow lane's 32-unit arrow gutter.
                 float shift=Mathf.Max(0,left+inset-32-first);
                 for(int i=0;i<items.Length;i++) {
                     var item=items[i];item.restingPosition+=Vector2.right*shift;
-                    var current=item.root.anchoredPosition;current.x=item.restingPosition.x;item.root.anchoredPosition=current;
                     item.pointer.SetLayout(item.restingPosition,item.restingRotation,item.face,false,i);
                 }
             }
         }
     }
+    private Rect FieldFootprint(ArenaCard item,bool own)
+    {
+        float rotation=worldTable!=null ? (own?-12f:12f) : item.restingRotation;
+        return DenseFieldViewport.LayoutFootprint(item.root,rotation);
+    }
+
     private void DrawArenaCard(RectTransform parent,ForgeCardView card,int count,string key,string groupKey,Vector2 position,Vector2 size,bool hand,float rotation,int order)
     {
+        // Player effects are HUD status objects with their own masks, clocks
+        // and dungeon progress. They are not physical battlefield cards.
+        bool worldCard=worldTable!=null&&!groupKey.StartsWith("markers:",StringComparison.Ordinal);
         retainedCards.Add(key);
         if(!arenaCards.TryGetValue(key,out var item) && !(IsRedesignLayout && RestoreRedesignCard(key,out item)))
         {
-            item=new ArenaCard();item.root=Panel(parent,"Card_"+card.id,position,size,Color.clear);
+            item=new ArenaCard();item.root=worldCard?Rect(parent,"Card_"+card.id,position,size):Panel(parent,"Card_"+card.id,position,size,Color.clear);
             item.face=Rect(item.root,"Visual",Vector2.zero,size);
             item.button=item.root.gameObject.AddComponent<Button>();item.button.transition=Selectable.Transition.None;
             item.pointer=item.root.gameObject.AddComponent<ForgeBattlefieldCardPointer>();arenaCards.Add(key,item);
         }
-        if(item.root.parent!=parent)item.root.SetParent(parent,false);
+        if(item.root.parent!=parent)item.root.SetParent(parent,worldCard&&!hand);
         item.card=card;
         item.restingPosition=position;item.restingRotation=rotation;
         bool denseParent=parent.parent!=null&&parent.parent.name.StartsWith("Dense_",StringComparison.Ordinal);
@@ -300,17 +341,45 @@ public sealed partial class ForgeBattlefieldController
         bool actionable=canAct && (option>=0 && !view.request.options[option].disabled || !hand && (AttackCardCandidate(card.id)||BlockCandidate(card.id))) && !submitted;
         var visibility=item.root.GetComponent<CanvasGroup>();
         if(visibility==null)visibility=item.root.gameObject.AddComponent<CanvasGroup>();
-        visibility.alpha=hand && card.zone is "Graveyard" or "Exile" or "Command" && !actionable?.65f:1f;
+        visibility.alpha=1;
         visibility.blocksRaycasts=true;
         bool paymentUncertain=option>=0 && view.request.options[option].requiresPaymentCheck;
         bool selected=option>=0 && (view.request.options[option].selected || view.request.options[option].label.StartsWith("[已选回牌库底]") || IsStagedHandChoice(view.request.options[option].id));
+        bool dimSource=!worldCard && !IsRedesignLayout && hand && parent==ownHand && card.zone is ("Graveyard" or "Exile" or "Command")
+            && !selected && (!actionable || paymentUncertain);
+        const float dimBrightness=.56f;
         bool attackSelected=IsDeclaringAttack && selectedAttackers.Contains(card.id) || IsBlockingChoice && selectedBlocker==card.id;
-        bool playableHand=hand && actionable && !paymentUncertain && view.request.kind=="InputPassPriority";
+        bool playableHand=hand && actionable && !paymentUncertain && !selected && !card.faceDown
+            && view.awaitingInput && view.request.seat==seat && !viewingBattlefield && !GameSettingsPanel.IsOpen
+            && service?.IsSpectator!=true && (parent==ownHand || card.zone=="Hand" && DirectHandSelection);
         bool own=key.StartsWith("Your",StringComparison.Ordinal);
-        string appearance=ArenaGroupKey(card)+"/"+size+"/"+count+"/"+actionable+"/"+selected+"/"+paymentUncertain+"/"+playableHand+"/"+attackSelected+"/land:"+(IsRedesignLand(card,hand)?RedesignLandColors(card):-1)
-            +"/exiled:"+string.Join(",",card.temporaryExileIds??Array.Empty<int>())+"/band:"+string.Join(",",card.attackingBandIds??Array.Empty<int>())
+        var actionHint=worldCard?WorldActionHint(card,hand,selected||attackSelected,playableHand):BattlefieldWorldActionHint.None;
+        int exileCount=hand?0:card.temporaryExileIds?.Length??0;
+        var firstExiled=exileCount>0?TemporaryExiledCard(card.temporaryExileIds[0]):null;
+        var secondExiled=exileCount>1?TemporaryExiledCard(card.temporaryExileIds[1]):null;
+        string appearance=ArenaGroupKey(card)+"/"+size+"/"+count+"/"+actionable+"/"+selected+"/"+paymentUncertain+"/"+playableHand+"/"+attackSelected+"/"+dimSource+"/land:"+(IsRedesignLand(card,hand)?RedesignLandColors(card):-1)
+            +"/band:"+string.Join(",",card.attackingBandIds??Array.Empty<int>())
             +"/"+card.qualificationKind+":"+card.qualificationCount+":"+card.qualificationRequired+":"+card.qualificationEarned+"/"+GamePreferences.Revision;
-        if(item.appearance!=appearance)
+        static string ExileFaceKey(ForgeCardView c)=>c?.faceDown==false
+            ?c.name+"/"+c.printingKey+"/"+c.currentArtPrintingKey+"/"+c.backFace+"/"+c.currentArtBackFace+"/"+BattlefieldWorldCard.FrameColorBits(c):"back";
+        if(exileCount>0)appearance+="/first-exile:"+ExileFaceKey(firstExiled);
+        if(exileCount>1)appearance+="/second-exile:"+ExileFaceKey(secondExiled);
+        if(worldCard)
+        {
+            appearance+="/world-cost:"+card.previewManaCost+"/"+card.secondaryPreviewManaCost+"/"+card.adventurePreviewManaCost+"/action:"+actionHint;
+            bool created=item.world==null;
+            if(created){
+                item.world=worldTable.Create(item.root,item.face,item.pointer);
+                if(!hand&&zonePoses.TryGetValue(card.id,out var prior)&&prior.zone=="Battlefield"&&prior.size!=Vector2.zero)
+                    item.world.StartFieldTransition(surface.TransformPoint(prior.position),prior.card.tapped);
+            }
+            item.world.SetLayoutOrder(order);
+            bool inCombat=attackSelected || card.attacking || card.blockedAttackerIds?.Length>0;
+            item.world.SetCombatAdvance(IsRedesignLayout && !hand && inCombat ? (own ? 1 : -1) : 0);
+            if(created||item.appearance!=appearance)BindWorldCard(item,card,count,hand,order,selected||attackSelected,actionable&&!paymentUncertain,actionHint,ExilePreview(firstExiled,secondExiled,exileCount));
+            item.appearance=appearance;item.faceDown=card.faceDown;
+        }
+        else if(item.appearance!=appearance)
         {
             bool revealed=item.appearance!=null && item.faceDown && !card.faceDown;
             RectTransform oldFace=null;
@@ -319,7 +388,7 @@ public sealed partial class ForgeBattlefieldController
             item.appearance=appearance;Clear(item.face);
             Color accent=selected || attackSelected?Gold:card.attacking?new Color(1,.36f,.14f):card.blocking?Blue:actionable && !paymentUncertain?new Color(.3f,.85f,1):new Color(.38f,.38f,.36f);
             if(HasTemporaryTokenFrame(card)&&!selected&&!attackSelected&&!actionable&&!card.attacking&&!card.blocking)accent=new Color(.86f,.9f,.95f);
-            if(selected || attackSelected || playableHand || hand && DirectHandSelection && actionable)
+            if(selected || attackSelected || playableHand)
             {
                 var glow=Rect(item.face,selected||attackSelected?"SelectedGlow":"PlayableGlow",Vector2.zero,size).gameObject.AddComponent<ForgePlayableGlow>();
                 glow.selected=selected||attackSelected;
@@ -440,7 +509,7 @@ public sealed partial class ForgeBattlefieldController
                     group.fontStyle=FontStyle.Bold;group.verticalOverflow=VerticalWrapMode.Overflow;
                 }
             }
-            if(!hand)PresentTemporaryExile(item.face,card,size);
+            if(exileCount>0)PresentTemporaryExile(item.face,ExilePreview(firstExiled,secondExiled,exileCount),size);
             if(count>1)
             {
                 float countWidth=Mathf.Max(42,24+count.ToString().Length*13);
@@ -456,6 +525,7 @@ public sealed partial class ForgeBattlefieldController
                 badge.sizeDelta=new Vector2(countWidth,countHeight+2);
             }
             if(selected && view.request.kind=="InputLondonMulligan")Label(item.face,"Selected",TapPaymentText("回牌库底","Return to bottom","一番下に戻す"),new Vector2(0,size.y*.35f),new Vector2(size.x,26),18,Gold);
+            if(dimSource)Panel(item.face,"UnavailableShade",Vector2.zero,size,new Color(0,0,0,1-dimBrightness));
             foreach(var graphic in item.face.GetComponentsInChildren<Graphic>())graphic.raycastTarget=false;
             item.button.targetGraphic=item.root.GetComponent<Image>();
             if(revealed)StartCoroutine(AnimateFaceUp(oldFace,border));
@@ -469,23 +539,41 @@ public sealed partial class ForgeBattlefieldController
         item.representedCount=count;
         item.button.interactable=true;item.button.onClick.RemoveAllListeners();
         Action choose=()=> {
+            if(IsFourPlayerScene&&(UsesTargetWindow||IsCardPickerRequest||FourCombatDecision)){
+                if(viewingBattlefield&&!hand&&card.zone=="Battlefield"){
+                    if(!GamePreferences.HoverCardDetails)sidebarCollapsed=false;
+                    item.pointer.InspectOnClick();
+                }
+                return;
+            }
             if(!hand && view?.request?.kind=="InputBlock"){ClickBlockCard(card.id,captured);return;}
             if(!hand && view?.request?.kind=="InputAttack"){ClickAttackCard(card.id,captured);return;}
             // A grouped permanent is a visual summary. Expand before choosing
             // an exact member, including lands; a new native request collapses it.
             if(count>1) {expandedGroups.Add(groupKey);groupExpandedFrame=Time.frameCount;PresentIntegrated(connectionText.text);}
             else if(actionable)Choose(option,captured);
+            else if(!hand && card.zone=="Battlefield"){
+                if(!GamePreferences.HoverCardDetails)sidebarCollapsed=false;
+                item.pointer.InspectOnClick();
+            }
         };
         bool dragToPlay=hand&&view?.request?.kind=="InputPassPriority";
         item.button.onClick.AddListener(()=> {
-            if (IsRedesignLayout && hand && item.root.GetComponent<BattlefieldRedesignHandInput>()?.ConsumeRevealClick() == true) return;
+            bool revealed=IsRedesignLayout && hand && item.root.GetComponent<BattlefieldRedesignHandInput>()?.ConsumeRevealClick()==true;
+            if(hand && !card.faceDown){
+                if(!GamePreferences.HoverCardDetails)sidebarCollapsed=false;
+                InspectIntegrated(card);
+            }
+            if(revealed)return;
             if(!dragToPlay)choose();
         });
         item.pointer.Configure(()=> {
             if(hand){
                 bool dual=!card.faceDown&&catalog.TryGetValue(card.printingKey??"",out var d)
                     &&d.features?.Any(f=>f!=null&&f.faceIndex==1)==true&&d.forgeSplitType is "Modal" or "Transform" or "Meld";
-                if(dual)InspectIntegrated(card);else {Node("InspectPanel").gameObject.SetActive(false);inspectedCardId=0;}
+                bool puzzleCard=service?.CurrentPuzzle!=null && !card.faceDown && !string.IsNullOrEmpty(card.printingKey);
+                if(dual||puzzleCard)InspectIntegrated(card);
+                else {Node("InspectPanel").gameObject.SetActive(false);inspectedCardId=0;}
             }
             else InspectIntegrated(card);
         },LeaveInspectCard,choose,hand && actionable && view?.request?.kind=="InputPassPriority");
@@ -570,7 +658,7 @@ public sealed partial class ForgeBattlefieldController
         var attributes=AttributeStateLabels(card);
         if(attributes.Length>0) {
             float offset=(card.detained?20:0)+((card.exertedBySeats?.Length??0)>0?20:0);
-            string text=(card.hasSicknessState&&card.summoningSick?"Zzz":attributes[0])+(attributes.Length>1?" +"+(attributes.Length-1):"");
+            string text=(card.hasSicknessState&&card.summoningSick?SicknessBadge:attributes[0])+(attributes.Length>1?" +"+(attributes.Length-1):"");
             float width=Mathf.Max(34,size.x-2);
             var badge=Panel(face,"AttributeState",new Vector2(0,size.y*.5f-10-offset),new Vector2(width,18),new Color(.08f,.12f,.15f,.95f));
             badge.GetComponent<Image>().raycastTarget=false;
@@ -691,10 +779,10 @@ public sealed partial class ForgeBattlefieldController
             var caption=Label(locked,"Locked","未解锁",Vector2.zero,new Vector2(size.x*.5f-4,20),Mathf.Clamp(Mathf.RoundToInt(size.x*.065f),9,14),Paper);caption.raycastTarget=false;
         }
     }
-    private static void PresentCompactBattlefieldFace(RectTransform parent,Sprite sprite,Vector2 size,bool tapped)
+    private static void PresentCompactBattlefieldFace(RectTransform parent,Sprite sprite,Vector2 size,bool tapped,Color? underlayFrame=null)
     {
         parent.GetComponent<Image>().sprite=null;
-        parent.GetComponent<Image>().color=Ink;
+        parent.GetComponent<Image>().color=underlayFrame??Ink;
         parent.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(136,120,7);
         parent.gameObject.AddComponent<Mask>().showMaskGraphic=true;
         var r=sprite.rect;
@@ -702,8 +790,9 @@ public sealed partial class ForgeBattlefieldController
         // Match the cropped strip's pixel aspect ratio; a fixed height stretched
         // letters and mana symbols vertically on compact battlefield cards.
         float titleHeight=titleWidth*(r.height*.052f)/(r.width*.87f);
-        float footer=Mathf.Min(13,size.y*.11f);
-        var art=Rect(parent,"Illustration",new Vector2(0,(footer-titleHeight)*.5f),new Vector2(size.x-8,size.y-titleHeight-footer-4)).gameObject.AddComponent<RawImage>();
+        float footer=underlayFrame.HasValue?0:Mathf.Min(13,size.y*.11f);
+        float horizontalInset=underlayFrame.HasValue?4:8;
+        var art=Rect(parent,"Illustration",new Vector2(0,(footer-titleHeight)*.5f),new Vector2(size.x-horizontalInset,size.y-titleHeight-footer-4)).gameObject.AddComponent<RawImage>();
         art.texture=sprite.texture;art.color=tapped?new Color(.65f,.68f,.72f):Color.white;
         // Preserve the illustration's proportions and its inset frame.
         CardArtCrop.Illustration(art,sprite);

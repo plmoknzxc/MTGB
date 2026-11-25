@@ -56,7 +56,6 @@ public static class ChoicePresentationDeltaValidation
         GamePreferences.SetLanguage("zh-CN");float until=Time.realtimeSinceStartup+30;
         while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;
         Check(GamePreferences.Ready&&GamePreferences.Language=="zh-CN","Chinese resources ready");
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))notice.enabled=false;
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("ValidationBattlefield").AddComponent<ForgeBattlefieldController>();
         bool enabled=ui.enabled;ui.enabled=false;float scale=GamePreferences.TextScale;
         var before=Native("tuck-top",v=>v.request.kind=="InputConfirm");

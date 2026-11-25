@@ -1,0 +1,186 @@
+[
+  {
+    "key": "priority",
+    "title": "普通优先权",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/priority.json",
+    "source": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/native-full-seat.json",
+    "sha256": "34107e7de30ac8db04ead32ba3ed933296ea35ffeb6705b2c0e138ac1010d9ef",
+    "category": "dock"
+  },
+  {
+    "key": "undo",
+    "title": "优先权与撤回",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/undo.json",
+    "source": "Explicit display adapter: same native contract used by ArenaPresentationValidation.ValidateMenuAndUndo",
+    "category": "dock",
+    "adapter": true
+  },
+  {
+    "key": "payment",
+    "title": "支付／取消",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/payment.json",
+    "source": ".tools/payment-dock-1005/native/tax-auto-payment.json",
+    "sha256": "aa1b8ddb1cadeaac604b9819345cc811dd72d51f05433c484277fad30531ff70",
+    "category": "dock"
+  },
+  {
+    "key": "hand",
+    "title": "手牌确认／取消",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/hand.json",
+    "source": ".tools/resolution-ui-1005/native/growth-yes-select-1.json",
+    "sha256": "cf51f2b2abbf5934abc7ac813909d0528ed68fdf811b3f16b7636382f7fc8ce6",
+    "category": "dock"
+  },
+  {
+    "key": "number",
+    "title": "X 数值",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/number.json",
+    "source": ".tools/resolution-ui-1005/native/wrath-two-number-3.json",
+    "sha256": "45132e03f6f57346a70a300f8d31f6b272f9475fa2bea8e1a47e2d0f8ea5c101",
+    "category": "dock"
+  },
+  {
+    "key": "energy",
+    "title": "能量数量",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/energy.json",
+    "source": ".tools/resolution-ui-1005/native/wrath-two-select-0.json",
+    "sha256": "0fa12efc9802dedf846953c1ece7c7c607ede3a52afefbb20d4e54266ddd9173",
+    "category": "dock"
+  },
+  {
+    "key": "attack",
+    "title": "宣告攻击",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/attack.json",
+    "source": "Tools/Validation/Reports/AttackDefenders/initial.json",
+    "sha256": "dadc7840ea8f6f632bc1a01ba3830bc34c5f63a35d93e0ead26839ad12247dae",
+    "category": "dock"
+  },
+  {
+    "key": "block",
+    "title": "宣告阻挡",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/block.json",
+    "source": "Tools/Validation/Reports/AdvancedInteractions/damage-blocking.json",
+    "sha256": "c4771d0da451d3460f3a8c3b866d93d3a0660af6e5be4c130740708541f8dc87",
+    "category": "dock"
+  },
+  {
+    "key": "search",
+    "title": "搜寻选牌",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/search.json",
+    "source": "Tools/Validation/Reports/CardSelection/fetch-live-choice.json",
+    "sha256": "675d46255c57f409f37185332ce173b29f0942c545ba27e30ecc5c8a902969d8",
+    "category": "modal"
+  },
+  {
+    "key": "graveyard",
+    "title": "坟场选牌",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/graveyard.json",
+    "source": "Tools/Validation/Reports/CardSelection/graveyard-choice.json",
+    "sha256": "6b576552cd3224ed81c786dc60767f0394bc207f239f50adfc224f3a9bc515bc",
+    "category": "modal"
+  },
+  {
+    "key": "discard",
+    "title": "对手手牌／弃牌",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/discard.json",
+    "source": "Tools/Validation/Reports/Thoughtseize/choice.json",
+    "sha256": "1a1764c842433278c0f508bc9d78ce93a3816c4ae754440da1c54f2fd772d99e",
+    "category": "modal"
+  },
+  {
+    "key": "order-cards",
+    "title": "卡牌排序",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/order-cards.json",
+    "source": ".tools/resolution-ui-1005/native/brain-two-order-2.json",
+    "sha256": "db3d97c202fa51b29ec4d67d0db74241e309c75e8f2ff2ac6dc010a0d8af4f0f",
+    "category": "modal"
+  },
+  {
+    "key": "order-triggers",
+    "title": "异能排序",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/order-triggers.json",
+    "source": "Tools/Validation/Reports/StackInteractions/triggers-order.json",
+    "sha256": "9a6c7ad05fa5f8633e795b9015e88933215b4f4950f4c08e9c590aef870b7a15",
+    "category": "modal"
+  },
+  {
+    "key": "modes",
+    "title": "模式／加码",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/modes.json",
+    "source": "Tools/Validation/Reports/ModeChoices/spree-targets-choices.json",
+    "sha256": "c57fdca26cbbbc907c6ea83c3905dc3d35d62294af5f4a6e957cfb292e9d2532",
+    "category": "modal"
+  },
+  {
+    "key": "piles",
+    "title": "分堆",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/piles.json",
+    "source": "Tools/Validation/Reports/Piles/fof-left-choice.json",
+    "sha256": "9938e4bf53816ec83b079f302ed36068b058327ba15a241c61acf744825efd41",
+    "category": "modal"
+  },
+  {
+    "key": "entry",
+    "title": "进场选项",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/entry.json",
+    "source": ".tools/payment-dock-1005/native/shock-yes-confirm.json",
+    "sha256": "8e2aff260240e252280641683256a52a74ac5c6b89b62f21a74add5c8dcffe0a",
+    "category": "popup"
+  },
+  {
+    "key": "mana-choice",
+    "title": "产费选项",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/mana-choice.json",
+    "source": "Tools/Validation/Reports/Interactions/mana-choice.json",
+    "sha256": "3bf9e237074768bc825834db25941efe869d38171fd5dde9bf9a846cddf59063",
+    "category": "popup"
+  },
+  {
+    "key": "target",
+    "title": "目标确认／重选",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/target.json",
+    "source": ".tools/target-branches-1006/native/shock-reset-cancel/1791248425680667000/target-151-1.json",
+    "sha256": "758ee46d332baa5668a052984e34e3b51848b7a1d73bf287eb674ce938b30021",
+    "category": "target"
+  },
+  {
+    "key": "mulligan",
+    "title": "保留／调度",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/mulligan.json",
+    "source": ".tools/target-branches-1006/native/shock-reset-cancel/1791248425680667000/step-0.json",
+    "sha256": "fb18bec05bc451ebd48914a17d5227532a3d82463e84c92d08df07ec7d32bb1e",
+    "category": "modal"
+  },
+  {
+    "key": "phyrexian",
+    "title": "法术力与生命支付",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/phyrexian.json",
+    "source": ".tools/mana-variants-1006/native/phyrexian-life/1791236086041064300/life-payment-1.json",
+    "sha256": "22c9be51b08256bc64533ab4abc49c9cd1fbd7021ec407cf649fbf0b9e295d86",
+    "category": "dock"
+  },
+  {
+    "key": "allocation",
+    "title": "数量／伤害分配",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/allocation.json",
+    "source": ".tools/quantity-allocation-1006/native/counter-division/1791253971245392900/allocation-confirm.json",
+    "sha256": "cfa388ed58e9156958080882d5a3307dbbcf9cc08b029b3292276f30c8e8458d",
+    "category": "modal"
+  },
+  {
+    "key": "number-large",
+    "title": "大数值（格式样本）",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/number-large.json",
+    "source": "Explicit numeric layout adapter derived from number",
+    "category": "dock",
+    "adapter": true
+  },
+  {
+    "key": "manual-number",
+    "title": "数值＋取消（布局样本）",
+    "path": "D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/action-ui-inputs/manual-number.json",
+    "source": "Explicit numeric layout adapter derived from number",
+    "category": "dock",
+    "adapter": true
+  }
+]

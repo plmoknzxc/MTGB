@@ -1,1 +1,3 @@
-PASS: visible toolbar and hit areas; Save As clone; automatic MTGB paste creates saved deck; errors do not replace deck; export format selection and clipboard; original files unchanged; test decks cleaned.
+FAIL System.Exception: Same-name Save As overwrote the original
+  at DeckExchangeValidation+<Validate>d__10.MoveNext () [0x0046d] in D:\project\MTGB\Assets\Scripts\Editor\DeckExchangeValidation.cs:145 
+  at DeckExchangeValidation+<Guard>d__8.MoveNext () [0x000b2] in D:\project\MTGB\Assets\Scripts\Editor\DeckExchangeValidation.cs:109 

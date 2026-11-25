@@ -45,7 +45,6 @@ public static class BeholdExilePresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui,string[] languages){
         string original=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try{
             float initialized=Time.realtimeSinceStartup+20;
             while(!GamePreferences.Ready&&Time.realtimeSinceStartup<initialized)yield return null;
@@ -91,7 +90,7 @@ public static class BeholdExilePresentationValidation
             }
             ui.Present(null,2,false,null,null,"");yield return Frame();var same=Read("same-zone");ui.Present(same,2,true,i=>{},null,"");yield return Frame();
             Check(GameObject.Find("CardSelection")!=null&&!GameObject.Find("CardSelection").GetComponentsInChildren<Text>().Any(t=>t.name=="OriginZone"),"Unchanged same-zone revealed hand keeps existing layout");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(original);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(original);}
     }
 }
 #endif

@@ -11,6 +11,11 @@ public static class PlayerCounterIcons
     private static bool loaded;
     public static bool TryLoad(string kind,out Sprite sprite)
     {
+        // Editor play-mode transitions may destroy generated sprites while
+        // keeping static fields alive (domain reload disabled).
+        bool stale=false;
+        if(loaded)foreach(var icon in icons.Values)if(icon==null){stale=true;break;}
+        if(stale){icons.Clear();loaded=false;}
         if(!loaded) {
             loaded=true;
             var texture=Resources.Load<Texture2D>("UI/PlayerCounters/ForgeIcons");

@@ -61,7 +61,7 @@ public sealed partial class MainMenuController
         backdrop.targetGraphic = dismiss;
         backdrop.transition = Selectable.Transition.None;
         backdrop.onClick.AddListener(CloseDeckExchange);
-        ObsidianArenaTheme.EnsureOutline(panel.GetComponent<Image>(), ObsidianArenaTheme.Line, new Vector2(1, -1));
+        StyleDeckDialog(panel);
 
         Text Label(Transform parent, string name, string value, int size, Color color, TextAnchor align)
         {
@@ -75,15 +75,14 @@ public sealed partial class MainMenuController
         }
         var heading = panel.Find("Heading").GetComponent<Text>();
         heading.GetComponent<PreferenceText>().Literal = true;
-        Place(heading.rectTransform, new Vector2(0, 338), new Vector2(1000, 52));
         var summary = Label(panel, "DeckSummary", currentDeck.name + "  ·  " + DeckCompanion.Text("主牌 ", "Main ", "メイン ") + stats.total,
-            19, MenuVisualTheme.Muted, TextAnchor.MiddleLeft);
+            21, MenuVisualTheme.MistBlue, TextAnchor.MiddleLeft);
         Place(summary.rectTransform, new Vector2(0, 278), new Vector2(1000, 52));
 
         var chartTitle = Label(panel, "CurveHeading", DeckCompanion.Text("非地牌 · ", "Nonland cards · ", "土地以外 · ") + stats.nonlands,
-            21, MenuVisualTheme.Paper, TextAnchor.MiddleLeft);
+            21, MenuVisualTheme.ArchivePaper, TextAnchor.MiddleLeft);
         Place(chartTitle.rectTransform, new Vector2(-176, 212), new Vector2(648, 44));
-        var typeTitle = Label(panel, "TypeHeading", DeckCompanion.Text("类型 / 张数", "Type / Count", "タイプ / 枚数"), 21, MenuVisualTheme.Paper, TextAnchor.MiddleLeft);
+        var typeTitle = Label(panel, "TypeHeading", DeckCompanion.Text("类型 / 张数", "Type / Count", "タイプ / 枚数"), 21, MenuVisualTheme.ArchivePaper, TextAnchor.MiddleLeft);
         Place(typeTitle.rectTransform, new Vector2(362, 212), new Vector2(276, 44));
 
         // Always show 0 through 7, retaining empty integer bins. Very large DIY
@@ -91,7 +90,7 @@ public sealed partial class MainMenuController
         var bins = new SortedSet<float>(stats.costs.Keys);
         float max = stats.costs.Count == 0 ? 7 : Mathf.Max(7, stats.costs.Keys.Max());
         for (int i = 0; i <= Mathf.Min(20, Mathf.CeilToInt(Mathf.Min(max, 20))); i++) bins.Add(i);
-        var scrollImage = AddImage(panel, "CurveScroll", MenuVisualTheme.Ink);
+        var scrollImage = AddImage(panel, "CurveScroll", MenuVisualTheme.Recess);
         Place(scrollImage.rectTransform, new Vector2(-176, -8), new Vector2(648, 376));
         scrollImage.raycastTarget = true;
         var scroll = scrollImage.gameObject.AddComponent<ScrollRect>();
@@ -109,7 +108,14 @@ public sealed partial class MainMenuController
         scroll.scrollSensitivity = 40;
         int peak = Mathf.Max(1, stats.costs.Count == 0 ? 0 : stats.costs.Values.Max());
         float slot = contentWidth / bins.Count;
-        var baseline = AddImage(content, "Baseline", MenuVisualTheme.Muted);
+        for(int i=1;i<=4;i++)
+        {
+            var line=AddImage(content,"Guide_"+i,new Color32(126,149,156,56));
+            line.rectTransform.anchorMin=line.rectTransform.anchorMax=line.rectTransform.pivot=Vector2.zero;
+            line.rectTransform.anchoredPosition=new Vector2(0,37+254f*i/4);
+            line.rectTransform.sizeDelta=new Vector2(contentWidth,1);
+        }
+        var baseline = AddImage(content, "Baseline", MenuVisualTheme.Etching);
         baseline.rectTransform.anchorMin = baseline.rectTransform.anchorMax = baseline.rectTransform.pivot = Vector2.zero;
         baseline.rectTransform.anchoredPosition = new Vector2(0, 36);
         baseline.rectTransform.sizeDelta = new Vector2(contentWidth, 1);
@@ -120,14 +126,20 @@ public sealed partial class MainMenuController
             float height = 254f * count / peak;
             float x = (index++ + .5f) * slot;
             string cost = value.ToString("0.##", CultureInfo.InvariantCulture);
-            var bar = AddImage(content, "CostBar_" + cost, MenuVisualTheme.Accent);
+            var bar = AddImage(content, "CostBar_" + cost, count==peak ? MenuVisualTheme.SideAccent : MenuVisualTheme.MainAccent);
             bar.rectTransform.anchorMin = bar.rectTransform.anchorMax = new Vector2(0, 0);
             bar.rectTransform.pivot = new Vector2(.5f, 0);
             bar.rectTransform.anchoredPosition = new Vector2(x, 37);
             bar.rectTransform.sizeDelta = new Vector2(Mathf.Min(46, slot - 18), height);
+            if (count>0)
+            {
+                var cap=AddImage(bar.transform,"Cap",MenuVisualTheme.Silver);
+                cap.rectTransform.anchorMin=Vector2.up; cap.rectTransform.anchorMax=Vector2.one;
+                cap.rectTransform.offsetMin=new Vector2(0,-Mathf.Min(3,height)); cap.rectTransform.offsetMax=Vector2.zero;
+            }
             var countText = Label(content, "CostCount_" + cost, count.ToString(), 18,
-                count > 0 ? MenuVisualTheme.Paper : MenuVisualTheme.Muted, TextAnchor.MiddleCenter);
-            var costText = Label(content, "CostLabel_" + cost, cost, 18, MenuVisualTheme.Paper, TextAnchor.MiddleCenter);
+                count > 0 ? MenuVisualTheme.ArchivePaper : MenuVisualTheme.Stone, TextAnchor.MiddleCenter);
+            var costText = Label(content, "CostLabel_" + cost, cost, 18, MenuVisualTheme.ArchivePaper, TextAnchor.MiddleCenter);
             foreach (var text in new[] { countText, costText })
             {
                 text.rectTransform.anchorMin = text.rectTransform.anchorMax = new Vector2(0, 0);
@@ -137,10 +149,10 @@ public sealed partial class MainMenuController
             countText.rectTransform.anchoredPosition = new Vector2(x, 40 + height);
             costText.rectTransform.anchoredPosition = new Vector2(x, -3);
         }
-        var track = AddImage(scroll.transform, "Scrollbar", MenuVisualTheme.Raised);
+        var track = AddImage(scroll.transform, "Scrollbar", Color.clear);
         Stretch(track.rectTransform, 8, 8, 360, 6);
-        var handle = AddImage(track.transform, "Handle", MenuVisualTheme.Muted);
-        Stretch(handle.rectTransform, 0, 0, 0, 0);
+        var handle = AddImage(track.transform, "Handle", MenuVisualTheme.MistBlue);
+        Stretch(handle.rectTransform, 0, 0, 3, 3);
         track.raycastTarget = handle.raycastTarget = true;
         var scrollbar = track.gameObject.AddComponent<Scrollbar>();
         scrollbar.handleRect = handle.rectTransform; scrollbar.targetGraphic = handle;
@@ -149,18 +161,21 @@ public sealed partial class MainMenuController
         scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
         var axis = Label(panel, "CurveAxis", DeckCompanion.Text("法术力值", "Mana value", "マナ総量") +
             (contentWidth > 632 ? DeckCompanion.Text(" · 拖动或滚轮查看", " · Drag or scroll to view", " · ドラッグ・スクロールで表示") : ""),
-            17, MenuVisualTheme.Muted, TextAnchor.MiddleCenter);
+            17, MenuVisualTheme.Stone, TextAnchor.MiddleCenter);
         Place(axis.rectTransform, new Vector2(-176, -226), new Vector2(648, 44));
 
         int row = 0;
         void TypeRow(string key, string name, int count)
         {
             float y = 158 - row++ * 36;
-            var background = AddImage(panel, "TypeRow_" + key, row % 2 == 1 ? MenuVisualTheme.Raised : MenuVisualTheme.Panel);
+            var background = AddImage(panel, "TypeRow_" + key, Color.clear);
             Place(background.rectTransform, new Vector2(362, y), new Vector2(276, 36));
-            var label = Label(background.transform, "Type", name, GamePreferences.Language == "ja-JP" ? 16 : 18, MenuVisualTheme.Paper, TextAnchor.MiddleLeft);
+            var rule=AddImage(background.transform,"Rule",MenuVisualTheme.Etching);
+            rule.rectTransform.anchorMin=Vector2.zero;rule.rectTransform.anchorMax=Vector2.right;
+            rule.rectTransform.offsetMin=Vector2.zero;rule.rectTransform.offsetMax=Vector2.up;
+            var label = Label(background.transform, "Type", name, GamePreferences.Language == "ja-JP" ? 16 : 18, MenuVisualTheme.ArchivePaper, TextAnchor.MiddleLeft);
             Stretch(label.rectTransform, 12, 44, 0, 0);
-            var number = Label(background.transform, "Count", count.ToString(), 18, MenuVisualTheme.Accent, TextAnchor.MiddleRight);
+            var number = Label(background.transform, "Count", count.ToString(), 19, MenuVisualTheme.MistBlue, TextAnchor.MiddleRight);
             Stretch(number.rectTransform, 234, 12, 0, 0);
         }
         foreach (var type in CurveCardTypes) TypeRow(type.ToString(), CurveTypeName(type), stats.types[type]);
@@ -169,23 +184,23 @@ public sealed partial class MainMenuController
         string noteText = DeckCompanion.Text("仅统计主牌，按实际张数计入；多类型牌分别计入对应类型。地不计入费用曲线。",
             "Main deck copies only. Multi-type cards count in each matching type. Lands are excluded from the curve.",
             "メインの枚数で集計。複数タイプは各タイプに計上します。土地はカーブに含みません。");
-        var note = Label(panel, "StatisticsNote", noteText, 16, MenuVisualTheme.Muted, TextAnchor.MiddleLeft);
+        var note = Label(panel, "StatisticsNote", noteText, 16, MenuVisualTheme.Stone, TextAnchor.MiddleLeft);
         Place(note.rectTransform, new Vector2(0, -280), new Vector2(1000, 64));
-        var close = CreateDialogButton(panel, "CloseCurve", DeckCompanion.Text("关闭", "Close", "閉じる"), new Vector2(0, -344), MenuVisualTheme.Raised, CloseDeckExchange);
+        var close = CreateDialogButton(panel, "CloseCurve", DeckCompanion.Text("关闭", "Close", "閉じる"), new Vector2(429, -344), MenuVisualTheme.Raised, CloseDeckExchange);
         var closeText = close.GetComponentInChildren<Text>();
         closeText.GetComponent<PreferenceText>().Literal = true;
         closeText.text = DeckCompanion.Text("关闭", "Close", "閉じる");
         closeText.GetComponent<PreferenceText>().Apply();
-        FrameDialogButton(close);
-        StartCoroutine(FitDeckCurveDialog(panel, overlay));
+        ((RectTransform)close.transform).sizeDelta=new Vector2(144,44);
+        MenuVisualTheme.StyleDeckTool(close,true);
     }
 
-    private IEnumerator FitDeckCurveDialog(RectTransform panel, GameObject overlay)
+    private IEnumerator FitDeckDialog(RectTransform panel, GameObject overlay)
     {
         while (panel != null && exchangeDialog == overlay)
         {
             var available = ((RectTransform)overlay.transform).rect.size - new Vector2(48, 48);
-            float scale = Mathf.Clamp01(Mathf.Min(available.x / 1100, available.y / 780));
+            float scale = Mathf.Clamp01(Mathf.Min(available.x / panel.rect.width, available.y / panel.rect.height));
             var size = Vector3.one * scale;
             if (panel.localScale != size) panel.localScale = size;
             if (UnityEngine.InputSystem.Keyboard.current?.escapeKey.wasPressedThisFrame == true)

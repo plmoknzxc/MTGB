@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.IO.Compression;
 using System.Text;
 
@@ -23,17 +24,17 @@ public sealed class MatchReplayRecorder : IDisposable
         directory=temporaryDirectory??Path.Combine(Path.GetTempPath(),"MTGB","ReplayFrames");
     }
 
-    public void Record(double seconds,ForgeSeatView first,ForgeSeatView second)
+    public void Record(double seconds,params ForgeSeatView[] views)
     {
-        if(finished||Failure!=null||first?.players==null||second?.players==null)return;
+        if(finished||Failure!=null||views==null||views.Any(v=>v?.players==null))return;
         try
         {
             if(firstTime<0)firstTime=seconds;
             double time=Math.Max(0,seconds-firstTime);
             if(double.IsNaN(time)||double.IsInfinity(time)||time<duration||time>86400
-                ||first.seat!=1||second.seat!=2||frameCount>=100000)
+                ||views.Length is not (2 or 4)||views.Where((v,i)=>v.seat!=i+1).Any()||frameCount>=100000)
                 throw new InvalidDataException("录像时间轴无效。");
-            string json=ServerSnapshotJson.SerializeReplayFrame(new ReplayFrame{time=time,views=new[]{first,second}});
+            string json=ServerSnapshotJson.SerializeReplayFrame(new ReplayFrame{time=time,views=views});
             jsonBytes+=Encoding.UTF8.GetByteCount(json)+1;
             if(jsonBytes>256L*1024*1024)throw new InvalidDataException("录像内容过大。");
             if(frames==null)

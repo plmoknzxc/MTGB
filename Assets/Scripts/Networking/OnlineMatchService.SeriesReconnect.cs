@@ -2,7 +2,7 @@ using System.Linq;
 
 public sealed partial class OnlineMatchService
 {
-    public bool IsCompeting => (LocalSeat == 1 || LocalSeat == 2)
+    public bool IsCompeting => (LocalSeat > 0 && !IsSpectator)
         && (IsInMatch || LobbyState?.series?.betweenGames == true && !LobbyState.series.finished);
     public bool CanLeaveRoom => !IsCompeting;
 

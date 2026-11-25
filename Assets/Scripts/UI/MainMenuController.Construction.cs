@@ -37,6 +37,7 @@ public sealed partial class MainMenuController
         bool searchChanged=newDeck||commanderSource!=commanderSearchSource||companionSource!=companionSearchSource;
         if(newDeck||commanderSource!=commanderSearchSource)advancedSearch.CommanderFit=commanderSource!=null;
         if(newDeck||companionSource!=companionSearchSource)advancedSearch.CompanionFit=companionSource!=null;
+        if(searchChanged)RefreshAdvancedSearchButton();
         constructionSearchDeck=currentDeck;commanderSearchSource=commanderSource;companionSearchSource=companionSource;
         foreach(var entry in (currentDeck?.cards??new List<DeckEntry>()).Concat(constructionHasCommander?currentDeck.commanders:Enumerable.Empty<DeckEntry>())){
             if(entry==null||entry.count<=0)continue;
@@ -44,6 +45,7 @@ public sealed partial class MainMenuController
             constructionNames.TryGetValue(card.cardName,out int count);constructionNames[card.cardName]=count+entry.count;
             var rule=DeckEditorRules.Get(card);if(rule!=null&&!rule.land)constructionTypes&=rule.types;
         }
+        RefreshBracketCounts();
         string key=constructionHasCommander+":"+constructionIdentity+":"+string.Join("|",commanders.Select(c=>c?.cardName))+":"+constructionCompanion+":"+(constructionCompanion==7?constructionTypes:-1)+(constructionCompanion==5?":"+string.Join("|",constructionNames.Keys.OrderBy(n=>n,StringComparer.Ordinal)):"");
         if(key==constructionFilterKey&&!searchChanged)return;
         constructionFilterKey=key;cachedCollectionQuery=null;collectionPage=0;
@@ -78,9 +80,10 @@ public sealed partial class MainMenuController
     string ConstructionCardProblem(MainMenuCardTile tile)
     {
         if(!MatchesCommanderIdentity(tile.Card,false))return DeckCompanion.Text("标识色","Identity","固有色");
-        if(tile.Zone==MainMenuCardTileZone.Sideboard||tile.Zone==MainMenuCardTileZone.Collection)return null;
+        if(tile.Zone==MainMenuCardTileZone.Sideboard)return null;
         if(!MatchesCompanionCard(tile.Card))return DeckCompanion.Text("行侣","Companion","相棒");
-        if(constructionCompanion==5&&DeckEditorRules.Get(tile.Card)?.land==false&&constructionNames.TryGetValue(tile.Card.cardName,out int count)&&count>1)return DeckCompanion.Text("行侣","Companion","相棒");
+        if(constructionCompanion==5&&DeckEditorRules.Get(tile.Card)?.land==false&&constructionNames.TryGetValue(tile.Card.cardName,out int count)
+            &&count>=(tile.Zone==MainMenuCardTileZone.Collection?1:2))return DeckCompanion.Text("行侣","Companion","相棒");
         return null;
     }
 }

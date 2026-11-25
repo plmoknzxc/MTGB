@@ -9,18 +9,19 @@ using UnityEngine.UI;
 /// <summary>Unity presentation of the authenticated seat view. Only server-offered options can be submitted.</summary>
 public sealed partial class ForgeBattlefieldController : MonoBehaviour
 {
-    public const string SceneName = BattlefieldRedesignLayout.SceneName;
+    public const string SceneName = "IntegratedBattlefield";
     private static bool loading;
     private OnlineMatchService service;
     private Canvas canvas;
     private RectTransform surface, cardsRoot, actionRoot, previewRoot;
+    private RectTransform puzzleEditorTools;
     private Text phaseText, promptText, connectionText;
     private ForgeSeatView view;
     private int seat;
     private bool canAct, submitted;
     private long requestId;
     private string renderedKey;
-    private (string hash, OnlineClientInteractionState interaction, bool connected, int preferences,
+    private (string hash, long decision, OnlineClientInteractionState interaction, bool connected, int preferences,
         int bestOf, int ownWins, int otherWins, string players) renderedInputs;
     private string boardPreferenceKey;
     private bool? componentFaceMode;
@@ -34,20 +35,22 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private static readonly Color Gold = new Color(.95f, .68f, .29f);
     private static readonly Color Blue = new Color(.32f, .72f, .92f);
 
-    public static void Open(OnlineMatchService owner)
+    public static void Open(OnlineMatchService owner, bool reload=false)
     {
         if (Application.isBatchMode && !owner.IsClient) return;
         if (loading) return;
-        owner.StartCoroutine(Load(owner));
+        owner.StartCoroutine(Load(owner,reload));
     }
 
-    private static IEnumerator Load(OnlineMatchService owner)
+    private static IEnumerator Load(OnlineMatchService owner,bool reload)
     {
         loading = true;
         try
         {
-            if (!IsBattlefieldSceneActive || OnlineLobbyPanel.HasBattlefieldLobby)
-                yield return SceneManager.LoadSceneAsync(SceneName);
+            int playerCount=owner?.ForgeView?.forge?.players?.Length??0;
+            string targetScene=(playerCount>2 || owner?.ForgeView?.forge?.formatId=="commander" || owner?.LobbyState?.config?.PlayerCapacity==4)?FourPlayerSceneName:SceneName;
+            if (reload || SceneManager.GetActiveScene().name!=targetScene || OnlineLobbyPanel.HasBattlefieldLobby)
+                yield return SceneManager.LoadSceneAsync(targetScene);
             if (owner == null || (!owner.IsInMatch && !owner.IsPreparingMatch && owner.EndReview == null))
             {
                 if(IsBattlefieldSceneActive) SceneManager.LoadScene("Main");
@@ -78,6 +81,11 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
 
     private void Update()
     {
+        AdvanceCombatFeedback();
+        if(service!=null && puzzleTimelineRevision!=service.PuzzleTimelineRevision){
+            puzzleTimelineRevision=service.PuzzleTimelineRevision;
+            ResetRestartPresentation();view=null;renderedKey=null;
+        }
         UpdateRedesignLayout();
         UpdateChoiceCancelShortcut();
         UpdateTargeting();
@@ -85,17 +93,29 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         UpdateExpandedGroupDismissal();
         UpdateNoticeExpiry();
         UpdateManaPoolPulse();
+        UpdateWorldActionHintVisibility();
         bool faceMode=GamePreferences.UseComponentCardFaces;
         if(componentFaceMode.HasValue&&componentFaceMode.Value!=faceMode&&integrated&&view!=null)
             PresentIntegrated(connectionText.text);
         componentFaceMode=faceMode;
         if (service == null) return; // The editor acceptance harness supplies real local-session views separately.
+        if (service.EditingCurrentPuzzle.HasValue || PuzzleSceneTransition.Pending(PuzzleSceneTransition.Destination.Menu)) return;
+        if (service.CurrentPuzzle != null) UpdatePuzzleEditorTools();
         if(service.IsPreparingMatch){PresentMatchPreparation();return;}
         if(WaitingForOpeningView){CloseMatchPreparation();return;}
         if(matchPreparationRoot!=null){Destroy(matchPreparationRoot.gameObject);matchPreparationRoot=null;preparationKey=null;
             if(!service.IsInMatch){SceneManager.LoadScene("Main");return;}}
-        if (service.EndReview != null) { PresentEndReview(); return; }
-        if (endCanvas != null) { Destroy(endCanvas.gameObject); if (leaveReviewButton != null) Destroy(leaveReviewButton.gameObject); CloseReviewCards(); reviewedMatch = null; }
+        if (service.EndReview != null) {
+            PresentEndReview();
+            PuzzleSceneTransition.Ready(PuzzleSceneTransition.Destination.Battlefield);
+            return;
+        }
+        if (endCanvas != null) {
+            Destroy(endCanvas.gameObject);
+            if (leaveReviewButton != null) Destroy(leaveReviewButton.gameObject);
+            CloseReviewCards();reviewedMatch=null;
+            if(integrated)Node("CornerCluster/ControlRow").gameObject.SetActive(true);
+        }
         if (!service.IsInMatch)
         {
             // Host disposal and delivery of its own result can occur on adjacent network ticks.
@@ -105,16 +125,134 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             return;
         }
         var series=service.LobbyState?.series;
-        var inputs=(service.ForgeView?.viewHash ?? "", service.InteractionState, service.IsConnected,
+        var currentView=service.ForgeView;
+        long decision=currentView?.forge?.awaitingInput==true ? currentView.forge.request.requestId : 0;
+        var inputs=(currentView?.viewHash ?? "", decision, service.InteractionState, service.IsConnected,
             GamePreferences.Revision, series?.bestOf??0, series?.player1Wins??0, series?.player2Wins??0, PlayerNamesKey());
         if (renderedKey!=null && inputs==renderedInputs) {UpdateAutomaticControl();return;}
         renderedInputs=inputs;
         renderedKey=string.Empty; // null remains the explicit interaction invalidation marker.
-        Present(service.ForgeView?.forge, service.IsSpectator ? 1 : service.LocalSeat,
-            !service.IsSpectator && service.IsConnected && service.InteractionState == OnlineClientInteractionState.Idle,
+        Present(currentView?.forge, service.IsSpectator ? 1 : service.LocalSeat,
+            !service.IsSpectator && service.IsConnected && service.InteractionState == OnlineClientInteractionState.Idle && !service.PuzzleUndoPending,
             service.SubmitForgeOption, service.IsSpectator ? (Action)null : service.Concede,
             service.IsReconnecting ? "连接中断 · 正在恢复对局" : service.HasPendingAction ? "正在提交操作…" : (service.IsSpectator ? "观战 · " : "房间 ") + service.CurrentRoomId, service.SubmitForgeOrder);
+        PuzzleSceneTransition.Ready(PuzzleSceneTransition.Destination.Battlefield);
         UpdateAutomaticControl();
+    }
+
+    private int puzzleTimelineRevision;
+    private Button puzzleUndoButton;
+    private Text puzzleUndoCaption;
+    private RectTransform puzzleQuestion;
+    private TMPro.TextMeshProUGUI puzzleQuestionText;
+    private int puzzleLayoutRevision;
+    private float PuzzleToolbarHeight => puzzleEditorTools!=null && puzzleEditorTools.gameObject.activeSelf ? puzzleEditorTools.rect.height+12 : 0;
+    private void UpdatePuzzleEditorTools()
+    {
+        bool visible = surface != null && service.IsInMatch && !GameSettingsPanel.IsOpen;
+        if (puzzleEditorTools == null && visible)
+        {
+            var puzzle=service.CurrentPuzzle;
+            puzzleEditorTools = ReplayWidgets.Panel(surface, "PuzzleEditorTools", 0, 0, 454, 160, MenuVisualTheme.ArchivePanel);
+            puzzleEditorTools.anchorMin = puzzleEditorTools.anchorMax = puzzleEditorTools.pivot = Vector2.one;
+            puzzleEditorTools.anchoredPosition = new Vector2(-28, -12);
+            MenuVisualTheme.SectionTop(puzzleEditorTools,MenuVisualTheme.MainAccent);
+            var header=ReplayWidgets.Rect(puzzleEditorTools,"QuestionHeader",0,0,454,88);
+            header.anchorMin=header.anchorMax=header.pivot=Vector2.up;
+            var title=ReplayWidgets.Label(header,puzzle.title,-66,15,284,37,24);
+            title.GetComponent<PreferenceText>().Literal=true;
+            title.resizeTextForBestFit=true;title.resizeTextMinSize=18;title.resizeTextMaxSize=25;
+            var goal=ReplayWidgets.Label(header,puzzle.Objective,0,-25,418,33,20);
+            goal.color=MenuVisualTheme.Silver;
+            Button read=null;
+            read=PuzzleAction(header,"看题目",145,15,130,()=>{
+                if(puzzleQuestion==null)CreatePuzzleReading(puzzle,title.preferredWidth>title.rectTransform.rect.width);
+                else puzzleQuestion.gameObject.SetActive(!puzzleQuestion.gameObject.activeSelf);
+                read.GetComponentInChildren<Text>().text=puzzleQuestion.gameObject.activeSelf?"收起题目":"看题目";
+                LayoutPuzzleQuestion();
+            });
+            ((RectTransform)read.transform).sizeDelta=new Vector2(130,42);
+            var toggleText=read.GetComponentInChildren<Text>();
+            toggleText.rectTransform.sizeDelta=new Vector2(110,38);
+            toggleText.horizontalOverflow=HorizontalWrapMode.Wrap;
+            PreferenceText.SetSize(toggleText,17);
+            var actions=ReplayWidgets.Rect(puzzleEditorTools,"PuzzleActions",0,0,454,68);
+            actions.anchorMin=actions.anchorMax=actions.pivot=new Vector2(.5f,0);
+            puzzleUndoButton=PuzzleAction(actions,"上一步",-147,1,132,()=>{
+                if(!TryUndoPresentedAction())service.UndoPuzzleStep();
+            });
+            DisabledButtonVisual.Bind(puzzleUndoButton);
+            puzzleUndoCaption=puzzleUndoButton.GetComponentInChildren<Text>();
+            PuzzleAction(actions,"重新开始",0,1,132,()=>service.LeavePuzzle(true));
+            PuzzleAction(actions,"修改本关",147,1,132,()=>service.OpenPuzzleEditorFromMatch(true));
+            SetOverlayLayer(puzzleEditorTools, InspectLayerOffset + 2, true);
+        }
+        if (puzzleEditorTools != null && puzzleEditorTools.gameObject.activeSelf != visible)
+            puzzleEditorTools.gameObject.SetActive(visible);
+        if(visible){
+            bool waiting=service.PuzzleUndoPending;
+            puzzleUndoButton.interactable=!waiting && (PresentedManaUndoIndex()>=0 || service.CanUndoPuzzle);
+            puzzleUndoCaption.text=waiting?TapPaymentText("还原中…","Restoring…","復元中…"):TapPaymentText("上一步","Undo","一手戻す");
+            if(puzzleQuestion!=null && puzzleLayoutRevision!=GamePreferences.Revision)LayoutPuzzleQuestion();
+        }
+    }
+
+    private void CreatePuzzleReading(LocalPuzzle puzzle,bool showFullTitle)
+    {
+        string brief=puzzle.Brief;
+        string body=string.IsNullOrWhiteSpace(brief)?puzzle.Objective:brief.Trim();
+        if(showFullTitle)body=puzzle.title+"\n"+body;
+        puzzleQuestion=ReplayWidgets.Rect(puzzleEditorTools,"PuzzleQuestion",18,-95,418,100);
+        puzzleQuestion.anchorMin=puzzleQuestion.anchorMax=puzzleQuestion.pivot=Vector2.up;
+        var area=ReplayWidgets.Panel(puzzleQuestion,"QuestionScroll",0,0,0,0,Color.clear);
+        area.anchorMin=Vector2.zero;area.anchorMax=Vector2.one;
+        area.offsetMin=Vector2.zero;area.offsetMax=new Vector2(-12,0);
+        area.gameObject.AddComponent<RectMask2D>();
+        var scroll=area.gameObject.AddComponent<ScrollRect>();
+        scroll.viewport=area;scroll.horizontal=false;scroll.movementType=ScrollRect.MovementType.Clamped;
+        puzzleQuestionText=CardSymbolText.Create(area,"QuestionBody",20,MenuVisualTheme.ArchivePaper);
+        puzzleQuestionText.GetComponent<PreferenceText>().Literal=true;
+        puzzleQuestionText.text=body;
+        puzzleQuestionText.alignment=TMPro.TextAlignmentOptions.TopLeft;
+        puzzleQuestionText.textWrappingMode=TMPro.TextWrappingModes.Normal;
+        var rect=puzzleQuestionText.rectTransform;
+        rect.anchorMin=Vector2.up;rect.anchorMax=Vector2.one;rect.pivot=Vector2.up;
+        rect.sizeDelta=Vector2.zero;rect.anchoredPosition=Vector2.zero;
+        scroll.content=rect;
+        var bar=(RectTransform)BuildSidebarScrollbar("QuestionScrollbar",area,puzzleQuestion).transform;
+        bar.anchorMin=Vector2.right;bar.anchorMax=Vector2.one;
+        bar.offsetMin=new Vector2(-8,0);bar.offsetMax=Vector2.zero;
+    }
+
+    private void LayoutPuzzleQuestion()
+    {
+        puzzleLayoutRevision=GamePreferences.Revision;
+        float extra=0;
+        if(puzzleQuestion.gameObject.activeSelf){
+            puzzleQuestionText.GetComponent<PreferenceText>().Apply();
+            float height=Mathf.Ceil(puzzleQuestionText.GetPreferredValues(puzzleQuestionText.text,406,Mathf.Infinity).y)+2;
+            puzzleQuestionText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);
+            float visible=Mathf.Min(height,Mathf.Clamp(surface.rect.height-800,74,186));
+            puzzleQuestion.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,visible);
+            puzzleQuestion.GetComponentInChildren<ScrollRect>().verticalNormalizedPosition=1;
+            extra=visible+18;
+        }
+        puzzleEditorTools.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,160+extra);
+        RefreshPuzzleStackLayout();
+    }
+
+    private void RefreshPuzzleStackLayout()
+    {
+        if(stackContent==null || view==null || !IsRedesignLayout)return;
+        var entries=DisplayedStackEntries();
+        LayoutRedesignStack(entries,Math.Max(entries.Length,view.stack?.Length??0));
+    }
+
+    private static Button PuzzleAction(Transform parent,string label,float x,float y,float width,Action action)
+    {
+        var button=ReplayWidgets.Button(parent,label,x,y,width,action);
+        MenuVisualTheme.StyleDeckTool(button);
+        return button;
     }
 
     public bool TrySubmitPresentedOption(int index, long expectedRequest)
@@ -159,12 +297,14 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
             Node("InspectPanel").gameObject.SetActive(false);
         }
         if(state==null){nameRequest=0;nameLanguageRevision=-1;pileRequest=0;selectedPileIndex=-1;ResetNotices();}
-        if(seat!=localSeat)ResetNotices();
+        if(seat!=localSeat&&!replayNoticesPrepared)ResetNotices();
         ObserveStackReadWindow(state,localSeat);
         view = state; seat = localSeat; canAct = enabledInput; submit = onChoice; submitOrder = onOrder; concede = onConcede;
         boardPreferenceKey=preferenceKey;
         requestId = state?.awaitingInput == true ? state.request.requestId : 0;
         submitted = false;
+        if (viewingBattlefield && state?.inputPending != true && battlefieldViewContext != StackTargetContext)
+            RestoreBattlefieldWindows();
         ObserveNextPhasePause(state,localSeat);
         if(joiningSpectator){
             var existing=state.notices??Array.Empty<ForgeNotice>();
@@ -179,6 +319,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if(pickerUpdate){SetText("PriorityPill/Text","等待你完成选择");PresentCardSelection();PresentTargetChoiceActions();RefreshBattlefieldViewControls();PresentRedesignLayout();return;}
         if (integrated) { PresentIntegrated(status);RefreshBattlefieldViewControls(); return; }
         Clear(cardsRoot); Clear(actionRoot); Clear(previewRoot);
+        if(statusMarkersRoot!=null)Clear(statusMarkersRoot);
         connectionText.text = status;
         phaseText.text = state == null || state.turn == 0 ? "准备对局 · 起手选择" : $"第 {state.turn} 回合  ·  {GamePreferences.T(state.turnSeat == seat ? "你的回合" : "对手回合")}  /  {GamePreferences.T(Phase(state.phase))}";
         promptText.text = state == null ? "等待对局状态" : Prompt(state, localSeat);
@@ -197,11 +338,24 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         overlay.overrideSorting = true;
         overlay.sortingLayerID = canvas.sortingLayerID;
         overlay.sortingOrder = canvas.sortingOrder + offset;
+        // World hand cards write depth in the HUD camera, with lifted cards at z=-9.
+        // Keep foreground canvases on the camera side of that paper as well as in sorting order.
+        if(worldTable!=null && canvas.renderMode==RenderMode.ScreenSpaceCamera && offset>=DragArrowLayerOffset){
+            // During scene activation Unity can still expose the canvas scale of
+            // the previous camera. Store depth in the HUD's final canvas units.
+            var hudSpace=canvas.transform;
+            var position=hudSpace.InverseTransformPoint(root.position);
+            position.z=(-14f-(offset-DragArrowLayerOffset)*.08f)/Mathf.Max(.01f,canvas.scaleFactor);
+            root.position=hudSpace.TransformPoint(position);
+        }
         if (interactive && root.GetComponent<GraphicRaycaster>() == null)
             root.gameObject.AddComponent<GraphicRaycaster>();
     }
 
-    private const int NoticeLayerOffset = 10, DragArrowLayerOffset = 20, InspectLayerOffset = 30, DecisionLayerOffset = 35;
+    // Combat links cross battlefield faces. Both players' trays, cards and headers cover them.
+    private const int CombatLinkLayer = 2, HandTrayLayer = 3, HandFaceLayer = 4, HandTabLayer = 5;
+    private const int NoticeLayerOffset = 10, HandHoverLayerOffset = 29, DragArrowLayerOffset = 36,
+        ReadingLayerOffset = 37, DecisionLayerOffset = 42, InspectLayerOffset = 48;
 
     private void Build()
     {
@@ -412,13 +566,15 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     public void Choose(int index, long expectedRequest)
         => ChooseCore(index,expectedRequest,null);
 
-    private void ChooseCore(int index,long expectedRequest,int[] attackGroup)
+    private void ChooseCore(int index,long expectedRequest,int[] combatGroup)
     {
-        if(viewingBattlefield || !canAct || submitted || index<0 || requestId!=expectedRequest || view?.awaitingInput!=true || index>=view.request.options.Length) return;
+        if(GameSettingsPanel.IsOpen || viewingBattlefield || !canAct || submitted || index<0 || requestId!=expectedRequest || view?.awaitingInput!=true || index>=view.request.options.Length) return;
         if(view.request.options[index].disabled)return;
-        if(attackGroup!=null && (submitOrder==null || view.request.kind!="InputAttack" || !view.request.options[index].id.StartsWith("attack:")))return;
+        if(HasAttackIssue && view.request.options[index].id=="ok")return;
+        if(combatGroup!=null && (submitOrder==null || !OnlineMatchSession.LegalCombatGroup(view.request,index,combatGroup)))return;
         if(service!=null && (service.ForgeView?.forge?.request?.requestId!=expectedRequest || !service.CanSubmitRuleAction)) return;
         if(TryStageHandChoice(index,expectedRequest))return;
+        ShowSubmittedContact(view.request.options[index]);
         RememberCastingOrigin(view.request.options[index]);
         RememberLandChoice(view.request.options[index]);
         submitted=true;
@@ -433,7 +589,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if (integrated) DisableIntegratedChoices();
         foreach(var button in cardsRoot.GetComponentsInChildren<Button>()) button.interactable=false;
         foreach(var button in actionRoot.GetComponentsInChildren<Button>()) button.interactable=false;
-        if(attackGroup!=null)submitOrder(index,attackGroup);else submit?.Invoke(index);
+        if(combatGroup!=null)submitOrder(index,combatGroup);else submit?.Invoke(index);
     }
 
     private void ConfirmConcede()
@@ -465,11 +621,21 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if(req.kind=="InputPassPriority")return v.stackCount>0?"你有优先权 · 可以响应\n双方连续让过后，结算堆叠顶项":"你有优先权\n可以行动，或让过优先权";
         return RequestTitle(req.kind);
     }
+    private int PresentedManaUndoIndex()
+    {
+        if(GameSettingsPanel.IsOpen || viewingBattlefield || submitted || !canAct || view?.awaitingInput!=true ||
+            view.request?.kind!="InputPassPriority" || view.request.seat!=seat)return -1;
+        if(service!=null && (!service.CanSubmitRuleAction || service.ForgeView?.forge?.request?.requestId!=requestId))return -1;
+        if(service?.CurrentPuzzle!=null)return service.PuzzleManaUndoIndex;
+        int index=OptionIndex("cancel");
+        return index>=0 && !view.request.options[index].disabled &&
+            view.request.options[index].label?.StartsWith("Undo",StringComparison.OrdinalIgnoreCase)==true ? index : -1;
+    }
+
     public bool TryUndoPresentedAction()
     {
-        if(GameSettingsPanel.IsOpen || submitted || !canAct || view?.awaitingInput!=true || view.request.kind!="InputPassPriority" || view.request.seat!=seat)return false;
-        int index=OptionIndex("cancel");
-        if(index<0 || !view.request.options[index].label.StartsWith("Undo",StringComparison.OrdinalIgnoreCase))return false;
+        int index=PresentedManaUndoIndex();
+        if(index<0)return false;
         Choose(index,requestId);
         return submitted;
     }
@@ -533,7 +699,7 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
         if(kind=="dialog" && view.request.message=="one: Choose a shared type")
             return GamePreferences.NativeText(option.label);
         if(kind=="dialog" && (view.request.message=="one: Choose a basic land type" || view.request.message=="one: Choose a land type"))
-            return SearchInsertionMenu.Label(option.label);
+            return CardTypeText.Term(option.label);
         if(kind=="dialog" && (view.request.message=="one: Select type of counters to remove"||view.request.message=="one: Select type counters to remove"||view.request.message=="one: Select type of counters to add or remove"))
             return CounterChoiceName(option.label);
         if(kind=="dialog" && option.label=="[FINISH TARGETING]" &&
@@ -632,5 +798,13 @@ public sealed partial class ForgeBattlefieldController : MonoBehaviour
     private static void TopLabel(RectTransform parent,string name,string text,float y,float width,float height)
     {var t=Label(parent,name,text,Vector2.zero,new Vector2(width,height),18,Paper);t.rectTransform.anchorMin=t.rectTransform.anchorMax=new Vector2(.5f,1);t.rectTransform.pivot=new Vector2(.5f,1);t.rectTransform.anchoredPosition=new Vector2(0,-y);}
     private static void Clear(Transform root)
-    {if(root==null)return;foreach(var child in root.Cast<Transform>().ToArray()){child.gameObject.SetActive(false);child.SetParent(null,false);Destroy(child.gameObject);}}
+    {
+        if(root==null)return;
+        foreach(var child in root.Cast<Transform>().ToArray()){
+            child.gameObject.SetActive(false);
+            child.SetParent(null,false);
+            if(Application.isPlaying)Destroy(child.gameObject);
+            else DestroyImmediate(child.gameObject);
+        }
+    }
 }

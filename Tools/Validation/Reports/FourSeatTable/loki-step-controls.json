@@ -1,0 +1,695 @@
+{
+  "match": "a3ee710e898944f3ad93abd397285e4f",
+  "transport": "four local Windows clients over LAN UDP",
+  "cases": [
+    {
+      "label": "shared priority before simultaneous drags",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 3,
+          "phase": "MAIN1",
+          "voteWindow": 3,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 3,
+          "phase": "MAIN1",
+          "voteWindow": 3,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 3,
+          "phase": "MAIN1",
+          "voteWindow": 3,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 3,
+          "phase": "MAIN1",
+          "voteWindow": 3,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        }
+      ]
+    },
+    {
+      "label": "teammate may respond; first spell still pending",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": true,
+          "priorityHint": "清栈后 · four"
+        }
+      ]
+    },
+    {
+      "label": "both spells on stack",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": true,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        }
+      ]
+    },
+    {
+      "label": "pact resolved; thopter still pending",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": true,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · four"
+        }
+      ]
+    },
+    {
+      "label": "thopter resolved; stack empty",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 4,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 4,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 4,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 4,
+          "phase": "MAIN1",
+          "voteWindow": 4,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        }
+      ]
+    },
+    {
+      "label": "second hero opens a fresh stack",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": true,
+          "priorityHint": "清栈后 · one"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · one"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · one"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "清栈后 · one"
+        }
+      ]
+    },
+    {
+      "label": "unanswered spell resolved; next hero acts",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        }
+      ]
+    },
+    {
+      "label": "two heroes ready; third can still act",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 12,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 2 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 12,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 2 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 12,
+          "voters": 13,
+          "voteButton": "取消结束",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 2 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 12,
+          "voters": 13,
+          "voteButton": "取消结束",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 2 / 3"
+        }
+      ]
+    },
+    {
+      "label": "hero cancels; still same main phase",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 4,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 1 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 4,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 1 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 4,
+          "voters": 13,
+          "voteButton": "取消结束",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 1 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 4,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 1 / 3"
+        }
+      ]
+    },
+    {
+      "label": "all heroes confirmed; Loki gets priority",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 13,
+          "voters": 13,
+          "voteButton": "全员已确认",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 3 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 13,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": true,
+          "priorityHint": "英雄确认结束 3 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 13,
+          "voters": 13,
+          "voteButton": "全员已确认",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 3 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 5,
+          "votes": 13,
+          "voters": 13,
+          "voteButton": "全员已确认",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 3 / 3"
+        }
+      ]
+    },
+    {
+      "label": "Loki responds after unanimity",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "全员让过后结算栈顶"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": true,
+          "priorityHint": "全员让过后结算栈顶"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "全员让过后结算栈顶"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 2,
+          "phase": "MAIN1",
+          "voteWindow": 0,
+          "votes": 0,
+          "voters": 0,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "全员让过后结算栈顶"
+        }
+      ]
+    },
+    {
+      "label": "Loki response resolves; all heroes can act again",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 6,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 6,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 6,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "MAIN1",
+          "voteWindow": 6,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束主阶段",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        }
+      ]
+    },
+    {
+      "label": "Loki passes; combat begins with fresh votes",
+      "clients": [
+        {
+          "pid": 52920,
+          "local": 1,
+          "priority": 1,
+          "phase": "COMBAT_BEGIN",
+          "voteWindow": 7,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束当前步骤",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 26128,
+          "local": 2,
+          "priority": 1,
+          "phase": "COMBAT_BEGIN",
+          "voteWindow": 7,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 39448,
+          "local": 3,
+          "priority": 1,
+          "phase": "COMBAT_BEGIN",
+          "voteWindow": 7,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束当前步骤",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        },
+        {
+          "pid": 728,
+          "local": 4,
+          "priority": 1,
+          "phase": "COMBAT_BEGIN",
+          "voteWindow": 7,
+          "votes": 0,
+          "voters": 13,
+          "voteButton": "结束当前步骤",
+          "advanceVisible": false,
+          "priorityHint": "英雄确认结束 0 / 3"
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ public static class PaymentControlsValidation1014 {
  static void Capture(string n){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Out+"/"+n+".png",tex.EncodeToPNG());UnityEngine.Object.Destroy(tex);}
  static void RightClick(ForgeBattlefieldController ui){if(probeMouse==null)probeMouse=InputSystem.AddDevice<Mouse>();InputSystem.QueueStateEvent(probeMouse,new MouseState{position=new Vector2(15,15)}.WithButton(MouseButton.Right));InputSystem.Update();Call(ui,"UpdateChoiceCancelShortcut");InputSystem.QueueStateEvent(probeMouse,new MouseState{position=new Vector2(15,15)});InputSystem.Update();}
  static IEnumerator Exercise(){
-  while(!GamePreferences.Ready)yield return null;foreach(var n in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))n.enabled=false;
+  while(!GamePreferences.Ready)yield return null;
   var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("TargetChoiceActionsBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;ui.GetType().GetField("service",Hidden).SetValue(ui,null);
   var initial=Read(".tools/bolt-amber-flow-1014/bolt-02-select-target.json");int sent=-1;ui.Present(initial,1,true,i=>sent=i,null,"");yield return new WaitForSecondsRealtime(.65f);
   var dock=(RectTransform)Get(ui,"targetChoiceActions");var next=dock.Find("NextTargetChoice").GetComponent<Button>();var cancel=dock.Find("CancelTargetChoice").GetComponent<Button>();Check(dock.gameObject.activeInHierarchy&&!next.interactable&&cancel.interactable,"Unselected target has disabled Next and enabled Cancel");Check(next.GetComponentInChildren<Text>().text=="下一步"&&cancel.GetComponentInChildren<Text>().text=="取消","Common target dock labels Next and Cancel");Check(((RectTransform)next.transform).anchoredPosition.x<((RectTransform)cancel.transform).anchoredPosition.x,"Next left and Cancel right");
@@ -80,7 +80,6 @@ public static class PaymentControlsValidation1014 {
  public static void RunTail(){if(Running)return;checks.Clear();Running=true;new GameObject("PaymentControlsTailProbe").AddComponent<Host>().StartCoroutine(Guard(ExerciseTail()));}
  static IEnumerator ExerciseTail(){
   while(!GamePreferences.Ready)yield return null;
-  foreach(var n in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))n.enabled=false;
   var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("PaymentControlsTailBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;ui.GetType().GetField("service",Hidden).SetValue(ui,null);int sent=-1;
   var cost=Read(".tools/lan-replay-flow-1014/force-803.json");sent=-1;ui.Present(cost,1,true,i=>sent=i,null,"");yield return null;
   var handDock=(RectTransform)Get(ui,"handChoiceActions");var handNext=handDock.Find("ConfirmHandChoice").GetComponent<Button>();var handCancel=handDock.GetComponentsInChildren<Button>().First(b=>b!=handNext);

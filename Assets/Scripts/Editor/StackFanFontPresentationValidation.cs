@@ -45,12 +45,11 @@ public static class StackFanFontPresentationValidation
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
         string language=GamePreferences.Language;float scale=GamePreferences.TextScale;
-        var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
         var it=Validate(ui);
         try{
             while(true){object next;try{if(!it.MoveNext())break;next=it.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt","PASS: first construction, next frame, forced preference scan, 0.6s periodic scan, two View/Return cycles per request; three languages x three scales x fifteen archived choice consumers; legacy/TMP size and font identity retained. Fixed label factory applies requested size immediately. Compact 1/3/7/12 fan preserves full 240x335 cards, ordering, bounded angles, and all card corners inside viewport. Extended counts are display adapters, not new engine effect tests.");
-        }finally{File.WriteAllLines(Output+"/font-observations.tsv",observations);running=false;ui.RestoreBattlefieldWindows();GamePreferences.SetScale(scale);GamePreferences.SetLanguage(language);if(notice!=null)notice.enabled=enabled;}
+        }finally{File.WriteAllLines(Output+"/font-observations.tsv",observations);running=false;ui.RestoreBattlefieldWindows();GamePreferences.SetScale(scale);GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {

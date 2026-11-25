@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,12 +8,14 @@ public sealed partial class ForgeBattlefieldController
 {
     private RectTransform targetOrigin;
     private ForgeTargetArrow targetArrow;
+    private readonly List<ForgeTargetArrow> additionalTargetArrows = new();
     private Sprite castingSprite;
     private ForgeCardView castingPreparedSpell, castingSource;
     private long targetingRequest, castingRequest;
     private int castingCardId=-1;
     private CanvasGroup castingHandGroup, castingDestinationGroup;
     private RectTransform castingDestination;
+    private ZonePose castingHandPose;
     private bool returningCast;
     private const int PendingCastId=int.MinValue;
     private ForgeStackItem PendingCastEntry()
@@ -63,7 +65,16 @@ public sealed partial class ForgeBattlefieldController
         if(preparedSource!=null)source=preparedSource.preparedSpell.ToCard();
         // Lands resolve their mana actions in place; only a spell/ability needs a casting preview.
         if(source==null || source.land || source.zone!="Exile" && source.zone!="Graveyard" && preparedSource==null && !view.players.Any(p=>(p.hand??System.Array.Empty<ForgeCardView>()).Any(c=>c.id==source.id)))return;
+        var handSlot=IsRedesignLayout&&source.zone=="Hand"
+            ?arenaCards.Values.FirstOrDefault(c=>c.card?.id==source.id&&c.root!=null&&c.root.parent==ownHand):null;
+        ZonePose release=null;
+        if(handSlot!=null){
+            release=new ZonePose{card=source};
+            ForgeUiMotion.Pose(handSlot.face,surface,out release.position,out release.size,out release.angle);
+        }
         ResetCastingVisual();
+        castingHandPose=release;
+        animatedPendingHand=0;
         castingSource=source;
         if(IsPreparedSpell(source))castingPreparedSpell=source;
         if(IsSpecializedFace(source))TryBattlefieldArt(source,out castingSprite);
@@ -107,7 +118,7 @@ public sealed partial class ForgeBattlefieldController
     }
     private void PresentTargeting()
     {
-        if(HasStackTargetChoices){HideTargeting();return;}
+        if(UsesTargetWindow){HideTargeting();return;}
         if(HasCastingPrompt)
         {
             if(IsRedesignLayout){
@@ -159,7 +170,7 @@ public sealed partial class ForgeBattlefieldController
             targetArrow.transform.SetAsLastSibling();
             UpdateTargeting();return;
         }
-        if(targetArrow!=null)targetArrow.SetVisible(false);
+        HideTargetArrows();
         if(castingCardId<0){HideTargeting();return;}
         if(returningCast || castingDestination!=null)return;
         var stack=stackCards.Values.FirstOrDefault(c=>c.source?.id==castingCardId);
@@ -202,12 +213,17 @@ public sealed partial class ForgeBattlefieldController
         {
             var group=targetOrigin.GetComponent<CanvasGroup>();group.interactable=false;group.blocksRaycasts=false;
         }
-        if(targetArrow!=null)targetArrow.SetVisible(false);
+        HideTargetArrows();
     }
     private void HideTargeting()
     {
         if(targetOrigin!=null)targetOrigin.gameObject.SetActive(false);
+        HideTargetArrows();
+    }
+    private void HideTargetArrows()
+    {
         if(targetArrow!=null)targetArrow.SetVisible(false);
+        foreach(var arrow in additionalTargetArrows)arrow.SetVisible(false);
     }
     private void ResetCastingVisual()
     {
@@ -215,6 +231,7 @@ public sealed partial class ForgeBattlefieldController
         if(castingHandGroup!=null){castingHandGroup.alpha=1;castingHandGroup.blocksRaycasts=true;}
         if(castingDestinationGroup!=null){castingDestinationGroup.alpha=1;castingDestinationGroup.blocksRaycasts=true;}
         castingHandGroup=castingDestinationGroup=null;castingDestination=null;
+        castingHandPose=null;
         castingCardId=-1;castingSprite=null;castingPreparedSpell=castingSource=null;returningCast=false;
         HideTargeting();
         if(handNavigation!=null&&handFanSlots.Count>0)ApplyHandFanOffset(handNavigation.Offset,false);
@@ -222,59 +239,84 @@ public sealed partial class ForgeBattlefieldController
     private void UpdateTargeting()
     {
         UpdateAttackArrowAt(Input.mousePosition);
+        UpdateBlockArrow(Input.mousePosition);
         if(targetOrigin==null || !targetOrigin.gameObject.activeSelf&&!IsRedesignLayout)return;
         if(IsTargeting)UpdateTargetingAt(Input.mousePosition);
     }
     // Also used by pointer-driven scene validation; never submits a rule action.
     public void UpdateTargetingAt(Vector2 mouse)
     {
-        if(HasStackTargetChoices){if(targetArrow!=null)targetArrow.SetVisible(false);return;}
+        if(UsesTargetWindow || GameSettingsPanel.IsOpen){HideTargetArrows();return;}
         if(!IsTargeting || targetArrow==null)return;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,mouse,null,out var endpoint);
-        int candidate=TargetOptionAt(mouse);
-        bool pointingAtTarget=candidate>=0;
-        if(candidate<0)candidate=System.Array.FindIndex(view.request.options,o=>o.selected);
-        if(candidate>=0)
-        {
-            string id=view.request.options[candidate].id;
-            foreach(var card in arenaCards.Values)
-                if(id=="card:"+card.root.name.Substring(5))endpoint=surface.InverseTransformPoint(card.face.position);
-            foreach(var entry in stackCards.Values)
-                // A fan card's centre can be covered by another stack item.
-                // Keep a live pointer on the exposed part the player actually hit.
-                if(id=="stack:"+entry.entry?.id && !pointingAtTarget)endpoint=surface.InverseTransformPoint(entry.tile.TransformPoint(entry.tile.rect.center));
-            foreach(var player in view.players)
-                if(id=="player:"+player.targetId)endpoint=surface.InverseTransformPoint(Node(player.seat==seat?"PlayerPlate":"OpponentPlate").position);
-        }
+        bool onScreen=canvas.pixelRect.Contains(mouse);
         Vector2 origin=targetOrigin.anchoredPosition+new Vector2(-targetOrigin.rect.width*.4f,targetOrigin.rect.height*.2f);
         if(IsRedesignLayout&&stackCards.TryGetValue("id:"+PendingCastId,out var pending))origin=surface.InverseTransformPoint(pending.tile.TransformPoint(new Vector3(pending.tile.rect.xMin,pending.tile.rect.center.y,0)));
-        targetArrow.SetEndpoints(origin,endpoint,
-            candidate>=0 && view.request.options[candidate].selected?Gold:candidate>=0?new Color(.2f,.85f,1):new Color(.22f,.55f,.85f),candidate>=0,true);
+        int used=0;
+        var request=view.request;
+        bool hasSelection=request.selectedCount>0;
+        foreach(var option in request.options)
+        {
+            if(!option.selected)continue;
+            hasSelection=true;
+            var target=TargetEntity(option.id);
+            if(target!=null && target.gameObject.activeInHierarchy)
+                Draw(target,option.id,true);
+        }
+        if(onScreen && (!hasSelection || request.maxCount<=0 || request.selectedCount<request.maxCount))
+        {
+            int index=TargetOptionAt(mouse);
+            var hover=index>=0?request.options[index]:null;
+            if(hover!=null && !hover.disabled && !hover.selected)Draw(TargetEntity(hover.id),hover.id,false);
+            else if(!hasSelection)Draw(null,null,false);
+        }
+        if(used==0)targetArrow.SetVisible(false);
+        for(int i=Mathf.Max(0,used-1);i<additionalTargetArrows.Count;i++)additionalTargetArrows[i].SetVisible(false);
+
+        void Draw(RectTransform target,string id,bool locked)
+        {
+            if(used>additionalTargetArrows.Count)
+            {
+                var extra=NewAttackArrow("AdditionalTargetArrow_"+used);
+                SetOverlayLayer(extra.rectTransform,DragArrowLayerOffset);
+                additionalTargetArrows.Add(extra);
+            }
+            var arrow=used==0?targetArrow:additionalTargetArrows[used-1];
+            used++;
+            Vector2 end;
+            if(target==null)RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,mouse,canvas.worldCamera,out end);
+            else end=id.StartsWith("player:")?PlayerArrowEdge(target,origin):(Vector2)surface.InverseTransformPoint(target.TransformPoint(target.rect.center));
+            arrow.SetVisible(true);
+            arrow.SetEndpoints(origin,end,locked?Gold:target!=null?TargetInk:new Color(.22f,.55f,.85f),target!=null,true,target);
+        }
+    }
+
+    private Vector2 PlayerArrowEdge(RectTransform plate,Vector2 origin)
+    {
+        Vector2 toward=(Vector2)plate.InverseTransformPoint(surface.TransformPoint(origin))-plate.rect.center;
+        Vector2 half=plate.rect.size*.5f+Vector2.one*5;
+        float distance=Mathf.Max(Mathf.Abs(toward.x)/half.x,Mathf.Abs(toward.y)/half.y);
+        Vector2 edge=plate.rect.center+(distance>0?toward/distance:Vector2.right*half.x);
+        return surface.InverseTransformPoint(plate.TransformPoint(edge));
     }
     private int TargetOptionAt(Vector2 position)
     {
-        var system=EventSystem.current;if(system==null)return -1;
-        var hits=new List<RaycastResult>();
-        system.RaycastAll(new PointerEventData(system){position=position},hits);
-        if(hits.Count==0)return -1;
-        var button=hits[0].gameObject.GetComponentInParent<Button>();
-        if(button==null || !button.interactable)return -1;
+        var button=ChoiceButtonAt(position);if(button==null)return -1;
         if(button.name.StartsWith("StackListChoice_")&&int.TryParse(button.name.Substring("StackListChoice_".Length),out int choice))return choice;
         if(button.name.StartsWith("StackListTarget_"))return OptionIndex("stack:"+button.name.Substring("StackListTarget_".Length));
         if(button.name.StartsWith("StackCard_"))
         {
-            if(HasStackTargetChoices)return -1;
+            if(UsesTargetWindow)return -1;
             var entry=stackCards.Values.FirstOrDefault(c=>c.tile==button.transform);
             return entry?.entry==null?-1:OptionIndex("stack:"+entry.entry.id);
         }
         if(button.name.StartsWith("Card_"))return OptionIndex("card:"+button.name.Substring(5));
         foreach(var player in view.players)
-            if(button.name==(player.seat==seat?"PlayerPlate":"OpponentPlate"))return OptionIndex("player:"+player.targetId);
+            if(button.transform==AttackEntity("player",player.targetId))return OptionIndex("player:"+player.targetId);
         return -1;
     }
     public bool TryChooseTargetAt(Vector2 position,long expectedRequest)
     {
-        if(!IsTargeting || expectedRequest!=requestId)return false;
+        if(IsFourPlayerScene || !IsTargeting || expectedRequest!=requestId)return false;
         int option=TargetOptionAt(position);if(option<0)return false;
         return TrySubmitPresentedOption(option,expectedRequest);
     }
@@ -285,12 +327,12 @@ public sealed partial class ForgeBattlefieldController
     private ForgeTargetArrow attackArrow;
     private readonly List<ForgeTargetArrow> extraAttackArrows=new List<ForgeTargetArrow>();
     private RectTransform attackHint;
-    private readonly List<ForgeTargetArrow> assignedAttackArrows=new List<ForgeTargetArrow>();
-    private bool IsDeclaringAttack => integrated && canAct && !submitted && !GameSettingsPanel.IsOpen
+    private readonly List<CombatLink> assignedAttackArrows=new();
+    private bool IsDeclaringAttack => integrated && !IsFourPlayerScene && canAct && !submitted && !GameSettingsPanel.IsOpen
         && view?.awaitingInput==true && view.request.seat==seat && view.request.kind=="InputAttack";
     private bool HasDefaultDuelDefender => view?.players?.Length==2 && DefaultAttackDestination()>=0;
     private bool CanSelectAttacker(int id) => IsDeclaringAttack && view.request.options.Any(o=>
-        o.attackerId==id && (o.id.StartsWith("attack:") || o.id.StartsWith("attack-remove:")));
+        !o.disabled && o.attackerId==id && (o.id.StartsWith("attack:") || o.id.StartsWith("attack-remove:")));
     private int AttackOption(string kind,int id) => IsDeclaringAttack && selectedAttackers.Count>0
         && selectedAttackers.All(attacker=>view.request.options.Any(o=>o.id.StartsWith("attack:")
             && o.attackerId==attacker && o.defenderKind==kind && o.defenderId==id && !o.disabled))
@@ -312,14 +354,16 @@ public sealed partial class ForgeBattlefieldController
         if(kind=="player")
         {
             var player=view?.players?.FirstOrDefault(p=>p.targetId==id);
-            return player==null?null:(RectTransform)Node(player.seat==seat?"PlayerPlate":"OpponentPlate");
+            if(player==null)return null;
+            if(fourPlayerScenePrepared && player.seat!=seat)return authored.Find("FourSeat_"+player.seat) as RectTransform;
+            return (RectTransform)Node(player.seat==seat?"PlayerPlate":"OpponentPlate");
         }
         return arenaCards.Values.FirstOrDefault(c=>c.root.name=="Card_"+id)?.root;
     }
     private ForgeTargetArrow NewAttackArrow(string name)
     {
         var arrow=Rect(surface,name,Vector2.zero,surface.rect.size).gameObject.AddComponent<ForgeTargetArrow>();
-        SetOverlayLayer((RectTransform)arrow.transform,15);
+        SetOverlayLayer((RectTransform)arrow.transform,CombatLinkLayer);
         arrow.raycastTarget=false;return arrow;
     }
     private void PresentAttackSelection()
@@ -328,7 +372,7 @@ public sealed partial class ForgeBattlefieldController
         bool active=IsDeclaringAttack && selectedAttacker>=0;
         if(active && attackArrow==null) {
             attackArrow=NewAttackArrow("AttackTargetArrow");
-            SetOverlayLayer(attackArrow.rectTransform,DragArrowLayerOffset);
+            attackArrow.gameObject.SetActive(false);
         }
         if(active && attackHint==null)
         {
@@ -341,8 +385,9 @@ public sealed partial class ForgeBattlefieldController
                 if(IsDeclaringAttack)Choose(OptionIndex("attack-band:"+selectedAttacker),attackSelectionRequest);
             },Ink);
         }
-        if(attackArrow!=null){attackArrow.gameObject.SetActive(active);attackArrow.transform.SetAsLastSibling();}
-        for(int i=0;i<extraAttackArrows.Count;i++)extraAttackArrows[i].gameObject.SetActive(active&&i<selectedAttackers.Count-1);
+        if(attackArrow!=null && !active)attackArrow.SetVisible(false);
+        for(int i=0;i<extraAttackArrows.Count;i++)
+            if(!active || i>=selectedAttackers.Count-1)extraAttackArrows[i].SetVisible(false);
         if(attackHint!=null)
         {
             attackHint.gameObject.SetActive(active && (!HasDefaultDuelDefender || OptionIndex("attack-band:"+selectedAttacker)>=0));
@@ -366,19 +411,10 @@ public sealed partial class ForgeBattlefieldController
                 attackHint.SetAsLastSibling();
             }
         }
-        int used=0;
         foreach(var attacker in (view?.players ?? System.Array.Empty<ForgePlayerView>())
             .SelectMany(p=>p.battlefield ?? System.Array.Empty<ForgeCardView>()).Where(c=>c.attacking && !string.IsNullOrEmpty(c.defenderKind)))
-        {
-            var from=AttackEntity("card",attacker.id);var to=AttackEntity(attacker.defenderKind,attacker.defenderId);
-            if(from==null || to==null)continue;
-            if(used==assignedAttackArrows.Count)assignedAttackArrows.Add(NewAttackArrow("AssignedAttack_"+used));
-            var arrow=assignedAttackArrows[used++];arrow.gameObject.SetActive(true);
-            // The dedicated combat Canvas keeps lines above cards and avatars.
-            arrow.transform.SetSiblingIndex(cardsRoot.GetSiblingIndex());
-            arrow.SetEndpoints(surface.InverseTransformPoint(from.position),surface.InverseTransformPoint(to.position),new Color(1,.48f,.18f));
-        }
-        for(int i=used;i<assignedAttackArrows.Count;i++)assignedAttackArrows[i].gameObject.SetActive(false);
+            ShowCombatLink(assignedAttackArrows,"AssignedAttack_",attacker.id,attacker.defenderKind,attacker.defenderId,AttackInk);
+        FinishCombatLinks(assignedAttackArrows);
         if(active)UpdateAttackArrowAt(Input.mousePosition);
     }
     public bool BeginAttackSelection(int attacker,long expectedRequest)
@@ -407,40 +443,43 @@ public sealed partial class ForgeBattlefieldController
     }
     private int AttackOptionAt(Vector2 position)
     {
-        var system=EventSystem.current;if(system==null)return -1;
-        var hits=new List<RaycastResult>();system.RaycastAll(new PointerEventData(system){position=position},hits);
-        var button=hits.Count==0?null:hits[0].gameObject.GetComponentInParent<Button>();
-        if(button==null || !button.interactable)return -1;
+        var button=ChoiceButtonAt(position);if(button==null)return -1;
         if(button.name.StartsWith("Card_") && int.TryParse(button.name.Substring(5),out int card))return AttackOption("card",card);
         foreach(var player in view.players)
-            if(button.name==(player.seat==seat?"PlayerPlate":"OpponentPlate"))return AttackOption("player",player.targetId);
+            if(button.transform==AttackEntity("player",player.targetId))return AttackOption("player",player.targetId);
         return -1;
     }
     public void UpdateAttackArrowAt(Vector2 position)
     {
         if(attackArrow==null)return;
         if(!IsDeclaringAttack || selectedAttacker<0 || attackSelectionRequest!=requestId)
-        {attackArrow.gameObject.SetActive(false);foreach(var arrow in extraAttackArrows)arrow.gameObject.SetActive(false);if(attackHint!=null)attackHint.gameObject.SetActive(false);return;}
+        {attackArrow.SetVisible(false);foreach(var arrow in extraAttackArrows)arrow.SetVisible(false);if(attackHint!=null)attackHint.gameObject.SetActive(false);return;}
         int index=AttackOptionAt(position);
         // In 1v1, selection already means attacking the legal opposing player.
         // Only an explicitly pointed permanent needs a target-selection arrow.
         if(HasDefaultDuelDefender && (index<0 || view.request.options[index].defenderKind!="card")) {
-            attackArrow.gameObject.SetActive(false);
-            foreach(var arrow in extraAttackArrows)arrow.gameObject.SetActive(false);
+            attackArrow.SetVisible(false);
+            foreach(var arrow in extraAttackArrows)arrow.SetVisible(false);
             return;
         }
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,position,null,out var end);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,position,canvas.worldCamera,out var end);
+        RectTransform target=null;
         if(index>=0)
         {
-            var option=view.request.options[index];var target=AttackEntity(option.defenderKind,option.defenderId);
+            var option=view.request.options[index];target=AttackEntity(option.defenderKind,option.defenderId);
             if(target!=null)end=surface.InverseTransformPoint(target.position);
         }
         for(int i=0;i<selectedAttackers.Count;i++) {
-            if(i>0&&extraAttackArrows.Count<i){var created=NewAttackArrow("AttackTargetArrow_"+i);SetOverlayLayer(created.rectTransform,DragArrowLayerOffset);extraAttackArrows.Add(created);}
+            if(i>0&&extraAttackArrows.Count<i){var created=NewAttackArrow("AttackTargetArrow_"+i);extraAttackArrows.Add(created);}
             var arrow=i==0?attackArrow:extraAttackArrows[i-1];
-            var source=AttackEntity("card",selectedAttackers[i]);arrow.gameObject.SetActive(source!=null);
-            if(source!=null)arrow.SetEndpoints(surface.InverseTransformPoint(source.position),end,
-                index>=0?new Color(1,.65f,.2f):new Color(.85f,.42f,.18f),index>=0);
+            var source=AttackEntity("card",selectedAttackers[i]);arrow.SetVisible(source!=null);
+            if(source!=null){
+                Vector2 origin=surface.InverseTransformPoint(source.position);
+                var option=index>=0?view.request.options[index]:null;
+                var plate=option?.defenderKind=="player"?target:null;
+                arrow.SetEndpoints(origin,plate!=null?PlayerArrowEdge(plate,origin):end,
+                    index>=0?AttackInk:new Color(.85f,.42f,.18f),index>=0,true,target);
+            }
         }
     }
     public bool TryChooseAttackAt(Vector2 position,long expectedRequest)

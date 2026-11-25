@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public sealed partial class ForgeBattlefieldController
 {
+    private readonly Dictionary<string,CardDefinition> missingPrintingFaces=new(StringComparer.Ordinal);
     private static bool IsSpecializedFace(ForgeCardView card)=>card!=null&&!card.faceDown&&(card.stateName??"").StartsWith("Specialize",StringComparison.Ordinal);
     private static bool HasTokenFrame(ForgeCardView card) => !card.faceDown && (card.token || card.copy);
     private static bool HasTemporaryTokenFrame(ForgeCardView card) => HasTokenFrame(card) && (card.pendingDepartures?.Length??0)>0;
@@ -50,6 +52,19 @@ public sealed partial class ForgeBattlefieldController
         sprite = null;
         if (card == null) return false;
         if (card.faceDown) return CardImageLibrary.TryLoadCardBack(out sprite);
+        if (IsCommanderEventMarker(card)) {
+            string asset = card.name switch {
+                "洛基的诡计" => "Loki",
+                "雄伟大洋" => "GrandMarine",
+                "山中之心" => "Heart",
+                "阿肯宝石" => "Arkenstone",
+                _ => null
+            };
+            if (asset != null) {
+                sprite = Resources.Load<Sprite>("UI/Battlefield/CommanderEvents/" + asset);
+                if (sprite != null) return true;
+            }
+        }
         if ((card.stateName ?? "").StartsWith("Specialize", StringComparison.Ordinal))
             return SpecializeCardArt.TryGetKey(card, out string specializedKey)
                 && CardImageLibrary.TryLoadPrintingKey(specializedKey, out sprite);
@@ -68,7 +83,16 @@ public sealed partial class ForgeBattlefieldController
         }
         if (catalog.TryGetValue(card.printingKey ?? "", out var definition))
             return CardImageLibrary.TryLoadFullCard(definition, card.backFace ? 1 : 0, out sprite);
-        if (!card.token) return false;
+        if (!card.token) {
+            if(card.backFace||card.effectMarker||card.copy||card.merged)return false;
+            string front=string.IsNullOrEmpty(card.originalName)?card.name:card.originalName;
+            if(string.IsNullOrEmpty(front))return false;
+            if(!missingPrintingFaces.TryGetValue(front,out var printed)){
+                printed=catalog.Values.FirstOrDefault(c=>!c.customContent && c.cardName==front);
+                missingPrintingFaces[front]=printed;
+            }
+            return printed!=null && CardImageLibrary.TryLoadFullCard(printed,out sprite);
+        }
         string name = card.name ?? "";
         if (name.EndsWith(" Token", StringComparison.Ordinal)) name = name.Substring(0, name.Length - 6);
         var related = catalog.TryGetValue(card.tokenSourcePrintingKey ?? "", out var source)

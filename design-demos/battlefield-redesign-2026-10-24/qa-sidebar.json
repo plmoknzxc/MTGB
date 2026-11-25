@@ -1,0 +1,120 @@
+{
+  "scope": "D版详情/历史共用侧栏交互原型；不验证Forge规则",
+  "entries": [
+    {
+      "label": "history-hover-does-not-switch",
+      "historySelected": "true",
+      "detailsVisible": false,
+      "events": 3
+    },
+    {
+      "label": "click-history-target-opens-details",
+      "selected": "true",
+      "title": "天空之怒"
+    },
+    {
+      "label": "keyboard-End-selects-history",
+      "selected": "true"
+    },
+    {
+      "label": "keyboard-Home-selects-details",
+      "selected": "true"
+    },
+    {
+      "label": "keyboard-End-selects-history",
+      "selected": "true"
+    },
+    {
+      "label": "keyboard-Home-selects-details",
+      "selected": "true"
+    },
+    {
+      "label": "normal-1280",
+      "brokenImages": [],
+      "height": 720,
+      "overlaps": [],
+      "visibleBoard": 13,
+      "visibleHand": 5,
+      "width": 1280
+    },
+    {
+      "label": "history-1280",
+      "brokenImages": [],
+      "height": 720,
+      "overlaps": [],
+      "visibleBoard": 13,
+      "visibleHand": 5,
+      "width": 1280
+    },
+    {
+      "label": "graveyard-browser",
+      "cards": 5,
+      "title": "你的坟墓场 · 5"
+    },
+    {
+      "label": "full-card-overlay",
+      "visible": true,
+      "title": "否认之力"
+    },
+    {
+      "label": "dense-1600-gallery",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 14,
+      "visibleHand": 5,
+      "width": 1600
+    },
+    {
+      "label": "printed-cost-in-details",
+      "symbols": [
+        "U",
+        "U"
+      ],
+      "text": "印刷费用\n5"
+    },
+    {
+      "label": "dense-1280-gallery",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 14,
+      "visibleHand": 5,
+      "width": 1280
+    }
+  ],
+  "normal1600": {
+    "label": "D-sidebar-normal-1600",
+    "boardCount": 13,
+    "brokenImages": [],
+    "coveredBoardBottom": [],
+    "fonts": "loaded",
+    "handBoardOverlaps": [],
+    "handCount": 5,
+    "handRotations": [
+      "none",
+      "none",
+      "none",
+      "none",
+      "none"
+    ],
+    "height": 900,
+    "width": 1600
+  },
+  "limitations": [
+    "历史只使用当前录像的3条记录",
+    "尚未替换Unity正式界面",
+    "同名实体目标标识和多来源费用应在正式接入时另做规则/网络回归"
+  ],
+  "consoleObservation": {
+    "errors": [
+      {
+        "level": "error",
+        "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+        "timestamp": "2026-10-24T11:59:44.094Z"
+      }
+    ],
+    "sourceSearch": "04-tabbed-sidebar.html 与 index.html 均无 MutationObserver/observe 调用",
+    "reloadedAndTabsVerified": true
+  }
+}

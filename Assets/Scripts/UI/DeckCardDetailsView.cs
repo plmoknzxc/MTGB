@@ -1,17 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 // Reuses the existing scroll viewport; only the detail content is replaced.
 public sealed class DeckCardDetailsView
 {
-    private static readonly Color Paper = MenuVisualTheme.Paper;
-    private static readonly Color Muted = MenuVisualTheme.Muted;
-    private readonly UnityEngine.UI.Text title;
+    private static Color Paper => MenuVisualTheme.ArchivePaper;
+    private static Color Muted => MenuVisualTheme.Stone;
+    private readonly TMPro.TextMeshProUGUI title;
     private readonly UnityEngine.UI.Text printing;
     private readonly UnityEngine.UI.Text type;
     private readonly TMPro.TextMeshProUGUI rules;
-    private readonly UnityEngine.UI.Text rulesHeading;
     private readonly UnityEngine.UI.Text flavor;
     private readonly UnityEngine.UI.Text flavorHeading;
     private readonly UnityEngine.UI.Text stats;
@@ -36,70 +36,63 @@ public sealed class DeckCardDetailsView
     private readonly List<GameObject> secondarySections = new List<GameObject>();
     private CardDefinition shownCard;
     private int shownFaceIndex = -1;
+    private bool shownHasBack;
     private int languageRevision = -1;
 
     public DeckCardDetailsView(UnityEngine.UI.Text oldText, System.Action<CardDefinition, Transform> openArt,
-        System.Action formatChanged = null,
-        UnityEngine.UI.Dropdown dropdownTemplate = null,
-        System.Func<CardDefinition,RectTransform,DeckKeywordGlossary.Entry,bool,bool> onRelatedHover = null)
+        System.Action formatChanged, UnityEngine.UI.Dropdown dropdownTemplate,
+        System.Func<CardDefinition,RectTransform,DeckKeywordGlossary.Entry,bool,bool> onRelatedHover,
+        Text headerTarget, RectTransform gallery)
     {
         this.openArt = openArt;
         relatedHover=onRelatedHover;
         font = oldText.font;
         legacyText = oldText.gameObject;
         content = oldText.transform.parent;
-        scroll = content.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+        scroll = content.GetComponentInParent<UnityEngine.UI.ScrollRect>(true);
         oldText.gameObject.SetActive(false);
         var layout = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
         layout.spacing = 9;
-        layout.padding = new RectOffset(10, 10, 10, 20);
+        layout.padding = new RectOffset(6, 5, 10, 20);
         layout.childControlWidth = layout.childControlHeight = true;
         layout.childForceExpandWidth = true;
         layout.childForceExpandHeight = false;
         var fitter = content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
         fitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
-        var actions=new GameObject("DetailActions",typeof(RectTransform),typeof(UnityEngine.UI.LayoutElement));
-        actions.transform.SetParent(content,false);actions.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight=48;
-        var infoButton = new GameObject("CardInfoTab", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
-        infoButton.transform.SetParent(actions.transform, false);
-        var ir = (RectTransform)infoButton.transform; ir.anchorMin = Vector2.zero; ir.anchorMax = new Vector2(.32f, 1); ir.offsetMin = ir.offsetMax = Vector2.zero;
-        infoTabBackground = infoButton.GetComponent<UnityEngine.UI.Image>();
-        infoTabBackground.sprite = IntegratedUiUtility.RoundedRect(100, 48, 6);
-        infoButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => SelectTab(0));
-        var infoLabel = Label(infoButton.transform, "Label", 16, Paper);
-        infoLabel.text = "卡牌信息"; infoLabel.alignment = TextAnchor.MiddleCenter;
-        infoLabel.rectTransform.anchorMin = Vector2.zero; infoLabel.rectTransform.anchorMax = Vector2.one;
-        infoLabel.rectTransform.offsetMin = infoLabel.rectTransform.offsetMax = Vector2.zero;
-        var artButton = new GameObject("CardArtButton", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
-        artButton.transform.SetParent(actions.transform, false);
-        var ar=(RectTransform)artButton.transform;ar.anchorMin=new Vector2(.34f,0);ar.anchorMax=new Vector2(.67f,1);ar.offsetMin=ar.offsetMax=Vector2.zero;
-        artButton.GetComponent<UnityEngine.UI.Image>().sprite = IntegratedUiUtility.RoundedRect(200,48,6);
-        artTabBackground = artButton.GetComponent<UnityEngine.UI.Image>();
-        artTabBackground.color = new Color(.19f,.28f,.39f);
-        artButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => SelectTab(1));
-        var artLabel = Label(artButton.transform, "Label", 16, Paper);
-        artLabel.text = "异画·下载";
-        artLabel.alignment = TextAnchor.MiddleCenter;
-        artLabel.rectTransform.anchorMin = Vector2.zero; artLabel.rectTransform.anchorMax = Vector2.one;
-        artLabel.rectTransform.offsetMin = artLabel.rectTransform.offsetMax = Vector2.zero;
-        var settings=new GameObject("SettingsButton",typeof(RectTransform),typeof(UnityEngine.UI.Image),typeof(UnityEngine.UI.Button));
-        settings.transform.SetParent(actions.transform,false);
-        var sr=(RectTransform)settings.transform;sr.anchorMin=new Vector2(.69f,0);sr.anchorMax=Vector2.one;sr.offsetMin=sr.offsetMax=Vector2.zero;
-        settings.GetComponent<UnityEngine.UI.Image>().sprite=IntegratedUiUtility.RoundedRect(100,48,6);
-        settingsTabBackground = settings.GetComponent<UnityEngine.UI.Image>();
-        settingsTabBackground.color=new Color(.17f,.22f,.29f);
-        settings.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>SelectTab(2));
-        var sl=Label(settings.transform,"Label",18,Paper);sl.text="设置";sl.alignment=TextAnchor.MiddleCenter;sl.rectTransform.anchorMin=Vector2.zero;sl.rectTransform.anchorMax=Vector2.one;sl.rectTransform.offsetMin=sl.rectTransform.offsetMax=Vector2.zero;
-        foreach (var label in new[] { infoLabel, artLabel, sl })
+        headerTarget.enabled=false;
+        var actions=new GameObject("DetailActions",typeof(RectTransform),typeof(HorizontalLayoutGroup));
+        var row=(RectTransform)actions.transform;
+        row.SetParent(headerTarget.transform,false);
+        row.anchorMin=Vector2.zero;row.anchorMax=Vector2.one;row.offsetMin=row.offsetMax=Vector2.zero;
+        var strip=actions.GetComponent<HorizontalLayoutGroup>();
+        strip.spacing=MainMenuController.InspectorToolGap;
+        strip.childControlWidth=strip.childControlHeight=true;
+        strip.childForceExpandWidth=false;strip.childForceExpandHeight=true;
+
+        Image Tab(string name,string caption,int index,bool iconOnly=false)
         {
-            PreferenceText.SetSize(label, 16);
-            label.horizontalOverflow = HorizontalWrapMode.Overflow;
-            label.rectTransform.offsetMin = new Vector2(8, 4);
-            label.rectTransform.offsetMax = new Vector2(-8, -4);
+            var tab=new GameObject(name,typeof(RectTransform),typeof(Image),typeof(Button),typeof(LayoutElement));
+            tab.transform.SetParent(row,false);
+            var size=tab.GetComponent<LayoutElement>();
+            size.minWidth=size.preferredWidth=iconOnly?MainMenuController.InspectorToolSize:0;
+            size.flexibleWidth=iconOnly?0:1;
+            var label=Label(tab.transform,"Label",16,Paper);
+            label.text=caption;label.alignment=TextAnchor.MiddleCenter;
+            label.resizeTextForBestFit=true;label.resizeTextMinSize=12;label.resizeTextMaxSize=label.fontSize;
+            label.rectTransform.anchorMin=Vector2.zero;label.rectTransform.anchorMax=Vector2.one;
+            label.rectTransform.offsetMin=new Vector2(4,2);label.rectTransform.offsetMax=new Vector2(-4,-2);
+            label.enabled=!iconOnly;
+            tab.GetComponent<Button>().onClick.AddListener(()=>SelectTab(index));
+            return tab.GetComponent<Image>();
         }
-        artContent = new GameObject("DeckEditorArtContent", typeof(RectTransform), typeof(UnityEngine.UI.LayoutElement));
-        artContent.transform.SetParent(content, false);
-        artContent.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 680;
+        infoTabBackground=Tab("CardInfoTab","卡牌详情",0);
+        artTabBackground=Tab("CardArtButton","异画·下载",1);
+        settingsTabBackground=Tab("SettingsButton","设置",2,true);
+        var gear=new GameObject("Gear",typeof(RectTransform),typeof(ForgeGearIcon)).GetComponent<ForgeGearIcon>();
+        gear.transform.SetParent(settingsTabBackground.transform,false);
+        gear.rectTransform.sizeDelta=new Vector2(20,20);
+        gear.color=MenuVisualTheme.ArchivePaper;gear.raycastTarget=false;
+        artContent=gallery.gameObject;
         settingsContent = new GameObject("DeckEditorSettings", typeof(RectTransform), typeof(UnityEngine.UI.VerticalLayoutGroup));
         settingsContent.transform.SetParent(content, false);
         var settingsLayout = settingsContent.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
@@ -112,6 +105,9 @@ public sealed class DeckCardDetailsView
                 new[] { "zh-CN", "ja-JP", "en-US" }, value => GamePreferences.SetLanguage(value), languageButtons);
         CreateSettingsRow("文字大小", new[] { "小", "标准", "大" },
             new[] { "0.85", "1", "1.3" }, value => GamePreferences.SetScale(float.Parse(value, System.Globalization.CultureInfo.InvariantCulture)), sizeButtons);
+        var themePicker = MenuThemePicker.Create(settingsContent.transform);
+        themePicker.gameObject.AddComponent<LayoutElement>().preferredHeight = MenuThemePicker.Height;
+        PlayerAvatarPicker.Create(settingsContent.transform).gameObject.AddComponent<LayoutElement>().preferredHeight=PlayerAvatarPicker.Height;
         ReplayWidgets.AutoSaveToggle(settingsContent.transform);
         var banlistTitle = Label(settingsContent.transform, "BanlistHeading", 18, Paper);
         banlistTitle.text = "赛制规则 · 日期";
@@ -129,36 +125,35 @@ public sealed class DeckCardDetailsView
             RefreshBanlistOptions();
         }
         var hint = Label(settingsContent.transform, "ApplyHint", 14, Muted);
-        hint.text = "更改立即生效。N/A 只取消禁限，仍检查该赛制的卡池。";
+        hint.text = "N/A 只取消禁限，仍检查该赛制的卡池。";
         hint.horizontalOverflow = HorizontalWrapMode.Wrap;
         hint.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 48;
         Transform header = CreateNameCostRow(content, "CardHeader");
-        title = Label(header, "CardName", 25, Paper);
-        title.fontStyle = FontStyle.Bold;
-        title.verticalOverflow = VerticalWrapMode.Overflow;
-        title.alignment = TextAnchor.UpperLeft;
+        title = DetailTitle(header, "CardName", 25);
         title.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1;
-        title.GetComponent<PreferenceText>().SetBaseSize(25);
         costs = CardSymbolText.Create(header, "ManaCost", 22, Paper);
         costs.alignment = TMPro.TextAlignmentOptions.TopRight;
         costs.enableWordWrapping = false;
         costWidth = costs.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-        costs.gameObject.AddComponent<PreferenceText>().SetBaseSize(22);
-        printing = Label(content, "Printing", 14, Muted);
+        Transform typeRow=CreateNameCostRow(content,"TypeAndStats");
+        type = Label(typeRow, "CardType", 15, MenuVisualTheme.Stone);
+        type.gameObject.AddComponent<LayoutElement>().flexibleWidth=1;
+        stats = Label(typeRow, "Stats", 17, MenuVisualTheme.ArchivePaper);
+        stats.alignment=TextAnchor.UpperRight;
+        stats.horizontalOverflow=HorizontalWrapMode.Overflow;
+        stats.gameObject.AddComponent<LayoutElement>();
+        printing = Label(content, "Printing", 13, Muted);
         var divider = new GameObject("Divider", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.LayoutElement));
         divider.transform.SetParent(content, false);
-        divider.GetComponent<UnityEngine.UI.Image>().color = new Color(.50f,.55f,.62f,.7f);
+        divider.GetComponent<UnityEngine.UI.Image>().color = MenuVisualTheme.Etching;
         divider.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
         divider.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 1;
-        type = Label(content, "CardType", 18, new Color(.72f,.81f,.91f));
-        stats = Label(content, "Stats", 18, new Color(.82f,.71f,.50f));
-        rulesHeading = Label(content, "RulesHeading", 14, Muted);
-        rulesHeading.text = "规则文本";
-        rules = CardSymbolText.Create(content, "Rules", 20, Paper);
+        rules = CardSymbolText.Create(content, "Rules", 18, Paper);
         rules.lineSpacing = 5;
+        rules.paragraphSpacing = 24;
         flavorHeading = Label(content, "FlavorHeading", 14, Muted);
         flavorHeading.text = "风味文字";
-        flavor = Label(content, "Flavor", 18, MenuVisualTheme.Muted);
+        flavor = Label(content, "Flavor", 18, MenuVisualTheme.Stone);
         flavor.fontStyle = FontStyle.Italic;
         flavor.lineSpacing = 1.15f;
         artContent.SetActive(false);
@@ -176,16 +171,24 @@ public sealed class DeckCardDetailsView
                 child.gameObject.SetActive(tab == 0);
         artContent.SetActive(tab == 1);
         settingsContent.SetActive(tab == 2);
-        infoTabBackground.color = tab == 0 ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
-        artTabBackground.color = tab == 1 ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
-        settingsTabBackground.color = tab == 2 ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
+        void StyleTab(Image background, bool selected)
+        {
+            MenuVisualTheme.StyleDeckTool(background.GetComponent<Button>(),selected);
+            var marker=MenuVisualTheme.Detail(background.transform,"ActiveRule",MenuVisualTheme.MainAccent);
+            marker.rectTransform.anchorMin=Vector2.zero;marker.rectTransform.anchorMax=Vector2.right;
+            marker.rectTransform.offsetMin=new Vector2(5,1);marker.rectTransform.offsetMax=new Vector2(-5,3);
+            marker.gameObject.SetActive(selected);
+        }
+        StyleTab(infoTabBackground, tab == 0);
+        StyleTab(artTabBackground, tab == 1);
+        StyleTab(settingsTabBackground, tab == 2);
         if (tab == 1 && shownCard != null) openArt?.Invoke(shownCard, artContent.transform);
         RefreshSettings();
         if (tab == 0)
         {
             int face = Mathf.Max(0, shownFaceIndex);
             shownFaceIndex = -1;
-            Show(shownCard, face);
+            Show(shownCard, face, shownHasBack);
         }
         if (scroll != null) { scroll.StopMovement(); scroll.verticalNormalizedPosition = 1; }
     }
@@ -200,18 +203,21 @@ public sealed class DeckCardDetailsView
         else if (banlistDropdown != null && displayedFormat != GamePreferences.DeckFormat) RefreshBanlistOptions();
         string[] languages = { "zh-CN", "ja-JP", "en-US" };
         for (int i = 0; i < languageButtons.Count; i++)
-            languageButtons[i].GetComponent<UnityEngine.UI.Image>().color = GamePreferences.Language == languages[i]
-                ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
+            MenuVisualTheme.StyleDeckTool(languageButtons[i], GamePreferences.Language == languages[i]);
         int selectedSize = GamePreferences.TextScale < .9f ? 0 : GamePreferences.TextScale > 1.2f ? 2 : 1;
         for (int i = 0; i < sizeButtons.Count; i++)
-            sizeButtons[i].GetComponent<UnityEngine.UI.Image>().color = i == selectedSize ? MenuVisualTheme.Primary : MenuVisualTheme.Raised;
+            MenuVisualTheme.StyleDeckTool(sizeButtons[i], i == selectedSize);
     }
 
     private UnityEngine.UI.Dropdown CreateDropdown(UnityEngine.UI.Dropdown template, string name)
     {
         var dropdown = Object.Instantiate(template, settingsContent.transform, false);
         dropdown.name = name;
-        dropdown.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 44;
+        var size=dropdown.GetComponent<LayoutElement>()??dropdown.gameObject.AddComponent<LayoutElement>();
+        size.minWidth=size.preferredWidth=-1;
+        size.preferredHeight=44;
+        MenuVisualTheme.StyleArchiveDropdown(dropdown);
+        PreferenceText.SetSize(dropdown.captionText,16);
         dropdown.onValueChanged.RemoveAllListeners();
         return dropdown;
     }
@@ -278,7 +284,7 @@ public sealed class DeckCardDetailsView
     {
         var go = new GameObject(value, typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button), typeof(UnityEngine.UI.LayoutElement));
         go.transform.SetParent(parent, false);
-        go.GetComponent<UnityEngine.UI.Image>().color = MenuVisualTheme.Raised;
+        go.GetComponent<UnityEngine.UI.Image>().color = MenuVisualTheme.Slate;
         go.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1;
         var button = go.GetComponent<UnityEngine.UI.Button>();
         button.onClick.AddListener(action);
@@ -291,14 +297,17 @@ public sealed class DeckCardDetailsView
         return button;
     }
 
-    public void Show(CardDefinition card, int faceIndex = 0)
+    public void Show(CardDefinition card, int faceIndex = 0, bool hasBack = false)
     {
-        if (ReferenceEquals(card, shownCard) && card != null && shownFaceIndex == faceIndex && languageRevision == GamePreferences.Revision) return;
+        if (ReferenceEquals(card, shownCard) && card != null && shownFaceIndex == faceIndex
+            && shownHasBack == hasBack && languageRevision == GamePreferences.Revision) return;
+        bool switchingFace = ReferenceEquals(card, shownCard) && faceIndex != shownFaceIndex;
         relatedHover?.Invoke(shownCard, rules.rectTransform, null, false);
         DeckKeywordLinkHover.Hide();
         languageRevision = GamePreferences.Revision;
         shownCard = card;
         shownFaceIndex = faceIndex;
+        shownHasBack = hasBack;
         foreach (GameObject section in secondarySections)
         {
             section.SetActive(false);
@@ -308,47 +317,61 @@ public sealed class DeckCardDetailsView
         CardFeatureDefinition displayedFace = null;
         if (faceIndex > 0 && card?.features != null)
             displayedFace = card.features.Find(f => f != null && f.faceIndex == faceIndex && f.featureIndex == 0);
-        title.text = card == null ? "请选择卡牌" : displayedFace == null ? GamePreferences.CardName(card) : GamePreferences.FeatureName(displayedFace);
+        bool unknownFace = faceIndex > 0 && displayedFace == null;
+        title.text = card == null ? "请选择卡牌" : unknownFace ? DeckCompanion.Text("背面","Back face","第２面") : displayedFace == null ? GamePreferences.CardName(card) : GamePreferences.FeatureName(displayedFace);
         printing.text = card == null ? string.Empty : card.PrintingKey;
-        type.text = card == null ? string.Empty : displayedFace == null ? GamePreferences.CardType(card)
+        type.text = card == null || unknownFace ? string.Empty : displayedFace == null ? GamePreferences.CardType(card)
             : GamePreferences.FeatureType(displayedFace, FeatureTypeLine(displayedFace));
-        string primaryRules = card == null ? string.Empty : displayedFace == null ? GamePreferences.CardRules(card)
+        string primaryRules = unknownFace ? DeckCompanion.Text("此面暂无规则资料","No rules data for this face","この面のルール情報は未収録") : card == null ? string.Empty : displayedFace == null ? GamePreferences.CardRules(card)
             : GamePreferences.FeatureRules(displayedFace);
         primaryRules = WithAvailabilityNotice(card, primaryRules);
         SetRules(rules, primaryRules);
         bool hasRules = !string.IsNullOrWhiteSpace(primaryRules);
         rules.gameObject.SetActive(hasRules);
-        rulesHeading.gameObject.SetActive(hasRules);
-        flavor.text = displayedFace == null ? card?.flavorText ?? string.Empty : string.Empty;
+        flavor.text = faceIndex == 0 ? GamePreferences.CardFlavor(card) : string.Empty;
         bool hasFlavor = !string.IsNullOrWhiteSpace(flavor.text);
         flavor.gameObject.SetActive(hasFlavor);
         flavorHeading.gameObject.SetActive(hasFlavor);
         stats.text = string.Empty;
         if (displayedFace != null) stats.text = Stats(displayedFace);
-        else if (card != null)
+        else if (card != null && !unknownFace)
         {
-            if (card.cardTypes.Has(CardType.Creature)) stats.text = $"力量 / 防御力    {card.attack} / {card.defence}";
+            if (card.cardTypes.Has(CardType.Creature)) stats.text = $"{card.attack} / {card.defence}";
             else if (card.cardTypes.Has(CardType.Planeswalker)) stats.text = $"忠诚值    {card.loyalty}";
             else if (card.cardTypes.Has(CardType.Battle)) stats.text = $"布防值    {card.battleDefense}";
         }
         stats.gameObject.SetActive(stats.text.Length > 0);
-        string manaCost = displayedFace == null ? card?.manaCost : displayedFace.manaCost;
+        stats.GetComponent<LayoutElement>().minWidth=Mathf.Ceil(stats.preferredWidth)+2;
+        string manaCost = unknownFace ? string.Empty : displayedFace == null ? card?.manaCost : displayedFace.manaCost;
         bool hasCost = !string.IsNullOrWhiteSpace(manaCost);
         costs.text = CardSymbolText.Format(manaCost);
         SetCostWidth(costs, costWidth, hasCost);
-        if (card?.features != null)
+        if (card != null)
         {
-            var features = new List<CardFeatureDefinition>(card.features);
-            features.Sort((a,b) => a == null ? 1 : b == null ? -1 : a.faceIndex != b.faceIndex
-                ? a.faceIndex.CompareTo(b.faceIndex) : a.featureIndex.CompareTo(b.featureIndex));
-            foreach (CardFeatureDefinition feature in features)
+            // The heading already shows the primary feature of the face in view.
+            // Older definitions can store the front only on the card itself.
+            var features = card.features?.Where(f => f != null).ToList() ?? new List<CardFeatureDefinition>();
+            if (faceIndex != 0 && !features.Any(f => f.faceIndex == 0 && f.featureIndex == 0))
+                features.Add(card.GetPrimaryFeature());
+            foreach (var feature in features.OrderBy(f => f.faceIndex == faceIndex ? -1 : f.faceIndex).ThenBy(f => f.featureIndex))
             {
-                if (feature == null || ReferenceEquals(feature, displayedFace)) continue;
-                if (displayedFace == null && feature.faceIndex == 0 && feature.featureIndex == 0) continue;
+                if (feature.faceIndex == faceIndex && feature.featureIndex == 0) continue;
                 secondarySections.Add(CreateFeatureSection(card, feature));
             }
+            if (hasBack && faceIndex != 1 && !features.Any(f => f.faceIndex == 1))
+            {
+                var missing = Label(content, "MissingBackRules", 17, Muted);
+                missing.text = DeckCompanion.Text("背面暂无规则资料","No rules data for the back face","第２面のルール情報は未収録");
+                secondarySections.Add(missing.gameObject);
+            }
         }
-        if (scroll != null) { scroll.StopMovement(); scroll.verticalNormalizedPosition = 1; }
+        if (scroll != null)
+        {
+            if (switchingFace && selectedTab == 0 && scroll.isActiveAndEnabled)
+                LayoutRebuilder.ForceRebuildLayoutImmediate(scroll.content);
+            scroll.StopMovement();
+            scroll.verticalNormalizedPosition = 1;
+        }
         if (selectedTab != 0) SelectTab(selectedTab);
     }
 
@@ -359,7 +382,7 @@ public sealed class DeckCardDetailsView
         section.transform.SetParent(content, false);
         var image = section.GetComponent<UnityEngine.UI.Image>();
         image.sprite = IntegratedUiUtility.RoundedRect(300, 160, 8);
-        image.color = new Color(.12f,.17f,.23f,.96f);
+        image.color = MenuVisualTheme.ArchivePanel;
         image.raycastTarget = false;
         var layout = section.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
         layout.padding = new RectOffset(13, 13, 12, 14);
@@ -367,24 +390,19 @@ public sealed class DeckCardDetailsView
         layout.childControlWidth = layout.childControlHeight = true;
         layout.childForceExpandWidth = true;
         layout.childForceExpandHeight = false;
-        var eyebrow = Label(section.transform, "FeatureKind", 14, new Color(.78f,.66f,.47f));
+        var eyebrow = Label(section.transform, "FeatureKind", 14, MenuVisualTheme.MistBlue);
         eyebrow.text = FeatureKind(card, feature);
         Transform featureHeader = CreateNameCostRow(section.transform, "FeatureHeader");
-        var name = Label(featureHeader, "FeatureName", 21, Paper);
-        name.fontStyle = FontStyle.Bold;
-        name.verticalOverflow = VerticalWrapMode.Overflow;
-        name.alignment = TextAnchor.UpperLeft;
+        var name = DetailTitle(featureHeader, "FeatureName", 21);
         name.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1;
-        name.GetComponent<PreferenceText>().SetBaseSize(21);
         name.text = GamePreferences.FeatureName(feature);
         var cost = CardSymbolText.Create(featureHeader, "FeatureCost", 19, Paper);
         cost.alignment = TMPro.TextAlignmentOptions.TopRight;
         cost.enableWordWrapping = false;
         var featureCostWidth = cost.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-        cost.gameObject.AddComponent<PreferenceText>().SetBaseSize(19);
         cost.text = CardSymbolText.Format(feature.manaCost);
         SetCostWidth(cost, featureCostWidth, !string.IsNullOrWhiteSpace(feature.manaCost));
-        var typeLine = Label(section.transform, "FeatureType", 16, new Color(.72f,.81f,.91f));
+        var typeLine = Label(section.transform, "FeatureType", 16, MenuVisualTheme.Stone);
         typeLine.text = GamePreferences.FeatureType(feature, FeatureTypeLine(feature));
         string featureRules = GamePreferences.FeatureRules(feature);
         if (!string.IsNullOrWhiteSpace(featureRules))
@@ -395,7 +413,7 @@ public sealed class DeckCardDetailsView
             text.lineSpacing = 4;
         }
         string statsText = Stats(feature);
-        if (!string.IsNullOrEmpty(statsText)) Label(section.transform, "FeatureStats", 17, new Color(.82f,.71f,.50f)).text = statsText;
+        if (!string.IsNullOrEmpty(statsText)) Label(section.transform, "FeatureStats", 17, MenuVisualTheme.Silver).text = statsText;
         return section;
     }
 
@@ -442,7 +460,8 @@ public sealed class DeckCardDetailsView
             case "Omen": return zh ? "预兆" : ja ? "予兆" : en;
             case "Room": return zh ? "房间" : ja ? "部屋" : en;
             case "Split": return zh ? "连体牌" : ja ? "分割カード" : en;
-            case "Other face": return zh ? "另一面" : ja ? "もう一方の面" : en;
+            case "Other face": return feature.faceIndex == 1 ? DeckCompanion.Text("背面","Back face","第２面")
+                : DeckCompanion.Text($"第 {feature.faceIndex + 1} 面",$"Face {feature.faceIndex + 1}",$"第{feature.faceIndex + 1}面");
             case "Front face": return zh ? "正面" : ja ? "第１面" : en;
             default: return zh ? "另一部分" : ja ? "別の部分" : en;
         }
@@ -462,6 +481,7 @@ public sealed class DeckCardDetailsView
 
     private void SetRules(TMPro.TextMeshProUGUI text, string source)
     {
+        text.GetComponent<PreferenceText>().SetMenuFace(MenuTypography.Face.Control);
         List<DeckKeywordGlossary.Entry> keywords = DeckKeywordGlossary.Find(source,card:shownCard);
         keywords.AddRange(DeckTokenLinks.Find(shownCard,source));
         text.richText = true;
@@ -471,6 +491,14 @@ public sealed class DeckCardDetailsView
         if (hover == null) hover = text.gameObject.AddComponent<DeckKeywordLinkHover>();
         hover.Configure(keywords, font, shownCard,
             relatedHover);
+    }
+
+    private static TMPro.TextMeshProUGUI DetailTitle(Transform parent,string name,int size)
+    {
+        var label=CardSymbolText.Create(parent,name,size,Paper);
+        label.GetComponent<PreferenceText>().SetMenuFace(MenuTypography.Face.Heading);
+        label.alignment=TMPro.TextAlignmentOptions.TopLeft;
+        return label;
     }
 
     private UnityEngine.UI.Text Label(Transform parent, string name, int size, Color color)

@@ -88,7 +88,7 @@ public sealed partial class ForgeBattlefieldController
         if (viewport == null) {
             viewport = Panel(row, "CompactDetails", Vector2.zero, Vector2.one, Color.clear);
             viewport.gameObject.AddComponent<RectMask2D>();
-            var createdScroll = viewport.gameObject.AddComponent<ScrollRect>();
+            var createdScroll = viewport.gameObject.AddComponent<ForgeStackDetailScrollRect>();
             createdScroll.viewport = viewport;
             createdScroll.content = Rect(viewport, "Content", Vector2.zero, Vector2.one);
             createdScroll.horizontal = false; createdScroll.movementType = ScrollRect.MovementType.Clamped;
@@ -97,10 +97,16 @@ public sealed partial class ForgeBattlefieldController
         return viewport.GetComponent<ScrollRect>();
     }
 
-    private float LayoutRedesignStackEffect(RectTransform parent, ForgeStackItem entry, string fallback, float top, float width)
+    private float LayoutRedesignStackEffect(RectTransform parent, ForgeStackItem entry, string fallback, float top, float width, bool inlineAbility=false)
     {
         string value = RedesignStackEffect(entry, fallback);
-        var source = RedesignStackText(parent, "CompactNote", value, 18, new Color(.75f, .79f, .75f), 0, top, width);
+        if(inlineAbility && entry.source?.faceDown!=true){
+            string rules=PlayerNamesRichText(GamePreferences.T(NamedAbilityEffectText(entry.source,entry.description)));
+            if(ShouldShowSpentMana(entry.source) && !entry.hasPaymentReceipt)
+                rules=TapPaymentText("实付：","Spent: ","支払済み：")+entry.source.spentMana+"\n"+rules;
+            if(!string.IsNullOrWhiteSpace(rules))value=rules+(value.Length==0?"":"\n"+value);
+        }
+        var source = RedesignStackText(parent, "CompactNote", value, HudTheme!=null?20:18, HudTheme!=null?HudText:new Color(.75f, .79f, .75f), 0, top, width);
         source.gameObject.SetActive(!string.IsNullOrWhiteSpace(value));
         if(!source.gameObject.activeSelf)return 0;
         source.supportRichText = true;
@@ -119,7 +125,7 @@ public sealed partial class ForgeBattlefieldController
         float previousOffset = content.anchoredPosition.y;
         // Short entries fit their content/artwork; long information scrolls
         // inside the bounded row while artwork remains outside the viewport.
-        string key = string.Join("\n", content.GetComponentsInChildren<Text>(true).Where(t => t.gameObject.activeSelf).Select(t => t.text));
+        string key = string.Join("\n", content.GetComponentsInChildren<Text>().Select(t => t.text));
         bool same = redesignStackDetailKeys.TryGetValue(identity, out string previous) && previous == key;
         redesignStackDetailKeys[identity] = key;
         RedesignPlace(content, new Vector2(0, 1), new Vector2(0, 1), Vector2.zero, new Vector2(width - 12, fullHeight));
@@ -128,7 +134,7 @@ public sealed partial class ForgeBattlefieldController
         scroll.enabled = overflow; scroll.StopMovement();
         viewport.GetComponent<Image>().raycastTarget = overflow;
         content.anchoredPosition = new Vector2(0, same ? Mathf.Clamp(previousOffset, 0, Mathf.Max(0, fullHeight - visibleHeight)) : 0);
-        if (scroll.verticalScrollbar == null) AddStackScrollIndicator(content);
+        if (scroll.verticalScrollbar == null) AddStackScrollIndicator(content, 10);
         scroll.verticalScrollbar.gameObject.SetActive(overflow);
         var track = (RectTransform)scroll.verticalScrollbar.transform;
         RedesignPlace(track, new Vector2(1, 1), new Vector2(1, 1), Vector2.zero, new Vector2(4, visibleHeight));

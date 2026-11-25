@@ -36,7 +36,6 @@ public static class KeywordSourcesPresentationValidation
     static IEnumerator Guard(IEnumerator work){var tasks=new Stack<IEnumerator>();tasks.Push(work);try{while(tasks.Count>0){object next;try{var t=tasks.Peek();if(!t.MoveNext()){tasks.Pop();continue;}next=t.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}if(next is IEnumerator child)tasks.Push(child);else yield return next;}File.WriteAllText(Output+"/result.txt","PASS_BOUNDED: "+checks+" executions; "+(markerOnly?"player marker glyph/detail/expiry/next ordinary card and three locales/both seats":"exact current/original keyword sources, removal/expiry/group, three real chooser requests, new player protection marker three locales/both seats")+". No whole-language/scroll/live-network PASS.");}finally{while(tasks.Count>0)(tasks.Pop() as IDisposable)?.Dispose();Running=false;}}
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             float deadline=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;yield return Frame();GamePreferences.SetLanguage("zh-CN");yield return Frame();Check(GamePreferences.Ready&&GamePreferences.Language=="zh-CN","Chinese preference initialized");
             var manifest=JsonUtility.FromJson<Manifest>(File.ReadAllText(Output+"/inputs/manifest.json"));
@@ -75,7 +74,7 @@ public static class KeywordSourcesPresentationValidation
                 GamePreferences.SetLanguage(language);yield return Frame();var v=Read(marker.stem+"-seat"+seat);ui.Present(v,seat,false,null,null,"");yield return Frame();Clean(ui);var card=v.players[0].effectMarkers.Single(c=>c.markerKind=="player-protection");typeof(ForgeBattlefieldController).GetMethod("InspectIntegrated",Hidden).Invoke(ui,new object[]{card});yield return Frame();string rules=Plain(Root.Find("InspectPanel/Rules").GetComponentInChildren<TextMeshProUGUI>().text);
                 Check(rules==(language=="zh-CN"?"你具有反黑保护。":language=="en-US"?"You have protection from black.":"あなたはプロテクション（黒）を持つ。"),"Exact new public marker localized "+language+seat);Check(Root.Find("InspectPanel/TypeLine").GetComponent<Text>().text==(language=="zh-CN"?"玩家状态":language=="en-US"?"Player state":"プレイヤーの状態"),"Actual marker state type "+language+seat);
             }
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);}
     }
 }
 #endif

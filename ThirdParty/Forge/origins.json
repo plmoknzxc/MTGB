@@ -1,10 +1,48 @@
 {
-  "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
+  "forgeRevision": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
   "forgeRepository": "https://github.com/Card-Forge/forge",
-  "forgeSourceSha256": "2f060fbe00f7e28c052aeb935ad9723eeafda71c4ef7eeb2619cdde496810190",
+  "forgeSourceSha256": "209821a933314f7fff8e46199412ef5f3bd2912a509631fa830e482b82be802d",
   "javaBinaryUrl": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip",
   "javaBinarySha256": "bc21a93923103cdaac93ee337b0ae4365e739fde36df823dd456bc67c8a9d352",
-  "nativePatchesSha256": "0fdf65d985799e6ba3e50be3f6bdc454c6e7df4c881ac34d1382cb0897560631",
+  "nativePatchesSha256": "89dc63f639d1c1a86148d31df52cc2978d9c7d7d3e01c9b1e52f844513c2bd3c",
+  "bridgeSourcesSha256": {
+    "forge/game/ability/effects/DigMultipleEffect.java": "ab44c2e92b23f653e3d5d96cd116ea455007bb40db9ead3ce5b9b5aefdae1e2e",
+    "forge/game/ability/effects/FlipOntoBattlefieldEffect.java": "1ae42e2089184fe2265eb736a901fa46bcae93500d2f4c6c1283a98d5c646287",
+    "forge/game/phase/PhaseHandler.java": "24c0dab38d9f38662323d70ddc02e51b24d7a9055b31c66a8f222fe756a4311b",
+    "mtgb/bridge/BridgeAbilityText.java": "4972ead51277aa60bbf0bc4c684af477614144f980ad65f75ba368eb521c740c",
+    "mtgb/bridge/BridgeAiStrategy.java": "0b6d567208fcbbcf5d22d0cbee12282afe2415dcab5e1137b0cd45fb565b653d",
+    "mtgb/bridge/BridgeAllocation.java": "3286f7d48b92c278c4ca448ca629ca2e6fdc4889f9bc1a63e4cdf5868ee04ab8",
+    "mtgb/bridge/BridgeCardNotices.java": "e1f75c20138b04abb07c5ec5419a33ec577cdb6abf850806dc172dd739d11459",
+    "mtgb/bridge/BridgeCleanupNotices.java": "882da992bbdce230e50a61f18fffd0ca1b87d62b9adc2dd6910deada5c1ecd5b",
+    "mtgb/bridge/BridgeCombatDeclaration.java": "2a6fcfb67d831d25ff651a31969268716db265a5e097d006653ffa8d6cf14d17",
+    "mtgb/bridge/BridgeCombatFeedback.java": "645d29aabcacfdb4c75cb8853f8cee8de922f9d75f162e68e78b4a8abf404f28",
+    "mtgb/bridge/BridgeCommanderEvent.java": "1d634c4d01cc71235c79b48dc9759a8b3b9b039b6fdd04f724c18bb556238f6a",
+    "mtgb/bridge/BridgeLibraryKnowledge.java": "67fca5c2a361044aaa3d77bb18c11293b6af15bcad47dc0b6154fa88f3298dc2",
+    "mtgb/bridge/BridgeLibraryOrder.java": "c4fa9f5abb166b0b4dd62dfe30c797b90e796122fc405039feb8dc7d2be48391",
+    "mtgb/bridge/BridgeLibraryPositions.java": "78d8e569d62610c42450015b4818176549aac2a175595b39815a2cc950119b8c",
+    "mtgb/bridge/BridgeLibraryShuffle.java": "2653644e839591faf3f10ea709fa36c7fa3902a5324ed77917bdbb70d159c07c",
+    "mtgb/bridge/BridgeMatchFormat.java": "c7a267d896ced34bde0089a1182860160d6a799fc1c82e14ee66969cb0cf60b0",
+    "mtgb/bridge/BridgeMatchRemovals.java": "e226ef79623da84d61d841c348e9210587dcc731b620327f5312b254aea7c2a2",
+    "mtgb/bridge/BridgePuzzleObjective.java": "cd51dcceb04883a97aee3ea340a3e93ffe5a97afab6e9515a7b4d68cd70333bf",
+    "mtgb/bridge/BridgeRestartNotices.java": "c86ea1c118dde0fa4807adfcab3a4197c3a29019311500dd4abd3ca1d367c256",
+    "mtgb/bridge/BridgeSeriesOwnership.java": "3f351028672ea31d75423fbfe9128ce4b03827a7a0bfddcd9f2b3e7a3fa2ce47",
+    "mtgb/bridge/BridgeShuffleAudit.java": "96f25c11ed916f86937af97c5e39ef8f793bcc36af3d02880ee33bec916f878a",
+    "mtgb/bridge/CommanderDeckInspector.java": "12365aeefeebaf4a299a2472746b8fba1cd1d72966f65d73697593623e07dcd0",
+    "mtgb/bridge/DeckEditorCatalog.java": "a7edc1aff0741da1c67fca815a688e62f2a859b8151d6de1fe4f899af2e3cb14",
+    "mtgb/bridge/ForgeActionLegality.java": "ace63859fa0ce66d107c4f09a96a3f703017252eec3143d7fa28edd6c2a89097",
+    "mtgb/bridge/ForgeBridge.java": "f456ffb9dbf77109d94b1792d603b6eae920cfdbe3a79c4df03a22b72185f696",
+    "mtgb/bridge/ForgeCardCostPreview.java": "1f2fae3173387ba3bf3e840766eb1ecf23172a700c1027721e315afb6d65d6a2",
+    "mtgb/bridge/ForgeCardNameIndex.java": "bf6eec8eeb88b4739bc7d6b0506bcf369167d6cd0ee989233f502c37c1c4a0bc",
+    "mtgb/bridge/ForgeCatalog.java": "a06643440bcb9089916ceef7f1efaa3b85d9eee2d5efe658d8f3be6234e7012e",
+    "mtgb/bridge/ForgeCharacteristicDetails.java": "e2a7634d982dcd9ef976869c0458948f1c476a568b338403eff44b1507062fc0",
+    "mtgb/bridge/ForgeEnvironment.java": "47396d95879af7ab8d0fb295e17c5de32fe18f5466a7858c79bc0690adf10392",
+    "mtgb/bridge/ForgePendingDeparture.java": "b8692fbfb5d804eecd23fc630724a9a0caf56b8d2cca91a5dd3e7243b68335d9",
+    "mtgb/bridge/ForgePoolMana.java": "32bdb9996d7171b5e07e362096474ed08d492c7e7d0f01d87cc0bc7134870db2",
+    "mtgb/bridge/ForgePublicCardDetails.java": "a1d3ea9b62055ad5759b8f93c73f038534d1652a4458d7f94b8d5ba2613a25f1",
+    "mtgb/bridge/ForgeSectorDetails.java": "4bb4505d9d45bd8f56f98a82d3ef6c97941148a54237be164e68a1d3cdf560bb",
+    "mtgb/bridge/ForgeStackPayment.java": "815868ad1c51f46e1e5041ed8cddef76daec707410fe33cb989584dce8d4fdb4",
+    "mtgb/bridge/ForgeStackTargets.java": "36d6a32354b2f878c6dc1436ecca484616360ba425f8cf9145883328bc1f5ff9"
+  },
   "nativeAssetPatches": [
     {
       "id": "dragonborn-positive-power-boon-guard",
@@ -17,12 +55,6 @@
       "path": "assets/res/cardsfolder/rebalanced/a-maelstrom_muse.txt",
       "sourceSha256": "8658e82db533d357152c683157aaeceb1a9eaccb8bdfd641aa408e696da823b2",
       "sha256": "1b960cde67ca748b23845ef8f78a771ca06f5031a2cc5505f81a6a3b2f10fcb8"
-    },
-    {
-      "id": "stick-together-own-party",
-      "path": "assets/res/cardsfolder/s/stick_together.txt",
-      "sourceSha256": "3b6cddaf7e29d605cec399881eb10e230d8b0e9981f20eb56dafc992b22191b8",
-      "sha256": "4e1a48a0e3d2b7bbe1abd4dc1ef72baacce1eedd76181c6d504932a45bc614d7"
     },
     {
       "id": "lukamina-white-death-triggered-card",
@@ -39,8 +71,8 @@
     {
       "id": "viconia-blue-distinct-trigger-description",
       "path": "assets/res/cardsfolder/v/viconia_nightsingers_disciple.txt",
-      "sourceSha256": "cf7eb189331c5c01121ebbad511ee043b55cb695adfd0c99b16bb7b2008ea65e",
-      "sha256": "340f0cdb2633803ff34bb6fbc4f5dbb426903f36821af54d773dafd38d844f8a"
+      "sourceSha256": "737fdbb638a644a2339a8af7943cb8cfbe7e81ede57b1973e2f7805266ebed11",
+      "sha256": "96402d3d713b273b16ab5b2df245e96bc9c00fc630137d1091b35957ac0ced2c"
     },
     {
       "id": "archival-whorl-own-promised-gift-condition",
@@ -59,32 +91,54 @@
       "path": "assets/res/cardsfolder/t/timmerian_fiends.txt",
       "sourceSha256": "620e3857a323c8aae32550c68c0a333c952ae651e31032547e5488be4d5de92b",
       "sha256": "943f0eebc4188eec68ff22119ea2e8830f2cc3bf734f08f6716e970293aefcde"
+    },
+    {
+      "id": "ysos-30-the-mystical-archive",
+      "path": "assets/res/cardsfolder/t/the_mystical_archive.txt",
+      "sourceSha256": "2c68c8b0f40409b6fef64d8d08f31ffb244eff40470adcc8809c55faabae1ded",
+      "sha256": "2c68c8b0f40409b6fef64d8d08f31ffb244eff40470adcc8809c55faabae1ded"
     }
   ],
   "nativePatchedSources": [
     {
       "path": "forge/ai/AvailableActions.java",
-      "sha256": "b05495ff586a0cc6efb5961e5ceee1c0a325d31adeeb2a46a6b09579bcaa5b07"
+      "sha256": "c8c1018fba5600d2a36e25f523bfe2ac21443eeb5f89e865f7703363f53b5c37"
+    },
+    {
+      "path": "forge/ai/ComputerUtilAbility.java",
+      "sha256": "aa52fedaf48b2b044121398639ca48494e5189249dc26a309b32c8211bbc9b75"
+    },
+    {
+      "path": "forge/ai/ComputerUtilCard.java",
+      "sha256": "82427391698b03e55f7636114f3f1f4e8727a0efba4c2d43c0f5990c3edae3eb"
     },
     {
       "path": "forge/ai/ComputerUtilMana.java",
-      "sha256": "35772eff4c8bd8c954c4e26bd6cdd982d25b90d6377a607944f30475914b6d27"
+      "sha256": "6d713a3bb9d02614adcd1635abbce5827c9a799e5fd3a0c5f79ba50366a4c8aa"
+    },
+    {
+      "path": "forge/ai/PlayerControllerAi.java",
+      "sha256": "5a8b90e75a789b7628671c9e559c92ccdc6acbad6f08395993377d31c5cf9711"
     },
     {
       "path": "forge/card/CardDb.java",
-      "sha256": "d49bc628649f5a099501e46dcb4dffa022cbda30aa2fbbd8e99d50efbf6587c7"
+      "sha256": "15354fbd50a7a0718a27f0f26b7c1dd446b4ea4872ca8b1aa7e71914d8eec871"
     },
     {
       "path": "forge/card/CardEdition.java",
-      "sha256": "417a7908bfffbb21d03f58a5a920a35639632cd36e49da82635eef55b5bd56c5"
+      "sha256": "f8bb470a973dfb0777d451a487b4de535c79ff2f3cb3a7ebb946c849ca445a8a"
     },
     {
       "path": "forge/CardStorageReader.java",
-      "sha256": "2c7ca4783cc28a1148b47502700c4a11fcf0acc20c33cccca79433263e3d1ab3"
+      "sha256": "c77d75327ee114679c7b35a1f76ce59752c17d6e4b21dd973fe9d6b6448829cd"
+    },
+    {
+      "path": "forge/deck/DeckFormat.java",
+      "sha256": "868eb602fd568a9332872e8c75adf42c326ace402fa405cfe39e4b3123954995"
     },
     {
       "path": "forge/game/ability/AbilityUtils.java",
-      "sha256": "5efd3346ae2da6b479e5f312d4ce4e1215817add73a8b7386d06d7572304054f"
+      "sha256": "6172ed301d6be2bf500a3f8aca50b67d32a434698431ac96f28a1613d3243c22"
     },
     {
       "path": "forge/game/ability/effects/BecomesBlockedEffect.java",
@@ -95,20 +149,12 @@
       "sha256": "486da535783edb71746b11d7d39f19979156fe2a2b7779f353e8e63d7eca2f49"
     },
     {
-      "path": "forge/game/ability/effects/CamouflageEffect.java",
-      "sha256": "da01bec24490efbe78b3885bcadfecc69a14568b1f8bbe60ac9bc81b1d9de8d9"
-    },
-    {
       "path": "forge/game/ability/effects/ChangeZoneEffect.java",
-      "sha256": "a94a3e88e8eefc1a68bf090a1d55b4250771bb68eeff0bfb90500b9d5fc0bda4"
-    },
-    {
-      "path": "forge/game/ability/effects/ChooseCardEffect.java",
-      "sha256": "c914872b5e34791dc8adf6220a2ff2b48c2a7fc05cbb26ad641f53779bb29010"
+      "sha256": "66ad6f107006fb78c2b14cfeb8b7ea50849ed955f0755fbef3f9167f516adde2"
     },
     {
       "path": "forge/game/ability/effects/ChooseCardNameEffect.java",
-      "sha256": "6d38df4b5d2b474b7c89bf03d7b87870ee6a838cb791b34d2710b66599482759"
+      "sha256": "46a2cd2d67b2d040a720a4e4ed9753d553bc68c9f18617f75fe417821f9a1212"
     },
     {
       "path": "forge/game/ability/effects/ChooseNumberEffect.java",
@@ -120,11 +166,11 @@
     },
     {
       "path": "forge/game/ability/effects/CountersPutOrRemoveEffect.java",
-      "sha256": "0006fb1c6466994c35a0159dd8ccbe8028f05768c15f1f1a7df6f6b518db7ab1"
+      "sha256": "3c6cd1a5e759a6ab9b8bc9da869446c44e4bc436adfbd71cfe999b4cff54e351"
     },
     {
       "path": "forge/game/ability/effects/CountersRemoveEffect.java",
-      "sha256": "948a612a114172ebda7c55461e1197e7c17d24700ce737317607d7d1429e9706"
+      "sha256": "35755cf0f5cfc7fd71c0e1725a3ec04bf36d1a28a0bfe9401849a737fabfb88d"
     },
     {
       "path": "forge/game/ability/effects/DigMultipleEffect.java",
@@ -132,15 +178,15 @@
     },
     {
       "path": "forge/game/ability/effects/FlipOntoBattlefieldEffect.java",
-      "sha256": "1ae42e2089184fe2265eb736a901fa46bcae93500d2f4c6c1283a98d5c646287"
+      "sha256": "21bce08688c0787799283b57a37c23fd70d4383dc63d4ef0c4d5d2c0902c4f1a"
     },
     {
       "path": "forge/game/ability/effects/MakeCardEffect.java",
-      "sha256": "c8a28608b8f9edb49605489d2568a2d61d80824a20cea7468cf664b4f0c614ab"
+      "sha256": "2e84a48946c1a1f144022d83e8f8f120a01a8e3854fdd2892700c6819e1a1054"
     },
     {
       "path": "forge/game/ability/effects/PlayEffect.java",
-      "sha256": "bf44f8a22be2a4532325106e2e5ce1cc7a6cc31b6bb6a7e9e8d90121d13ab0e3"
+      "sha256": "b26f2a8077b2394821f45a30bb737ac2c5bc7f9f00f2b2607db4ea7b8268d355"
     },
     {
       "path": "forge/game/ability/effects/RemoveFromGameEffect.java",
@@ -152,31 +198,39 @@
     },
     {
       "path": "forge/game/ability/effects/SwitchBlockEffect.java",
-      "sha256": "1ede1df72f9111b4b784ee312bfaf83d808b4d66b59cafe1bb25829830962acf"
+      "sha256": "442c9772681626456b1bfb482ee82a62ffa9a8b523b4ab372df48bea6797cd90"
     },
     {
       "path": "forge/game/ability/effects/TextBoxExchangeEffect.java",
       "sha256": "b3cabce12d1f1b792135619971cb625ffc9f3205add532152dc10075611667b2"
     },
     {
-      "path": "forge/game/ability/effects/VoteEffect.java",
-      "sha256": "5ea1dc235c35ef5bf7ecbc9e0e8c0465270acf2a7213cb236fbc239e9459b163"
-    },
-    {
       "path": "forge/game/ability/SpellAbilityEffect.java",
-      "sha256": "09cb55d7f06797c5bbca23e284abd40c600a854b0bf589a128444410e967bef7"
+      "sha256": "f0509044557773e3400b273fd439ec7fce04f62ee73f19a6c968febae1d9effa"
     },
     {
       "path": "forge/game/card/Card.java",
-      "sha256": "f22eef941c5e6a80db7ee90edf83997037f39102220989501e92ab69a4463c66"
+      "sha256": "956a6e3a8299554aa3dedbc0dab6ebc268916b6b33903f46e747b0fbbd38fab2"
+    },
+    {
+      "path": "forge/game/card/CardState.java",
+      "sha256": "fd6405d1bddec19211689d75713fa0da69147316c33953ca78694dc6ee3484a1"
+    },
+    {
+      "path": "forge/game/card/CardTraitChanges.java",
+      "sha256": "a35fe7f0576970e6f74466947a78a93d3441d0edfaa2471fb02e9b400c659123"
+    },
+    {
+      "path": "forge/game/combat/Combat.java",
+      "sha256": "894b9c5fa74b41f7f230a80a9667cae816e406629c99b72c7cfbe4c51f6b1f27"
+    },
+    {
+      "path": "forge/game/cost/Cost.java",
+      "sha256": "39ec826bb5e3ed649d19a90927f78850a402f2d2cbbd246b7640a1a0eb002f9e"
     },
     {
       "path": "forge/game/cost/CostAdjustment.java",
-      "sha256": "05b05372daaadbb04178d8bb4c25273c104e97a6d407ae5a5be6e0a0d5d84f39"
-    },
-    {
-      "path": "forge/game/cost/CostMill.java",
-      "sha256": "04c8ef1f2e71cdc91a1e1cbf6422faf467a4cdbf0b9b77c626fa0165cfaffce7"
+      "sha256": "285e7d48108c6102cf3219bc9986df2e0f62bae4ebce582defd50615816cc49b"
     },
     {
       "path": "forge/game/cost/CostPayment.java",
@@ -188,15 +242,23 @@
     },
     {
       "path": "forge/game/Game.java",
-      "sha256": "fa8714edca89137e67f9639b972c8b5081cd7ba09060cb624e1c2a73694e072a"
+      "sha256": "1ebeaee31b281415b1325b9909e188c734bad2fb58d239aef87fe94574e5bfa2"
     },
     {
       "path": "forge/game/GameAction.java",
-      "sha256": "af42e24127e5c9d355ff9153d86e070525e702fd275bca226ce4e923ed803cf1"
+      "sha256": "8f4a86e99c10c3a99cf3a2051bd2206729b88fbdc46d960ab7e9ca360ea2b810"
     },
     {
       "path": "forge/game/GameActionUtil.java",
-      "sha256": "a58575c1622c7d8c92b80343f6a6a87dece500db86b79aaeb12f31fc50d0c8da"
+      "sha256": "a10fa58bb0276e4bbc80af91cde5acddf6f8618b98e9afa87949a816eb36134c"
+    },
+    {
+      "path": "forge/game/GameRules.java",
+      "sha256": "af7329a090ef9046c8517d93384d0814b972fd428e6b485fc1ca4e09691dbed7"
+    },
+    {
+      "path": "forge/game/GameState.java",
+      "sha256": "62815f8d059f8a87f9e54e60d52bb07b52a83ad9e307dc4d91f6c5f5cda95a12"
     },
     {
       "path": "forge/game/mana/Mana.java",
@@ -207,24 +269,36 @@
       "sha256": "3d839b4d6bc30f5dfe27f6597b2ba35aae3fb5aab927cbd510a5df2251340628"
     },
     {
+      "path": "forge/game/mana/ManaPool.java",
+      "sha256": "b90a52a71698acc61a89a641c93aefd5489aefd82157d68ab5bc456b41b0ee51"
+    },
+    {
       "path": "forge/game/phase/PhaseHandler.java",
-      "sha256": "24c0dab38d9f38662323d70ddc02e51b24d7a9055b31c66a8f222fe756a4311b"
+      "sha256": "e7ce7690bf24342a6bc7edb14e2c07bd39490fcc80588ef6d26ce78ea7d392a8"
+    },
+    {
+      "path": "forge/game/phase/Untap.java",
+      "sha256": "bb2b396b6604f5b7720aea2a7aadecbaeeccdfa535434a9c32fd06403c43bc05"
     },
     {
       "path": "forge/game/player/Player.java",
-      "sha256": "33771a32744bd396a541b60e5f35a0724403b9331d757c59d5e08f56774a18ab"
+      "sha256": "2e935dcb085b42e919dc5be66d645de725736b4d8748d32f4a064e0f4a5c3dd8"
     },
     {
       "path": "forge/game/player/PlaySpellAbility.java",
-      "sha256": "424275a6c073348f61ffdb2bd5355787b9b14587fae573939728fed185ea5649"
+      "sha256": "7eb21f037546c99c20445c92c1c546ee7654cb6d78ff9c649d8262986f3ebee5"
     },
     {
       "path": "forge/game/spellability/AbilityManaPart.java",
-      "sha256": "f998fe2723329ee3384ac2c3f140652f0c7160e41c765b34ded75009d1fb951d"
+      "sha256": "ae3484b73302d6f39294c67cea7244f117391e92747c05e3290f7d353217a35e"
     },
     {
       "path": "forge/game/spellability/SpellAbility.java",
-      "sha256": "99f780cd7b4b65be3c4f0549bf4d901bcb749ebe7468b511d9ad7e2e16c8e3ac"
+      "sha256": "571720369d194b0cd743adea2e55dd04150aca8c36a9429f117a0c5532655a4a"
+    },
+    {
+      "path": "forge/game/spellability/SpellAbilityRestriction.java",
+      "sha256": "b44c3198f858005c951acbffffb459395e1b6009c0b8fa5afa938206062836bd"
     },
     {
       "path": "forge/game/spellability/TargetRestrictions.java",
@@ -232,11 +306,11 @@
     },
     {
       "path": "forge/game/zone/MagicStack.java",
-      "sha256": "65e5fe7e273eb0cfd95bb61945a82d96433500bcbc52aa3d22cea63b5357d056"
+      "sha256": "d197ff5cc32879002ce048386ce1c9abef612f25027929fb9b87d5cda88e8a08"
     },
     {
       "path": "forge/gamemodes/match/input/InputPayMana.java",
-      "sha256": "6e30a7bd4b3ef47bed46d7c49932526053f3af841f35fcbf840f3d7a755818c6"
+      "sha256": "b2c5ac6c8df08857c64576931bbcd59719b2017387074c7ec18ddc6d077ea79b"
     },
     {
       "path": "forge/gamemodes/match/input/InputPayManaOfCostPayment.java",
@@ -244,43 +318,15 @@
     },
     {
       "path": "forge/gamemodes/match/input/InputSelectManyBase.java",
-      "sha256": "cf0d5ec43fadae19c13bcc250b82e481358ed8eddea29e6ef1c81f4e22c60751"
+      "sha256": "35187baaeffbb35eeff01331e9793e24a125ff1494ecdda9683e792d04e41dd5"
     },
     {
       "path": "forge/gamemodes/match/input/InputSelectTargets.java",
-      "sha256": "5c40e71cac05afcf48dd85d67b69216f64f88709761979452d98b8abf676239b"
+      "sha256": "7f2d87618febf7194483d263482c3ebb8f9db2a673660b94020ff178f04c0e08"
     },
     {
       "path": "forge/player/HumanCostDecision.java",
-      "sha256": "4141d8f07fb88861e58de23d9f5a369fd7718f192b370e26f73ebbe8c153f758"
+      "sha256": "7dff281b8106a2bf4ab5118097732e40e61685d2d65820f7ded96a300bd4eaef"
     }
-  ],
-  "bridgeSourcesSha256": {
-    "mtgb/bridge/BridgeAllocation.java": "f66276b2effa527deb57f3bbf70a081ae595b4d8b156173c80d7c7bb818cf36f",
-    "mtgb/bridge/BridgeCardNotices.java": "46e1f58267f32c51cd8fbc23bb5b22081a9d3b536422d20e61d2ef5a17456336",
-    "mtgb/bridge/BridgeCleanupNotices.java": "e1a6770dd39d35b7cc6ef6315f96cfbc76e2f10d043361719bb9ce3b0c50f1ed",
-    "mtgb/bridge/BridgeLibraryKnowledge.java": "71be4b3ab4871aedeee24da5247523ca4027dca0e2f11d48093bc48db6f28d25",
-    "mtgb/bridge/BridgeMatchRemovals.java": "21d82a5046327bae17104d98de37790a2f4f195d1774a15ed31a3020fd849d27",
-    "mtgb/bridge/BridgeRestartNotices.java": "f6a2a3bb1a62ca900b8c0396f9ab7baf824ba3158fb276b9205909bcd5cd7190",
-    "mtgb/bridge/BridgeSeriesOwnership.java": "34c606d412e9cf72d1a53341bcd9392feb26d2a09bbd1ee74a8025407c615418",
-    "mtgb/bridge/ForgeBridge.java": "fa6afff18a78870158914cf0600ed034de55c4aba9d43c43a79d982e221bb795",
-    "mtgb/bridge/ForgeCardCostPreview.java": "87ec44834e39793ee4b2a829e1cd92e70e4d8a40ba06ddc2b3aaa8a1c4fed1ff",
-    "mtgb/bridge/ForgeCardNameIndex.java": "bf6eec8eeb88b4739bc7d6b0506bcf369167d6cd0ee989233f502c37c1c4a0bc",
-    "mtgb/bridge/ForgeCatalog.java": "848928b8814814987c3f7b5bb2fb246a161ddef8d260702fc6ad4a8ffbac888f",
-    "mtgb/bridge/ForgeCharacteristicDetails.java": "e2a7634d982dcd9ef976869c0458948f1c476a568b338403eff44b1507062fc0",
-    "mtgb/bridge/ForgeEnvironment.java": "ab5b354a90220ec9142a1dbd141ca3ab86e790a15716a8638d38d6ecc4501f79",
-    "mtgb/bridge/ForgePendingDeparture.java": "b8692fbfb5d804eecd23fc630724a9a0caf56b8d2cca91a5dd3e7243b68335d9",
-    "mtgb/bridge/ForgePoolMana.java": "01aaf285dab5736c4abc241b7d3c03947c775e8a166ded233ce955741bae843b",
-    "mtgb/bridge/ForgeSectorDetails.java": "4bb4505d9d45bd8f56f98a82d3ef6c97941148a54237be164e68a1d3cdf560bb",
-    "mtgb/bridge/ForgeStackTargets.java": "d60ed1d588546d985e3bde316e6df7cc49c92ce76b17c9aff46c56c9575ce83c",
-    "mtgb/bridge/BridgeAbilityText.java": "0889fb587558615f78eee3eb59e9ecc1b5077d412c62dd05d242e4a912a66c62",
-    "mtgb/bridge/BridgeLibraryPositions.java": "5b8e0e403330023207994e83dacd8c1b14c4eb35160d0bf7631424768a48e6b3",
-    "mtgb/bridge/CommanderDeckInspector.java": "fac7876f215b2daeb456797fe2eb36c22ba7c6536e1ee0b5aa8927a5bb68d422",
-    "mtgb/bridge/DeckEditorCatalog.java": "a7edc1aff0741da1c67fca815a688e62f2a859b8151d6de1fe4f899af2e3cb14",
-    "forge/game/phase/PhaseHandler.java": "24c0dab38d9f38662323d70ddc02e51b24d7a9055b31c66a8f222fe756a4311b",
-    "forge/game/ability/effects/DigMultipleEffect.java": "ab44c2e92b23f653e3d5d96cd116ea455007bb40db9ead3ce5b9b5aefdae1e2e",
-    "forge/game/ability/effects/FlipOntoBattlefieldEffect.java": "1ae42e2089184fe2265eb736a901fa46bcae93500d2f4c6c1283a98d5c646287",
-    "mtgb/bridge/ForgePublicCardDetails.java": "1d244012a9ef0d7e324c53f71220cb460d526c80f742b61191121a58a78d32de",
-    "mtgb/bridge/ForgeActionLegality.java": "b653b73a557571c71abc2d67754a63f9ea1ac0aa2f4db493eb6e88f3d76321c8"
-  }
+  ]
 }

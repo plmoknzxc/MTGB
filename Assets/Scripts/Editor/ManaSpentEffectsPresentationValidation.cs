@@ -52,7 +52,6 @@ public static class ManaSpentEffectsPresentationValidation
         var jade=Native("jade-stack","jade-next-turn",v=>v.stackItems.Any(s=>s.kind!="spell"&&s.source.name=="Jade Orb of Dragonkind"));
         var forge=Native("foundry-stack","foundry-exile",v=>v.stackItems.Any(s=>s.kind!="spell"&&s.source.name=="Forger's Foundry"));
         bool enabled=ui.enabled;ui.enabled=false;string locale=GamePreferences.Language;var module=EventSystem.current.currentInputModule;bool active=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None).Select(n=>(n,n.enabled)).ToArray();foreach(var n in notices)n.n.enabled=false;
         var selected=parts.Split(',');try {foreach(string lang in languages.Split(',')) {
             int revision=GamePreferences.Revision;bool changed=lang!=GamePreferences.Language;GamePreferences.SetLanguage(lang);float until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||changed&&revision==GamePreferences.Revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale unavailable");
             foreach(var item in new[]{(name:"color",view:color),(name:"riot",view:riot),(name:"foundry",view:foundry)}) {
@@ -88,7 +87,7 @@ public static class ManaSpentEffectsPresentationValidation
             string unknown="When you spend this mana to cast a different unknown spell, keep this text. ([Unknown]) [Card: Opt (121), Activator: Player 1]";
             Check((string)typeof(ForgeBattlefieldController).GetMethod("AbilityEffectText",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(ui,new object[]{new ForgeCardView{name="Unknown"},unknown})==unknown,"Unknown paragraph was replaced");
             File.AppendAllText(Output+"/steps.log",lang+" parts="+parts+" exact buttons/guards/panels/paragraphs PASS\n");
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=active;foreach(var n in notices)if(n.n!=null)n.n.enabled=n.enabled;}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=active;}
     }
 }
 #endif

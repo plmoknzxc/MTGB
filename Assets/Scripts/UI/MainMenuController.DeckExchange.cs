@@ -21,44 +21,112 @@ public sealed partial class MainMenuController
     private void CreateDeckExchangeToolbar()
     {
         var parent=deckDropdown.transform.parent;
-        CreateDialogButton(parent,"SaveAsDeckButton","另存",Vector2.zero,MenuVisualTheme.Raised,ShowSaveAsDeck);
-        CreateDialogButton(parent,"ImportDeckButton","导入",Vector2.zero,MenuVisualTheme.Raised,()=>{
-            if(hasUnsavedDeckChanges)ShowUnsavedChangesDialog(ShowImportDeck);else ShowImportDeck();
-        });
-        CreateDialogButton(parent,"ExportDeckButton","导出",Vector2.zero,MenuVisualTheme.Raised,ShowExportDeck);
-        deleteDeckButton=CreateDialogButton(parent,"DeleteDeckButton","删除",Vector2.zero,new Color(.62f,.16f,.19f),ShowDeleteDeck);
         reloadButton.gameObject.SetActive(false);
+        var heading = AddText(parent,"DeckEditorHeading","卡组编辑",21,MenuVisualTheme.ArchivePaper,TextAnchor.MiddleLeft);
+        MenuTypography.Use(heading,MenuTypography.Face.Heading);
+        heading.horizontalOverflow = HorizontalWrapMode.Overflow;
         var row=new GameObject("DeckToolbar",typeof(RectTransform),typeof(HorizontalLayoutGroup));row.transform.SetParent(parent,false);
         var rect=(RectTransform)row.transform;rect.anchorMin=new Vector2(0,1);rect.anchorMax=Vector2.one;
-        rect.pivot=new Vector2(.5f,1);rect.offsetMin=new Vector2(32,-80);rect.offsetMax=new Vector2(-32,-32);
+        rect.offsetMin=new Vector2(26,-65);rect.offsetMax=new Vector2(-26,-16);
         var layout=row.GetComponent<HorizontalLayoutGroup>();layout.spacing=10;layout.childAlignment=TextAnchor.MiddleLeft;
         layout.childControlWidth=layout.childControlHeight=true;layout.childForceExpandHeight=true;layout.childForceExpandWidth=false;
-        string[] order={"BackToTitleButton","DeckDropdown","DeckNameInput","RenameDeckButton","NewDeckButton","SaveDeckButton","SaveAsDeckButton","ImportDeckButton","ExportDeckButton","DeleteDeckButton","CollectionSearchInput","CollectionSearchButton","CollectionSearchResetButton","AdvancedSearchButton"};
-        foreach(string name in order)
+        void Add(Component control,float width=74)
         {
-            if(name=="CollectionSearchInput")
-            {
-                var spacer=new GameObject("ToolbarSpacer",typeof(RectTransform),typeof(LayoutElement));
-                spacer.transform.SetParent(row.transform,false);spacer.GetComponent<LayoutElement>().flexibleWidth=1;
-            }
-            var child=parent.GetComponentsInChildren<Transform>(true).First(t=>t.name==name);child.SetParent(row.transform,false);
-            var size=child.gameObject.AddComponent<LayoutElement>();
-            size.minWidth=size.preferredWidth=name=="DeckDropdown" || name=="DeckNameInput"?220:name=="CollectionSearchInput"?280:name=="AdvancedSearchButton"?110:name=="RenameDeckButton"?94:74;
+            control.transform.SetParent(row.transform,false);
+            var size=control.gameObject.AddComponent<LayoutElement>();
+            size.minWidth=size.preferredWidth=width;
             size.flexibleWidth=0;
-            var button=child.GetComponent<UnityEngine.UI.Button>();if(button==null)continue;
-            var image=child.GetComponent<UnityEngine.UI.Image>();image.sprite=IntegratedUiUtility.RoundedRect(100,48,6);
-            image.color=name=="SaveDeckButton"?new Color(.22f,.43f,.69f):name=="DeleteDeckButton"?new Color(.62f,.16f,.19f):new Color(.19f,.25f,.34f);
-            var outline=child.GetComponent<Outline>();if(outline==null)outline=child.gameObject.AddComponent<Outline>();
-            outline.effectDistance=new Vector2(1,-1);outline.effectColor=name=="DeleteDeckButton"?new Color(.9f,.38f,.39f,.9f):new Color(.39f,.52f,.68f,.85f);
-            var colors=button.colors;colors.normalColor=Color.white;colors.highlightedColor=new Color(1.3f,1.3f,1.3f);colors.pressedColor=new Color(.7f,.8f,.95f);button.colors=colors;
-            foreach(var text in child.GetComponentsInChildren<Text>()){text.color=Color.white;PreferenceText.SetSize(text,19);text.raycastTarget=false;}
+            if(control is not Button button)return;
+            var label=button.GetComponentInChildren<Text>(true);
+            PreferenceText.SetSize(label,18);
+            MenuVisualTheme.StyleDeckTool(button,button==saveDeckButton);
         }
-        PreferenceText.SetSize(deckDropdown.captionText,19);deckDropdown.captionText.horizontalOverflow=HorizontalWrapMode.Wrap;
-        deckDropdown.captionText.verticalOverflow=VerticalWrapMode.Truncate;deckDropdown.captionText.resizeTextForBestFit=true;
-        deckDropdown.captionText.resizeTextMinSize=13;deckDropdown.captionText.resizeTextMaxSize=25;
+        Button AddAction(string name,string caption,Action action)
+        {
+            var button=CreateDialogButton(row.transform,name,caption,Vector2.zero,MenuVisualTheme.Panel,action);
+            Add(button);
+            return button;
+        }
+
+        Add(backToTitleButton);
+        Add(heading,0);
+        Add(deckDropdown,220);
+        Add(deckNameInput,220);
+        AddAction("RenameDeckButton","重命名",BeginRenameDeck);
+        deleteDeckButton=AddAction("DeleteDeckButton","删除",ShowDeleteDeck);
+        deleteDeckButton.GetComponentInChildren<Text>(true).color=new Color32(255,203,211,255);
+
+        var spacer=new GameObject("ToolbarSpacer",typeof(RectTransform),typeof(LayoutElement));
+        spacer.transform.SetParent(row.transform,false);
+        spacer.GetComponent<LayoutElement>().flexibleWidth=1;
+        Add(newDeckButton);
+        Add(saveDeckButton);
+        AddAction("SaveAsDeckButton","另存",ShowSaveAsDeck);
+        AddAction("ImportDeckButton","导入",RequestImportDeck);
+        AddAction("ExportDeckButton","导出",ShowExportDeck);
+        var deckCaption=deckDropdown.captionText;
+        deckCaption.GetComponent<PreferenceText>().FitSingleLineHeight=false;
+        MenuVisualTheme.StyleArchiveControl(deckDropdown);
+        MenuTypography.Use(deckCaption,MenuTypography.Face.Control);
+        deckCaption.fontStyle=FontStyle.Normal;
+        PreferenceText.SetSize(deckCaption,18);
+        deckCaption.resizeTextForBestFit=false;
+        deckCaption.horizontalOverflow=HorizontalWrapMode.Overflow;
+        deckCaption.verticalOverflow=VerticalWrapMode.Overflow;
         row.AddComponent<DeckToolbarAutoSize>().Configure();
+        LayoutCollectionSearch();
         UpdateDeleteDeckButton();
     }
+    void LayoutCollectionSearch()
+    {
+        RectTransform Row(string name, float inset, float height)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(HorizontalLayoutGroup));
+            var rect = (RectTransform)go.transform;
+            rect.SetParent(collectionArea, false);
+            rect.anchorMin = new Vector2(.024f, 1);
+            rect.anchorMax = new Vector2(.976f, 1);
+            rect.offsetMin = new Vector2(0,-inset-height); rect.offsetMax = new Vector2(0,-inset);
+            var layout = go.GetComponent<HorizontalLayoutGroup>();
+            layout.childAlignment = TextAnchor.MiddleLeft;
+            layout.spacing = 8;
+            layout.childControlWidth = layout.childControlHeight = true;
+            layout.childForceExpandWidth = false;
+            return rect;
+        }
+        void Add(RectTransform row, Component control, float width, bool expand)
+        {
+            control.transform.SetParent(row, false);
+            var size = control.gameObject.AddComponent<LayoutElement>();
+            size.minWidth = size.preferredWidth = width;
+            size.flexibleWidth = expand ? 1 : 0;
+            if (control is Button button)
+            {
+                var label=button.GetComponentInChildren<Text>(true);
+                PreferenceText.SetSize(label,16);
+                MenuVisualTheme.StyleDeckTool(button);
+            }
+        }
+
+        var host = collectionSearchInput.transform.parent;
+        var search = host.Find("CollectionSearchButton").GetComponent<Button>();
+        var reset = host.Find("CollectionSearchResetButton").GetComponent<Button>();
+        var title = Row("CollectionHeading", 8, 38);
+        Add(title,collectionCountText,48,true);
+        collectionCountText.resizeTextForBestFit = true;
+        collectionCountText.resizeTextMinSize = 14;
+        collectionCountText.resizeTextMaxSize = Mathf.RoundToInt(22*GamePreferences.TextScale);
+        Add(title,advancedSearchButton,98,false);
+        title.gameObject.AddComponent<DeckToolbarAutoSize>().Configure();
+        var query = Row("CollectionQuery", 54, 40);
+        Add(query,collectionSearchInput,72,true);
+        Add(query,search,58,false);
+        Add(query,reset,58,false);
+        query.gameObject.AddComponent<DeckToolbarAutoSize>().Configure();
+        RefreshAdvancedSearchButton();
+    }
+
+
     void UpdateDeleteDeckButton()
     {
         if(deleteDeckButton!=null)deleteDeckButton.interactable=loadedDeckIndex>=0 && loadedDeckIndex<decks.Count;
@@ -92,6 +160,8 @@ public sealed partial class MainMenuController
     }
     void CloseDeckExchange()
     {
+        if (exchangeDialog != null && exchangeDialog.name == "CompanionDeck") companionDialogOpen = false;
+        if (exchangeDialog != null && exchangeDialog.name == "AuxiliaryDeck") auxiliaryDialogOpen = false;
         exchangeGeneration++;
         pickerArtPending.Clear();
         if(pickerArtLoader!=null){StopCoroutine(pickerArtLoader);pickerArtLoader=null;}
@@ -104,8 +174,10 @@ public sealed partial class MainMenuController
         exchangeDialog=new GameObject("DeckExchange",typeof(RectTransform),typeof(UnityEngine.UI.Image));exchangeDialog.transform.SetParent(GetRootCanvas().transform,false);
         Stretch((RectTransform)exchangeDialog.transform,0,0,0,0);exchangeDialog.GetComponent<UnityEngine.UI.Image>().color=new Color(0,0,0,.78f);
         var panel=new GameObject("Panel",typeof(RectTransform),typeof(UnityEngine.UI.Image));panel.transform.SetParent(exchangeDialog.transform,false);
-        Place((RectTransform)panel.transform,Vector2.zero,size);panel.GetComponent<UnityEngine.UI.Image>().color=MenuVisualTheme.Panel;
-        var heading=AddText(panel.transform,"Heading",title,25,Color.white,TextAnchor.MiddleLeft);
+        Place((RectTransform)panel.transform,Vector2.zero,size);panel.GetComponent<UnityEngine.UI.Image>().color=MenuVisualTheme.ArchivePanel;
+        MenuTypography.Scope(panel.transform);
+        var heading=AddText(panel.transform,"Heading",title,25,MenuVisualTheme.ArchivePaper,TextAnchor.MiddleLeft);
+        MenuTypography.Use(heading,MenuTypography.Face.Heading);
         Place(heading.rectTransform,new Vector2(0,size.y*.5f-38),new Vector2(size.x-60,40));
         return (RectTransform)panel.transform;
     }
@@ -113,14 +185,37 @@ public sealed partial class MainMenuController
     RectTransform PickerPanel(string name,string title,Vector2 size)
     {
         pickerArtPending.Clear();pickerVisible.Clear();
-        if(exchangeDialog==null || exchangeDialog.name!=name){var created=ExchangePanel(title,size);exchangeDialog.name=name;PreferenceText.SetSize(created.Find("Heading").GetComponent<Text>(),25);return created;}
+        if(exchangeDialog==null || exchangeDialog.name!=name)
+        {
+            var created=ExchangePanel(title,size);
+            exchangeDialog.name=name;
+            StyleDeckDialog(created);
+            return created;
+        }
         var panel=(RectTransform)exchangeDialog.transform.Find("Panel");
+        panel.sizeDelta=size;
         panel.Find("Heading").GetComponent<Text>().text=title;
         return panel;
     }
+    private void StyleDeckDialog(RectTransform panel)
+    {
+        exchangeDialog.GetComponent<Image>().color=MenuVisualTheme.DialogShade;
+        var heading=panel.Find("Heading").GetComponent<Text>();
+        MenuVisualTheme.StyleDeckDialogSurface(panel, heading);
+        PreferenceText.SetSize(heading,31);
+        StartCoroutine(FitDeckDialog(panel,exchangeDialog));
+    }
     void FinishPicker(Transform panel)
     {
-        foreach(Transform child in panel)if(child.name!="Heading")child.gameObject.SetActive(pickerVisible.Contains(child));
+        foreach(Transform child in panel)if(child.name!="Heading" && child.name!="DialogLintel" && child.name!="DialogFrame")child.gameObject.SetActive(pickerVisible.Contains(child));
+    }
+    private Vector2 PickerCardSlot(RectTransform panel, int index)
+    {
+        var center=new Vector2((index%3-1)*397,index<3?49:-152);
+        var backing=PickerImage(panel,"Slot_"+index,MenuVisualTheme.ArchivePanel);
+        Place(backing.rectTransform,center,new Vector2(384,187));
+        backing.transform.SetAsFirstSibling();
+        return center;
     }
     Text PickerText(Transform panel,string name,string value,int size,Color color,TextAnchor alignment)
     {
@@ -178,20 +273,82 @@ public sealed partial class MainMenuController
         pickerVisible.Add(button.transform);button.gameObject.SetActive(true);
         var colors=button.colors;colors.fadeDuration=0;button.colors=colors;
         button.interactable=interactable;button.onClick.RemoveAllListeners();button.onClick.AddListener(()=>action());
-        button.GetComponent<Image>().color=MenuVisualTheme.Raised;
         var text=button.GetComponentInChildren<Text>();text.text=GamePreferences.T(label);PreferenceText.SetSize(text,20);
+        MenuVisualTheme.StyleDeckTool(button,name=="Close"||name=="CloseCompanion");
         DisabledButtonVisual.Bind(button);
         text.canvasRenderer.SetAlpha(interactable?1:.38f);
         return button;
     }
-    InputField ExchangeInput(Transform parent,string name,Vector2 pos,Vector2 size,bool multiline=false)
+    InputField ExchangeInput(Transform parent,string name,Vector2 pos,Vector2 size)
     {
         var go=new GameObject(name,typeof(RectTransform),typeof(UnityEngine.UI.Image),typeof(UnityEngine.UI.InputField));go.transform.SetParent(parent,false);Place((RectTransform)go.transform,pos,size);
         var input=go.GetComponent<UnityEngine.UI.InputField>();input.targetGraphic=go.GetComponent<UnityEngine.UI.Image>();input.targetGraphic.color=MenuVisualTheme.Ink;
-        input.textComponent=AddText(go.transform,"Text","",18,MenuVisualTheme.Paper,multiline?TextAnchor.UpperLeft:TextAnchor.MiddleLeft);
+        input.textComponent=AddText(go.transform,"Text","",18,MenuVisualTheme.Paper,TextAnchor.MiddleLeft);
         input.textComponent.supportRichText=false;Stretch(input.textComponent.rectTransform,12,10,12,10);
-        // The parser rejects oversized input as a whole. Never truncate a pasted deck into a valid partial list.
-        input.lineType=multiline?InputField.LineType.MultiLineNewline:InputField.LineType.SingleLine;input.characterLimit=0;
+        return input;
+    }
+    TMPro.TMP_InputField ExchangeScrollableInput(Transform parent,string name,Vector2 pos,Vector2 size,bool readOnly=false)
+    {
+        var go=new GameObject(name,typeof(RectTransform),typeof(Image));
+        // TMP creates its caret and registers its text viewport on the first OnEnable.
+        go.SetActive(false);
+        go.transform.SetParent(parent,false);Place((RectTransform)go.transform,pos,size);
+        var input=go.AddComponent<TMPro.TMP_InputField>();
+        var viewport=new GameObject("Text Area",typeof(RectTransform),typeof(RectMask2D));
+        viewport.transform.SetParent(go.transform,false);
+        Stretch((RectTransform)viewport.transform,12,38,10,10);
+        var textObject=new GameObject("Text",typeof(RectTransform),typeof(TMPro.TextMeshProUGUI));
+        textObject.transform.SetParent(viewport.transform,false);
+        var label=textObject.GetComponent<TMPro.TextMeshProUGUI>();
+        label.text="";label.color=MenuVisualTheme.ArchivePaper;label.alignment=TMPro.TextAlignmentOptions.TopLeft;
+        label.enableAutoSizing=false;label.textWrappingMode=TMPro.TextWrappingModes.Normal;
+        label.richText=false;label.raycastTarget=false;
+        // The import dialog can open before the localized font finishes loading.
+        // Prefer the loaded CJK asset so pasted names and error lines stay legible.
+        var importFont=GamePreferences.TmpFont;
+        if(importFont==null)
+        {
+            string fallback=GamePreferences.Language=="ja-JP"?"NotoSansCJKjp-SDF":"NotoSansCJKsc-SDF";
+            importFont=Resources.FindObjectsOfTypeAll<TMPro.TMP_FontAsset>().FirstOrDefault(font=>font.name==fallback);
+#if UNITY_EDITOR
+            // Editor play-mode previews can skip GamePreferences initialization.
+            if(importFont==null)importFont=UnityEditor.AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>("Assets/Fonts/"+fallback+".asset");
+#endif
+        }
+        if(importFont!=null)label.font=importFont;
+        Stretch(label.rectTransform,0,0,0,0);
+        input.textViewport=(RectTransform)viewport.transform;
+        input.textComponent=label;
+        input.lineType=TMPro.TMP_InputField.LineType.MultiLineNewline;
+        input.richText=false;
+        input.readOnly=readOnly;
+        input.onFocusSelectAll=false;
+        input.scrollSensitivity=2f;input.characterLimit=0;
+        PreferenceText.SetSize(label,18);
+        var binding=label.GetComponent<PreferenceText>();
+        binding.Literal=true;
+        binding.SetMenuFace(MenuTypography.Face.Control);
+        input.fontAsset=label.font;
+        MenuVisualTheme.StyleArchiveControl(input,recessed:true);
+        input.customCaretColor=true;
+        input.caretColor=MenuVisualTheme.Silver;
+        input.caretWidth=3;
+        input.caretBlinkRate=.85f;
+        input.selectionColor=new Color32(97,158,194,165);
+        var track=new GameObject("VerticalScrollbar",typeof(RectTransform),typeof(UnityEngine.UI.Image),typeof(UnityEngine.UI.Scrollbar));
+        track.transform.SetParent(go.transform,false);
+        var trackRect=(RectTransform)track.transform;
+        trackRect.anchorMin=new Vector2(1,0);trackRect.anchorMax=Vector2.one;
+        trackRect.offsetMin=new Vector2(-28,10);trackRect.offsetMax=new Vector2(-8,-10);
+        var handle=new GameObject("Handle",typeof(RectTransform),typeof(UnityEngine.UI.Image));
+        handle.transform.SetParent(track.transform,false);
+        Stretch((RectTransform)handle.transform,3,3,3,3);
+        var scrollbar=track.GetComponent<UnityEngine.UI.Scrollbar>();
+        scrollbar.handleRect=(RectTransform)handle.transform;
+        scrollbar.direction=UnityEngine.UI.Scrollbar.Direction.TopToBottom;
+        MenuVisualTheme.StyleDeckScrollThumb(scrollbar);
+        input.verticalScrollbar=scrollbar;
+        go.SetActive(true);
         return input;
     }
     void AdoptNewDeck(DeckDefinition deck)
@@ -233,21 +390,52 @@ public sealed partial class MainMenuController
         });
         if(this!=null)deckExchange=codec;return codec;
     }
+    void RequestImportDeck()
+    {
+        if(hasUnsavedDeckChanges) ShowUnsavedChangesDialog(ShowImportDeck);
+        else ShowImportDeck();
+    }
+
+    static Button ExchangeButton(Transform panel,string name,string caption,Vector2 position,Action action,bool primary=false)
+    {
+        var button=CreateDialogButton(panel,name,caption,position,MenuVisualTheme.Raised,action);
+        MenuVisualTheme.StyleDeckTool(button,primary);
+        return button;
+    }
+
     void ShowImportDeck()
     {
         var panel=ExchangePanel("导入卡组",new Vector2(900,660));
-        var hint=AddText(panel,"Hint","粘贴后自动识别 MO / MTGA / MTGB，直接创建新卡组。",18,MenuVisualTheme.Muted,TextAnchor.MiddleLeft);Place(hint.rectTransform,new Vector2(0,238),new Vector2(840,36));
-        var input=ExchangeInput(panel,"DeckText",new Vector2(0,38),new Vector2(840,348),true);
-        var errors=ExchangeInput(panel,"ImportErrors",new Vector2(0,-205),new Vector2(840,112),true);errors.readOnly=true;errors.gameObject.SetActive(false);
+        StyleDeckDialog(panel);
+        var hint=AddText(panel,"Hint","粘贴后自动识别 MO / MTGA / MTGB，直接创建新卡组。",18,MenuVisualTheme.Stone,TextAnchor.MiddleLeft);Place(hint.rectTransform,new Vector2(0,238),new Vector2(840,36));
+        var fields=new GameObject("TextFields",typeof(RectTransform),typeof(VerticalLayoutGroup));
+        fields.transform.SetParent(panel,false);
+        Place((RectTransform)fields.transform,new Vector2(0,-24),new Vector2(840,472));
+        var layout=fields.GetComponent<VerticalLayoutGroup>();
+        layout.spacing=12;
+        layout.childControlWidth=layout.childControlHeight=true;
+        layout.childForceExpandWidth=true;
+        layout.childForceExpandHeight=false;
+        var input=ExchangeScrollableInput(fields.transform,"DeckText",Vector2.zero,new Vector2(840,472));
+        input.gameObject.AddComponent<LayoutElement>().flexibleHeight=1;
+        var errors=ExchangeScrollableInput(fields.transform,"ImportErrors",Vector2.zero,new Vector2(840,112),readOnly:true);
+        errors.gameObject.AddComponent<LayoutElement>().preferredHeight=112;
+        errors.textComponent.color=new Color32(255,203,211,255);
+        errors.gameObject.SetActive(false);
         input.onValueChanged.AddListener(value=>{
             if(importDebounce!=null)StopCoroutine(importDebounce);
             exchangeGeneration++;importDebounce=StartCoroutine(ParsePastedDeck(value,errors,exchangeGeneration));
         });
-        CreateDialogButton(panel,"Paste","粘贴",new Vector2(330,-293),MenuVisualTheme.Primary,()=>input.text=GUIUtility.systemCopyBuffer);
-        CreateDialogButton(panel,"Cancel","取消",new Vector2(-330,-293),MenuVisualTheme.Raised,CloseDeckExchange);
+        ExchangeButton(panel,"Paste","粘贴",new Vector2(330,-293),()=>{
+            input.text=GUIUtility.systemCopyBuffer;
+            input.Select();
+            input.ActivateInputField();
+            input.MoveTextEnd(false);
+        },primary:true);
+        ExchangeButton(panel,"Cancel","取消",new Vector2(-330,-293),CloseDeckExchange);
         input.Select();input.ActivateInputField();
     }
-    IEnumerator ParsePastedDeck(string text,InputField errors,int generation)
+    IEnumerator ParsePastedDeck(string text,TMPro.TMP_InputField errors,int generation)
     {
         yield return new WaitForSecondsRealtime(.35f);
         importDebounce=null;
@@ -266,11 +454,12 @@ public sealed partial class MainMenuController
     {
         if(currentDeck==null)return;
         var panel=ExchangePanel("导出卡组",new Vector2(900,660));int generation=exchangeGeneration;
-        var output=ExchangeInput(panel,"ExportText",new Vector2(0,-10),new Vector2(840,392),true);output.readOnly=true;
-        var hint=AddText(panel,"Hint","",17,MenuVisualTheme.Muted,TextAnchor.MiddleLeft);Place(hint.rectTransform,new Vector2(0,-244),new Vector2(840,60));
+        StyleDeckDialog(panel);
+        var output=ExchangeScrollableInput(panel,"ExportText",new Vector2(0,-10),new Vector2(840,392),readOnly:true);
+        var hint=AddText(panel,"Hint","",17,MenuVisualTheme.Stone,TextAnchor.MiddleLeft);Place(hint.rectTransform,new Vector2(0,-244),new Vector2(840,60));
         bool valid=false;
-        var copy=CreateDialogButton(panel,"Copy","复制",new Vector2(330,-293),MenuVisualTheme.Primary,()=>{if(valid)GUIUtility.systemCopyBuffer=output.text;});copy.interactable=false;
-        CreateDialogButton(panel,"Close","关闭",new Vector2(-330,-293),MenuVisualTheme.Raised,CloseDeckExchange);
+        var copy=ExchangeButton(panel,"Copy","复制",new Vector2(330,-293),()=>{if(valid)GUIUtility.systemCopyBuffer=output.text;},primary:true);copy.interactable=false;
+        ExchangeButton(panel,"Close","关闭",new Vector2(-330,-293),CloseDeckExchange);
         try
         {
             var codec=await GetDeckExchange();if(this==null || generation!=exchangeGeneration || panel==null)return;
@@ -283,11 +472,12 @@ public sealed partial class MainMenuController
                         :"MTGA 文本：保留系列与编号；不保留赛制或禁表日期。");}
                 catch(Exception e){output.text="";hint.text=e.Message;valid=false;}
                 copy.interactable=valid;
-                for(int i=0;i<buttons.Count;i++)buttons[i].GetComponent<UnityEngine.UI.Image>().color=i==(int)format?MenuVisualTheme.Primary:MenuVisualTheme.Raised;
+                for(int i=0;i<buttons.Count;i++)MenuVisualTheme.StyleDeckTool(buttons[i],i==(int)format);
                 output.MoveTextStart(false);
+                output.verticalScrollbar.value=0;
             };
             foreach(DeckTextExchange.Format format in Enum.GetValues(typeof(DeckTextExchange.Format)))
-            {var captured=format;buttons.Add(CreateDialogButton(panel,format.ToString(),format.ToString(),new Vector2(((int)format-1)*180,222),MenuVisualTheme.Raised,()=>select(captured)));}
+            {var captured=format;buttons.Add(ExchangeButton(panel,format.ToString(),format.ToString(),new Vector2(((int)format-1)*180,222),()=>select(captured)));}
             select(DeckTextExchange.Format.MTGB);
         }
         catch(Exception e){if(hint!=null)hint.text=e.Message;}
@@ -318,12 +508,12 @@ public sealed class DeckToolbarAutoSize : MonoBehaviour
         foreach (Transform child in transform)
         {
             var dropdown=child.GetComponent<Dropdown>();
-            if (child.GetComponent<Button>() == null&&dropdown==null) continue;
+            if (child.GetComponent<Button>() == null && dropdown == null && child.name != "DeckEditorHeading") continue;
             var layout = child.GetComponent<LayoutElement>();
             var label = dropdown!=null?dropdown.captionText:child.GetComponentInChildren<Text>(true);
             if (layout == null || label == null) continue;
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
-            label.verticalOverflow = VerticalWrapMode.Truncate;
+            label.verticalOverflow = dropdown!=null ? VerticalWrapMode.Overflow : VerticalWrapMode.Truncate;
             items.Add(new Item { layout = layout, label = label, baseWidth = layout.preferredWidth, dropdown=dropdown });
         }
         Refresh();

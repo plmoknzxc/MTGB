@@ -16,6 +16,8 @@ public sealed partial class ForgeBattlefieldController
     private string VoteTerm(string source,string term)
     {
         switch((source,term)) {
+            case ("Split Decision","Denial"):return TapPaymentText("拒斥","Denial","否定");
+            case ("Split Decision","Duplication"):return TapPaymentText("重制","Duplication","複製");
             case ("Tivit, Seller of Secrets","Evidence"):return TapPaymentText("搜证","Evidence","証拠");
             case ("Tivit, Seller of Secrets","Bribery"):return TapPaymentText("行贿","Bribery","賄賂");
             case ("Plea for Power","Time"):return TapPaymentText("时间","Time","時間");
@@ -31,7 +33,7 @@ public sealed partial class ForgeBattlefieldController
         string name=request.sourceCard.name,prefix=name+" — ";
         if(native?.StartsWith(prefix,StringComparison.Ordinal)!=true)return native;
         string term=VoteTerm(name,native.Substring(prefix.Length));
-        return term==null?native:ConfirmationSourceName(name,request.sourceCard.id)+" — "+term;
+        return term==null?native:GamePreferences.CardFaceName(name)+" — "+term;
     }
 
     private string VoteNoticeText(ForgeNotice notice,string value)

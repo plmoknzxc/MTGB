@@ -10,6 +10,7 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--output',default='.tools/git-publish-1014')
     parser.add_argument('--date',default='20261014')
+    parser.add_argument('--local-only',action='store_true',help='Record local archives without a release URL')
     args=parser.parse_args()
     output=(ROOT/args.output).resolve();output.mkdir(parents=True,exist_ok=True)
     source=ROOT/'ForgeRuntime/source';destination=ROOT/'ThirdParty/Forge'
@@ -22,7 +23,7 @@ def main():
         path=source/'native-patches'/row['path'];assert sha(path)==row['sha256'],row['path']
         target=destination/'native-patches'/row['path'];target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,target)
     shutil.copy2(source/'origins.json',destination/'origins.json')
-    release='https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-'+args.date
+    release=None if args.local_only else 'https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-'+args.date
     overlay=output/('mtgb-forge-source-overlay-'+args.date+'.zip');files=[]
     with zipfile.ZipFile(overlay,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as package:
         for parent in [ROOT/'Tools/ForgeBridge',ROOT/'Tools/ForgeProof',destination]:

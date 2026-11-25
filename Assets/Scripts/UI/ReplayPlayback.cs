@@ -22,6 +22,8 @@ public sealed class ReplayPlayback : MonoBehaviour
     private int lastFrame = -1;
     private int lastPresentationRevision = -1;
     private string source;
+    internal static string BattlefieldScene(int playerCount) => playerCount == 4
+        ? ForgeBattlefieldController.FourPlayerSceneName : ForgeBattlefieldController.SceneName;
     public static void Open(MatchReplay replay, string path, bool export)
     {
         if (Current != null) return;
@@ -31,10 +33,10 @@ public sealed class ReplayPlayback : MonoBehaviour
     }
     private IEnumerator Load(bool export)
     {
-        yield return SceneManager.LoadSceneAsync(ForgeBattlefieldController.SceneName);
+        yield return SceneManager.LoadSceneAsync(BattlefieldScene(Replay.players.Length));
         board = FindFirstObjectByType<ForgeBattlefieldController>();
         if (board == null) board = new GameObject("ReplayBattlefield").AddComponent<ForgeBattlefieldController>();
-        BuildControls(); Seek(0);
+        BuildControls(); Render(0,true);
         if (export) ChooseExport();
     }
     private void BuildControls()
@@ -48,11 +50,14 @@ public sealed class ReplayPlayback : MonoBehaviour
         var toggleRect=(RectTransform)controlsToggle.transform;
         toggleRect.anchorMin=toggleRect.anchorMax=new Vector2(1,1);toggleRect.pivot=new Vector2(1,1);toggleRect.anchoredPosition=new Vector2(-20,-18);
         ReplayWidgets.Button(bar, "返回录像", -540, 24, 160, Exit);
-        playText = ReplayWidgets.Button(bar, "暂停", -395, 24, 110, () => { Playing = !Playing; if (Position >= Replay.Duration) Seek(0); }).GetComponentInChildren<Text>();
+        playText = ReplayWidgets.Button(bar, "暂停", -395, 24, 110, () => {
+            Playing = !Playing;
+            if (Playing && lastFrame == Replay.frames.Count - 1) { Position = 0; Render(0,true); }
+        }).GetComponentInChildren<Text>();
         ReplayWidgets.Button(bar, "上一步", -275, 24, 110, () => Step(-1));
         ReplayWidgets.Button(bar, "下一步", -155, 24, 110, () => Step(1));
         speedText = ReplayWidgets.Button(bar, "1×", -55, 24, 70, () => { Speed = Speed >= 4 ? .5f : Speed * 2; }).GetComponentInChildren<Text>();
-        ReplayWidgets.Button(bar, "切换视角", 70, 24, 160, () => { Seat = 3 - Seat; Seek(Position); });
+        ReplayWidgets.Button(bar, "切换视角", 70, 24, 160, () => { Seat = Seat % Replay.players.Length + 1; Render(lastFrame,true); });
         ReplayWidgets.Button(bar, "导出视频", 240, 24, 160, ChooseExport);
         timeText = ReplayWidgets.Label(bar, "", 475, 24, 270, 48, 20, TextAnchor.MiddleRight);
         var track = ReplayWidgets.Panel(bar, "Timeline", 0, -32, 1230, 12, MenuVisualTheme.Raised);
@@ -83,36 +88,44 @@ public sealed class ReplayPlayback : MonoBehaviour
     {
         if (board == null) return;
         // A paused frame still depends on loaded translations, fonts and text size.
-        if(GamePreferences.Ready && lastPresentationRevision!=GamePreferences.Revision)Render(false);
         if (Playing)
         {
             Position = Math.Min(Replay.Duration, Position + Time.unscaledDeltaTime * Speed);
-            Render(false);
+            Render(ReplayRepository.FrameAt(Replay,Position),false);
             if (Position >= Replay.Duration) Playing = false;
         }
+        else if(GamePreferences.Ready && lastPresentationRevision!=GamePreferences.Revision)Render(lastFrame,false);
         slider.SetValueWithoutNotify((float)Position);
         timeText.text = ReplayWidgets.TimeText(Position) + " / " + ReplayWidgets.TimeText(Replay.Duration);
         playText.text = GamePreferences.T(Playing ? "暂停" : "播放"); speedText.text = Speed + "×";
     }
     public void Seek(double seconds)
     {
-        Position = Math.Max(0, Math.Min(Replay.Duration, seconds)); Render(true);
+        Position = Math.Max(0, Math.Min(Replay.Duration, seconds));
+        Render(ReplayRepository.FrameAt(Replay,Position),true);
     }
     private void Step(int direction)
     {
         Playing = false;
-        int frame = Mathf.Clamp(ReplayRepository.FrameAt(Replay, Position) + direction, 0, Replay.frames.Count - 1);
-        Seek(Replay.frames[frame].time);
+        int frame = Mathf.Clamp(lastFrame + direction, 0, Replay.frames.Count - 1);
+        Position = Replay.frames[frame].time;
+        Render(frame,true);
     }
-    private void Render(bool seek)
+    private void Render(int frame,bool seek)
     {
-        if (board == null) return;
-        int frame = ReplayRepository.FrameAt(Replay, Position);
+        if (board == null || frame < 0) return;
         if (!seek && frame == lastFrame && lastPresentationRevision==GamePreferences.Revision) return;
         lastFrame = frame;
         lastPresentationRevision=GamePreferences.Revision;
-        board.PresentReplay(Replay.frames[frame].views[Seat - 1], Seat, Replay.players, seek,Replay.frames[frame].views[2-Seat]);
-        stateText.text = Replay.players[Seat - 1] + " · " + GamePreferences.T("观看录像");
+        board.PresentReplayFrame(Replay,frame,Seat,seek);
+        if(frame==Replay.frames.Count-1){
+            string winner=Replay.winnerSeat>0?Replay.players[Replay.winnerSeat-1]:null;
+            winner=OnlineRoomConfig.WinnerLabel(Replay.frames[frame].views[0],Replay.winnerSeat,winner);
+            stateText.text=winner==null?GamePreferences.T(Replay.reason??"对局结束"):GamePreferences.Language switch {
+                "zh-CN"=>winner+" 获胜", "ja-JP"=>winner+"の勝利", _=>winner+" wins"
+            };
+            SetControlsVisible(true);
+        }else stateText.text = Replay.players[Seat - 1] + " · " + GamePreferences.T("观看录像");
     }
     private void Exit()
     {

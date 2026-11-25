@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -9,10 +10,12 @@ using UnityEngine.UI;
 public sealed class ReplayBrowser : MonoBehaviour
 {
     private static ReplayBrowser current;
+    private GameObject coveredMenu;
     public static bool ReopenOnReturn;
     public static string ReturnMessage;
     private RectTransform rows;
-    private Text details, status, pagination;
+    private Text details, status, pagination, versus, timing, filename, listHeading;
+    private readonly Text[] playerLabels = new Text[4];
     private Button play, export, delete, previousPage, nextPage;
     private RectTransform deleteDialog;
     private string[] files = Array.Empty<string>();
@@ -22,55 +25,95 @@ public sealed class ReplayBrowser : MonoBehaviour
     private CancellationTokenSource previewRead;
     private int page, selectionRevision;
     private const int PageSize = 8;
-    private static readonly Color Surface = new Color(.075f, .105f, .15f);
-    private static readonly Color Border = new Color(.22f, .30f, .41f);
-    private static readonly Color Gold = new Color(.87f, .70f, .40f);
-    private static readonly Color WarmText = new Color(.91f, .95f, 1f);
-    public static void Show()
+    // Recorder names contain a timestamp, sometimes followed by a game number and match id.
+    // Custom filenames are displayed verbatim.
+    private static readonly Regex RecorderName = new Regex(
+        @"^(?<stamp>\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2})(?: G(?<game>\d+) [a-fA-F0-9]{32})?(?<copy> \(\d+\))?$");
+    public static void Show(GameObject menuToCover = null)
     {
         if (current != null) return;
         var canvas = ReplayWidgets.Canvas("ReplayBrowser", 420);
         current = canvas.gameObject.AddComponent<ReplayBrowser>(); current.Build();
+        if (menuToCover != null && menuToCover.activeSelf)
+        {
+            current.coveredMenu = menuToCover;
+            menuToCover.SetActive(false);
+        }
     }
     private void Build()
     {
-        var background = ReplayWidgets.Panel(transform, "Background", 0, 0, 1920, 1080, new Color(.035f,.055f,.085f));
-        background.anchorMin = Vector2.zero; background.anchorMax = Vector2.one; background.offsetMin = background.offsetMax = Vector2.zero;
-        var art = ReplayWidgets.Rect(background, "ArchiveArtwork", 0, 0, 1920, 1080);
-        art.anchorMin = Vector2.zero; art.anchorMax = Vector2.one; art.offsetMin = art.offsetMax = Vector2.zero;
-        var image = art.gameObject.AddComponent<RawImage>();
-        image.texture = Resources.Load<Texture2D>("Menu/ArchiveSanctum");
-        image.color = new Color(.40f,.57f,.80f,.19f); image.raycastTarget = false;
-        var fit = art.gameObject.AddComponent<AspectRatioFitter>(); fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-        fit.aspectRatio = image.texture != null ? (float)image.texture.width / image.texture.height : 16f / 9;
-        ReplayWidgets.Panel(transform, "HeaderRule", 0, 396, 1660, 1, Border).GetComponent<Image>().raycastTarget = false;
-        ReplayWidgets.Label(transform, "观看录像", -600, 445, 500, 72, 42);
-        ReplayWidgets.Button(transform, "返回", 760, 450, 140, () => Destroy(gameObject));
-        ReplayWidgets.Button(transform, "打开录像目录", -710, 350, 240, OpenFolder);
-        ReplayWidgets.Button(transform, "刷新", -495, 350, 150, RefreshFiles);
-        ReplayWidgets.Button(transform, "设置", 760, 350, 140, () => GameSettingsPanel.Show(transform));
-        rows = ReplayWidgets.Panel(transform, "ReplayList", -305, -30, 1050, 670, Surface);
-        var info = ReplayWidgets.Panel(transform, "ReplayDetails", 540, -30, 580, 670, new Color(.095f,.135f,.19f));
-        AddBorder(rows.gameObject); AddBorder(info.gameObject);
-        ReplayWidgets.Panel(info, "DetailRule", 0, 238, 510, 1, Border).GetComponent<Image>().raycastTarget = false;
-        ReplayWidgets.Label(info, "录像详情", 0, 279, 510, 50, 28);
-        details = ReplayWidgets.Label(info, "选择一场对局", 0, 42, 510, 385, 22, TextAnchor.UpperLeft);
-        play = ReplayWidgets.Button(info, "播放录像", 0, -208, 500, () => OpenSelected(false), true);
-        export = ReplayWidgets.Button(info, "导出视频", -130, -276, 240, () => OpenSelected(true));
-        delete = ReplayWidgets.Button(info, "删除录像", 130, -276, 240, ShowDeleteSelected);
-        pagination = ReplayWidgets.Label(transform, "", -300, -420, 480, 52, 20, TextAnchor.MiddleCenter);
-        previousPage = ReplayWidgets.Button(transform, "上一页", -695, -420, 170, () => { if (page > 0) { page--; RenderFiles(); } });
-        nextPage = ReplayWidgets.Button(transform, "下一页", 95, -420, 170, () => { if ((page + 1) * PageSize < files.Length) { page++; RenderFiles(); } });
-        status = ReplayWidgets.Label(transform, ReturnMessage ?? "", 0, -487, 1660, 46, 18);
+        var root = MenuVisualTheme.ArchivePage(GetComponent<Canvas>(), "ReplayPage", "观看录像", "返回", () => Destroy(gameObject));
+        Button Tool(Transform parent, string label, float x, float y, float width, Action action, bool primary = false)
+        {
+            var button = ReplayWidgets.Button(parent, label, x, y, width, action, primary);
+            MenuVisualTheme.StyleDeckTool(button, primary);
+            return button;
+        }
+        Tool(root, "设置", 500, 401, 156, () => GameSettingsPanel.Show(transform, archiveStyle:true));
+        var list = MenuVisualTheme.ArchiveSection(root, "ReplayList", DeckCompanion.Text("本地录像","Local recordings","ローカル録画"),
+            -330, -25, 980, 690, MenuVisualTheme.LibraryAccent);
+        listHeading = list.GetComponentInChildren<Text>();
+        Tool(list, "打开录像目录", 212, 299, 206, OpenFolder);
+        Tool(list, "刷新", 394, 299, 130, RefreshFiles);
+        rows = ReplayWidgets.Rect(list, "Files", 0, -8, 916, 488);
+        pagination = ReplayWidgets.Label(list, "", 0, -301, 350, 50, 20, TextAnchor.MiddleCenter);
+        pagination.color = MenuVisualTheme.Stone;
+        previousPage = Tool(list, "上一页", -364, -301, 188, () => { if (page > 0) { page--; RenderFiles(); } });
+        nextPage = Tool(list, "下一页", 364, -301, 188, () => { if ((page + 1) * PageSize < files.Length) { page++; RenderFiles(); } });
+
+        var info = MenuVisualTheme.ArchiveSection(root, "ReplayDetails", "录像详情", 502, -25, 636, 690, MenuVisualTheme.SideAccent);
+        var plate = ReplayWidgets.Panel(info, "Matchup", 0, 107, 572, 250, MenuVisualTheme.Recess);
+        var scenery = ReplayWidgets.Rect(plate, "MoonlitBackdrop", 0, 0, 572, 250).gameObject.AddComponent<RawImage>();
+        MenuThemeArtwork.Bind(scenery, MenuThemeArtwork.Role.Replay);
+        scenery.uvRect = new Rect(.04f, .07f, .92f, .683f);
+        scenery.color = new Color(.70f, .82f, .94f, .96f);
+        scenery.raycastTarget = false;
+        details = ReplayWidgets.Label(plate, "选择一场对局", 0, 74, 518, 52, 21);
+        details.color = MenuVisualTheme.Silver;
+        Text PlayerLabel(float y)
+        {
+            var player = ReplayWidgets.Label(plate, "", 0, y, 518, 55, 30);
+            player.GetComponent<PreferenceText>().Literal = true;
+            player.resizeTextForBestFit = true; player.resizeTextMinSize = 14; player.resizeTextMaxSize = 36;
+            MenuTypography.Use(player, MenuTypography.Face.Heading);
+            return player;
+        }
+        for (int i = 0; i < playerLabels.Length; i++) playerLabels[i] = PlayerLabel(0);
+        versus = ReplayWidgets.Label(plate, "", 0, -28, 518, 32, 16);
+        MenuTypography.Use(versus, MenuTypography.Face.Control);
+        versus.color = MenuVisualTheme.SideAccent;
+        timing = ReplayWidgets.Label(info, "", 0, -61, 572, 46, 22);
+        filename = ReplayWidgets.Label(info, "", 0, -126, 572, 78, 17);
+        filename.color = MenuVisualTheme.Stone;
+        filename.GetComponent<PreferenceText>().Literal = true;
+        filename.resizeTextForBestFit = true; filename.resizeTextMinSize = 14; filename.resizeTextMaxSize = 20;
+        play = Tool(info, "播放录像", 0, -213, 572, () => OpenSelected(false), true);
+        ((RectTransform)play.transform).sizeDelta = new Vector2(572, 66);
+        export = Tool(info, "导出视频", -148, -301, 276, () => OpenSelected(true));
+        delete = Tool(info, "删除录像", 148, -301, 276, ShowDeleteSelected);
+        delete.GetComponentInChildren<Text>().color = MenuVisualTheme.Warning;
+        status = ReplayWidgets.Label(root, ReturnMessage ?? "", 0, -413, 1640, 65, 20);
+        status.color = MenuVisualTheme.Silver;
         ReturnMessage = null;
-        foreach (var label in GetComponentsInChildren<Text>()) label.color = WarmText;
-        foreach (var button in GetComponentsInChildren<Button>()) StyleButton(button, button == play);
-        pagination.color = status.color = new Color(.64f,.73f,.84f);
         ReplayRepository.Changed += RefreshFiles;
-        GamePreferences.Changed += RefreshDetails;
+        GamePreferences.Changed += RefreshPresentation;
         RefreshFiles();
     }
-    private void OnDestroy() { previewRead?.Cancel();previewRead?.Dispose();ReplayRepository.Changed -= RefreshFiles; GamePreferences.Changed -= RefreshDetails; if (current == this) current = null; }
+    private void OnDestroy()
+    {
+        previewRead?.Cancel();
+        previewRead?.Dispose();
+        ReplayRepository.Changed -= RefreshFiles;
+        GamePreferences.Changed -= RefreshPresentation;
+        if (current == this) current = null;
+        if (coveredMenu != null && coveredMenu.scene.isLoaded) coveredMenu.SetActive(true);
+    }
+    private void RefreshPresentation()
+    {
+        listHeading.text = DeckCompanion.Text("本地录像","Local recordings","ローカル録画");
+        RefreshDetails();
+        RenderFiles();
+    }
     public void RefreshFiles()
     {
         try {
@@ -78,7 +121,7 @@ public sealed class ReplayBrowser : MonoBehaviour
             if (selectedPath != null && Array.IndexOf(files, selectedPath) < 0) {
                 ++selectionRevision; selected = null; selectedPath = null;
                 previewRead?.Cancel();
-                details.text = "选择一场对局";
+                ClearPreview("选择一场对局");
             }
             page = Math.Min(page, Math.Max(0, (files.Length - 1) / PageSize)); RenderFiles();
         }
@@ -90,34 +133,60 @@ public sealed class ReplayBrowser : MonoBehaviour
         for (int i = page * PageSize; i < Math.Min(files.Length, (page + 1) * PageSize); i++)
         {
             string path = files[i];
-            var button = ReplayWidgets.Button(rows, Path.GetFileNameWithoutExtension(path), 0, 285 - (i % PageSize) * 77,
-                1000, () => Select(path), selectedPath == path);
-            ((RectTransform)button.transform).sizeDelta = new Vector2(1000, 65);
-            StyleButton(button, selectedPath == path);
-            if (selectedPath == path) ReplayWidgets.Panel(button.transform, "SelectedMark", -496, 0, 3, 47, Gold).GetComponent<Image>().raycastTarget = false;
-            var label = button.GetComponentInChildren<Text>(); label.alignment = TextAnchor.MiddleLeft;
-            label.rectTransform.sizeDelta = new Vector2(958, 60);
-            label.horizontalOverflow=HorizontalWrapMode.Wrap;label.resizeTextForBestFit=true;
-            label.resizeTextMinSize=16;label.resizeTextMaxSize=Mathf.RoundToInt(20*GamePreferences.TextScale);
+            string name = Path.GetFileNameWithoutExtension(path);
+            bool active = selectedPath == path;
+            float y = 214 - (i % PageSize) * 61;
+            var button = ReplayWidgets.Button(rows, name, 0, y, 916, () => Select(path));
+            ((RectTransform)button.transform).sizeDelta = new Vector2(916, 56);
+            MenuVisualTheme.StyleDeckOption(button, active);
+            if (!active)
+            {
+                var colors = button.colors;
+                colors.normalColor = (i % 2 == 0) ? MenuVisualTheme.ArchivePanel : MenuVisualTheme.Recess;
+                button.colors = colors;
+                button.targetGraphic.CrossFadeColor(colors.normalColor, 0, true, true);
+            }
+            else
+                ReplayWidgets.Panel(button.transform, "SelectedMark", -453, 0, 4, 42, MenuVisualTheme.SideAccent).GetComponent<Image>().raycastTarget = false;
+            var label = button.GetComponentInChildren<Text>();
+            label.alignment = TextAnchor.MiddleLeft;
+            label.GetComponent<PreferenceText>().Literal = true;
+            label.horizontalOverflow = HorizontalWrapMode.Wrap;
+            label.rectTransform.sizeDelta = new Vector2(858, 54);
+            label.resizeTextMinSize = 15; label.resizeTextMaxSize = 24;
+            var match = RecorderName.Match(name);
+            if (match.Success && DateTime.TryParseExact(match.Groups["stamp"].Value, "yyyy-MM-dd HH-mm-ss",
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out var stamp))
+            {
+                label.text = stamp.ToString("yyyy / MM / dd", CultureInfo.InvariantCulture);
+                label.rectTransform.sizeDelta = new Vector2(426, 52);
+                label.rectTransform.anchoredPosition = new Vector2(-216, 0);
+                var clock = ReplayWidgets.Label(button.transform, stamp.ToString("HH:mm:ss", CultureInfo.InvariantCulture) + match.Groups["copy"].Value,
+                    32, 0, 228, 50, 20);
+                MenuTypography.Use(clock, MenuTypography.Face.Control);
+                clock.color = MenuVisualTheme.Silver;
+                if (match.Groups["game"].Success)
+                {
+                    string game = match.Groups["game"].Value;
+                    var round = ReplayWidgets.Label(button.transform, DeckCompanion.Text("第 " + game + " 局","Game " + game,"第 " + game + " ゲーム"),
+                        319, 0, 214, 50, 20, TextAnchor.MiddleRight);
+                    round.color = MenuVisualTheme.SideAccent;
+                }
+            }
         }
-        if (files.Length == 0) ReplayWidgets.Label(rows, "还没有保存的录像", 0, 0, 900, 80, 28, TextAnchor.MiddleCenter).color = new Color(.60f,.62f,.64f);
+        if (files.Length == 0)
+            ReplayWidgets.Label(rows, "还没有保存的录像", 0, 0, 830, 80, 26, TextAnchor.MiddleCenter).color = MenuVisualTheme.Stone;
         pagination.text = (page + 1) + " / " + Math.Max(1, (files.Length + PageSize - 1) / PageSize);
         play.interactable = export.interactable = selected != null && !opening;
         delete.interactable = selectedPath != null && File.Exists(selectedPath);
         previousPage.interactable = page > 0;
         nextPage.interactable = (page + 1) * PageSize < files.Length;
     }
-    private static void AddBorder(GameObject target)
+    private void ClearPreview(string message)
     {
-        var outline = target.GetComponent<Outline>() ?? target.AddComponent<Outline>(); outline.effectColor = Border; outline.effectDistance = new Vector2(1,-1);
-    }
-    private static void StyleButton(Button button, bool primary)
-    {
-        button.GetComponent<Image>().color = primary ? new Color(.21f,.39f,.61f) : new Color(.12f,.18f,.27f);
-        AddBorder(button.gameObject);
-        var colors = button.colors; colors.highlightedColor = new Color(1.22f,1.25f,1.3f);
-        colors.pressedColor = new Color(.8f,.8f,.8f); colors.disabledColor = new Color(.70f,.75f,.82f,.85f); button.colors = colors;
-        button.GetComponentInChildren<Text>().color = WarmText;
+        details.text = message;
+        foreach (var label in playerLabels) label.text = "";
+        versus.text = timing.text = filename.text = "";
     }
     public async void Select(string path)
     {
@@ -125,14 +194,16 @@ public sealed class ReplayBrowser : MonoBehaviour
         previewRead?.Cancel();previewRead?.Dispose();previewRead=new CancellationTokenSource();var cancellation=previewRead.Token;
         opening=false; selected = null; selectedPath = path; play.interactable = export.interactable = false;
         delete.interactable = File.Exists(path);
-        details.text = "正在读取录像…";
+        ClearPreview("正在读取录像…");
+        filename.text = Path.GetFileName(path);
+        RenderFiles();
         try
         {
             var replay = await Task.Run(() => ReplayRepository.ReadPreview(path,false,cancellation),cancellation);
             if (this == null || request != selectionRevision) return;
             selected = replay;
             RefreshDetails();
-            status.text = ""; RenderFiles();
+            status.text = ""; play.interactable = export.interactable = !opening;
             if(replay.duration<0){
                 var complete=await Task.Run(()=>ReplayRepository.ReadPreview(path,true,cancellation),cancellation);
                 if(this==null||request!=selectionRevision)return;
@@ -147,8 +218,22 @@ public sealed class ReplayBrowser : MonoBehaviour
         if (selected == null || details == null) return;
         string started = DateTime.Parse(selected.startedUtc, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
             .ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-        details.text = started + "\n\n" + selected.players[0] + "\n── VS ──\n" + selected.players[1]
-            + "\n\n" + string.Format(GamePreferences.T("时长：{0}"), selected.duration<0 ? "…" : ReplayWidgets.TimeText(selected.duration));
+        details.text = started;
+        bool fourSeats = selected.players.Length == 4;
+        versus.text = fourSeats ? "" : "VS";
+        for (int i = 0; i < playerLabels.Length; i++)
+        {
+            var label = playerLabels[i];
+            label.gameObject.SetActive(i < selected.players.Length);
+            if (i >= selected.players.Length) continue;
+            label.text = selected.players[i];
+            label.supportRichText = false;
+            label.rectTransform.sizeDelta = new Vector2(fourSeats ? 252 : 518, 55);
+            label.rectTransform.anchoredPosition = fourSeats
+                ? new Vector2(i % 2 == 0 ? -136 : 136, i < 2 ? 12 : -64)
+                : new Vector2(0, i == 0 ? 20 : -76);
+        }
+        timing.text = string.Format(GamePreferences.T("时长：{0}"), selected.duration < 0 ? "…" : ReplayWidgets.TimeText(selected.duration));
     }
     private async void OpenSelected(bool video)
     {
@@ -159,7 +244,7 @@ public sealed class ReplayBrowser : MonoBehaviour
             if(ReplayVideoExportJob.Busy){status.text=GamePreferences.T("已有视频正在后台导出");return;}
             string videoSource=selectedPath;
             ReplayVideoExportDialog.Show(Path.GetFileNameWithoutExtension(videoSource),
-                (destination,overwrite,width,height,fps)=>ReplayVideoExportJob.Start(videoSource,1,destination,overwrite,width,height,fps));
+                (destination,overwrite,width,height,fps)=>ReplayVideoExportJob.Start(videoSource,1,destination,overwrite,width,height,fps), archiveStyle:true);
             return;
         }
         if(opening)return;
@@ -177,11 +262,12 @@ public sealed class ReplayBrowser : MonoBehaviour
     {
         if (selectedPath == null || deleteDialog != null) return;
         string path = selectedPath;
-        deleteDialog = ReplayWidgets.Panel(transform, "DeleteReplayModal", 0, 0, 1920, 1080, new Color(0,0,0,.7f));
+        deleteDialog = ReplayWidgets.Panel(transform, "DeleteReplayModal", 0, 0, 1920, 1080, MenuVisualTheme.DialogShade);
         deleteDialog.anchorMin = Vector2.zero; deleteDialog.anchorMax = Vector2.one;
         deleteDialog.offsetMin = deleteDialog.offsetMax = Vector2.zero;
-        var box = ReplayWidgets.Panel(deleteDialog, "DeleteReplayDialog", 0, 0, 720, 300, Surface);
-        ReplayWidgets.Label(box, "删除录像", 0, 96, 640, 52, 30);
+        var box = ReplayWidgets.Panel(deleteDialog, "DeleteReplayDialog", 0, 0, 780, 336, MenuVisualTheme.ArchivePanel);
+        var heading = ReplayWidgets.Label(box, "删除录像", 0, 96, 640, 52, 30);
+        MenuVisualTheme.StyleDeckDialogSurface(box, heading);
         var question = ReplayWidgets.Label(box, "确定删除“" + Path.GetFileNameWithoutExtension(path) + "”？\n删除后无法恢复。", 0, 8, 640, 100, 21);
         question.horizontalOverflow = HorizontalWrapMode.Wrap;
         var cancel = ReplayWidgets.Button(box, "取消", -145, -100, 250, CloseDeleteDialog);
@@ -192,7 +278,8 @@ public sealed class ReplayBrowser : MonoBehaviour
                 status.text = removed ? "录像已删除。" : "录像已不存在，列表已刷新。";
             } catch (Exception e) { CloseDeleteDialog(); status.text = "删除失败：" + e.Message; }
         });
-        StyleButton(cancel, false); StyleButton(confirm, false);
+        MenuVisualTheme.StyleDeckTool(cancel); MenuVisualTheme.StyleDeckTool(confirm);
+        confirm.GetComponentInChildren<Text>().color = MenuVisualTheme.Warning;
     }
     private void CloseDeleteDialog()
     {

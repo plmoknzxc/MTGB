@@ -28,7 +28,7 @@ public static class BattlefieldLayerPresentationValidation
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("LayerValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(ui));
     }
     static IEnumerator Guard(ForgeBattlefieldController ui){
-        var language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;
+        var language=GamePreferences.Language;
         var test=Validate(ui);
         try{while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: zh/en/ja fixed stack dock across priority, casting, crowded targets, collapse and restore; only the front card has an aligned animated glow; five player counters fit on one row, actual width overflow pages and restores; both mana pools remain below new/cached selection windows and are restored with stable typography; native selection raycasts/IDs; dense support row gaps use actual card heights. This is Unity presentation evidence, not new effect validation.");}
         finally{running=false;ui.RestoreBattlefieldWindows();GamePreferences.SetLanguage(language);}

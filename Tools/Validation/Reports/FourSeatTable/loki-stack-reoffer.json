@@ -1,0 +1,721 @@
+{
+  "runtimeHash": "c996cd3cc507abe3007255f5cac91e54bbb6eedfbcc01b0bdb643772f19dfc06",
+  "transport": "four independent Windows Unity players, loopback LAN UDP",
+  "sessions": [
+    {
+      "match": "075fe65ea80c4dbf92d088999f8eabaf",
+      "race": {
+        "firstSeat": 1,
+        "secondSeat": 3,
+        "loki": 4,
+        "deltaMs": 5,
+        "firstUtcMs": 1795541175691,
+        "secondUtcMs": 1795541175696
+      },
+      "clients": [
+        {
+          "seat": 1,
+          "pid": 58888
+        },
+        {
+          "seat": 2,
+          "pid": 55000
+        },
+        {
+          "seat": 3,
+          "pid": 40372
+        },
+        {
+          "seat": 4,
+          "pid": 54880
+        }
+      ],
+      "checkpoints": [
+        {
+          "label": "shared priority before simultaneous drags",
+          "sequence": 63,
+          "priority": 1,
+          "receivedPrompt": [
+            1
+          ],
+          "stack": []
+        },
+        {
+          "label": "Loki offered the original spell first",
+          "sequence": 64,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "teammate may respond; first spell still pending",
+          "sequence": 66,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "both spells on stack",
+          "sequence": 67,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": [
+            {
+              "id": 3,
+              "controller": 3,
+              "name": "Pact of the Titan"
+            },
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "pact resolved; thopter still pending",
+          "sequence": 71,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "thopter resolved; stack empty",
+          "sequence": 75,
+          "priority": 2,
+          "receivedPrompt": [
+            2
+          ],
+          "stack": []
+        },
+        {
+          "label": "second hero opens a fresh stack",
+          "sequence": 76,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": [
+            {
+              "id": 5,
+              "controller": 2,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "unanswered spell resolved; next hero acts",
+          "sequence": 80,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": []
+        },
+        {
+          "label": "two heroes ready; third can still act",
+          "sequence": 82,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": []
+        },
+        {
+          "label": "hero cancels; still same main phase",
+          "sequence": 83,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": []
+        },
+        {
+          "label": "all heroes confirmed; Loki gets priority",
+          "sequence": 90,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": []
+        },
+        {
+          "label": "Loki responds after unanimity",
+          "sequence": 91,
+          "priority": 1,
+          "receivedPrompt": [
+            1
+          ],
+          "stack": [
+            {
+              "id": 6,
+              "controller": 4,
+              "name": "Pact of the Titan"
+            }
+          ]
+        },
+        {
+          "label": "Loki response resolves; all heroes can act again",
+          "sequence": 95,
+          "priority": 1,
+          "receivedPrompt": [
+            1
+          ],
+          "stack": []
+        },
+        {
+          "label": "Loki passes; combat begins with fresh votes",
+          "sequence": 102,
+          "priority": 1,
+          "receivedPrompt": [
+            1
+          ],
+          "stack": []
+        }
+      ],
+      "priorityPasses": [
+        {
+          "sequence": 67,
+          "seat": 4,
+          "request": 118,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 68,
+          "seat": 1,
+          "request": 120,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 69,
+          "seat": 2,
+          "request": 122,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 70,
+          "seat": 3,
+          "request": 124,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 71,
+          "seat": 4,
+          "request": 126,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 72,
+          "seat": 2,
+          "request": 128,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 73,
+          "seat": 3,
+          "request": 130,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 74,
+          "seat": 1,
+          "request": 132,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 76,
+          "seat": 4,
+          "request": 136,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 77,
+          "seat": 3,
+          "request": 138,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 78,
+          "seat": 1,
+          "request": 140,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 79,
+          "seat": 2,
+          "request": 142,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 91,
+          "seat": 1,
+          "request": 156,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 92,
+          "seat": 2,
+          "request": 158,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 93,
+          "seat": 3,
+          "request": 160,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 94,
+          "seat": 4,
+          "request": 162,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 101,
+          "seat": 4,
+          "request": 170,
+          "stack": []
+        }
+      ]
+    },
+    {
+      "match": "0d85dfd9c74e4715b2635cb63d692151",
+      "race": {
+        "firstSeat": 1,
+        "secondSeat": 2,
+        "loki": 3,
+        "deltaMs": 21,
+        "firstUtcMs": 1795541688578,
+        "secondUtcMs": 1795541688557
+      },
+      "clients": [
+        {
+          "seat": 1,
+          "pid": 4048
+        },
+        {
+          "seat": 2,
+          "pid": 58044
+        },
+        {
+          "seat": 3,
+          "pid": 61384
+        },
+        {
+          "seat": 4,
+          "pid": 45580
+        }
+      ],
+      "checkpoints": [
+        {
+          "label": "shared priority before simultaneous drags",
+          "sequence": 63,
+          "priority": 1,
+          "receivedPrompt": [
+            1
+          ],
+          "stack": []
+        },
+        {
+          "label": "Loki offered the original spell first",
+          "sequence": 64,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "teammate may respond; first spell still pending",
+          "sequence": 65,
+          "priority": 2,
+          "receivedPrompt": [
+            2
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "both spells on stack",
+          "sequence": 66,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": [
+            {
+              "id": 3,
+              "controller": 2,
+              "name": "Pact of the Titan"
+            },
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "pact resolved; thopter still pending",
+          "sequence": 70,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "Loki responds on second offer of the original spell",
+          "sequence": 71,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": [
+            {
+              "id": 5,
+              "controller": 3,
+              "name": "Pact of the Titan"
+            },
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "Loki's response resolved; original offered again",
+          "sequence": 75,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": [
+            {
+              "id": 2,
+              "controller": 1,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "thopter resolved; stack empty",
+          "sequence": 79,
+          "priority": 2,
+          "receivedPrompt": [
+            2
+          ],
+          "stack": []
+        },
+        {
+          "label": "second hero opens a fresh stack",
+          "sequence": 80,
+          "priority": 3,
+          "receivedPrompt": [
+            3
+          ],
+          "stack": [
+            {
+              "id": 7,
+              "controller": 2,
+              "name": "Ornithopter"
+            }
+          ]
+        },
+        {
+          "label": "unanswered spell resolved; next hero acts",
+          "sequence": 84,
+          "priority": 4,
+          "receivedPrompt": [
+            4
+          ],
+          "stack": []
+        }
+      ],
+      "priorityPasses": [
+        {
+          "sequence": 66,
+          "seat": 3,
+          "request": 116,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 67,
+          "seat": 4,
+          "request": 118,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 68,
+          "seat": 1,
+          "request": 120,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 69,
+          "seat": 2,
+          "request": 122,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 71,
+          "seat": 4,
+          "request": 126,
+          "stack": [
+            5,
+            2
+          ]
+        },
+        {
+          "sequence": 72,
+          "seat": 1,
+          "request": 128,
+          "stack": [
+            5,
+            2
+          ]
+        },
+        {
+          "sequence": 73,
+          "seat": 2,
+          "request": 130,
+          "stack": [
+            5,
+            2
+          ]
+        },
+        {
+          "sequence": 74,
+          "seat": 3,
+          "request": 132,
+          "stack": [
+            5,
+            2
+          ]
+        },
+        {
+          "sequence": 75,
+          "seat": 3,
+          "request": 134,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 76,
+          "seat": 2,
+          "request": 136,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 77,
+          "seat": 4,
+          "request": 138,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 78,
+          "seat": 1,
+          "request": 140,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 80,
+          "seat": 3,
+          "request": 144,
+          "stack": [
+            7
+          ]
+        },
+        {
+          "sequence": 81,
+          "seat": 4,
+          "request": 146,
+          "stack": [
+            7
+          ]
+        },
+        {
+          "sequence": 82,
+          "seat": 1,
+          "request": 148,
+          "stack": [
+            7
+          ]
+        },
+        {
+          "sequence": 83,
+          "seat": 2,
+          "request": 150,
+          "stack": [
+            7
+          ]
+        }
+      ],
+      "visibleHandCounts": {
+        "sequence": 84,
+        "loki": 3,
+        "rows": [
+          {
+            "viewer": 1,
+            "visible": [
+              7,
+              6,
+              0,
+              8
+            ],
+            "counts": [
+              7,
+              6,
+              6,
+              8
+            ]
+          },
+          {
+            "viewer": 2,
+            "visible": [
+              7,
+              6,
+              0,
+              8
+            ],
+            "counts": [
+              7,
+              6,
+              6,
+              8
+            ]
+          },
+          {
+            "viewer": 3,
+            "visible": [
+              0,
+              0,
+              6,
+              0
+            ],
+            "counts": [
+              7,
+              6,
+              6,
+              8
+            ]
+          },
+          {
+            "viewer": 4,
+            "visible": [
+              7,
+              6,
+              0,
+              8
+            ],
+            "counts": [
+              7,
+              6,
+              6,
+              8
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -15,14 +15,54 @@ public sealed partial class ForgeBattlefieldController
         return match.Success?match.Groups[1].Value=="MAX!"?"4":match.Groups[1].Value:"";
     }
     private static bool IsPublicRuleHelper(ForgeCardView card)=>card!=null&&!card.faceDown&&card.effectMarker&&card.markerKind=="effect"&&card.helperArtName is "The Monarch" or "The Initiative" or "The Ring";
-    private static string MarkerName(ForgeCardView card)=>IsSprocketMarker(card)?TapPaymentText("装置齿轮组","Contraption sprockets","からくり列"):RegenerationSourceName(card)??(card.effectSourceName=="Dragonborn Immolator"&&(card.name??"").EndsWith("'s Boon",StringComparison.Ordinal)?string.Format(GamePreferences.T("{0}'s boon"),GamePreferences.CardFaceName(card.effectSourceName)):card.markerKind=="player-protection"?TapPaymentText("玩家保护","Player protection","プレイヤーのプロテクション"):IsPublicRuleHelper(card)
+    private static bool IsPuzzleGoal(ForgeCardView card)=>card?.effectMarker==true && !card.faceDown && card.markerKind=="effect" && card.helperArtName=="Puzzle Goal";
+    private static string MarkerName(ForgeCardView card)=>IsPuzzleGoal(card)?TapPaymentText("残局目标","Puzzle Goal","パズルの目標"):IsSprocketMarker(card)?TapPaymentText("装置齿轮组","Contraption sprockets","からくり列"):RegenerationSourceName(card)??(card.effectSourceName=="Dragonborn Immolator"&&(card.name??"").EndsWith("'s Boon",StringComparison.Ordinal)?string.Format(GamePreferences.T("{0}'s boon"),GamePreferences.CardFaceName(card.effectSourceName)):card.markerKind=="player-protection"?TapPaymentText("玩家保护","Player protection","プレイヤーのプロテクション"):IsPublicRuleHelper(card)
         ?card.helperArtName=="The Ring"?TapPaymentText("魔戒","The Ring","指輪"):card.helperArtName=="The Monarch"?TapPaymentText("君主","The Monarch","統治者"):DeckKeywordGlossary.All.FirstOrDefault(e=>e.English==card.helperArtName)?.Name??card.name
         :card.markerKind=="game"?card.helperArtName switch {
         "Day"=>TapPaymentText("白昼","Day","昼"),"Night"=>TapPaymentText("黑夜","Night","夜"),_=>card.name
     }:IsSpeedMarker(card)?card.helperArtName is "Max Speed" or "Max Speed!"?TapPaymentText("速度极限！","Max Speed!","最高速度！"):TapPaymentText("发动引擎！","Start Your Engines!","エンジン始動！"):card.name);
+    private string DisplayMarkerRules(ForgeCardView card)
+    {
+        if (card.markerKind != "game" || card.helperArtName is not ("Day" or "Night"))
+            return MarkerRules(card);
+
+        // MID 019/020 helper faces. Only the turn-based condition changes for shared team turns.
+        bool shared = view?.commanderEvent == OnlineRoomConfig.Loki;
+        if (card.helperArtName == "Day")
+        {
+            string change = shared
+                ? TapPaymentText("英雄共用回合，洛基单独行动。若主动一方在其回合中无人施放咒语，则下一个回合成为黑夜。",
+                    "The heroes share a turn. Loki takes a separate turn. If no player on the active side casts a spell during that turn, it becomes night next turn.",
+                    "ヒーローはターンを共有し、ロキは単独でターンを行う。アクティブ・チームの誰もそのターンに呪文を唱えなかったなら、次のターンに夜になる。")
+                : TapPaymentText("如果牌手于自己回合中没有施放咒语，则下一个回合成为黑夜。",
+                    "If the active player casts no spells during their turn, it becomes night next turn.",
+                    "アクティブ・プレイヤーが自分のターンに呪文を唱えなかったなら、次のターンに夜になる。");
+            return TapPaymentText("于天色成为白昼时，转化所有夜形永久物。",
+                "As it becomes day, transform all nightbound permanents.",
+                "昼になるに際し、夜明を持つすべてのパーマネントを変身させる。") + "\n\n" + change;
+        }
+
+        string dawn = shared
+            ? TapPaymentText("英雄共用回合，洛基单独行动。若主动一方有一位牌手在该回合施放过两个或更多咒语，则下一个回合成为白昼。每位英雄施放的咒语分别计数。",
+                "The heroes share a turn. Loki takes a separate turn. It becomes day next turn if one player on the active side casts at least two spells that turn. Count each hero’s spells separately.",
+                "ヒーローはターンを共有し、ロキは単独でターンを行う。アクティブ・チームの１人がそのターンに呪文を２つ以上唱えたなら、次のターンに昼になる。唱えた呪文はヒーローごとに数える。")
+            : TapPaymentText("如果牌手于自己回合中施放过两个或更多咒语，则下一个回合成为白昼。",
+                "If the active player casts two or more spells during their turn, it becomes day next turn.",
+                "アクティブ・プレイヤーが自分のターンに呪文を２つ以上唱えたなら、次のターンに昼になる。");
+        return TapPaymentText("于天色成为黑夜时，转化所有昼形永久物。昼形永久物以夜形状态进战场。",
+            "As it becomes night, transform all daybound permanents. Daybound permanents enter the battlefield nightbound.",
+            "夜になるに際し、日暮を持つすべてのパーマネントを変身させる。日暮を持つパーマネントは夜明の面を表にして戦場に出る。") + "\n\n" + dawn;
+    }
+
     private static string MarkerRules(ForgeCardView card)
     {
-        if(IsSprocketMarker(card))return card.markerStatus+"\n\n"+(card.currentRules=="At the beginning of your upkeep, if you control a Contraption, move the CRANK! counter to the next sprocket and crank any number of that sprocket's Contraptions."?SprocketRules():card.currentRules);
+        if(IsPuzzleGoal(card) && card.currentRules=="At the beginning of your cleanup step on the specified turn, you lose the game.")
+            return TapPaymentText("在指定回合的清除步骤开始时，你输掉这盘游戏。",card.currentRules,"指定されたターンのあなたのクリンナップ・ステップの開始時に、あなたはこのゲームに敗北する。");
+        if(IsSprocketMarker(card)) {
+            var sprocket=System.Text.RegularExpressions.Regex.Match(card.markerStatus??"",@"^CRANK! — ([1-3])$");
+            string current=sprocket.Success?TapPaymentText("启动标记 · 齿轮组 ","CRANK! — ","クランク・カウンター · 第")+sprocket.Groups[1].Value:card.markerStatus;
+            return current+"\n\n"+(card.currentRules=="At the beginning of your upkeep, if you control a Contraption, move the CRANK! counter to the next sprocket and crank any number of that sprocket's Contraptions."?SprocketRules():card.currentRules);
+        }
         if(card.markerKind=="player-protection")return string.Join("\n",(card.currentRules??"").Split('\n').Select(line=>{
             string[] names={"white","blue","black","red","green"},zh={"反白","反蓝","反黑","反红","反绿"},ja={"白","青","黒","赤","緑"};
             int index=Array.FindIndex(names,n=>line=="Protection from "+n);
@@ -96,12 +136,17 @@ public sealed partial class ForgeBattlefieldController
         => card?.effectMarker==true && card.markerKind=="effect"
             && (card.name??"").StartsWith("Warped ",StringComparison.Ordinal)
             && (card.currentRules??"").Trim()=="You may cast the card.";
-    private static IEnumerable<ForgeCardView> VisibleEffectMarkers(ForgePlayerView player)
-        => (player.effectMarkers??Array.Empty<ForgeCardView>()).Where(c=>!IsExiledCardCastPermission(c));
+    private IEnumerable<ForgeCardView> VisibleEffectMarkers(ForgePlayerView player)
+        => (player.effectMarkers??Array.Empty<ForgeCardView>()).Where(c=>!IsExiledCardCastPermission(c)
+            && (service?.CurrentPuzzle==null || !IsPuzzleGoal(c)));
 
     private void PresentEmblems(ForgePlayerView player,bool own)
     {
         var markers=VisibleEffectMarkers(player).Concat(own?view.globalEffects??Array.Empty<ForgeCardView>():Array.Empty<ForgeCardView>()).ToArray();
+        if(battleSidebar!=null){
+            PresentSidebarMarkers(player,own,(player.emblems??Array.Empty<ForgeCardView>()).Concat(markers).ToArray());
+            return;
+        }
         bool State(ForgeCardView card)=>card.markerKind!="delayed"&&!string.IsNullOrEmpty(card.helperArtName);
         float manaReserve = IsRedesignLayout ? RedesignPlayerManaReserve : 0;
         PresentMarkerLane(player,own,"States",markers.Where(State).ToArray(),(own?1:-1)*(200+manaReserve));
@@ -117,13 +162,14 @@ public sealed partial class ForgeBattlefieldController
         int page=pages.TryGetValue(pageKey,out int saved)?Math.Min(saved,maxPage):0;
         pages[pageKey]=page;
         var plate=(RectTransform)Node(own?"PlayerPlate":"OpponentPlate");
+        var markerParent=worldTable!=null&&statusMarkersRoot!=null?statusMarkersRoot:cardsRoot;
         bool stateLane=lane=="States";
         float spacing=stateLane?106:86;
         for(int i=page*capacity;i<Math.Min(groups.Length,(page+1)*capacity);i++) {
             var card=groups[i][0];
-            var position=cardsRoot.InverseTransformPoint(plate.TransformPoint(new Vector3(-spacing+(i%capacity)*spacing,y,0)));
+            var position=markerParent.InverseTransformPoint(plate.TransformPoint(new Vector3(-spacing+(i%capacity)*spacing,y,0)));
             // Reuse the existing image, shape, hover and native object identity.
-            DrawArenaCard(cardsRoot,card,groups[i].Length,(own?"Your":"Opponent")+"Emblem:"+card.id,"markers:"+player.seat+":"+lane+":"+GroupKey(card),new Vector2(position.x,position.y),new Vector2(stateLane?96:76,stateLane?126:card.markerKind=="delayed"?68:82),false,0,i);
+            DrawArenaCard(markerParent,card,groups[i].Length,(own?"Your":"Opponent")+"Emblem:"+card.id,"markers:"+player.seat+":"+lane+":"+GroupKey(card),new Vector2(position.x,position.y),new Vector2(stateLane?96:76,stateLane?126:card.markerKind=="delayed"?68:82),false,0,i);
         }
         foreach(int direction in new[]{-1,1}) {
             string name=lane+(direction<0?"Previous":"Next");
@@ -156,8 +202,9 @@ public sealed partial class ForgeBattlefieldController
     }
     public static string PendingDepartureText(ForgePendingDeparture instruction)
     {
-        // Conditions outside this bounded translation retain the exact engine text.
-        if(!string.IsNullOrEmpty(instruction.condition))return instruction.description??"";
+        string source=instruction.description??"";
+        if(!string.IsNullOrEmpty(instruction.condition)||source.Contains(" if "))
+            return NativeMessageText.TryTranslate(source,out var localized)?localized:source;
         string phase=System.Text.RegularExpressions.Regex.Replace(instruction.phase??"",@"\s+","").Trim().ToLowerInvariant();
         string when=phase switch {
             "endofturn"=>instruction.yourTurn?TapPaymentText("在该效果操控者的下一个结束步骤开始时，","At the beginning of that effect controller's next end step, ","その効果のコントローラーの次の終了ステップの開始時に、"):TapPaymentText("在下一个结束步骤开始时，","At the beginning of the next end step, ","次の終了ステップの開始時に、"),

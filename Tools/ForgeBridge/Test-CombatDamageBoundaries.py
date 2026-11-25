@@ -56,6 +56,7 @@ def run(case):
    def snapshot(m,label):
     r=m['request'];v=dict(m['views'][r['seat']-1]);v.update(request=r,awaitingInput=True);write(folder/(label+'.json'),v)
    before=None;initial=None;hands=None;source_ids=[];defender_ids=[];seen=set();attacked=set();pairs=set();contexts={};completed=[];skipped=None;optional=0;cast=False;paid=0;spell_id=None;deadline=time.monotonic()+180
+   strikes={}
    for step in range(400):
     check(time.monotonic()<deadline,'Deadline');m=messages.get(timeout=35)
     if isinstance(m,Exception):raise m
@@ -65,12 +66,19 @@ def run(case):
     if r['requestId'] in seen:continue
     seen.add(r['requestId']);v=m['views'][0];one,two=v['players'];kind=r['kind'];ids=[o['id'] for o in r['options']];pick='ok'
     check(not m['views'][0]['players'][1]['hand'] and not m['views'][1]['players'][0]['hand'],'private hand concealed')
+    for event in v['combatFeedback']:
+     if event['kind']=='strike' and event['id'] not in strikes:
+      check(v['phase']=='COMBAT_DAMAGE' and kind=='InputPassPriority' and bool(completed),'strike occurs after the native damage choices close')
+      strikes[event['id']]=event['attacker']
+     if event['kind'] in ('hit','loss'):
+      check(bool(strikes) and min(strikes)<event['id'],'impact follows the attack animation cue')
     if kind=='InputPassPriority':
      if initial is None and r['seat']==1 and v['phase']=='MAIN1':
       initial=v['players'];before=proof(r);hands=[{c['id'] for c in m['views'][s]['players'][s]['hand']} for s in range(2)];source_ids=[c['id'] for c in one['battlefield'] if c['creature']];defender_ids=[c['id'] for c in two['battlefield'] if c['creature']];snapshot(m,'before')
      if initial is not None and case=='fog' and not cast and r['seat']==1 and v['phase']=='MAIN1' and not v['stackItems']:
       spell_id=next(c['id'] for c in one['hand'] if c['name']=='Fog');pick='card:'+str(spell_id);cast=True
      if initial is not None and attacked and v['phase']=='MAIN2' and not v['stackItems']:
+      check(sorted(strikes.values())==sorted(source_ids),'one strike per damage-dealing attacker even when divided or prevented')
       after=proof(r);snapshot(m,'resolved');check([x['library'] for x in before['players']]==[x['library'] for x in after['players']],'exact library order unchanged')
       dead_own={source_ids[0]} if case in ('furnace','shared-deathtouch') else set()
       dead_other=set() if case=='fog' else {defender_ids[0]} if case in ('furnace','skip-shared','shared-deathtouch') else {next(c['id'] for c in initial[1]['battlefield'] if c['name']=='Grizzly Bears')}

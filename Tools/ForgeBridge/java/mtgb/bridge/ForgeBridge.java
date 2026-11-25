@@ -9,6 +9,7 @@ import forge.game.card.CardView;
 import forge.game.card.CardCollection;
 import forge.game.card.CardCollectionView;
 import forge.game.player.*;
+import forge.game.spellability.SpellAbility;
 import forge.game.zone.ZoneType;
 import forge.gamemodes.match.input.*;
 import forge.gui.GuiBase;
@@ -32,6 +33,8 @@ public final class ForgeBridge {
     static String SESSION;
     static final ExecutorService EDT = Executors.newSingleThreadExecutor(r -> new Thread(r, "mtgb-ui"));
     static Game game;
+    static BridgeCommanderEvent commanderActivity;
+    static BridgeCombatFeedback combatFeedback = new BridgeCombatFeedback();
     static boolean inspectingCompanions;
     static final JsonArray legalCompanionPrintings=new JsonArray();
     static final List<Gui> guis = new ArrayList<>();
@@ -40,6 +43,22 @@ public final class ForgeBridge {
     static volatile Pending pending;
     static long revision;
     static int restartRevision;
+    static int openingFirstSeat;
+    static int[] mulliganCounts, mulliganHandSizes;
+    static boolean[] mulliganKept;
+    static void recordMulligan(Player player,boolean keep,int handSize){
+        int seat=game.getRegisteredPlayers().indexOf(player);
+        if(seat<0||seat>=mulliganKept.length)return;
+        if(keep){mulliganKept[seat]=true;mulliganHandSizes[seat]=Math.max(0,handSize);}
+        else mulliganCounts[seat]++;
+    }
+    static void stampNotice(Map<String,Object> notice){
+        if(game==null||game.getPhaseHandler()==null)return;
+        var phase=game.getPhaseHandler();
+        notice.put("turn",phase.getTurn());
+        notice.put("turnSeat",game.getRegisteredPlayers().indexOf(phase.getPlayerTurn())+1);
+        notice.put("phase",String.valueOf(phase.getPhase()));
+    }
     static final BridgeMatchRemovals matchRemovals = new BridgeMatchRemovals();
     static final BridgeSeriesOwnership seriesOwnership = new BridgeSeriesOwnership();
     static final java.util.concurrent.atomic.AtomicLong noticeSequence=new java.util.concurrent.atomic.AtomicLong();
@@ -131,7 +150,30 @@ public final class ForgeBridge {
         }
     }
     static final class BridgeAiController extends forge.ai.PlayerControllerAi {
-        BridgeAiController(Game game,Player player,forge.LobbyPlayer lobby){super(game,player,lobby);}
+        private final BridgeAiStrategy strategy;
+        BridgeAiController(Game game,Player player,forge.LobbyPlayer lobby){
+            super(game,player,lobby); strategy=new BridgeAiStrategy(player);
+        }
+        @Override public boolean pilotsNonAggroDeck(){return strategy.nonAggro();}
+        @Override public Card chooseSingleCardForZoneChange(ZoneType destination,List<ZoneType> origin,
+            SpellAbility ability,CardCollection choices,DelayedReveal reveal,String prompt,boolean optional,Player decider) {
+            Card chosen=super.chooseSingleCardForZoneChange(destination,origin,ability,choices,reveal,prompt,optional,decider);
+            return ForgePublicCardDetails.rememberDraft(chosen,ability,game.getRegisteredPlayers().indexOf(getPlayer())+1);
+        }
+        @Override public int getStrategicSpellPriority(forge.game.spellability.SpellAbility ability){
+            return strategy.spellPriority(ability);
+        }
+        @Override public int getStrategicRemovalPriority(Card card){return strategy.removalPriority(card);}
+        @Override public boolean mulliganKeepHand(Player firstPlayer,int cardsToReturn){
+            CardCollectionView hand=getPlayer().getCardsIn(ZoneType.Hand);
+            boolean keep=strategy.handlesMulligan(hand)?strategy.keep(hand,cardsToReturn):super.mulliganKeepHand(firstPlayer,cardsToReturn);
+            recordMulligan(getPlayer(),keep,hand.size()-cardsToReturn);
+            return keep;
+        }
+        @Override public CardCollectionView tuckCardsViaMulligan(CardCollectionView hand,int cardsToReturn){
+            return strategy.handlesMulligan(hand)?strategy.bottom(hand,cardsToReturn)
+                :super.tuckCardsViaMulligan(new CardCollection(hand),cardsToReturn);
+        }
         @Override public CardCollectionView cheatShuffle(CardCollectionView cards){
             return libraryOrder==null?super.cheatShuffle(cards):libraryOrder.preserve(getPlayer(),cards);
         }
@@ -153,18 +195,26 @@ public final class ForgeBridge {
         }
         @Override public Player chooseStartingPlayer(boolean firstGame){
             int seat=config.get("firstPlayerSeat").getAsInt();
-            if(seat<1||seat>2)throw new IllegalArgumentException("Invalid first player seat");
+            if(seat<1||seat>getGame().getPlayers().size())throw new IllegalArgumentException("Invalid first player seat");
+            openingFirstSeat=seat;
             return getGame().getPlayers().get(seat-1);
         }
     }
     // Both ordinary and controlled players use the same production overrides.
     // Forge's controlled-player constructor shares the master's input queue/proxy.
     static final class BridgeController extends PlayerControllerHuman {
+        private boolean puzzleSolver;
+        @Override public boolean isGuiPlayer() { return puzzleSolver || super.isGuiPlayer(); }
         @Override public CardCollectionView cheatShuffle(CardCollectionView cards) {
             return libraryOrder==null?super.cheatShuffle(cards):libraryOrder.preserve(getPlayer(),cards);
         }
         BridgeController(Game game,Player player,LobbyPlayerHuman lobby){super(game,player,lobby);}
         BridgeController(Player player,LobbyPlayerHuman lobby,PlayerControllerHuman master){super(player,lobby,master);}
+        @Override public Card chooseSingleCardForZoneChange(ZoneType destination,List<ZoneType> origin,
+            SpellAbility ability,CardCollection choices,DelayedReveal reveal,String prompt,boolean optional,Player decider) {
+            Card chosen=super.chooseSingleCardForZoneChange(destination,origin,ability,choices,reveal,prompt,optional,decider);
+            return ForgePublicCardDetails.rememberDraft(chosen,ability,guiFor(this).seat);
+        }
         static final class PaymentIntent {
             final forge.game.spellability.SpellAbility ability;
             final boolean cancelAllowed;
@@ -232,7 +282,8 @@ public final class ForgeBridge {
         }
         @Override public forge.game.spellability.TargetChoices chooseNewTargetsFor(forge.game.spellability.SpellAbility ability,java.util.function.Predicate<forge.game.GameObject> filter,boolean optional) {
             Gui gui=guiFor(this);var previous=gui.targetingAbility;gui.targetingAbility=ability;
-            try{return super.chooseNewTargetsFor(ability,filter,optional);}finally{gui.targetingAbility=previous;}
+            boolean wasRetargeting=gui.retargeting;gui.retargeting=true;
+            try{return super.chooseNewTargetsFor(ability,filter,optional);}finally{gui.targetingAbility=previous;gui.retargeting=wasRetargeting;}
         }
         @Override public String chooseCardName(forge.game.spellability.SpellAbility ability,
                 java.util.function.Predicate<forge.card.ICardFace> predicate,String valid,String message) {
@@ -495,6 +546,7 @@ public final class ForgeBridge {
                         CardCollectionView bottom=cardsToReturn>=hand.size()?hand:super.tuckCardsViaMulligan(hand,cardsToReturn);
                         for(Card card:bottom)game.getAction().moveToLibrary(card,-1,null);
                     }
+                    recordMulligan(getPlayer(),keep,hand.size()-cardsToReturn);
                     return keep;
                 }
                 @Override public CardCollectionView tuckCardsViaMulligan(CardCollectionView hand, int cardsToReturn) {
@@ -506,7 +558,8 @@ public final class ForgeBridge {
                 @Override public Player chooseStartingPlayer(boolean isFirstGame) {
                     // The existing room owns the first-player policy for each game.
                     int seat = config.get("firstPlayerSeat").getAsInt();
-                    if (seat < 1 || seat > 2) throw new IllegalArgumentException("Invalid first player seat");
+                    if (seat < 1 || seat > game.getPlayers().size()) throw new IllegalArgumentException("Invalid first player seat");
+                    openingFirstSeat=seat;
                     return game.getPlayers().get(seat - 1);
                 }
                 @Override public org.apache.commons.lang3.tuple.ImmutablePair<CardCollection,CardCollection> arrangeForScry(CardCollection cards) {
@@ -558,6 +611,7 @@ public final class ForgeBridge {
     static final class Option {
         String id, label;
         int attackerId, defenderId;
+        Integer blockTargetSlots, blockSeatSlots;
         String defenderKind;
         boolean requiresPaymentCheck;
         transient boolean priorityResponse;
@@ -578,6 +632,7 @@ public final class ForgeBridge {
         int selectedCount, remainingCount, sourceCardId,replacementAffectedPlayerSeat,votingPlayerSeat;
         boolean secretVote;
         String kind, message;
+        BridgeCombatDeclaration combatDeclaration;
         Object sourceCard,replacementAffectedCard;
         String abilityText, abilityKind, rulesText;
         Object rulesSource;
@@ -607,7 +662,42 @@ public final class ForgeBridge {
     static void fatal(Throwable e) {
         if(shuffleAudit!=null)shuffleAudit.finish("engine_fatal");
         e.printStackTrace(System.err);
-        Map<String,Object> m=envelope("fatal"); m.put("error", "Forge rules engine failed; see server diagnostics."); send(m); System.exit(2);
+        boolean illegalAttachment = e instanceof InvalidPuzzleAttachment;
+        Map<String,Object> m=envelope(illegalAttachment ? "invalidPuzzleAttachment" : "fatal");
+        m.put("error", illegalAttachment ? e.getMessage() : "Forge rules engine failed; see server diagnostics."); send(m); System.exit(2);
+    }
+
+    private static final class InvalidPuzzleAttachment extends IllegalArgumentException {
+        InvalidPuzzleAttachment(String card) { super(card); }
+    }
+
+    // State-based actions can remove an illegal Aura or detach Equipment during setup.
+    // Check before giving priority, while the position still belongs entirely to the author.
+    private static void verifyPuzzleAttachments(JsonArray required) {
+        if (required == null || required.isEmpty()) return;
+        record Link(int seat, String name, int targetSeat, String targetName) {}
+        Map<Link,Integer> attached = new HashMap<>();
+        var players = game.getRegisteredPlayers();
+        for (Card c : game.getCardsIn(ZoneType.Battlefield)) {
+            var target = c.getEntityAttachedTo();
+            if (target == null || c.getPaperCard() == null) continue;
+            Player owner;
+            String name;
+            if (target instanceof Card other && other.getPaperCard() != null) {
+                owner = other.getOwner(); name = other.getPaperCard().getName();
+            } else if (target instanceof Player p) { owner = p; name = ""; }
+            else continue;
+            attached.merge(new Link(players.indexOf(c.getOwner())+1,c.getPaperCard().getName(),
+                players.indexOf(owner)+1,name),1,Integer::sum);
+        }
+        for (var element : required) {
+            var row=element.getAsJsonObject();
+            var link=new Link(row.get("seat").getAsInt(),row.get("name").getAsString(),
+                row.get("targetSeat").getAsInt(),row.get("targetName").getAsString());
+            int left=attached.getOrDefault(link,0)-row.get("count").getAsInt();
+            if (left<0) throw new InvalidPuzzleAttachment(link.name());
+            attached.put(link,left);
+        }
     }
     static void guiTask(Runnable r) {
         EDT.execute(() -> { try { r.run(); publishInput(); } catch(Throwable e) { if(terminalCancellation(e))finish();else fatal(e); } });
@@ -615,7 +705,7 @@ public final class ForgeBridge {
     static Object base(Object proxy, Method method, Object[] args, String assets) throws Throwable {
         String n=method.getName();
         if(n.equals("getAssetsDir")) return assets;
-        if(n.equals("getCurrentVersion")) return "MTGB-Forge";
+        if(n.equals("getCurrentVersion") || n.equals("getUserAgent")) return "MTGB-Forge";
         if(n.equals("isRunningOnDesktop")) return true;
         if(n.equals("isGuiThread")) return Thread.currentThread().getName().equals("mtgb-ui");
         if(n.equals("invokeInEdtLater")) { guiTask((Runnable)args[0]); return null; }
@@ -701,6 +791,7 @@ public final class ForgeBridge {
                     if(context.flipLocation!=null)notice.put("flipLocation",card(context.flipLocation));
                     notice.put("flipHits",context.flipHits.stream().map(ForgeBridge::card).toList());
                 }
+                stampNotice(notice);
                 notices.addLast(notice);while(notices.size()>16)notices.removeFirst();
             }
         }
@@ -713,6 +804,13 @@ public final class ForgeBridge {
         GameEntity replacementAffected;
         forge.game.spellability.SpellAbility sourceChoiceAbility;
         forge.game.spellability.SpellAbility targetingAbility;
+        boolean retargeting;
+        boolean hasFollowingTargetChoice() {
+            if(retargeting || targetingAbility==null)return false;
+            for(var next=targetingAbility.getSubAbility();next!=null;next=next.getSubAbility())
+                if(next.usesTargeting() && next.getMinTargets()>0)return true;
+            return false;
+        }
         forge.game.spellability.SpellAbility optionalCostAbility;
         boolean bottomDigOrder;
         Player votingPlayer;
@@ -740,11 +838,18 @@ public final class ForgeBridge {
         Gui(int seat) { this.seat=seat; }
         @Override public Object invoke(Object proxy, Method method, Object[] a) throws Throwable {
             String n=method.getName();
-            if(n.equals("setHighlighted")) {
+            if(n.equals("setSelection")) {
+                forge.gamemodes.match.Selection selection = (forge.gamemodes.match.Selection)a[0];
                 synchronized(ForgeBridge.class) {
-                    for(Object entity:(Iterable<?>)a[0])if(entity instanceof CardView card) {
-                        if((boolean)a[1])highlightedCards.add(card.getId());else highlightedCards.remove(card.getId());
+                    selectionMin = selection.min();
+                    selectionMax = selection.max();
+                    highlightedCards.clear();
+                    for(var object : selection.chosen()) {
+                        if(object instanceof CardView card) highlightedCards.add(card.getId());
                     }
+                    Set<Integer> actionable = new HashSet<>();
+                    for(CardView card : selection.actionable()) actionable.add(card.getId());
+                    actionableCards = actionable;
                 }
                 return null;
             }
@@ -763,17 +868,8 @@ public final class ForgeBridge {
                 });
                 return null;
             }
-            if(n.equals("getGamestate")) return null; // no developer-supplied saved state in a live match
             if(n.equals("getGameSpeed")) return forge.gui.control.PlaybackSpeed.NORMAL;
-            if(n.equals("setWeaklySelectable")) {
-                Set<Integer> ids=new HashSet<>();
-                for(Object card:(Iterable<?>)a[0]) ids.add(((CardView)card).getId());
-                actionableCards=ids; return null;
-            }
-            if(n.equals("clearWeaklySelectable")) { actionableCards=Set.of(); return null; }
             if(n.equals("isNetGame")) return true; // disables local-only yield suggestions
-            if(n.equals("setSelectables")) { selectionMin=(int)a[1];selectionMax=(int)a[2];return null; }
-            if(n.equals("clearSelectables")) { selectionMin=selectionMax=0;return null; }
             if(n.equals("showPromptMessage")) { message=(String)a[1]; inputRevision++; return null; }
             if(n.equals("updateButtons") && a.length==6) {
                 shownInput=controller.getInputQueue().getInput();
@@ -810,7 +906,6 @@ public final class ForgeBridge {
                 return selectCards((String)a[0],(List<?>)a[1],(int)a[2],(int)a[3],List.of(),false);
             }
             if(n.equals("reveal")) { revealCards((String)a[0],(List<?>)a[1]);return null; }
-            if(n.equals("updateRevealedCards"))return null; // revealCards already acknowledged the exact list.
             if(n.equals("manipulateCardList"))return manipulate((String)a[0],(Iterable<CardView>)a[1],(Iterable<CardView>)a[2],(boolean)a[3],(boolean)a[4],(boolean)a[5]);
             if(n.equals("order") && a.length==9) {
                 List<Object> values=new ArrayList<>((List<?>)a[4]);
@@ -832,7 +927,7 @@ public final class ForgeBridge {
             if(n.equals("openZones")) return null; // zone contents come from seat-filtered snapshots
             if(n.equals("getDayTime")) return "";
             if(n.equals("showErrorDialog")) throw new IllegalStateException(Arrays.toString(a));
-            if(n.equals("applyDelta") || n.equals("applyYieldUpdate"))
+            if(n.equals("applyDelta") || n.equals("applyYieldUpdate") || n.equals("applyMacroState"))
                 throw new UnsupportedOperationException("Unadapted information or control callback: "+n);
             if(method.isDefault()) return InvocationHandler.invokeDefault(proxy,method,a);
             // Reviewed snapshot-driven presentation callbacks only. A new upstream
@@ -844,8 +939,8 @@ public final class ForgeBridge {
         static final Set<String> PRESENTATION_CALLBACKS=Set.of(
             "setGameView","setOriginalGameController","setGameController","setSpectator","openView",
             "afterGameEnd","showCombat","flashIncorrectAction","alertUser","finishGame","handleGameEvent",
-            "setPanelSelection","setCard","setPlayerAvatar","setHighlighted","setGamePause",
-            "setGameSpeed","updateDayTime","awaitNextInput","cancelAwaitNextInput","showWaitingTimer",
+            "setPanelSelection","setCard","setPlayerAvatar","setGamePause",
+            "setGameSpeed","updateDayTime","awaitNextInput","cancelAwaitNextInput",
             "updateAutoPassPrompt","setCurrentPlayer","setNetGame");
         List<Object> insertInList(String title,Object added,List<?> previous) {
             List<Object> result=new ArrayList<>(previous);
@@ -1137,16 +1232,25 @@ public final class ForgeBridge {
                 });
             }
             final List<?> choices=values;
+            int alreadyChosen=targeting!=null && !retargeting?targeting.getTargets().size():0;
+            int maximum=targeting!=null && !retargeting?targeting.getMaxTargets():1;
+            boolean advanceOnPick=hasFollowingTargetChoice() || alreadyChosen+1<maximum;
             int selected=-1;
             while(true) {
                 CompletableFuture<Integer> answer=new CompletableFuture<>();List<Option> options=new ArrayList<>();
                 for(int i=0;i<values.size();i++) {
                     final int j=i;Object value=values.get(i);
-                    Option option=new Option(value instanceof forge.game.spellability.StackItemView stack?"stack:"+stack.getId():"cancel",value==null?"取消":String.valueOf(value),()->answer.complete(j));
+                    boolean finish="[FINISH TARGETING]".equals(value);
+                    if(finish && selected>=0)continue;
+                    Option option=new Option(value instanceof forge.game.spellability.StackItemView stack?"stack:"+stack.getId():finish?"ok":"cancel",finish?"确认目标":value==null?"取消":String.valueOf(value),()->answer.complete(j));
+                    if(!retargeting && targeting!=null && value instanceof forge.game.spellability.StackItemView stack) {
+                        for(var item:game.getStack())if(item.getView().getId()==stack.getId())
+                            option.disabled=targeting.getTargets().contains(item.getSpellAbility());
+                    }
                     option.selected=selected==j;options.add(option);
                 }
                 if(selected>=0){options.add(new Option("ok","确认目标",()->answer.complete(-2)));options.add(new Option("reset-targets","重选",()->answer.complete(-3)));}
-                Pending request=new Pending(seat,"SelectStackTarget",title,options);request.modal=true;request.selectedCount=selected>=0?1:0;request.maxCount=1;
+                Pending request=new Pending(seat,"SelectStackTarget",title,options);request.modal=true;request.selectedCount=alreadyChosen+(selected>=0?1:0);request.maxCount=maximum;
                 request.sourceCardId=interactionSourceCardId;
                 for(Card c:game.getCardsInGame())if(c.getId()==interactionSourceCardId)request.sourceCard=card(c);
                 if(targeting!=null) {
@@ -1162,7 +1266,7 @@ public final class ForgeBridge {
                     int result=awaitAnswer(answer);
                     if(result==-2)return index?originalValues.indexOf(choices.get(selected)):choices.get(selected);
                     if(result==-3){selected=-1;continue;}
-                    if(choices.get(result)==null || !(choices.get(result) instanceof forge.game.spellability.StackItemView))return index?originalValues.indexOf(choices.get(result)):choices.get(result);
+                    if(advanceOnPick || !(choices.get(result) instanceof forge.game.spellability.StackItemView))return index?originalValues.indexOf(choices.get(result)):choices.get(result);
                     selected=selected==result?-1:result;
                 }catch(Exception e){throw new IllegalStateException("Unanswered stack target",e);}
             }
@@ -1243,7 +1347,7 @@ public final class ForgeBridge {
             }
         }
         boolean canAffordSpree(forge.game.spellability.SpellAbility sa,List<forge.game.spellability.AbilitySub> possible,Set<Integer> selected,int added) {
-            var intent=sa.copy();intent.setActivatingPlayer(sa.getActivatingPlayer()!=null?sa.getActivatingPlayer():game.getPlayers().get(seat-1));intent.setSubAbility(null);
+            var intent=sa.copy();intent.setActivatingPlayer(sa.getActivatingPlayer()!=null?sa.getActivatingPlayer():controller.getPlayer());intent.setSubAbility(null);
             var modes=new ArrayList<forge.game.spellability.AbilitySub>();
             for(int i=0;i<possible.size();i++)if(selected.contains(i)||i==added)modes.add(possible.get(i));
             // Forge chains copies and applies its own Spree cost adjustment, reductions,
@@ -1467,7 +1571,9 @@ public final class ForgeBridge {
             if(kind.isEmpty()) kind=inp.getClass().getSuperclass().getSimpleName();
             if(inp instanceof forge.player.HumanCostDecision.BeholdInput)kind="InputSelectCardsFromList";
             if(g.targetDraftInput!=inp){g.targetDraftInput=inp;g.targetDraft=null;}
-            boolean singleTarget=inp instanceof InputSelectTargets && g.selectionMax==1;
+            // A spell such as Ram Through has two successive one-target clauses.
+            // Picking the first advances Forge; keep the editable draft for the last.
+            boolean singleTarget=inp instanceof InputSelectTargets && g.selectionMax==1 && !g.hasFollowingTargetChoice();
             Set<GameEntity> chosenTargets=inp instanceof InputSelectTargets && !singleTarget?selectedTargets(inp):Set.of();
             List<Option> opts=new ArrayList<>();
             if(singleTarget && g.targetDraft!=null)opts.add(new Option("ok","确认",() -> {
@@ -1486,7 +1592,7 @@ public final class ForgeBridge {
                 && (!(inp instanceof InputAttack) || !game.getCombat().getAttackers().isEmpty()))
                 opts.add(new Option("cancel",g.cancelLabel,() -> g.controller.getInputProxy().selectButtonCancel()));
             if(inp instanceof InputAttack attack) addAttackOptions(g,attack,opts);
-            if(inp instanceof InputBlock block) addBlockOptions(g,block,opts);
+            BridgeCombatDeclaration blockRules=inp instanceof InputBlock block ? addBlockOptions(g,block,opts) : null;
             if(supportedInput(inp) && !(inp instanceof InputAttack) && !(inp instanceof InputBlock)) {
                 List<ZoneType> zones=new ArrayList<>(List.of(ZoneType.Hand,ZoneType.Battlefield,ZoneType.Graveyard,ZoneType.Exile));
                 // Native getActivateAction checks the library permission and exact top
@@ -1518,7 +1624,8 @@ public final class ForgeBridge {
                             candidate.requiresPaymentCheck=prediction!=null&&!prediction.payable();
                             candidate.priorityResponse=prediction!=null&&prediction.response();
                             candidate.disabled=counterExhausted;
-                            if(inp instanceof InputSelectEntitiesFromList || inp instanceof InputSelectTargets || inp instanceof InputSelectCardsForConvokeOrImprovise || inp instanceof InputSelectCardToRemoveCounter) {
+                            if(inp instanceof InputSelectEntitiesFromList || inp instanceof InputSelectTargets || inp instanceof InputSelectCardsForConvokeOrImprovise || inp instanceof InputSelectCardToRemoveCounter
+                                || guis.size()==4 && (london || inp instanceof InputPayMana)) {
                                 candidate.card=visible?card(c):Map.of("id",c.getId(),"name","Face-down card","faceDown",true);
                                 if(inp instanceof InputSelectEntitiesFromList selection)candidate.selected=selection.getSelected().contains(c);
                                 else if(inp instanceof InputSelectCardsForConvokeOrImprovise selection)candidate.selected=selection.getSelected().contains(c);
@@ -1526,6 +1633,7 @@ public final class ForgeBridge {
                                     candidate.order=selection.getCounterTable().column(c).values().stream().mapToInt(com.google.common.collect.Multiset::size).sum();
                                     candidate.selected=candidate.order>0;
                                 }
+                                else if(london)candidate.selected=((InputLondonMulligan)inp).getSelectedCards().contains(c);
                                 else if(singleTarget)candidate.selected=g.targetDraft==c;
                                 else if(inp instanceof InputSelectTargets)candidate.selected=chosenTargets.contains(c);
                             }
@@ -1582,6 +1690,8 @@ public final class ForgeBridge {
             if(!supportedInput(inp)) throw new UnsupportedOperationException("Unadapted input: "+kind);
             if(opts.isEmpty()) throw new UnsupportedOperationException("No supported options for "+kind+": "+g.message);
             Pending request=new Pending(g.seat,kind,g.message,opts);
+            if(inp instanceof InputAttack)request.combatDeclaration=BridgeCombatDeclaration.attack(game.getCombat());
+            else request.combatDeclaration=blockRules;
             request.gui=g;
             request.remainingManaCost=nativeRemainingManaCost;
             if(inp instanceof InputPayMana payment)request.paymentMode=paymentMode(payment);
@@ -1840,6 +1950,7 @@ public final class ForgeBridge {
             seriesOwnership.publishChanges();
             Map<String,Object> view=new LinkedHashMap<>(); view.put("seat",s+1); view.put("anteEnabled",game.getRules().useAnte());view.put("formatId",BridgeMatchFormat.id());
             view.put("notices",new ArrayList<>(guis.get(s).notices));
+            view.put("combatFeedback",combatFeedback.snapshot());
             Player acting=pending!=null && pending.seat==s+1 && pending.gui!=null?pending.gui.controller.getPlayer():guis.get(s).controller.getPlayer();
             boolean canRespond=acting.isInGame() && !game.isGameOver() && acting.getView().hasAvailableActions();
             if(acting.isInGame() && !game.isGameOver() && pending!=null && pending.seat==s+1 && pending.gui!=null && pending.kind.equals("InputPassPriority")) {
@@ -1854,6 +1965,20 @@ public final class ForgeBridge {
             view.put("dayTime",game.getDayTime()==null?"":game.isDay()?"day":"night");
             view.put("globalEffects",game.getDayTime()==null?List.of():List.of(Map.of("id",-2000001,"name",game.isDay()?"Day":"Night","helperArtName",game.isDay()?"Day":"Night","effectMarker",true,"markerKind","game","zone","Command","currentType","Game state","currentRules",game.isDay()?"当前为白昼。":"当前为黑夜。")));
             view.put("turn", game.getPhaseHandler().getTurn());
+            if(config.has("commanderEvent") && !config.get("commanderEvent").isJsonNull()) {
+                String event=config.get("commanderEvent").getAsString();
+                if(!event.isEmpty()) {
+                    view.put("commanderEvent",event);
+                    if(BridgeCommanderEvent.LOKI.equals(event)) {
+                        view.put("lokiSeat",config.get("firstPlayerSeat").getAsInt());
+                        var nextHero = game.getPhaseHandler().getHeroAfterStack();
+                        view.put("heroAfterStackSeat", nextHero == null ? 0 : game.getRegisteredPlayers().indexOf(nextHero) + 1);
+                    }
+                }
+            }
+            view.put("firstPlayerSeat",openingFirstSeat>0?openingFirstSeat:config.get("firstPlayerSeat").getAsInt());
+            view.put("mulliganCounts",mulliganCounts.clone());view.put("mulliganKept",mulliganKept.clone());
+            view.put("mulliganHandSizes",mulliganHandSizes.clone());
             // Active players shrink on concession; authenticated seats remain
             // the registered order, including the terminal public stack.
             view.put("turnSeat", game.getRegisteredPlayers().indexOf(game.getPhaseHandler().getPlayerTurn()) + 1);
@@ -1899,7 +2024,8 @@ public final class ForgeBridge {
                     }
                     entry.put("chosenModes",modes);entry.put("castingChoices",costs);
                 }
-                Map<String,Object> stackSource=(Map<String,Object>)card(source);
+                Map<String,Object> stackSource=(Map<String,Object>)(source.isFaceDown()
+                    ? zoneCard(source,guis.get(s).controller.getPlayer()) : card(source));
                 Integer x=item.getSpellAbility().getXManaCostPaid();
                 if(x!=null&&!source.isFaceDown()) {
                     entry.put("xValue",x);entry.put("hasXValue",true);
@@ -1945,11 +2071,13 @@ public final class ForgeBridge {
             for(int i=0;i<guis.size();i++) {
                 Player p=guis.get(i).controller.getPlayer();
                 Map<String,Object> pv=new LinkedHashMap<>(); pv.put("seat",i+1); pv.put("life",p.getLife());
+                pv.put("eliminated",p.hasLost());
                 // Eligibility is distinct from the longer-lived zone permission lists.
                 // Publish only IDs of public/recipient-authorised outside-hand cards.
                 pv.put("usableSourceIds",usableSourceIds(p,viewer,s+1));
-                // Sideboards remain private even when another player controls this seat.
-                pv.put("sideboardCards",p==viewer?p.getCardsIn(ZoneType.Sideboard).stream().map(c->zoneCard(c,viewer)).toList():List.of());
+                pv.put("sideboardCards",BridgeLibraryKnowledge.sharesKnowledge(viewer,p)?p.getCardsIn(ZoneType.Sideboard).stream().map(c->zoneCard(c,viewer)).toList():List.of());
+                pv.put("commanderCastCounts",p.getCommanders().stream().sorted(Comparator.comparingInt(Card::getId))
+                    .map(p::getCommanderCast).toList());
                 pv.put("commanders",p.getCardsIn(ZoneType.Command).stream().filter(Card::isCommander).map(c->zoneCard(c,viewer)).toList());
                 pv.put("commandCards",p.getCardsIn(ZoneType.Command).stream()
                     .filter(c->!c.isImmutable()&&c.getView().canBeShownTo(viewer.getView()))
@@ -1986,7 +2114,7 @@ public final class ForgeBridge {
                 List<Object> field=new ArrayList<>(); for(Card c:p.getCardsIn(ZoneType.Battlefield)) {
                     Map<String,Object> visible=(Map<String,Object>)card(c);
                     visible.put("pendingDepartures",ForgePendingDeparture.forCard(c,departureTriggers));
-                    if(c.isFaceDown() && (c.getView().canFaceDownBeShownTo(viewer.getView()) || libraryKnowledge.knowsBattlefieldFace(c,s+1))) {
+                    if(c.isFaceDown() && libraryKnowledge.canSeeFace(c,viewer)) {
                         var original=c.getState(forge.card.CardStateName.Original);
                         visible.put("knownFaceName",original.getName());
                         visible.put("knownFaceRules",original.getOracleText());
@@ -2009,6 +2137,7 @@ public final class ForgeBridge {
                     if("Keyword Effects".equals(c.getName()) && forge.ImageKeys.HIDDEN_CARD.equals(c.getImageKey())
                         && p.getKeywords().getValues().stream().allMatch(k->k.getKeyword()==forge.game.keyword.Keyword.PROTECTION))continue;
                     Map<String,Object> marker=(Map<String,Object>)card(c);
+                    if(commanderActivity!=null)commanderActivity.writeTrickBoard(c,marker);
                     boolean dungeon=c.getType().isDungeon();
                     marker.put("effectMarker",true);marker.put("markerKind",dungeon?"dungeon":"effect");
                     marker.put("currentType",dungeon?"Dungeon":"Effect");marker.put("currentRules",currentLandRules(c));
@@ -2146,7 +2275,8 @@ public final class ForgeBridge {
     static Object zoneCard(Card c,Player viewer) {
         Map<String,Object> visible=(Map<String,Object>)card(c);
         int viewerSeat=guis.stream().filter(g->g.controller.getPlayer()==viewer).map(g->g.seat).findFirst().orElse(0);
-        if(c.isFaceDown() && (c.getView().canFaceDownBeShownTo(viewer.getView()) || libraryKnowledge.knowsBattlefieldFace(c,viewerSeat))) {
+        ForgePublicCardDetails.addDraftMemory(c,viewerSeat,visible);
+        if(c.isFaceDown() && libraryKnowledge.canSeeFace(c,viewer)) {
             var original=c.getState(forge.card.CardStateName.Original);
             visible.put("knownFaceName",original.getName());visible.put("knownFaceRules",original.getOracleText());
             if(c.getPaperCard() instanceof forge.item.PaperCard)visible.put("knownFacePrintingKey",ForgeCatalog.key((forge.item.PaperCard)c.getPaperCard()));
@@ -2446,30 +2576,66 @@ public final class ForgeBridge {
             }
         }
     }
-    static void addBlockOptions(Gui gui,InputBlock input,List<Option> options) {
+    static BridgeCombatDeclaration addBlockOptions(Gui gui,InputBlock input,List<Option> options) {
         var combat=game.getCombat();
-        for(Card blocker:gui.controller.getPlayer().getCreaturesInPlay()) {
+        var defending=gui.controller.getPlayer();
+        var rules=BridgeCombatDeclaration.block(combat,defending);
+        int used=(int)combat.getAllBlockers().stream().filter(c->c.getController()==defending).count();
+        Map<Integer,Integer> targetSlots=new HashMap<>();
+        Set<Integer> impossible=new HashSet<>();
+        Map<Integer,BridgeCombatDeclaration.BlockLimit> bounded=new HashMap<>();
+        for(var limit:rules.limits)bounded.put(limit.id(),limit);
+        for(Card attacker:combat.getAttackers()) {
+            var limit=bounded.get(attacker.getId());
+            if(limit==null)continue;
+            if(limit.unblockable())impossible.add(attacker.getId());
+            if(limit.max()>=0)targetSlots.put(attacker.getId(),Math.max(0,limit.max()-combat.getBlockers(attacker).size()));
+        }
+        for(Card blocker:defending.getCreaturesInPlay()) {
             if(combat.isBlocking(blocker))options.add(new Option("block-remove:"+blocker.getId(),"取消阻挡",()->input.selectCard(blocker,null,RECALL_ATTACKER)));
             for(Card attacker:combat.getAttackers()) {
-                if(!combat.isBlocking(blocker,attacker) && !forge.game.combat.CombatUtil.canBlock(attacker,blocker,combat))continue;
+                if(!combat.isBlocking(blocker,attacker) && (impossible.contains(attacker.getId()) || !forge.game.combat.CombatUtil.canBlock(attacker,blocker,combat)))continue;
                 Option option=new Option("block:"+blocker.getId()+":"+attacker.getId(),blocker.getName()+" → "+attacker.getName(),()->{
                     input.selectCard(attacker,null,null);input.selectCard(blocker,null,null);
                 });
-                option.attackerId=attacker.getId();option.defenderId=blocker.getId();option.selected=combat.isBlocking(blocker,attacker);options.add(option);
+                option.attackerId=attacker.getId();option.defenderId=blocker.getId();option.selected=combat.isBlocking(blocker,attacker);
+                option.blockTargetSlots=targetSlots.get(attacker.getId());
+                if(rules.seatLimit>0)option.blockSeatSlots=Math.max(0,rules.seatLimit-used);
+                options.add(option);
             }
         }
+        return rules;
     }
     static void receive(JsonObject o) {
         String type=o.get("type").getAsString();
         if(type.equals("shutdown")) { send(envelope("bye")); System.exit(0); }
         if(type.equals("concede")) {
             int seat=o.get("seat").getAsInt();
-            if(!SESSION.equals(o.get("session").getAsString()) || seat<1 || seat>2) throw new IllegalArgumentException("Invalid concede");
+            if(!SESSION.equals(o.get("session").getAsString()) || seat<1 || seat>guis.size()) throw new IllegalArgumentException("Invalid concede");
             // Forge concession is valid even while its rules worker awaits a human choice.
             var controller=guis.get(seat-1).controller;
             Input waiting=controller.getInputQueue().getInput();
+            final Pending outstanding;
+            synchronized(ForgeBridge.class) { outstanding=pending!=null && pending.seat!=seat ? pending : null; }
             controller.concede();
-            if(!game.isGameOver())returnLivingControlInput(seat);
+            if(!game.isGameOver()) {
+                returnLivingControlInput(seat);
+                // Nobody passed. An unrelated concession changes the public board but leaves
+                // the surviving holder's input waiting on its original Forge callback.
+                synchronized(ForgeBridge.class) {
+                    if(pending==outstanding && outstanding!=null && !outstanding.consumed
+                            && outstanding.gui!=null
+                            && outstanding.gui.controller.getPlayer().isInGame()) {
+                        outstanding.gui.inputRevision++;
+                        publishInput();
+                        if(pending==outstanding) {
+                            outstanding.decisionViews=null;
+                            outstanding.requestId=++revision;
+                            publish(outstanding);
+                        }
+                    }
+                }
+            }
             // A surviving multiplayer game has no terminal queue release. Stop
             // only the captured input owned by the departed player; another
             // player's input may share this controller's queue under control.
@@ -2484,7 +2650,7 @@ public final class ForgeBridge {
             }
             finish(); return;
         }
-        Pending p; Option option=null; String error=null;List<Integer> order=null;List<Option> attackGroup=null;
+        Pending p; Option option=null; String error=null;List<Integer> order=null;List<Option> combatGroup=null;
         synchronized(ForgeBridge.class) {
             p=pending;
             if(!SESSION.equals(o.get("session").getAsString())) error="wrong-session";
@@ -2506,23 +2672,31 @@ public final class ForgeBridge {
                 }
                 // JsonUtility serializes a null array as []. An empty optional
                 // group is the ordinary single offered attack action.
-                else if(p.kind.equals("InputAttack") && id.startsWith("attack:") && o.has("order") && !o.get("order").isJsonNull()
+                else if(((p.kind.equals("InputAttack") && (id.startsWith("attack:") || id.startsWith("attack-remove:")))
+                    || (p.kind.equals("InputBlock") && (id.startsWith("block:") || id.startsWith("block-remove:")))) && o.has("order") && !o.get("order").isJsonNull()
                     && (!o.get("order").isJsonArray() || o.getAsJsonArray("order").size()>0)) {
                     try {
                         // One response assigns a group through the exact offered native actions.
                         // This is UI multiselect, independent of Forge's banding mechanic.
-                        Set<Integer> attackers=new LinkedHashSet<>();attackGroup=new ArrayList<>();
+                        String[] parts=id.split(":",3);
+                        String suffix=parts.length==3?":"+parts[2]:"";
+                        Set<Integer> members=new HashSet<>();
+                        Map<String,Option> offered=new HashMap<>();
+                        for(Option entry:p.options)if(!entry.disabled && (!parts[0].equals("block") || entry.selected==option.selected))
+                            offered.put(entry.id,entry);
+                        combatGroup=new ArrayList<>();
                         for(JsonElement entry:o.getAsJsonArray("order")) {
-                            int attacker=entry.getAsInt();
-                            if(!attackers.add(attacker))throw new IllegalArgumentException();
-                            Option candidate=null;
-                            for(Option offered:p.options)if(!offered.disabled && offered.id.startsWith("attack:")
-                                && offered.attackerId==attacker && Objects.equals(offered.defenderKind,option.defenderKind)
-                                && offered.defenderId==option.defenderId){candidate=offered;break;}
-                            if(candidate==null)throw new IllegalArgumentException();
-                            attackGroup.add(candidate);
+                            int member=entry.getAsInt();
+                            Option candidate=offered.get(parts[0]+":"+member+suffix);
+                            if(!members.add(member) || candidate==null)throw new IllegalArgumentException();
+                            combatGroup.add(candidate);
                         }
-                        if(attackers.isEmpty() || !attackers.contains(option.attackerId))error="invalid-order";
+                        if(!members.contains(Integer.parseInt(parts[1])))error="invalid-order";
+                        if(parts[0].equals("block") && !option.selected) {
+                            if(option.blockTargetSlots!=null && members.size()>option.blockTargetSlots)error="invalid-order";
+                            if(option.blockSeatSlots!=null && members.stream().filter(n->!offered.containsKey("block-remove:"+n)).count()>option.blockSeatSlots)
+                                error="invalid-order";
+                        }
                     }catch(RuntimeException malformed){error="invalid-order";}
                 }
                 else if(o.has("order") && !o.get("order").isJsonNull() && (!o.get("order").isJsonArray() || o.getAsJsonArray("order").size()>0))error="invalid-order";
@@ -2534,12 +2708,15 @@ public final class ForgeBridge {
             }
             p.consumed=true;
             Gui responding=p.gui!=null?p.gui:guis.get(p.seat-1);
+            if (o.has("heroHandoff") && o.get("heroHandoff").getAsBoolean()
+                    && option.id.equals("ok") && p.kind.equals("InputPassPriority"))
+                game.getPhaseHandler().handOffHeroWindow(responding.controller.getPlayer());
             if(option.id.startsWith("card:") && (p.kind.equals("InputPassPriority") || p.kind.contains("PayMana")))
                 responding.interactionSourceCardId=Integer.parseInt(option.id.substring(5));
             else if(p.kind.equals("InputPassPriority"))responding.interactionSourceCardId=0;
         }
         Map<String,Object> ack=envelope("accepted"); ack.put("requestId",p.requestId); send(ack);
-        if(attackGroup!=null){List<Option> group=attackGroup;guiTask(()->{for(Option attacker:group)attacker.action.run();});}
+        if(combatGroup!=null){List<Option> group=combatGroup;guiTask(()->{for(Option member:group)member.action.run();});}
         else if(order!=null)p.acceptOrder.accept(order);
         else if(p.modal || p.kind.equals("dialog")) option.action.run(); else guiTask(option.action);
     }
@@ -2620,6 +2797,7 @@ public final class ForgeBridge {
                 && (filter==null || filter.test(player));
         } catch(ReflectiveOperationException e) { throw new IllegalStateException("Pinned target API changed",e); }
     }
+    private static BridgePuzzleObjective puzzleObjective;
     static synchronized void finish() {
         if(finished || game==null || !game.isGameOver()) return;
         finished=true; pending=null;
@@ -2628,6 +2806,7 @@ public final class ForgeBridge {
         modalAnswers.clear();
         int winner=0;
         for(Gui gui:guis) if(game.getOutcome().isWinner(gui.controller.getPlayer().getRegisteredPlayer())) winner=gui.seat;
+        if(puzzleObjective!=null) winner=puzzleObjective.winner(winner);
         Map<String,Object> message=envelope("ended"); message.put("winnerSeat",winner); message.put("views",views()); message.put("matchRemovals",matchRemovals.snapshot()); message.put("matchOwnership",seriesOwnership.snapshot(winner)); send(message);
     }
     public static void main(String[] args) throws Exception {
@@ -2651,7 +2830,7 @@ public final class ForgeBridge {
         config.addProperty("shuffleCuts",libraryOrder.enabled()?0:1);
         SESSION=config.get("session").getAsString();
         if(config.has("shuffleAuditFile")&&!config.get("shuffleAuditFile").getAsString().isBlank()){
-            shuffleAudit=new BridgeShuffleAudit(config);Player.setLibraryAudit(shuffleAudit);
+            shuffleAudit=new BridgeShuffleAudit(config);
             Runtime.getRuntime().addShutdownHook(new Thread(()->shuffleAudit.close("shutdown"),"mtgb-audit-close"));
         }
         String assets=new File(args[0]).getCanonicalPath().replace('\\','/')+"/";
@@ -2675,8 +2854,35 @@ public final class ForgeBridge {
             ? ForgeCatalog.registeredPrintings(java.nio.file.Path.of(args[0]).resolve("../catalog.jsonl").normalize(),config)
             : ForgeCatalog.printings();
         List<RegisteredPlayer> players=new ArrayList<>();
+        forge.gamemodes.puzzle.Puzzle puzzle = null;
+        JsonArray puzzleAttachments = null;
+        JsonObject objective = null;
+        int puzzleTurns = 0;
+        if (config.has("localPuzzle") && !config.get("localPuzzle").isJsonNull()
+                && !config.get("localPuzzle").getAsString().isBlank()) {
+            if (!config.get("localPractice").getAsBoolean() || config.get("aiSeat").getAsInt() != 2)
+                throw new IllegalArgumentException("Puzzles require a local AI opponent");
+            JsonObject setup = JsonParser.parseString(config.get("localPuzzle").getAsString()).getAsJsonObject();
+            puzzleAttachments = setup.getAsJsonArray("attachments");
+            objective = setup.getAsJsonObject("objective");
+            puzzleTurns = setup.get("turns").getAsInt();
+            List<String> state = new ArrayList<>();
+            for (JsonElement line : setup.getAsJsonArray("state")) state.add(line.getAsString());
+            puzzle = new forge.gamemodes.puzzle.Puzzle(Map.of("metadata", List.of(
+                "Name:" + setup.get("title").getAsString(), "Goal:" + setup.get("goal").getAsString(),
+                "Turns:" + puzzleTurns, "HideGoal:" + (objective != null)), "state", state));
+        }
+        final var localPuzzle = puzzle;
+        final var requiredAttachments = puzzleAttachments;
+        final var customGoal = objective;
+        final int deadline = puzzleTurns;
         JsonArray decks=config.getAsJsonArray("decks");
-        for(int seat=1;seat<=2;seat++) {
+        int seatCount=decks.size();
+        BridgeCommanderEvent event=new BridgeCommanderEvent(config.has("commanderEvent")&&!config.get("commanderEvent").isJsonNull()?config.get("commanderEvent").getAsString():"",BridgeMatchFormat.id(),config.get("firstPlayerSeat").getAsInt());
+        commanderActivity=event;
+        if(seatCount!=(BridgeMatchFormat.id().equals("commander")?4:2))throw new IllegalArgumentException("Unexpected number of player decks for this room");
+        mulliganCounts=new int[seatCount];mulliganHandSizes=new int[seatCount];mulliganKept=new boolean[seatCount];
+        for(int seat=1;seat<=seatCount;seat++) {
             JsonObject source=decks.get(seat-1).getAsJsonObject();
             Deck deck=new Deck("MTGB Player "+seat);
             loadSection(deck.getMain(),source.getAsJsonArray("cards"));
@@ -2686,22 +2892,28 @@ public final class ForgeBridge {
             loadAuxiliarySection(deck,source,"contraptions",forge.deck.DeckSection.Contraptions,15);
             boolean ai=config.has("aiSeat")&&config.get("aiSeat").getAsInt()==seat;
             RegisteredPlayer registered=BridgeMatchFormat.register(deck).setPlayer(ai?new BridgeAiPlayer("Forge AI"):new BridgePlayer("Player "+seat));
+            if (localPuzzle != null) registered.setStartingHand(0);
             registered.setStartingLife(BridgeMatchFormat.startingLife(config.get("startingLife").getAsInt()));
+            event.register(registered,seat);
             players.add(registered);
         }
         if(registrationHook!=null)registrationHook.accept(players);
-        GameRules rules=new GameRules(GameType.Constructed); rules.setGamesPerMatch(1);
+        GameRules rules=event.rules(localPuzzle == null ? GameType.Constructed : GameType.Puzzle); rules.setGamesPerMatch(1);
         BridgeMatchFormat.apply(rules);
         rules.setPlayForAnte(config.has("useAnte") && config.get("useAnte").getAsBoolean());
         Match match=new Match(rules,players,"Unity bridge proof"); game=match.createGame();
-        for(int i=0;i<2;i++)libraryOrder.register(game.getPlayers().get(i),decks.get(i).getAsJsonObject());
+        for(int i=0;i<seatCount;i++)libraryOrder.register(game.getPlayers().get(i),decks.get(i).getAsJsonObject());
         game.subscribeToEvents(libraryKnowledge); game.subscribeToEvents(new BridgeCleanupNotices()); game.subscribeToEvents(matchRemovals); game.subscribeToEvents(seriesOwnership);
         game.subscribeToEvents(new BridgeRestartNotices());
         game.subscribeToEvents(new BridgeCardNotices());
-        for(int i=0;i<2;i++) {
+        combatFeedback = new BridgeCombatFeedback();
+        Player.setLibraryAudit(combatFeedback);
+        game.subscribeToEvents(combatFeedback);
+        for(int i=0;i<seatCount;i++) {
             Gui handler=new Gui(i+1);Player player=game.getPlayers().get(i);
             // Keep both seat projections without replacing the native AI mind.
             handler.controller=player.getController() instanceof PlayerControllerHuman human?human:new BridgeController(game,player,new BridgePlayer(player.getName()));
+            if (localPuzzle != null && i == 0) ((BridgeController)handler.controller).puzzleSolver = true;
             handler.controller.setGui((IGuiGame)Proxy.newProxyInstance(IGuiGame.class.getClassLoader(),new Class<?>[]{IGuiGame.class},handler));
             guis.add(handler);
         }
@@ -2724,7 +2936,19 @@ public final class ForgeBridge {
         game.getAction().invoke(() -> {
             // Forge's own worker exception handler can itself fail in headless mode.
             // Report failures before they escape it so clients never wait indefinitely.
-            try { match.startGame(game,()->{seriesOwnership.capture();if(startGameHook!=null)startGameHook.run();}); finish(); } catch(Throwable e) { if(terminalCancellation(e))finish();else fatal(e); }
+            try { match.startGame(game,()->{
+                if (localPuzzle != null) {
+                    localPuzzle.applyToGame(game);
+                    verifyPuzzleAttachments(requiredAttachments);
+                    if (customGoal != null) {
+                        puzzleObjective = new BridgePuzzleObjective(game,customGoal,deadline);
+                        game.subscribeToEvents(puzzleObjective);
+                    }
+                }
+                seriesOwnership.capture();
+                event.start(game);
+                if(startGameHook!=null)startGameHook.run();
+            }); finish(); } catch(Throwable e) { if(terminalCancellation(e))finish();else fatal(e); }
         });
         new CountDownLatch(1).await(); // Forge game workers are daemon threads.
     }

@@ -47,7 +47,6 @@ public static class RevealCostRollbackPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui){
         var language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try{
             int rev=GamePreferences.Revision;bool changing=language!="zh-CN";GamePreferences.SetLanguage("zh-CN");float until=Time.realtimeSinceStartup+12;while((!GamePreferences.Ready||changing&&GamePreferences.Revision==rev)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language=="zh-CN","Exact language ready");
             int calls=0,sent=-1;
@@ -61,7 +60,7 @@ public static class RevealCostRollbackPresentationValidation
             var after=Read("cancelled-viewer");Check(after.players[0].hand.Select(c=>c.id).OrderBy(i=>i).SequenceEqual(reveal.request.previewCards.Select(c=>c.id).OrderBy(i=>i)),"Already revealed identities preserved after native refund");
             ui.Present(after,2,false,i=>calls++,null,"");yield return Frame();Check(GameObject.Find("CardSelection")==null&&GameObject.Find("SelectionAction_"+confirm)==null,"Native reveal UI clears at restored priority");
             File.AppendAllText(Output+"/steps.log","opponent exact two-card reveal ray and knowledge-preserving refund PASS\n");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

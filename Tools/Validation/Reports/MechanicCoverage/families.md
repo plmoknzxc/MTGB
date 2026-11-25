@@ -157,5 +157,7 @@
 
 | 操作 | 直接引用脚本数 | 代表牌 |
 |---|---:|---|
+| PutSticker | 36 | Aerialephant、Ambassador Blorpityblorpboop |
+| Assimilate | 8 | Assimilate the Wounded、Assimilation Assessor |
 
 每项规则/界面断言、证据状态、请求族与未适配分支见 [families.json](families.json)。

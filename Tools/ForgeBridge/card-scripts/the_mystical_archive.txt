@@ -1,0 +1,16 @@
+Name:The Mystical Archive
+ManaCost:no cost
+Types:Land
+K:ETBReplacement:Other:DBDraft
+SVar:DBDraft:DB$ Draft | Spellbook$ Abrade,Ad Nauseam,Armageddon,Berserk,Big Score,Bulk Up,Crackle with Power,Deduce,Disdainful Stroke,Empty the Warrens,Force of Will,Giant Growth,Hop to It,Knockout Maneuver,Pick Your Poison,Pongify,Prismatic Ending,Reprieve,Requisition Raid,Shamanic Revelation,Sheoldred's Edict,Smallpox,Stargaze,Stock Up,Zombify | RememberDrafted$ True | SubAbility$ DBExile | SpellDescription$ As this land enters, draft a card from CARDNAME's spellbook and exile it face down.
+SVar:DBExile:DB$ ChangeZone | Origin$ Hand | Destination$ Exile | ExileFaceDown$ True | Defined$ Remembered | Imprint$ True | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+A:AB$ Mana | Cost$ T | Produced$ C | SpellDescription$ Add {C}.
+A:AB$ Mana | Cost$ 1 T | Produced$ Combo Any | Amount$ 2 | RestrictValid$ SpellNotFromStartingDeck | SpellDescription$ Add two mana in any combination of colors. Spend this mana only to cast spells that aren't from your starting deck.
+A:AB$ ChooseCard | Cost$ 2 T | ChoiceZone$ Exile | Choices$ Card.IsImprinted | Mandatory$ True | SubAbility$ DBReturn | SpellDescription$ Put a card exiled with this land into its owner's hand.
+SVar:DBReturn:DB$ ChangeZone | Origin$ Exile | Destination$ Hand | Defined$ ChosenCard | SubAbility$ DBClearChoice
+SVar:DBClearChoice:DB$ Cleanup | ClearChosenCard$ True
+T:Mode$ ChangesZone | Origin$ Exile | Destination$ Any | ValidCard$ Card.IsImprinted | Static$ True | Execute$ DBUnlink
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Any | ValidCard$ Card.Self | Static$ True | Execute$ DBUnlink
+SVar:DBUnlink:DB$ Cleanup | ClearImprinted$ True
+Oracle:As this land enters, draft a card from The Mystical Archive's spellbook and exile it face down.\n{T}: Add {C}.\n{1}, {T}: Add two mana in any combination of colors. Spend this mana only to cast spells that aren't from your starting deck.\n{2}, {T}: Put a card exiled with this land into its owner's hand.

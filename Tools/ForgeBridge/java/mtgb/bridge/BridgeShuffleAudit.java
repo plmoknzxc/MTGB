@@ -39,7 +39,7 @@ final class BridgeShuffleAudit implements Player.LibraryAudit {
         status=target.resolveSibling(target.getFileName()+".status.json");
         writer=new Thread(this::write,"mtgb-shuffle-audit");writer.setDaemon(true);writer.start();
         var header=new LinkedHashMap<String,Object>();header.put("type","start");header.put("formatVersion",1);header.put("createdUtc",Instant.now().toString());
-        for(String key:List.of("session","roomId","gameNumber","seed","runtimeHash","forgeRevision","firstPlayerSeat","startingLife","noShuffle","useAnte","shuffleAlgorithm","shufflePasses","shufflePiles","shuffleMaxPacket","shuffleCuts","decks","authorizedAuxiliarySeriesPools"))
+        for(String key:List.of("session","roomId","gameNumber","seed","runtimeHash","forgeRevision","formatId","commanderEvent","firstPlayerSeat","startingLife","noShuffle","useAnte","shuffleAlgorithm","shufflePasses","shufflePiles","shuffleMaxPacket","shuffleCuts","decks","authorizedAuxiliarySeriesPools"))
             if(config.has(key))header.put(key,config.get(key));
         header.put("limits",Map.of("maxUncompressedBytes",MAX_BYTES,"maxRecords",MAX_RECORDS,"queueMemoryChars",QUEUE_CHARS,"retentionDays",30,"archiveBudgetBytes",512L*1024*1024));
         publish(header);
@@ -72,7 +72,7 @@ final class BridgeShuffleAudit implements Player.LibraryAudit {
                 added.add(Map.of("id",card.getId(),"printing",paper==null?"":paper.getEdition()+"/"+paper.getCollectorNumber(),"name",paper==null?card.getName():paper.getName(),"land",card.isLand()));
             }
         }
-        var record=new LinkedHashMap<String,Object>();record.put("gameInstance",instance);record.put("seat",game.getPlayers().indexOf(player)+1);
+        var record=new LinkedHashMap<String,Object>();record.put("gameInstance",instance);record.put("seat",game.getRegisteredPlayers().indexOf(player)+1);
         record.put("turn",game.getPhaseHandler().getTurn());record.put("phase",String.valueOf(game.getPhaseHandler().getPhase()));record.put("stage",String.valueOf(game.getAge()));
         record.put("library",order);if(!added.isEmpty())record.put("identities",added);
         if(cause!=null){record.put("sourceId",cause.getHostCard().getId());record.put("sourceName",cause.getHostCard().getName());record.put("api",String.valueOf(cause.getApi()));}

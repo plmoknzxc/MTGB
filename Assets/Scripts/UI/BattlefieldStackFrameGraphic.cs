@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // A hollow rounded frame, so translucent rows keep their original fill.
+[RequireComponent(typeof(CanvasRenderer))]
 public sealed class BattlefieldStackFrameGraphic : MaskableGraphic
 {
     public float Radius = 3;

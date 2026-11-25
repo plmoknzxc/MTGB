@@ -140,7 +140,7 @@ public sealed partial class ForgeBattlefieldController
         {
             bool own = playerSeat == seat;
             RedesignPlace(row, own ? Vector2.zero : new Vector2(0, 1), Vector2.one * .5f,
-                new Vector2(205, own ? 194 : -242), new Vector2(width, height));
+                new Vector2(64 + width * .5f, own ? 194 : -242 + RedesignOpponentHudLift - 6), new Vector2(width, height));
             return;
         }
         row.anchorMin=row.anchorMax=new Vector2(.5f,.5f);row.pivot=new Vector2(.5f,.5f);

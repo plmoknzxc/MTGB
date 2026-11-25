@@ -26,7 +26,6 @@ public static class ForgeInteractionValidation
     }
     static IEnumerator Validate() {
         yield return SceneManager.LoadSceneAsync("IntegratedBattlefield");
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))UnityEngine.Object.Destroy(notice);
         var ui=new GameObject("InteractionUiValidation").AddComponent<ForgeBattlefieldController>();
         foreach(var mouse in new[]{PointerEventData.InputButton.Left,PointerEventData.InputButton.Right}) {
             var state=Read("mana-choice");int sent=-1;

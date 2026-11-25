@@ -57,7 +57,17 @@ public sealed class ReplayVideoEncoder : IDisposable
         if (!process.WaitForExit(30000)) { process.Kill(); throw new IOException("视频编码超时。"); }
         process.WaitForExit();
         if (process.ExitCode != 0) { lock(errors) throw new IOException(errors.ToString()); }
-        if(overwrite&&File.Exists(output))File.Replace(temporary,output,null);else File.Move(temporary, output);
+        for(int attempt=0;;attempt++) {
+            try {
+                if(overwrite&&File.Exists(output))File.Replace(temporary,output,null);
+                else File.Move(temporary,output);
+                break;
+            }
+            catch(IOException e) when(overwrite && attempt<8 && (e.HResult&0xffff) is 32 or 33 or 80 or 183 or 1175) {
+                // A reader or indexer may briefly hold the old MP4 during the final rename.
+                System.Threading.Thread.Sleep(50*(attempt+1));
+            }
+        }
         finished = true;
     });
     public void Dispose()

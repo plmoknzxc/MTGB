@@ -25,12 +25,11 @@ public static class RandomBoundaryPresentationValidation
     }
     static IEnumerator Guard(IEnumerator iterator)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;
-        if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt","PASS: real native boundary request replay in zh-CN/en-US/ja-JP; mana cancellation pointer/native index, localized payment meaning, actionable stale and duplicate guards, nonacting viewer, next request enabled after cancellation, explicit keep confirmation without mana. Native Fly animated/EOT/zone/recast snapshots: creature stats and flying removed at EOT, Whacker stats retained then new ETB stats, Xenosquirrels death and no phantom choices. No actual network/animation timing claim; effects proved separately by Test-RandomBoundaries.py.");
-        }finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return new WaitForSecondsRealtime(.35f);yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

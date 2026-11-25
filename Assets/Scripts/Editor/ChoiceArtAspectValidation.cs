@@ -34,10 +34,10 @@ public static class ChoiceArtAspectValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        string locale=GamePreferences.Language;var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
+        string locale=GamePreferences.Language;
         var it=Validate(ui);
         try{while(true){object next;try{if(!it.MoveNext())break;next=it.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: sprite-subrect / wide / tall frames / nonuniform ancestor scale / rotation / null reset, maximal crop and source bounds, top-aligned illustrations and centered headers; three locales, native many/small combat and effect assignment, casting options, prepared payment/stack, ability stack/order, modal options and chosen spell header actual pixel/display aspect; selection raycast identity/stale/duplicate/viewer guards, stable same-request recipient art and scroll, last of eleven reachable, View/Return. Only archived native UI replay; no new engine effects.");}
-        finally{File.WriteAllLines(Output+"/aspect-observations.tsv",observations);running=false;ui.RestoreBattlefieldWindows();GamePreferences.SetLanguage(locale);if(notice!=null)notice.enabled=enabled;}
+        finally{File.WriteAllLines(Output+"/aspect-observations.tsv",observations);running=false;ui.RestoreBattlefieldWindows();GamePreferences.SetLanguage(locale);}
     }
     static void CropMatrix()
     {

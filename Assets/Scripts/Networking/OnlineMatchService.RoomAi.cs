@@ -1,18 +1,80 @@
 using System;
 using System.Linq;
+using UnityEngine;
 
 public sealed partial class OnlineMatchService
 {
     private const ulong AiClientId = ulong.MaxValue;
 
+    private string submittedAiName, submittedAiFingerprint;
+    private bool sawAiCheck;
+    // Servers predating the optional host-only fields still report start/end of validation.
+    private string legacyAiName, legacyAiFingerprint;
+    public string AcceptedRoomAiDeckName => !string.IsNullOrEmpty(LobbyState?.aiDeckFingerprint)
+        ? LobbyState.aiDeckName : legacyAiName;
+    public bool RoomAiChangePending => submittedAiFingerprint != null || LobbyState?.aiPending == true;
+
+    public bool MatchesAcceptedRoomAiDeck(DeckDefinition deck)
+    {
+        if (deck == null || deck.name != AcceptedRoomAiDeckName) return false;
+        var key = LobbyState?.aiDeckFingerprint;
+        if (string.IsNullOrEmpty(key)) key = legacyAiFingerprint;
+        return !string.IsNullOrEmpty(key) && key == AiFingerprintForRoom(deck);
+    }
+
+    private string AiFingerprintForRoom(DeckDefinition deck)
+    {
+        var copy = CloneDeck(deck);
+        copy.format = LobbyState.config?.formatId;
+        return AiFingerprint(copy);
+    }
+
+    private static string AiFingerprint(DeckDefinition deck) => Hash128.Compute(JsonUtility.ToJson(deck)).ToString();
+
     public void ConfigureRoomAi(DeckDefinition deck, bool remove = false)
     {
-        if (HasJoinedLobby && !IsInMatch)
-            SendToServer(OnlineProtocol.ConfigureAi, new OnlineAiMessage { deck = deck, remove = remove });
+        if (!HasJoinedLobby || IsInMatch || IsSpectator || LobbyState.hostSeat != LocalSeat) return;
+        if (!remove)
+        {
+            if (deck == null || RoomAiChangePending || MatchesAcceptedRoomAiDeck(deck)) return;
+            submittedAiName = deck.name;
+            submittedAiFingerprint = AiFingerprintForRoom(deck);
+            sawAiCheck = false;
+        }
+        SendToServer(OnlineProtocol.ConfigureAi, new OnlineAiMessage { deck = deck, remove = remove });
+    }
+
+    private void ClearAiSubmission()
+    {
+        submittedAiName = submittedAiFingerprint = null;
+        sawAiCheck = false;
+    }
+
+    private void ObserveAiLobby(OnlineLobbyState lobby)
+    {
+        if (lobby == null || lobby.hostSeat != LocalSeat || IsSpectator)
+        {
+            ClearAiSubmission();
+            legacyAiName = legacyAiFingerprint = null;
+            return;
+        }
+        bool aiPresent = lobby.players?.Any(player => player.isAi) == true;
+        if (!aiPresent) legacyAiName = legacyAiFingerprint = null;
+        if (submittedAiFingerprint == null) return;
+        if (lobby.aiPending) sawAiCheck = true;
+        else if (sawAiCheck || submittedAiFingerprint == lobby.aiDeckFingerprint)
+        {
+            if (aiPresent && string.IsNullOrEmpty(lobby.aiDeckFingerprint))
+            {
+                legacyAiName = submittedAiName;
+                legacyAiFingerprint = submittedAiFingerprint;
+            }
+            ClearAiSubmission();
+        }
     }
 
     private static bool CanConfigureAi(OnlineRoomState room, OnlineRoomMember actor)
-        => room != null && actor != null && !actor.isAi && !actor.IsSpectator && actor.connected
+        => room != null && room.config.PlayerCapacity == 2 && actor != null && !actor.isAi && !actor.IsSpectator && actor.connected
             && room.hostSeat == actor.seat && !room.RetainsPlayers && !actor.reviewing
             && room.playDrawChooserSeat == 0;
 
@@ -57,8 +119,11 @@ public sealed partial class OnlineMatchService
                 if (result.error != null || !result.Allows(deck)) { Reject(DeckCompanionInspector.Status(result, false)); return; }
             }
             if (!Current()) return;
+            var fingerprint = AiFingerprint(deck);
+            if (previous != null && previous.aiDeckFingerprint == fingerprint) return;
             room.members[targetSeat] = new OnlineRoomMember {
                 seat = targetSeat, isAi = true, clientId = AiClientId, displayName = "Forge AI",
+                aiDeckFingerprint = fingerprint,
                 connected = true, ready = true, sceneReady = true, deck = deck
             };
             // Changing the opponent requires the human to confirm readiness again.

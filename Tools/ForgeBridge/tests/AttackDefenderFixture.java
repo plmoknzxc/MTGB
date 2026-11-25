@@ -18,6 +18,10 @@ public final class AttackDefenderFixture {
         ForgeBridge.run(args,() -> {
             Player one=ForgeBridge.game.getPlayers().get(0),two=ForgeBridge.game.getPlayers().get(1);
             for(int i=0;i<3;i++)place("Goblin Piker",one);
+            if(Boolean.getBoolean("mtgb.test.combatGroups")) {
+                for(int i=0;i<3;i++)place("Grizzly Bears",two);
+                place("Charging Rhino",one);
+            }
             place("Wall of Wood",one); // Defender: cannot be declared as an attacker.
             Card walker=place("Jace Beleren",two);
             walker.setCounters(CounterType.getType("LOYALTY"),5);

@@ -35,10 +35,10 @@ public sealed partial class MainMenuController
         var go=new GameObject("CommandZoneDrop",typeof(RectTransform),typeof(Image),typeof(Outline));
         go.transform.SetParent(sideboardContent,false);commandZoneDrop=(RectTransform)go.transform;
         commandZoneDrop.sizeDelta=sideboardContent.GetComponent<GridLayoutGroup>().cellSize;
-        go.GetComponent<Image>().color=new Color(.16f,.14f,.08f,.9f);go.GetComponent<Image>().raycastTarget=false;
-        go.GetComponent<Outline>().effectColor=MenuVisualTheme.Primary;
-        var label=AddText(go.transform,"Label",DeckCompanion.Text("统帅区\n拖入主将","Command zone\nDrop commander","統率領域\n統率者をここへ"),18,MenuVisualTheme.Paper,TextAnchor.MiddleCenter);
-        Stretch(label.rectTransform,8,8,8,8);label.raycastTarget=false;
+        go.GetComponent<Image>().color=MenuVisualTheme.ArchivePanel;go.GetComponent<Image>().raycastTarget=false;
+        go.GetComponent<Outline>().effectColor=MenuVisualTheme.Etching;
+        var label=AddText(go.transform,"Label",CommandDropLabel(),18,MenuVisualTheme.Paper,TextAnchor.MiddleCenter);
+        Stretch(label.rectTransform,8,8,3,3);label.raycastTarget=false;
     }
     void RequestCommandZone(CardDefinition card,bool fromMain)
     {
@@ -62,9 +62,10 @@ public sealed partial class MainMenuController
     {
         RefreshMainDeckHeading();
         RefreshSecondaryDeckHeading();
-        if(commandZoneDrop!=null)commandZoneDrop.GetComponentInChildren<Text>().text=DeckCompanion.Text("统帅区\n拖入主将","Command zone\nDrop commander","統率領域\n統率者をここへ");
+        if(commandZoneDrop!=null)commandZoneDrop.GetComponentInChildren<Text>().text=CommandDropLabel();
         if(addSideboardButton!=null)SetText(addSideboardButton.GetComponentInChildren<Text>(),DeckCompanion.Text("加入备牌","Add to sideboard","サイドに追加"));
     }
+    static string CommandDropLabel()=>DeckCompanion.Text("统帅区 · 拖入主将","Command zone · Drop commander","統率領域 · 統率者をここへ");
     IEnumerator AdaptCommanderSideboard(DeckDefinition deck)
     {
         if(DeckCommander.Has(deck)||DeckRepository.GetTotalCount(deck,true)!=1)yield break;
@@ -102,8 +103,9 @@ public sealed partial class MainMenuController
         string role=tile.Zone==MainMenuCardTileZone.Commander?DeckCompanion.Text("主将","Commander","統率者"):
             DeckCompanion.IsSelected(currentDeck,new DeckEntry{setCode=tile.Card.setCode,collectorNumber=tile.Card.CollectorNumber})?DeckCompanion.Text("行侣","Companion","相棒"):DeckCompanion.Text("备牌","Sideboard","サイド");
         var bg=old!=null?old.GetComponent<Image>():AddImage(tile.transform,"RoleBackground",Color.white);bg.gameObject.SetActive(true);
-        bg.color=tile.Zone==MainMenuCardTileZone.Commander?new Color(.40f,.29f,.08f,.96f):new Color(.08f,.2f,.3f,.96f);
-        bg.rectTransform.anchorMin=new Vector2(0,0);bg.rectTransform.anchorMax=new Vector2(1,0);bg.rectTransform.pivot=new Vector2(.5f,0);bg.rectTransform.sizeDelta=new Vector2(-8,24);bg.rectTransform.anchoredPosition=new Vector2(0,4);bg.raycastTarget=false;
+        bg.color=tile.Zone==MainMenuCardTileZone.Commander?MenuVisualTheme.LitSlate:MenuVisualTheme.ArchivePanel;
+        bg.rectTransform.anchorMin=Vector2.zero;bg.rectTransform.anchorMax=new Vector2(1,0);
+        bg.rectTransform.offsetMin=new Vector2(4,4);bg.rectTransform.offsetMax=new Vector2(-53,30);bg.raycastTarget=false;
         var text=bg.GetComponentInChildren<Text>()??AddText(bg.transform,"DeckRole",role,14,Color.white,TextAnchor.MiddleCenter);text.text=role;Stretch(text.rectTransform,0,0,0,0);text.raycastTarget=false;
     }
 }

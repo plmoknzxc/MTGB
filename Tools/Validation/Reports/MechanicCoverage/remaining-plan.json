@@ -6510,10 +6510,6 @@
                     "sha256": "a6d639a93029dc8314891b8b31c403ba7e4d8c43e56fb1aea6689d267107e8f6"
                   },
                   {
-                    "path": "Assets/Scripts/UI/ForgeBattlefieldMigrationNotice.cs",
-                    "sha256": "3943d00920e001bce5fdb06581bac2a804d1ae211d7138627ba4b5e8c7e12566"
-                  },
-                  {
                     "path": "Assets/Scripts/UI/CardArtPanel.cs",
                     "sha256": "6e075bdac0e436556552ecb7cc152a4342170aaa87388f0563fac5e81257bc11"
                   },

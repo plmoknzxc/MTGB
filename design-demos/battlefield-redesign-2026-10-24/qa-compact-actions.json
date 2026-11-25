@@ -1,0 +1,4844 @@
+{
+  "status": "PASS",
+  "scope": "Native renderer projection and HTML layout only; no gameplay or networking outcomes",
+  "nativeProjections": 69,
+  "originalSnapshots": 19,
+  "composition": 1,
+  "explicitAdapters": 3,
+  "layouts": [
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动",
+        "撤回 Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下一步",
+        "重新选择",
+        "取消",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "全部攻击",
+        "结束阶段",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "确认 / 让过",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动",
+        "撤回 Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下一步",
+        "重新选择",
+        "取消",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "全部攻击",
+        "结束阶段",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "确认 / 让过",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动",
+        "撤回 Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下一步",
+        "重新选择",
+        "取消",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "全部攻击",
+        "结束阶段",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "确认 / 让过",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动",
+        "Undo Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Next",
+        "Reselect",
+        "Cancel",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Attack all",
+        "End phase",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Confirm / Pass",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动",
+        "Undo Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Next",
+        "Reselect",
+        "Cancel",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Attack all",
+        "End phase",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Confirm / Pass",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动",
+        "Undo Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Next",
+        "Reselect",
+        "Cancel",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Attack all",
+        "End phase",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Confirm / Pass",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动",
+        "戻す Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "次へ",
+        "選び直す",
+        "キャンセル",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "全て攻撃",
+        "フェイズ終了",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "確定・パス",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "0.85",
+      "buttons": [
+        "−",
+        "+",
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动",
+        "戻す Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "次へ",
+        "選び直す",
+        "キャンセル",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "全て攻撃",
+        "フェイズ終了",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "確定・パス",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1",
+      "buttons": [
+        "−",
+        "+",
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动",
+        "戻す Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "次へ",
+        "選び直す",
+        "キャンセル",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "全て攻撃",
+        "フェイズ終了",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "確定・パス",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1600,
+        1000
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下一步",
+        "下阶段暂停",
+        "手动",
+        "撤回 Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下一步",
+        "重新选择",
+        "取消",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "全部攻击",
+        "结束阶段",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "确认 / 让过",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "确定",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "zh-CN",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "取消",
+        "下一步",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Next",
+        "下阶段暂停",
+        "手动",
+        "Undo Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Next",
+        "Reselect",
+        "Cancel",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Attack all",
+        "End phase",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Confirm / Pass",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Confirm",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "en-US",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "Cancel",
+        "Next",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "priority",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "次へ",
+        "下阶段暂停",
+        "手动",
+        "戻す Z"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "undo",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "payment",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "次へ",
+        "選び直す",
+        "キャンセル",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "hand",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "energy",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "全て攻撃",
+        "フェイズ終了",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "attack",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "確定・パス",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "block",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "search",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "graveyard",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "discard",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-cards",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "order-triggers",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "modes",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "piles",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "entry",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mana-choice",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "target",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "mulligan",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "phyrexian",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "allocation",
+      "modal": true
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "確認",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "number-large",
+      "modal": false
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "locale": "ja-JP",
+      "scale": "1.3",
+      "buttons": [
+        "−",
+        "+",
+        "キャンセル",
+        "次へ",
+        "下阶段暂停",
+        "手动"
+      ],
+      "detailsHidden": true,
+      "errors": [],
+      "key": "manual-number",
+      "modal": false
+    }
+  ],
+  "stackChecks": [
+    {
+      "count": 0,
+      "clientHeight": 0,
+      "hidden": true,
+      "rendered": 0,
+      "scrollHeight": 0,
+      "scrollTop": 0,
+      "scrollable": false
+    },
+    {
+      "count": 1,
+      "clientHeight": 520,
+      "hidden": false,
+      "rendered": 1,
+      "scrollHeight": 520,
+      "scrollTop": 0,
+      "scrollable": false
+    },
+    {
+      "count": 2,
+      "clientHeight": 520,
+      "hidden": false,
+      "rendered": 2,
+      "scrollHeight": 520,
+      "scrollTop": 0,
+      "scrollable": false
+    },
+    {
+      "count": 4,
+      "clientHeight": 520,
+      "hidden": false,
+      "rendered": 4,
+      "scrollHeight": 520,
+      "scrollTop": 0,
+      "scrollable": false
+    },
+    {
+      "count": 5,
+      "clientHeight": 520,
+      "hidden": false,
+      "rendered": 5,
+      "scrollHeight": 529,
+      "scrollTop": 0,
+      "scrollable": true
+    },
+    {
+      "count": 12,
+      "clientHeight": 520,
+      "hidden": false,
+      "rendered": 12,
+      "scrollHeight": 1264,
+      "scrollTop": 0,
+      "scrollable": true
+    },
+    {
+      "count": 30,
+      "clientHeight": 520,
+      "hidden": false,
+      "rendered": 30,
+      "scrollHeight": 3154,
+      "scrollTop": 0,
+      "scrollable": true
+    }
+  ],
+  "stackEnd": {
+    "maximum": 2634,
+    "scrollTop": 2634
+  },
+  "wheelTop": 680,
+  "selectedStackResult": {
+    "selected": 1,
+    "targetText": "天空之怒",
+    "targeted": 1
+  },
+  "lowerCheck": {
+    "fieldOverlap": 0,
+    "manaOverlap": false,
+    "state": "lowered"
+  },
+  "raiseState": "raised",
+  "consoleErrorsAfterRepair": []
+}

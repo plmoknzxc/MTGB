@@ -43,7 +43,6 @@ public static class ConvokeGenericPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui) {
         string language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();bool inputs=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var states=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try {
             foreach(string locale in new[]{"zh-CN","en-US","ja-JP"}) {
                 GamePreferences.SetLanguage(locale);float deadline=Time.realtimeSinceStartup+8;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Check(GamePreferences.Ready,"Locale ready");
@@ -70,7 +69,7 @@ public static class ConvokeGenericPresentationValidation
                 ScreenCapture.CaptureScreenshot(Output+"/"+locale+"-colorless-adapter.png");yield return Frame();
                 File.AppendAllText(Output+"/steps.log",locale+" actual {1}/{G}/{W}, native index/ray/guards/return; ordinary {C} adapter PASS\n");
             }
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=inputs;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=states[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=inputs;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

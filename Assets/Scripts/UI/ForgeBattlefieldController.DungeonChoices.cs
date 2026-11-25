@@ -49,7 +49,7 @@ public sealed partial class ForgeBattlefieldController
         float height=Mathf.Min(590,surface.rect.height-52),width=Mathf.Min(720,surface.rect.width-52);
         landChoiceMenu.sizeDelta=new Vector2(width,height);
         landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         Label(landChoiceMenu,"Title",TapPaymentText("选择下一个房间","Choose the next room","次の部屋を選択"),new Vector2(0,height/2-26),new Vector2(width-36,34),23,Paper);
         float artHeight=height-88,artWidth=artHeight/1.4f;
         var art=Rect(landChoiceMenu,"DungeonMap",new Vector2(-width*.5f+artWidth*.5f+22,-12),new Vector2(artWidth,artHeight)).gameObject.AddComponent<Image>();
@@ -69,7 +69,8 @@ public sealed partial class ForgeBattlefieldController
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(.5f,1);rect.anchoredPosition=new Vector2(0,-y);
             var label=button.GetComponentInChildren<Text>();PreferenceText.SetSize(label,18);label.resizeTextForBestFit=false;label.alignment=TextAnchor.MiddleLeft;label.supportRichText=false;
             label.rectTransform.sizeDelta=new Vector2(choiceWidth-24,rowHeight-18);
-            button.interactable=canAct&&!submitted;y+=rowHeight+16;
+            if(HudTheme!=null)StyleZoneButton(button,option.selected);
+            button.interactable=canAct&&!submitted&&!option.disabled;y+=rowHeight+16;
         }
         content.sizeDelta=new Vector2(choiceWidth,y);
         if(y>height-88)AddStackScrollIndicator(content);

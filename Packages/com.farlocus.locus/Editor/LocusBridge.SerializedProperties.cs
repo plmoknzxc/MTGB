@@ -14,6 +14,7 @@ namespace Locus
     {
         public sealed class SerializedPropertySnapshot
         {
+            public string restoreState;
             public string propertyPath;
             public string semanticPath;
             public string nodeKind;
@@ -83,8 +84,10 @@ namespace Locus
             public string[] lines;
         }
 
+        [Serializable]
         public sealed class SerializedPropertyBindingTarget
         {
+            public string globalObjectId;
             public string kind;
             public string guid;
             public string path;
@@ -219,6 +222,8 @@ namespace Locus
             public int index;
             public int toIndex;
             public int size;
+            public bool initialize;
+            public string[] values;
         }
 
         private sealed class SerializedManagedReferenceWriteCommand
@@ -251,14 +256,17 @@ namespace Locus
             SerializedProperty prop,
             int maxDepth = 4,
             int maxArrayItems = 64,
-            bool dynamicSchema = false)
+            bool dynamicSchema = false,
+            bool includeRestoreState = true)
         {
             if (prop == null)
                 return null;
 
             maxDepth = Math.Max(0, maxDepth);
             maxArrayItems = Math.Max(0, maxArrayItems);
-            return SnapshotSerializedProperty(prop.Copy(), 0, maxDepth, maxArrayItems, dynamicSchema);
+            var snapshot = SnapshotSerializedProperty(prop.Copy(), 0, maxDepth, maxArrayItems, dynamicSchema);
+            if (includeRestoreState) snapshot.restoreState = Locus.Json.LocusJson.SerializeData(CapturePropertyRestoreState(prop));
+            return snapshot;
         }
 
         public static SerializedPropertySnapshot SnapshotSerializedObject(
@@ -341,7 +349,7 @@ namespace Locus
 
         public static string SerializedPropertySnapshotToJson(SerializedPropertySnapshot snapshot)
         {
-            return ToJsonValue(snapshot, 0, SnapshotJsonDepthLimit, true);
+            return Locus.Json.LocusJson.SerializeData(snapshot);
         }
 
         public static bool IsSerializedPropertyWritable(SerializedProperty prop)
@@ -360,6 +368,8 @@ namespace Locus
                 case SerializedPropertyType.String:
                 case SerializedPropertyType.Enum:
                 case SerializedPropertyType.ObjectReference:
+                case SerializedPropertyType.ExposedReference:
+                case SerializedPropertyType.Hash128:
                 case SerializedPropertyType.LayerMask:
                 case SerializedPropertyType.ArraySize:
                 case SerializedPropertyType.Vector2:
@@ -383,6 +393,26 @@ namespace Locus
             }
         }
 
+        // SerializedProperty.ulongValue exists from Unity 2022.1. Older editors
+        // store the same 64 bits behind longValue; the cast is lossless.
+        internal static ulong GetSerializedUInt64(SerializedProperty prop)
+        {
+#if UNITY_2022_1_OR_NEWER
+            return prop.ulongValue;
+#else
+            return unchecked((ulong)prop.longValue);
+#endif
+        }
+
+        internal static void SetSerializedUInt64(SerializedProperty prop, ulong value)
+        {
+#if UNITY_2022_1_OR_NEWER
+            prop.ulongValue = value;
+#else
+            prop.longValue = unchecked((long)value);
+#endif
+        }
+
         public static object SerializedPropertyValue(SerializedProperty prop, bool resolveSchema = true)
         {
             if (prop == null)
@@ -393,11 +423,13 @@ namespace Locus
                 case SerializedPropertyType.Integer:
                 case SerializedPropertyType.ArraySize:
                 case SerializedPropertyType.LayerMask:
-                    return prop.intValue;
+                    if (prop.type == "ulong") return GetSerializedUInt64(prop).ToString(CultureInfo.InvariantCulture);
+                    if (prop.type == "long") return prop.longValue.ToString(CultureInfo.InvariantCulture);
+                    return prop.longValue;
                 case SerializedPropertyType.Boolean:
                     return prop.boolValue;
                 case SerializedPropertyType.Float:
-                    return prop.floatValue;
+                    return prop.doubleValue;
                 case SerializedPropertyType.String:
                     return prop.stringValue;
                 case SerializedPropertyType.Enum:
@@ -412,6 +444,10 @@ namespace Locus
                     return prop.objectReferenceValue != null
                         ? SerializedObjectReferencePath(prop.objectReferenceValue)
                         : "";
+                case SerializedPropertyType.ExposedReference:
+                    return prop.exposedReferenceValue != null ? SerializedObjectReferencePath(prop.exposedReferenceValue) : "";
+                case SerializedPropertyType.Hash128:
+                    return prop.hash128Value.ToString();
                 case SerializedPropertyType.Vector2:
                     return VectorValue(prop.vector2Value);
                 case SerializedPropertyType.Vector3:
@@ -494,11 +530,11 @@ namespace Locus
                 case SerializedPropertyType.Integer:
                 case SerializedPropertyType.ArraySize:
                 case SerializedPropertyType.LayerMask:
-                    return prop.intValue.ToString(CultureInfo.InvariantCulture);
+                    return Convert.ToString(SerializedPropertyValue(prop), CultureInfo.InvariantCulture);
                 case SerializedPropertyType.Boolean:
                     return prop.boolValue ? "true" : "false";
                 case SerializedPropertyType.Float:
-                    return prop.floatValue.ToString(CultureInfo.InvariantCulture);
+                    return prop.doubleValue.ToString("R", CultureInfo.InvariantCulture);
                 case SerializedPropertyType.String:
                     return prop.stringValue ?? "";
                 case SerializedPropertyType.Enum:
@@ -507,6 +543,10 @@ namespace Locus
                     if (prop.objectReferenceValue == null)
                         return "None";
                     return SerializedObjectReferenceDisplay(prop.objectReferenceValue);
+                case SerializedPropertyType.ExposedReference:
+                    return prop.exposedReferenceValue == null ? "None" : SerializedObjectReferenceDisplay(prop.exposedReferenceValue);
+                case SerializedPropertyType.Hash128:
+                    return prop.hash128Value.ToString();
                 case SerializedPropertyType.Vector2:
                     return FormatVector(prop.vector2Value);
                 case SerializedPropertyType.Vector3:
@@ -556,6 +596,8 @@ namespace Locus
         {
             if (prop == null)
                 throw new Exception("SerializedProperty is required");
+            if (!prop.editable || prop.propertyPath == "m_Script")
+                throw new InvalidOperationException("SerializedProperty is read only: " + prop.propertyPath);
             string json = string.IsNullOrWhiteSpace(valueJson) ? "null" : valueJson.Trim();
             SerializedPropertySnapshot restoreSnapshot;
             if (TryParseRestoreSnapshotCommand(json, out restoreSnapshot))
@@ -577,13 +619,13 @@ namespace Locus
                 case SerializedPropertyType.Integer:
                 case SerializedPropertyType.ArraySize:
                 case SerializedPropertyType.LayerMask:
-                    prop.intValue = ParseIntJson(json);
+                    SetPropertyIntegerValue(prop, json);
                     break;
                 case SerializedPropertyType.Boolean:
                     prop.boolValue = ParseBoolJson(json);
                     break;
                 case SerializedPropertyType.Float:
-                    prop.floatValue = ParseFloatJson(json);
+                    prop.doubleValue = double.Parse(TrimJsonString(json), CultureInfo.InvariantCulture);
                     break;
                 case SerializedPropertyType.String:
                     prop.stringValue = ParseStringJson(json);
@@ -592,8 +634,13 @@ namespace Locus
                     SetEnumValue(prop, json);
                     break;
                 case SerializedPropertyType.ObjectReference:
-                    string assetPath = ParseStringJson(json);
-                    prop.objectReferenceValue = ResolveSerializedObjectReference(prop, assetPath);
+                    prop.objectReferenceValue = ResolvePropertyReferenceValue(prop, json);
+                    break;
+                case SerializedPropertyType.ExposedReference:
+                    prop.exposedReferenceValue = ResolvePropertyReferenceValue(prop, json);
+                    break;
+                case SerializedPropertyType.Hash128:
+                    prop.hash128Value = Hash128.Parse(ParseStringJson(json));
                     break;
                 case SerializedPropertyType.Vector2:
                     Vector2Json v2 = DeserializeJson<Vector2Json>(json);
@@ -871,6 +918,13 @@ namespace Locus
             if (snapshot == null)
                 throw new Exception("SerializedProperty snapshot is required");
 
+            if (!string.IsNullOrEmpty(snapshot.restoreState)) {
+                RestorePropertyState(prop, DeserializeJson<PropertyRestoreNode>(snapshot.restoreState),
+                    ExistingManagedPropertyReferences(prop.serializedObject), new HashSet<long>());
+                return;
+            }
+            if (snapshot.childrenTruncated) throw new InvalidOperationException("A truncated display snapshot cannot be restored.");
+
             if (snapshot.isArray && prop.isArray && prop.propertyType == SerializedPropertyType.Generic)
             {
                 int targetSize = Math.Max(0, snapshot.arraySize);
@@ -929,6 +983,7 @@ namespace Locus
 
         private static string SerializedPropertySnapshotValueJson(SerializedPropertySnapshot snapshot)
         {
+            if (snapshot.value != null) return Locus.Json.LocusJson.SerializeData(snapshot.value);
             string valueType = FirstNonEmpty(snapshot.valueType, snapshot.type);
             switch (valueType)
             {
@@ -1007,7 +1062,9 @@ namespace Locus
             FieldInfo fieldInfo = dynamicSchema ? null : ResolveSerializedPropertyFieldInfo(prop);
             bool isEnum = prop.propertyType == SerializedPropertyType.Enum;
             bool isManagedReference = prop.propertyType == SerializedPropertyType.ManagedReference;
-            bool isObjectReference = prop.propertyType == SerializedPropertyType.ObjectReference;
+            bool isObjectReference = prop.propertyType == SerializedPropertyType.ObjectReference || prop.propertyType == SerializedPropertyType.ExposedReference;
+            Type referenceFieldType = prop.propertyType == SerializedPropertyType.ExposedReference && fieldType != null && fieldType.IsGenericType
+                ? fieldType.GetGenericArguments()[0] : fieldType;
             var snapshot = new SerializedPropertySnapshot
             {
                 propertyPath = prop.propertyPath,
@@ -1023,7 +1080,10 @@ namespace Locus
                 name = prop.name,
                 prefabOverride = prop.prefabOverride,
                 type = prop.propertyType.ToString(),
-                valueType = prop.propertyType.ToString(),
+                valueType = prop.propertyType == SerializedPropertyType.Integer && prop.type == "long" ? "Long"
+                    : prop.propertyType == SerializedPropertyType.Integer && prop.type == "ulong" ? "UnsignedLong"
+                    : prop.propertyType == SerializedPropertyType.Float && prop.type == "double" ? "Double"
+                    : prop.propertyType == SerializedPropertyType.ExposedReference ? "ObjectReference" : prop.propertyType.ToString(),
                 fieldTypeFullName = FieldTypeFullName(fieldType),
                 fieldTypeAssembly = FieldTypeAssembly(fieldType),
                 value = SerializedPropertyValue(prop, !dynamicSchema),
@@ -1060,13 +1120,15 @@ namespace Locus
                 minLines = SerializedFieldMinLines(fieldInfo),
                 maxLines = SerializedFieldMaxLines(fieldInfo),
                 referenceTypeFullName = !dynamicSchema && isObjectReference
-                    ? FieldTypeFullName(fieldType)
+                    ? FieldTypeFullName(referenceFieldType)
                     : "",
                 referenceTypeAssembly = !dynamicSchema && isObjectReference
-                    ? FieldTypeAssembly(fieldType)
+                    ? FieldTypeAssembly(referenceFieldType)
                     : "",
                 attributes = SerializedFieldAttributes(fieldInfo)
             };
+
+            if (!dynamicSchema) ApplyPropertyListPresentation(prop, snapshot, fieldInfo);
 
             bool compactValue = IsSerializedPropertyCompactValue(prop.propertyType);
             if (depth < maxDepth && !compactValue)
@@ -1087,6 +1149,8 @@ namespace Locus
         {
             switch (propertyType)
             {
+                case SerializedPropertyType.Hash128:
+                case SerializedPropertyType.ExposedReference:
                 case SerializedPropertyType.Vector2:
                 case SerializedPropertyType.Vector3:
                 case SerializedPropertyType.Vector4:
@@ -1123,7 +1187,7 @@ namespace Locus
         private static SerializedPropertyBindingTarget SerializedObjectReferenceTarget(
             SerializedProperty prop)
         {
-            UnityEngine.Object referenced = prop != null ? prop.objectReferenceValue : null;
+            UnityEngine.Object referenced = prop == null ? null : prop.propertyType == SerializedPropertyType.ExposedReference ? prop.exposedReferenceValue : prop.objectReferenceValue;
             UnityEngine.Object owner = prop != null && prop.serializedObject != null
                 ? prop.serializedObject.targetObject
                 : null;
@@ -1236,7 +1300,20 @@ namespace Locus
             if (action == "insert" || action == "add")
             {
                 int index = ClampArrayIndex(command.index, prop.arraySize, true);
-                prop.InsertArrayElementAtIndex(index);
+                if (command.initialize) InsertInitializedListElement(prop, index);
+                else prop.InsertArrayElementAtIndex(index);
+                return;
+            }
+
+            if (action == "insertreferences")
+            {
+                InsertListReferences(prop, ClampArrayIndex(command.index, prop.arraySize, true), command.values);
+                return;
+            }
+
+            if (action == "duplicate")
+            {
+                DuplicateSerializedListElement(prop, command.index);
                 return;
             }
 
@@ -1328,7 +1405,7 @@ namespace Locus
             }
         }
 
-        private static SerializedManagedReferenceTypeOption[] ManagedReferenceTypeOptions(SerializedProperty prop)
+        private static SerializedManagedReferenceTypeOption[] ManagedReferenceTypeOptionsUncached(SerializedProperty prop)
         {
             Type fieldType = ResolveManagedReferenceTypeName(prop.managedReferenceFieldTypename);
             if (fieldType == null)
@@ -1408,7 +1485,7 @@ namespace Locus
             return false;
         }
 
-        private static Type ResolveManagedReferenceTypeName(string typeName)
+        private static Type ResolveManagedReferenceTypeNameUncached(string typeName)
         {
             typeName = (typeName ?? "").Trim();
             if (string.IsNullOrEmpty(typeName))
@@ -1693,42 +1770,52 @@ namespace Locus
             return type != null && type.IsEnum && Attribute.IsDefined(type, typeof(FlagsAttribute), false);
         }
 
-        private static string SerializedFieldTooltip(FieldInfo field)
+        private sealed class SerializedFieldMetadata
         {
-            TooltipAttribute attr = field != null
-                ? field.GetCustomAttribute<TooltipAttribute>(true)
-                : null;
-            return attr != null ? attr.tooltip ?? "" : "";
+            public string Tooltip = "", Header = "";
+            public bool HasRange, Multiline;
+            public float RangeMin, RangeMax;
+            public int MinLines, MaxLines;
+            public Attribute[] Declarations = new Attribute[0];
+            public bool HasDynamicListPresentation;
+            public SerializedPropertyAttributeInfo[] Attributes = new SerializedPropertyAttributeInfo[0];
+        }
+        private static readonly SerializedFieldMetadata EmptySerializedFieldMetadata = new SerializedFieldMetadata();
+        private static readonly Dictionary<FieldInfo, SerializedFieldMetadata> SerializedFieldMetadataCache = new Dictionary<FieldInfo, SerializedFieldMetadata>();
+
+        private static SerializedFieldMetadata SerializedFieldMetadataFor(FieldInfo field)
+        {
+            if (field == null) return EmptySerializedFieldMetadata;
+            SerializedFieldMetadata metadata;
+            if (SerializedFieldMetadataCache.TryGetValue(field, out metadata)) return metadata;
+            // Reflection/attribute construction is immutable within this AppDomain.
+            // Do it once per field, not once per value and once per attribute kind.
+            var attributes = field.GetCustomAttributes(true).OfType<Attribute>().ToArray();
+            var range = attributes.OfType<RangeAttribute>().FirstOrDefault();
+            var textArea = attributes.OfType<TextAreaAttribute>().FirstOrDefault();
+            var multiline = attributes.OfType<MultilineAttribute>().FirstOrDefault();
+            metadata = new SerializedFieldMetadata {
+                Tooltip = attributes.OfType<TooltipAttribute>().FirstOrDefault()?.tooltip ?? "",
+                Header = attributes.OfType<HeaderAttribute>().FirstOrDefault()?.header ?? "",
+                HasRange = range != null, RangeMin = range != null ? range.min : 0,
+                RangeMax = range != null ? range.max : 0, Multiline = textArea != null || multiline != null,
+                MinLines = textArea != null ? textArea.minLines : multiline != null ? multiline.lines : 0,
+                MaxLines = textArea != null ? textArea.maxLines : 0,
+                Declarations = attributes,
+                HasDynamicListPresentation = attributes.Any(a => a.GetType().FullName == "Sirenix.OdinInspector.ShowIfAttribute" ||
+                    a.GetType().FullName == "Sirenix.OdinInspector.HideIfAttribute" || a.GetType().FullName == "Sirenix.OdinInspector.ListDrawerSettingsAttribute"),
+                Attributes = attributes.Take(32).Select(SerializedFieldAttributeInfo).ToArray()
+            };
+            if (SerializedFieldMetadataCache.Count >= 8192) SerializedFieldMetadataCache.Clear();
+            SerializedFieldMetadataCache[field] = metadata;
+            return metadata;
         }
 
-        private static string SerializedFieldHeader(FieldInfo field)
-        {
-            HeaderAttribute attr = field != null
-                ? field.GetCustomAttribute<HeaderAttribute>(true)
-                : null;
-            return attr != null ? attr.header ?? "" : "";
-        }
-
-        private static bool HasSerializedFieldRange(FieldInfo field)
-        {
-            return field != null && field.GetCustomAttribute<RangeAttribute>(true) != null;
-        }
-
-        private static float SerializedFieldRangeMin(FieldInfo field)
-        {
-            RangeAttribute attr = field != null
-                ? field.GetCustomAttribute<RangeAttribute>(true)
-                : null;
-            return attr != null ? attr.min : 0f;
-        }
-
-        private static float SerializedFieldRangeMax(FieldInfo field)
-        {
-            RangeAttribute attr = field != null
-                ? field.GetCustomAttribute<RangeAttribute>(true)
-                : null;
-            return attr != null ? attr.max : 0f;
-        }
+        private static string SerializedFieldTooltip(FieldInfo field) => SerializedFieldMetadataFor(field).Tooltip;
+        private static string SerializedFieldHeader(FieldInfo field) => SerializedFieldMetadataFor(field).Header;
+        private static bool HasSerializedFieldRange(FieldInfo field) => SerializedFieldMetadataFor(field).HasRange;
+        private static float SerializedFieldRangeMin(FieldInfo field) => SerializedFieldMetadataFor(field).RangeMin;
+        private static float SerializedFieldRangeMax(FieldInfo field) => SerializedFieldMetadataFor(field).RangeMax;
 
         private static float SerializedFieldNumberStep(FieldInfo field, SerializedProperty prop)
         {
@@ -1737,44 +1824,10 @@ namespace Locus
             return 0f;
         }
 
-        private static bool IsSerializedFieldMultiline(FieldInfo field)
-        {
-            return field != null &&
-                   (field.GetCustomAttribute<TextAreaAttribute>(true) != null ||
-                    field.GetCustomAttribute<MultilineAttribute>(true) != null);
-        }
-
-        private static int SerializedFieldMinLines(FieldInfo field)
-        {
-            if (field == null)
-                return 0;
-            TextAreaAttribute textArea = field.GetCustomAttribute<TextAreaAttribute>(true);
-            if (textArea != null)
-                return textArea.minLines;
-            MultilineAttribute multiline = field.GetCustomAttribute<MultilineAttribute>(true);
-            return multiline != null ? multiline.lines : 0;
-        }
-
-        private static int SerializedFieldMaxLines(FieldInfo field)
-        {
-            if (field == null)
-                return 0;
-            TextAreaAttribute textArea = field.GetCustomAttribute<TextAreaAttribute>(true);
-            return textArea != null ? textArea.maxLines : 0;
-        }
-
-        private static SerializedPropertyAttributeInfo[] SerializedFieldAttributes(FieldInfo field)
-        {
-            if (field == null)
-                return new SerializedPropertyAttributeInfo[0];
-
-            return field
-                .GetCustomAttributes(true)
-                .OfType<Attribute>()
-                .Take(32)
-                .Select(SerializedFieldAttributeInfo)
-                .ToArray();
-        }
+        private static bool IsSerializedFieldMultiline(FieldInfo field) => SerializedFieldMetadataFor(field).Multiline;
+        private static int SerializedFieldMinLines(FieldInfo field) => SerializedFieldMetadataFor(field).MinLines;
+        private static int SerializedFieldMaxLines(FieldInfo field) => SerializedFieldMetadataFor(field).MaxLines;
+        private static SerializedPropertyAttributeInfo[] SerializedFieldAttributes(FieldInfo field) => SerializedFieldMetadataFor(field).Attributes;
 
         private static SerializedPropertyAttributeInfo SerializedFieldAttributeInfo(Attribute attr)
         {
@@ -1797,6 +1850,8 @@ namespace Locus
                 value = multiline.lines.ToString(CultureInfo.InvariantCulture);
             else if (min != null)
                 value = min.min.ToString(CultureInfo.InvariantCulture);
+            else
+                value = PropertyListAttributeValue(attr);
 
             Type type = attr.GetType();
             return new SerializedPropertyAttributeInfo
@@ -1913,7 +1968,7 @@ namespace Locus
             return null;
         }
 
-        private static FieldInfo SerializedMemberField(Type ownerType, string memberName)
+        private static FieldInfo SerializedMemberFieldUncached(Type ownerType, string memberName)
         {
             for (Type current = ownerType; current != null; current = current.BaseType)
             {

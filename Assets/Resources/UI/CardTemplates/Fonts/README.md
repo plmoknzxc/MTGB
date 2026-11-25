@@ -5,6 +5,8 @@ The reviewed font binaries, import metadata and license notices are included in 
 | Resource | Font | License |
 |---|---|---|
 | NameCN / NameJP | Source Han Serif CN / JP Bold | OFL 1.1 |
+| NameWeiCN | Ma Shan Zheng Regular, used for simplified Chinese display card names | OFL 1.1 |
+| NameWenKaiCN | LXGW WenKai Medium, comparison option for simplified Chinese display card names | OFL 1.1 |
 | RulesCN / RulesJP | Source Han Sans CN / JP Regular | OFL 1.1 |
 | NameEN / RulesEN / StatsEN | EB Garamond SemiBold / Regular / Bold | OFL 1.1 |
 | GlyphSymbols | Renamed LXGW WenKai subset: U+2610, space | OFL 1.1 |

@@ -31,6 +31,7 @@ public final class BridgeCleanupNotices {
                 notice.put("id",id);notice.put("message",event.message());
                 notice.put("kind","cleanup");notice.put("value",event.message());
                 notice.put("actorSeat",actor);notice.put("publicNotice",true);
+                ForgeBridge.stampNotice(notice);
                 boolean visible=!source.isFaceDown()&&source.getView().canBeShownTo(gui.controller.getPlayer().getView());
                 notice.put("title",visible?source.getName():"");
                 if(visible)notice.put("sourceCard",ForgeBridge.card(source));

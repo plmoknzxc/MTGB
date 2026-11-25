@@ -9,15 +9,32 @@ public sealed partial class ForgeBattlefieldController
     private BattlefieldRedesignLayout redesignProfile;
     private bool IsRedesignLayout => redesignProfile != null;
     private bool redesignHandExpanded = true;
+    private bool redesignOtherHandExpanded;
+    // A native reveal/choice owns visibility until it completes. Never store
+    // that forced expansion as the viewer's ordinary hand preference.
+    private bool RedesignOtherHandForced => !viewingBattlefield && DirectHandSelection && SelectionHand?.seat != DisplayedHandSeat;
     private float redesignFooterTop = 262;
     private float redesignFooterLeft;
+    private static readonly Vector2 DuelClusterPosition=new Vector2(-186,101);
+    private const float PhaseDockTop=104;
+    // Permanent lanes reserve the full phase dock even when its actions briefly collapse.
+    private float DuelFieldFooterTop=>DuelClusterPosition.y+PhaseDockTop;
+    private float DuelFieldFooterLeft {
+        get {
+            var pause=pauseNextPhaseButton?.transform as RectTransform;
+            float width=pause!=null?-pause.anchoredPosition.x-pause.rect.xMin:0;
+            return surface.rect.width-Mathf.Max(340,width);
+        }
+    }
     private const float RedesignPlayerManaReserve = 56;
+    private const float RedesignOpponentHudLift = 54;
     private Vector2 redesignSurfaceSize;
     private Vector2Int redesignViewportSize;
     private int redesignPreferenceRevision = -1;
     private readonly List<RaycastResult> redesignPointerHits = new();
 
-    public static bool IsBattlefieldSceneActive => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName;
+    public static bool IsBattlefieldSceneActive => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName
+        || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == FourPlayerSceneName;
 
     private static void RedesignPlace(RectTransform rect, Vector2 anchor, Vector2 pivot, Vector2 position, Vector2 size)
     {
@@ -41,13 +58,29 @@ public sealed partial class ForgeBattlefieldController
         // Reuse the shipping footer completely; only move the whole group down.
         // These are the native anchors from ApplyDuelLayout/PresentControlMode.
         var cluster = (RectTransform)Node("CornerCluster");
-        cluster.anchoredPosition = new Vector2(-186, 101);
+        cluster.anchoredPosition = DuelClusterPosition;
+        if(worldTable!=null){
+            var opponent=(RectTransform)Node("OpponentPlate");
+            opponent.anchoredPosition=new Vector2(opponent.anchoredPosition.x,-120+RedesignOpponentHudLift);
+            var opponentShell=(RectTransform)Node("OpponentPlateWithZones");
+            opponentShell.anchoredPosition=new Vector2(opponentShell.anchoredPosition.x,-144+RedesignOpponentHudLift);
+            var opponentZones=(RectTransform)Node("ZonePiles_OpponentTopRight");
+            opponentZones.anchoredPosition=new Vector2(opponentZones.anchoredPosition.x,-192+RedesignOpponentHudLift);
+        }
         foreach (var button in new[] { controlModeButton, pauseNextPhaseButton })
             if (button != null)
             {
                 var rect = (RectTransform)button.transform;
                 rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 26.5f);
             }
+        if(worldTable!=null){
+            var gear=(RectTransform)Node("GearBox/SettingsButton");
+            if(controlModeButton!=null&&controlModeButton.gameObject.activeInHierarchy){
+                var corners=new Vector3[4];((RectTransform)controlModeButton.transform).GetWorldCorners(corners);
+                gear.position=new Vector3(corners[2].x+27,(corners[0].y+corners[2].y)*.5f,corners[2].z);
+            }else gear.position=surface.TransformPoint(new Vector3(surface.rect.xMax-23,surface.rect.yMin+26.5f,0));
+            gear.sizeDelta=new Vector2(40,40);
+        }
 
         var row = Node("CornerCluster/ControlRow");
         float footerTop = 0,footerLeft=surface.rect.width-32;
@@ -69,6 +102,7 @@ public sealed partial class ForgeBattlefieldController
             }
             foreach (var corner in corners){var point=surface.InverseTransformPoint(corner);footerTop=Mathf.Max(footerTop,point.y-surface.rect.yMin);footerLeft=Mathf.Min(footerLeft,point.x-surface.rect.xMin);}
         }
+        Reserve(row.Find("PhaseDockSurface") as RectTransform);
         Reserve((RectTransform)row.Find("PhaseText"),true);
         Reserve((RectTransform)row.Find("TurnChip/TurnLabel"),true);
         foreach (var button in row.GetComponentsInChildren<UnityEngine.UI.Button>(false)) Reserve((RectTransform)button.transform);
@@ -81,14 +115,17 @@ public sealed partial class ForgeBattlefieldController
         if (Mathf.Abs(redesignStackHeightLimit - RedesignStackMaximumHeight) > .1f)
         {
             redesignStackOffset = stackContent.anchoredPosition.y;
-            LayoutRedesignStack(view?.stackItems ?? Array.Empty<ForgeStackItem>(), Math.Max(view?.stackItems?.Length ?? 0, view?.stack?.Length ?? 0));
+            var entries=DisplayedStackEntries();
+            LayoutRedesignStack(entries,Math.Max(entries.Length,view?.stack?.Length??0));
         }
         ApplyRedesignHandOffset(ownFan.navigation?.Offset ?? 0, true);
         ApplyRedesignHandOffset(opponentFan, opponentFan.navigation?.Offset ?? 0, true);
+        FitFieldBetweenHands();
         PositionRedesignSourceTabs();
         redesignSurfaceSize = surface.rect.size;
         redesignViewportSize = new Vector2Int(Screen.width, Screen.height);
         redesignPreferenceRevision = GamePreferences.Revision;
+        LayoutBattleSidebar();
     }
 
     private void ReflowRedesignSourceWidth(HandFanState fan)
@@ -105,7 +142,9 @@ public sealed partial class ForgeBattlefieldController
     private void UpdateRedesignLayout()
     {
         if (!IsRedesignLayout || !integrated || view == null) return;
+        UpdateBattleSidebarSlide();
         if (surface.rect.size != redesignSurfaceSize || GamePreferences.Ready && redesignPreferenceRevision != GamePreferences.Revision) { PresentIntegrated(connectionText.text); return; }
+        UpdateBattlefieldViewNavigation();
 #if ENABLE_INPUT_SYSTEM
         var mouse = UnityEngine.InputSystem.Mouse.current;
         if (mouse != null && mouse.leftButton.wasPressedThisFrame) HandleRedesignBattlefieldPointer(mouse.position.ReadValue());
@@ -116,13 +155,15 @@ public sealed partial class ForgeBattlefieldController
 
     private void HandleRedesignBattlefieldPointer(Vector2 position)
     {
-        if (EventSystem.current == null) return;
+        // Picking a target, including the response-in-flight frame, is part of casting.
+        if (EventSystem.current == null || HasCastingPrompt || UsesTargetWindow) return;
         redesignPointerHits.Clear();
         EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = position }, redesignPointerHits);
         var hit = redesignPointerHits.Count > 0 ? redesignPointerHits[0].gameObject.transform : null;
         if (hit != null && (hit.IsChildOf(ownHand) || hit == ownHand || handSourceTabs != null && hit.IsChildOf(handSourceTabs))) return;
+        if (hit != null && (hit.IsChildOf(otherHand) || hit == otherHand || otherSourceTabs != null && hit.IsChildOf(otherSourceTabs))) return;
         bool field = hit == null || hit.IsChildOf(cardsRoot) || hit.IsChildOf(Node("PlayerPlate")) || hit.IsChildOf(Node("OpponentPlate"));
-        if (field) SetRedesignHandExpanded(false);
+        if (field) { SetRedesignHandExpanded(false); SetRedesignOtherHandExpanded(false); }
     }
 
     private bool ExpandRedesignHand()
@@ -141,5 +182,25 @@ public sealed partial class ForgeBattlefieldController
         ForgeBattlefieldCardPointer.RestoreHandOrder(ownHand);
         LeaveInspectCard();
         ApplyRedesignHandOffset(ownFan.navigation?.Offset ?? 0, true);
+        FitFieldBetweenHands();
+    }
+
+    private bool ExpandRedesignOtherHand()
+    {
+        if (RedesignOtherHandForced) return false;
+        bool changed = !redesignOtherHandExpanded;
+        SetRedesignOtherHandExpanded(true);
+        return changed;
+    }
+
+    private void SetRedesignOtherHandExpanded(bool expanded)
+    {
+        if (!IsRedesignLayout || RedesignOtherHandForced || redesignOtherHandExpanded == expanded) return;
+        redesignOtherHandExpanded = expanded;
+        foreach (var slot in opponentFan.slots) slot.item.pointer.ResetHover();
+        ForgeBattlefieldCardPointer.RestoreHandOrder(otherHand);
+        LeaveInspectCard();
+        ApplyRedesignHandOffset(opponentFan, 0, true);
+        FitFieldBetweenHands();
     }
 }

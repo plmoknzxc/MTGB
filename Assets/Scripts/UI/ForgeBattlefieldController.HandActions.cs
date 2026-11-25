@@ -42,12 +42,18 @@ public sealed partial class ForgeBattlefieldController
         var button=Button(parent,name,label,position,new Vector2(width,54),action,Color.clear);
         var face=Rect(button.transform,"Face",Vector2.zero,new Vector2(width,54));face.SetAsFirstSibling();
         var graphic=face.gameObject.AddComponent<ForgeActionButtonGraphic>();graphic.Secondary=secondary;button.targetGraphic=graphic;
+        graphic.ApplyTheme(HudTheme);
         var outline=button.GetComponent<Outline>();if(outline!=null)outline.enabled=false;
         var text=button.GetComponentInChildren<Text>();PreferenceText.SetSize(text,16);text.rectTransform.sizeDelta=new Vector2(width-8,50);text.raycastTarget=false;text.resizeTextForBestFit=false;text.color=secondary?Color.white:new Color(.13f,.11f,.075f);
         return button;
     }
-    private static void RefreshDockActionColor(Button button) {
+    private void RefreshDockActionColor(Button button) {
         var face=button.GetComponentInChildren<ForgeActionButtonGraphic>();
+        if (HudTheme!=null && face!=null) {
+            face.ApplyTheme(HudTheme);
+            button.GetComponentInChildren<Text>().color=button.interactable?(Color)HudTheme.ActionText:HudMuted;
+            return;
+        }
         button.GetComponentInChildren<Text>().color=!button.interactable?new Color(.66f,.68f,.7f)
             :face!=null&&face.Secondary?Color.white:new Color(.13f,.11f,.075f);
     }

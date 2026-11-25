@@ -18,7 +18,7 @@ public static class ForgeCatalogStore
     {
         var config = ForgeCardCatalog.ReadConfigMetadata(root);
         bool authorityOnly = false;
-#if UNITY_SERVER
+#if UNITY_SERVER && !UNITY_EDITOR
         authorityOnly = true;
 #endif
         return Read(Path.Combine(root, FileName), config.catalogHash, root, warnings, cancellation, authorityOnly);

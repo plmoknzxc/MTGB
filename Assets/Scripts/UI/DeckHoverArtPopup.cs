@@ -20,28 +20,35 @@ public sealed class DeckHoverArtPopup : MonoBehaviour, IPointerEnterHandler, IPo
     private Coroutine loading;
     private Coroutine closeDelay;
     private int generation;
+    private bool showFaceNames, centerFaces;
     public RectTransform Rect=>(RectTransform)transform;
 
     public void Show(RectTransform root,MainMenuCardTile tile,Font textFont,string format=null)
     {
         Show(root,tile.Card,(RectTransform)tile.transform,textFont,format);
     }
-    public void Show(RectTransform root,CardDefinition card,RectTransform anchor,Font textFont,string format=null)
+    public void Show(RectTransform root,CardDefinition card,RectTransform anchor,Font textFont,string format=null,
+        bool namedFaces=false,bool centered=false)
     {
         if(closeDelay!=null){StopCoroutine(closeDelay);closeDelay=null;}
         gameObject.SetActive(true);surface=root;sourceAnchor=anchor;
         int request=++generation;
         if(loading!=null)StopCoroutine(loading);
         ClearContent();relatedSignature=null;
+        showFaceNames=namedFaces;centerFaces=centered;
         rightWasDown=Mouse.current!=null&&Mouse.current.rightButton.isPressed;
         if(card==null||anchor==null){Hide();return;}
         CardImageLibrary.TryLoadFullCard(card,out var front);
         images.Add(front);imageNames.Add(GamePreferences.CardName(card));imageGroups.Add(null);
-        if((card.features!=null&&card.features.Exists(f=>f!=null&&f.faceIndex>0))||CardImageLibrary.HasBackFace(card))
+        var backFace=card.features?.Find(f=>f!=null&&f.faceIndex>0);
+        if(backFace!=null||CardImageLibrary.HasBackFace(card))
         {
             CardImageLibrary.TryLoadBackFace(card,out var back);
-            images.Add(back);imageNames.Add(GamePreferences.CardName(card));imageGroups.Add(null);
+            images.Add(back);
+            imageNames.Add(backFace!=null?GamePreferences.FeatureName(backFace):namedFaces?"":GamePreferences.CardName(card));
+            imageGroups.Add(null);
         }
+        if(namedFaces){Build();return;}
         AddKeywords(GamePreferences.CardRules(card),card);
         if(card.features!=null)foreach(var feature in card.features)AddKeywords(GamePreferences.FeatureRules(feature),card);
         Build();
@@ -74,6 +81,7 @@ public sealed class DeckHoverArtPopup : MonoBehaviour, IPointerEnterHandler, IPo
     private void ClearContent()
     {
         images.Clear();imageNames.Clear();imageGroups.Clear();keywords.Clear();dungeons.Clear();dungeonSlot=-1;dungeonIndex=0;
+        showFaceNames=false;centerFaces=false;
     }
     private void AddRelated(DeckRelatedTokenArt.Art art)
     {
@@ -122,12 +130,12 @@ public sealed class DeckHoverArtPopup : MonoBehaviour, IPointerEnterHandler, IPo
         surfaceSize=surface.rect.size;
         preferenceRevision=GamePreferences.Revision;
         foreach(Transform child in transform){child.gameObject.SetActive(false);Destroy(child.gameObject);}
-        float availableW=surface.rect.width-32,availableH=surface.rect.height*.86f;
+        float availableW=surface.rect.width-32,availableH=centerFaces?surface.rect.height-32:surface.rect.height*.86f;
         float helpWidth=keywords.Count>0?Mathf.Min(340,availableW*.27f):0;
         float scale=GamePreferences.TextScale;
-        float captionHeight=(imageGroups.Contains("dungeon")?72:imageGroups.Contains("ring")?58:0)*scale;
+        float captionHeight=(showFaceNames?48:imageGroups.Contains("dungeon")?72:imageGroups.Contains("ring")?58:0)*scale;
         int count=Mathf.Max(1,images.Count),columns=Mathf.Min(3,count),rows=Mathf.CeilToInt(count/(float)columns);
-        float cardWidth=Mathf.Min(360,Mathf.Min((availableW-helpWidth-16*columns)/columns,(availableH-12*(rows-1)-captionHeight*rows)/rows/1.4f));
+        float cardWidth=Mathf.Min(showFaceNames?408:360,Mathf.Min((availableW-helpWidth-16*columns)/columns,(availableH-12*(rows-1)-captionHeight*rows)/rows/1.4f));
         float cardHeight=cardWidth*1.4f,imageWidth=columns*(cardWidth+12)-12;
         float height=rows*(cardHeight+captionHeight+12)-12,width=imageWidth+(helpWidth>0?helpWidth+16:0);
         Rect.sizeDelta=new Vector2(width,height);Rect.anchorMin=Rect.anchorMax=Rect.pivot=Vector2.zero;
@@ -140,6 +148,18 @@ public sealed class DeckHoverArtPopup : MonoBehaviour, IPointerEnterHandler, IPo
             var image=NewImage("CardArt"+i,transform,new Color(.02f,.025f,.035f));
             float imageX=i%columns*(cardWidth+12),imageY=-i/columns*(cardHeight+captionHeight+12);
             Place(image.rectTransform,imageX,imageY-captionHeight,cardWidth,cardHeight);
+            if(showFaceNames)
+            {
+                var bar=NewImage("FaceHeading"+i,transform,MenuVisualTheme.ArchivePanel);
+                Place(bar.rectTransform,imageX,imageY,cardWidth,captionHeight);
+                string side=count==2?(i==0?"正面":"背面"):"";
+                var title=CardSymbolText.Create(bar.transform,"FaceName",24,MenuVisualTheme.Paper);
+                title.font=GamePreferences.TmpFont;title.richText=false;
+                title.text=side.Length==0?imageNames[i]:string.IsNullOrEmpty(imageNames[i])?side:side+"　"+imageNames[i];
+                title.alignment=TMPro.TextAlignmentOptions.MidlineLeft;
+                title.enableAutoSizing=true;title.fontSizeMin=16;title.fontSizeMax=24*scale;
+                Place(title.rectTransform,12,0,cardWidth-24,captionHeight);
+            }
             if(!string.IsNullOrEmpty(imageGroups[i]))
             {
                 // Raised black title tab and a rounded black surround, as on the
@@ -227,7 +247,8 @@ public sealed class DeckHoverArtPopup : MonoBehaviour, IPointerEnterHandler, IPo
             }
         }
         Rect.sizeDelta=new Vector2(width,height);
-        Rect.anchoredPosition=new Vector2(Mathf.Clamp(x,12,surface.rect.width-width-12),Mathf.Clamp(high.y-height,12,surface.rect.height-height-12));
+        Rect.anchoredPosition=centerFaces?(surface.rect.size-Rect.sizeDelta)*.5f:
+            new Vector2(Mathf.Clamp(x,12,surface.rect.width-width-12),Mathf.Clamp(high.y-height,12,surface.rect.height-height-12));
         transform.SetAsLastSibling();
     }
     private void LateUpdate(){if(surface!=null&&sourceAnchor!=null&&(surface.rect.size!=surfaceSize||preferenceRevision!=GamePreferences.Revision))Build();}

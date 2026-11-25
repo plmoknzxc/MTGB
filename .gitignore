@@ -24,6 +24,8 @@ Assets/_Recovery.meta
 Assets/Resources/UI/CardTemplates/Fonts/*
 !Assets/Resources/UI/CardTemplates/Fonts/README.md
 !Assets/Resources/UI/CardTemplates/Fonts/NameCN.otf*
+!Assets/Resources/UI/CardTemplates/Fonts/NameWenKaiCN.ttf
+!Assets/Resources/UI/CardTemplates/Fonts/NameWenKaiCN.ttf.meta
 !Assets/Resources/UI/CardTemplates/Fonts/NameJP.otf*
 !Assets/Resources/UI/CardTemplates/Fonts/NameEN.otf*
 !Assets/Resources/UI/CardTemplates/Fonts/RulesCN.otf*
@@ -85,6 +87,7 @@ desktop.ini
 # Local replay recordings and optional video encoder binaries
 /Replays/*.mtgbr
 /Replays/Videos/
+/Puzzles/.legacy-imported
 /VideoTools/*.exe
 
 /Tools/Validation/Reports/PlayerControl/

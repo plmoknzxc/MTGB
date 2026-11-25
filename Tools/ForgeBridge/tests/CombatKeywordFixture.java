@@ -9,8 +9,28 @@ import java.util.*;
 public final class CombatKeywordFixture {
     public static void main(String[] args)throws Exception {
         ForgeBridge.run(args,()->{
-            for(int seat=1;seat<=2;seat++)
-                StateBranchFixture.setup(ForgeBridge.game.getPlayers().get(seat-1),ForgeBridge.config.getAsJsonObject(seat==1?"own":"other"));
+            var positions=ForgeBridge.config.getAsJsonArray("positions");
+            if(positions!=null) {
+                for(int i=0;i<positions.size();i++)
+                    StateBranchFixture.setup(ForgeBridge.game.getRegisteredPlayers().get(i),positions.get(i).getAsJsonObject());
+            } else {
+                for(int seat=1;seat<=2;seat++)
+                    StateBranchFixture.setup(ForgeBridge.game.getRegisteredPlayers().get(seat-1),ForgeBridge.config.getAsJsonObject(seat==1?"own":"other"));
+            }
+            if (ForgeBridge.config.has("startAtNight")) ForgeBridge.game.setDayTime(true);
+            if (ForgeBridge.config.has("privateExileFixture")) {
+                var players=ForgeBridge.game.getRegisteredPlayers();
+                for(var owner:players) {
+                    var visible=StateBranchFixture.place("Lightning Bolt",owner,ZoneType.Exile);
+                    visible.turnFaceDown(true);
+                    visible.addMayLookFaceDownExile(owner);
+                    StateBranchFixture.place("Giant Growth",owner,ZoneType.Exile).turnFaceDown(true);
+                }
+                // Ownership alone grants no look. Only the next seat may see this card.
+                var borrowed=StateBranchFixture.place("Counterspell",players.get(1),ZoneType.Exile);
+                borrowed.turnFaceDown(true);
+                borrowed.addMayLookFaceDownExile(players.get(2));
+            }
             ForgeBridge.game.getAction().checkStaticAbilities();
             Thread observer=new Thread(()->{
                 Set<Long> saved=new HashSet<>();

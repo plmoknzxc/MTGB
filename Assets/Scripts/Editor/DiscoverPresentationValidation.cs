@@ -45,7 +45,6 @@ public static class DiscoverPresentationValidation {
     static IEnumerator Validate(ForgeBattlefieldController ui) {
         string original=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try {foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}) {
             int revision=GamePreferences.Revision;bool change=lang!=GamePreferences.Language;GamePreferences.SetLanguage(lang);float deadline=Time.realtimeSinceStartup+20;
             while((!GamePreferences.Ready||change&&revision==GamePreferences.Revision)&&Time.realtimeSinceStartup<deadline)yield return null;
@@ -96,7 +95,7 @@ public static class DiscoverPresentationValidation {
                 File.AppendAllText(Output+"/steps.log","reveal seat "+reveal.request.seat+"\n");
             }
             var empty=Read("empty","resolved-1");ui.Present(empty,empty.seat,true,i=>{},null,"");yield return Frame();Check(!Root.Find("CardSelectionOverlay").gameObject.activeInHierarchy,"Empty discover leaves picker");
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(original);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(original);}
     }
 }
 #endif

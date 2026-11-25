@@ -1,0 +1,13 @@
+{
+  "scope": "Presentation adapters composed from native-full-seat.json; not new recorded matches or engine rule assertions",
+  "sourceRules": "Read-only installed Forge inferno_titan.txt Oracle and exact ability text",
+  "playerNames": [
+    "长昵称测试玩家甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午",
+    "对手长昵称测试ABCDEFGHIJKLMNOPQ"
+  ],
+  "samples": [
+    "stack-target-multi-ability-input.json",
+    "stack-target-two-abilities-input.json"
+  ],
+  "baseSpellSample": "native-full-seat.json"
+}

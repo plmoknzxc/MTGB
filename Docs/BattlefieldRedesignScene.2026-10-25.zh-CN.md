@@ -18,7 +18,7 @@
 
 当前堆叠已取消下面历史批次的“截取首句摘要”和三行折叠／展开按钮。最新策略是直接显示完整公开效果、施放信息与 X，超长正文直接滚动；异能只显示当前进入堆叠的那条完整异能。见文末“直接展示当前效果”。旧检查身份和当时的范围继续保留。
 
-新场景为 `Assets/Scenes/IntegratedBattlefieldRedesign.unity`，通过 Canvas 上的 `BattlefieldRedesignLayout` 组件启用。原场景 `IntegratedBattlefield.unity` 未改，修改前后 SHA256 均为 `3FF3CB51506C876A021973B1852BEB6B6902FA12AB20DFDF964D8EC808633405`。副本没有加入默认建房／录像加载路径和构建清单。
+这次制作的平面战场现已退役，原先通过 Canvas 上的 `BattlefieldRedesignLayout` 组件启用。原场景 `IntegratedBattlefield.unity` 未改，修改前后 SHA256 均为 `3FF3CB51506C876A021973B1852BEB6B6902FA12AB20DFDF964D8EC808633405`。副本没有加入默认建房／录像加载路径和构建清单。
 
 最终按用户“直接用原来的”要求，删除新做的右下尺寸／字体／排版函数，阶段、下一步、选项、撤回与模式开关直接使用原来的控件、尺寸和样式。仅将原 CornerCluster 整组及模式开关向底边下移 32 个 Canvas 单位，模式开关底边距为 6。保留原有 Button 回调、交互层、原生选项索引和重复／非操作者提交守卫。法术力按用户后续选择固定放到双方玩家信息的区域统计旁，保留原符号、数值、分页与支付回调。
 

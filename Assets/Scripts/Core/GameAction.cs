@@ -33,7 +33,8 @@ public enum GameActionType
     ToggleLibraryCard = 50,
     ConfirmLibrarySearch = 51,
     ToggleDiscard = 52,
-    ConfirmDiscard = 53
+    ConfirmDiscard = 53,
+    SetHeroStepVote = 54
 }
 
 [Serializable]

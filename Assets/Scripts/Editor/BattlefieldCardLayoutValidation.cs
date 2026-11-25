@@ -31,10 +31,9 @@ public static class BattlefieldCardLayoutValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool prior=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
         var test=Validate(ui);
         try{while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"result.txt","PASS: focused original-cost removal, top-anchored battlefield art, larger scan inspection, 1/2/3/7 stack layout and exact two-stack target rays. Archived engine evidence reused; seven objects are display-only.");}
-        finally{running=false;if(banner!=null)banner.enabled=prior;}
+        finally{running=false;}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {

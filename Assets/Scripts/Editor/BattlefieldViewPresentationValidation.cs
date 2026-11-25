@@ -49,10 +49,10 @@ public static class BattlefieldViewPresentationValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         var it=Validate(ui);
         try{while(true){object next;try{if(!it.MoveNext())break;next=it.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: archived actual native modal consumers; raycast View/Return, all registered active windows/blockers hide without deactivation, scroll/input/selection preservation, no hidden submissions, same-context updates and new-context reset, seat/null reset, native permission/stale/duplicate guards after restore; three languages at current scale; native stack remains visible. Notification/history/mulligan fixtures are UI adapters, not effect tests. End-result window registration source-reviewed; full network/end lifecycle not exercised.");}
-        finally{ui.RestoreBattlefieldWindows();running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        finally{ui.RestoreBattlefieldWindows();running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {

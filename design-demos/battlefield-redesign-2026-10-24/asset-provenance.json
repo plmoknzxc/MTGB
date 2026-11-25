@@ -1,0 +1,212 @@
+[
+  {
+    "card": "60",
+    "name": "Meticulous Archive",
+    "path": "CardImages/zh-CN/MKM/264.jpg",
+    "sha256": "e2d0780ddd01e132f9411f341d401a261e49272bbf30a8ddd2e0f808747b693c"
+  },
+  {
+    "card": "9",
+    "name": "Hallowed Fountain",
+    "path": "CardImages/CLU/277.jpg",
+    "sha256": "a5f9195ad07d3241779dbb102cb27b3f059c35fc686d128a72f76c782aadd337"
+  },
+  {
+    "card": "59",
+    "name": "Meticulous Archive",
+    "path": "CardImages/zh-CN/MKM/264.jpg",
+    "sha256": "e2d0780ddd01e132f9411f341d401a261e49272bbf30a8ddd2e0f808747b693c"
+  },
+  {
+    "card": "5",
+    "name": "Island",
+    "path": "CardImages/zh-CN/10E/368.jpg",
+    "sha256": "8d76f910b25cd39360ff9a5d9e992bdf96cf0ff376db0db9eb10a5111bcffa41"
+  },
+  {
+    "card": "10",
+    "name": "Hallowed Fountain",
+    "path": "CardImages/CLU/277.jpg",
+    "sha256": "a5f9195ad07d3241779dbb102cb27b3f059c35fc686d128a72f76c782aadd337"
+  },
+  {
+    "card": "24",
+    "name": "Counterspell",
+    "path": "CardImages/2ED/55.jpg",
+    "sha256": "4294780fee6e3bcde3cd036479c2e4a2245e17ae6ebc9db4eb05cc5f6323529b"
+  },
+  {
+    "card": "19",
+    "name": "Murktide Regent",
+    "path": "CardImages/zh-CN/MH2/337.jpg",
+    "sha256": "5e4845777eaf4da362362aa0e61447cd26dff340a58ef567328569f5e9a1d7c5"
+  },
+  {
+    "card": "42",
+    "name": "Wrath of the Skies",
+    "path": "CardImages/zh-CN/MH3/325.jpg",
+    "sha256": "c3d4e29eb524ee4f93bd6f01eb9825aa4bf6215e48f49b4d98816d5457ae3afb"
+  },
+  {
+    "card": "32",
+    "name": "Force of Negation",
+    "path": "CardImages/zh-CN/2X2/346.jpg",
+    "sha256": "789383a8cc1a1c8176711a69713c7fa62dc7592370a09177e295e330afffe839"
+  },
+  {
+    "card": "51",
+    "name": "Spell Snare",
+    "path": "CardImages/zh-CN/BBD/132.jpg",
+    "sha256": "75502103481de8934ba7a1547892d085e5ad88014fd5cfeba0e47b71d47726d9"
+  },
+  {
+    "card": "14",
+    "name": "Scalding Tarn",
+    "path": "CardImages/EXP/22.jpg",
+    "sha256": "5a82c4bde7a9dd863b1664aac94e95045c68b77a4856ceb78e02e37f1b64a229"
+  },
+  {
+    "card": "28",
+    "name": "Flooded Strand",
+    "path": "CardImages/EXP/16.jpg",
+    "sha256": "8d96d58d712427741774d88845788f7f2400e70608a5fe20c55466656ed261e5"
+  },
+  {
+    "card": "6",
+    "name": "Island",
+    "path": "CardImages/zh-CN/10E/368.jpg",
+    "sha256": "8d76f910b25cd39360ff9a5d9e992bdf96cf0ff376db0db9eb10a5111bcffa41"
+  },
+  {
+    "card": "16",
+    "name": "Murktide Regent",
+    "path": "CardImages/zh-CN/MH2/337.jpg",
+    "sha256": "5e4845777eaf4da362362aa0e61447cd26dff340a58ef567328569f5e9a1d7c5"
+  },
+  {
+    "card": "37",
+    "name": "Tune the Narrative",
+    "path": "CardImages/zh-CN/MH3/403.jpg",
+    "sha256": "e61571d43ff2485d1f362d08bbaf4e808dd1fb3b7116ff1103961da9f9096525"
+  },
+  {
+    "card": "21",
+    "name": "Flow State",
+    "path": "CardImages/zh-CN/SOS/49.jpg",
+    "sha256": "a67e3ed73590d6e336e9a83697e1ca0bf4f03157f720e5e593f55b567ba0b449"
+  },
+  {
+    "card": "57",
+    "name": "Consider",
+    "path": "CardImages/CLU/84.jpg",
+    "sha256": "34a24ab585fd7a596525a961c9ef21bf86a3e68ecc844da8a20b2b33f394703c"
+  },
+  {
+    "card": "43",
+    "name": "Lórien Revealed",
+    "path": "CardImages/zh-CN/HOC/179.jpg",
+    "sha256": "0adbb8801c4a7bf3a29ca39caa1d6f5870ea4f1941bc17891beeb1a52e70447e"
+  },
+  {
+    "card": "38",
+    "name": "Tune the Narrative",
+    "path": "CardImages/zh-CN/MH3/403.jpg",
+    "sha256": "e61571d43ff2485d1f362d08bbaf4e808dd1fb3b7116ff1103961da9f9096525"
+  },
+  {
+    "card": "34",
+    "name": "Force of Negation",
+    "path": "CardImages/zh-CN/2X2/346.jpg",
+    "sha256": "789383a8cc1a1c8176711a69713c7fa62dc7592370a09177e295e330afffe839"
+  },
+  {
+    "card": "77",
+    "name": "Hedge Maze",
+    "path": "CardImages/zh-CN/MKM/262.jpg",
+    "sha256": "20c68f3df2c7f3e93d6981b82f2410251954fbceb058f6eb72ae1f8af3006adf"
+  },
+  {
+    "card": "87",
+    "name": "Commercial District",
+    "path": "CardImages/zh-CN/MKM/259.jpg",
+    "sha256": "f9203ee971a8cf8a2cf3861c03b0c8da83792af1226fea26fef5a7af9d656f6c"
+  },
+  {
+    "card": "131",
+    "name": "Breeding Pool",
+    "path": "CardImages/CLU/275.jpg",
+    "sha256": "24927545ac0edd1aae23ec2ebff100beeeaf9e80e3715bdb8ccd6084629e0729"
+  },
+  {
+    "card": "85",
+    "name": "Thundering Falls",
+    "path": "CardImages/zh-CN/MKM/269.jpg",
+    "sha256": "314392105162fa75ef81f40aadafa2f74ca4616e01f852bf8eaa217f0bd422d4"
+  },
+  {
+    "card": "103",
+    "name": "Generous Ent",
+    "path": "CardImages/zh-CN/LTR/169.jpg",
+    "sha256": "55a4cec46d738bc5537c3a98b4e7e6cb8a170677c8a111e0734cc0d047fdc8c5"
+  },
+  {
+    "card": "125",
+    "name": "Curator of Mysteries",
+    "path": "CardImages/zh-CN/AFC/81.jpg",
+    "sha256": "6c826a6f92eba1423619664ec55888635f5aac26d95963e3fbc9a509d2f7c56b"
+  },
+  {
+    "card": "107",
+    "name": "Oliphaunt",
+    "path": "CardImages/zh-CN/HOC/199.jpg",
+    "sha256": "7ccacae7b4b5c2f1baa2936c8a5489a85baea274e8cbc399eede564f8e2e8fec"
+  },
+  {
+    "card": "152",
+    "name": "Food Token",
+    "path": "CardImages/TWOE/13.jpg",
+    "sha256": "cff802624397685396b0bdbeba7c22c3b985648efcf3444699bb250ff6ea6909"
+  },
+  {
+    "card": "86",
+    "name": "Sink into Stupor",
+    "path": "CardImages/zh-CN/MH3/241.jpg",
+    "sha256": "94be519a0cb409c72b667e944d052ec02282df9a9ae3f5bd2a3f8e76647d16f3"
+  },
+  {
+    "card": "116",
+    "name": "Violent Outburst",
+    "path": "CardImages/zh-CN/ARB/63.jpg",
+    "sha256": "7c96bcc440a29a650064a4ea2ba9489d26f0edb8678287d3c28bc4605d68d459"
+  },
+  {
+    "card": "134",
+    "name": "Living End",
+    "path": "CardImages/SLD/1769.jpg",
+    "sha256": "0554d88920ed5fff85096ab0c26c49e26d123860685e1b349422673274fd1b08"
+  },
+  {
+    "card": "115",
+    "name": "Violent Outburst",
+    "path": "CardImages/zh-CN/ARB/63.jpg",
+    "sha256": "7c96bcc440a29a650064a4ea2ba9489d26f0edb8678287d3c28bc4605d68d459"
+  },
+  {
+    "card": "97",
+    "name": "Subtlety",
+    "path": "CardImages/zh-CN/H2R/6.jpg",
+    "sha256": "ff431c6f052976f93e33d66f33197fe451548336da4442c68927904a262290c0"
+  },
+  {
+    "card": "128",
+    "name": "Force of Negation",
+    "path": "CardImages/zh-CN/2X2/346.jpg",
+    "sha256": "789383a8cc1a1c8176711a69713c7fa62dc7592370a09177e295e330afffe839"
+  },
+  {
+    "card": "39",
+    "name": "Wrath of the Skies",
+    "path": "CardImages/zh-CN/MH3/325.jpg",
+    "sha256": "c3d4e29eb524ee4f93bd6f01eb9825aa4bf6215e48f49b4d98816d5457ae3afb"
+  }
+]

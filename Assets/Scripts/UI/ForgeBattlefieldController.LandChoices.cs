@@ -139,11 +139,13 @@ public sealed partial class ForgeBattlefieldController
         landChoiceMenu.anchorMin=landChoiceMenu.anchorMax=landChoiceMenu.pivot=new Vector2(.5f,.5f);
         landChoiceMenu.GetComponent<Image>().color=Ink;
         landChoiceMenu.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(500,240,16);
+        bool numberDock=view.request.paymentMode=="manual" && (view.request.kind=="ChooseNumber"||options.All(o=>int.TryParse(o.label,out _)));
+        if(HudTheme!=null&&!numberDock)StyleHudSurface(landChoiceMenu,HudInk,HudEdge);
         if(playerVote){PresentGenericChoices(captured);return true;}
         if(view.request.selectionPurpose=="manaAbility" && (!mana||options.Any(o=>Regex.Matches(ChoiceManaSymbols(o.label,view.request)??"",@"\{[^{}]+\}").Count>1))) {
             PresentManaAbilityChoices(options,source,anchor,captured);return true;
         }
-        if(view.request.paymentMode=="manual" && (view.request.kind=="ChooseNumber"||options.All(o=>int.TryParse(o.label,out _)))) {
+        if(numberDock) {
             PresentNumericChoices(options,source,anchor,captured);return true;
         }
         if(valueChoice){PresentValueChoices(options,captured);return true;}
@@ -171,16 +173,25 @@ public sealed partial class ForgeBattlefieldController
             Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+20,surface.rect.yMax-height/2-20));
         bool assigningSector=sectorChoice&&view.request.message!="one: Choose a sector";
         int groupPlayer=GroupAssignmentSeat(source);
-        string sectorTitle=assigningSector?TapPaymentText("分配分区","Assign a sector","セクターを割り当て"):TapPaymentText("选择分区","Choose a sector","セクターを選択");
+        string sectorTitle=assigningSector?TapPaymentText("为生物分配星区","Assign a sector","セクターを割り当て"):TapPaymentText("选择星区","Choose a sector","セクターを選択");
         string groupTitle=groupPlayer>0?TapPaymentText($"为{PlayerDisplayName(groupPlayer)}选择友方或敌方",$"Choose friend or foe for {PlayerDisplayName(groupPlayer)}",$"{PlayerDisplayName(groupPlayer)}を味方か敵かに選ぶ"):null;
         bool tapMana=mana&&view.request.message=="getAbilityToPlay"&&options.All(o=>Regex.IsMatch(o.label??"",@"^\s*\{T\}\s*:"));
         string manaTitle=tapMana?TapPaymentText("横置产费","Tap for mana","タップしてマナを出す"):TapPaymentText("选择法术力","Choose mana","マナを選択");
         var title=Label(landChoiceMenu,"Title",groupTitle??(sectorChoice?sectorTitle:mana?manaTitle:confirmation?"是否执行？":TapPaymentText("选择异能或施放方式","Choose ability or spell","能力や唱え方を選択")),new Vector2(0,height/2-(cards?20:16)),new Vector2(width,26),cards?21:17,Color.white);
         title.raycastTarget=false;
         string name=source?.name??"";
-        if(source!=null && (!sectorChoice||source.name==source.originalName) && catalog.TryGetValue(source.printingKey??"",out var definition))name=GamePreferences.CardName(definition);
+        if(!sectorChoice && source!=null && catalog.TryGetValue(source.printingKey??"",out var definition))name=GamePreferences.CardName(definition);
         if(options.All(o=>o.withoutManaCost))name=TapPaymentText("无需支付法术力费用","Without paying its mana cost","マナ・コストを支払わずに唱える");
-        if(sectorChoice)name=source!=null?$"{name} ({source.id})":assigningSector?Regex.Match(view.request.message,@"^one: Assign (.+) to a sector$").Groups[1].Value:"";
+        if(sectorChoice) {
+            if(source!=null) {
+                string publicName=source.faceDown?TapPaymentText("面朝下的生物","Face-down creature","裏向きのクリーチャー"):GamePreferences.CardFaceName(source.name);
+                name=$"{publicName} ({source.id})";
+            }
+            else if(assigningSector) {
+                var assigned=Regex.Match(view.request.message,@"^one: Assign (.+) (\(\d+\)) to a sector$");
+                name=GamePreferences.CardFaceName(assigned.Groups[1].Value)+" "+assigned.Groups[2].Value;
+            }
+        }
         var subtitle=Label(landChoiceMenu,"Source",name,new Vector2(0,height/2-(cards?48:36)),new Vector2(width-20,20),cards||sectorChoice?15:13,new Color(.7f,.78f,.84f));subtitle.raycastTarget=false;
         float groupHeader=0;
         if(groupPlayer>0||cards){
@@ -214,7 +225,7 @@ public sealed partial class ForgeBattlefieldController
         float choicesY=mana||sectorChoice?-height/2+12+(hasFooter?32:0)+viewportHeight/2:cards?(hasFooter?-12:-32):(hasFooter?-4:-22);
         if(groupPlayer>0||cards){viewportHeight=height-groupHeader-16-(hasFooter?32:0);choicesY=-height/2+12+(hasFooter?32:0)+viewportHeight/2;}
         var clip=Panel(landChoiceMenu,"Choices",new Vector2(0,choicesY),new Vector2(width-24,viewportHeight),Color.clear);
-        clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;
+        clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;scroll.DecisionTheme=HudTheme;
         var content=Rect(clip,"Content",Vector2.zero,new Vector2(width,viewportHeight));scroll.viewport=clip;scroll.content=content;scroll.Configure(cellWidth);
         float itemHeight=sectorChoice?sectorItemHeight:cards?viewportHeight-12:mana?36:32;
 
@@ -238,7 +249,7 @@ public sealed partial class ForgeBattlefieldController
                 symbol.alignment=TMPro.TextAlignmentOptions.Center;symbol.text=CardSymbolText.Format(ChoiceManaSymbols(option.label,view.request));
             }
             else if(cards)DrawAbilityChoice(inner,source,option,size-Vector2.one*5);
-            else {var text=Label(inner,"Answer",RequestOptionLabel(option),Vector2.zero,size-Vector2.one*4,19,Paper);text.raycastTarget=false;if(sectorChoice){PreferenceText.SetSize(text,19);text.resizeTextForBestFit=false;}}
+            else {var text=Label(inner,"Answer",sectorChoice?SectorChoiceLabel(option.label):RequestOptionLabel(option),Vector2.zero,size-Vector2.one*4,19,Paper);text.raycastTarget=false;if(sectorChoice){PreferenceText.SetSize(text,19);text.resizeTextForBestFit=false;}}
         }
         content.anchoredPosition=new Vector2(-choiceScrollOffset,0);scroll.Configure(cellWidth);
         // Dismissible choices use outside-click/right-click; keep only an actual engine confirmation.
@@ -283,6 +294,7 @@ public sealed partial class ForgeBattlefieldController
         total=Mathf.Max(0,total-6);
         float height=Mathf.Min(Mathf.Min(320,surface.rect.height-64),header+total+16);
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme!=null)StyleHudSurface(landChoiceMenu,HudInk,HudEdge);
         landChoiceMenu.anchoredPosition=new Vector2(Mathf.Clamp(anchor.x,surface.rect.xMin+width/2+20,surface.rect.xMax-width/2-20),
             Mathf.Clamp(anchor.y+height/2+18,surface.rect.yMin+height/2+20,surface.rect.yMax-height/2-20));
         title.rectTransform.sizeDelta=new Vector2(width-24,titleHeight);title.rectTransform.anchoredPosition=new Vector2(0,height/2-8-titleHeight/2);

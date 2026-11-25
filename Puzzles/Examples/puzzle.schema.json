@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MTGB 残局（版本 3）",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "goal", "cards"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 3 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 60 },
+    "author": { "type": "string", "description": "作者的游戏内玩家名" },
+    "id": { "type": "string" },
+    "description": { "type": "string" },
+    "goal": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": { "mode": { "enum": ["win", "survive"] } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "conditions"],
+          "properties": {
+            "mode": { "enum": ["all", "any"], "description": "满足全部或任一条件" },
+            "checkAt": { "enum": ["state", "win", "survive"], "default": "state", "description": "局面满足时、获胜时或存活到期时检查" },
+            "conditions": { "type": "array", "minItems": 1, "maxItems": 32, "items": { "$ref": "#/$defs/condition" } }
+          }
+        }
+      ]
+    },
+    "turns": { "type": "integer", "minimum": 1, "maximum": 30, "default": 1 },
+    "humanLife": { "$ref": "#/$defs/life" },
+    "aiLife": { "$ref": "#/$defs/life" },
+    "firstSide": { "$ref": "#/$defs/player" },
+    "phase": { "enum": ["MAIN1", "COMBAT_BEGIN", "MAIN2", "END_OF_TURN"], "default": "MAIN1" },
+    "seed": { "type": "integer" },
+    "orderedBattlefield": { "type": "boolean" },
+    "hasTableRows": { "type": "boolean" },
+    "cards": { "type": "array", "minItems": 1, "maxItems": 500, "items": { "$ref": "#/$defs/card" } }
+  },
+  "$defs": {
+    "life": { "type": "integer", "minimum": 1, "maximum": 200, "default": 20 },
+    "player": { "enum": ["you", "opponent"] },
+    "zone": { "enum": ["battlefield", "hand", "library", "graveyard", "exile"] },
+    "amount": { "type": "integer", "minimum": 0, "maximum": 99 },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "player", "op", "value"],
+      "properties": {
+        "metric": { "enum": ["life", "damageTakenThisTurn", "cardCount"] },
+        "player": { "$ref": "#/$defs/player" },
+        "op": { "enum": ["atLeast", "atMost", "exactly"] },
+        "value": { "type": "integer", "minimum": 0 },
+        "zone": { "$ref": "#/$defs/zone" },
+        "name": { "type": "string", "description": "可选的英文牌名" },
+        "cardType": { "enum": ["Creature", "Land", "Artifact", "Enchantment", "Planeswalker", "Battle", "Instant", "Sorcery", "Kindred"] }
+      },
+      "if": { "properties": { "metric": { "const": "cardCount" } } },
+      "then": { "required": ["zone"] },
+      "else": { "not": { "anyOf": [{ "required": ["zone"] }, { "required": ["name"] }, { "required": ["cardType"] }] } }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "description": "开局牌的英文牌名" },
+        "side": { "$ref": "#/$defs/player", "default": "you" },
+        "zone": { "$ref": "#/$defs/zone", "default": "battlefield" },
+        "count": { "type": "integer", "minimum": 1, "maximum": 100, "default": 1 },
+        "tapped": { "type": "boolean" },
+        "summoningSick": { "type": "boolean" },
+        "damage": { "$ref": "#/$defs/amount" },
+        "plusCounters": { "$ref": "#/$defs/amount" },
+        "overrideCounter": { "type": "boolean" },
+        "counterValue": { "$ref": "#/$defs/amount" },
+        "key": { "type": "string" },
+        "attachedTo": { "type": "string" },
+        "targetCopy": { "type": "integer", "minimum": 0 },
+        "tablePlace": { "type": "integer", "minimum": 0 },
+        "entryBatch": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@ public static class OnlineClientProfileStore
     {
         public string address = "127.0.0.1";
         public int port = 7777;
-        public string displayName = "Player";
+        public string displayName;
         public string roomId = "main";
         public DeckDefinition deck;
     }
@@ -170,16 +170,15 @@ public static class OnlineClientProfileStore
         return ushort.TryParse(value, out ushort port) && port > 0 ? port : (ushort)7777;
     }
 
-    private static string DefaultDisplayName(string profileId)
+    internal static string DefaultDisplayName(string profileId)
     {
-        if (profileId == "player-1") return "Player 1";
-        if (profileId == "player-2") return "Player 2";
-        return "Player";
+        string player=GamePreferences.Language switch {"en-US"=>"Player","ja-JP"=>"プレイヤー",_=>"玩家"};
+        return profileId switch {"player-1"=>player+" 1","player-2"=>player+" 2",_=>player};
     }
 
     private static string NormalizeDisplayName(string value)
     {
-        string result = string.IsNullOrWhiteSpace(value) ? "Player" : value.Trim();
+        string result = string.IsNullOrWhiteSpace(value) ? DefaultDisplayName(null) : value.Trim();
         return result.Length <= 24 ? result : result.Substring(0, 24);
     }
 

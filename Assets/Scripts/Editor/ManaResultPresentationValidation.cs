@@ -37,12 +37,11 @@ public static class ManaResultPresentationValidation
     }
     static IEnumerator Guard(IEnumerator iterator)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;
-        if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt",poolOnly?"PASS: zh-CN/en-US/ja-JP native pool payment/retry/control-release replay; exact color indexes with raycast/stale/duplicate/viewer guards; white counts below/right of rendered shield glyphs, fixed fonts, six-count/empty/increase boundaries, no row backgrounds, bounds clear of controls. Pool-only incremental review; random-result assertions were not rerun.":"PASS: native Mana Clash IDs consumed once in order across repeated/rolling snapshots; procedural flip/tumble motion and native final die value, no random text banner, nonblocking graphics, fixed fonts, expiry/null-session reset; native turn-control pool owner/release. Native blue pool raycast submits exact offered index with stale/duplicate/viewer guards. Explicit transport/display fixtures: private block rejection interrupts/resumes flips (IDs remapped); all color indexes, unavailable/empty colors, six counts, no backgrounds/outlines, decrement/zero/increase pulse; pool separated from priority/controls. zh-CN/en-US/ja-JP; no new effect, network timing or dice-distribution claim.");
-        }finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

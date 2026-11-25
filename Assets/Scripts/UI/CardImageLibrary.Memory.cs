@@ -30,6 +30,11 @@ public static partial class CardImageLibrary
             else if(graphic is RawImage raw&&raw.texture!=null)protectedTextures.Add(raw.texture);
         }
         var removed=new HashSet<Sprite>();
+        // World cards retain their art through mesh property blocks, not Images.
+        foreach(var card in UnityEngine.Object.FindObjectsByType<BattlefieldWorldCard>(FindObjectsInactive.Include,FindObjectsSortMode.None))
+        {
+            if(card.ArtTexture!=null)protectedTextures.Add(card.ArtTexture);
+        }
         Trim(Cache,ref fullBytes,FullBudget,protectedTextures,removed);
         Trim(ThumbnailCache,ref thumbnailBytes,ThumbnailBudget,protectedTextures,removed);
         foreach(var key in DisplayedFullCards.Where(p=>removed.Contains(p.Value)).Select(p=>p.Key).ToArray())

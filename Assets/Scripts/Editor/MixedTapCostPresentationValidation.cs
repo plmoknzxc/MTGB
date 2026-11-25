@@ -40,7 +40,6 @@ public static class MixedTapCostPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui) {
         var language=GamePreferences.Language;var active=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();bool inputs=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var states=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try {
             GamePreferences.SetLanguage("zh-CN");float deadline=Time.realtimeSinceStartup+8;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Check(GamePreferences.Ready,"Language ready");
             foreach(var color in new[]{"Green","White"}) {
@@ -70,7 +69,7 @@ public static class MixedTapCostPresentationValidation
                 ui.Present(Read(test,"unpayable-cancelled"),1,true,_=>{},null,"");yield return Frame();Check(GameObject.Find("CardSelection")==null&&GameObject.Find("ManaPaymentActions")==null,"Cancelled input cleanup");
                 File.AppendAllText(Output+"/steps.log",test+" cancellation ray/priority cleanup PASS\n");
             }
-        } finally {ui.Present(null,1,false,null,null,"");ui.enabled=active;if(module!=null)module.enabled=inputs;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=states[i];}
+        } finally {ui.Present(null,1,false,null,null,"");ui.enabled=active;if(module!=null)module.enabled=inputs;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

@@ -1,0 +1,8 @@
+Tidelights menu music
+
+Oboro (2019) by PeriTune (Sei Mutsuki)
+Original recording and official loop: https://peritune.com/blog/2019/04/08/oboro/
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+
+MTGB adjusted the playback level of the official loop and re-encoded it as Ogg Vorbis.

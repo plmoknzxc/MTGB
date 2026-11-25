@@ -1,0 +1,117 @@
+// Run in the Main scene in Play Mode with the Emperor theme and its animation on.
+// Paste this entire method body into Unity MCP execute_code with compiler=roslyn.
+// The returned CSV is written after four measurement windows (about 18 seconds).
+// Leave the Game view visible until the file appears. The alternating static /
+// active windows use the live controller's disable / enable path in the same scene.
+// Frame timings and GC counters cover the whole Editor Game frame. A GPU time
+// of zero means the current backend could not supply that counter.
+if (!Application.isPlaying || UnityEditor.EditorApplication.isPaused)
+    return "Enter Play Mode with the main menu visible.";
+var motion = UnityEngine.Object.FindFirstObjectByType<TidelightsMenuMotion>();
+var host = UnityEngine.Object.FindFirstObjectByType<GamePreferences>();
+if (motion == null || !motion.isActiveAndEnabled || host == null)
+    return "Select the Emperor theme, open the main menu and enable its animation.";
+var artwork = motion.GetComponent<UnityEngine.UI.RawImage>();
+var wasEnabled = motion.enabled;
+var originalFps = Application.targetFrameRate;
+var originalVSync = QualitySettings.vSyncCount;
+var invariant = System.Globalization.CultureInfo.InvariantCulture;
+var path = System.IO.Path.Combine(Application.temporaryCachePath,
+    "MTGB-MenuMotion-" + System.DateTime.Now.ToString("yyyyMMdd-HHmmss-fff") + ".csv");
+var gcCategory = Unity.Profiling.ProfilerCategory.Memory;
+var counter = "GC Allocated In Frame";
+var fields = new[] { "dtMs", "mainThreadMs", "gpuMs", "gcAllBytes", "drawCalls", "batches", "triangles" };
+
+System.Collections.IEnumerator Measure()
+{
+    const int capacity = 20000;
+    var stageIds = new int[capacity];
+    var samples = new double[capacity, fields.Length];
+    var timings = new FrameTiming[1];
+    var report = new System.Text.StringBuilder();
+    var gc = Unity.Profiling.ProfilerRecorder.StartNew(gcCategory, counter);
+    int n = 0;
+    try
+    {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
+        report.AppendLine("# Unity " + Application.unityVersion + ", " + SystemInfo.processorType + ", "
+            + SystemInfo.graphicsDeviceName + ", " + SystemInfo.graphicsDeviceType + ", "
+            + Screen.width + "x" + Screen.height + ", 60fps cap, previous target=" + originalFps
+            + ", previous vSync=" + originalVSync);
+        for (int window = 0; window < 4; window++)
+        {
+            motion.enabled = window % 2 == 1;
+            double started = Time.realtimeSinceStartupAsDouble;
+            while (Time.realtimeSinceStartupAsDouble - started < 1.0)
+                yield return null;
+            report.AppendLine("# " + window + " playing=" + motion.isActiveAndEnabled
+                + " background=" + artwork.texture.name + " frame=" + Time.frameCount);
+            foreach (var g in motion.GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
+            {
+                var tex = g.mainTexture;
+                if (!tex) continue;
+                long gpuBytes = 0;
+                for (int level = 0; level < tex.mipmapCount; level++)
+                    gpuBytes += UnityEngine.Experimental.Rendering.GraphicsFormatUtility.ComputeMipmapSize(
+                        Math.Max(1, tex.width >> level), Math.Max(1, tex.height >> level), tex.graphicsFormat);
+                report.AppendLine("# graphic=" + g.name + ",enabled=" + g.isActiveAndEnabled + ",texture="
+                    + tex.name + ",format=" + tex.graphicsFormat + ",gpuTextureBytes=" + gpuBytes
+                    + ",editorObjectBytes=" + UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(tex));
+            }
+            started = Time.realtimeSinceStartupAsDouble;
+            while (Time.realtimeSinceStartupAsDouble - started < 3.5 && n < capacity)
+            {
+                FrameTimingManager.CaptureFrameTimings();
+                yield return null;
+                if (!motion || !motion.gameObject.activeInHierarchy) yield break;
+                bool valid = FrameTimingManager.GetLatestTimings(1, timings) > 0;
+                stageIds[n] = window;
+                samples[n,0] = Time.unscaledDeltaTime * 1000;
+                samples[n,1] = valid ? timings[0].cpuMainThreadFrameTime : 0;
+                samples[n,2] = valid ? timings[0].gpuFrameTime : 0;
+                samples[n,3] = gc.Valid ? gc.CurrentValue : -1;
+                samples[n,4] = UnityEditor.UnityStats.drawCalls;
+                samples[n,5] = UnityEditor.UnityStats.batches;
+                samples[n,6] = UnityEditor.UnityStats.triangles;
+                n++;
+            }
+        }
+        for (int state = 0; state < 2; state++)
+        {
+            var values = new System.Collections.Generic.List<double>(n);
+            for (int k = 0; k < fields.Length; k++)
+            {
+                values.Clear();
+                for (int j = 0; j < n; j++)
+                    if (stageIds[j] % 2 == state) values.Add(samples[j,k]);
+                if (values.Count == 0) continue;
+                values.Sort();
+                int mid = values.Count / 2;
+                double median = values.Count % 2 == 0 ? (values[mid-1] + values[mid]) / 2 : values[mid];
+                double p95 = values[(int)Math.Ceiling(values.Count * .95) - 1];
+                report.AppendLine("# summary mode=" + (state == 0 ? "static" : "motion") + " count="
+                    + values.Count + " " + fields[k] + " median=" + median.ToString("F4", invariant)
+                    + " p95=" + p95.ToString("F4", invariant));
+            }
+        }
+        report.AppendLine("window," + string.Join(",", fields));
+        for (int i = 0; i < n; i++)
+        {
+            report.Append(stageIds[i]);
+            for (int k = 0; k < fields.Length; k++)
+                report.Append(',').Append(samples[i,k].ToString("0.######", invariant));
+            report.AppendLine();
+        }
+        System.IO.File.WriteAllText(path, report.ToString());
+    }
+    finally
+    {
+        if (motion) motion.enabled = wasEnabled;
+        Application.targetFrameRate = originalFps;
+        QualitySettings.vSyncCount = originalVSync;
+        gc.Dispose();
+    }
+}
+host.StartCoroutine(Measure());
+return path;

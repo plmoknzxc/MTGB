@@ -43,7 +43,6 @@ public static class StackExileCostPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try{foreach(string locale in new[]{"zh-CN","en-US","ja-JP"}){
             int revision=GamePreferences.Revision;bool changing=GamePreferences.Language!=locale;GamePreferences.SetLanguage(locale);
             float deadline=Time.realtimeSinceStartup+12;while((!GamePreferences.Ready||changing&&GamePreferences.Revision==revision)&&Time.realtimeSinceStartup<deadline)yield return null;
@@ -77,7 +76,7 @@ public static class StackExileCostPresentationValidation
                 Check(GameObject.Find("ValueTitle")==null,"Restored priority removes selector");
                 File.AppendAllText(Output+"/steps.log",locale+" "+optionId+" PASS\n");
             }
-        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

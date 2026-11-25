@@ -15,8 +15,8 @@ public static class ModeCardPresentationValidation
     public static void Run(){if(running)return;Check(Application.isPlaying,"Requires Play Mode");running=true;Directory.CreateDirectory(Output);File.WriteAllText(Output+"/result.txt","RUNNING");var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();if(ui==null)ui=new GameObject("ModeCardValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(ui));}
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        string language=GamePreferences.Language;var iterator=Validate(ui);var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
-        try{while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: zh-CN/en-US/ja-JP real Spree, mode and optional-cost requests; separate local-art/effect cards, fixed font and bounded scroll; original rule-line identity after target filtering; selected/disabled/minimum gates; raycast native index, stale/disabled/duplicate/viewer guards. Not a live network or all-cards claim.");}finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        string language=GamePreferences.Language;var iterator=Validate(ui);
+        try{while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: zh-CN/en-US/ja-JP real Spree, mode and optional-cost requests; separate local-art/effect cards, fixed font and bounded scroll; original rule-line identity after target filtering; selected/disabled/minimum gates; raycast native index, stale/disabled/duplicate/viewer guards. Not a live network or all-cards claim.");}finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {

@@ -33,7 +33,6 @@ public static class CopyStateRemainderPresentationValidation {
     [Serializable] public class Sample{public string caseName,label;public int cardId,sourceId;}
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             float until=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;yield return Frame();GamePreferences.SetLanguage("en-US");yield return Frame();until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||GamePreferences.Language!="en-US")&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language=="en-US","English preferences initialized");
             var samples=JsonUtility.FromJson<Samples>(File.ReadAllText(Output+"/inputs/manifest.json")).samples;
@@ -51,7 +50,7 @@ public static class CopyStateRemainderPresentationValidation {
                 if(sample.caseName=="merged"&&sample.label=="copied-over"&&seat==1){ScreenCapture.CaptureScreenshot(Output+"/merged-copy.png");yield return Frame();}Clean(ui);
             }
 
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);}
     }
 }
 #endif

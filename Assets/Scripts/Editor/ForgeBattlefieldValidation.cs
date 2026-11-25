@@ -66,7 +66,6 @@ public static class ForgeBattlefieldValidation
             sawAttack=sawBlock=invalidTargetChecked=false; blockClicks=0;
             castCancelled=castReturned=false;
             File.WriteAllText(".tools/forge-migration/battlefield/"+ResultName+"-trace.jsonl","");
-            foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None)) UnityEngine.Object.Destroy(notice);
             if(mulligan)
             {
                 // Reproduce scene entry with a cold preference binding on the hidden stack.

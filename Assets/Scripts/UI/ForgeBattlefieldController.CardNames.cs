@@ -43,7 +43,7 @@ public sealed partial class ForgeBattlefieldController
         float listWidth=width-306,listHeight=height-190;
         int pageSize=Math.Max(1,Mathf.FloorToInt(listHeight/58));
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         Label(landChoiceMenu,"NameTitle",TapPaymentText("指定牌名","Name a card","カード名を指定"),new Vector2(0,height/2-28),new Vector2(width-40,34),23,Paper);
         var inputRoot=Panel(landChoiceMenu,"NameSearch",new Vector2(-136,height/2-82),new Vector2(listWidth,42),new Color(.025f,.035f,.05f));
         var searchText=Label(inputRoot,"Text",nameQuery,Vector2.zero,new Vector2(listWidth-18,36),18,Paper);
@@ -52,6 +52,7 @@ public sealed partial class ForgeBattlefieldController
         placeholder.alignment=TextAnchor.MiddleLeft;placeholder.supportRichText=false;
         var input=inputRoot.gameObject.AddComponent<InputField>();input.textComponent=searchText;input.placeholder=placeholder;
         input.lineType=InputField.LineType.SingleLine;input.characterLimit=120;input.SetTextWithoutNotify(nameQuery);input.interactable=canAct&&!submitted;
+        if(HudTheme!=null)MenuVisualTheme.StyleSearchInput(input);
         var rows=Rect(landChoiceMenu,"NameRows",new Vector2(-136,-13),new Vector2(listWidth,listHeight));
         var status=Label(landChoiceMenu,"NamePage", "",new Vector2(-136,-height/2+72),new Vector2(listWidth-142,28),16,Paper);
         var preview=Panel(landChoiceMenu,"NamePreview",new Vector2(width/2-146,9),new Vector2(254,356),Ink);
@@ -60,10 +61,11 @@ public sealed partial class ForgeBattlefieldController
         var canonical=Label(landChoiceMenu,"NameCanonical","",new Vector2(width/2-146,-height/2+132),new Vector2(268,48),15,Paper);canonical.supportRichText=false;
         var missing=Label(preview,"MissingArt","",Vector2.zero,new Vector2(230,100),18,Paper);missing.raycastTarget=false;
         var confirm=Button(landChoiceMenu,"NameConfirm",TapPaymentText("确认牌名","Confirm name","名前を確定"),new Vector2(width/2-146,-height/2+37),new Vector2(240,44),()=>Choose(nameSelection,captured),new Color(.18f,.32f,.49f));
+        if(HudTheme!=null)StyleZoneButton(confirm,true);
         Button previous=null,next=null;
         Action showPreview=()=>{
             var entry=nameEntries.FirstOrDefault(e=>e.index==nameSelection);
-            confirm.interactable=entry!=null&&canAct&&!submitted;
+            confirm.interactable=entry!=null&&canAct&&!submitted&&!view.request.options[entry.index].disabled;
             previewName.text=entry?.localized??TapPaymentText("请选择牌名","Select a card name","カード名を選択");
             canonical.text=entry==null?"":entry.canonical;
             Sprite sprite=null;
@@ -80,7 +82,8 @@ public sealed partial class ForgeBattlefieldController
                 var entry=visible[row];
                 var button=Button(rows,"NameOption_"+entry.index,entry.localized,new Vector2(0,listHeight/2-28-row*58),new Vector2(listWidth,52),()=>{nameSelection=entry.index;render();},
                     nameSelection==entry.index?new Color(.18f,.38f,.55f):new Color(.13f,.19f,.25f));
-                button.interactable=canAct&&!submitted;
+                if(HudTheme!=null)StyleZoneButton(button,nameSelection==entry.index);
+                button.interactable=canAct&&!submitted&&!view.request.options[entry.index].disabled;
                 var text=button.GetComponentInChildren<Text>();PreferenceText.SetSize(text,18);text.resizeTextForBestFit=false;text.supportRichText=false;text.alignment=TextAnchor.MiddleLeft;
             }
             status.text=TapPaymentText($"{filteredNames.Length} 个牌名 · {namePage+1}/{pagesCount}",$"{filteredNames.Length} names · {namePage+1}/{pagesCount}",$"{filteredNames.Length} 件・{namePage+1}/{pagesCount}");
@@ -101,8 +104,10 @@ public sealed partial class ForgeBattlefieldController
         int cancel=OptionIndex("cancel");
         if(cancel>=0) {
             var cancelButton=Button(landChoiceMenu,"NameCancel",TapPaymentText("取消","Cancel","キャンセル"),new Vector2(-136,-height/2+30),new Vector2(160,38),()=>Choose(cancel,captured),Ink);
-            cancelButton.interactable=canAct&&!submitted;
+            if(HudTheme!=null)StyleZoneButton(cancelButton);
+            cancelButton.interactable=canAct&&!submitted&&!view.request.options[cancel].disabled;
         }
+        if(HudTheme!=null){StyleZoneButton(previous);StyleZoneButton(next);}
         filter();landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();
     }
 }

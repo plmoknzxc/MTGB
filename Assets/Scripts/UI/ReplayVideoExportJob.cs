@@ -8,7 +8,8 @@ using UnityEngine.UI;
 [Serializable]
 public sealed class ReplayVideoExportRequest
 {
-    public string replay,output,status,cancel,language;
+    public string replay,output,status,cancel,language,theme,themeDirectory;
+    public string[] imageRoots;
     public int seat=1;
     public int width=1920,height=1080,fps=30;
     public float textScale=1;
@@ -89,7 +90,8 @@ public sealed class ReplayVideoExportJob : MonoBehaviour
             Directory.CreateDirectory(job.directory);
             job.request=new ReplayVideoExportRequest{replay=Path.Combine(job.directory,"source.mtgbr"),output=Path.GetFullPath(output),
                 status=Path.Combine(job.directory,"status.json"),cancel=Path.Combine(job.directory,"cancel"),
-                language=GamePreferences.Language,textScale=GamePreferences.TextScale,seat=seat,overwrite=overwrite,width=width,height=height,fps=fps};
+                language=GamePreferences.Language,theme=MenuThemeCatalog.Current.Id,themeDirectory=MenuThemePackage.Root,imageRoots=CardImageLibrary.ImageRoots(),
+                textScale=GamePreferences.TextScale,seat=seat,overwrite=overwrite,width=width,height=height,fps=fps};
             string json=JsonUtility.ToJson(job.request);
             job.preparation=Task.Run(()=>{File.Copy(replay,job.request.replay);File.WriteAllText(Path.Combine(job.directory,"job.json"),json);});
             return true;

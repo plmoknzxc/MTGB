@@ -17,6 +17,11 @@
       "route": "Bridge version"
     },
     {
+      "signature": "String getUserAgent()",
+      "role": "environment",
+      "route": "Headless bridge HTTP user agent"
+    },
+    {
       "signature": "void invokeInEdtNow(Runnable runnable)",
       "role": "thread",
       "route": "Synchronous dedicated UI executor"
@@ -40,6 +45,36 @@
       "signature": "boolean isGuiThread()",
       "role": "thread",
       "route": "Exact mtgb-ui thread"
+    },
+    {
+      "signature": "default boolean isMatchInProgress()",
+      "role": "default",
+      "route": "Forge headless default"
+    },
+    {
+      "signature": "default boolean showCoach(final String title, final String text, final String nextLabel, final Runnable onNext)",
+      "role": "default",
+      "route": "Forge headless default"
+    },
+    {
+      "signature": "default void hideCoach()",
+      "role": "default",
+      "route": "Forge headless default"
+    },
+    {
+      "signature": "default boolean isTutorialBoardReady()",
+      "role": "default",
+      "route": "Forge headless default"
+    },
+    {
+      "signature": "default TutorialLayout getTutorialLayout()",
+      "role": "default",
+      "route": "Forge headless default"
+    },
+    {
+      "signature": "default void highlightGui(final Collection<TutorialTarget> targets)",
+      "role": "default",
+      "route": "Forge headless default"
     },
     {
       "signature": "String getAssetsDir()",
@@ -245,22 +280,22 @@
   "sourceGuards": [
     {
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/interfaces/IGuiBase.java",
-      "sha256": "3ea53cb053cb6a5a9c5f411b11b808f1ecc371983396bc28086f9526d71bc77d",
+      "sha256": "77ea0d004b83f0651be79e71e5352d66f91157f1a7d60cedd4483f8e7a40a925",
       "scope": "Every interface signature/default body; classification reviewed"
     },
     {
       "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlayerController.java",
-      "sha256": "24ab20e0a7a491345b345529e6018b60f5ecef2b95d5c4f4c68726482966936b",
+      "sha256": "6974c25c95df0b8e5eb4a491e6eb01d66594dc8c43bbc961864724fdf548d58b",
       "scope": "Inherited defaults and abstract declaration guard; resolution table separate"
     },
     {
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java",
-      "sha256": "e05ab45ffea33fae2aa5f52d805dfb4e98e24a0ce9de6a6e9e73eeb0d96e61d3",
+      "sha256": "376deefb21beff02a0d836bb938fc03e58f620825580b951a1fecf33bd1d31ce",
       "scope": "Whole-source change guard; not every branch runtime tested"
     },
     {
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java",
-      "sha256": "7bc42c5748f6586b243f92a452059f6e9c0a91d8bf852db64463bee949e2704f",
+      "sha256": "7b3888dd83789f7c0ddb37e0997e0c1fd7a2fe9148dbef9e08e8e9fcf2d7c0b9",
       "scope": "Legacy static helper call and native cost selection reviewed"
     },
     {
@@ -270,12 +305,12 @@
     },
     {
       "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java",
-      "sha256": "65988ae54fdafe83562b5b70e79404af09a83f642958aacc32ea43ffc53c1311",
+      "sha256": "4cc01a9475baca414f5dc8c2a4fefcaad01cd0ef283e4fcc6ec8c87ce39ae1cc",
       "scope": "Native resolution cost paths and cancellation patch context guard"
     },
     {
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java",
-      "sha256": "b8456dce4d63882be37da6fa4197d8b483932b5ec7d7cf16e0d1f548db029248",
+      "sha256": "38beeda5398af2964d6f4b3c87ee20a4445087a31300eb3841e7f0b1ec401dd7",
       "scope": "Pinned native payer/manaCost/phyLifeToLose/saPaidFor/effect fields and native life reservation/commit/cancel contract; reflection change guard, not effect proof."
     },
     {

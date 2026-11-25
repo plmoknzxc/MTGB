@@ -25,12 +25,11 @@ public static class LibraryCostPresentationValidation
     }
     static IEnumerator Guard(IEnumerator iterator)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;
-        if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt","PASS: native same-graveyard upkeep replay in zh-CN/en-US/ja-JP; legal player selector/confirm/cancel; exact source/card identities, native count/confirmation gate, stable card tiles, real pointer index, actionable stale/duplicate and nonacting guards; opponent orders own cards; fixed localized payment instructions fit existing text scale; paid/sacrificed/age-two end state clears choices. Engine effects are separately proved by Test-LibraryCosts.py; no actual network or animation claim.");
-        }finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return new WaitForSecondsRealtime(.3f);yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

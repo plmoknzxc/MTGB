@@ -9,19 +9,19 @@ import forge.game.GameType;
 import forge.game.player.RegisteredPlayer;
 import java.util.*;
 
-/** Room-selected 1v1 rules. Deck metadata never selects the server's variant. */
+/** Room-selected match rules. Deck metadata never selects the server's variant. */
 final class BridgeMatchFormat {
     static String id() {
         return ForgeBridge.config.has("formatId") ? ForgeBridge.config.get("formatId").getAsString() : "none";
     }
     static Set<GameType> variants() {
         return switch (id()) {
-            case "duelcommander" -> EnumSet.of(GameType.Commander);
+            case "commander", "duelcommander" -> EnumSet.of(GameType.Commander);
             case "brawl" -> EnumSet.of(GameType.Brawl);
             default -> EnumSet.noneOf(GameType.class);
         };
     }
-    static boolean commanders() { return id().equals("duelcommander") || id().equals("brawl"); }
+    static boolean commanders() { return id().equals("commander") || id().equals("duelcommander") || id().equals("brawl"); }
     static RegisteredPlayer register(Deck deck) {
         if (!commanders()) {
             if (!deck.getCommanders().isEmpty()) throw new IllegalArgumentException("Room format does not use commanders");
@@ -31,7 +31,7 @@ final class BridgeMatchFormat {
         if(problem!=null)throw new IllegalArgumentException("Invalid commander deck: "+problem);
         int side=deck.getOrCreate(DeckSection.Sideboard).countAll();
         if(side>1)throw new IllegalArgumentException("Only a designated companion may be outside the deck");
-        return RegisteredPlayer.forVariants(2,variants(),deck,null,false,null,null);
+        return RegisteredPlayer.forVariants(ForgeBridge.config.getAsJsonArray("decks").size(),variants(),deck,null,false,null,null);
     }
     static void apply(GameRules rules) {
         rules.setAppliedVariants(variants());
@@ -40,6 +40,7 @@ final class BridgeMatchFormat {
     static int startingLife(int requested) {
         // Local practice explicitly permits a custom life total; online variant rules stay fixed.
         if(ForgeBridge.config.has("localPractice")&&ForgeBridge.config.get("localPractice").getAsBoolean())return requested;
+        if(id().equals("commander"))return 40;
         return commanders() ? (id().equals("brawl")?25:20) : requested;
     }
 }

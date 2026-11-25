@@ -85,7 +85,6 @@ public static class ForgeControlModeValidation
     {
         Directory.CreateDirectory(Folder);
         yield return SceneManager.LoadSceneAsync("IntegratedBattlefield");
-        foreach(var n in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))UnityEngine.Object.Destroy(n);
         var ui=new GameObject("ModeUiValidation").AddComponent<ForgeBattlefieldController>();
         var state=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(Folder+"payment.json"));
         ui.Present(state,1,true,_=>{},()=>{},"验证");yield return null;

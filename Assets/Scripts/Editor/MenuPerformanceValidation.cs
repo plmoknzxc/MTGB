@@ -90,7 +90,9 @@ public static class MenuPerformanceValidation
             while(Field<ReplayPreview>(browser,"selected")==null&&Time.realtimeSinceStartup<deadline)yield return null;
             Check(Field<ReplayPreview>(browser,"selected")!=null,"browser displays preview before full playback loading");
             yield return new WaitForSecondsRealtime(.8f);
-            Check(Field<string>(browser,"selectedPath")==list[0]&&Field<Text>(browser,"details").text.Contains(Field<ReplayPreview>(browser,"selected").players[0]),"stale previous preview never replaces current selection");
+            var selectedPlayers = Field<ReplayPreview>(browser,"selected").players;
+            Check(Field<string>(browser,"selectedPath")==list[0] && Field<Text>(browser,"firstPlayer").text==selectedPlayers[0]
+                && Field<Text>(browser,"secondPlayer").text==selectedPlayers[1],"stale previous preview never replaces current selection");
             Check(Field<Button>(browser,"play").interactable,"play available after metadata read");
             ScreenCapture.CaptureScreenshot(Path.GetFullPath(Root+"/replay-after.png"));yield return new WaitForEndOfFrame();
             UnityEngine.Object.Destroy(browser.gameObject);

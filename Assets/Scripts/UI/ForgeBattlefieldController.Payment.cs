@@ -16,7 +16,7 @@ public sealed partial class ForgeBattlefieldController
     {
         var phaseTrack=Node("CornerCluster/ControlRow").Find("PhaseTrack");
         if(phaseTrack!=null)phaseTrack.gameObject.SetActive(true);
-        if(!IsManaPaymentDecision) {
+        if(!IsManaPaymentDecision || IsFourPlayerScene) {
             if(manaPaymentActions!=null)manaPaymentActions.gameObject.SetActive(false);
             return;
         }
@@ -79,6 +79,7 @@ public sealed partial class ForgeBattlefieldController
             manaPaymentPrompt.enableAutoSizing=false;manaPaymentPrompt.raycastTarget=false;
         }
         choiceHintPanel.gameObject.SetActive(true);
+        if (HudTheme!=null){StyleHudSurface(choiceHintPanel,HudInk,HudEdge);manaPaymentPrompt.color=HudText;}
         float width=Mathf.Min(644,surface.rect.width-48);
         manaPaymentPrompt.fontSize=20*GamePreferences.TextScale;
         manaPaymentPrompt.richText=true;

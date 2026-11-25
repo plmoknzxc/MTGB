@@ -109,8 +109,11 @@ public sealed class SearchInsertionMenu : MonoBehaviour
         float y = bottomRight.y - 304;
         if (y - 300 < bounds.yMin + 12) y = hostRect.InverseTransformPoint(corners[2]).y + 304;
         panel.anchoredPosition = new Vector2(x, Mathf.Clamp(y, bounds.yMin + 312, bounds.yMax - 312));
-        ReplayWidgets.Label(panel, mana ? "插入法术力符号" : "插入类别", -28, 264, 820, 44, 24);
-        ReplayWidgets.Button(panel, "×", 418, 264, 40, Close);
+        var title = ReplayWidgets.Label(panel, mana ? "插入法术力符号" : "插入类别", -28, 264, 820, 44, 24);
+        MenuVisualTheme.StyleDeckDialogSurface(panel, title, 52);
+        var close = ReplayWidgets.Button(panel, "×", 414, 274, 42, Close);
+        ((RectTransform)close.transform).sizeDelta = new Vector2(42, 34);
+        MenuVisualTheme.StyleDeckTool(close);
         categories.Clear();
         for (int i = 0; i < groups.Length; i++)
         {
@@ -129,19 +132,21 @@ public sealed class SearchInsertionMenu : MonoBehaviour
         search.gameObject.name = "InsertionSearch";
         var placeholder = ReplayWidgets.Label(search.transform, "搜索选项", 0, 0, 536, 42, 22);
         placeholder.color = MenuVisualTheme.Muted; search.placeholder = placeholder;
+        MenuVisualTheme.StyleSearchInput(search);
         search.onValueChanged.AddListener(_ => Render());
-        var viewport = ReplayWidgets.Panel(panel, "Options", 146, -36, 568, 436, MenuVisualTheme.Panel);
+        var viewport = ReplayWidgets.Panel(panel, "Options", 146, -36, 568, 436, MenuVisualTheme.Recess);
         viewport.gameObject.AddComponent<RectMask2D>();
         scroll = viewport.gameObject.AddComponent<ScrollRect>();
         items = ReplayWidgets.Rect(viewport, "Items", 0, 0, 556, 436);
         items.anchorMin = items.anchorMax = new Vector2(.5f, 1); items.pivot = new Vector2(.5f, 1);
         scroll.content = items; scroll.viewport = viewport; scroll.horizontal = false;
         scroll.movementType = ScrollRect.MovementType.Clamped; scroll.scrollSensitivity = 35;
-        var track = ReplayWidgets.Panel(panel, "ScrollTrack", 434, -36, 8, 436, MenuVisualTheme.Ink);
+        var track = ReplayWidgets.Panel(panel, "ScrollTrack", 436, -36, 18, 436, MenuVisualTheme.Recess);
         var bar = track.gameObject.AddComponent<Scrollbar>();
         var handle = ReplayWidgets.Panel(track, "Handle", 0, 0, 0, 0, MenuVisualTheme.Muted);
         handle.anchorMin = Vector2.zero; handle.anchorMax = Vector2.one; handle.offsetMin = handle.offsetMax = Vector2.zero;
         bar.handleRect = handle; bar.targetGraphic = handle.GetComponent<Image>(); bar.direction = Scrollbar.Direction.BottomToTop; scroll.verticalScrollbar = bar;
+        MenuVisualTheme.StyleDeckScrollThumb(bar);
         Render(); GamePreferences.BindScene();
     }
     public static string Label(string value)
@@ -152,7 +157,7 @@ public sealed class SearchInsertionMenu : MonoBehaviour
     void Render()
     {
         foreach (Transform child in items) { child.gameObject.SetActive(false); Destroy(child.gameObject); }
-        for (int i = 0; i < categories.Count; i++) categories[i].GetComponent<Image>().color = i == selected ? MenuVisualTheme.Primary : MenuVisualTheme.Panel;
+        for (int i = 0; i < categories.Count; i++) MenuVisualTheme.StyleDeckTool(categories[i], i == selected);
         string term = search.text.Trim();
         var values = (term.Length == 0 ? groups[selected].Values : groups.SelectMany(g => g.Values).Distinct()).Where(v => Label(v).IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
         int columns = mana ? 3 : 1;
@@ -163,6 +168,7 @@ public sealed class SearchInsertionMenu : MonoBehaviour
             string value = values[i]; float width = mana ? 172 : 544;
             var button = ReplayWidgets.Button(items, Label(value), mana ? -184 + i % 3 * 184 : 0, 0, width, () => Insert(value));
             button.name = "Insert_" + value;
+            MenuVisualTheme.StyleDeckOption(button);
             var r = (RectTransform)button.transform; r.anchorMin = r.anchorMax = new Vector2(.5f, 1);
             var text = button.GetComponentInChildren<Text>(); text.rectTransform.sizeDelta = new Vector2(width - 16, 52);
             text.resizeTextForBestFit=false;text.horizontalOverflow=HorizontalWrapMode.Wrap;

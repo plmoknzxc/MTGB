@@ -13,15 +13,20 @@ public static class OnlineSpectatorView
             matchId=source.matchId, viewerSeat=spectatorSeat, appliedSequence=source.appliedSequence,
             outcome=source.outcome,
             forge=new ForgeSeatView {
-                seat=1, phase=view.phase, formatId=view.formatId,dayTime=view.dayTime,turn=view.turn, turnSeat=view.turnSeat,
-                prioritySeat=view.prioritySeat, stackCount=view.stackCount,
+                seat=1, phase=view.phase, formatId=view.formatId,commanderEvent=view.commanderEvent,lokiSeat=view.lokiSeat,
+                dayTime=view.dayTime,turn=view.turn, turnSeat=view.turnSeat,
+                firstPlayerSeat=view.firstPlayerSeat,mulliganCounts=view.mulliganCounts?.ToArray(),mulliganHandSizes=view.mulliganHandSizes?.ToArray(),mulliganKept=view.mulliganKept?.ToArray(),
+                prioritySeat=view.prioritySeat, heroAfterStackSeat=view.heroAfterStackSeat, stackCount=view.stackCount,
+                heroVoteWindow=view.heroVoteWindow, heroVoters=view.heroVoters, heroVotes=view.heroVotes,
+                heroCombatChoice=view.heroCombatChoice, heroCombatSeat=view.heroCombatSeat,
+                combatFeedback=view.combatFeedback?.ToArray(), restartRevision=view.restartRevision,
                 notices=(view.notices??Array.Empty<ForgeNotice>()).Where(n=>n.publicNotice).Select(n=>new ForgeNotice {
-                    id=n.id,actorSeat=n.actorSeat,kind=n.kind,value=n.value,message=n.message,title=n.title,publicNotice=true,sourceCard=PublicCard(n.sourceCard),
+                    id=n.id,actorSeat=n.actorSeat,turn=n.turn,turnSeat=n.turnSeat,phase=n.phase,stackId=n.stackId,kind=n.kind,value=n.value,message=n.message,title=n.title,publicNotice=true,sourceCard=PublicCard(n.sourceCard),
                     reason=n.reason,fromZone=n.fromZone,toZone=n.toZone,cards=(n.cards??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray()
                 }).ToArray(),
                 globalEffects=(view.globalEffects??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                 players=(view.players??Array.Empty<ForgePlayerView>()).Select(p=>new ForgePlayerView {
-                    seat=p.seat,controllingSeat=p.controllingSeat,targetId=p.targetId,life=p.life,handCount=p.handCount,libraryCount=p.libraryCount,
+                    seat=p.seat,eliminated=p.eliminated,controllingSeat=p.controllingSeat,targetId=p.targetId,life=p.life,handCount=p.handCount,libraryCount=p.libraryCount,
                     commanders=(p.commanders??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     commandCards=(p.commandCards??p.commanders??Array.Empty<ForgeCardView>()).Select(PublicCard).ToArray(),
                     libraryTop=p.libraryTopPublic?PublicCard(p.libraryTop):null,libraryTopPublic=p.libraryTopPublic,
@@ -62,9 +67,42 @@ public static class OnlineSpectatorView
                 playableExile=Array.Empty<ForgeCardView>(),playableGraveyard=Array.Empty<ForgeCardView>(),playableCommand=Array.Empty<ForgeCardView>()
             }
         };
-        result.forge.stack=result.forge.stackItems.Select(s=>s.description).ToArray();
+        var stack=result.forge.stackItems;
+        for(int i=0;i<stack.Length;i++){
+            var targets=view.stackItems[i].targets;
+            if(targets==null)continue;
+            stack[i].targets=targets.Where(t=>t!=null).Select(t=>PublicTarget(t,result.forge)).ToArray();
+        }
+        result.forge.stack=stack.Select(s=>s.description).ToArray();
         result.SealHash();
         return result;
+    }
+
+    private static ForgeStackTarget PublicTarget(ForgeStackTarget target,ForgeSeatView visible)
+    {
+        var copy=new ForgeStackTarget{kind=target.kind,zone=target.zone,id=target.id,stackId=target.stackId,
+            playerSeat=target.playerSeat,ownerSeat=target.ownerSeat,leftZone=target.leftZone};
+        if(target.card==null)return copy;
+        // Resolve identities from the observer's public zones, including the stack.
+        // A target in the source player's hand can carry its private name and printing.
+        if(!target.leftZone && !target.card.faceDown) {
+            if(target.kind=="stack")
+                copy.card=visible.stackItems.FirstOrDefault(s=>s.id==target.stackId&&s.source?.id==target.card.id)?.source;
+            else foreach(var player in visible.players) {
+                if(target.zone=="Library"){
+                    copy.card=player.libraryCards?.FirstOrDefault(p=>p.card?.id==target.card.id)?.card;
+                    if(copy.card!=null)break;
+                }
+                var cards=target.zone switch {
+                    "Battlefield"=>player.battlefield, "Graveyard"=>player.graveyardCards,
+                    "Exile"=>player.exileCards, "Command"=>player.commandCards, _=>null
+                };
+                copy.card=cards?.FirstOrDefault(c=>c?.id==target.card.id);
+                if(copy.card!=null)break;
+            }
+        }
+        copy.card??=new ForgeCardView{id=target.card.id,ownerSeat=target.ownerSeat,zone=target.zone,faceDown=true};
+        return copy;
     }
 
     private static ForgeCardView PublicCard(ForgeCardView card)

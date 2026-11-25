@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "title": "清场与护卫",
+  "description": "对手的灰棕熊挡在面前。用手里的闪电击清出一条路，并留下自己的风龙兽。",
+  "turns": 1,
+  "goal": {
+    "mode": "all",
+    "conditions": [
+      { "metric": "cardCount", "player": "opponent", "zone": "battlefield", "name": "Grizzly Bears", "op": "exactly", "value": 0 },
+      { "metric": "cardCount", "player": "you", "zone": "battlefield", "name": "Wind Drake", "op": "atLeast", "value": 1 }
+    ]
+  },
+  "cards": [
+    { "name": "Wind Drake", "side": "you", "zone": "battlefield" },
+    { "name": "Mountain", "side": "you", "zone": "battlefield" },
+    { "name": "Lightning Bolt", "side": "you", "zone": "hand" },
+    { "name": "Island", "side": "you", "zone": "library", "count": 4 },
+    { "name": "Grizzly Bears", "side": "opponent", "zone": "battlefield" },
+    { "name": "Forest", "side": "opponent", "zone": "library", "count": 4 }
+  ]
+}

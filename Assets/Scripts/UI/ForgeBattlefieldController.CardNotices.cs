@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,12 +9,12 @@ public sealed partial class ForgeBattlefieldController
     private readonly Dictionary<long,RectTransform> cardNoticeWindows=new();
     private readonly Dictionary<long,string> cardNoticeLayouts=new();
     private readonly HashSet<long> dismissedCardNotices=new();
-    private readonly HashSet<long> suppressedCardNotices=new();
-    private static bool IsCardNotice(ForgeNotice notice)=>notice.kind is "card-reveal" or "card-move";
+    private static bool IsCardNotice(ForgeNotice notice)=>notice.kind=="card-reveal";
+    private static bool IsHistoryOnlyNotice(ForgeNotice notice)=>notice.kind is "cast" or "copy" or "card-move";
     private void ResetCardNotices()
     {
-        foreach(var window in cardNoticeWindows.Values)if(window!=null)Destroy(window.gameObject);
-        cardNoticeWindows.Clear();cardNoticeLayouts.Clear();dismissedCardNotices.Clear();suppressedCardNotices.Clear();
+        foreach(var window in cardNoticeWindows.Values)if(window!=null){window.gameObject.SetActive(false);Destroy(window.gameObject);}
+        cardNoticeWindows.Clear();cardNoticeLayouts.Clear();dismissedCardNotices.Clear();
     }
     private static string NoticeZone(string zone)=>zone switch {
         "Library"=>TapPaymentText("牌库","library","ライブラリー"),"Hand"=>TapPaymentText("手牌","hand","手札"),
@@ -29,44 +29,27 @@ public sealed partial class ForgeBattlefieldController
         string reason=notice.reason=="cost"?TapPaymentText("支付费用","paying a cost","コストの支払い"):
             notice.reason=="effect"?TapPaymentText("效果结算","an effect resolving","効果の解決"):TapPaymentText("规则处理","a game action","ゲームの処理");
         string cause=string.IsNullOrEmpty(source)?reason:TapPaymentText($"因《{source}》{reason}",$"{source}: {reason}",$"「{source}」：{reason}");
-        if(notice.kind=="card-move")return cause+"\n"+NoticeZone(notice.fromZone)+" → "+NoticeZone(notice.toZone);
         var zones=(notice.cards??Array.Empty<ForgeCardView>()).Select(c=>c.zone).Where(z=>!string.IsNullOrEmpty(z)).Distinct();
         return cause+"\n"+TapPaymentText("展示卡牌，来自：","Cards shown from: ","公開されたカードの領域：")+string.Join("、",zones.Select(NoticeZone));
     }
     private void CloseCardNotice(long id)
     {
         dismissedCardNotices.Add(id);
-        if(cardNoticeWindows.Remove(id,out var window)&&window!=null)Destroy(window.gameObject);
+        if(cardNoticeWindows.Remove(id,out var window)&&window!=null){window.gameObject.SetActive(false);Destroy(window.gameObject);}
         cardNoticeLayouts.Remove(id);
     }
     private void PresentCardNotices(ForgeNotice[] notes)
     {
-        suppressedCardNotices.IntersectWith(notes.Select(n=>n.id));
         foreach(var note in notes.Where(IsCardNotice).OrderBy(n=>n.id)) {
-            // Preserve the record for history/replays. A grouped movement can
-            // grow on a later snapshot, so suppression is not user dismissal.
-            if(note.kind=="card-move"&&note.fromZone=="Battlefield"
-                &&note.toZone is "Exile" or "Hand" or "Graveyard"
-                &&!string.Equals(note.reason,"cost",StringComparison.OrdinalIgnoreCase)
-                &&(note.cards?.Length??0)==1) {
-                suppressedCardNotices.Add(note.id);
-                if(cardNoticeWindows.Remove(note.id,out var hidden)&&hidden!=null)Destroy(hidden.gameObject);
-                cardNoticeLayouts.Remove(note.id);continue;
+            if(dismissedCardNotices.Contains(note.id)||(!cardNoticeWindows.ContainsKey(note.id)&&note.id<=lastNoticeId))continue;
+            // The selectable hand already shows the entire reveal to its recipient.
+            // Leave separate reveals, other viewers and read-only playback alone.
+            if(canAct&&SelectionHand is ForgePlayerView hand&&hand.handCount<=10
+                &&note.turn==view.turn&&note.phase==view.phase&&note.sourceCard?.id>0
+                &&(view.stackItems??Array.Empty<ForgeStackItem>()).Any(s=>s.source?.id==note.sourceCard.id)
+                &&note.cards is {Length:>0}&&note.cards.All(c=>c.zone=="Hand"&&VisibleHand(hand).Any(h=>h.id==c.id))){
+                CloseCardNotice(note.id);continue;
             }
-            bool previouslySuppressed=suppressedCardNotices.Remove(note.id);
-            // Older recordings contain ChangeZone's reveal after the already
-            // public return. Suppress only that exact pair; a real intervening
-            // movement of the same card must remain visible.
-            if(note.kind=="card-move"&&note.toZone=="Hand"&&note.fromZone!="Library"
-                &&note.message is "展示卡牌" or "Revealed cards"
-                &&notes.Any(previous=>previous.id<note.id&&previous.kind==note.kind&&string.IsNullOrEmpty(previous.message)
-                    &&previous.fromZone==note.fromZone&&previous.toZone==note.toZone&&previous.reason==note.reason
-                    &&previous.actorSeat==note.actorSeat&&previous.sourceCard?.id==note.sourceCard?.id
-                    &&(previous.cards??Array.Empty<ForgeCardView>()).Select(c=>c.id).OrderBy(id=>id)
-                        .SequenceEqual((note.cards??Array.Empty<ForgeCardView>()).Select(c=>c.id).OrderBy(id=>id))
-                    &&!notes.Any(middle=>middle.id>previous.id&&middle.id<note.id&&IsCardNotice(middle)
-                        &&(middle.cards??Array.Empty<ForgeCardView>()).Any(c=>(note.cards??Array.Empty<ForgeCardView>()).Any(n=>n.id==c.id)))))continue;
-            if(dismissedCardNotices.Contains(note.id)||(!previouslySuppressed&&!cardNoticeWindows.ContainsKey(note.id)&&note.id<=lastNoticeId))continue;
             string key=GamePreferences.Revision+"/"+surface.rect.size+"/"+note.kind+"/"+CardNoticeDescription(note)+"/"+
                 string.Join("|",(note.cards??Array.Empty<ForgeCardView>()).Select(c=>c.id+":"+c.name+":"+c.printingKey+":"+c.faceDown));
             if(cardNoticeLayouts.TryGetValue(note.id,out string previous)&&previous==key)continue;
@@ -74,7 +57,7 @@ public sealed partial class ForgeBattlefieldController
             Vector2 position=created?new Vector2((cardNoticeWindows.Count%5)*28-56,56-(cardNoticeWindows.Count%5)*28):window.anchoredPosition;
             if(created) {
                 window=Panel(surface,"CardNotice_"+note.id,position,new Vector2(400,360),Ink);
-                SetOverlayLayer(window,NoticeLayerOffset,true);cardNoticeWindows.Add(note.id,window);
+                SetOverlayLayer(window,ReadingLayerOffset,true);cardNoticeWindows.Add(note.id,window);
             } else Clear(window);
             var cards=note.cards??Array.Empty<ForgeCardView>();
             float width=Mathf.Min(cards.Length<=1?300:380,surface.rect.width-48);
@@ -92,13 +75,16 @@ public sealed partial class ForgeBattlefieldController
             Color[] accents={new Color(.3f,.76f,.9f),new Color(.92f,.68f,.28f),new Color(.72f,.55f,.94f),new Color(.4f,.8f,.56f)};
             Color accent=accents[(int)(note.id%accents.Length)];
             var edge=window.GetComponent<Outline>()??window.gameObject.AddComponent<Outline>();edge.effectColor=accent;edge.effectDistance=new Vector2(2,-2);
+            if(HudTheme!=null){StyleHudSurface(window,HudInk,HudEdge);accent=HudAccent;}
             var shadow=window.GetComponents<Shadow>().FirstOrDefault(s=>s.GetType()==typeof(Shadow))??window.gameObject.AddComponent<Shadow>();shadow.effectColor=new Color(0,0,0,.85f);shadow.effectDistance=new Vector2(8,-8);
             var header=Panel(window,"Header",new Vector2(0,height*.5f-23),new Vector2(width,46),new Color(.07f+accent.r*.25f,.07f+accent.g*.25f,.07f+accent.b*.25f));
+            if(HudTheme!=null)header.GetComponent<Image>().color=HudRaised;
             header.gameObject.AddComponent<ForgeCardNoticeDrag>().Window=window;
-            var title=Label(header,"Title",note.kind=="card-move"?TapPaymentText("卡牌移区","Cards moved","カードの移動"):TapPaymentText("展示卡牌","Revealed cards","公開されたカード"),new Vector2(-22,0),new Vector2(width-78,42),20,Paper);
+            var title=Label(header,"Title",TapPaymentText("展示卡牌","Revealed cards","公開されたカード"),new Vector2(-22,0),new Vector2(width-78,42),20,Paper);
             title.raycastTarget=false;title.fontStyle=FontStyle.Bold;
             long id=note.id;
             var close=Button(header,"Close","×",new Vector2(width*.5f-25,0),new Vector2(42,42),()=>CloseCardNotice(id),Color.clear);
+            if(HudTheme!=null)StyleZoneButton(close);
             close.GetComponentInChildren<Text>().raycastTarget=false;
             description.rectTransform.sizeDelta=new Vector2(width-32,descriptionHeight);
             description.rectTransform.anchoredPosition=new Vector2(0,height*.5f-54-descriptionHeight*.5f);

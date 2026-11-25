@@ -10,15 +10,17 @@ public sealed partial class ForgeBattlefieldController
 
     private string ArenaPresentationGroupKey(ForgeCardView card)
     {
-        if(!IsRedesignLand(card,false)||!card.landPresentationKnown||!card.landStackable)return ArenaGroupKey(card);
-        if((view?.stackItems??Array.Empty<ForgeStackItem>()).Any(e=>(e.targets??Array.Empty<ForgeStackTarget>()).Any(t=>t.kind=="card"&&!t.leftZone&&t.zone=="Battlefield"&&t.id==card.id)))
-            return ArenaGroupKey(card)+"/target:"+card.id;
         int option=OptionIndex("card:"+card.id);
         string eligibility=option<0?"none":view.request.options[option].disabled+"/"+view.request.options[option].requiresPaymentCheck+"/"+view.request.options[option].selected;
-        return ArenaGroupKeyCore(card,true)+"/land:"+card.landManaColors+"/option:"+eligibility;
+        // A group's representative must have the same available action as every member.
+        string optionKey="/option:"+eligibility;
+        if(!IsRedesignLand(card,false)||!card.landPresentationKnown||!card.landStackable)return ArenaGroupKey(card)+optionKey;
+        if((view?.stackItems??Array.Empty<ForgeStackItem>()).Any(e=>(e.targets??Array.Empty<ForgeStackTarget>()).Any(t=>t.kind=="card"&&!t.leftZone&&t.zone=="Battlefield"&&t.id==card.id)))
+            return ArenaGroupKey(card)+"/target:"+card.id+optionKey;
+        return ArenaGroupKeyCore(card,true)+"/land:"+card.landManaColors+optionKey;
     }
 
-    private static int RedesignLandColors(ForgeCardView card)
+    internal static int RedesignLandColors(ForgeCardView card)
     {
         if(card.landPresentationKnown)return card.landManaColors&31;
         // Older recordings have no production projection. Use only explicit

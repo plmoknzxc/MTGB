@@ -1,0 +1,13 @@
+MTGB.exe
+MTGB_Data
+UnityPlayer.dll
+UnityCrashHandler64.exe
+MonoBleedingEdge
+D3D12
+DirectML.dll
+ForgeRuntime
+VideoTools
+Licenses
+LICENSE
+SOURCE_CODE.md
+THIRD_PARTY_NOTICES.md

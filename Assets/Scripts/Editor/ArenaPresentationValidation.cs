@@ -215,7 +215,6 @@ public static class AttackDefenderPresentationValidation
     public static void Run()
     {
         if(!Application.isPlaying)throw new Exception("Enter Play Mode first.");
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))UnityEngine.Object.Destroy(notice);
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();
         if(ui==null)ui=new GameObject("AttackValidation").AddComponent<ForgeBattlefieldController>();
         ui.StartCoroutine(Validate(ui));
@@ -349,7 +348,9 @@ public static class BattlefieldMenuValidation
         var settings=GameObject.Find("GameSettings").transform;
         present();yield return null;yield return new WaitForEndOfFrame();
         Require(settings.GetSiblingIndex()==canvas.childCount-1,"Match refresh raised the hand above settings.");
-        foreach(var name in new[]{"简体中文","日本語","English","小","标准","大","认输"})Require(FindButton(settings,name).gameObject.activeInHierarchy,"Missing settings action: "+name);
+        foreach(var name in new[]{"小","标准","大","左侧面板","悬停浮窗","认输"})Require(FindButton(settings,name).gameObject.activeInHierarchy,"Missing settings action: "+name);
+        if(GamePreferences.LanguageSelectionEnabled)
+            foreach(var name in new[]{"简体中文","日本語","English"})Require(FindButton(settings,name).gameObject.activeInHierarchy,"Missing language: "+name);
         Require(!ui.TryUndoPresentedAction(),"Undo should be blocked while settings are open.");
         ScreenCapture.CaptureScreenshot(folder+"/settings.png");yield return new WaitForEndOfFrame();
         FindButton(settings,"认输").onClick.Invoke();Require(concessions==0,"Opening confirmation conceded.");
@@ -377,9 +378,15 @@ public static class BattlefieldMenuValidation
         }
         finally{InputSystem.RemoveDevice(keyboard);}
 #endif
-        GameSettingsPanel.Show(canvas);Require(!FindButton(settings,"认输").gameObject.activeSelf,"Battlefield concede leaked into non-match settings.");
+        GameSettingsPanel.Show(canvas,battlefield:true);
+        settings=GameObject.Find("GameSettings").transform;
+        Require(FindButton(settings,"悬停浮窗").gameObject.activeInHierarchy && !FindButton(settings,"认输").gameObject.activeSelf,"Read-only battlefield settings are incorrect.");
+        GameSettingsPanel.Show(canvas);
+        settings=GameObject.Find("GameSettings").transform;
+        Require(!FindButton(settings,"认输").gameObject.activeSelf,"Battlefield concede leaked into non-match settings.");
+        Require(!settings.GetComponentsInChildren<Button>(true).Any(b=>b.name=="左侧面板" || b.name=="悬停浮窗"),"Battlefield card details leaked into menu settings.");
         FindButton(settings,"完成").onClick.Invoke();
-        const string result="PASS: rendered gear; shared language/text-size settings; modal blocks undo; concede confirmation/cancel/duplicate guard; exact Forge Undo only; no payment-cancel/end-turn; Z keyboard path, Ctrl+Z ignored, held-key duplicate blocked; non-match settings omit concede.";
+        const string result="PASS: rendered gear; text size and battlefield card details; modal blocks undo; concede confirmation/cancel/duplicate guard; exact Forge Undo only; no payment-cancel/end-turn; Z keyboard path, Ctrl+Z ignored, held-key duplicate blocked; read-only battlefield and menu settings.";
         File.WriteAllText(folder+"/result.txt",result);Debug.Log(result);
     }
 }
@@ -393,7 +400,6 @@ public static class CastingMotionValidation
         if(running)return;
         if(!Application.isPlaying)throw new Exception("Enter IntegratedBattlefield Play Mode first.");
         running=true;
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))UnityEngine.Object.Destroy(notice);
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>() ?? new GameObject("MotionValidation").AddComponent<ForgeBattlefieldController>();
         ui.StartCoroutine(GuardedCheck(ui));
     }

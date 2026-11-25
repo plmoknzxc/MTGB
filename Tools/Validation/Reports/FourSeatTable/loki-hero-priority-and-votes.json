@@ -1,0 +1,3270 @@
+{
+  "transport": "local Windows standalone clients, Unity Transport UDP",
+  "runtimeHash": "817cf6facf27a4bda73028171302767397bd713ad508a1ee29019c298769bd93",
+  "protocol": 23,
+  "native": [
+    "PASS heart-of-the-mountain stone",
+    "PASS god-of-mischief ally block",
+    "PASS god-of-mischief shared life",
+    "PASS god-of-mischief heroes win",
+    "PASS god-of-mischief first turn draws",
+    "PASS god-of-mischief trick board",
+    "PASS god-of-mischief Loki wins",
+    "PASS god-of-mischief team priority",
+    "PASS nauctis-grand-marine-preview nauctis",
+    "PASS nauctis-grand-marine-preview nauctis threshold",
+    "PASS god-of-mischief two hero casts",
+    "PASS god-of-mischief one hero twice",
+    "PASS god-of-mischief clone",
+    "PASS god-of-mischief destroy",
+    "PASS god-of-mischief destroy none",
+    "PASS god-of-mischief discount",
+    "PASS god-of-mischief sweep",
+    "PASS god-of-mischief steal",
+    "PASS god-of-mischief destroy after transfer",
+    "PASS god-of-mischief steal after transfer",
+    "PASS god-of-mischief reveal",
+    "PASS god-of-mischief discard instant",
+    "PASS god-of-mischief discard two",
+    "PASS god-of-mischief stun",
+    "PASS god-of-mischief three heroes attack"
+  ],
+  "matches": {
+    "heroesRespondAndDefend": {
+      "race": {
+        "firstSeat": 2,
+        "secondSeat": 4,
+        "loki": 1,
+        "deltaMs": 5,
+        "firstUtcMs": 1795502645948,
+        "secondUtcMs": 1795502645953
+      },
+      "match": "403f1c0ff2de4a11bb42cdd2210d6f53",
+      "checkpoints": [
+        {
+          "label": "shared priority before simultaneous drags",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 110,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "teammate may respond; first spell still pending",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 116,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "both spells on stack",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#F17C7C>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 118,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#5DB9F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#B2D452>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#B896F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "pact resolved; thopter still pending",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 126,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "thopter resolved; stack empty",
+          "privateDecisionSeat": 3,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 134,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "second hero opens a fresh stack",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 136,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "unanswered spell resolved; next hero acts",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 144,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "two heroes ready; third can still act",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "取消结束",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "取消结束",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 144,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "hero cancels; still same main phase",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "取消结束",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 144,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "all heroes confirmed; Loki gets priority",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 154,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "全员已确认",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "全员已确认",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "全员已确认",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "Loki passes; combat begins with fresh votes",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 91,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 91,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 156,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束当前步骤",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 91,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束当前步骤",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 91,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束当前步骤",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "Loki declares attackers; vote controls hidden",
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 238,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "Hero declares blocker for team",
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 249,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "Hero declares blocker for team",
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 3,
+              "priorityLabel": "宣告阻挡 · three",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 3,
+              "priorityLabel": "宣告阻挡 · three",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 252,
+              "combatSeat": 3,
+              "priorityLabel": "宣告阻挡 · three",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "turn": 3,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 3,
+              "priorityLabel": "宣告阻挡 · three",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "Loki allocates damage between allies' blockers",
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "turn": 3,
+              "phase": "COMBAT_DAMAGE",
+              "request": 266,
+              "combatSeat": 1,
+              "priorityLabel": "分配伤害 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "turn": 3,
+              "phase": "COMBAT_DAMAGE",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "分配伤害 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "turn": 3,
+              "phase": "COMBAT_DAMAGE",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "分配伤害 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "turn": 3,
+              "phase": "COMBAT_DAMAGE",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "分配伤害 · one",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "combat damage resolved after declarations and allocation",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 33080,
+              "local": 1,
+              "sequence": 167,
+              "phase": "COMBAT_DAMAGE",
+              "priority": 1,
+              "request": 270,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后推进步骤",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 45420,
+              "local": 2,
+              "sequence": 167,
+              "phase": "COMBAT_DAMAGE",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后推进步骤",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 14964,
+              "local": 3,
+              "sequence": 167,
+              "phase": "COMBAT_DAMAGE",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后推进步骤",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 53192,
+              "local": 4,
+              "sequence": 167,
+              "phase": "COMBAT_DAMAGE",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后推进步骤",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        }
+      ],
+      "priorityPasses": [
+        {
+          "sequence": 67,
+          "seat": 2,
+          "request": 118,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 68,
+          "seat": 3,
+          "request": 120,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 69,
+          "seat": 4,
+          "request": 122,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 70,
+          "seat": 1,
+          "request": 124,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 71,
+          "seat": 2,
+          "request": 126,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 72,
+          "seat": 3,
+          "request": 128,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 73,
+          "seat": 4,
+          "request": 130,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 74,
+          "seat": 1,
+          "request": 132,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 76,
+          "seat": 2,
+          "request": 136,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 77,
+          "seat": 3,
+          "request": 138,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 78,
+          "seat": 4,
+          "request": 140,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 79,
+          "seat": 1,
+          "request": 142,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 90,
+          "seat": 1,
+          "request": 154,
+          "stack": []
+        },
+        {
+          "sequence": 97,
+          "seat": 1,
+          "request": 162,
+          "stack": []
+        },
+        {
+          "sequence": 104,
+          "seat": 1,
+          "request": 170,
+          "stack": []
+        },
+        {
+          "sequence": 111,
+          "seat": 1,
+          "request": 178,
+          "stack": []
+        },
+        {
+          "sequence": 118,
+          "seat": 1,
+          "request": 186,
+          "stack": []
+        },
+        {
+          "sequence": 125,
+          "seat": 1,
+          "request": 194,
+          "stack": []
+        },
+        {
+          "sequence": 126,
+          "seat": 1,
+          "request": 196,
+          "stack": []
+        },
+        {
+          "sequence": 127,
+          "seat": 2,
+          "request": 198,
+          "stack": []
+        },
+        {
+          "sequence": 128,
+          "seat": 3,
+          "request": 200,
+          "stack": []
+        },
+        {
+          "sequence": 129,
+          "seat": 4,
+          "request": 202,
+          "stack": []
+        },
+        {
+          "sequence": 130,
+          "seat": 1,
+          "request": 204,
+          "stack": []
+        },
+        {
+          "sequence": 131,
+          "seat": 2,
+          "request": 206,
+          "stack": []
+        },
+        {
+          "sequence": 132,
+          "seat": 3,
+          "request": 208,
+          "stack": []
+        },
+        {
+          "sequence": 133,
+          "seat": 4,
+          "request": 210,
+          "stack": []
+        },
+        {
+          "sequence": 136,
+          "seat": 1,
+          "request": 214,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 137,
+          "seat": 2,
+          "request": 216,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 138,
+          "seat": 3,
+          "request": 218,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 139,
+          "seat": 4,
+          "request": 220,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 140,
+          "seat": 1,
+          "request": 222,
+          "stack": []
+        },
+        {
+          "sequence": 141,
+          "seat": 2,
+          "request": 224,
+          "stack": []
+        },
+        {
+          "sequence": 142,
+          "seat": 3,
+          "request": 226,
+          "stack": []
+        },
+        {
+          "sequence": 143,
+          "seat": 4,
+          "request": 228,
+          "stack": []
+        },
+        {
+          "sequence": 144,
+          "seat": 1,
+          "request": 230,
+          "stack": []
+        },
+        {
+          "sequence": 145,
+          "seat": 2,
+          "request": 232,
+          "stack": []
+        },
+        {
+          "sequence": 146,
+          "seat": 3,
+          "request": 234,
+          "stack": []
+        },
+        {
+          "sequence": 147,
+          "seat": 4,
+          "request": 236,
+          "stack": []
+        },
+        {
+          "sequence": 150,
+          "seat": 1,
+          "request": 241,
+          "stack": []
+        },
+        {
+          "sequence": 151,
+          "seat": 2,
+          "request": 243,
+          "stack": []
+        },
+        {
+          "sequence": 152,
+          "seat": 3,
+          "request": 245,
+          "stack": []
+        },
+        {
+          "sequence": 153,
+          "seat": 4,
+          "request": 247,
+          "stack": []
+        },
+        {
+          "sequence": 159,
+          "seat": 1,
+          "request": 257,
+          "stack": []
+        },
+        {
+          "sequence": 160,
+          "seat": 2,
+          "request": 259,
+          "stack": []
+        },
+        {
+          "sequence": 161,
+          "seat": 3,
+          "request": 261,
+          "stack": []
+        },
+        {
+          "sequence": 162,
+          "seat": 4,
+          "request": 263,
+          "stack": []
+        }
+      ]
+    },
+    "lokiRespondsAfterVote": {
+      "race": {
+        "firstSeat": 2,
+        "secondSeat": 4,
+        "loki": 1,
+        "deltaMs": 7,
+        "firstUtcMs": 1795502745391,
+        "secondUtcMs": 1795502745384
+      },
+      "match": "a3b8d9cc0c404805bfecc774df5a050f",
+      "checkpoints": [
+        {
+          "label": "shared priority before simultaneous drags",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 110,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 63,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 3,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "teammate may respond; first spell still pending",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 66,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 116,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "both spells on stack",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#F17C7C>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 118,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#5DB9F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#B2D452>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 67,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 3,
+                  "controller": 4,
+                  "name": "Pact of the Titan"
+                },
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>four</color>  ·  施放瞬间|泰坦条约",
+                "02|<color=#B896F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "pact resolved; thopter still pending",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 126,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 71,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 3,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · three",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 2,
+                  "controller": 2,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>two</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "thopter resolved; stack empty",
+          "privateDecisionSeat": 3,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 134,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 75,
+              "phase": "MAIN1",
+              "priority": 3,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · three",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 4,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "second hero opens a fresh stack",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 136,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 76,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 4,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "清栈后 · four",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 5,
+                  "controller": 3,
+                  "name": "Ornithopter"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>three</color>  ·  施放神器生物|扑翼机"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "unanswered spell resolved; next hero acts",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 80,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 144,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 5,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "two heroes ready; third can still act",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "取消结束",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "取消结束",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 82,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 144,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 2 / 3",
+              "voteWindow": 5,
+              "votes": 6,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "hero cancels; still same main phase",
+          "privateDecisionSeat": 4,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "取消结束",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 83,
+              "phase": "MAIN1",
+              "priority": 4,
+              "request": 144,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · four",
+              "priorityHint": "英雄确认结束 1 / 3",
+              "voteWindow": 5,
+              "votes": 2,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "all heroes confirmed; Loki gets priority",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 154,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "全员已确认",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "全员已确认",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 90,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "英雄确认结束 3 / 3",
+              "voteWindow": 5,
+              "votes": 14,
+              "voters": 14,
+              "voteButton": "全员已确认",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "Loki responds after unanimity",
+          "privateDecisionSeat": 1,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 91,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 156,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后结算栈顶",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 6,
+                  "controller": 1,
+                  "name": "Pact of the Titan"
+                }
+              ],
+              "rendered": [
+                "01|<color=#5DB9F5>one</color>  ·  施放瞬间|泰坦条约"
+              ]
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 91,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后结算栈顶",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 6,
+                  "controller": 1,
+                  "name": "Pact of the Titan"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B2D452>one</color>  ·  施放瞬间|泰坦条约"
+              ]
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 91,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后结算栈顶",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 6,
+                  "controller": 1,
+                  "name": "Pact of the Titan"
+                }
+              ],
+              "rendered": [
+                "01|<color=#B896F5>one</color>  ·  施放瞬间|泰坦条约"
+              ]
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 91,
+              "phase": "MAIN1",
+              "priority": 1,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · one",
+              "priorityHint": "全员让过后结算栈顶",
+              "voteWindow": 0,
+              "votes": 0,
+              "voters": 0,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [
+                {
+                  "id": 6,
+                  "controller": 1,
+                  "name": "Pact of the Titan"
+                }
+              ],
+              "rendered": [
+                "01|<color=#F17C7C>one</color>  ·  施放瞬间|泰坦条约"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Loki response resolves; all heroes can act again",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 95,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 95,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 164,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 95,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 95,
+              "phase": "MAIN1",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 6,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束主阶段",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        },
+        {
+          "label": "Loki passes; combat begins with fresh votes",
+          "privateDecisionSeat": 2,
+          "clients": [
+            {
+              "pid": 12128,
+              "local": 1,
+              "sequence": 102,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 7,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 16756,
+              "local": 2,
+              "sequence": 102,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 172,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 7,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束当前步骤",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 34988,
+              "local": 3,
+              "sequence": 102,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 7,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束当前步骤",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            },
+            {
+              "pid": 25464,
+              "local": 4,
+              "sequence": 102,
+              "phase": "COMBAT_BEGIN",
+              "priority": 2,
+              "request": 0,
+              "afterStack": 0,
+              "priorityLabel": "优先权 · two",
+              "priorityHint": "英雄确认结束 0 / 3",
+              "voteWindow": 7,
+              "votes": 0,
+              "voters": 14,
+              "voteButton": "结束当前步骤",
+              "combatSeat": 0,
+              "combatChoice": "",
+              "stack": [],
+              "rendered": []
+            }
+          ]
+        }
+      ],
+      "priorityPasses": [
+        {
+          "sequence": 67,
+          "seat": 2,
+          "request": 118,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 68,
+          "seat": 3,
+          "request": 120,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 69,
+          "seat": 4,
+          "request": 122,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 70,
+          "seat": 1,
+          "request": 124,
+          "stack": [
+            3,
+            2
+          ]
+        },
+        {
+          "sequence": 71,
+          "seat": 2,
+          "request": 126,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 72,
+          "seat": 3,
+          "request": 128,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 73,
+          "seat": 4,
+          "request": 130,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 74,
+          "seat": 1,
+          "request": 132,
+          "stack": [
+            2
+          ]
+        },
+        {
+          "sequence": 76,
+          "seat": 2,
+          "request": 136,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 77,
+          "seat": 3,
+          "request": 138,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 78,
+          "seat": 4,
+          "request": 140,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 79,
+          "seat": 1,
+          "request": 142,
+          "stack": [
+            5
+          ]
+        },
+        {
+          "sequence": 91,
+          "seat": 1,
+          "request": 156,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 92,
+          "seat": 2,
+          "request": 158,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 93,
+          "seat": 3,
+          "request": 160,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 94,
+          "seat": 4,
+          "request": 162,
+          "stack": [
+            6
+          ]
+        },
+        {
+          "sequence": 101,
+          "seat": 1,
+          "request": 170,
+          "stack": []
+        }
+      ]
+    },
+    "threeHeroesAttack": {
+      "match": "8aec9b49f5714572bac33813a88fccf9",
+      "checkpoints": [
+        {
+          "label": "Hero declares own attacker",
+          "clients": [
+            {
+              "pid": 49128,
+              "local": 1,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 3,
+              "priorityLabel": "宣告攻击 · three",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 2020,
+              "local": 2,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 3,
+              "priorityLabel": "宣告攻击 · three",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 39928,
+              "local": 3,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 306,
+              "combatSeat": 3,
+              "priorityLabel": "宣告攻击 · three",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 46716,
+              "local": 4,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 3,
+              "priorityLabel": "宣告攻击 · three",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "Hero declares own attacker",
+          "clients": [
+            {
+              "pid": 49128,
+              "local": 1,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 309,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 2020,
+              "local": 2,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 39928,
+              "local": 3,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 46716,
+              "local": 4,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 1,
+              "priorityLabel": "宣告攻击 · one",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "Hero declares own attacker",
+          "clients": [
+            {
+              "pid": 49128,
+              "local": 1,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 4,
+              "priorityLabel": "宣告攻击 · four",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 2020,
+              "local": 2,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 4,
+              "priorityLabel": "宣告攻击 · four",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 39928,
+              "local": 3,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 0,
+              "combatSeat": 4,
+              "priorityLabel": "宣告攻击 · four",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 46716,
+              "local": 4,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_ATTACKERS",
+              "request": 312,
+              "combatSeat": 4,
+              "priorityLabel": "宣告攻击 · four",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        },
+        {
+          "label": "Loki can block all three heroes' attackers",
+          "clients": [
+            {
+              "pid": 49128,
+              "local": 1,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 2020,
+              "local": 2,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 323,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 39928,
+              "local": 3,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            },
+            {
+              "pid": 46716,
+              "local": 4,
+              "turn": 4,
+              "phase": "COMBAT_DECLARE_BLOCKERS",
+              "request": 0,
+              "combatSeat": 2,
+              "priorityLabel": "宣告阻挡 · two",
+              "priorityHint": "等待战斗选择完成"
+            }
+          ]
+        }
+      ],
+      "declaredSeats": [
+        1,
+        3,
+        4
+      ]
+    }
+  }
+}

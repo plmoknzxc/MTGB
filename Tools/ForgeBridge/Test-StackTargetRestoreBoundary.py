@@ -124,7 +124,11 @@ def run(case):
     elif kind=='Scry' and RESOLVE_ONLY:
      snap(m,'scry-'+str(len(seen)));pick=next((o['id'] for o in opts if o['id'].startswith('scry-top:')),'confirm-scry')
     elif kind in ('dialog','SelectEntities','InputSelectEntitiesFromList'):
-     snap(m,'choice-'+str(len(seen)));pick=next(o['id'] for o in opts if o['label'].startswith(('Opt' if COPY else 'Shock')+' ('+str(shock)+')') and not o.get('disabled')) if r['message']=='oneOrNone: Exile from Stack' else next(o['id'] for o in opts if o['id'] not in ('cancel','no') and not o.get('disabled'))
+     snap(m,'choice-'+str(len(seen)))
+     if r['message']=='oneOrNone: Exile from Stack':
+      desired=next(o for o in opts if o['label'].startswith(('Opt' if COPY else 'Shock')+' ('+str(shock)+')') and not o.get('disabled'))
+      pick='ok' if desired.get('selected') else desired['id']
+     else:pick=next(o['id'] for o in opts if o['id'] not in ('cancel','no') and not o.get('disabled'))
      if retry and ('cast' in r['message'].lower() or 'play' in r['message'].lower()):freecast=True
     else:raise AssertionError(('Unhandled',kind,r['message'],ids))
     check(pick in ids and not next(o for o in opts if o['id']==pick).get('disabled'),('legal option',kind,pick,ids))

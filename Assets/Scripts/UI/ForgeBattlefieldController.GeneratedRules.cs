@@ -3,6 +3,19 @@ public sealed partial class ForgeBattlefieldController
     // Native generated paragraphs have no independent printed translation row.
     // Exact templates only: unknown rules stay visible rather than losing clauses.
     private string GeneratedSearchRuleText(string rule,bool playerReferences=false) {
+        if(rule!=null&&rule.StartsWith("Player ",System.StringComparison.Ordinal)) {
+            var freeCast=System.Text.RegularExpressions.Regex.Match(rule,@"^Player (\d+) may cast (.+) without paying its mana cost\.\z");
+            if(freeCast.Success&&int.TryParse(freeCast.Groups[1].Value,out int seat)&&GamePreferences.IsCardIdentity(freeCast.Groups[2].Value)) {
+                string who=playerReferences?PlayerTextReference(seat):PlayerDisplayName(seat);
+                string card=GamePreferences.CardFaceName(freeCast.Groups[2].Value);
+                return TapPaymentText($"{who}可以施放{card}，且无需支付其法术力费用。",rule,$"{who}はマナ・コストを支払わずに{card}を唱えてもよい。");
+            }
+            var look=System.Text.RegularExpressions.Regex.Match(rule,@"^Player (\d+) looks at Face-down card \(([A-Z]?\d+)\)\.\z");
+            if(look.Success&&int.TryParse(look.Groups[1].Value,out int observer)) {
+                string who=playerReferences?PlayerTextReference(observer):PlayerDisplayName(observer),id=look.Groups[2].Value;
+                return TapPaymentText($"{who}检视盖牌（{id}）。",rule,$"{who}は裏向きのカード（{id}）を見る。");
+            }
+        }
         var dividedSearch=System.Text.RegularExpressions.Regex.Match(rule??"",@"^Player (?<owner>\d+) searches their library for up to four cards with different names and reveals them\. Player (?<chooser>\d+) chooses two of those cards\. Player \k<owner> puts the chosen cards into their graveyard and the rest into their hand\. Then Player \k<owner> shuffles\.\s*$");
         if(dividedSearch.Success) {
             string Name(string group)=>playerReferences?PlayerTextReference(int.Parse(dividedSearch.Groups[group].Value)):PlayerDisplayName(int.Parse(dividedSearch.Groups[group].Value));
@@ -71,7 +84,7 @@ public sealed partial class ForgeBattlefieldController
             TapPaymentText("直到你的下个回合结束，你可以使用该牌。",rule,"あなたの次のターンの終了時まで、あなたはそのカードをプレイしてもよい。"),
         "You may play that card this turn." =>
             TapPaymentText("本回合中，你可以使用该牌。",rule,"このターン、あなたはそのカードをプレイしてもよい。"),
-        _ => rule
+        _ => NativeMessageText.TryTranslate(rule, out var localized) ? localized : rule
         };
     }
 }

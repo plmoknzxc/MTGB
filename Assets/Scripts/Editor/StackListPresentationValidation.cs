@@ -35,7 +35,6 @@ public static class StackListPresentationValidation
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
         string language=GamePreferences.Language;
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;
         var test=Validate(ui);File.WriteAllText(Output+"/result.txt","RUNNING");
         try {
             while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}

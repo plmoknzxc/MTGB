@@ -83,3 +83,8 @@ Sacrifice|牺牲|将自己操控的永久物置入拥有者坟墓场；这不是
 Search|搜寻|检视指定区域并按条件选择牌；完成后按指示处理。|Look through the stated zone and choose cards satisfying the instructions.
 Shuffle|洗牌|将牌库随机排列，使任何牌手都不知道其顺序。|Randomize the library so no player knows the order.
 Tap and Untap|横置与重置|横置将永久物转为已横置，重置使其恢复为未横置。|Tap a permanent or return it to its untapped state.
+# Simplified Chinese: printed reminder on Thunder-Thrash Elder, Shards of Alara #117.
+Devour 3|吞噬3,吞噬 3|于它进场时，你可以牺牲任意数量的生物。此生物进场时上面有该数量三倍的+1/+1指示物。|As this enters, you may sacrifice any number of creatures. This creature enters with three times that many +1/+1 counters on it.
+# Simplified Chinese: 雄伟大洋, the Nauctis Commander Party play aid supplied with the issue.
+Dive|深潜|其无法被阻挡，直到其在攻击时造成战斗伤害为止。|A creature that dives cannot be blocked until it deals combat damage while attacking.
+Descend 20|落坟20,落坟 20|在你位于广袤海域期间，只要你坟墓场中有二十张或更多永久物牌，你便进入雄伟大洋。|Count permanent cards in your own graveyard. Descend 20 is satisfied when there are twenty or more.

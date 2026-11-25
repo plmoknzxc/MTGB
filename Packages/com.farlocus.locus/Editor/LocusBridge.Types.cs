@@ -123,7 +123,8 @@ namespace Locus
             public void print(object obj)
             {
                 TouchActivity();
-                _output.AppendLine(obj != null ? obj.ToString() : "null");
+                string text = obj != null ? obj.ToString() : "null";
+                lock (_output) _output.AppendLine(text);
             }
 
             /// <summary>
@@ -138,7 +139,7 @@ namespace Locus
                 TouchActivity();
                 if (obj == null)
                 {
-                    _output.AppendLine("null");
+                    lock (_output) _output.AppendLine("null");
                     return;
                 }
 
@@ -150,14 +151,15 @@ namespace Locus
                     else
                         json = Locus.Json.LocusJson.Serialize(obj);
 
-                    _output.AppendLine(json);
+                    lock (_output) _output.AppendLine(json);
                 }
                 catch (Exception ex)
                 {
                     Type errorType = ex.GetType();
-                    _output.Append("[printJson error: ")
-                           .Append(errorType.FullName ?? errorType.Name)
-                           .AppendLine("]");
+                    lock (_output)
+                        _output.Append("[printJson error: ")
+                               .Append(errorType.FullName ?? errorType.Name)
+                               .AppendLine("]");
                 }
             }
 
@@ -166,12 +168,39 @@ namespace Locus
             /// </summary>
             public void clear()
             {
-                _output.Length = 0;
+                lock (_output) _output.Length = 0;
             }
 
             public string GetOutput()
             {
-                return _output.ToString();
+                lock (_output) return _output.ToString();
+            }
+
+            /// <summary>
+            /// Output length and the last non-empty line (at most
+            /// <paramref name="maxChars"/> characters, keeping its end). Safe
+            /// from the thread-pool progress publisher while the snippet prints.
+            /// </summary>
+            internal void GetOutputSummary(int maxChars, out int chars, out string lastLine)
+            {
+                // Bounded scans: this runs under the lock print() takes, so a
+                // huge single-line printJson must not cost a full walk.
+                const int MaxTrailingWhitespace = 4096;
+                lock (_output)
+                {
+                    chars = _output.Length;
+                    int end = _output.Length;
+                    int whitespaceLimit = Math.Max(0, end - MaxTrailingWhitespace);
+                    while (end > whitespaceLimit && char.IsWhiteSpace(_output[end - 1]))
+                        end--;
+                    int start = end;
+                    int lineLimit = Math.Max(0, end - Math.Max(1, maxChars));
+                    while (start > lineLimit && _output[start - 1] != '\n' && _output[start - 1] != '\r')
+                        start--;
+                    if (start < end && char.IsLowSurrogate(_output[start]))
+                        start++;
+                    lastLine = end > start ? _output.ToString(start, end - start) : "";
+                }
             }
         }
     }
@@ -265,6 +294,11 @@ namespace Locus
 
     internal static class LocusSceneObjectUtility
     {
+        public static void ValidateSceneObject(string scenePath, string objectPath)
+        {
+            ResolveSceneObject(scenePath, objectPath);
+        }
+
         public static void SelectSceneObject(string scenePath, string objectPath)
         {
             GameObject target = ResolveSceneObject(scenePath, objectPath);

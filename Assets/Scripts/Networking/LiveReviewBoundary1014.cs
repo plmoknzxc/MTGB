@@ -123,7 +123,7 @@ public sealed class LiveReviewBoundary1014 : MonoBehaviour
         yield return Wait(()=>service.EndReview!=null,20);
         Check(service.EndReview!=null,"No end review");
         yield return new WaitForSecondsRealtime(1);
-        Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName,"Auto-left battlefield");
+        Check(ForgeBattlefieldController.IsBattlefieldSceneActive,"Auto-left battlefield");
         Check(!service.IsInMatch&&service.EndReview.winnerSeat==2,"Wrong result");
         Check(!service.CanSubmitRuleAction,"Result screen permits rule actions");
         var players=service.ForgeView.forge.players;
@@ -165,7 +165,7 @@ public sealed class LiveReviewBoundary1014 : MonoBehaviour
         leave.onClick.Invoke();
         if(!AutomaticCase)service.DecideEndReplay(true);yield return Wait(()=>service.EndReplayStatus=="录像已保存",20);
         Check(service.EndReplayStatus=="录像已保存","Replay save failed: "+service.EndReplayStatus);
-        Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName,"Saving replay left review");
+        Check(ForgeBattlefieldController.IsBattlefieldSceneActive,"Saving replay left review");
         result.Find(service.EndReview.series?.betweenGames == true ? "前往换备" : "返回房间").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();yield return new WaitForSecondsRealtime(1);
         Check(service.IsOnline&&service.HasJoinedLobby,"Leaving battlefield disconnected the room");
         Check(AutomaticCase?UnityEngine.SceneManagement.SceneManager.GetActiveScene().name=="Main"&&!service.IsOnline:OnlineLobbyPanel.HasBattlefieldLobby&&service.LobbyState.series.betweenGames,"Manual exit/sideboard transition failed");

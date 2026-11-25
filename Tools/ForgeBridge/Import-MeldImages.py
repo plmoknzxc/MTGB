@@ -27,6 +27,20 @@ def main():
         key=row['set'].upper()+'/'+row['collector_number']
         if key in by_key:raise ValueError('Ambiguous exact source printing '+key)
         by_key[key]=row
+    # Some frozen all_parts partners have only an ID. Recover their exact printing
+    # from the local image index, whose normal URLs contain that printing UUID.
+    from urllib.parse import urlsplit
+    partner_ids={p['id'] for row in rows.values() for p in row.get('all_parts',[]) if p['component']=='meld_part'}
+    partner_keys={ident:r['set'].upper()+'/'+r['collector_number'] for ident,r in rows.items() if ident in partner_ids}
+    with (ROOT/'Assets/StreamingAssets/CardArtSources.jsonl').open(encoding='utf8') as source_index:
+        for line in source_index:
+            image=json.loads(line)
+            faces=image.get('faces') or []
+            if not faces:continue
+            ident=Path(urlsplit(faces[0].get('normal','')).path).stem
+            if ident in partner_ids:
+                if ident in partner_keys and partner_keys[ident]!=image['key']:raise ValueError('Conflicting partner printing '+ident)
+                partner_keys[ident]=image['key']
     entries,missing,jobs=[],[],{}
     for line in (ROOT/'ForgeRuntime/catalog.jsonl').open(encoding='utf8'):
         printing=json.loads(line)
@@ -46,6 +60,9 @@ def main():
         # authoritative; retain the reverse-printing difference for review.
         entries.append({'key':printing['key'],'state':'Meld','name':result['name'],'artKey':art_key,'sourceId':source['id'],'resultId':result['id'],'source':result['scryfall_uri'],
             'reversePrintingMatched':any(p['id']==source['id'] and p['component']=='meld_part' for p in result.get('all_parts',[]))})
+        partners=[p for p in source.get('all_parts',[]) if p['component']=='meld_part' and p['name']!=source['name']]
+        if len(partners)==1 and partners[0]['id'] in partner_keys:
+            entries[-1].update(partnerKey=partner_keys[partners[0]['id']],partnerName=partners[0]['name'])
         jobs[art_key]={'key':art_key,'face':0,'url':url,'path':art_key+'.jpg','id':result['id'],'quality':result['image_status']}
     args.output.mkdir(parents=True,exist_ok=True)
     def write(name,data):(args.output/name).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n','utf8')

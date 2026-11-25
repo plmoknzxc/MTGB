@@ -24,7 +24,7 @@ public final class ForgeEnvironment {
                 String name = method.getName();
                 switch (name) {
                     case "getAssetsDir": return assets;
-                    case "getCurrentVersion": return "MTGB-Forge";
+                    case "getCurrentVersion": case "getUserAgent": return "MTGB-Forge";
                     case "isRunningOnDesktop": return true;
                     case "isGuiThread": return Thread.currentThread().getName().equals("mtgb-forge-ui");
                     case "invokeInEdtLater": UI.execute((Runnable) args[0]); return null;

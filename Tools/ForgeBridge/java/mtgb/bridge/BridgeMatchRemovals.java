@@ -32,6 +32,7 @@ final class BridgeMatchRemovals {
                 Map<String,Object> notice = new LinkedHashMap<>();
                 notice.put("id",id);notice.put("kind","match-removal");notice.put("actorSeat",actor);
                 notice.put("publicNotice",true);notice.put("message",event.message());notice.put("value",event.message());
+                ForgeBridge.stampNotice(notice);
                 notice.put("sourceCard",ForgeBridge.card(source));notice.put("removedCards",affected);
                 gui.notices.addLast(notice);while(gui.notices.size()>16)gui.notices.removeFirst();
             }

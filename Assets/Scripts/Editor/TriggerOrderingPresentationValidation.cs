@@ -26,7 +26,7 @@ public static class TriggerOrderingPresentationValidation
     static IEnumerator Nested(IEnumerator e,Action<Exception> fail){while(true){bool more=false;object current=null;try{more=e.MoveNext();if(more)current=e.Current;}catch(Exception ex){fail(ex);break;}if(!more)break;if(current is IEnumerator child)yield return Nested(child,fail);else yield return current;}}
     static void Click(Button b){var rect=(RectTransform)b.transform;var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,rect.TransformPoint(rect.rect.center)),button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(pointer,hits);Check(hits.Count>0&&hits[0].gameObject.GetComponentInParent<Button>()==b,"Blocked "+b.name);ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,pointer,ExecuteEvents.pointerClickHandler);}
     static IEnumerator Exercise(){
-        var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("TriggerOrderBattlefield").AddComponent<ForgeBattlefieldController>();bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool active=module!=null&&module.enabled;if(module!=null)module.enabled=false;string language=GamePreferences.Language;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None).Select(n=>(n,n.enabled)).ToArray();foreach(var n in notices)n.n.enabled=false;
+        var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("TriggerOrderBattlefield").AddComponent<ForgeBattlefieldController>();bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool active=module!=null&&module.enabled;if(module!=null)module.enabled=false;string language=GamePreferences.Language;
         try{
             var meta=JsonUtility.FromJson<Meta>(File.ReadAllText(".tools/trigger-order-1006/native/apnap-life-result.json"));Check(meta.status=="PASS"&&meta.runtimeHash==JsonUtility.FromJson<Meta>(File.ReadAllText("ForgeRuntime/runtime.json")).runtimeHash,"Native proof stale");
             var inputs=Directory.GetFiles(meta.folder,"step-*.json").Where(p=>!p.EndsWith("-other.json")).OrderBy(p=>int.Parse(Path.GetFileNameWithoutExtension(p).Split('-').Last())).Where(p=>JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(p)).request.kind=="OrderAbilities").ToArray();Check(inputs.Length>=10,"Missing actual transition inputs");foreach(string path in inputs){File.Copy(path,Output+"/inputs/"+Path.GetFileName(path));File.AppendAllText(Output+"/input-hashes.tsv",path+"\t"+Hash(path)+"\n");}
@@ -44,7 +44,7 @@ public static class TriggerOrderingPresentationValidation
                     if(lang=="zh-CN"&&acting&&ordered.Length==2){ScreenCapture.CaptureScreenshot(Output+"/seat-"+request.seat+".png");yield return Frame();}File.AppendAllText(Output+"/steps.log",lang+" seat="+request.seat+" request="+request.requestId+" acting="+acting+" ordered="+ordered.Length+" "+id+" PASS\n");
                 }
             }
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(language);if(module!=null)module.enabled=active;foreach(var n in notices)if(n.n!=null)n.n.enabled=n.enabled;}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(language);if(module!=null)module.enabled=active;}
     }
 }
 #endif

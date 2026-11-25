@@ -40,14 +40,14 @@ public sealed class BattlefieldUiTransition : MonoBehaviour
         Apply();
     }
 
-    public void Hide(Vector2 departure, Action onHidden = null)
+    public void Hide(Vector2 departure, Action onHidden = null,float delay=0)
     {
         if (!initialized) { gameObject.SetActive(false); onHidden?.Invoke(); return; }
         if (!gameObject.activeSelf) { onHidden?.Invoke(); return; }
         interactive = false;
         if (!leaving) {
             fromPosition = position; fromSize = size; fromAlpha = alpha;
-            targetPosition += departure; targetAlpha = 0; elapsed = 0; leaving = true;
+            targetPosition += departure; targetAlpha = 0; elapsed = -delay; leaving = true;
             hidden = onHidden ?? (() => gameObject.SetActive(false));
         }
         Apply();
@@ -62,11 +62,37 @@ public sealed class BattlefieldUiTransition : MonoBehaviour
         elapsed = Duration;
     }
 
+    public void StartAtCurrentPose()
+    {
+        rect=(RectTransform)transform;
+        group=GetComponent<CanvasGroup>();
+        initialized=true;horizontal=true;leaving=false;
+        alpha=fromAlpha=targetAlpha=group.alpha;
+        Rebase();
+    }
+
+    public void StopAtCurrentPose()
+    {
+        initialized=leaving=false;
+        hidden=null;
+        group.interactable=group.blocksRaycasts=true;
+    }
+
+#if UNITY_EDITOR
+    public void SnapEditorPreview()
+    {
+        if(Application.isPlaying||!initialized)return;
+        elapsed=Duration;
+        position=targetPosition;size=targetSize;alpha=targetAlpha;
+        Apply();
+    }
+#endif
+
     void LateUpdate()
     {
         if (!initialized) return;
-        elapsed = Mathf.Min(Duration, elapsed + Time.unscaledDeltaTime);
-        float eased = 1 - Mathf.Pow(1 - elapsed / Duration, 3);
+        elapsed = Mathf.Min(Duration, elapsed + Mathf.Min(Time.unscaledDeltaTime,.05f));
+        float eased = 1 - Mathf.Pow(1 - Mathf.Max(0,elapsed) / Duration, 3);
         position = Vector2.LerpUnclamped(fromPosition, targetPosition, eased);
         size = Vector2.LerpUnclamped(fromSize, targetSize, eased);
         alpha = Mathf.LerpUnclamped(fromAlpha, targetAlpha, eased);

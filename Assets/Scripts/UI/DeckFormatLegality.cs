@@ -22,6 +22,17 @@ public sealed class DeckFormatLegality
         return index == 0 ? "标准赛" : index >= 0 ? Names[index] : "N/A";
     }
 
+    // One search evaluates thousands of printings against the same snapshot dates.
+    public static DeckFormatLegality ForSearch(string format, IReadOnlyList<CardDefinition> catalog)
+    {
+        var legality = new DeckFormatLegality();
+        if (format == "none") return legality;
+        legality.searchDates = new Dictionary<string, string> { [format] = Latest(format) };
+        if (format == "duelcommander") legality.searchDates["vintage"] = Latest("vintage");
+        legality.PrepareForValidation(format, catalog);
+        return legality;
+    }
+
     // Authority-side preparation is cached; reads format rules, never hashes runtime resources.
     public void PrepareForValidation(string format, IReadOnlyList<CardDefinition> catalog)
     {
@@ -41,6 +52,11 @@ public sealed class DeckFormatLegality
         }
         string key = Key(format, Current);
         if (!snapshots.TryGetValue(key, out var rule)) snapshots[key] = rule = Parse(ResolvePath(format, Current));
+        if (format == "duelcommander")
+        {
+            string paperKey = Key("vintage", Current);
+            if (!snapshots.ContainsKey(paperKey)) snapshots[paperKey] = Parse(ResolvePath("vintage", Current));
+        }
         if (rule.CommonOnly && commonDates == null) commonDates = ReadCommonDates(Path.Combine(ForgeCardCatalog.Root, "assets", "res", "editions"));
     }
 
@@ -57,6 +73,7 @@ public sealed class DeckFormatLegality
     }
 
     readonly Dictionary<string, Snapshot> snapshots = new Dictionary<string, Snapshot>(StringComparer.OrdinalIgnoreCase);
+    Dictionary<string, string> searchDates;
     readonly Dictionary<string, HashSet<string>> nameSets = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
     Dictionary<string, DateTime> commonDates;
     IReadOnlyList<CardDefinition> indexedCatalog;
@@ -107,6 +124,14 @@ public sealed class DeckFormatLegality
             if (rule.Restricted.Contains(name) || rule.RestrictedLegendary && card.HasSupertype(CardSupertype.Legendary))
                 return "restricted";
         }
+        if (format == "duelcommander")
+        {
+            // Duel Commander is a paper format. Alchemy printings may have different rules
+            // even when a card of the same name also has a paper printing.
+            if (IsAlchemySet(card.setCode) || IsAlchemySet(card.forgeSet)) return "not_legal";
+            string paper = Get(card, "vintage", Current);
+            if (paper == "not_legal" || paper == "banned" || paper == "unknown") return "not_legal";
+        }
         if (rule.Additional.Contains(name)) return "legal";
         if (rule.HasSets && (!nameSets.TryGetValue(name, out var editions) || !editions.Overlaps(rule.Sets)))
             return "not_legal";
@@ -118,6 +143,12 @@ public sealed class DeckFormatLegality
                 return "not_legal";
         }
         return "legal";
+    }
+
+    static bool IsAlchemySet(string code)
+    {
+        return code != null && code.Length == 4 && char.ToUpperInvariant(code[0]) == 'Y'
+            && char.IsLetter(code[1]) && char.IsLetter(code[2]) && char.IsLetter(code[3]);
     }
 
     public IEnumerator Refresh(string format, string banlist, IReadOnlyList<CardDefinition> catalog)
@@ -158,6 +189,16 @@ public sealed class DeckFormatLegality
                 rule = Parse(path);
                 snapshots[key] = rule;
             }
+            if (format == "duelcommander")
+            {
+                string paperKey = Key("vintage", Current);
+                if (!snapshots.ContainsKey(paperKey))
+                {
+                    string path = ResolvePath("vintage", Current);
+                    if (!File.Exists(path)) { Error = "无法读取法禁的纸牌用牌范围。"; yield break; }
+                    snapshots[paperKey] = Parse(path);
+                }
+            }
             if (rule.CommonOnly && commonDates == null)
             {
                 string editions = Path.Combine(ForgeCardCatalog.Root, "assets", "res", "editions");
@@ -174,8 +215,12 @@ public sealed class DeckFormatLegality
         }
     }
 
-    static string Key(string format, string banlist) => format + "/"
-        + (banlist == NoBanlist || banlist == Current ? Latest(format) : banlist);
+    string Key(string format, string banlist)
+    {
+        if (banlist == NoBanlist || banlist == Current)
+            banlist = searchDates != null && searchDates.TryGetValue(format, out var date) ? date : Latest(format);
+        return format + "/" + banlist;
+    }
 
     static string Folder(string format)
     {

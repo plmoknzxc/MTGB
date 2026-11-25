@@ -32,8 +32,6 @@ public static class InteractionFixValidation
     static IEnumerator Exercise() {
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("ValidationBattlefield").AddComponent<ForgeBattlefieldController>();
         bool prior=ui.enabled;ui.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);
-        foreach(var n in notices)n.enabled=false;
         GamePreferences.SetLanguage("zh-CN");
         float until=Time.realtimeSinceStartup+25;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;
         var lines=new List<string>();

@@ -13,7 +13,7 @@ public sealed partial class ForgeBattlefieldController
         float height=Mathf.Min(surface.rect.height-80,410);
         landChoiceMenu.sizeDelta=new Vector2(width,height);
         landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         string prompt=view.request.message switch {
             "one: Choose Room to lock"=>TapPaymentText("选择要锁定的门","Choose a door to lock","閉じるドアを選択"),
             "one: Choose Room to unlock"=>TapPaymentText("选择要解锁的门","Choose a door to unlock","開放するドアを選択"),
@@ -29,6 +29,7 @@ public sealed partial class ForgeBattlefieldController
             var tile=Panel(landChoiceMenu,"RoomDoorOption_"+index,
                 new Vector2((i-(options.Length-1)*.5f)*cellWidth,-header/2),new Vector2(cellWidth-12,tileHeight),new Color(.12f,.19f,.24f));
             tile.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(216,340,9);
+            if(HudTheme!=null)StylePickerTile(tile,option.selected,false,!option.disabled);
             var button=tile.gameObject.AddComponent<Button>();button.targetGraphic=tile.GetComponent<Image>();
             button.onClick.AddListener(()=>Choose(index,captured));button.interactable=canAct&&!submitted&&!option.disabled;
             bool left=card.stateName=="LeftSplit",unlocked=left?card.leftRoomUnlocked:card.rightRoomUnlocked;

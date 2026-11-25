@@ -49,7 +49,7 @@ final class BridgeSeriesOwnership {
             for(var gui:ForgeBridge.guis) {
                 Map<String,Object> notice=new LinkedHashMap<>();notice.put("id",id);notice.put("kind","ownership");
                 notice.put("actorSeat",owner);notice.put("publicNotice",true);notice.put("sourceCard",ForgeBridge.card(card));
-                notice.put("value",card.getName());gui.notices.addLast(notice);while(gui.notices.size()>16)gui.notices.removeFirst();
+                notice.put("value",card.getName());ForgeBridge.stampNotice(notice);gui.notices.addLast(notice);while(gui.notices.size()>16)gui.notices.removeFirst();
             }
         }
     }

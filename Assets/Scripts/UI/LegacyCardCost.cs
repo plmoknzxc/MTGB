@@ -19,10 +19,18 @@ public sealed class LegacyCardCost : MonoBehaviour
     bool raisedTitle,mainFirst,paired,sideways,printedIsSecondary,hovered;
     ForgeBattlefieldCardPointer pointer;
     TMP_Text separator,mainEmpty,secondaryEmpty;
+    internal float Clearance=2;
     public static float IconSize(float width)=>Mathf.Min(22,width*.095f);
     static int Count(string cost)=>Regex.Matches(cost??"",@"\{[^{}]+\}").Count;
     static string Normalize(string cost)=>string.Equals(cost,"no cost",System.StringComparison.OrdinalIgnoreCase)?"":cost??"";
-    static bool SameCost(string a,string b)=>Regex.Replace(Normalize(a),@"\s+","").ToUpperInvariant()==Regex.Replace(Normalize(b),@"\s+","").ToUpperInvariant();
+    static void ReleasePatch(Texture2D texture){
+        if(texture==null)return;
+#if UNITY_EDITOR
+        if(!Application.isPlaying){DestroyImmediate(texture);return;}
+#endif
+        Destroy(texture);
+    }
+    internal static bool SameCost(string a,string b)=>Regex.Replace(Normalize(a),@"\s+","").ToUpperInvariant()==Regex.Replace(Normalize(b),@"\s+","").ToUpperInvariant();
     RectTransform Region(string name)
     {
         var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(Root,false);return r;
@@ -44,7 +52,7 @@ public sealed class LegacyCardCost : MonoBehaviour
         if(source!=art||printed!=printedCost||adventurePrinted!=printedAdventure||raisedTitle!=highTitle||sideways!=rotated){
             source=art;printed=printedCost;adventurePrinted=printedAdventure;
             raisedTitle=highTitle;sideways=rotated;
-            if(mainPatch!=null)Destroy(mainPatch);if(adventurePatch!=null)Destroy(adventurePatch);
+            ReleasePatch(mainPatch);ReleasePatch(adventurePatch);
             // Older scans place the last symbol farther left; long printed
             // costs use a tighter pitch. Include the full circle and shadow.
             float mainLeft=Mathf.Max(.06f,.938f-Count(printed)*(Count(printed)>6?.05f:.056f)-.026f);
@@ -77,7 +85,7 @@ public sealed class LegacyCardCost : MonoBehaviour
         diameter=Mathf.Min(diameter,(face.x-12)/(total+(paired?.55f:0)));
         float Width(int count)=>Mathf.Max(1,count)*diameter+Mathf.Max(0,count-1)*gap;
         float mw=Width(n),aw=paired?Width(a):0,sw=paired?diameter*.55f:0;
-        float width=mw+aw+sw,left=face.x*.5f-6-width,y=face.y*.5f+diameter*.5f+2;
+        float width=mw+aw+sw,left=face.x*.5f-6-width,y=face.y*.5f+diameter*.5f+Clearance;
         void Group(RectTransform r,float x,float w){r.anchorMin=r.anchorMax=new Vector2(.5f,.5f);r.pivot=new Vector2(0,.5f);r.sizeDelta=new Vector2(w,diameter+4);r.anchoredPosition=new Vector2(x,y);}
         float mx=left+(paired&&!mainFirst?aw+sw:0),ax=left+(mainFirst?mw+sw:0);
         Group((RectTransform)Main.transform,mx,mw);Group((RectTransform)Adventure.transform,ax,aw);
@@ -121,7 +129,12 @@ public sealed class LegacyCardCost : MonoBehaviour
         var sample=new Texture2D(width,Mathf.CeilToInt(height*.12f),TextureFormat.RGB24,false);
         Color[] pixels;
         try{sample.ReadPixels(new Rect(art.rect.x,art.rect.y+bottom,width,sample.height),0,0);pixels=sample.GetPixels();}
-        finally{Destroy(sample);}
+        finally{
+#if UNITY_EDITOR
+            if(!Application.isPlaying)DestroyImmediate(sample);else
+#endif
+            Destroy(sample);
+        }
         float Light(float x,float y){var c=pixels[Mathf.Clamp(Mathf.RoundToInt(y)-bottom,0,pixels.Length/width-1)*width+Mathf.Clamp(Mathf.RoundToInt(x),0,width-1)];return(c.r+c.g+c.b)/3;}
         float Score(int x,int y,int radius,out int votes){
             float score=0;votes=0;
@@ -150,7 +163,7 @@ public sealed class LegacyCardCost : MonoBehaviour
         return Complete(Rect.MinMaxRect(Mathf.Max(.06f,(left-padding)/width),Mathf.Min(bounds.yMin,(cy-padding)/height),
             Mathf.Max(bounds.xMax,(right+padding)/width),Mathf.Max(bounds.yMax,(cy+padding)/height)));
     }
-    static Texture2D Cover(Sprite art,ref Rect uv,bool rotated,int symbols=0)
+    internal static Texture2D Cover(Sprite art,ref Rect uv,bool rotated,int symbols=0)
     {
         var target=RenderTexture.GetTemporary(art.texture.width,art.texture.height,0,RenderTextureFormat.ARGB32);var previous=RenderTexture.active;
         try{
@@ -166,7 +179,11 @@ public sealed class LegacyCardCost : MonoBehaviour
             int reach=36;
             var sample=new Texture2D(rotated?width:reach,rotated?reach:height,TextureFormat.RGBA32,false);
             sample.ReadPixels(rotated?new Rect(pixel.x,pixel.y-reach,width,reach):new Rect(pixel.x-reach,pixel.y,reach,height),0,0);
-            var candidates=sample.GetPixels();Destroy(sample);
+            var candidates=sample.GetPixels();
+#if UNITY_EDITOR
+            if(!Application.isPlaying)DestroyImmediate(sample);else
+#endif
+            Destroy(sample);
             // A neighbouring strip can contain a letter or the old circle's
             // shadow. Select the quietest short strip in the adjacent title.
             int best=0;float bestScore=float.PositiveInfinity;
@@ -192,5 +209,5 @@ public sealed class LegacyCardCost : MonoBehaviour
         }finally{RenderTexture.active=previous;RenderTexture.ReleaseTemporary(target);}
     }
     void OnRectTransformDimensionsChange()=>Layout();
-    void OnDestroy(){if(mainPatch!=null)Destroy(mainPatch);if(adventurePatch!=null)Destroy(adventurePatch);}
+    void OnDestroy(){ReleasePatch(mainPatch);ReleasePatch(adventurePatch);}
 }

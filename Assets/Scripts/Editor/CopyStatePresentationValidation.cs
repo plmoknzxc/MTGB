@@ -33,7 +33,6 @@ public static class CopyStatePresentationValidation {
     [Serializable] public class Sample{public string caseName,label;public int cardId,sourceId;}
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             float until=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;yield return Frame();GamePreferences.SetLanguage("en-US");yield return Frame();until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||GamePreferences.Language!="en-US")&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language=="en-US","English preferences initialized");
             var samples=JsonUtility.FromJson<Samples>(File.ReadAllText(Output+"/inputs/manifest.json")).samples;
@@ -60,7 +59,7 @@ public static class CopyStatePresentationValidation {
                 var v=Read(regression);ui.Present(v,1,false,null,null,"");yield return Frame();Clean(ui);var card=v.players[0].battlefield.First(c=>c.copy);typeof(ForgeBattlefieldController).GetMethod("InspectIntegrated",Hidden).Invoke(ui,new object[]{card});yield return Frame();Ray(Root.Find("InspectPanel/OriginalState").GetComponent<Button>());yield return Frame();string footer=Root.Find("InspectPanel/Footer").GetComponent<Text>().text;Check(footer.Contains(regression.StartsWith("dino")?"*/*":"3/1"),"Affected original printed variable/physical P/T regression "+regression);Clean(ui);
             }
 
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);}
     }
 }
 #endif

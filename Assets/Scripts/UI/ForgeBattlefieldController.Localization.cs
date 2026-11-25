@@ -141,7 +141,8 @@ public sealed partial class ForgeBattlefieldController
         }
         var visible=(view?.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>
             (p.battlefield??Array.Empty<ForgeCardView>()).Concat(p.hand??Array.Empty<ForgeCardView>())
-            .Concat(p.graveyardCards??Array.Empty<ForgeCardView>()).Concat(p.exileCards??Array.Empty<ForgeCardView>()))
+            .Concat(p.graveyardCards??Array.Empty<ForgeCardView>()).Concat(p.exileCards??Array.Empty<ForgeCardView>())
+            .Concat(p.effectMarkers??Array.Empty<ForgeCardView>()).Concat(p.commandCards??Array.Empty<ForgeCardView>()))
             .Concat((view?.stackItems??Array.Empty<ForgeStackItem>()).Select(s=>s.source))
             .Concat(new[]{view?.request?.sourceCard})
             .Concat(view?.request?.previewCards??Array.Empty<ForgeCardView>())
@@ -211,6 +212,8 @@ public sealed partial class ForgeBattlefieldController
         foreach(string word in words) {
             string local=word switch {
                 "artifact"=>TapPaymentText("神器",word,"アーティファクト"),"battle"=>TapPaymentText("战役",word,"バトル"),
+                "artifact creature"=>TapPaymentText("神器生物",word,"アーティファクト・クリーチャー"),
+                "enchantment creature"=>TapPaymentText("结界生物",word,"クリーチャー・エンチャント"),
                 "card"=>TapPaymentText("牌",word,"カード"),"creature"=>TapPaymentText("生物",word,"クリーチャー"),
                 "enchantment"=>TapPaymentText("结界",word,"エンチャント"),"instant"=>TapPaymentText("瞬间",word,"インスタント"),
                 "equipment"=>TapPaymentText("武具",word,"装備品"),

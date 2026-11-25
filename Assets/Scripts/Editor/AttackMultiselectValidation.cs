@@ -20,7 +20,7 @@ public static class AttackMultiselectValidation
     static void Check(bool ok,string description){if(!ok)throw new Exception(description);Checks.Add("PASS "+description);}
     static object Get(object owner,string field)=>owner.GetType().GetField(field,Private).GetValue(owner);
     static object Call(object owner,string name,params object[] args)=>owner.GetType().GetMethod(name,Private).Invoke(owner,args);
-    static bool Legal(ForgeRequest request,int index,List<int> members)=>(bool)typeof(OnlineMatchSession).GetMethod("LegalAttackGroup",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{request,index,members});
+    static bool Legal(ForgeRequest request,int index,List<int> members)=>(bool)typeof(OnlineMatchSession).GetMethod("LegalCombatGroup",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{request,index,members});
     static ForgeSeatView View(string directory,string name){var m=JsonUtility.FromJson<ForgeWireMessage>(File.ReadAllText(directory+"/"+name+".json"));var v=m.views[0];v.request=m.request;v.awaitingInput=true;return v;}
     static Button Card(int id)=>GameObject.Find("Card_"+id).GetComponent<Button>();
     public static void Run()
@@ -38,7 +38,6 @@ public static class AttackMultiselectValidation
     {
         float deadline=Time.realtimeSinceStartup+30;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;
         var directory=Directory.GetDirectories(".tools/attack-multiselect-1013","native-*").OrderByDescending(d=>d).First(d=>File.ReadAllText(d+"/result.json").Contains("\"PASS\""));
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))notice.enabled=false;
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("AttackBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;
         var v=View(directory,"initial");var ids=v.players[0].battlefield.Where(c=>c.name=="Goblin Piker").Select(c=>c.id).ToArray();int a=ids[0],b=ids[1];
         int choice=-1,groupChoice=-1,count=0;int[] group=null;

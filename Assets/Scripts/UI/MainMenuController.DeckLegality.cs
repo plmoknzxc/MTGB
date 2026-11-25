@@ -7,6 +7,7 @@ public sealed partial class MainMenuController
     private readonly DeckFormatLegality deckLegality = new DeckFormatLegality();
     private bool legalitySubscribed;
     private Dropdown deckFormatDropdown;
+    private Dropdown deckBracketDropdown;
     private readonly System.Collections.Generic.List<string> deckFormatOptions = new System.Collections.Generic.List<string>();
 
     private void CreateDeckFormatControl()
@@ -22,16 +23,36 @@ public sealed partial class MainMenuController
         PreferenceText.SetSize(deckFormatDropdown.captionText,16);
         PreferenceText.SetSize(deckFormatDropdown.itemText,16);
         DropdownChevron.Apply(deckFormatDropdown);
+        MenuVisualTheme.StyleArchiveDropdown(deckFormatDropdown);
         var captionFrame=(RectTransform)deckFormatDropdown.captionText.transform.parent;
         captionFrame.anchorMin=Vector2.zero;captionFrame.anchorMax=Vector2.one;
         captionFrame.offsetMin=new Vector2(10,2);captionFrame.offsetMax=new Vector2(-36,-2);
         deckFormatDropdown.captionText.GetComponent<PreferenceText>().Apply();
+        deckBracketDropdown=Instantiate(deckFormatDropdown,mainDeckCountText.transform,false);
+        deckBracketDropdown.name="CommanderBracketDropdown";
+        deckBracketDropdown.onValueChanged=new Dropdown.DropdownEvent();
+        deckBracketDropdown.captionText.GetComponent<PreferenceText>().Literal=true;
+        deckBracketDropdown.itemText.GetComponent<PreferenceText>().Literal=true;
+        deckBracketDropdown.onValueChanged.AddListener(value=>{
+            if(currentDeck?.format!="commander" || currentDeck.commanderBracket==value)return;
+            currentDeck.commanderBracket=value;
+            SaveDeckFormatMetadata();
+            RefreshDeckSortControls();
+            OnDeckLegalityChanged();
+        });
+        deckFormatDropdown.template.GetComponentInChildren<Toggle>(true).gameObject.AddComponent<DeckFormatReselect>();
         deckFormatDropdown.onValueChanged.AddListener(index=>{
             if(currentDeck==null||index<0||index>=deckFormatOptions.Count)return;
-            GamePreferences.SetDeckFormat(deckFormatOptions[index]);
+            string format = deckFormatOptions[index];
+            GamePreferences.SetDeckFormat(format);
             OnDeckLegalitySelectionChanged();
             cardDetailsView?.RefreshLegalitySettings();
             RefreshDeckFormatControl();
+
+            var draft = CollectionSearchDraft();
+            draft.Format = format == "none" ? 0 : Array.IndexOf(DeckFormatLegality.Keys, format) + 1;
+            draft.Status = 0; // Playable, including cards restricted to one copy.
+            ApplyAdvancedSearch(draft);
         });
         RefreshDeckFormatControl();
     }
@@ -48,17 +69,27 @@ public sealed partial class MainMenuController
         deckFormatDropdown.SetValueWithoutNotify(Mathf.Max(0,deckFormatOptions.IndexOf(selected)));
         deckFormatDropdown.RefreshShownValue();
         deckFormatDropdown.interactable=currentDeck!=null;
+        bool showBracket=currentDeck?.format=="commander";
+        deckBracketDropdown.gameObject.SetActive(showBracket);
+        if(showBracket)
+        {
+            deckBracketDropdown.ClearOptions();
+            deckBracketDropdown.AddOptions(DeckCommander.BracketOptions());
+            deckBracketDropdown.SetValueWithoutNotify(DeckCommander.EffectiveBracket(currentDeck.format,currentDeck.commanderBracket));
+            deckBracketDropdown.RefreshShownValue();
+            deckBracketDropdown.interactable=true;
+        }
     }
 
-    private void FitDeckFormatPopup(float headerWidth,float captionWidth)
+    private static void FitDeckFormatPopup(Dropdown dropdown,float headerWidth,float captionWidth)
     {
-        if(deckFormatDropdown.template==null||deckFormatDropdown.itemText==null)return;
-        var text=deckFormatDropdown.itemText;
+        if(dropdown.template==null||dropdown.itemText==null)return;
+        var text=dropdown.itemText;
         var settings=text.GetGenerationSettings(Vector2.zero);
         float width=captionWidth;
-        foreach(var option in deckFormatDropdown.options)
+        foreach(var option in dropdown.options)
             width=Mathf.Max(width,text.cachedTextGeneratorForLayout.GetPreferredWidth(option.text,settings)/text.pixelsPerUnit+56);
-        var popup=deckFormatDropdown.template;
+        var popup=dropdown.template;
         popup.anchorMin=popup.anchorMax=Vector2.zero;popup.pivot=new Vector2(0,1);
         popup.anchoredPosition=new Vector2(0,-6);
         popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,Mathf.Min(headerWidth,Mathf.Ceil(width)));
@@ -85,28 +116,35 @@ public sealed partial class MainMenuController
             bool enteringCommander=!DeckCommander.IsFormat(currentDeck.format)&&DeckCommander.IsFormat(format);
             currentDeck.format = format;
             currentDeck.banlist = banlist;
-            if (loadedDeckIndex >= 0 && loadedDeckIndex < decks.Count)
-            {
-                try
-                {
-                    // Persist only legality metadata, leaving unsaved card edits untouched.
-                    var saved = CloneDeck(decks[loadedDeckIndex]);
-                    saved.format = format;
-                    saved.banlist = banlist;
-                    DeckRepository.SaveReplacing(decks[loadedDeckIndex].name, saved);
-                    decks[loadedDeckIndex] = saved;
-                    deckDirectoryRevision=DeckRepository.DirectoryRevision();
-                }
-                catch (Exception exception)
-                {
-                    MarkDeckDirty();
-                    SetStatus("赛制设置未能自动保存：" + exception.Message);
-                }
-            }
-            else MarkDeckDirty();
+            currentDeck.commanderBracket = DeckCommander.EffectiveBracket(format, currentDeck.commanderBracket);
+            SaveDeckFormatMetadata();
             if(enteringCommander)StartCoroutine(AdaptCommanderSideboard(currentDeck));
         }
         RefreshDeckGrids();
+    }
+
+    private void SaveDeckFormatMetadata()
+    {
+        if (loadedDeckIndex >= 0 && loadedDeckIndex < decks.Count)
+        {
+            try
+            {
+                // Persist only format settings, leaving unsaved card edits untouched.
+                var saved = CloneDeck(decks[loadedDeckIndex]);
+                saved.format = currentDeck.format;
+                saved.banlist = currentDeck.banlist;
+                saved.commanderBracket = currentDeck.commanderBracket;
+                DeckRepository.SaveReplacing(decks[loadedDeckIndex].name, saved);
+                decks[loadedDeckIndex] = saved;
+                deckDirectoryRevision=DeckRepository.DirectoryRevision();
+            }
+            catch (Exception exception)
+            {
+                MarkDeckDirty();
+                SetStatus("赛制设置未能自动保存：" + exception.Message);
+            }
+        }
+        else MarkDeckDirty();
     }
 
     private void RefreshDeckLegality()
@@ -125,7 +163,7 @@ public sealed partial class MainMenuController
     {
         if (deckBuilderGroup != null)
             foreach (var tile in deckBuilderGroup.GetComponentsInChildren<MainMenuCardTile>(true))
-                if (tile.Zone != MainMenuCardTileZone.Collection) ApplyLegality(tile);
+                ApplyLegality(tile);
     }
 
     private void ApplyLegality(MainMenuCardTile tile)
@@ -133,62 +171,58 @@ public sealed partial class MainMenuController
         if (tile == null || tile.Card == null) return;
         bool companion=tile.Zone==MainMenuCardTileZone.Sideboard&&DeckCompanion.Has(currentDeck)
             &&string.Equals(currentDeck.companion.PrintingKey,tile.Card.PrintingKey,StringComparison.OrdinalIgnoreCase);
+        string bracket = BracketNotice(tile.Card, out bool bracketWarning);
         string state = deckLegality.Get(tile.Card, GamePreferences.DeckFormat, GamePreferences.DeckBanlist, tile.Zone==MainMenuCardTileZone.Commander, companion);
+        string construction = ConstructionCardProblem(tile);
         bool restrictedOverflow = state == "restricted" && TotalCopiesByName(tile.Card.cardName) > 1;
-        string constructionProblem=ConstructionCardProblem(tile);
-        bool invalid = state == "not_legal" || state == "banned" || restrictedOverflow || constructionProblem!=null;
-        var wash = tile.transform.Find("LegalityWash")?.GetComponent<Image>();
-        if (!invalid && state != "restricted" && tile.transform.Find("LegalityBadge") == null && wash == null) return;
-        if (wash == null)
-        {
-            var go = new GameObject("LegalityWash", typeof(RectTransform), typeof(Image));
-            go.transform.SetParent(tile.transform, false);
-            wash = go.GetComponent<Image>();
-            wash.raycastTarget = false;
-            wash.rectTransform.anchorMin = Vector2.zero;
-            wash.rectTransform.anchorMax = Vector2.one;
-            wash.rectTransform.offsetMin = wash.rectTransform.offsetMax = Vector2.zero;
+        bool invalid = state == "not_legal" || state == "banned" || restrictedOverflow || construction != null;
+        bool collection = tile.Zone == MainMenuCardTileZone.Collection;
+        bool atLimit = collection && !invalid && !bracketWarning && state != "unknown" && currentDeck != null &&
+            (state == "restricted" ? TotalCopiesByName(tile.Card.cardName) >= 1 : DeckRepository.GetAllowedCopiesToAdd(currentDeck,tile.Card) <= 0);
+        string legality = state == "banned" ? GamePreferences.T("禁用")
+            : state == "not_legal" ? DeckCompanion.Text("不合法","Not legal","使用不可")
+            : construction ?? (atLimit ? DeckCompanion.Text("已达上限","Limit reached","上限")
+            : state == "restricted" ? GamePreferences.T("限1")
+            : collection && state == "unknown" ? DeckCompanion.Text("判定中","Checking","確認中") : null);
+
+        Color warning = new Color32(159,48,65,255);
+        float below = SetTileNotice(tile,"LegalityBadge",legality,invalid ? warning : new Color32(64,74,91,255),3);
+        SetTileNotice(tile,"BracketBadge",bracket,bracketWarning ? warning : new Color32(37,85,92,255),below);
+    }
+
+    private static float SetTileNotice(MainMenuCardTile tile,string name,string message,Color color,float top)
+    {
+        var badge = tile.transform.Find(name) as RectTransform;
+        if (string.IsNullOrEmpty(message)) {
+            if (badge != null) badge.gameObject.SetActive(false);
+            return top;
         }
-        wash.color = state == "banned"
-            ? new Color(.33f, .02f, .03f, .38f)
-            : new Color(.83f, .07f, .09f, .47f);
-        wash.gameObject.SetActive(invalid);
-        var badge = tile.transform.Find("LegalityBadge/Label")?.GetComponent<Text>();
-        if (badge == null)
-        {
-            var background = new GameObject("LegalityBadge", typeof(RectTransform), typeof(Image));
-            background.transform.SetParent(tile.transform, false);
-            var go = new GameObject("Label", typeof(RectTransform), typeof(Text));
-            go.transform.SetParent(background.transform, false);
-            badge = go.GetComponent<Text>();
-            badge.font = GamePreferences.Font ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            badge.fontSize = 14;
-            PreferenceText.SetSize(badge, 14);
-            badge.fontStyle = FontStyle.Bold;
-            badge.alignment = TextAnchor.MiddleCenter;
-            badge.color = Color.white;
-            badge.raycastTarget = false;
-            var rect = (RectTransform)background.transform;
-            rect.anchorMin = rect.anchorMax = new Vector2(1, 1);
-            rect.pivot = new Vector2(1, 1);
-            rect.anchoredPosition = new Vector2(-5, -5);
-            rect.sizeDelta = new Vector2(Mathf.Min(130,((RectTransform)tile.transform).rect.width-12), 30);
-            background.GetComponent<Image>().color = new Color(.58f, .01f, .03f, 1f);
-            background.GetComponent<Image>().raycastTarget = false;
-            var border = background.AddComponent<Outline>();
-            border.effectColor = new Color(1f, .82f, .63f, 1f);
-            border.effectDistance = new Vector2(2, 2);
-            badge.rectTransform.anchorMin = Vector2.zero;
-            badge.rectTransform.anchorMax = Vector2.one;
-            badge.rectTransform.offsetMin = badge.rectTransform.offsetMax = Vector2.zero;
+        if (badge == null) {
+            var image = AddImage(tile.transform,name,color);
+            image.raycastTarget=false;
+            badge=image.rectTransform;
+            badge.anchorMin=badge.anchorMax=badge.pivot=new Vector2(0,1);
+            var caption=AddText(badge,"Label","",18,Color.white,TextAnchor.MiddleCenter);
+            caption.GetComponent<PreferenceText>().Literal=true;
+            caption.raycastTarget=false;
+            caption.fontStyle=FontStyle.Bold;
+            caption.horizontalOverflow=HorizontalWrapMode.Overflow;
+            Stretch(caption.rectTransform,0,0,0,0);
         }
-        badge.text = state == "banned" ? GamePreferences.T("禁用")
-            : state == "restricted" ? GamePreferences.T("限1") : constructionProblem??string.Empty;
-        badge.transform.parent.gameObject.SetActive(badge.text.Length > 0);
-        // Quantity controls and the status mark remain readable over the red tint.
-        var controls = tile.transform.Find("QuantityControls");
-        if (controls != null) controls.SetAsLastSibling();
-        badge.transform.parent.SetAsLastSibling();
+        badge.gameObject.SetActive(true);
+        badge.GetComponent<Image>().color=color;
+        var text=badge.GetComponentInChildren<Text>();
+        text.text=message;
+        float maxWidth=Mathf.Max(32,((RectTransform)tile.transform).rect.width-6);
+        float width=Mathf.Ceil(text.preferredWidth)+12;
+        text.resizeTextForBestFit=width>maxWidth;
+        text.resizeTextMinSize=12;
+        text.resizeTextMaxSize=text.fontSize;
+        float height=Mathf.Max(26,text.fontSize+8);
+        badge.sizeDelta=new Vector2(Mathf.Min(width,maxWidth),height);
+        badge.anchoredPosition=new Vector2(3,-top);
+        badge.SetAsLastSibling();
+        return top+height+2;
     }
 
     private int TotalCopiesByName(string name)

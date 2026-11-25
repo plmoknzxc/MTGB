@@ -11,8 +11,6 @@ public static class ComponentCardFaceDemo
     static string Root=".tools/component-card-1007/demo/";
     static long stamp;
     static ForgeBattlefieldController ui;
-    static ForgeBattlefieldMigrationNotice notice;
-    static bool noticeEnabled;
     public static bool Running { get; private set; }
     public static void Start(string root=".tools/component-card-1007/demo/")
     {
@@ -20,8 +18,6 @@ public static class ComponentCardFaceDemo
         if(Running)Stop();Root=root.EndsWith("/")?root:root+"/";
         ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("ComponentFaceDemo").AddComponent<ForgeBattlefieldController>();
         Directory.CreateDirectory(Root);stamp=0;Running=true;
-        notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();
-        noticeEnabled=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
         AssemblyReloadEvents.beforeAssemblyReload-=Stop;AssemblyReloadEvents.beforeAssemblyReload+=Stop;
         EditorApplication.playModeStateChanged-=ModeChanged;EditorApplication.playModeStateChanged+=ModeChanged;
         EditorApplication.update-=Poll;EditorApplication.update+=Poll;
@@ -31,7 +27,6 @@ public static class ComponentCardFaceDemo
         if(!Running)return;
         EditorApplication.update-=Poll;Running=false;
         AssemblyReloadEvents.beforeAssemblyReload-=Stop;EditorApplication.playModeStateChanged-=ModeChanged;
-        if(notice!=null)notice.enabled=noticeEnabled;
         Directory.CreateDirectory(Root);File.WriteAllText(Root+"stop.json","{}");
     }
     static void ModeChanged(PlayModeStateChange mode){if(mode==PlayModeStateChange.ExitingPlayMode)Stop();}

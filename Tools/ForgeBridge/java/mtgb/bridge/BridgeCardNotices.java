@@ -6,6 +6,7 @@ import forge.game.card.Card;
 import forge.game.card.CardView;
 import forge.game.event.GameEventCardChangeZone;
 import forge.game.event.GameEventShuffle;
+import forge.game.event.GameEventSpellAbilityCast;
 import forge.game.spellability.SpellAbility;
 import forge.game.zone.ZoneType;
 import java.util.*;
@@ -25,7 +26,8 @@ public final class BridgeCardNotices {
     static SpellAbility cause() {
         var cost=ForgeBridge.game.costPaymentStack.peek();
         if(cost!=null)return cost.payment().getAbility();
-        return ForgeBridge.game.getStack().isResolving()?ForgeBridge.game.getStack().peekAbility():null;
+        var stack=ForgeBridge.game.getStack();
+        return stack.isResolving() && !stack.isEmpty() ? stack.peekAbility() : null;
     }
     static Map<String,Object> notice(ForgeBridge.Gui gui,String kind,String message,List<Object> cards,SpellAbility ability) {
         Map<String,Object> result=new LinkedHashMap<>();
@@ -33,6 +35,7 @@ public final class BridgeCardNotices {
         result.put("message",message==null?"":message);result.put("value","");result.put("cards",cards);
         result.put("reason",ForgeBridge.game.costPaymentStack.peek()!=null?"cost":ability!=null?"effect":"rules");
         result.put("actorSeat",ability==null?0:ForgeBridge.game.getRegisteredPlayers().indexOf(ability.getActivatingPlayer())+1);
+        ForgeBridge.stampNotice(result);
         Card source=ability==null?null:ability.getHostCard();
         if(source!=null&&!source.isFaceDown()&&source.getZone()!=null&&!source.getZone().getZoneType().isHidden()
                 &&ForgeBridge.guis.stream().allMatch(g->source.getView().canBeShownTo(g.controller.getPlayer().getView())))
@@ -43,6 +46,36 @@ public final class BridgeCardNotices {
     static void append(ForgeBridge.Gui gui,Map<String,Object> notice) {
         gui.notices.addLast(notice);
         while(gui.notices.size()>128)gui.notices.removeFirst();
+    }
+    @Subscribe public void cast(GameEventSpellAbilityCast event) {
+        if(event.sa()==null||!event.sa().isSpell()||event.sa().getHostCard()==null||event.si()==null)return;
+        synchronized(ForgeBridge.class) {
+            Card card=ForgeBridge.game.getCardsInGame().stream()
+                .filter(c->c.getId()==event.sa().getHostCard().getId()).findFirst().orElse(null);
+            boolean copied=false;
+            var castFrom=card==null?null:card.getCastFrom();
+            for(var item:ForgeBridge.game.getStack())if(item.getId()==event.si().getId()){
+                copied=item.getSpellAbility().isCopied();break;
+            }
+            if(castFrom==null)for(var item:ForgeBridge.game.getStack())if(item.getId()==event.si().getId()){
+                castFrom=item.getSpellAbility().getHostCard().getCastFrom();break;
+            }
+            String from=castFrom==null?"":castFrom.getZoneType().name();
+            int actor=event.si().getActivatingPlayer()==null?0:ForgeBridge.game.getRegisteredPlayers().stream()
+                .filter(p->p.getId()==event.si().getActivatingPlayer().getId()).findFirst()
+                .map(p->ForgeBridge.game.getRegisteredPlayers().indexOf(p)+1).orElse(0);
+            long id=ForgeBridge.noticeSequence.incrementAndGet();
+            boolean visible=card!=null?!card.isFaceDown():!event.sa().getHostCard().isFaceDown();
+            for(var gui:ForgeBridge.guis){
+                Map<String,Object> note=new LinkedHashMap<>();
+                note.put("id",id);note.put("kind",copied?"copy":"cast");note.put("actorSeat",actor);
+                note.put("stackId",event.si().getId());note.put("fromZone",from);
+                note.put("value",visible?(card!=null?card.getName():event.sa().getHostCard().getName()):"");note.put("message","");note.put("title","");
+                note.put("publicNotice",true);
+                if(visible&&card!=null)note.put("sourceCard",ForgeBridge.card(card));
+                ForgeBridge.stampNotice(note);append(gui,note);
+            }
+        }
     }
     static void revealed(ForgeBridge.Gui gui,String title,List<Object> cards) {
         // Temporary controller GUIs publish to their receiving client seat.
@@ -93,14 +126,14 @@ public final class BridgeCardNotices {
     @Subscribe public void moved(GameEventCardChangeZone event) {
         if(event.card()==null||event.from()==null||event.to()==null)return;
         ZoneType from=event.from().zoneType(),to=event.to().zoneType();
-        if(from==to||from==ZoneType.None||!(to==ZoneType.Graveyard||to==ZoneType.Exile||to==ZoneType.Hand||to==ZoneType.Library&&!from.isHidden()))return;
+        if(from==to||from==ZoneType.None||!(to==ZoneType.Battlefield||to==ZoneType.Graveyard||to==ZoneType.Exile||to==ZoneType.Hand||to==ZoneType.Library&&!from.isHidden()))return;
         Card card=ForgeBridge.game.getCardsInGame().stream().filter(c->c.getId()==event.card().getId()).findFirst().orElse(null);
         if(card==null)return;
         synchronized(ForgeBridge.class) {
             SpellAbility ability=cause();
             // The stack already shows the cast spell / cycling source. Notify
             // the fetched, milled, exiled or other separately moved objects.
-            if(from==ZoneType.Stack&&(ability==null||card.getId()==ability.getHostCard().getId())
+            if(from==ZoneType.Stack&&to!=ZoneType.Battlefield&&(ability==null||card.getId()==ability.getHostCard().getId())
                 ||ForgeBridge.game.costPaymentStack.peek()!=null&&ability!=null&&!ability.isManaAbility()&&card.getId()==ability.getHostCard().getId())return;
             // A hidden library draw is not a revealed move into the hand.
             boolean publicOrigin=!from.isHidden()&&!event.card().isFaceDown();

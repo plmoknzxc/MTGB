@@ -5,7 +5,7 @@ public static class OnlinePlayerContext
 
     public static void SetLocalPlayer(int playerId)
     {
-        LocalPlayerId = playerId == 2 ? 2 : 1;
+        LocalPlayerId = playerId is >= 1 and <= 4 ? playerId : 1;
     }
 
     public static void Reset()

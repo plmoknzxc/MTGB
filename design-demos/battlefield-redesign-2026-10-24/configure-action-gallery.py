@@ -1,0 +1,10 @@
+from pathlib import Path
+W=Path(__file__).parent;p=W/'index.html';s=p.read_text(encoding='utf-8')
+s=s.replace("document.querySelector('#dense').disabled=next!=='interact'||current===5;","document.querySelector('#dense').disabled=next!=='interact';")
+s=s.replace("current===5?'固定Unity底图':'拥挤演示'","current===5?'堆叠压力':'拥挤演示'")
+s=s.replace("next==='current'?'当前正式界面 · 仅作视觉对照':'悬停看牌 · 点击固定详情 · 详情／历史标签切换'","next==='current'?'当前正式界面 · 仅作视觉对照':current===5?'点战场收起手牌 · 点手牌展开 · 堆叠超过四项可滚动':'悬停看牌 · 点击固定详情 · 详情／历史标签切换'")
+s=s.replace('叠加新横排手牌、阶段操作、堆叠及详情／历史。','叠加新横排手牌、紧凑阶段操作与可滚动长堆叠；暂不展示详情／历史。')
+s=s.replace('堆叠超过四项可滚动','堆叠超出可视高度时滚动')
+if 'layout-checks.js' not in s:s=s.replace('</body>','<script src="action-ui-data.js"></script><script src="layout-checks.js"></script></body>')
+p.write_text(s,encoding='utf-8')
+print('Configured F stack stress and action-window layout checks')

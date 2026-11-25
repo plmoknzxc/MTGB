@@ -1,0 +1,18 @@
+const string W="D:/project/MTGB/design-demos/battlefield-redesign-2026-10-24/";
+var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();var f=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance;int checks=0,failed=0;var results=new System.Collections.Generic.List<object>();
+Rect Bounds(RectTransform r){var c=new Vector3[4];r.GetWorldCorners(c);return Rect.MinMaxRect(c.Min(v=>v.x),c.Min(v=>v.y),c.Max(v=>v.x),c.Max(v=>v.y));}
+void Check(bool pass,string context){checks++;if(!pass)failed++;results.Add(new{pass,context});}
+void Save(string status){var json=System.Type.GetType("Newtonsoft.Json.JsonConvert, Newtonsoft.Json").GetMethod("SerializeObject",new[]{typeof(object)});System.IO.File.WriteAllText(W+"unity-redesign-dense.json",(string)json.Invoke(null,new object[]{new{status,checks,failed,results}}));}
+System.Collections.IEnumerator Run(){
+ foreach(string mode in new[]{"three-support","dense","large-hand"}){
+  var v=JsonUtility.FromJson<ForgeSeatView>(System.IO.File.ReadAllText(W+"native-full-seat.json"));
+  foreach(var player in v.players){if(mode=="dense")player.battlefield=Enumerable.Range(0,8).SelectMany(n=>player.battlefield.Select(c=>{var copy=JsonUtility.FromJson<ForgeCardView>(JsonUtility.ToJson(c));copy.id+=n*1000;copy.counters=new[]{new ForgeCardCounter{kind="P1P1",count=n}};return copy;})).ToArray();if(mode=="large-hand"){player.hand=Enumerable.Range(0,5).SelectMany(n=>player.hand.Select(c=>{var copy=JsonUtility.FromJson<ForgeCardView>(JsonUtility.ToJson(c));copy.id+=n*1000;return copy;})).ToArray();player.handCount=player.hand.Length;}}
+  ui.Present(null,1,false,null,null,"");yield return null;ui.Present(v,1,false,null,null,"");yield return new WaitForSecondsRealtime(.8f);Canvas.ForceUpdateCanvases();
+  var canvas=GameObject.Find("Canvas").transform;var pool=canvas.Find("ManaPoolChips") as RectTransform;var r=Bounds(pool);r.xMin-=36*pool.lossyScale.x;r.xMax+=36*pool.lossyScale.x;Check(r.yMin>=0&&r.yMax<=Screen.height,"mana stays on screen "+mode);var stack=canvas.Find("StackColumn/Viewport") as RectTransform;Check(!r.Overlaps(Bounds(stack)),"mana clears stack "+mode);
+  var arena=(System.Collections.IDictionary)typeof(ForgeBattlefieldController).GetField("arenaCards",f).GetValue(ui);foreach(System.Collections.DictionaryEntry pair in arena){if(!pair.Key.ToString().StartsWith("Your"))continue;var root=(RectTransform)pair.Value.GetType().GetField("root").GetValue(pair.Value);if(!root.gameObject.activeInHierarchy)continue;var card=Bounds(root);var scroll=root.GetComponentInParent<BattlefieldHorizontalScroll>();if(scroll!=null){var clip=Bounds(scroll.viewport);card=Rect.MinMaxRect(Mathf.Max(card.xMin,clip.xMin),Mathf.Max(card.yMin,clip.yMin),Mathf.Min(card.xMax,clip.xMax),Mathf.Min(card.yMax,clip.yMax));if(card.width<=0||card.height<=0)continue;}Check(!r.Overlaps(card),"mana clears visible permanent "+mode+"/"+pair.Key);}
+  if(mode=="large-hand"){var hand=canvas.Find("PlayerHandRoot");var navigation=hand.GetComponentInChildren<ForgeHandFanNavigation>();navigation.MoveBy(-100000);yield return null;Check(navigation.CanPan&&navigation.Offset<0,"large hand browses to end");}
+  ScreenCapture.CaptureScreenshot(W+"unity-"+mode+".png");yield return new WaitForEndOfFrame();Save("RUNNING");
+ }
+ Save("COMPLETE");
+}
+System.Collections.IEnumerator Guard(){var it=Run();for(int frame=0;frame<10000;frame++){bool next=false;object value=null;try{next=it.MoveNext();if(next)value=it.Current;}catch(Exception e){failed++;results.Add(new{exception=e.ToString()});Save("ERROR");yield break;}if(!next)break;yield return value;}}Save("STARTING");ui.StartCoroutine(Guard());return "Dense layout validation started";

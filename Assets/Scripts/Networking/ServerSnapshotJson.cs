@@ -134,7 +134,9 @@ internal static class ServerSnapshotJson
         return serializer.Deserialize<T>(reader);
     }
     public static T Copy<T>(T value) => Deserialize<T>(Serialize(value));
-    internal static string HashView(OnlinePlayerViewState view)
+    internal static string HashView(OnlinePlayerViewState view) => HashFields(view);
+
+    internal static string HashFields(object fields)
     {
         // The canonical field order/escaping is unchanged. Feed UTF-8 directly
         // to SHA instead of allocating a JToken tree, JSON string and byte array.
@@ -142,7 +144,7 @@ internal static class ServerSnapshotJson
         using var crypto=new CryptoStream(System.IO.Stream.Null,sha,CryptoStreamMode.Write);
         using(var text=new System.IO.StreamWriter(crypto,new UTF8Encoding(false),1024,true))
         using(var writer=new JsonTextWriter(text){CloseOutput=false})
-            JsonSerializer.Create(HashSettings).Serialize(writer,view);
+            JsonSerializer.Create(HashSettings).Serialize(writer,fields);
         crypto.FlushFinalBlock();
         return BitConverter.ToString(sha.Hash).Replace("-",string.Empty);
     }

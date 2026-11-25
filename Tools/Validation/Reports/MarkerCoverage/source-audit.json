@@ -23,12 +23,12 @@
   "registrationCallers": [
     {
       "path": "ability\\effects\\AnimateEffect.java",
-      "line": 211,
+      "line": 212,
       "method": "registerDelayedTrigger"
     },
     {
       "path": "ability\\effects\\ChangeZoneAllEffect.java",
-      "line": 203,
+      "line": 204,
       "method": "registerDelayedTrigger"
     },
     {
@@ -43,12 +43,12 @@
     },
     {
       "path": "ability\\effects\\ChangeZoneEffect.java",
-      "line": 1528,
+      "line": 1535,
       "method": "registerDelayedTrigger"
     },
     {
       "path": "ability\\effects\\CountersPutEffect.java",
-      "line": 691,
+      "line": 692,
       "method": "registerDelayedTrigger"
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "path": "ability\\effects\\PumpEffect.java",
-      "line": 486,
+      "line": 487,
       "method": "registerDelayedTrigger"
     },
     {
@@ -123,17 +123,17 @@
     },
     {
       "path": "ability\\SpellAbilityEffect.java",
-      "line": 405,
+      "line": 419,
       "method": "registerDelayedTrigger"
     },
     {
       "path": "ability\\SpellAbilityEffect.java",
-      "line": 495,
+      "line": 509,
       "method": "registerDelayedTrigger"
     },
     {
       "path": "ability\\SpellAbilityEffect.java",
-      "line": 898,
+      "line": 912,
       "method": "registerThisTurnDelayedTrigger"
     },
     {
@@ -143,12 +143,12 @@
     },
     {
       "path": "phase\\PhaseHandler.java",
-      "line": 210,
+      "line": 249,
       "method": "registerThisTurnDelayedTrigger"
     },
     {
       "path": "phase\\PhaseHandler.java",
-      "line": 882,
+      "line": 1008,
       "method": "registerThisTurnDelayedTrigger"
     },
     {
@@ -183,6 +183,7 @@
     "EFFECT",
     "PLANAR",
     "SCHEME",
+    "STICKER_SHEET",
     "TOKEN"
   ],
   "status": "PASS"

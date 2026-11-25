@@ -22,7 +22,7 @@ public sealed partial class ForgeBattlefieldController
         // for confirmation, reset and cancel at the user's chosen text size.
         float width=Mathf.Min(surface.rect.width-100,Mathf.Max(536,options.Length*254+36)),height=Mathf.Min(540,surface.rect.height-80);
         landChoiceMenu.sizeDelta=new Vector2(width,height);landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         string title=spree?TapPaymentText("追欢","Spree","放題"):modes?TapPaymentText("选择效果","Choose modes","モードを選択"):TapPaymentText("选择施放方式","Choose casting method","唱え方を選択");
         if(pawprint&&source!=null)title=GamePreferences.CardFaceName(source.name);
         var heading=Label(landChoiceMenu,"Title",title,new Vector2(0,height*.5f-30),new Vector2(width-32,54),24,Paper);
@@ -44,6 +44,7 @@ public sealed partial class ForgeBattlefieldController
             string nativeCost=raw;raw=PrintedCostText(option.castingFace??source,raw);
             // Retain the existing fallback for old views without a rule baseline.
             if(raw==nativeCost&&raw=="Exile a green card from your hand")raw=TapPaymentText("从手牌中放逐一张绿色牌",raw,"あなたの手札から緑のカード１枚を追放する");
+            if(raw==nativeCost&&!string.IsNullOrEmpty(raw))raw=GamePreferences.NativeText(raw);
             return CardSymbolText.Format(prefix+(raw??""));
         }
         var costTexts=options.Select(CostText).ToArray();
@@ -73,6 +74,7 @@ public sealed partial class ForgeBattlefieldController
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(0,1);rect.anchoredPosition=new Vector2(firstCardX+i*(cardWidth+20),-headerHeight);
             button.transition=Selectable.Transition.None;button.interactable=canAct&&!submitted&&!option.disabled;
             var border=button.GetComponent<Image>();border.sprite=IntegratedUiUtility.RoundedRect(240,336,10);
+            if(HudTheme!=null){border.sprite=IntegratedUiUtility.SlicedRoundedRect(6);border.type=Image.Type.Sliced;border.color=option.selected?HudAccent:option.disabled?HudRule:HudEdge;}
             var selection=Label(button.transform,"Selection",option.selected?(pawprint?"×"+option.chosenCount:"✓"):"",new Vector2(cardWidth*.5f-28,cardHeight*.5f-18),new Vector2(46,30),18,Gold);selection.gameObject.SetActive(option.selected);
             // Clip away the entire printed rules area instead of placing a smaller
             // opaque rectangle over it. No costs, other modes or flavour can peek out.
@@ -85,11 +87,13 @@ public sealed partial class ForgeBattlefieldController
             var frame=Panel(rect,"RulesFrame",new Vector2(0,-headHeight*.5f),new Vector2(faceWidth,bodyHeight),new Color(.13f,.15f,.16f));frame.GetComponent<Image>().raycastTarget=false;
             var bodyPanel=Panel(frame,"ModeRules",new Vector2(0,-2),new Vector2(faceWidth-14,bodyHeight-18),new Color(.85f,.87f,.81f));
             bodyPanel.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(210,148,9);bodyPanel.GetComponent<Image>().raycastTarget=false;
+            if(HudTheme!=null){frame.GetComponent<Image>().color=HudInk;bodyPanel.GetComponent<Image>().color=HudRule;}
             var inset=Panel(bodyPanel,"PaperInset",Vector2.zero,bodyPanel.sizeDelta-new Vector2(4,4),new Color(.92f,.93f,.88f));
             inset.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(206,144,7);inset.GetComponent<Image>().raycastTarget=false;
+            if(HudTheme!=null)inset.GetComponent<Image>().color=HudRaised;
             float visibleRulesHeight=bodyHeight-34;
             var rules=Scroll(bodyPanel,"RulesScroll",Vector2.zero,new Vector2(cardWidth-40,visibleRulesHeight));
-            var text=Label(rules,"Effect",ModeRules(source,option,modes),Vector2.zero,new Vector2(cardWidth-46,visibleRulesHeight),17,new Color(.07f,.09f,.09f));
+            var text=Label(rules,"Effect",ModeRules(source,option,modes),Vector2.zero,new Vector2(cardWidth-46,visibleRulesHeight),17,HudTheme!=null?HudText:new Color(.07f,.09f,.09f));
             text.alignment=TextAnchor.UpperLeft;text.resizeTextForBestFit=false;text.supportRichText=false;
             text.rectTransform.anchorMin=text.rectTransform.anchorMax=text.rectTransform.pivot=new Vector2(.5f,1);
             float textHeight=Mathf.Max(visibleRulesHeight,text.preferredHeight+6);text.rectTransform.sizeDelta=new Vector2(cardWidth-46,textHeight);rules.sizeDelta=new Vector2(cardWidth-40,textHeight);
@@ -116,7 +120,8 @@ public sealed partial class ForgeBattlefieldController
                 image.color=new Color(.38f,.38f,.38f,1);
                 bodyPanel.GetComponent<Image>().color=new Color(.24f,.26f,.25f,1);
                 inset.GetComponent<Image>().color=new Color(.27f,.29f,.27f,1);
-                text.color=new Color(.62f,.65f,.63f,1);
+                text.color=HudTheme!=null?HudMuted:new Color(.62f,.65f,.63f,1);
+                if(HudTheme!=null){bodyPanel.GetComponent<Image>().color=HudRule;inset.GetComponent<Image>().color=HudInk;}
             }
             if(option.id.StartsWith("mode:unavailable:",StringComparison.Ordinal)) {
                 var shade=Panel(head,"UnavailableShade",Vector2.zero,new Vector2(faceWidth,headHeight),new Color(.035f,.05f,.065f,.8f));
@@ -133,6 +138,7 @@ public sealed partial class ForgeBattlefieldController
         for(int i=0;i<actions.Length;i++) {
             int index=OptionIndex(actions[i].Item1);
             var button=Button(landChoiceMenu,actions[i].Item1,actions[i].Item2,new Vector2((i-(actions.Length-1)*.5f)*(actionWidth+12),-height*.5f+28),new Vector2(actionWidth,42),()=>Choose(index,captured),i==0?new Color(.22f,.37f,.55f):Ink);
+            if(HudTheme!=null)StyleZoneButton(button,i==0);
             button.interactable=canAct&&!submitted&&index>=0&&!request.options[index].disabled;
         }
         landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();

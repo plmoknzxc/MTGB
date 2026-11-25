@@ -20,9 +20,9 @@ public static class CombatAllocationPresentationValidation
     public static void Run(){if(running)return;Check(Application.isPlaying,"Enter IntegratedBattlefield Play Mode.");running=true;Directory.CreateDirectory(Output);File.WriteAllText(Output+"/result.txt","RUNNING");var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();if(ui==null)ui=new GameObject("CombatAllocationValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(Validate(ui)));}
     static IEnumerator Guard(IEnumerator test)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try{while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: actual native combat requests in zh-CN/en-US/ja-JP at current scale: source/recipient identities and native lethal values, exact plus/minus/reset/confirm mapping and gates, stable panels/cards/fonts, fixed-size localized labels; first-strike/double-strike context transition remains actionable, ordinary wheel and last of eleven recipients reachable; invalid menace confirmation gets fresh input with private localized error and can finish blocking; independent stale/duplicate/nonacting guards; exact resolved life, survivor count/expansion, death and aura-return displays. Native effects separate; not all combat, all languages/text/art, devices, animation or live network.");}
-        finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return new WaitForSecondsRealtime(.15f);yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

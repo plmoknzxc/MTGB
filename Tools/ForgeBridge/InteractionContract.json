@@ -122,6 +122,38 @@
       "route": "已有精确处理或默认转发"
     },
     {
+      "name": "updateButtons",
+      "signature": "default void updateButtons(PlayerView owner, String label1, String label2, boolean enable1, boolean enable2, boolean focus1, boolean undoAvailable)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "默认转发到现有按钮状态处理"
+    },
+    {
+      "name": "showCoinFlip",
+      "signature": "default void showCoinFlip(boolean heads, String caption, boolean waitForTap)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认展示回调，结算由引擎处理"
+    },
+    {
+      "name": "showFlipOntoBattlefield",
+      "signature": "default void showFlipOntoBattlefield(CardView flipped, CardView target, List<CardView> hit, List<CardView> battlefield, int timesFlipped)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认展示回调"
+    },
+    {
+      "name": "endFlipOntoBattlefield",
+      "signature": "default void endFlipOntoBattlefield(CardView flipped)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认展示回调"
+    },
+    {
       "name": "flashIncorrectAction",
       "signature": "void flashIncorrectAction()",
       "default": false,
@@ -210,6 +242,14 @@
       "route": "默认转发／快照展示回调"
     },
     {
+      "name": "onSnapshotRestored",
+      "signature": "default void onSnapshotRestored()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认回调，桥接按当前快照展示"
+    },
+    {
       "name": "notifyStackAddition",
       "signature": "default void notifyStackAddition(final GameEventSpellAbilityCast event)",
       "default": true,
@@ -282,14 +322,6 @@
       "route": "默认转发／快照展示回调"
     },
     {
-      "name": "updateRevealedCards",
-      "signature": "void updateRevealedCards(TrackableCollection<CardView> collection)",
-      "default": false,
-      "returnType": "void",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
-    },
-    {
       "name": "refreshCardDetails",
       "signature": "default void refreshCardDetails(Iterable<CardView> cards)",
       "default": true,
@@ -304,14 +336,6 @@
       "returnType": "void",
       "role": "snapshot",
       "route": "默认转发／快照展示回调"
-    },
-    {
-      "name": "getGamestate",
-      "signature": "GameState getGamestate()",
-      "default": false,
-      "returnType": "GameState",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
     },
     {
       "name": "updateManaPool",
@@ -642,50 +666,26 @@
       "route": "已有精确处理或默认转发"
     },
     {
-      "name": "setHighlighted",
-      "signature": "void setHighlighted(Iterable<GameEntityView> entities, boolean b)",
-      "default": false,
-      "returnType": "void",
-      "role": "snapshot",
-      "route": "默认转发／快照展示回调"
-    },
-    {
-      "name": "setSelectables",
-      "signature": "void setSelectables(Iterable<CardView> cards, int min, int max)",
+      "name": "setSelection",
+      "signature": "void setSelection(Selection selection)",
       "default": false,
       "returnType": "void",
       "role": "state",
-      "route": "已有精确处理或默认转发"
+      "route": "当前请求的选择数量、已选牌和可操作牌"
     },
     {
-      "name": "clearSelectables",
-      "signature": "void clearSelectables()",
-      "default": false,
-      "returnType": "void",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
+      "name": "canPickStackTargets",
+      "signature": "default boolean canPickStackTargets()",
+      "default": true,
+      "returnType": "boolean",
+      "role": "default",
+      "route": "使用原生堆叠目标选择对话框"
     },
     {
       "name": "isSelecting",
       "signature": "boolean isSelecting()",
       "default": false,
       "returnType": "boolean",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
-    },
-    {
-      "name": "setWeaklySelectable",
-      "signature": "void setWeaklySelectable(final Iterable<CardView> cards)",
-      "default": false,
-      "returnType": "void",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
-    },
-    {
-      "name": "clearWeaklySelectable",
-      "signature": "void clearWeaklySelectable()",
-      "default": false,
-      "returnType": "void",
       "role": "state",
       "route": "已有精确处理或默认转发"
     },
@@ -770,14 +770,6 @@
       "route": "默认转发／快照展示回调"
     },
     {
-      "name": "showWaitingTimer",
-      "signature": "void showWaitingTimer(PlayerView forPlayer, String waitingForPlayerName)",
-      "default": false,
-      "returnType": "void",
-      "role": "snapshot",
-      "route": "默认转发／快照展示回调"
-    },
-    {
       "name": "updateAutoPassPrompt",
       "signature": "void updateAutoPassPrompt()",
       "default": false,
@@ -818,12 +810,28 @@
       "route": "原生 Forge yield 同步未接入"
     },
     {
+      "name": "applyMacroState",
+      "signature": "void applyMacroState(IMacroSystem.State state)",
+      "default": false,
+      "returnType": "void",
+      "role": "unsupported",
+      "route": "Forge 原生远程宏不在 MTGB 协议内"
+    },
+    {
       "name": "applyDelta",
       "signature": "default void applyDelta(DeltaPacket packet)",
       "default": true,
       "returnType": "void",
       "role": "unsupported",
       "route": "项目采用自有快照协议；原生 Forge delta 未接入"
+    },
+    {
+      "name": "awaitInput",
+      "signature": "default void awaitInput(final CountDownLatch done) throws InterruptedException",
+      "default": true,
+      "returnType": "void",
+      "role": "default",
+      "route": "原生等待，桥接由独立线程提交"
     },
     {
       "name": "isNetGame",
@@ -868,5 +876,5 @@
       "reason": "IGuiBase 48 声明、基础静态辅助调用和继承源文件已加入守卫；运行反射表解析145个PlayerController声明到实现。这是结构分类，不能证明全卡池无阻断，别名/间接调用、其他模式及组合仍未全审计。"
     }
   ],
-  "reviewedInterfaceSha256": "3f5c63fe76b1252574d2455fe5695a4649694902302618af65b8a731758fdb70"
+  "reviewedInterfaceSha256": "01c2d047416cbe9953b46cb4580c95bc65664b3bff6fe0661c1a2d693d7e99fc"
 }

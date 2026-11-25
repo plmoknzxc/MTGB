@@ -47,6 +47,27 @@ public static class OnlineRoomFormatValidation
             var legality = new DeckFormatLegality(); legality.PrepareForValidation("duelcommander", catalog);
             var lutriCard = DeckRepository.ResolveCard(lutri, catalog);
             Require(legality.Get(lutriCard, "duelcommander", DeckFormatLegality.Current, true) == "legal" && legality.Get(lutriCard, "duelcommander", DeckFormatLegality.Current, false, true) == "banned", "Commander/companion ban roles conflated");
+            var alchemy = catalog.First(c => c.cardName == "Key to the Archive" && c.setCode == "YMID" && !c.forgeAmbiguous);
+            var paper = catalog.First(c => c.cardName == "Clifftop Retreat" && c.setCode != "YEOE" && !c.forgeAmbiguous);
+            var alchemyReprint = catalog.First(c => c.cardName == "Clifftop Retreat" && c.setCode == "YEOE" && !c.forgeAmbiguous);
+            Require(legality.Get(alchemy, "duelcommander", DeckFormatLegality.Current) == "not_legal"
+                && legality.Get(alchemy, "duelcommander", DeckFormatLegality.NoBanlist) == "not_legal",
+                "Digital-only Alchemy card appeared legal in Duel Commander");
+            var editorLegality = new DeckFormatLegality();
+            var editorRefresh = editorLegality.Refresh("duelcommander", DeckFormatLegality.Current, catalog);
+            while (editorRefresh.MoveNext()) { }
+            Require(editorLegality.Error == null
+                && editorLegality.Get(alchemy, "duelcommander", DeckFormatLegality.Current) == "not_legal",
+                "Deck editor refresh did not apply the paper-card pool");
+            Require(legality.Get(paper, "duelcommander", DeckFormatLegality.Current) == "legal"
+                && legality.Get(alchemyReprint, "duelcommander", DeckFormatLegality.Current) == "not_legal",
+                "Paper and Alchemy printings were conflated");
+            legality.PrepareForValidation("brawl", catalog);
+            Require(legality.Get(alchemy, "brawl", DeckFormatLegality.Current) == "legal",
+                "Alchemy was excluded from Brawl");
+            var alchemyDeck = new DeckDefinition { format = "duelcommander", cards = new() { Entry("Plains", 98), Entry("Key to the Archive") }, commanders = new() { Entry("Isamaru, Hound of Konda") }, sideboard = new() };
+            Require(!Accept(alchemyDeck, "duelcommander") && Accept(alchemyDeck, "brawl"),
+                "Duel/Brawl authority did not distinguish Alchemy legality");
             var restricted = JsonUtility.FromJson<DeckDefinition>(JsonUtility.ToJson(deck));
             var recall = catalog.First(card => card.cardName == "Ancestral Recall" && !card.forgeAmbiguous);
             restricted.cards.Add(new DeckEntry { cardId = recall.cardID, setCode = recall.setCode, collectorNumber = recall.CollectorNumber, count = 2 });
@@ -57,7 +78,7 @@ public static class OnlineRoomFormatValidation
             var sanitized = (OnlineRoomConfig)typeof(OnlineMatchService).GetMethod("SanitizeRoomConfig", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { config });
             var copy = JsonUtility.FromJson<OnlineRoomConfig>(JsonUtility.ToJson(sanitized));
             Require(copy.formatId == "modern" && copy.bestOf == 3, "Format lost in room configuration");
-            const string result = "PASS: room format roundtrip, legal deck acceptance, illegal deck rejection, Vintage restricted count, Duel/Brawl 100-card structure and fixed room rules, unsupported variants rejected. Native commander eligibility is validated separately.";
+            const string result = "PASS: room formats, Vintage restricted counts, Duel/Brawl 100-card rules, and Alchemy paper-pool checks through editor refresh and server authority. Native commander eligibility is validated separately.";
             Debug.Log(result); return result;
         }
         finally { UnityEngine.Object.DestroyImmediate(owner); }

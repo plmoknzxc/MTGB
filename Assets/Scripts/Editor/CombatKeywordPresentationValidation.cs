@@ -40,11 +40,10 @@ public static class CombatKeywordPresentationValidation
     static IEnumerator Guard(IEnumerator test,bool countersOnly)
     {
         string language=GamePreferences.Language;
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
         try {
             while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"result.txt",countersOnly?"PASS: original infect/wither native result inputs, zh-CN/current scale; three recipient frames, exact red PT and counter count with nonempty generated numeric glyphs after compact-counter overflow fix; screenshot verification separate. No new native effect start or unrelated UI regression.":"PASS: original native R29 inputs, zh-CN/current text scale; exact surviving/dead card identities, red counter-modified PT, creature -1/-1 counter and player poison amounts, both seats' poison/PT layout; native defender-owned banding damage allocation all add/confirm rays, legal gates, stale/duplicate/nonacting guards and resumed overlay cleanup. Existing consumers, not new UI firsts; attack-band construction remains a confirmed separate gap; no complete R29/all-combat/live-network claim.");
-        } finally {running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        } finally {running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui,bool countersOnly)
     {

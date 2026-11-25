@@ -25,7 +25,6 @@ public static class BattlefieldRowBoundaryPresentationValidation
     {
         foreach(string locale in new[]{"zh-CN","en-US","ja-JP"}) {
             GamePreferences.SetLanguage(locale);while(!GamePreferences.Ready)yield return null;
-            var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();if(banner!=null)banner.enabled=false;
             var packet=BattlefieldStressPresentationValidation.Fixture();
             var stack=packet.stackItems;var stackText=packet.stack;int stackCount=packet.stackCount;
             // The stack itself occupies the right edge. Test dense-card input

@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix='mtgb-attack-') as temp, (out/'engine.lo
     start=Path(temp)/'start.json'
     start.write_text(json.dumps({'session':'attack-test','seed':4,'startingLife':20,'firstPlayerSeat':1,'decks':[deck,deck]}),encoding='utf-8')
     cp=str(classes)+';'+str(runtime/'classes')+';'+str(runtime/'lib/*')
-    p=subprocess.Popen([str(runtime/cfg['java']),'-Djava.awt.headless=true','-cp',cp,'mtgb.bridge.AttackDefenderFixture',str(runtime/cfg['assets']),str(start)],cwd=runtime/cfg['assets'],env=dict(os.environ,APPDATA=temp,LOCALAPPDATA=temp),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=log,text=True,encoding='utf-8')
+    p=subprocess.Popen([str(runtime/cfg['java']),'-Djava.awt.headless=true','-Dmtgb.test.combatGroups=true','-cp',cp,'mtgb.bridge.AttackDefenderFixture',str(runtime/cfg['assets']),str(start)],cwd=runtime/cfg['assets'],env=dict(os.environ,APPDATA=temp,LOCALAPPDATA=temp),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=log,text=True,encoding='utf-8')
     messages=queue.Queue();threading.Thread(target=lambda:[messages.put(json.loads(line)) for line in p.stdout],daemon=True).start()
     def read():
         m=messages.get(timeout=25);trace.write(json.dumps(m)+'\n');trace.flush()
@@ -58,14 +58,17 @@ with tempfile.TemporaryDirectory(prefix='mtgb-attack-') as temp, (out/'engine.lo
         player=m['views'][0]['players'][1]['targetId']
         allowed={('player',player),('card',walker),('card',battle)}
         pairs=[o for o in m['request']['options'] if o['id'].startswith('attack:')]
-        assert len(pairs)==9,pairs
+        rhino=next(x['id'] for x in one if x['name']=='Charging Rhino')
+        assert len(pairs)==12,pairs
         assert {(o['defenderKind'],o['defenderId']) for o in pairs}==allowed
-        assert {o['attackerId'] for o in pairs}==set(attackers)
+        assert {o['attackerId'] for o in pairs}==set(attackers+[rhino])
         snapshot(m,'initial')
         reject(m,'attack:'+str(a)+':card:999999','invalid-option')
         valid=f'attack:{a}:player:{player}'
         reject(m,valid,'wrong-seat',2)
         previous=m;m=respond(m,valid);assigned(m,a,'player',player)
+        send(m,valid,order=[a,b]);m=request();assigned(m,a,'player',player);assigned(m,b,'player',player)
+        send(m,f'attack-remove:{a}',order=[a,b]);m=request();assigned(m,a);assigned(m,b)
         send(m,valid,order=[a,b]);m=request();assigned(m,a,'player',player);assigned(m,b,'player',player)
         send(m,valid,order=[a,a]);reply=read();assert reply['type']=='rejected' and reply['error']=='invalid-order',reply
         m=respond(m,'reset-attacks');assigned(m,a);assigned(m,b)
@@ -83,7 +86,8 @@ with tempfile.TemporaryDirectory(prefix='mtgb-attack-') as temp, (out/'engine.lo
         m=respond(m,f'attack:{c}:card:{battle}');assigned(m,c,'card',battle)
         assigned(m,a,'player',player);assigned(m,b,'card',walker)
         snapshot(m,'all-assigned')
-        m=respond(m,'ok');passes=set()
+        m=respond(m,f'attack:{rhino}:player:{player}')
+        m=respond(m,'ok');passes=set();tested_blocks=False
         while True:
             v=m['views'][0]
             if v['players'][1]['life']==18:
@@ -91,12 +95,35 @@ with tempfile.TemporaryDirectory(prefix='mtgb-attack-') as temp, (out/'engine.lo
                 assert next(c for c in field(m,1) if c['id']==battle)['defense']==3
                 assert next(c for c in field(m,1) if c['planeswalker'])['loyalty']==5
                 assert next(c for c in field(m,2) if c['battle'])['defense']==5
-                assert passes=={1,2},passes
+                assert passes=={1,2} and tested_blocks,passes
                 snapshot(m,'resolved');break
+            if m['request']['kind']=='InputBlock' and not tested_blocks:
+                bears=[x['id'] for x in field(m,2) if x['name']=='Grizzly Bears']
+                assert len(bears)==3
+                first,second,third=bears
+                def block_check(expected):
+                    actual={x['id'] for x in field(m,2) if a in x.get('blockedAttackerIds',[])}
+                    assert actual==set(expected),(actual,expected)
+                option=f'block:{first}:{a}'
+                limited=f'block:{first}:{rhino}'
+                assert next(o for o in m['request']['options'] if o['id']==limited)['blockTargetSlots']==1
+                send(m,limited,order=bears);reply=read()
+                assert reply['type']=='rejected' and reply['error']=='invalid-order',reply
+                send(m,option,order=bears);m=request();block_check(bears)
+                m=respond(m,f'block-remove:{third}');block_check([first,second])
+                send(m,option,order=[first,third]);reply=read()
+                assert reply['type']=='rejected' and reply['error']=='invalid-order',reply
+                m=respond(m,f'block:{third}:{a}');block_check(bears)
+                send(m,option,order=[first,second]);m=request();block_check([third])
+                m=respond(m,option);block_check([first,third])
+                send(m,f'block-remove:{third}',order=[third,first]);m=request();block_check([])
+                m=respond(m,limited)
+                assert next(x for x in field(m,2) if x['id']==first)['blockedAttackerIds']==[rhino]
+                tested_blocks=True
             if m['request']['kind']=='InputPassPriority':passes.add(m['request']['seat'])
             assert time.monotonic()<deadline,'Combat damage timeout'
             m=respond(m,'ok')
-        text='PASS: Unity empty-order single attacker, valid group, duplicate group rejected, all/recall all; 3 attackers independently assigned to player/planeswalker/own battle protected by opponent; reassign, same-destination idempotency, recall; invalid/duplicate/stale/wrong-seat rejected; defender creature/friendly planeswalker/self-protected battle excluded; both seats pass; real combat life 20->18, loyalty 5->3, defense 5->3, other counters unchanged.'
+        text='PASS: Unity empty-order single attacker, valid group, grouped attack recall, three identical blockers assigned, one withdrawn/rejoined, mixed-direction toggle and over-cap group rejected, singleton blocked Charging Rhino, group pair/full recall, duplicate group rejected, all/recall all; 3 attackers independently assigned to player/planeswalker/own battle protected by opponent; reassign, same-destination idempotency, recall; invalid/duplicate/stale/wrong-seat rejected; defender creature/friendly planeswalker/self-protected battle excluded; both seats pass; real combat life 20->18, loyalty 5->3, defense 5->3, other counters unchanged.'
         result.write_text(text,encoding='utf-8');print(text)
     except Exception as error:
         result.write_text('FAIL: '+repr(error),encoding='utf-8');raise

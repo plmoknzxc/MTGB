@@ -35,7 +35,7 @@ public static class VariableBranchPresentationValidation
     static IEnumerator Guard(ForgeBattlefieldController ui){var stack=new Stack<IEnumerator>();stack.Push(Validate(ui));try{while(stack.Count>0){object c;try{var e=stack.Peek();if(!e.MoveNext()){(e as IDisposable)?.Dispose();stack.Pop();continue;}c=e.Current;if(c is IEnumerator nested){stack.Push(nested);continue;}}catch(Exception error){File.WriteAllText(Output+"/result.txt","FAIL "+error);throw;}yield return c;}File.WriteAllText(Output+"/result.txt","PASS: native Doodle choices in both seats, selected confirmation and source identity; native join-forces range/second payer, Vermin life enumeration/local draft and confirmation in three locales, exact option indices, stale/duplicate/nonacting gates, View/Return font stability, numeric/payment dock rectangles, native next-priority cleanup. Secret-choice projection and spectator filtering through OnlineMatchSession.Poll are adapters with archived native envelopes, not live-network or additional effect tests.");}finally{while(stack.Count>0)(stack.Pop() as IDisposable)?.Dispose();Running=false;}}
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {
-        string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+        string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         try{foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}){
             int revision=GamePreferences.Revision;bool change=GamePreferences.Language!=lang;GamePreferences.SetLanguage(lang);float until=Time.realtimeSinceStartup+20;while((!GamePreferences.Ready||change&&revision==GamePreferences.Revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale unavailable");yield return Frame();File.AppendAllText(Output+"/steps.log","requested="+lang+" loaded="+GamePreferences.Language+" revision="+GamePreferences.Revision+"\n");
             foreach(int actor in new[]{1,2})foreach(int count in new[]{0,1}){
@@ -61,7 +61,7 @@ public static class VariableBranchPresentationValidation
             ui.Present(Read("join-forces","resolved-other"),2,false,null,null,"");yield return Frame();Check(!pay.gameObject.activeInHierarchy&&GameObject.Find("CardAbilityChoices")==null,"Payment/number retained after next priority");
         }
         yield return ProjectSecretRequests();
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
     }
     static IEnumerator ProjectSecretRequests()
     {

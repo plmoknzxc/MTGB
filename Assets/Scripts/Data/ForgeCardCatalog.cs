@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>Display projection of the pinned Forge catalog. Contains no executable card effects.</summary>
 public static class ForgeCardCatalog
 {
-    public const string Revision = "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676";
+    public const string Revision = "583714b8bfbd9cb04f8bc39ad95861190caf7691";
     public const int Protocol = 1;
     public static string Root => Path.Combine(PrintingKeyUtility.ApplicationRoot, "ForgeRuntime");
     public static string BundledJavaRelativePath => Path.DirectorySeparatorChar == '\\' ? "jre/bin/java.exe" : "jre/bin/java";

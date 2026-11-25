@@ -1,6 +1,6 @@
 # 对战统一使用新场景
 
-产品对战默认场景现在统一为IntegratedBattlefieldRedesign。本地AI、普通联机、观战、录像回放和后台视频导出引用同一个ForgeBattlefieldController.SceneName；不再按本地／联机分叉选择旧场景。新场景识别按准确场景名，不将旧场景当作可用战场。
+产品对战默认场景在该版本统一为平面战场。本地AI、普通联机、观战、录像回放和后台视频导出引用同一个ForgeBattlefieldController.SceneName；不再按本地／联机分叉选择旧场景。新场景识别按准确场景名，不将旧场景当作可用战场。
 
 EditorBuildSettings、发布／开发客户端构建和交互增量构建只列Main与新战场，旧战场从构建移除。旧场景工程文件保留原样作历史；遗留加载的sceneLoaded守卫会立即转到新场景，包括编辑器直接从旧场景启动。原场景SHA256仍为 `3ff3cb51506c876a021973b1852beb6b6902fa12ab20dfdf964d8ec808633405`。
 

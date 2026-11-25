@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "capture": [
+    1518,
+    927
+  ],
+  "protectedCount": 45,
+  "newUiOverlaps": [],
+  "leftInfoLandOverlaps": [],
+  "ownManaClearInBothHandStates": true,
+  "scope": "Fixed composition geometry; raised hand and hover enlargement may cover battlefield by explicit user direction"
+}

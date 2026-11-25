@@ -6,12 +6,17 @@ public sealed partial class ForgeBattlefieldController
         "Alpha" => "α", "Beta" => "β", "Gamma" => "γ", _ => ""
     };
 
-    private static string SectorName(string sector) => sector switch {
-        "Alpha" => TapPaymentText("α 分区", "Alpha sector", "アルファ・セクター"),
-        "Beta" => TapPaymentText("β 分区", "Beta sector", "ベータ・セクター"),
-        "Gamma" => TapPaymentText("γ 分区", "Gamma sector", "ガンマ・セクター"),
+    private static string SectorChoiceLabel(string sector) => sector switch {
+        "Alpha" => TapPaymentText("阿尔法","Alpha","アルファ"),
+        "Beta" => TapPaymentText("贝塔","Beta","ベータ"),
+        "Gamma" => TapPaymentText("伽马","Gamma","ガンマ"),
         _ => ""
     };
+    private static string SectorName(string sector)
+    {
+        string name=SectorChoiceLabel(sector);
+        return name.Length==0?"":name+TapPaymentText("星区"," sector","・セクター");
+    }
 
     private void PresentSectorBadge(RectTransform face, Vector2 size, ForgeCardView card)
     {
@@ -35,9 +40,9 @@ public sealed partial class ForgeBattlefieldController
     {
         string assigned = card.zone == "Battlefield" ? SectorName(card.sector) : "";
         string chosen = card.faceDown ? "" : SectorName(card.chosenSector);
-        string text = assigned.Length == 0 ? "" : TapPaymentText("所属分区：", "Assigned sector: ", "所属セクター：") + assigned;
+        string text = assigned.Length == 0 ? "" : TapPaymentText("所属星区：", "Assigned sector: ", "所属セクター：") + assigned;
         if (chosen.Length > 0) text += (text.Length == 0 ? "" : "\n")
-            + TapPaymentText("已选分区：", "Chosen sector: ", "選んだセクター：") + chosen;
+            + TapPaymentText("已选星区：", "Chosen sector: ", "選んだセクター：") + chosen;
         return text;
     }
 }

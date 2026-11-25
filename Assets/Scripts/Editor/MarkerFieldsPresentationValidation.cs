@@ -34,7 +34,7 @@ public static class MarkerFieldsPresentationValidation
             Check(Root.Find("InspectPanel/Art").GetComponent<Image>().sprite.texture==expected.texture,"Actual hover source texture "+key);Check(!Root.Find("InspectPanel/Art/MissingArt").gameObject.activeSelf,"Public source has no missing-art placeholder");}
         var scroll=rules.GetComponentInParent<ScrollRect>();Check(rules.GetPreferredValues(rules.text,rules.rectTransform.rect.width,10000).y<=rules.rectTransform.rect.height+1,"Full detail text geometry");if(scroll!=null){scroll.verticalNormalizedPosition=0;yield return Frame();}
     }
-    static IEnumerator Validate(ForgeBattlefieldController ui){var language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
+    static IEnumerator Validate(ForgeBattlefieldController ui){var language=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         try{float end=Time.realtimeSinceStartup+15;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<end)yield return null;GamePreferences.SetLanguage("zh-CN");end=Time.realtimeSinceStartup+15;while((!GamePreferences.Ready||GamePreferences.Language!="zh-CN")&&Time.realtimeSinceStartup<end)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language=="zh-CN","Main locale ready");
             foreach(int seat in new[]{1,2}){
                 var v=Read("kick-"+seat);int calls=0;ui.Present(null,v.seat,false,null,null,"");ui.Present(v,v.seat,false,_=>calls++,null,"");yield return Frame();var card=v.players.SelectMany(p=>p.effectMarkers).First(c=>c.markerKind=="effect");
@@ -51,7 +51,7 @@ public static class MarkerFieldsPresentationValidation
             // Presentation adapter, not a new hidden-source effect result.
             var hidden=Read("kick-1");var anon=new ForgeCardView{id=999901,name="持续效果",effectMarker=true,markerKind="effect",ownerSeat=1,zone="Command",currentType="Effect",currentRules="来源牌为非公开信息。"};hidden.players[0].effectMarkers=new[]{anon};ui.Present(null,1,false,null,null,"");ui.Present(hidden,1,false,null,null,"");yield return Frame();yield return Hover(anon,null);Check(Root.Find("InspectPanel/Name").GetComponent<Text>().text=="持续效果"&&Root.Find("InspectPanel/Art").GetComponent<Image>().sprite==null,"ADAPTER anonymous source has no identity/art leak");
             Check(anon.printingKey==null&&anon.effectSourceName==null&&anon.effectSourcePrintingKey==null,"ADAPTER anonymous protocol identity absent");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(language);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(language);}
     }
 }
 #endif

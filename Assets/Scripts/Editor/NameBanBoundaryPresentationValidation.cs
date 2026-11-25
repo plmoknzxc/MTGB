@@ -23,7 +23,7 @@ public static class NameBanBoundaryPresentationValidation
     static IEnumerator Guard(ForgeBattlefieldController ui){var it=Validate(ui);try{while(true){object next;try{if(!it.MoveNext())break;next=it.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS_BOUNDED: actual mandatory Card type and color1/1 choice/native confirmation rays; readonly/stale/duplicate/dismissal guards, fixed font and View Return; current exact blocked/restored priority options. Name/tax/payment/control selectors reuse existing proofs; native outcomes separate, principal locale only.");}finally{(it as IDisposable)?.Dispose();Running=false;}}
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {
-        bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+        bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         try{
             var meta=JsonUtility.FromJson<Meta>(File.ReadAllText(Base+"/type-color-latest.json"));Check(meta.status=="PASS"&&meta.runtimeHash==JsonUtility.FromJson<Meta>(File.ReadAllText("ForgeRuntime/runtime.json")).runtimeHash,"Exact current native producer/runtime");
             foreach(string label in new[]{"choice-0","choice-1","confirmed-choice-1"}){
@@ -41,7 +41,7 @@ public static class NameBanBoundaryPresentationValidation
             }
             var blocked=Read(meta.directory,"completed-2");ui.Present(blocked,1,true,null,null,"");yield return Frame();Check(ui.OptionIndex("card:124")<0,"Current native own Shock blocked by chosen Instant");
             var restored=Read(meta.directory,"completed-4");ui.Present(restored,1,true,null,null,"");yield return Frame();Check(ui.OptionIndex("card:124")>=0,"Same exact Shock restored after Archon removal");Check(!GameObject.Find("CardAbilityChoices")?.activeInHierarchy??true,"Priority clears mandatory chooser");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;}
     }
 }
 #endif

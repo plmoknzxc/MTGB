@@ -22,7 +22,7 @@ public static class SearchBoundaryPresentationValidation
  static IEnumerator Guard(ForgeBattlefieldController ui){var tasks=new Stack<IEnumerator>();tasks.Push(Validate(ui));try{while(tasks.Count>0){object next;try{var t=tasks.Peek();if(!t.MoveNext()){tasks.Pop();continue;}next=t.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}if(next is IEnumerator nested)tasks.Push(nested);else yield return next;}File.WriteAllText(Output+"/result.txt","PASS: actual search native prompts/pickers, three languages on changed confirmations; main-language restricted/grave/hand native identity and confirmation, cancellation, request/seat/duplicate guards, actual rays and fixed fonts/bounds; existing binary regression. UI increment only; native rule outcomes independently proved.");}finally{while(tasks.Count>0)(tasks.Pop() as IDisposable)?.Dispose();Running=false;}}
  static IEnumerator Validate(ForgeBattlefieldController ui)
  {
-  string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var migration=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool migrationEnabled=migration!=null&&migration.enabled;if(migration!=null)migration.enabled=false;var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
+  string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool moduleEnabled=module!=null&&module.enabled;if(module!=null)module.enabled=false;
   try{foreach(string language in new[]{"zh-CN","en-US","ja-JP"}){
    int revision=GamePreferences.Revision;bool changing=GamePreferences.Language!=language;GamePreferences.SetLanguage(language);float until=Time.realtimeSinceStartup+12;while((!GamePreferences.Ready||changing&&GamePreferences.Revision==revision)&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale not ready");
    // Earlier eighteen completed Chinese cells retain their original FAIL run.
@@ -46,7 +46,7 @@ public static class SearchBoundaryPresentationValidation
    }
    var legacy=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText("Tools/Validation/Reports/RandomMechanics/xeno-dec-increment-choice.json"));int legacyCalls=0;ui.Present(null,1,false,null,null,"");ui.Present(legacy,1,true,i=>{Check(i==1,"Legacy binary identity");legacyCalls++;},null,"");yield return Frame();Click(GameObject.Find("ValueOption_1").GetComponent<Button>());Check(legacyCalls==1,"Legacy binary failed");File.AppendAllText(Output+"/steps.log",language+" legacy-binary PASS\n");
    ui.Present(null,1,false,null,null,"");ui.Present(Read("mixed-grave","confirm-2"),1,true,_=>{},null,"");yield return Frame();yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Output+"/"+language+"-alternate-search.png");yield return new WaitForSecondsRealtime(.2f);
-  }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(migration!=null)migration.enabled=migrationEnabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(locale);}
+  }}finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=moduleEnabled;GamePreferences.SetLanguage(locale);}
  }
 }
 #endif

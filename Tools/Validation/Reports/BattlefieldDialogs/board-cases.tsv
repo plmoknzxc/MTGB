@@ -1,0 +1,19 @@
+案例	场面快照	输入	双方场上牌数	双方头像可见	记录可见	抽查详情的牌	进入详情
+boardcase-00	Tools/Validation/Reports/SpecialStates/snapshot.json		1	True	True	Grizzly Bears	True
+boardcase-01	Tools/Validation/Reports/EmblemFaceDown/morph-down.json	InputPassPriority	34	True	True	Face-down card	True
+boardcase-02	Tools/Validation/Reports/EmblemFaceDown/morph-up.json	InputPassPriority	34	True	True	Garruk, Cursed Huntsman	True
+boardcase-03	Tools/Validation/Reports/EmblemFaceDown/emblem.json	InputPassPriority	33	True	True	Face-down card	True
+boardcase-04	Tools/Validation/Reports/Prepare/ready.json	InputPassPriority	26	True	True	Emeritus of Woe	True
+boardcase-05	Tools/Validation/Reports/Prepare/payment.json	InputPayManaOfCostPayment	26	True	True	Emeritus of Woe	True
+boardcase-06	Tools/Validation/Reports/Prepare/stack.json	InputPassPriority	26	True	True	Emeritus of Woe	True
+boardcase-07	Tools/Validation/Reports/Prepare/resolved.json	InputPassPriority	26	True	True	Emeritus of Woe	True
+boardcase-08	Tools/Validation/Reports/PlayerControl/combat-controlled-hand.json	InputPassPriority	12	True	True	Grizzly Bears	True
+boardcase-09	Tools/Validation/Reports/PlayerControl/combat-slave-view.json		12	True	True	Grizzly Bears	True
+boardcase-10	Tools/Validation/Reports/ModifiedCharacteristics/field.json	InputPassPriority	9	True	True	Grizzly Bears	True
+boardcase-11	Tools/Validation/Reports/MarkerCoverage/snapshot.json		1	True	True	Grizzly Bears	True
+boardcase-12	Tools/Validation/Reports/ManaPoolPayments/blue-payment.json	InputPayManaOfCostPayment	16	True	True	Grizzly Bears	True
+boardcase-13	Tools/Validation/Reports/ManaPoolPayments/wrong-color-retry.json	InputPayManaOfCostPayment	16	True	True	Grizzly Bears	True
+boardcase-14	Tools/Validation/Reports/FraMechanics/behold-board-resolved.json	InputPassPriority	52	True	True	Jace Beleren	True
+boardcase-15	.tools/attachments-1007/native/equipment-detach/1791334481675366000/action-1.json	InputPassPriority	4	True	True	Bonesplitter	True
+boardcase-16	.tools/copy-states-1009/ui-inputs/transform-back-token-seat1.json	InputPassPriority	9	True	True	Insectile Aberration	True
+boardcase-17	.tools/digital-identity-1010/ui-inputs/accept-final.json		22	True	True	Val, Marooned Surveyor	True

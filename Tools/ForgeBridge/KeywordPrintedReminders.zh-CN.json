@@ -1,0 +1,86 @@
+{
+  "威慑": {
+    "card": "自动龙械",
+    "set": "LCI",
+    "number": "144",
+    "text": "此生物只能被两个或更多生物阻挡。",
+    "url": "https://scryfall.com/card/lci/144/zhs/%E8%87%AA%E5%8A%A8%E9%BE%99%E6%A2%B0-(dinotomaton)"
+  },
+  "警戒": {
+    "card": "山地看护犬",
+    "set": "M21",
+    "number": "2",
+    "text": "此生物攻击时不需横置。",
+    "url": "https://scryfall.com/card/m21/2/zhs/%E5%B1%B1%E5%9C%B0%E7%9C%8B%E6%8A%A4%E7%8A%AC-(alpine-watchdog)"
+  },
+  "系命": {
+    "card": "神圣唱诗人",
+    "set": "M21",
+    "number": "4",
+    "text": "此生物所造成的伤害会让你获得等量的生命。",
+    "url": "https://scryfall.com/card/m21/4/zhs/%E7%A5%9E%E5%9C%A3%E5%94%B1%E8%AF%97%E4%BA%BA-(anointed-chorister)"
+  },
+  "连击": {
+    "card": "攻城进击兵",
+    "set": "M21",
+    "number": "37",
+    "text": "此生物能造成先攻伤害以及普通战斗伤害。",
+    "url": "https://scryfall.com/card/m21/37/zhs/%E6%94%BB%E5%9F%8E%E8%BF%9B%E5%87%BB%E5%85%B5-(siege-striker)"
+  },
+  "守军": {
+    "card": "符佑城垛",
+    "set": "M21",
+    "number": "44",
+    "text": "此生物不能攻击。",
+    "url": "https://scryfall.com/card/m21/44/zhs/%E7%AC%A6%E4%BD%91%E5%9F%8E%E5%9E%9B-(warded-battlements)"
+  },
+  "闪现": {
+    "card": "拘捕法球",
+    "set": "M21",
+    "number": "47",
+    "text": "你可以于你能够施放瞬间的时机下施放此咒语。",
+    "url": "https://scryfall.com/card/m21/47/zhs/%E6%8B%98%E6%8D%95%E6%B3%95%E7%90%83-(capture-sphere)"
+  },
+  "辟邪": {
+    "card": "硬背巨牙鲨",
+    "set": "M21",
+    "number": "72",
+    "text": "此生物不能成为由对手操控之咒语或异能的目标。",
+    "url": "https://scryfall.com/card/m21/72/zhs/%E7%A1%AC%E8%83%8C%E5%B7%A8%E7%89%99%E9%B2%A8-(spined-megalodon)"
+  },
+  "延势": {
+    "card": "炮台食人魔",
+    "set": "M21",
+    "number": "169",
+    "text": "此生物能阻挡具飞行异能的生物。",
+    "url": "https://scryfall.com/card/m21/169/zhs/%E7%82%AE%E5%8F%B0%E9%A3%9F%E4%BA%BA%E9%AD%94-(turret-ogre)"
+  },
+  "死触": {
+    "card": "暴躁双冠龙",
+    "set": "M21",
+    "number": "194",
+    "text": "它对生物造成的任何数量伤害都足以消灭后者。",
+    "url": "https://scryfall.com/card/m21/194/zhs/%E6%9A%B4%E8%BA%81%E5%8F%8C%E5%86%A0%E9%BE%99-(ornery-dilophosaur)"
+  },
+  "飞行": {
+    "card": "银嘴狮鹫",
+    "set": "M19",
+    "number": "285",
+    "text": "此生物只能被具飞行或延势异能的生物阻挡。",
+    "url": "https://scryfall.com/card/m19/285/zhs/%E9%93%B6%E5%98%B4%E7%8B%AE%E9%B9%AB-(silverbeak-griffin)"
+  },
+  "先攻": {
+    "card": "杰出队长",
+    "set": "M15",
+    "number": "25",
+    "text": "此生物会比不具先攻异能的生物提前造成战斗伤害。",
+    "url": "https://scryfall.com/card/m15/25/zhs/%E6%9D%B0%E5%87%BA%E9%98%9F%E9%95%BF-(preeminent-captain)"
+  },
+  "吞噬3": {
+    "card": "雷击族长老",
+    "set": "ALA",
+    "number": "117",
+    "text": "于它进场时，你可以牺牲任意数量的生物。此生物进场时上面有该数量三倍的+1/+1指示物。",
+    "url": "https://scryfall.com/card/ala/117/zhs"
+  }
+}

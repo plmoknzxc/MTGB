@@ -12,6 +12,7 @@ public static class ForgeControlPolicy
         // Casting automation never commits a payment. The explicit action
         // button starts native payment, in every priority-control mode.
         if(request.kind!="InputPassPriority")return -1;
+        if(view.heroVoteWindow > 0 && seat != view.lokiSeat)return -1;
         int ok=Array.FindIndex(request.options??Array.Empty<ForgeOption>(),o=>o!=null&&o.id=="ok"&&!o.disabled);
         if(ok<0)return -1;
         int playerSeat=request.playerSeat>0?request.playerSeat:seat;

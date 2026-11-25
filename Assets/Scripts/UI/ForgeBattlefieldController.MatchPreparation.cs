@@ -32,8 +32,10 @@ public sealed partial class ForgeBattlefieldController
         Present(new ForgeSeatView{players=seats},service.IsSpectator?1:service.LocalSeat,false,null,null,"");
         if(matchPreparationRoot!=null)Destroy(matchPreparationRoot.gameObject);
         matchPreparationRoot=Panel(surface,"BattlefieldPlayDraw",Vector2.zero,surface.rect.size,new Color(0,0,0,.42f));
-        SetOverlayLayer(matchPreparationRoot,30,true);
+        SetOverlayLayer(matchPreparationRoot,DecisionLayerOffset,true);
+        matchPreparationRoot.gameObject.AddComponent<CanvasGroup>().ignoreParentGroups=true;
         var dialog=Panel(matchPreparationRoot,"Choice",Vector2.zero,new Vector2(620,242),Ink);
+        if(HudTheme!=null)StyleHudSurface(dialog,HudInk,HudEdge);
         bool local=chooser>0&&chooser==service.LocalSeat;
         string title=chooser==0?TapPaymentText("正在准备起手牌…","Preparing opening hands…","初手を準備中…"):local?TapPaymentText("选择先攻或后攻","Choose play or draw","先攻か後攻を選択"):TapPaymentText("等待 "+PlayerDisplayName(chooser)+" 选择先后攻","Waiting for "+PlayerDisplayName(chooser)+" to choose play or draw",PlayerDisplayName(chooser)+"の先攻・後攻選択を待機中");
         Label(dialog,"Title",title,new Vector2(0,70),new Vector2(572,48),28,Paper);
@@ -42,6 +44,7 @@ public sealed partial class ForgeBattlefieldController
             var first=Button(dialog,"PlayFirst",TapPaymentText("先攻","Play","先攻"),new Vector2(-148,-58),new Vector2(264,54),()=>SubmitPlayDraw(true),Gold);
             var draw=Button(dialog,"DrawFirst",TapPaymentText("后攻","Draw","後攻"),new Vector2(148,-58),new Vector2(264,54),()=>SubmitPlayDraw(false),Gold);
             first.interactable=draw.interactable=service.IsConnected;
+            if(HudTheme!=null){MenuVisualTheme.StyleDeckTool(first);MenuVisualTheme.StyleDeckTool(draw);}
         }
     }
     private void SubmitPlayDraw(bool first)

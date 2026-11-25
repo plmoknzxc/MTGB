@@ -24,6 +24,7 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
     private GameObject countBadge;
     private Text countBadgeText;
     private bool singleCopyDisplay;
+    private int tileCount;
     public void SetSingleCopyDisplay(bool single){singleCopyDisplay=single;}
 
     public CardDefinition Card => card;
@@ -44,18 +45,25 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
 
     public void SetCount(int count)
     {
-        if (countBadgeText != null) countBadgeText.text = "x" + count;
-        if (countBadge != null) countBadge.SetActive(!singleCopyDisplay && count > 1 && !QuantityControlsVisible);
+        tileCount = count;
+        if (countBadgeText != null) countBadgeText.text = "×" + (singleCopyDisplay ? 1 : count);
+        RefreshCountBadge();
+    }
+
+    private void RefreshCountBadge()
+    {
+        if (countBadge != null)
+            countBadge.SetActive(tileCount > 1 && !singleCopyDisplay && !QuantityControlsVisible);
     }
 
     public void SetQuantityControls(bool visible, int count, bool canIncrease)
     {
         if (quantityControls == null) return;
-        quantityText.text = singleCopyDisplay?"1":"x"+count;
+        quantityText.text = singleCopyDisplay ? "1" : "×" + count;
         decreaseButton.interactable = count > 0;
         increaseButton.interactable = canIncrease;
         quantityControls.SetActive(visible);
-        if (countBadge != null) countBadge.SetActive(!singleCopyDisplay && !visible && count > 1);
+        RefreshCountBadge();
     }
 
     public void Configure(MainMenuController owner, CardDefinition cardDefinition, MainMenuCardTileZone tileZone)
@@ -72,10 +80,11 @@ public sealed class MainMenuCardTile : MonoBehaviour, IPointerEnterHandler, IPoi
         if (outline == null) outline = GetComponent<Outline>();
         if (outline == null) return;
 
-        outline.effectColor = highlighted
-            ? MenuVisualTheme.Accent
-            : MenuVisualTheme.Line;
-        outline.effectDistance = highlighted ? new Vector2(3f, 3f) : new Vector2(1.5f, -1.5f);
+        outline.enabled = highlighted;
+        Color accent=zone==MainMenuCardTileZone.MainDeck ? MenuVisualTheme.MainAccent
+            : zone==MainMenuCardTileZone.Collection ? MenuVisualTheme.LibraryAccent : MenuVisualTheme.SideAccent;
+        outline.effectColor = accent;
+        outline.effectDistance = Vector2.one;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

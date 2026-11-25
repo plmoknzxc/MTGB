@@ -44,7 +44,7 @@ public static class KnownPhrasePresentationValidation
   }
   }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
  }
- static IEnumerator Validate(ForgeBattlefieldController ui){string locale=GamePreferences.Language;float scale=GamePreferences.TextScale;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+ static IEnumerator Validate(ForgeBattlefieldController ui){string locale=GamePreferences.Language;float scale=GamePreferences.TextScale;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
   try{float end=Time.realtimeSinceStartup+15;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<end)yield return null;
    foreach(string language in new[]{"zh-CN","en-US","ja-JP"}){
     GamePreferences.SetLanguage(language);end=Time.realtimeSinceStartup+15;while((!GamePreferences.Ready||GamePreferences.Language!=language)&&Time.realtimeSinceStartup<end)yield return null;Check(GamePreferences.Ready&&GamePreferences.Language==language,"Actual locale "+language);
@@ -90,7 +90,7 @@ public static class KnownPhrasePresentationValidation
     var src=Read("chapter-1").stackItems.First().source;string unknown="Custom chapter effect. [Added once: Another Source (999)]";Check((string)Call(ui,"AbilityEffectText",src,unknown)==unknown,language+" unmatched chapter/wrapper preserved");
    }
    GamePreferences.SetLanguage("zh-CN");end=Time.realtimeSinceStartup+15;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<end)yield return null;GamePreferences.SetScale(1.3f);var max=Read("air");ui.Present(null,1,false,null,null,"");ui.Present(max,1,false,null,null,"");yield return Frame();var h=Root.GetComponentsInChildren<Text>().Single(t=>t.name=="Instruction");Check(!h.resizeTextForBestFit&&h.preferredHeight<=h.rectTransform.rect.height+1,"Max scale target prompt fits without shrinking");
-  }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetScale(scale);GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+  }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetScale(scale);GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
  }
 }
 #endif

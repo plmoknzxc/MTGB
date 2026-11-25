@@ -11,6 +11,9 @@ public final class BridgeRestartNotices {
         synchronized(ForgeBridge.class) {
             int actor=event.whoRestarted().getId()+1;
             ForgeBridge.restartRevision++;
+            ForgeBridge.openingFirstSeat=0;
+            Arrays.fill(ForgeBridge.mulliganCounts,0);Arrays.fill(ForgeBridge.mulliganHandSizes,0);
+            Arrays.fill(ForgeBridge.mulliganKept,false);
             ForgeBridge.libraryKnowledge.restarted();
             BridgeCardNotices.restarted();
             long id=ForgeBridge.noticeSequence.incrementAndGet();
@@ -27,6 +30,7 @@ public final class BridgeRestartNotices {
                 gui.shownInput=null;gui.inputRevision++;gui.publishedInputRevision=-1;
                 Map<String,Object> notice=new LinkedHashMap<>();
                 notice.put("id",id);notice.put("kind","restart");notice.put("actorSeat",actor);
+                ForgeBridge.stampNotice(notice);
                 notice.put("publicNotice",true);notice.put("value","");notice.put("message","");notice.put("title","");
                 gui.notices.addLast(notice);
             }

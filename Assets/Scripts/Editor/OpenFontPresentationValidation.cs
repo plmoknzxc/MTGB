@@ -82,6 +82,29 @@ public static class OpenFontPresentationValidation
         }
         foreach(var cost in face.GetComponentsInChildren<TemplateManaCost>())Check(cost.Complete,locale+" independent mana icons "+card+" "+cost.name);
     }
+    static void AuditMenuSymbols(Transform parent)
+    {
+        var host = new GameObject("MenuSymbolProbe", typeof(RectTransform), typeof(MenuTypography));
+        host.transform.SetParent(parent, false);
+        try
+        {
+            var label = CardSymbolText.Create(host.transform, "ManaCost", 22, Color.white);
+            var atlas = label.spriteAsset;
+            var tokens = new[] { atlas }.Concat(atlas.fallbackSpriteAssets)
+                .SelectMany(sheet => sheet.spriteCharacterTable).Select(symbol => symbol.name).ToArray();
+            label.rectTransform.sizeDelta = new Vector2(6000, 80);
+            label.enableWordWrapping = false;
+            label.text = CardSymbolText.Format(string.Concat(tokens.Select(token => "{" + token + "}")));
+            label.ForceMeshUpdate();
+            if (label.textInfo.characterCount != tokens.Length)
+                throw new Exception("Menu mana symbols missing from the rendered text");
+            for (int i = 0; i < tokens.Length; i++)
+                if (!(label.textInfo.characterInfo[i].textElement is TMP_SpriteCharacter sprite && sprite.name == tokens[i]))
+                    throw new Exception($"Menu font rendered {{{tokens[i]}}} with the wrong glyph in {GamePreferences.Language}");
+        }
+        finally { host.SetActive(false); UnityEngine.Object.Destroy(host); }
+    }
+
     static IEnumerator Validate()
     {
         while(!GamePreferences.Ready)yield return null;
@@ -102,6 +125,7 @@ public static class OpenFontPresentationValidation
         foreach(string locale in new[]{"zh-CN","ja-JP","en-US","zh-CN"}){
             GamePreferences.SetLanguage(locale);yield return Frame();float deadline=Time.realtimeSinceStartup+30;while((!GamePreferences.Ready||GamePreferences.Language!=locale)&&Time.realtimeSinceStartup<deadline)yield return null;
             Check(GamePreferences.Ready&&GamePreferences.Language==locale,locale+" ready");
+            AuditMenuSymbols(shelf.transform);
             for(int i=0;i<cards.Length;i++)Bind(faces[i],cards[i],arts[i]);
             foreach(var t in shelf.GetComponentsInChildren<Transform>(true))t.gameObject.layer=30;
             yield return Frame();

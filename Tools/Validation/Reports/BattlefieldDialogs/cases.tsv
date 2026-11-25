@@ -1,0 +1,85 @@
+样例	输入	用途	变体	来源	视角或提取方式	潮灯窗口与排序层	潮灯可点击按钮数	秘殿可点击按钮数	视口外按钮数（潮灯）	潮灯未命中	秘殿未命中	潮灯实际点击	潮灯提交	秘殿实际点击	秘殿提交	修复前未命中（有基线时）
+000	AssignAmount			.tools/combat-allocation/attempts/1791069853235960800/block-multiple-allocation-20.json		allocationPanel:42	3	3	0			Plus	amount-add:0	Plus	amount-add:0	
+001	AssignAmount	combatDamage		Tools/Validation/Reports/AdvancedInteractions/damage-assign.json		allocationPanel:42	5	5	0			Confirm	confirm-amount	Confirm	confirm-amount	
+002	AssignAmount	genericAmount	分配 · counters	.tools/quantity-allocation-1006/ui/20261006T0242457833280Z/inputs/counter-division-allocation-before-reset.json		allocationPanel:42	4	4	0			Confirm	confirm-amount	Confirm	confirm-amount	allocationPanel/Minus=blocked:Card_152/ForgePermanents
+003	AssignAmount	genericAmount	分配 · damage	.tools/target-branches-1006/ui/20261006T0113554204631Z/inputs/arc-partial-step-20.json		allocationPanel:42	3	3	0			Plus	amount-add:0	Plus	amount-add:0	allocationPanel/Reset=blocked:Card_145/ForgePermanents
+004	AssignAmount	genericAmount	分配 · mana	.tools/quantity-allocation-1006/ui/20261006T0242457833280Z/inputs/mana-combo-allocation-before-reset.json		allocationPanel:42	4	4	0			Confirm	confirm-amount	Confirm	confirm-amount	
+005	AssignAmount	genericAmount	分配 · shield	.tools/quantity-allocation-1006/ui/20261006T0242457833280Z/inputs/shield-division-allocation-before-reset.json		allocationPanel:42	3	3	0			Confirm	confirm-amount	Confirm	confirm-amount	allocationPanel/Confirm=blocked:Card_139/ForgePermanents;allocationPanel/Reset=blocked:Card_145/ForgePermanents
+006	ChooseModes	modes		Tools/Validation/Reports/CastChoiceFamilies/escalate-base-modes-seat1.json		landChoiceMenu:42	6	6	0			Mode_mode:0	mode:0	Mode_mode:0	mode:0	
+007	ChooseModes	spree		Tools/Validation/Reports/CastingChoices/cast-spree-modes-0.json		landChoiceMenu:42	4	4	0			Mode_mode:0	mode:0	Mode_mode:0	mode:0	
+008	ChooseNumber		cancel confirm-number number-minus number-minus-five	.tools/number-auction-1006/ui/20261006T0236220864847Z/inputs/hellion-large-number-120.json		landChoiceMenu:42,choiceHintPanel:0	3	3	0			ConfirmValue	confirm-number	ConfirmValue	confirm-number	
+009	ChooseNumber		cancel confirm-number number-minus number-plus	Tools/Validation/Reports/AdvancedInteractions/x-number.json		landChoiceMenu:42,choiceHintPanel:0	3	3	0			ConfirmValue	confirm-number	ConfirmValue	confirm-number	
+010	ChooseNumber		cancel confirm-number number-plus	.tools/reveal-cost-rollback-1008/native/sacrifice-reveal-before-mana/1791441437121148800/number-8-envelope.json	views/0	landChoiceMenu:42,choiceHintPanel:0	2	2	0			ConfirmValue	confirm-number	ConfirmValue	confirm-number	
+011	ChooseNumber		cancel confirm-number number-plus number-plus-five	Tools/Validation/Reports/CastChoiceFamilies/multikicker-base-number-seat1.json		landChoiceMenu:42,choiceHintPanel:0	2	2	0			ConfirmValue	confirm-number	ConfirmValue	confirm-number	
+012	ChooseOptions		confirm-cards reset-cards select	Tools/Validation/Reports/GenericChoices/colors-choices-0-4.json		landChoiceMenu:42	4	4	1			GenericOption_1	select:1	GenericOption_1	select:1	
+013	ChooseOptions		confirm-cards select	Tools/Validation/Reports/OpeningContracts/zero-choices-0.json		landChoiceMenu:42	1	1	0			GenericConfirm	confirm-cards	GenericConfirm	confirm-cards	
+014	ChooseOptions		reset-cards select	Tools/Validation/Reports/GenericChoices/colors-choices-0-1.json		landChoiceMenu:42	4	4	3			GenericOption_0	select:0	GenericOption_0	select:0	
+015	ChooseOptions		secretVote confirm-cards reset-cards select	.tools/vote-resolution-1009/ui-inputs/elrond-choice-30-wire.json	views/0	landChoiceMenu:42	3	3	0			GenericOption_1	select:1	GenericOption_1	select:1	
+016	ChooseOptions		secretVote select	.tools/vote-resolution-1009/ui-inputs/elrond-choice-28-wire.json	views/0	landChoiceMenu:42	2	2	0			GenericOption_0	select:0	GenericOption_0	select:0	
+017	ChooseOptions		select	Tools/Validation/Reports/GenericChoices/colors-choices-0-0.json		landChoiceMenu:42	3	3	3			GenericOption_0	select:0	GenericOption_0	select:0	
+018	ChooseOptions		vote confirm-cards reset-cards select	.tools/r03-payload-1010/ui-inputs/vote-1.json	views/0	landChoiceMenu:42	3	3	0			GenericOption_0	select:0	GenericOption_0	select:0	
+019	ChooseOptions		vote select	.tools/r03-payload-1010/ui-inputs/vote-0.json	views/0	landChoiceMenu:42	2	2	0			GenericOption_0	select:0	GenericOption_0	select:0	
+020	ChooseOptions	optionalCosts	confirm-cards reset-cards select	Tools/Validation/Reports/CastChoiceFamilies/bargain-optional-seat1.json		landChoiceMenu:42	4	4	0			Mode_reset-cards	reset-cards	Mode_reset-cards	reset-cards	
+021	ChooseOptions	optionalCosts	confirm-cards select	Tools/Validation/Reports/CastChoiceFamilies/bargain-base-optional-seat1.json		landChoiceMenu:42	3	3	0			Mode_confirm-cards	confirm-cards	Mode_confirm-cards	confirm-cards	
+022	ChoosePile	pile	empty	Tools/Validation/Reports/Piles/favor-empty-choice.json		selectionPanel:42	2	2	0			SelectPile_0		SelectPile_0		
+023	ChoosePile	pile	visible	Tools/Validation/Reports/Piles/fof-left-choice.json		selectionPanel:42	2	2	0			SelectPile_0		SelectPile_0		
+024	InputAttack			Tools/Validation/Reports/AttackDefenders/all-assigned.json			0	0	0							
+025	InputBlock			Tools/Validation/Reports/AdvancedInteractions/damage-blocking.json			0	0	0							
+026	InputChooseStartingHand			Tools/Validation/Reports/OpeningContracts/accept-hand-0.json		mulliganChoices:42	2	2	0			Mulligan_ok	ok	Mulligan_ok	ok	
+027	InputConfirm			Tools/Validation/Reports/FraMechanics/grave-empower-unknown.json		landChoiceMenu:42	2	2	0			ValueOption_0	ok	ValueOption_0	ok	
+028	InputConfirm		preview	Tools/Validation/Reports/AdvancedInteractions/battle-front-trigger.json		selectionPanel:42	2	2	0			SelectionAction_0	ok	SelectionAction_0	ok	
+029	InputConfirm	costConfirmation	manual	.tools/card-notices-1014/native/mana-source/1791956709432924800/step-16.json	views/0	targetChoiceActions:43,choiceHintPanel:0	2	2	0							
+030	InputConfirm	optionalReplacement		Tools/Validation/Reports/DamageDraw/damage-optional-accept-optional-12.json		abilityOrder:42	2	2	0							
+031	InputConfirm	optionalReplacement	manual	.tools/commander-boundaries-1024/inputs/ninjutsu-owner-replacement.json	views/0	abilityOrder:42	2	2	0							
+032	InputConfirmMulligan			Tools/Validation/Reports/Empower/draw-request-0.json		mulliganChoices:42	2	2	0			Mulligan_ok	ok	Mulligan_ok	ok	
+033	InputLondonMulligan			Tools/Validation/Reports/MulliganRounds/rounds-1-0-3-seat-2-selected-0.json		mulliganChoices:42	1	1	0			Mulligan_cancel	cancel	Mulligan_cancel	cancel	
+034	InputPassPriority		idle	Tools/Validation/Reports/AdvancedInteractions/battle-backface.json			0	0	0							
+035	InputPassPriority		stack	Tools/Validation/Reports/AdvancedInteractions/abilities-activated.json			0	0	0							
+036	InputPayManaOfCostPayment			Tools/Validation/Reports/ControlModes/payment.json		choiceHintPanel:0	0	0	0							
+037	InputSelectCardToRemoveCounter	removeCounters		.tools/counter-cost-boundary-1008/ui/20261008T0328452478416Z/zh-CN-remove-any-counter-cancel-0.json		selectionPanel:42	2	2	0			SelectionAction_0	cancel	SelectionAction_0	cancel	
+038	InputSelectCardsForConvokeOrImprovise	convoke		Tools/Validation/Reports/TapPayment/convoke-cancel-selection-0.json		selectionPanel:42	6	6	0			SelectionAction_0	ok	SelectionAction_0	ok	
+039	InputSelectCardsForConvokeOrImprovise	improvise		Tools/Validation/Reports/TapPayment/improvise-only-selection-0.json		selectionPanel:42	6	6	0			SelectionAction_0	ok	SelectionAction_0	ok	
+040	InputSelectCardsForConvokeOrImprovise	waterbend		Tools/Validation/Reports/TapPayment/waterbend-only-selection-0.json		selectionPanel:42	4	4	0			SelectionAction_0	ok	SelectionAction_0	ok	
+041	InputSelectCardsFromList			Tools/Validation/Reports/CardSelection/hand-choice.json		handChoiceActions:43,choiceHintPanel:0	2	2	0							
+042	InputSelectCardsFromList	behold		.tools/behold-exile-1008/ui/20261008T0749275256883Z/inputs/ordinary.json		selectionPanel:42	3	3	0			SelectionAction_0	cancel	SelectionAction_0	cancel	
+043	InputSelectCardsFromList	beholdExile		.tools/behold-exile-1008/ui/20261008T0749275256883Z/inputs/board-selected.json			0	0	0							
+044	InputSelectCardsFromList	collectEvidence		Tools/Validation/Reports/AdvancedInteractions/evidence-confirmed.json		selectionPanel:42	7	7	0			SelectionAction_0	ok	SelectionAction_0	ok	
+045	InputSelectCardsFromList	putLibraryCost		Tools/Validation/Reports/LibraryCosts/cancel-card-cards-1-0.json		selectionPanel:42	3	3	0			SelectionAction_0	cancel	SelectionAction_0	cancel	
+046	InputSelectEntitiesFromList			Tools/Validation/Reports/CardSelection/fetch-choice.json			0	0	0							
+047	InputSelectEntitiesFromList		proliferate	.tools/player-counters-1009/ui-inputs/mass-0.json	views/0	selectionPanel:42	5	5	0			SelectionAction_0	ok	SelectionAction_0	ok	
+048	InputSelectEntitiesFromList		secretVote	.tools/villain-multi-1009/ui-inputs/mob-controlled-choice-36-wire.json	views/0	landChoiceMenu:42	2	2	0			GenericOption_0	player:0	GenericOption_0	player:0	
+049	InputSelectEntitiesFromList		vote	.tools/vote-choice-1009/native/judgment-tie/1791551461266113500/vote-24-wire.json	views/0	selectionPanel:42	3	3	0			Artwork	card:268	Artwork	card:268	
+050	InputSelectEntitiesFromList	chooseLibraryCostOwner		Tools/Validation/Reports/LibraryCosts/cancel-card-players-1.json			0	0	0							
+051	InputSelectTargets		board	Tools/Validation/Reports/CommonMechanics/ascend-source-targets-2.json		targetChoiceActions:43	2	2	0							
+052	InputSelectTargets		offboard	Tools/Validation/Reports/AdvancedInteractions/graveyards-targets.json		selectionPanel:42	5	5	0			SelectionAction_0	ok	SelectionAction_0	ok	
+053	OrderAbilities			Tools/Validation/Reports/StackInteractions/triggers-order-start.json		abilityOrder:42	2	2	0							
+054	OrderAbilities	replacementOrder		Tools/Validation/Reports/DamageDraw/damage-add-first-order-12.json		abilityOrder:42	2	2	0							
+055	OrderCards			Tools/Validation/Reports/CardSelection/look-choice.json		selectionPanel:42	5	5	0			SelectionAction_3	confirm-cards	SelectionAction_3	confirm-cards	
+056	OrderCards	exertAttack		.tools/exert-branches-1006/ui/20261006T0147485127662Z/inputs/attack-exert-exert-choice-0.json		selectionPanel:42	2	2	0			SelectionAction_1	confirm-cards	SelectionAction_1	confirm-cards	
+057	RevealCards		cards	Tools/Validation/Reports/CardNames/arbiter-empty-reveal.json		handChoiceActions:43,choiceHintPanel:0	1	1	0							
+058	Scry			Tools/Validation/Reports/CommonMechanics/dungeon-scry.json		selectionPanel:42	2	2	0			SelectionAction_0	confirm-scry	SelectionAction_0	confirm-scry	
+059	SelectCards			Tools/Validation/Reports/CardSelection/gift-dialog-choice.json		selectionPanel:42	6	6	0			SelectionAction_4	confirm-cards	SelectionAction_4	confirm-cards	
+060	SelectCards	chooseSource		Tools/Validation/Reports/DamageDraw/damage-split-repeat-select-12.json		selectionPanel:42	9	9	0			Artwork	select:0	Artwork	select:0	
+061	SelectStackTarget			Tools/Validation/Reports/StackInteractions/spells-target-2.json		stackList:42	4	4	0			Confirm	ok	Confirm	ok	
+062	Surveil			Tools/Validation/Reports/CardSelection/surveil-choice.json		selectionPanel:42	4	4	0			SelectionAction_0	scry-top:138	SelectionAction_0	scry-top:138	
+063	dialog		cancel choice	Tools/Validation/Reports/AdvancedInteractions/abilities-dialog.json		landChoiceMenu:42	3	3	0			Option_0	choice:0	Option_0	choice:0	
+064	dialog		choice	Tools/Validation/Reports/CastChoiceFamilies/xconfluence-dialog-seat1.json		landChoiceMenu:42	3	3	0			Option_0	choice:0	Option_0	choice:0	
+065	dialog	cardName	choice	Tools/Validation/Reports/CardNames/arbiter-name-choice.json		landChoiceMenu:42	2	2	0			NameOption_0		NameOption_0		
+066	dialog	castingCosts	cancel choice	Tools/Validation/Reports/ModeChoices/evoke-choices.json		landChoiceMenu:42	3	3	0			Mode_choice:0	choice:0	Mode_choice:0	choice:0	
+067	dialog	dungeon	choice	Tools/Validation/Reports/CommonMechanics/dungeon-dialog-2.json		selectionPanel:42	3	3	0			Artwork	choice:0	Artwork	choice:0	
+068	dialog	dungeonRoom	choice	Tools/Validation/Reports/CommonMechanics/dungeon-dialog-3.json		landChoiceMenu:42	2	2	0			DungeonRoom_0	choice:0	DungeonRoom_0	choice:0	
+069	InputSelectEntitiesFromList		ringBearer	Tools/Validation/Reports/CommonMechanics/ring-select-2.json			0	0	0							
+070	AuditNotice		notice-dice	Tools/Validation/Reports/RandomBoundaries/monitor-cancel-retry-resolved-1.json	 / notice#1	randomResultRoot:10	0	0	0							
+071	AuditNotice		notice-coin	Tools/Validation/Reports/RandomMechanics/coin-lose-resolved.json	 / notice#1	randomResultRoot:10	0	0	0							
+072	InputConfirm	costConfirmation	payOrDecline	.tools/card-notices-1014/native/mana-source/1791956709432924800/step-16.json	views/0	targetChoiceActions:43,choiceHintPanel:0	2	2	0							
+073	AuditNotice		notice-card-reveal	.tools/card-notices-1014/native/forestcycling/1791954446039286100/step-26.json	views/1 / notice#3	cardNotice:CardNotice_3	0	0	0							
+074	dialog		creatureType	.tools/choice-payload-tail-1012/ui-inputs/portal-choose.json	views/0	landChoiceMenu:42	19	19	0			TypeOption_0	choice:0	TypeOption_0	choice:0	
+075	dialog	manaAbility	manaAbility	.tools/mana-choices-1016/after-Llanowar-Wastes/14.json	views/0	landChoiceMenu:42	2	2	0							
+076	AuditNotice		notice-restart	.tools/restart-series-1011/ui-input/mixed-final.json	views/0 / notice#1	noticeToast:10	0	0	0							
+077	dialog		sector	.tools/sector-display-1012/ui-inputs/choose.json	views/0	landChoiceMenu:42	3	3	0			Option_0	choice:0	Option_0	choice:0	
+078	AuditNotice		notice-ownership	.tools/series-ownership-1012/ui-inputs/ownership-notices.json	views/0 / notice#1	noticeToast:10	0	0	0							
+079	AuditNotice		notice-match-removal	.tools/series-ownership-1012/native/ownership-removal/1791758074046560700/after-2-wire.json	views/0 / notice#3	noticeToast:10	0	0	0							
+080	MoveCards		moveCards-contract	Tools/ForgeBridge/java/mtgb/bridge/ForgeBridge.java	constructed using manipulate contract and Tools\Validation\Reports\CardSelection\fetch-choice.json	selectionPanel:42	2	2	0							
+081	dialog	roomDoor	roomDoor	.tools/layers-spellbook-reconcile-1011/ui-input/room-face-3-wire.json	views/actor	landChoiceMenu:42	2	2	0			RoomDoorOption_0	choice:0	RoomDoorOption_0	choice:0	
+082	OrderCards		costOrder	.tools/cost-order-format-1009/ui-inputs/exile-before-mana-0.json		landChoiceMenu:42	2	2	0							
+083	InputConfirm		commanderReset	.tools/commander-perpetual-reset-1024/inputs/bounce.json	views/actor	selectionPanel:42	2	2	0			SelectionAction_0	ok	SelectionAction_0	ok	

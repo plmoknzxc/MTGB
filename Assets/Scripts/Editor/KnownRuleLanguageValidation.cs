@@ -44,7 +44,6 @@ public static class KnownRuleLanguageValidation
         GamePreferences.SetLanguage("zh-CN");float until=Time.realtimeSinceStartup+30;
         while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;
         Check(GamePreferences.Ready&&GamePreferences.Language=="zh-CN","Chinese resources ready");
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))notice.enabled=false;
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("LanguageBattlefield").AddComponent<ForgeBattlefieldController>();ui.enabled=false;
         var records=File.ReadAllLines(".tools/known-rule-language-1013/baseline-real.tsv").Select(line=>line.Split('\t')).ToArray();
         var first=Read(records[0][0]);ui.Present(first,1,false,null,null,"");yield return Frame();

@@ -107,6 +107,7 @@ public final class AvailableActions {
         if (sa.getPayCosts() == null || !sa.getPayCosts().hasManaCost()) {
             return true;
         }
+        // TODO include RemoveDeck:All when they weren't used
         // AI-only spending preferences must not veto human decisions.
         SpellAbility intent = sa.copy(player);
         intent.removeParam("AIPhyrexianPayment");

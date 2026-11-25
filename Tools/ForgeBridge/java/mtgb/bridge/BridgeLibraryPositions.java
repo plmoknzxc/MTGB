@@ -107,8 +107,10 @@ final class BridgeLibraryPositions {
         List<Card> library=new ArrayList<>(owner.getCardsIn(ZoneType.Library));settle(owner,library);
         if(!ForgeBridge.game.getStack().isResolving()&&ForgeBridge.game.costPaymentStack.peek()==null)privateBatches.clear();
         Map<Integer,Map<String,Object>> result=new TreeMap<>();
-        for(int key:new int[]{recipient,0}) {
-            var edge=known.getOrDefault(owner.getId(),Map.of()).get(key);if(edge==null)continue;
+        for(var entry:known.getOrDefault(owner.getId(),Map.of()).entrySet()) {
+            int key=entry.getKey();
+            if(key!=0 && key!=recipient && !BridgeLibraryKnowledge.sharesKnowledge(viewer,ForgeBridge.guis.get(key-1).controller.getPlayer()))continue;
+            var edge=entry.getValue();
             if(!matches(library,edge.top,false))edge.top.clear();if(!matches(library,edge.bottom,true))edge.bottom.clear();
             for(int i=0;i<edge.top.size();i++)put(result,library,i,key==0);
             for(int i=0;i<edge.bottom.size();i++)put(result,library,library.size()-edge.bottom.size()+i,key==0);
@@ -116,7 +118,7 @@ final class BridgeLibraryPositions {
         for(var place:fixed.getOrDefault(owner.getId(),List.of()))
             if(place.index<library.size()&&library.get(place.index).getId()==place.id)put(result,library,place.index,true);
         for(int i=0;i<library.size();i++) {
-            var card=library.get(i);if(!card.getView().canBeShownTo(viewer.getView()))continue;
+            var card=library.get(i);if(!BridgeLibraryKnowledge.visibleTo(card,viewer))continue;
             boolean publicInfo=ForgeBridge.guis.stream().allMatch(g->card.getView().canBeShownTo(g.controller.getPlayer().getView()));
             put(result,library,i,publicInfo);
         }

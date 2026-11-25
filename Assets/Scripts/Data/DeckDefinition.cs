@@ -8,6 +8,7 @@ public sealed class DeckDefinition
     // Local file identity, never included in the network deck payload.
     [NonSerialized] public string sourcePath;
     public string format = "standard";
+    public int commanderBracket;
     public string banlist = "current";
     public List<DeckEntry> commanders = new List<DeckEntry>();
     public List<DeckEntry> cards = new List<DeckEntry>();

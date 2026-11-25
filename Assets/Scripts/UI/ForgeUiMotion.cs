@@ -25,11 +25,21 @@ public sealed class ForgeUiMotion : MonoBehaviour
         Begin(position, size, angle, seconds, lift, null);
     }
 
-    public void Follow(RectTransform destination, float seconds, Action onComplete)
+    public void Follow(RectTransform destination, float seconds, Action onComplete, bool continueFlight=false)
     {
         if (follow == destination && IsMoving) return;
         Pose(destination, (RectTransform)transform.parent, out var position, out var size, out var angle);
-        Begin(position, size, angle, seconds, Mathf.Min(38,Vector2.Distance(((RectTransform)transform).anchoredPosition,position)*.07f), onComplete);
+        float lift=Mathf.Min(38,Vector2.Distance(((RectTransform)transform).anchoredPosition,position)*.07f);
+        if(continueFlight && IsMoving){
+            // A pending spell can acquire a new row halfway through this same flight.
+            // Preserve the clock and hand off directly for an unchanged dock.
+            if((end-position).sqrMagnitude<1 && (endSize-size).sqrMagnitude<1 && Mathf.Abs(Mathf.DeltaAngle(endAngle,angle))<1){
+                follow=destination;completed=onComplete;return;
+            }
+            seconds=Mathf.Max(.08f,duration-elapsed);
+            lift*=1-Mathf.Clamp01(elapsed/duration);
+        }
+        Begin(position, size, angle, seconds, lift, onComplete);
         follow = destination;
     }
 
@@ -48,7 +58,9 @@ public sealed class ForgeUiMotion : MonoBehaviour
     {
         if (!IsMoving) return;
         if (follow != null) Pose(follow, (RectTransform)rect.parent, out end, out endSize, out endAngle);
-        elapsed += Time.unscaledDeltaTime;
+        // A costly snapshot can consume the whole flight duration before its
+        // first rendered frame. Keep visible intermediate poses on a slow frame.
+        elapsed += follow!=null?Mathf.Min(Time.unscaledDeltaTime,.05f):Time.unscaledDeltaTime;
         float t = Mathf.Clamp01(elapsed / duration);
         float eased = 1 - Mathf.Pow(1 - t, 3);
         rect.anchoredPosition = Vector2.LerpUnclamped(start, end, eased) + Vector2.up * (Mathf.Sin(t * Mathf.PI) * arc);

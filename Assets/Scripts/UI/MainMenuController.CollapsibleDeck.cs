@@ -6,10 +6,10 @@ public sealed partial class MainMenuController
 {
     private bool detailsCollapsed, sideboardCollapsed, floatingDeckDetails;
     private float detailsCollapseProgress, sideboardCollapseProgress, floatingCloseAt;
-    private RectTransform deckLayoutRoot, deckArea, mainArea, sideArea;
+    private RectTransform deckLayoutRoot, deckArea, collectionArea, mainArea, sideArea;
     private Button detailsCollapseButton, sideboardCollapseButton;
+    private RectTransform detailChevron, sideChevron, detailSeam, sidePlate;
     private CanvasGroup sideAreaGroup, sideHeadingGroup;
-    private float expandedDeckWidth;
     private DeckHoverArtPopup deckArtHover;
     private DeckHoverArtPopup detailsArtHover;
 
@@ -17,32 +17,38 @@ public sealed partial class MainMenuController
     {
         deckLayoutRoot=(RectTransform)deckBuilderGroup.transform;
         RectTransform FindArea(string name)=>System.Array.Find(deckLayoutRoot.GetComponentsInChildren<RectTransform>(true),r=>r.name==name);
-        deckArea=FindArea("DeckBackplate");mainArea=FindArea("MainDeckScroll");sideArea=FindArea("SideboardScroll");
+        deckArea=FindArea("DeckBackplate");collectionArea=FindArea("CollectionBackplate");mainArea=FindArea("MainDeckScroll");sideArea=FindArea("SideboardScroll");
         if(deckArea==null||mainArea==null||sideArea==null)return;
-        var grid=mainDeckContent.GetComponent<GridLayoutGroup>();
-        expandedDeckWidth=grid.cellSize.x*4+grid.spacing.x*3+grid.padding.horizontal+74;
+        sidePlate=MenuVisualTheme.Detail(deckLayoutRoot,"SideboardBackplate",MenuVisualTheme.SideSurface).rectTransform;
+        sidePlate.SetSiblingIndex(deckArea.GetSiblingIndex());
+        MenuVisualTheme.SectionTop(sidePlate,MenuVisualTheme.SideAccent);
         sideAreaGroup=sideArea.GetComponent<CanvasGroup>();
         if(sideAreaGroup==null)sideAreaGroup=sideArea.gameObject.AddComponent<CanvasGroup>();
         sideHeadingGroup=sideboardCountText.GetComponent<CanvasGroup>();
         if(sideHeadingGroup==null)sideHeadingGroup=sideboardCountText.gameObject.AddComponent<CanvasGroup>();
-        detailsCollapseButton=MakeCollapseArrow("CollapseCardDetails","‹",()=>{
+        detailsCollapseButton=MakeCollapseArrow("CollapseCardDetails",out detailChevron,()=>{
             detailsCollapsed=!detailsCollapsed;floatingDeckDetails=false;previewVisible=false;if(detailsArtHover!=null)detailsArtHover.Hide();
             hoveredTile=null;floatingCloseAt=0;
         });
-        sideboardCollapseButton=MakeCollapseArrow("CollapseSideboard","‹",()=>sideboardCollapsed=!sideboardCollapsed);
+        sideboardCollapseButton=MakeCollapseArrow("CollapseSideboard",out sideChevron,()=>sideboardCollapsed=!sideboardCollapsed);
+        detailSeam=MenuVisualTheme.Detail(deckLayoutRoot,"DetailSeam",MenuVisualTheme.Etching).rectTransform;
+        detailSeam.SetSiblingIndex(detailsCollapseButton.transform.GetSiblingIndex());
         UpdateDeckCollapseLayout();
     }
 
-    private Button MakeCollapseArrow(string name,string label,UnityEngine.Events.UnityAction action)
+    private Button MakeCollapseArrow(string name,out RectTransform chevron,UnityEngine.Events.UnityAction action)
     {
         var go=new GameObject(name,typeof(RectTransform),typeof(Image),typeof(Button));
         go.transform.SetParent(deckLayoutRoot,false);
-        var image=go.GetComponent<Image>();image.sprite=IntegratedUiUtility.RoundedRect(32,32,8);
-        image.color=MenuVisualTheme.Raised;
         var button=go.GetComponent<Button>();button.onClick.AddListener(action);
-        var text=AddText(go.transform,"Arrow",label,36,MenuVisualTheme.Paper,TextAnchor.MiddleCenter);
-        text.raycastTarget=false;Stretch(text.rectTransform,0,0,0,0);
-        go.AddComponent<DeckCollapseArrowHover>();
+        MenuVisualTheme.StyleArchiveControl(button);
+        var icon=new GameObject("Arrow",typeof(RectTransform),typeof(DropdownChevron)).GetComponent<DropdownChevron>();
+        icon.transform.SetParent(go.transform,false);
+        icon.raycastTarget=false;
+        chevron=icon.rectTransform;
+        Place(chevron,Vector2.zero,new Vector2(20,20));
+        chevron.localScale=Vector3.one*1.5f;
+        icon.color=MenuVisualTheme.Silver;
         return button;
     }
 
@@ -60,23 +66,39 @@ public sealed partial class MainMenuController
         sideboardCollapseProgress=Mathf.MoveTowards(sideboardCollapseProgress,sideboardCollapsed?1:0,step);
         float d=Mathf.SmoothStep(0,1,detailsCollapseProgress),s=Mathf.SmoothStep(0,1,sideboardCollapseProgress);
         float w=deckLayoutRoot.rect.width,h=deckLayoutRoot.rect.height;
-        float right=w*.745f,normalLeft=right-expandedDeckWidth,left=Mathf.Lerp(normalLeft,60,d);
-        DeckRegion(deckArea,left,h*.01f,right-left,h*.89f);
-        float headerHeight=LayoutDeckHeader(right-left-20,h*.04f);
-        DeckRegion(mainDeckCountText.rectTransform,left+10,h*.9f-headerHeight,right-left-20,headerHeight);
-        float bottom=Mathf.Lerp(h*.315f,h*.055f,s);
-        DeckRegion(mainArea,left+10,bottom,right-left-20,h*.9f-headerHeight-6-bottom);
+        float margin=w*.0135f, gap=Mathf.Clamp(w*.0115f,12,24);
+        float detailWidth=Mathf.Clamp(w*.174f,260,380), libraryWidth=Mathf.Clamp(w*.215f,310,460);
+        float left=Mathf.Lerp(margin+detailWidth+gap,margin+40,d);
+        float libraryLeft=w-margin-libraryWidth, right=libraryLeft-gap;
+        float top=h-100, baseY=h*.02f;
+        DeckRegion(collectionArea,libraryLeft,baseY,libraryWidth,top-baseY);
+        float headerHeight=LayoutDeckHeader(right-left-36,48);
+        DeckRegion(mainDeckCountText.rectTransform,left+18,top-headerHeight-7,right-left-36,headerHeight);
+        float workspaceHeight=top-baseY;
+        var sideGrid=sideboardContent.GetComponent<GridLayoutGroup>();
+        var viewport=sideArea.GetComponent<ScrollRect>().viewport;
+        float viewportInsets=viewport.offsetMin.y-viewport.offsetMax.y;
+        float sideHeight=Mathf.Clamp(sideGrid.cellSize.y+sideGrid.padding.vertical+viewportInsets+5,workspaceHeight*.22f,workspaceHeight*.40f);
+        float sideHeadingY=baseY+sideHeight+4;
+        float sideTop=Mathf.Lerp(sideHeadingY,baseY,s)+48;
+        float mainBase=sideTop+12;
+        DeckRegion(sidePlate,left,baseY,right-left,sideTop-baseY);
+        DeckRegion(deckArea,left,mainBase,right-left,top-mainBase);
+        DeckRegion(mainArea,left+12,mainBase+8,right-left-24,top-headerHeight-24-mainBase);
         // Slide the sideboard out intact, rather than scaling its cards during the transition.
-        DeckRegion(sideArea,left+10,h*.01f-s*h*.28f,right-left-20,h*.26f);
+        DeckRegion(sideArea,left+12,baseY-s*(sideHeight+baseY),right-left-24,sideHeight);
         sideAreaGroup.alpha=1-s;sideAreaGroup.blocksRaycasts=sideAreaGroup.interactable=!sideboardCollapsed;
-        DeckRegion(sideboardCountText.rectTransform,left+10,Mathf.Lerp(h*.275f,h*.013f,s),right-left-68,h*.035f);
-        sideHeadingGroup.alpha=1-s;
-        sideHeadingGroup.blocksRaycasts=sideHeadingGroup.interactable=!sideboardCollapsed;
-        DeckRegion((RectTransform)sideboardCollapseButton.transform,right-58,Mathf.Lerp(h*.275f-5,h*.01f,s),48,42);
-        sideboardCollapseButton.GetComponentInChildren<Text>().rectTransform.localRotation=Quaternion.Euler(0,0,sideboardCollapsed?-90:90);
-        DeckRegion((RectTransform)detailsCollapseButton.transform,Mathf.Lerp(normalLeft-48,6,d),h*.455f-46,42,92);
-        detailsCollapseButton.GetComponentInChildren<Text>().text=detailsCollapsed?"›":"‹";
-        ResizeDeckColumns(mainDeckContent);ResizeDeckColumns(sideboardContent);
+        DeckRegion(sideboardCountText.rectTransform,left+12,Mathf.Lerp(sideHeadingY,baseY,s),right-left-62,42);
+        sideHeadingGroup.alpha=1;
+        DeckRegion((RectTransform)sideboardCollapseButton.transform,right-49,Mathf.Lerp(sideHeadingY,baseY,s),42,42);
+        sideChevron.localRotation=Quaternion.Euler(0,0,180*s);
+        DeckRegion((RectTransform)detailsCollapseButton.transform,Mathf.Lerp(margin+detailWidth-InspectorToolInset-InspectorToolSize,margin,d),
+            top-InspectorToolInset-InspectorToolSize,InspectorToolSize,InspectorToolSize);
+        detailChevron.localRotation=Quaternion.Euler(0,0,-90+180*d);
+        DeckRegion(detailSeam,Mathf.Lerp(margin+detailWidth,margin-3,d),baseY,1,top-baseY);
+        FitCardGrid(collectionContent,2);
+        FitCardGrid(mainDeckContent);
+        FitCardGrid(sideboardContent);
 
         if(floatingDeckDetails)
         {
@@ -85,18 +107,16 @@ public sealed partial class MainMenuController
             if(draggedTile!=null||(!over&&hoveredTile==null&&Time.unscaledTime>=floatingCloseAt))floatingDeckDetails=false;
         }
         if(!floatingDeckDetails&&deckArtHover!=null&&deckArtHover.gameObject.activeSelf)deckArtHover.Hide();
-        float detailWidth=Mathf.Max(1,normalLeft-10-w*.005f);
-        DeckRegion(previewPanelRect,w*.005f-d*(detailWidth+40),h*.01f,detailWidth,h*.89f);
+        DeckRegion(previewPanelRect,Mathf.Lerp(margin,-detailWidth-6,d),baseY,detailWidth,top-baseY);
         cardPreviewGroup.alpha=1-d;
         cardPreviewGroup.blocksRaycasts=cardPreviewGroup.interactable=!detailsCollapsed;
     }
 
-    private static void ResizeDeckColumns(RectTransform content)
+    private static void FitCardGrid(RectTransform content,int columns=0)
     {
         var grid=content.GetComponent<GridLayoutGroup>();
-        const float preferredWidth=180;
         float available=content.rect.width-grid.padding.horizontal;
-        int columns=Mathf.Max(1,Mathf.FloorToInt((available+grid.spacing.x)/(preferredWidth+grid.spacing.x)));
+        if(columns==0) columns=Mathf.Max(1,Mathf.RoundToInt((available+grid.spacing.x)/(202f+grid.spacing.x)));
         if(grid.constraintCount!=columns)grid.constraintCount=columns;
         float width=Mathf.Max(1,(available-grid.spacing.x*(columns-1))/columns);
         var size=new Vector2(width,width*1.4f);

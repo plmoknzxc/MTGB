@@ -1,0 +1,70 @@
+{
+  "source": "组合展示数据：沿用录像卡图及本地资料，主动组合全部区域；不声称是真实对局或规则效果验证。",
+  "assets": [
+    {
+      "name": "Sol Ring",
+      "printing": "2ED/270",
+      "source": "CardImages/2ED/270.jpg",
+      "asset": "assets/full-0.jpg",
+      "sha256": "9d6d4416abd7ea815194156891e55bde414bd0d49efd15688cb710cc981ca63b"
+    },
+    {
+      "name": "Flickerwisp",
+      "printing": "2X2/11",
+      "source": "CardImages/zh-CN/2X2/11.jpg",
+      "asset": "assets/full-1.jpg",
+      "sha256": "015e6317ae298f0c1de5ace9bcf1c4233272d4cb7da629c3e2e9959a2fe7aa09"
+    },
+    {
+      "name": "Jace, the Mind Sculptor",
+      "printing": "2XM/334",
+      "source": "CardImages/zh-CN/2XM/334.jpg",
+      "asset": "assets/full-2.jpg",
+      "sha256": "736aefb18da0dafa623a28730c07efc945d3dddccedbfcd1161068a9a4289242"
+    },
+    {
+      "name": "Rhystic Study",
+      "printing": "CM1/15",
+      "source": "CardImages/CM1/15.jpg",
+      "asset": "assets/full-3.jpg",
+      "sha256": "ad817dac649763194e1858299d5d4043a78d70fc35eee3f1816f6e54b8daf95e"
+    },
+    {
+      "name": "Liliana of the Veil",
+      "printing": "DMU/373",
+      "source": "CardImages/zh-CN/DMU/373.jpg",
+      "asset": "assets/full-4.jpg",
+      "sha256": "0564f9edb54d66ca2e5ccf7c9a0aa301d7c5b76b92cd2ecf6d618574dc00035d"
+    },
+    {
+      "name": "Teferi, Hero of Dominaria",
+      "printing": "DOM/207",
+      "source": "CardImages/zh-CN/DOM/207.jpg",
+      "asset": "assets/full-5.jpg",
+      "sha256": "3b217c05e2093f18d5679e9fda0e210de0009a97b20720758363255565dc5177"
+    },
+    {
+      "name": "Invasion of Ikoria",
+      "printing": "MOM/190",
+      "source": "CardImages/zh-CN/MOM/190.jpg",
+      "asset": "assets/full-6.jpg",
+      "sha256": "22f2e823c42b26815961df7d1c12784c0eb58e27c2f2d0df94a9da5d2331ca42"
+    },
+    {
+      "name": "Invasion of Zendikar",
+      "printing": "MOM/194",
+      "source": "CardImages/zh-CN/MOM/194.jpg",
+      "asset": "assets/full-7.jpg",
+      "sha256": "0a9f04d89782cca297101c73d7892a75074d26b6a64d09c5a7e22366deb31907"
+    },
+    {
+      "name": "Lost Mine of Phandelver",
+      "printing": "TAFR/21",
+      "source": "CardImages/zh-CN/TAFR/21.png",
+      "asset": "assets/full-dungeon.png",
+      "sha256": "e32d500fefb255a5affa84c712c6d6e30774c89e1ff58f8fd0bfdc1d80f2dfa1",
+      "verification": "Viewed TAFR/20,21,22; selected the actual Lost Mine image."
+    }
+  ],
+  "icons": "Assets/Resources/UI/PlayerCounters/ForgeIcons.png + Index.json"
+}

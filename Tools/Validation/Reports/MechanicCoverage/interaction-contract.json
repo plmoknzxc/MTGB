@@ -1,6 +1,6 @@
 {
-  "forgeRevision": "4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676",
-  "interfaceSha256": "3f5c63fe76b1252574d2455fe5695a4649694902302618af65b8a731758fdb70",
+  "forgeRevision": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+  "interfaceSha256": "01c2d047416cbe9953b46cb4580c95bc65664b3bff6fe0661c1a2d693d7e99fc",
   "interfaceChanged": false,
   "methods": [
     {
@@ -124,6 +124,38 @@
       "route": "已有精确处理或默认转发"
     },
     {
+      "name": "updateButtons",
+      "signature": "default void updateButtons(PlayerView owner, String label1, String label2, boolean enable1, boolean enable2, boolean focus1, boolean undoAvailable)",
+      "default": true,
+      "returnType": "void",
+      "role": "state",
+      "route": "默认转发到现有按钮状态处理"
+    },
+    {
+      "name": "showCoinFlip",
+      "signature": "default void showCoinFlip(boolean heads, String caption, boolean waitForTap)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认展示回调，结算由引擎处理"
+    },
+    {
+      "name": "showFlipOntoBattlefield",
+      "signature": "default void showFlipOntoBattlefield(CardView flipped, CardView target, List<CardView> hit, List<CardView> battlefield, int timesFlipped)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认展示回调"
+    },
+    {
+      "name": "endFlipOntoBattlefield",
+      "signature": "default void endFlipOntoBattlefield(CardView flipped)",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认展示回调"
+    },
+    {
       "name": "flashIncorrectAction",
       "signature": "void flashIncorrectAction()",
       "default": false,
@@ -212,6 +244,14 @@
       "route": "默认转发／快照展示回调"
     },
     {
+      "name": "onSnapshotRestored",
+      "signature": "default void onSnapshotRestored()",
+      "default": true,
+      "returnType": "void",
+      "role": "snapshot",
+      "route": "原生默认回调，桥接按当前快照展示"
+    },
+    {
       "name": "notifyStackAddition",
       "signature": "default void notifyStackAddition(final GameEventSpellAbilityCast event)",
       "default": true,
@@ -284,14 +324,6 @@
       "route": "默认转发／快照展示回调"
     },
     {
-      "name": "updateRevealedCards",
-      "signature": "void updateRevealedCards(TrackableCollection<CardView> collection)",
-      "default": false,
-      "returnType": "void",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
-    },
-    {
       "name": "refreshCardDetails",
       "signature": "default void refreshCardDetails(Iterable<CardView> cards)",
       "default": true,
@@ -306,14 +338,6 @@
       "returnType": "void",
       "role": "snapshot",
       "route": "默认转发／快照展示回调"
-    },
-    {
-      "name": "getGamestate",
-      "signature": "GameState getGamestate()",
-      "default": false,
-      "returnType": "GameState",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
     },
     {
       "name": "updateManaPool",
@@ -644,50 +668,26 @@
       "route": "已有精确处理或默认转发"
     },
     {
-      "name": "setHighlighted",
-      "signature": "void setHighlighted(Iterable<GameEntityView> entities, boolean b)",
-      "default": false,
-      "returnType": "void",
-      "role": "snapshot",
-      "route": "默认转发／快照展示回调"
-    },
-    {
-      "name": "setSelectables",
-      "signature": "void setSelectables(Iterable<CardView> cards, int min, int max)",
+      "name": "setSelection",
+      "signature": "void setSelection(Selection selection)",
       "default": false,
       "returnType": "void",
       "role": "state",
-      "route": "已有精确处理或默认转发"
+      "route": "当前请求的选择数量、已选牌和可操作牌"
     },
     {
-      "name": "clearSelectables",
-      "signature": "void clearSelectables()",
-      "default": false,
-      "returnType": "void",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
+      "name": "canPickStackTargets",
+      "signature": "default boolean canPickStackTargets()",
+      "default": true,
+      "returnType": "boolean",
+      "role": "default",
+      "route": "使用原生堆叠目标选择对话框"
     },
     {
       "name": "isSelecting",
       "signature": "boolean isSelecting()",
       "default": false,
       "returnType": "boolean",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
-    },
-    {
-      "name": "setWeaklySelectable",
-      "signature": "void setWeaklySelectable(final Iterable<CardView> cards)",
-      "default": false,
-      "returnType": "void",
-      "role": "state",
-      "route": "已有精确处理或默认转发"
-    },
-    {
-      "name": "clearWeaklySelectable",
-      "signature": "void clearWeaklySelectable()",
-      "default": false,
-      "returnType": "void",
       "role": "state",
       "route": "已有精确处理或默认转发"
     },
@@ -772,14 +772,6 @@
       "route": "默认转发／快照展示回调"
     },
     {
-      "name": "showWaitingTimer",
-      "signature": "void showWaitingTimer(PlayerView forPlayer, String waitingForPlayerName)",
-      "default": false,
-      "returnType": "void",
-      "role": "snapshot",
-      "route": "默认转发／快照展示回调"
-    },
-    {
       "name": "updateAutoPassPrompt",
       "signature": "void updateAutoPassPrompt()",
       "default": false,
@@ -820,12 +812,28 @@
       "route": "原生 Forge yield 同步未接入"
     },
     {
+      "name": "applyMacroState",
+      "signature": "void applyMacroState(IMacroSystem.State state)",
+      "default": false,
+      "returnType": "void",
+      "role": "unsupported",
+      "route": "Forge 原生远程宏不在 MTGB 协议内"
+    },
+    {
       "name": "applyDelta",
       "signature": "default void applyDelta(DeltaPacket packet)",
       "default": true,
       "returnType": "void",
       "role": "unsupported",
       "route": "项目采用自有快照协议；原生 Forge delta 未接入"
+    },
+    {
+      "name": "awaitInput",
+      "signature": "default void awaitInput(final CountDownLatch done) throws InterruptedException",
+      "default": true,
+      "returnType": "void",
+      "role": "default",
+      "route": "原生等待，桥接由独立线程提交"
     },
     {
       "name": "isNetGame",
@@ -921,133 +929,118 @@
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
     },
     {
-      "method": "isLibgdxPort",
-      "line": 1517,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
-    },
-    {
-      "method": "confirm",
-      "line": 1532,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java"
-    },
-    {
       "method": "getAbilityToPlay",
-      "line": 225,
+      "line": 235,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "showErrorDialog",
-      "line": 271,
+      "line": 281,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "sideboard",
-      "line": 276,
+      "line": 286,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "assignCombatDamage",
-      "line": 301,
+      "line": 311,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "assignGenericAmount",
-      "line": 327,
+      "line": 337,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "assignGenericAmount",
-      "line": 356,
+      "line": 366,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 393,
+      "line": 403,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 396,
+      "line": 406,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 455,
+      "line": 465,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setPanelSelection",
-      "line": 483,
+      "line": 493,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 497,
+      "line": 507,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 526,
+      "line": 536,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "chooseSingleEntityForEffect",
-      "line": 613,
+      "line": 623,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "chooseEntitiesForEffect",
-      "line": 653,
+      "line": 663,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 673,
+      "line": 683,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 684,
+      "line": 694,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 691,
+      "line": 701,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setCard",
-      "line": 702,
+      "line": 712,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 706,
+      "line": 716,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getChoices",
-      "line": 728,
+      "line": 738,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 822,
+      "line": 832,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "confirm",
-      "line": 829,
+      "line": 839,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setPanelSelection",
-      "line": 865,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "order",
-      "line": 866,
+      "line": 875,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
@@ -1057,132 +1050,107 @@
     },
     {
       "method": "order",
-      "line": 887,
+      "line": 886,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 900,
+      "line": 897,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "setPanelSelection",
-      "line": 909,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "insertInList",
+      "method": "order",
       "line": 910,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setPanelSelection",
-      "line": 922,
+      "line": 919,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "insertInList",
+      "line": 920,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setPanelSelection",
+      "line": 932,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 923,
+      "line": 933,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "message",
-      "line": 949,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "isLibgdxPort",
-      "line": 958,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "showRevealedCards",
       "line": 960,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "hideRevealedCards",
-      "line": 967,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "reveal",
-      "line": 969,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "updateRevealedCards",
-      "line": 971,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "manipulateCardList",
-      "line": 979,
+      "method": "showRevealedCards",
+      "line": 965,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 1009,
+      "line": 974,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "reveal",
+      "line": 983,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "hideRevealedCards",
+      "line": 985,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "manipulateCardList",
+      "line": 993,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isLibgdxPort",
+      "line": 1024,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 1025,
+      "line": 1040,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 1037,
+      "line": 1052,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setCard",
-      "line": 1058,
+      "line": 1074,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 1069,
+      "line": 1085,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 1080,
+      "line": 1096,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setCard",
-      "line": 1094,
+      "line": 1110,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 1135,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "order",
-      "line": 1138,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "order",
-      "line": 1141,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "order",
-      "line": 1144,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "order",
-      "line": 1147,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "order",
-      "line": 1150,
+      "line": 1151,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
@@ -1192,427 +1160,402 @@
     },
     {
       "method": "order",
-      "line": 1156,
+      "line": 1157,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 1159,
+      "line": 1160,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1163,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1166,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1170,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1172,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "order",
+      "line": 1175,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 1191,
+      "line": 1208,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1217,
+      "line": 1234,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 1222,
+      "line": 1239,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1289,
+      "line": 1306,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 1307,
+      "line": 1324,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1309,
+      "line": 1326,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getChoices",
+      "line": 1427,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1406,
+      "line": 1430,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1455,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 1468,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "setCard",
-      "line": 1414,
+      "line": 1476,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getChoices",
-      "line": 1415,
+      "line": 1477,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1432,
+      "line": 1494,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1437,
+      "line": 1499,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 1442,
+      "line": 1504,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 1448,
+      "line": 1510,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 1453,
+      "line": 1515,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 1458,
+      "line": 1520,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 1481,
+      "line": 1543,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "confirm",
-      "line": 1488,
+      "line": 1550,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "updateAutoPassPrompt",
-      "line": 1531,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "clearWeaklySelectable",
-      "line": 1557,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "setWeaklySelectable",
-      "line": 1591,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "clearWeaklySelectable",
-      "line": 1602,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "clearWeaklySelectable",
-      "line": 1608,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "setWeaklySelectable",
-      "line": 1618,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "clearWeaklySelectable",
-      "line": 1624,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "setWeaklySelectable",
-      "line": 1629,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "setWeaklySelectable",
-      "line": 1647,
+      "line": 1603,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "awaitNextInput",
-      "line": 1709,
+      "line": 1764,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setSelection",
+      "line": 1796,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 1730,
+      "line": 1805,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 1733,
+      "line": 1808,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 1787,
+      "line": 1862,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1859,
+      "line": 1934,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getChoices",
-      "line": 1869,
+      "line": 1944,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 1880,
+      "line": 1956,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "confirm",
-      "line": 1887,
+      "line": 1963,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "message",
-      "line": 1889,
+      "line": 1965,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 1941,
+      "line": 2017,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 1943,
+      "line": 2019,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getChoices",
-      "line": 1968,
+      "line": 2044,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2007,
+      "line": 2083,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2029,
+      "line": 2105,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2038,
+      "line": 2114,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2048,
+      "line": 2124,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2057,
+      "line": 2133,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2066,
+      "line": 2142,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 2071,
+      "line": 2147,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "confirm",
-      "line": 2082,
+      "line": 2163,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 2145,
+      "line": 2225,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2219,
+      "line": 2299,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2220,
+      "line": 2300,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2226,
+      "line": 2306,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 2318,
+      "line": 2398,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "order",
-      "line": 2322,
+      "line": 2402,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "setSelection",
+      "line": 2518,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "assignGenericAmount",
-      "line": 2475,
+      "line": 2590,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "one",
-      "line": 2545,
+      "line": 2660,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "reveal",
-      "line": 2563,
+      "line": 2678,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 2570,
+      "line": 2685,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "reveal",
-      "line": 2581,
+      "line": 2696,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "reveal",
-      "line": 2593,
+      "line": 2708,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getChoices",
-      "line": 2604,
+      "line": 2719,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "many",
-      "line": 2610,
+      "line": 2725,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "isNetGame",
-      "line": 2720,
+      "line": 2924,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "updateCards",
-      "line": 2869,
+      "line": 3008,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "message",
-      "line": 2882,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "message",
-      "line": 2898,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "getGamestate",
-      "line": 2901,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "getGamestate",
-      "line": 2902,
+      "line": 3021,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "showConfirmDialog",
-      "line": 2921,
+      "line": 3049,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "showErrorDialog",
-      "line": 2931,
+      "line": 3059,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "message",
-      "line": 2970,
+      "line": 3098,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "message",
-      "line": 2985,
+      "line": 3113,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 3027,
+      "line": 3155,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 3036,
+      "line": 3164,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 3041,
+      "line": 3169,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 3122,
+      "line": 3251,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 3128,
+      "line": 3257,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "message",
-      "line": 3145,
+      "line": 3275,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 3186,
+      "line": 3316,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getChoices",
-      "line": 3228,
+      "line": 3358,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 3235,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "confirm",
-      "line": 3245,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3327,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3346,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "getInteger",
-      "line": 3348,
+      "line": 3365,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
@@ -1621,133 +1564,168 @@
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "message",
-      "line": 3385,
+      "method": "oneOrNone",
+      "line": 3457,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "oneOrNone",
-      "line": 3407,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "confirm",
-      "line": 3426,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3456,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "many",
-      "line": 3466,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3495,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "many",
-      "line": 3505,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3534,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "one",
-      "line": 3541,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "many",
-      "line": 3546,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3573,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3579,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "oneOrNone",
-      "line": 3610,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "message",
-      "line": 3628,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "awaitNextInput",
-      "line": 3678,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "cancelAwaitNextInput",
-      "line": 3682,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "many",
-      "line": 3712,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
-    },
-    {
-      "method": "many",
-      "line": 3734,
+      "line": 3476,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "getInteger",
-      "line": 3747,
+      "line": 3478,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "getGameView",
-      "line": 3809,
+      "method": "confirm",
+      "line": 3505,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "updateAutoPassPrompt",
-      "line": 3820,
+      "method": "message",
+      "line": 3515,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "showPromptMessage",
-      "line": 3830,
+      "method": "oneOrNone",
+      "line": 3537,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "updateButtons",
-      "line": 3831,
+      "method": "confirm",
+      "line": 3556,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3586,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3596,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3626,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3636,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3666,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "one",
+      "line": 3673,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3678,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3706,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3712,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "oneOrNone",
+      "line": 3743,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "message",
+      "line": 3761,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "awaitNextInput",
-      "line": 3832,
+      "line": 3801,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
-      "method": "isUiSetToSkipPhase",
-      "line": 3874,
+      "method": "cancelAwaitNextInput",
+      "line": 3805,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3835,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "many",
+      "line": 3857,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getInteger",
+      "line": 3870,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getGameView",
+      "line": 3932,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "applyYieldUpdate",
+      "line": 3943,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
       "method": "updateAutoPassPrompt",
-      "line": 3896,
+      "line": 3944,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "showPromptMessage",
+      "line": 3954,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateButtons",
+      "line": 3955,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "awaitNextInput",
+      "line": 3956,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getGameView",
+      "line": 3996,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "getGameView",
+      "line": 3997,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "isUiSetToSkipPhase",
+      "line": 4006,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
+    },
+    {
+      "method": "updateAutoPassPrompt",
+      "line": 4028,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
     },
     {
@@ -1776,113 +1754,98 @@
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
     },
     {
-      "method": "message",
-      "line": 927,
+      "method": "applyMacroState",
+      "line": 922,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
     },
     {
+      "method": "message",
+      "line": 935,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/RecordActionsMacroSystem.java"
+    },
+    {
+      "method": "canPickStackTargets",
+      "line": 102,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
+    },
+    {
+      "method": "canPickStackTargets",
+      "line": 180,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
+    },
+    {
       "method": "one",
-      "line": 253,
+      "line": 258,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
     },
     {
       "method": "oneOrNone",
-      "line": 255,
+      "line": 260,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
     },
     {
       "method": "one",
-      "line": 320,
+      "line": 367,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
     },
     {
       "method": "oneOrNone",
-      "line": 320,
+      "line": 367,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/TargetSelection.java"
     },
     {
       "method": "updateButtons",
-      "line": 90,
+      "line": 93,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
     },
     {
       "method": "updateButtons",
-      "line": 95,
+      "line": 98,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
     },
     {
       "method": "updateCards",
-      "line": 164,
+      "line": 158,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
     },
     {
       "method": "flashIncorrectAction",
-      "line": 173,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 292,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 308,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 309,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 321,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 328,
+      "line": 167,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
     },
     {
       "method": "showCombat",
-      "line": 361,
+      "line": 348,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputAttack.java"
     },
     {
+      "method": "setSelection",
+      "line": 109,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBase.java"
+    },
+    {
       "method": "showPromptMessage",
-      "line": 127,
+      "line": 155,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBase.java"
     },
     {
       "method": "updateButtons",
-      "line": 77,
+      "line": 75,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
     },
     {
       "method": "showCombat",
-      "line": 90,
+      "line": 88,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
     },
     {
       "method": "message",
-      "line": 109,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 192,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 196,
+      "line": 110,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputBlock.java"
     },
     {
       "method": "updateButtons",
-      "line": 47,
+      "line": 46,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputChooseStartingHand.java"
     },
     {
@@ -1907,7 +1870,7 @@
     },
     {
       "method": "confirm",
-      "line": 119,
+      "line": 116,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputConfirmMulligan.java"
     },
     {
@@ -1931,58 +1894,48 @@
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLondonMulligan.java"
     },
     {
-      "method": "setHighlighted",
-      "line": 138,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLondonMulligan.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 144,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputLondonMulligan.java"
-    },
-    {
       "method": "updateButtons",
-      "line": 155,
+      "line": 156,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "alertUser",
-      "line": 159,
+      "line": 160,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "updateButtons",
-      "line": 171,
+      "line": 183,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "updateButtons",
-      "line": 174,
+      "line": 186,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "alertUser",
-      "line": 177,
+      "line": 189,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "getGameView",
-      "line": 185,
+      "line": 197,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "applyYieldUpdate",
-      "line": 245,
+      "line": 257,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "applyYieldUpdate",
-      "line": 253,
+      "line": 265,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
       "method": "showConfirmDialog",
-      "line": 318,
+      "line": 330,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPassPriority.java"
     },
     {
@@ -1992,32 +1945,32 @@
     },
     {
       "method": "hideManaPool",
-      "line": 76,
+      "line": 75,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
     },
     {
       "method": "isLibgdxPort",
-      "line": 83,
+      "line": 82,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
     },
     {
       "method": "one",
-      "line": 312,
+      "line": 322,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
     },
     {
       "method": "updateButtons",
-      "line": 391,
+      "line": 408,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
     },
     {
       "method": "updateButtons",
-      "line": 393,
+      "line": 410,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
     },
     {
       "method": "updateButtons",
-      "line": 405,
+      "line": 422,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java"
     },
     {
@@ -2046,99 +1999,64 @@
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputProxy.java"
     },
     {
-      "method": "setSelectables",
-      "line": 52,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java"
-    },
-    {
-      "method": "clearSelectables",
-      "line": 154,
+      "method": "updateButtons",
+      "line": 188,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java"
     },
     {
       "method": "updateButtons",
-      "line": 183,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java"
+      "line": 97,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
     },
     {
       "method": "updateButtons",
-      "line": 98,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 127,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 133,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectManyBase.java"
-    },
-    {
-      "method": "setSelectables",
-      "line": 65,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 70,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+      "line": 60,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectStackItems.java"
     },
     {
       "method": "setCard",
-      "line": 76,
+      "line": 102,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
       "method": "updateButtons",
-      "line": 123,
+      "line": 149,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
       "method": "updateButtons",
-      "line": 128,
+      "line": 154,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
       "method": "updateButtons",
-      "line": 130,
+      "line": 156,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
       "method": "updateButtons",
-      "line": 135,
+      "line": 161,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
       "method": "updateButtons",
-      "line": 137,
+      "line": 163,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
       "method": "oneOrNone",
-      "line": 384,
+      "line": 418,
       "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
     },
     {
-      "method": "setHighlighted",
-      "line": 399,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+      "method": "awaitInput",
+      "line": 26,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSyncronizedBase.java"
     },
     {
-      "method": "setHighlighted",
-      "line": 424,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
-    },
-    {
-      "method": "setHighlighted",
-      "line": 432,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
-    },
-    {
-      "method": "clearSelectables",
-      "line": 444,
-      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectTargets.java"
+      "method": "setSelection",
+      "line": 46,
+      "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputSyncronizedBase.java"
     }
   ],
   "unknown": [],
@@ -2197,6 +2115,14 @@
         "route": "Bridge version"
       },
       {
+        "name": "getUserAgent",
+        "signature": "String getUserAgent()",
+        "default": false,
+        "returnType": "String",
+        "role": "environment",
+        "route": "Headless bridge HTTP user agent"
+      },
+      {
         "name": "invokeInEdtNow",
         "signature": "void invokeInEdtNow(Runnable runnable)",
         "default": false,
@@ -2235,6 +2161,54 @@
         "returnType": "boolean",
         "role": "thread",
         "route": "Exact mtgb-ui thread"
+      },
+      {
+        "name": "isMatchInProgress",
+        "signature": "default boolean isMatchInProgress()",
+        "default": true,
+        "returnType": "boolean",
+        "role": "default",
+        "route": "Forge headless default"
+      },
+      {
+        "name": "showCoach",
+        "signature": "default boolean showCoach(final String title, final String text, final String nextLabel, final Runnable onNext)",
+        "default": true,
+        "returnType": "boolean",
+        "role": "default",
+        "route": "Forge headless default"
+      },
+      {
+        "name": "hideCoach",
+        "signature": "default void hideCoach()",
+        "default": true,
+        "returnType": "void",
+        "role": "default",
+        "route": "Forge headless default"
+      },
+      {
+        "name": "isTutorialBoardReady",
+        "signature": "default boolean isTutorialBoardReady()",
+        "default": true,
+        "returnType": "boolean",
+        "role": "default",
+        "route": "Forge headless default"
+      },
+      {
+        "name": "getTutorialLayout",
+        "signature": "default TutorialLayout getTutorialLayout()",
+        "default": true,
+        "returnType": "TutorialLayout",
+        "role": "default",
+        "route": "Forge headless default"
+      },
+      {
+        "name": "highlightGui",
+        "signature": "default void highlightGui(final Collection<TutorialTarget> targets)",
+        "default": true,
+        "returnType": "void",
+        "role": "default",
+        "route": "Forge headless default"
       },
       {
         "name": "getAssetsDir",
@@ -2564,25 +2538,25 @@
     "sourceGuards": [
       {
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gui/interfaces/IGuiBase.java",
-        "sha256": "3ea53cb053cb6a5a9c5f411b11b808f1ecc371983396bc28086f9526d71bc77d",
+        "sha256": "77ea0d004b83f0651be79e71e5352d66f91157f1a7d60cedd4483f8e7a40a925",
         "unchanged": true,
         "scope": "Every interface signature/default body; classification reviewed"
       },
       {
         "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlayerController.java",
-        "sha256": "24ab20e0a7a491345b345529e6018b60f5ecef2b95d5c4f4c68726482966936b",
+        "sha256": "6974c25c95df0b8e5eb4a491e6eb01d66594dc8c43bbc961864724fdf548d58b",
         "unchanged": true,
         "scope": "Inherited defaults and abstract declaration guard; resolution table separate"
       },
       {
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java",
-        "sha256": "e05ab45ffea33fae2aa5f52d805dfb4e98e24a0ce9de6a6e9e73eeb0d96e61d3",
+        "sha256": "376deefb21beff02a0d836bb938fc03e58f620825580b951a1fecf33bd1d31ce",
         "unchanged": true,
         "scope": "Whole-source change guard; not every branch runtime tested"
       },
       {
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/HumanCostDecision.java",
-        "sha256": "7bc42c5748f6586b243f92a452059f6e9c0a91d8bf852db64463bee949e2704f",
+        "sha256": "7b3888dd83789f7c0ddb37e0997e0c1fd7a2fe9148dbef9e08e8e9fcf2d7c0b9",
         "unchanged": true,
         "scope": "Legacy static helper call and native cost selection reviewed"
       },
@@ -2594,13 +2568,13 @@
       },
       {
         "path": ".tools/forge-proof/upstream/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java",
-        "sha256": "65988ae54fdafe83562b5b70e79404af09a83f642958aacc32ea43ffc53c1311",
+        "sha256": "4cc01a9475baca414f5dc8c2a4fefcaad01cd0ef283e4fcc6ec8c87ce39ae1cc",
         "unchanged": true,
         "scope": "Native resolution cost paths and cancellation patch context guard"
       },
       {
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/gamemodes/match/input/InputPayMana.java",
-        "sha256": "b8456dce4d63882be37da6fa4197d8b483932b5ec7d7cf16e0d1f548db029248",
+        "sha256": "38beeda5398af2964d6f4b3c87ee20a4445087a31300eb3841e7f0b1ec401dd7",
         "unchanged": true,
         "scope": "Pinned native payer/manaCost/phyLifeToLose/saPaidFor/effect fields and native life reservation/commit/cancel contract; reflection change guard, not effect proof."
       },
@@ -2705,25 +2679,25 @@
       {
         "helper": "GuiBase.getInterface()",
         "method": "getSaveFile",
-        "line": 2919,
+        "line": 3047,
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
       },
       {
         "helper": "GuiBase.getInterface()",
         "method": "showFileDialog",
-        "line": 2949,
+        "line": 3077,
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
       },
       {
         "helper": "SOptionPane",
         "method": "showErrorDialog",
-        "line": 2961,
+        "line": 3089,
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
       },
       {
         "helper": "SOptionPane",
         "method": "showErrorDialog",
-        "line": 2964,
+        "line": 3092,
         "path": ".tools/forge-proof/upstream/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java"
       },
       {

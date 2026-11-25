@@ -18,6 +18,7 @@ public static class BattleTextDiagnostics
     const int MaxPending = 128, MaxRemembered = 512, MaxText = 2048;
     const long MaxFileBytes = 2 * 1024 * 1024;
     static readonly Regex Prose = new Regex(@"[A-Za-z][A-Za-z'’-]*(?: +[A-Za-z][A-Za-z'’-]*){2,}", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(20));
+    static readonly Regex Instruction = new Regex(@"^(?:Choose|Select|Attach|Pay|Sacrifice|Discard|Activate|Confirm|Cancel)(?: [A-Za-z]+)?[.?!]?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
     static readonly Queue<string> pending = new Queue<string>();
     static readonly HashSet<string> remembered = new HashSet<string>(StringComparer.Ordinal);
     static readonly Queue<string> order = new Queue<string>();
@@ -42,16 +43,15 @@ public static class BattleTextDiagnostics
         string clean = Regex.Replace(text, @"\{[^}]*\}|<[^>]*>", "");
         try { return Prose.IsMatch(clean); } catch (RegexMatchTimeoutException) { return true; }
     }
-    public static bool IsUntranslatedDisplay(string text)=>HasEnglishProse(text)&&!GamePreferences.IsCardIdentity(text);
+    public static bool IsUntranslatedDisplay(string text)=>!string.IsNullOrEmpty(text)
+        &&(HasEnglishProse(text)||Instruction.IsMatch(text))&&!GamePreferences.IsCardIdentity(text);
 
     public static void Record(string channel, string source, string display, ForgeCardView card = null, bool final = false, string recipe = null, ForgeCardView origin = null)
     {
 #if UNITY_SERVER
         return;
 #else
-        if (deferred > 0 && !final || !GamePreferences.Ready || GamePreferences.Language == "en-US" || card?.faceDown == true || !HasEnglishProse(display)) return;
-        // A known untranslated proper name is not an untranslated rules sentence.
-        if (GamePreferences.IsCardIdentity(display)) return;
+        if (deferred > 0 && !final || !GamePreferences.Ready || GamePreferences.Language == "en-US" || card?.faceDown == true || !IsUntranslatedDisplay(display)) return;
         string Clip(string s) => string.IsNullOrEmpty(s) ? "" : s.Length <= MaxText ? s : s.Substring(0, MaxText);
         bool truncated=(source?.Length??0)>MaxText||(display?.Length??0)>MaxText||(recipe?.Length??0)>MaxText;
         source = Clip(source); display = Clip(display);

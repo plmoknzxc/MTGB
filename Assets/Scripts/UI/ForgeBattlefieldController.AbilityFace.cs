@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 public sealed partial class ForgeBattlefieldController
 {
@@ -35,7 +36,7 @@ public sealed partial class ForgeBattlefieldController
             return text;
         }
         string prefix=source?.name+" ("+source?.id+") - ";
-        string effectText=NormalizePrintedSelfNames(source,effect??"");
+        string effectText=NormalizePrintedSelfNames(source,effect??"").TrimEnd();
         if(effectText.StartsWith(prefix,System.StringComparison.Ordinal))effectText=effectText.Substring(prefix.Length);
         // Keyword triggers in the ordering dialog use the same physical source
         // followed by a colon instead of the stack's dash. Its name is already
@@ -69,6 +70,25 @@ public sealed partial class ForgeBattlefieldController
         if(source!=null&&!source.faceDown&&effectText.EndsWith(ownAttackerSuffix,System.StringComparison.Ordinal)) {
             effectText=effectText.Substring(0,effectText.Length-ownAttackerSuffix.Length);
             ownAttackerContext="\n["+TapPaymentText("攻击者：","Attacker: ","攻撃クリーチャー：")+GamePreferences.CardFaceName(source.name)+" ("+source.id+")]";
+        }
+        string combatContext="";
+        if(source!=null&&!source.faceDown&&!IsPublicRuleHelper(source)&&effectText.EndsWith("]")) {
+            // Forge appends event details after the target list. Peel only known
+            // event shapes so the printed paragraph and targets still bind separately.
+            var damage=Regex.Match(effectText,@" \[Damage Source: (.+? \(\d+\)), Damaged: Player (\d+), Amount: (\d+)\]\z");
+            var blocker=Regex.Match(effectText,@" \[Blocker: (.+? \(\d+\))\]\z");
+            var visitor=Regex.Match(effectText,@" \[Player: Player (\d+)\]\z");
+            if(damage.Success&&GamePreferences.IsCardIdentity(damage.Groups[1].Value)&&int.TryParse(damage.Groups[2].Value,out int damagedSeat)) {
+                string card=GamePreferences.CardFaceName(damage.Groups[1].Value), who=PlayerName(damagedSeat), n=damage.Groups[3].Value;
+                combatContext="\n"+TapPaymentText($"{card}对{who}造成了 {n} 点伤害。",$"{card} dealt {n} damage to {who}.",$"{card}は{who}に{n}点のダメージを与えた。");
+                effectText=effectText.Substring(0,damage.Index);
+            } else if(blocker.Success&&GamePreferences.IsCardIdentity(blocker.Groups[1].Value)) {
+                combatContext="\n"+TapPaymentText("阻挡者：","Blocker: ","ブロック・クリーチャー：")+GamePreferences.CardFaceName(blocker.Groups[1].Value);
+                effectText=effectText.Substring(0,blocker.Index);
+            } else if(visitor.Success&&int.TryParse(visitor.Groups[1].Value,out int seat)) {
+                combatContext="\n"+TapPaymentText("牌手：","Player: ","プレイヤー：")+PlayerName(seat);
+                effectText=effectText.Substring(0,visitor.Index);
+            }
         }
         // WrappedAbility and SpellAbilityEffect append targets after the printed
         // paragraph. Match the rule separately, then retain the actual targets.
@@ -194,7 +214,7 @@ public sealed partial class ForgeBattlefieldController
             PlayerName(int.Parse(m.Groups[1].Value))+"は"+PlayerName(int.Parse(m.Groups[2].Value))+"のライブラリーの一番上のカードを見る。"));
         foreach(string generated in new[]{"Draw a card at the beginning of the next turn's upkeep.","Draw a card at the beginning of the next upkeep."})
             paragraph=paragraph.Replace(generated,GeneratedPublicRuleText(generated));
-        paragraph+=eventContext;
+        paragraph+=eventContext+combatContext;
         paragraph+=specializedContext;
         paragraph+=addedContext;
         paragraph+=attackerContext;
@@ -210,6 +230,19 @@ public sealed partial class ForgeBattlefieldController
         names=System.Text.RegularExpressions.Regex.Replace(names,@"(?<= - )(?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery)(?: (?:Artifact|Creature|Enchantment|Planeswalker|Battle|Land|Instant|Sorcery))*",m=>string.Join(" ",m.Value.Split(' ').Select(GamePreferences.T)));
         names=System.Text.RegularExpressions.Regex.Replace(names,@"Face-down card (?=\([A-Z]?[0-9]+\))",TapPaymentText("盖牌 ","Face-down card ","裏向きのカード "));
         names=System.Text.RegularExpressions.Regex.Replace(names,@"[\[\]{}]","");
+        if(names.Contains("Forge AI") && source!=null) {
+            var playerTargets=(view?.stackItems??System.Array.Empty<ForgeStackItem>())
+                .Where(item=>item?.source?.id==source.id && item.description==effect)
+                .SelectMany(item=>item.targets??System.Array.Empty<ForgeStackTarget>())
+                .Where(target=>target?.kind=="player" && target.playerSeat>0)
+                .Select(target=>target.playerSeat).Distinct().ToArray();
+            // Forge uses its internal AI name in Targeting, even when the lobby
+            // displays a localized name. Resolve only a known computer seat.
+            var computers=playerTargets.Where(p=>(service?.IsLocalAiMatch==true && p==2)
+                || service?.LobbyState?.players?.Any(member=>member.seat==p && member.isAi)==true).ToArray();
+            if(computers.Length==1)
+                names=System.Text.RegularExpressions.Regex.Replace(names,@"(^|,\s*)Forge AI(?=\s*(?:,|$))",m=>m.Groups[1].Value+PlayerName(computers[0]));
+        }
         names=System.Text.RegularExpressions.Regex.Replace(names,@"\bPlayer (\d+)\b",m=>PlayerName(int.Parse(m.Groups[1].Value)));
         return Complete(paragraph+"\n"+TapPaymentText("目标：","Targets: ","対象：")+names);
     }

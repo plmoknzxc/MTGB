@@ -26,12 +26,23 @@ public sealed class TemplateCardFace : MonoBehaviour
     RectTransform hoverCostRoot;
     TemplateManaCost hoverMain,hoverAdventure;
     static Color Ink=>Color.black;
+    public static string ChineseNameFontKey { get; set; } = "NameWenKaiCN";
+    public static TMP_FontAsset DisplayNameFont => Font(true);
+    public static Font DisplayNameNativeFont {
+        get {
+            string key=GamePreferences.Language.StartsWith("zh")?ChineseNameFontKey:
+                GamePreferences.Language.StartsWith("ja")?"NameJP":"NameEN";
+            return Resources.Load<Font>("UI/CardTemplates/Fonts/"+key)??GamePreferences.Font;
+        }
+    }
     static TMP_FontAsset Font(bool heading,bool symbols=false,bool stats=false)
     {
         string locale=symbols||GamePreferences.Language.StartsWith("en")?"EN":GamePreferences.Language.StartsWith("zh")?"CN":GamePreferences.Language.StartsWith("ja")?"JP":"";
         if(locale=="")return GamePreferences.TmpFont;
-        string key=stats?"StatsEN":(heading?"Name":"Rules")+locale;
-        var font=LoadFont(key,locale=="EN"?72:48);
+        string key=stats?"StatsEN":heading&&locale=="CN"?ChineseNameFontKey:(heading?"Name":"Rules")+locale;
+        // World card names are enlarged with the battlefield camera. Give the
+        // display face a denser SDF while leaving rules text at its current size.
+        var font=LoadFont(key,locale=="EN"?72:key==ChineseNameFontKey?64:48);
         if(font==null)return GamePreferences.TmpFont;
         // The EN symbol/numeral fonts are shared across locales. A cached font
         // must not retain the previous locale's CJK fallback after switching.

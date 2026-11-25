@@ -47,6 +47,16 @@ public static class DeckKeywordGlossary
     private const string AffinityChineseKinds = "出身非神器的神器生物|史迹永久物|历史永久物|神器生物|非瑞克西亚人|非瑞人|鹏洛客|雪境地|衍生物|裂片妖|城门|门|武具|盟友|伙伴|树林|海岛|沼泽|山脉|平原|骑士|灵俑|精怪|生物|鸟|羊|匪徒|狂徒|猫|蛙|食品|蜥蜴|城镇|市镇|达雷克|戴立克|人类|公民|市民|精灵|妖精|神器|结界";
     private static readonly Regex affinityChinese = new Regex(@"(?<type>共鸣(?:"+AffinityChineseKinds+")|(?:"+AffinityChineseKinds+")共鸣)", RegexOptions.CultureInvariant);
     public static IReadOnlyList<Entry> All { get { EnsureLoaded(); return entries; } }
+    public static string KeywordName(string nativeKey)
+    {
+        EnsureLoaded();
+        string term=nativeKey.Replace('_',' ');
+        if(terms.TryGetValue(term,out var matches)){
+            foreach(var entry in matches)
+                if(string.Equals(entry.English,term,StringComparison.OrdinalIgnoreCase))return entry.Name;
+        }
+        return GamePreferences.NativeText(nativeKey);
+    }
 
     private static void EnsureLoaded()
     {
@@ -89,6 +99,8 @@ public static class DeckKeywordGlossary
         // 装備品 is a card subtype; 装備している describes an attached creature.
         // Only the ability/cost or an explicit reference to that ability is a keyword.
         if(name=="装備")return @"装備(?=[ \t]*(?:\\?\{|[0-9０-９XＸ]|[—―]|能力|コスト|を持|[、，,。;；「」『』]|$))";
+        if(char.IsDigit(name[name.Length-1]))
+            return (Regex.IsMatch(name,@"^[A-Za-z]")?@"(?<![A-Za-z])":"")+Regex.Escape(name)+@"(?![0-9０-９A-Za-z])";
         bool latin=Regex.IsMatch(name,@"[A-Za-z]");
         return latin?@"(?<![A-Za-z])"+Regex.Escape(name)+@"(?![A-Za-z]|\s+counters?\b)":Regex.Escape(name);
     }
@@ -115,6 +127,7 @@ public static class DeckKeywordGlossary
     private static string VisibleRules(string rules,CardDefinition card,bool maskTokenNames=true)
     {
         string visible=Regex.Replace(rules,@"(?m)^(?<bullet>[•・]\s*)(?<heading>[A-Z][A-Za-z'’ ,]+)(?=\s*\()",m=>terms.ContainsKey(m.Groups["heading"].Value.Trim())?m.Value:m.Groups["bullet"].Value+new string(' ',m.Groups["heading"].Length));
+        visible=Regex.Replace(visible,@"</?(?:color|s|u|b|i|alpha|size|sprite)(?:=[^>]*|\s[^>]*)?>",m=>new string(' ',m.Length),RegexOptions.IgnoreCase);
         visible=WithoutReminders(visible);
         if(maskTokenNames)visible=Regex.Replace(visible,@"《[^》]+》",m=>new string(' ',m.Length));
         // English ability-word headings are descriptive labels, not keywords.
@@ -228,6 +241,10 @@ public static class DeckKeywordGlossary
             var entry=candidates.Find(e=>string.Equals(language.StartsWith("zh")?e.Chinese:language.StartsWith("ja")?e.Japanese:e.English,match.Value,StringComparison.OrdinalIgnoreCase))??candidates[0];
             if(!found.Contains(entry))found.Add(entry);
         }
+        // Prefer the reminder printed beside the keyword on this face. Only an
+        // exact heading qualifies: a list of abilities or a different cost can
+        // have a different reminder. Never modify the shared glossary entries.
+        if(card!=null)UseFaceReminders(found,rules,language);
         return found;
 
         void AddParameterized(Regex regex,string source,char[] mask,string family)
@@ -240,6 +257,29 @@ public static class DeckKeywordGlossary
                 if(!found.Exists(e=>e.English==variant.English && e.Chinese==variant.Chinese))found.Add(variant);
                 for(int i=match.Index;i<match.Index+match.Length;i++)mask[i]=' ';
             }
+        }
+    }
+
+    private static readonly Regex faceReminders = new Regex(
+        @"^[ \t]*(?<heading>[^()（）<>\r\n]{1,54}?)[ \t]*[（(](?<reminder>[^()（）<>\r\n]+)[）)]",
+        RegexOptions.Multiline | RegexOptions.CultureInvariant);
+
+    private static void UseFaceReminders(List<Entry> found,string rules,string language)
+    {
+        foreach(Match m in faceReminders.Matches(rules)){
+            string heading=m.Groups["heading"].Value.Trim();
+            int at=found.FindIndex(e=>heading.Equals(e.English,StringComparison.OrdinalIgnoreCase)
+                || heading==e.Chinese || heading==e.Japanese || Array.IndexOf(e.Aliases,heading)>=0);
+            if(at<0)continue;
+            var e=found[at];
+            string help=m.Groups["reminder"].Value.Trim();
+            bool zh=language.StartsWith("zh"),ja=language.StartsWith("ja");
+            // Parentheses can also contain an enchant restriction or a cost.
+            // Preserve the localized glossary if this face fell back to English.
+            if(help.Length==0 || "。.!?！？".IndexOf(help[help.Length-1])<0)continue;
+            if(zh && !Regex.IsMatch(help,@"[\p{IsCJKUnifiedIdeographs}]") || ja && !Regex.IsMatch(help,@"[ぁ-ヿ]"))continue;
+            found[at]=new Entry(e.English,e.Chinese,e.Japanese,zh||ja?e.EnglishHelp:help,
+                zh?help:e.ChineseHelp,ja?help:e.JapaneseHelp){Aliases=e.Aliases,AutoDisplay=e.AutoDisplay};
         }
     }
 
@@ -429,13 +469,33 @@ public sealed class DeckKeywordLinkHover : MonoBehaviour, IPointerEnterHandler, 
     private CardDefinition sourceCard;
     private System.Func<CardDefinition,RectTransform,DeckKeywordGlossary.Entry,bool,bool> relatedHover;
     private static GameObject popup;
+    private static Canvas tooltipLayer;
     private static DeckKeywordLinkHover owner;
+
+    private string boundRules, boundLanguage;
+
+    public static void BindRules(TextMeshProUGUI label,string source,CardDefinition card=null)
+    {
+        source ??= "";
+        var hover=label.GetComponent<DeckKeywordLinkHover>();
+        if(hover!=null && hover.boundRules==source && hover.sourceCard==card && hover.boundLanguage==GamePreferences.Language)return;
+        var terms=DeckKeywordGlossary.Find(source,card:card);
+        label.richText=true;
+        label.raycastTarget=terms.Count>0;
+        label.text=CardSymbolText.Format(DeckKeywordGlossary.Markup(source,terms,card));
+        if(hover==null && terms.Count==0)return;
+        if(hover==null)hover=label.gameObject.AddComponent<DeckKeywordLinkHover>();
+        hover.Configure(terms,GamePreferences.Font,card);
+        hover.boundRules=source;
+        hover.boundLanguage=GamePreferences.Language;
+    }
 
     public void Configure(List<DeckKeywordGlossary.Entry> values, Font textFont, CardDefinition card = null,
         System.Func<CardDefinition,RectTransform,DeckKeywordGlossary.Entry,bool,bool> onRelatedHover = null)
     {
         if(activeIndex>=0&&rules!=null)relatedHover?.Invoke(sourceCard,rules.rectTransform,null,false);
         if(owner==this)Hide();
+        boundRules=null;
         entries = values;
         font = textFont;
         sourceCard=card;
@@ -450,8 +510,9 @@ public sealed class DeckKeywordLinkHover : MonoBehaviour, IPointerEnterHandler, 
         if (rules == null || entries == null || entries.Count == 0) return;
         Canvas canvas = GetComponentInParent<Canvas>();
         if (canvas == null) return;
+        var root=canvas.rootCanvas;
         int linkIndex = TMP_TextUtilities.FindIntersectingLink(rules, eventData.position,
-            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera);
+            root.renderMode == RenderMode.ScreenSpaceOverlay ? null : root.worldCamera);
         if (linkIndex < 0 || linkIndex >= rules.textInfo.linkCount)
         {
             if(activeIndex>=0)relatedHover?.Invoke(sourceCard,rules.rectTransform,null,false);
@@ -484,60 +545,74 @@ public sealed class DeckKeywordLinkHover : MonoBehaviour, IPointerEnterHandler, 
             activeIndex = index;
             RefreshPopup(entries[index]);
         }
-        PositionPopup(canvas, eventData.position);
+        PositionPopup(tooltipLayer, eventData.position);
         if (popup != null && !popup.activeSelf) popup.SetActive(true);
     }
 
     private void CreatePopup(DeckKeywordGlossary.Entry entry, Canvas canvas)
     {
         owner = this;
+        // The battlefield HUD uses camera-space canvases at different physical depths.
+        // A screen overlay keeps the tooltip above both those panels and the world cards.
+        tooltipLayer = new GameObject("KeywordTooltipLayer", typeof(RectTransform), typeof(Canvas)).GetComponent<Canvas>();
+        tooltipLayer.renderMode = RenderMode.ScreenSpaceOverlay;
+        tooltipLayer.sortingOrder = short.MaxValue - 1;
+        tooltipLayer.targetDisplay = canvas.rootCanvas.targetDisplay;
+        tooltipLayer.scaleFactor = canvas.rootCanvas.scaleFactor;
+        Canvas.ForceUpdateCanvases();
         popup = new GameObject("KeywordExplanation", typeof(RectTransform), typeof(Image));
         popup.SetActive(false);
-        popup.transform.SetParent(canvas.transform, false);
-        popup.transform.SetAsLastSibling();
+        popup.transform.SetParent(tooltipLayer.transform, false);
         var rect = (RectTransform)popup.transform;
         rect.anchorMin = rect.anchorMax = new Vector2(.5f, .5f);
         rect.pivot = new Vector2(0, 1);
+        var theme = MenuThemeCatalog.Current;
         var background = popup.GetComponent<Image>();
-        background.sprite = IntegratedUiUtility.RoundedRect(400, 100, 8);
-        background.color = new Color(.075f, .105f, .15f, .98f);
+        Color ink = theme.SectionFill;
+        ink.a = 1;
+        background.color = ink;
         background.raycastTarget = false;
         var outline = popup.AddComponent<Outline>();
-        outline.effectColor = new Color(.54f, .67f, .80f, .9f);
+        outline.effectColor = theme.InputRim;
         outline.effectDistance = new Vector2(1, -1);
-        Text heading = AddText("Keyword", entry.Name, 18, new Color(.85f, .72f, .48f));
-        heading.fontStyle = FontStyle.Bold;
-        Text body = AddText("Explanation", entry.Help, 16, new Color(.92f, .94f, .97f));
+        var heading = AddText("Keyword", entry.Name, 22, theme.ArchivePaper);
+        MenuTypography.Use(heading, MenuTypography.Face.Heading);
+        heading.color = theme.NavigationEdge;
+        var body = AddText("Explanation", entry.Help, 18, theme.ArchivePaper);
+        MenuTypography.Use(body, MenuTypography.Face.Reading);
         RefreshPopup(entry);
     }
 
     private static void RefreshPopup(DeckKeywordGlossary.Entry entry)
     {
         if (popup == null) return;
-        var texts = popup.GetComponentsInChildren<Text>();
+        var texts = popup.GetComponentsInChildren<Text>(true);
         Text heading = System.Array.Find(texts, t => t.name == "Keyword");
         Text body = System.Array.Find(texts, t => t.name == "Explanation");
         heading.text = entry.Name;
         body.text = entry.Help;
-        heading.GetComponent<PreferenceText>().SetBaseSize(18);
-        body.GetComponent<PreferenceText>().SetBaseSize(16);
+        heading.GetComponent<PreferenceText>().SetBaseSize(22);
+        body.GetComponent<PreferenceText>().SetBaseSize(18);
         var canvasRect=(RectTransform)popup.transform.parent;
         float width=Mathf.Min(400,canvasRect.rect.width-32);
         float availableHeight=Mathf.Max(128,canvasRect.rect.height-32);
-        body.rectTransform.anchorMin = body.rectTransform.anchorMax = new Vector2(0, 1);
-        body.rectTransform.sizeDelta = new Vector2(width-32, 100);
-        // Fit complete definitions at a stable font size instead of overflowing
-        // the old fixed 300px box, especially for Japanese compound mechanics.
-        while(body.preferredHeight+60>availableHeight && width<Mathf.Min(720,canvasRect.rect.width-32))
+        heading.rectTransform.anchorMin = heading.rectTransform.anchorMax = Vector2.up;
+        body.rectTransform.anchorMin = body.rectTransform.anchorMax = Vector2.up;
+        float titleHeight, bodyTop, bodyHeight, height;
+        while(true)
         {
-            width=Mathf.Min(width+80,Mathf.Min(720,canvasRect.rect.width-32));
-            body.rectTransform.sizeDelta=new Vector2(width-32,100);
+            heading.rectTransform.sizeDelta = body.rectTransform.sizeDelta = new Vector2(width-36,100);
+            titleHeight = Mathf.Ceil(heading.preferredHeight);
+            bodyTop = 14 + titleHeight + 9;
+            bodyHeight = Mathf.Ceil(body.preferredHeight);
+            height = bodyTop + bodyHeight + 16;
+            float maxWidth=Mathf.Min(720,canvasRect.rect.width-32);
+            if(height<=availableHeight || width>=maxWidth)break;
+            width=Mathf.Min(width+80,maxWidth);
         }
-        float height = Mathf.Max(body.preferredHeight + 60, 128);
-        var rect = (RectTransform)popup.transform;
-        rect.sizeDelta = new Vector2(width, height);
-        PlaceText(heading.rectTransform, new Vector2(16, -38), new Vector2(-16, -12));
-        PlaceText(body.rectTransform, new Vector2(16, -height + 14), new Vector2(-16, -46));
+        ((RectTransform)popup.transform).sizeDelta = new Vector2(width,height);
+        PlaceText(heading.rectTransform,new Vector2(18,-14-titleHeight),new Vector2(-18,-14));
+        PlaceText(body.rectTransform,new Vector2(18,-bodyTop-bodyHeight),new Vector2(-18,-bodyTop));
     }
 
     private static void PositionPopup(Canvas canvas, Vector2 screenPosition)
@@ -548,7 +623,7 @@ public sealed class DeckKeywordLinkHover : MonoBehaviour, IPointerEnterHandler, 
         var rect = (RectTransform)popup.transform;
         float height = rect.rect.height;
         rect.anchoredPosition = new Vector2(Mathf.Clamp(local.x + 18, canvasRect.rect.xMin + 8, canvasRect.rect.xMax - rect.rect.width - 8),
-            Mathf.Clamp(local.y - 12, canvasRect.rect.yMin + height + 8, canvasRect.rect.yMax - 8));
+            Mathf.Clamp(local.y - 12, canvasRect.rect.yMin + height + 8, canvasRect.rect.yMax - 8))-canvasRect.rect.center;
     }
 
     public void OnPointerExit(PointerEventData eventData) { if(activeIndex>=0)relatedHover?.Invoke(sourceCard,rules.rectTransform,null,false);activeIndex=-1;if (owner == this) Hide(); }
@@ -557,7 +632,12 @@ public sealed class DeckKeywordLinkHover : MonoBehaviour, IPointerEnterHandler, 
     {
         if (owner != null) owner.activeIndex = -1;
         owner = null;
-        if (popup != null) UnityEngine.Object.Destroy(popup);
+        if (tooltipLayer != null)
+        {
+            tooltipLayer.gameObject.SetActive(false);
+            UnityEngine.Object.Destroy(tooltipLayer.gameObject);
+            tooltipLayer = null;
+        }
         popup = null;
     }
     private Text AddText(string name, string value, int size, Color color)

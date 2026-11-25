@@ -28,10 +28,9 @@ public static class TemplateCardReadabilityValidation
     }
     static IEnumerator Guard()
     {
-        var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool prior=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
         var work=Validate();
         try{while(true){object next;try{if(!work.MoveNext())break;next=work.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"result.txt","PASS: focused two-card rendering checks; reused unchanged native snapshots, no new engine or network claim.");}
-        finally{running=false;GamePreferences.SetLanguage("zh-CN");if(notice!=null)notice.enabled=prior;}
+        finally{running=false;GamePreferences.SetLanguage("zh-CN");}
     }
     static void Face(TemplateCardFace face,string label)
     {

@@ -2,7 +2,7 @@
 
 当前使用官方印刷目录、持久对局会话和独立进程，联机对局在 IntegratedBattlefield 战场展示。操作与验证见 [战场说明](../../Docs/ForgeBattlefield.zh-CN.md)，运行结构见 [项目架构](../../Docs/ForgeArchitecture.zh-CN.md)。
 
-当前固定版本：Forge 2.0.15（Reality Fracture），2026-09-30 同步。升级范围、验证和缺图见 [同步记录](../../Docs/ForgeUpdate-2.0.15.zh-CN.md)。
+当前固定版本：Forge 2.0.16（Star Trek），2026-11-18 同步。升级范围、验证和缺图见 [同步记录](../../Docs/ForgeUpdate-2.0.16.zh-CN.md)。
 
 对战文本本地化：原生公开异能携带实时原文及来源牌面，客户端复用该牌面的译文。自动漏译日志位于客户端 `Application.persistentDataPath/Diagnostics/battle-text.jsonl`，当前及上一份各最多2 MiB，不含完整席位快照或隐藏牌。Unity编辑器的 `NativeMessageValidation.ReplaySavedMessages(path)` 在当前语言重放显示输入；未识别或截断的输入明确失败，不作为规则效果通过。`python -X utf8 Tools/ForgeBridge/Test-AbilityText.py` 验证真实施放、选目标、触发排序与独立的公开来源投影，`--cases` 可只补失败的尾段。诊断、验证范围与两端版本要求见 [对战英文残留记录](../../Docs/BattleTextLocalizationDiagnosis.2026-10-16.zh-CN.md)。
 
@@ -69,7 +69,7 @@ IntegratedBattlefield 在联机开局时自动加载，按服务器下发的状�
 
 ## 来源
 
-- Forge：`https://github.com/Card-Forge/forge`，提交 `4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676`。许可证见运行资源 `assets/LICENSE.txt` 和上游源码；桥接 Java 文件标注 GPL-3.0-or-later。
+- Forge：`https://github.com/Card-Forge/forge`，提交 `583714b8bfbd9cb04f8bc39ad95861190caf7691`。许可证见运行资源 `assets/LICENSE.txt` 和上游源码；桥接 Java 文件标注 GPL-3.0-or-later。
 - Eclipse Temurin JRE：版本、下载地址和 SHA-256 固定在 `Package-Runtime.py`，包内保留原有许可证文件。
 - 包内 `source/forge-<revision>.zip` 是固定提交的上游源码；`source/bridge` 是对应桥接源码；`origins.json` 记录源档案及 JRE 校验值。`Build-Bridge.ps1`、`Package-Runtime.py` 是 MTGB 仓库布局下的构建脚本，不能直接在包内 `source` 根目录运行。
 - `source/native-patches` 保存实际编译的完整原生修正源码，`NativePatches.json` 保存变更上下文与原始哈希，`origins.json` 记录变更清单与生成源码哈希。单独重建运行包时，也要用 JDK 17 将该目录中的 Java 源码编译到 `classes`，不能只编译桥接而漏掉修正。

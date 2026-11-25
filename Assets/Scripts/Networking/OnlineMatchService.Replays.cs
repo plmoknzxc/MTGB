@@ -30,14 +30,14 @@ public sealed partial class OnlineMatchService
         replayReceiveEpoch++;
         foreach(var stream in receivingReplays.Values)stream.Dispose();
         receivingReplays.Clear();expectedReplays.Clear();decodingReplays.Clear();
-        replayReceiveDeadlines.Clear();replaySaveChoices.Clear();declinedReviewReplays.Clear();
+        replayReceiveDeadlines.Clear();replaySaveChoices.Clear();
     }
     private void FailReplay(string id,string reason)
     {
         if(receivingReplays.TryGetValue(id,out var stream))stream.Dispose();
         receivingReplays.Remove(id);expectedReplays.Remove(id);replayReceiveDeadlines.Remove(id);
-        replaySaveChoices.Remove(id);declinedReviewReplays.Remove(id);
-        if(EndReview?.matchId==id){EndReplayStatus=reason+"，可以继续查看或离开";endReplayChoice=false;}
+        replaySaveChoices.Remove(id);
+        if(EndReview?.matchId==id)MarkEndReplayUnavailable(reason+"，可以继续查看或离开");
     }
     private IEnumerator SendCompletedReplay(RecordedMatchReplay recording, ulong[] recipients)
     {
@@ -80,7 +80,7 @@ public sealed partial class OnlineMatchService
             if (chunk.index != chunk.count - 1) return;
             byte[] bytes=stream.ToArray();
             stream.Dispose(); receivingReplays.Remove(chunk.matchId); expectedReplays.Remove(chunk.matchId);replayReceiveDeadlines.Remove(chunk.matchId);
-            if(replaySaveChoices.TryGetValue(chunk.matchId,out bool save)&&!save){replaySaveChoices.Remove(chunk.matchId);declinedReviewReplays.Remove(chunk.matchId);return;}
+            if(replaySaveChoices.TryGetValue(chunk.matchId,out bool save)&&!save){replaySaveChoices.Remove(chunk.matchId);return;}
             decodingReplays.Add(chunk.matchId);StartCoroutine(DecodeReceivedReplay(chunk.matchId,bytes));
         }
         catch (Exception error)

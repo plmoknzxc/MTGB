@@ -26,6 +26,14 @@ public static partial class CardImageLibrary
     public static string AlternateExternalRoot => Path.Combine(PrintingKeyUtility.ApplicationRoot, AlternateFolderName);
     public static string PersistentRoot => Path.Combine(Application.persistentDataPath, FolderName);
 
+    // Preserve the selected local printing for authored battlefield crop layouts.
+    public static bool TryGetImageSource(Sprite sprite, out string path)
+    {
+        if(sprite != null) foreach(var pair in Cache)
+            if(pair.Value.Sprite == sprite){path=pair.Key;return true;}
+        path=null;return false;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
@@ -282,6 +290,9 @@ public static partial class CardImageLibrary
             {
                 name = $"CardImage_{info.Directory?.Name}_{Path.GetFileNameWithoutExtension(info.Name)}",
                 filterMode = FilterMode.Trilinear,
+                // Full card scans are also mapped onto tilted world cards.
+                // Anisotropic sampling keeps those prints clearer at an angle.
+                anisoLevel = thumbnail ? 1 : 8,
                 // A small positive bias softens minified, rotated scans without
                 // blurring the original full-size hover image.
                 mipMapBias = .3f,

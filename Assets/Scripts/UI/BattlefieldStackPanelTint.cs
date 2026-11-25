@@ -4,8 +4,8 @@ using UnityEngine.UI;
 // A light diagonal tint on the existing rounded panel sprite.
 public sealed class BattlefieldStackPanelTint : BaseMeshEffect
 {
-    private static readonly Color Top = new(38 / 255f, 49 / 255f, 57 / 255f, 196 / 255f);
-    private static readonly Color Bottom = new(9 / 255f, 21 / 255f, 30 / 255f, 219 / 255f);
+    private static readonly Color Top = new(95 / 255f, 97 / 255f, 91 / 255f, 244 / 255f);
+    private static readonly Color Bottom = new(40 / 255f, 46 / 255f, 47 / 255f, 248 / 255f);
 
     public override void ModifyMesh(VertexHelper vertices)
     {

@@ -19,7 +19,6 @@ public static class PaymentHintValidation1014 {
  static Rect Bounds(RectTransform r){var c=new Vector3[4];r.GetWorldCorners(c);return Rect.MinMaxRect(c[0].x,c[0].y,c[2].x,c[2].y);}
  static IEnumerator Exercise(){
   while(!GamePreferences.Ready)yield return null;
-  foreach(var n in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))n.enabled=false;
   var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("HintBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;ui.GetType().GetField("service",Hidden).SetValue(ui,null);
   foreach(float scale in new[]{1f,1.3f}) {
    GamePreferences.SetScale(scale);

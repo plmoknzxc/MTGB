@@ -63,7 +63,7 @@ public final class ForgeProof {
     static Object base(Object proxy, Method method, Object[] args, String assets) throws Throwable {
         String n=method.getName();
         if(n.equals("getAssetsDir")) return assets;
-        if(n.equals("getCurrentVersion")) return "MTGB-Proof";
+        if(n.equals("getCurrentVersion") || n.equals("getUserAgent")) return "MTGB-Proof";
         if(n.equals("isRunningOnDesktop")) return true;
         if(n.equals("isGuiThread")) return Thread.currentThread().getName().equals("proof-ui");
         if(n.equals("invokeInEdtLater")) { guiTask((Runnable)args[0]); return null; }

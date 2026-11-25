@@ -47,9 +47,9 @@ def request(url):
             time.sleep(2 ** attempt)
 
 
-def metadata(code):
+def metadata(code, refresh=False):
     path = WORK / ('set-' + code + '.json')
-    if path.exists():
+    if path.exists() and not refresh:
         return json.loads(path.read_text(encoding='utf-8'))
     response = request('https://mtgch.com/api/v1/set/' + code.lower() + '/cards/')
     response.encoding = 'utf-8'
@@ -67,7 +67,7 @@ def normalized(name):
     return (name or '').replace('’', "'").replace('꞉', ':').casefold().strip()
 
 
-def download(job):
+def download(job, reserve_bytes):
     try:
         path = DEST / job['relative']
         for extension in ('.png', '.jpg', '.jpeg'):
@@ -76,8 +76,8 @@ def download(job):
                 with Image.open(candidate) as image:
                     image.verify()
                 return dict(**job, status='existing')
-        if shutil.disk_usage(ROOT).free < 4 * 1024 ** 3:
-            raise OSError('Disk reserve reached (4 GiB)')
+        if shutil.disk_usage(DEST).free < reserve_bytes:
+            raise OSError('Disk reserve reached')
         data = request(job['url']).content
         with Image.open(io.BytesIO(data)) as image:
             image.load()
@@ -101,7 +101,11 @@ def download(job):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--workers', type=int, default=12, choices=range(1, 33))
+    parser.add_argument('--sets', nargs='+', metavar='CODE', help='Refresh only these sets and keep a separate import report')
     args = parser.parse_args()
+    selected = {code.upper() for code in args.sets or []}
+    if any(not re.fullmatch(r'[A-Z0-9]+', code) for code in selected):
+        parser.error('Invalid set code')
     catalog = {}
     for line in (ROOT / 'ForgeRuntime/catalog.jsonl').read_text(encoding='utf-8').splitlines():
         card = json.loads(line)
@@ -113,10 +117,17 @@ def main():
         for token in entry['tokens']:
             catalog.setdefault(token['key'], dict(key=token['key'], name=token['name'], faces=[dict(name=token['name'])]))
     sets = sorted({key.split('/')[0] for key in catalog})
+    if selected:
+        if selected.difference(sets):
+            parser.error('Unknown set: ' + ', '.join(sorted(selected.difference(sets))))
+        sets = sorted(selected)
+        catalog = {key: card for key, card in catalog.items() if key.split('/')[0] in selected}
+    work = WORK / ('-'.join(sets)) if selected else WORK
+    work.mkdir(parents=True, exist_ok=True)
     jobs, excluded, metadata_failures, unavailable_sets = {}, [], [], []
     print(f'Checking {len(catalog)} local printings in {len(sets)} sets', flush=True)
     with futures.ThreadPoolExecutor(max_workers=3) as pool:
-        pending = {pool.submit(metadata, code): code for code in sets}
+        pending = {pool.submit(metadata, code, bool(selected)): code for code in sets}
         for index, done in enumerate(futures.as_completed(pending), 1):
             code = pending[done]
             try:
@@ -155,10 +166,17 @@ def main():
                 metadata_failures.append(dict(set=code, error=str(error)))
             if index % 20 == 0 or index == len(sets):
                 print(f'Metadata {index}/{len(sets)}; Chinese faces {len(jobs)}; failed sets {len(metadata_failures)}', flush=True)
-    (WORK / 'plan.json').write_text(json.dumps(list(jobs.values()), ensure_ascii=False, indent=2), encoding='utf-8')
+    (work / 'plan.json').write_text(json.dumps(list(jobs.values()), ensure_ascii=False, indent=2), encoding='utf-8')
+    DEST.mkdir(parents=True, exist_ok=True)
+    # A scoped update has a known upper budget. Keep at least 1 GiB free and
+    # allow up to 1 MiB per planned face.
+    free = shutil.disk_usage(DEST).free
+    reserve = 4 * 1024 ** 3
+    if selected:
+        reserve = max(1024 ** 3, free - len(jobs) * 1024 ** 2)
     stats, results, last = {}, [], time.monotonic()
-    with (WORK / 'results.jsonl').open('a', encoding='utf-8') as journal, futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
-        pending = [pool.submit(download, job) for job in jobs.values()]
+    with (work / 'results.jsonl').open('a', encoding='utf-8') as journal, futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
+        pending = [pool.submit(download, job, reserve) for job in jobs.values()]
         for index, done in enumerate(futures.as_completed(pending), 1):
             result = done.result()
             results.append(result)
@@ -172,7 +190,8 @@ def main():
                    metadataFailures=metadata_failures, unavailableSets=unavailable_sets, excluded=excluded,
                    failures=[r for r in results if r['status'] == 'failed'],
                    source='https://mtgch.com', destination=str(DEST.relative_to(ROOT)))
-    REPORT.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    report = work / 'summary.json' if selected else REPORT
+    report.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(summary, ensure_ascii=True)[:2000], flush=True)
     if metadata_failures or stats.get('failed'):
         raise SystemExit(1)

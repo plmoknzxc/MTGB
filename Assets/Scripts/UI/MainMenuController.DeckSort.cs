@@ -13,10 +13,10 @@ public sealed partial class MainMenuController
     private readonly System.Random deckSortRandom=new System.Random();
     private readonly Dictionary<(DeckEntry entry,int copy),int> deckShuffleOrder=new();
     private DeckDefinition shuffledDeck;
-    private Button deckCurve,deckCostSort,deckTypeSort,deckShuffle;
+    private Button deckCurve,deckCostSort,deckTypeSort,deckShuffle,deckBracketList;
     private Dropdown deckArrangement;
     private bool singleDeckCards;
-    private (float,float,int,string,string,string,string,string,string,string,int,int,int) deckHeaderLayoutKey;
+    private (float,float,int,string,string,string,string,string,string,string,int,int,int,string,string) deckHeaderLayoutKey;
     private float deckHeaderLayoutHeight;
 
     private void CreateDeckSortControls()
@@ -28,6 +28,7 @@ public sealed partial class MainMenuController
             PreferenceText.SetSize(button.GetComponentInChildren<Text>(),16);return button;
         }
         deckCurve=Add("DeckCurve",ShowDeckCurve);
+        deckBracketList=Add("CommanderBracketList",ShowBracketCatalog);
         deckArrangement=Instantiate(deckFormatDropdown,mainDeckCountText.transform,false);
         deckArrangement.name="DeckArrangementDropdown";
         deckArrangement.onValueChanged=new Dropdown.DropdownEvent();
@@ -47,9 +48,12 @@ public sealed partial class MainMenuController
         if(deckCostSort==null)return;
         void Label(Button button,string value,bool active){
             var label=button.GetComponentInChildren<Text>();var binding=label.GetComponent<PreferenceText>();binding.Literal=true;label.text=value;
-            button.GetComponent<Image>().color=active?MenuVisualTheme.Primary:MenuVisualTheme.Raised;
+            MenuVisualTheme.StyleDeckTool(button,active);
         }
         Label(deckCurve,DeckCompanion.Text("查看曲线","Mana curve","マナカーブ"),false);
+        bool showList=currentDeck?.format=="commander";
+        deckBracketList.gameObject.SetActive(showList);
+        if(showList)Label(deckBracketList,BracketListCaption(),false);
         deckArrangement.ClearOptions();
         deckArrangement.AddOptions(new List<string>{DeckCompanion.Text("合并排列","Merged copies","まとめて表示"),DeckCompanion.Text("单张排列","Individual cards","1枚ずつ表示")});
         deckArrangement.SetValueWithoutNotify(singleDeckCards?1:0);
@@ -59,14 +63,15 @@ public sealed partial class MainMenuController
         Label(deckTypeSort,DeckCompanion.Text("按类型","Card type","タイプ"),deckViewSort==DeckViewSort.Type);
         Label(deckShuffle,DeckCompanion.Text("打乱","Shuffle","混ぜる"),deckViewSort==DeckViewSort.Shuffle&&ReferenceEquals(shuffledDeck,currentDeck));
     }
-    // The count/format stay together; sorting stays at the right edge. A narrow
-    // panel wraps the controls, with the card viewport reserving their full height.
+    // Keep deck information above the view controls, wrapping the latter as needed.
     private float LayoutDeckHeader(float width,float minimumRowHeight)
     {
         if(mainDeckCountText==null||deckFormatDropdown==null||deckCostSort==null)return minimumRowHeight;
         float gap=Mathf.Clamp(width*.012f,6,12);
         var curve=deckCurve.GetComponentInChildren<Text>();var cost=deckCostSort.GetComponentInChildren<Text>();var type=deckTypeSort.GetComponentInChildren<Text>();var shuffle=deckShuffle.GetComponentInChildren<Text>();
-        var key=(width,minimumRowHeight,GamePreferences.Revision,mainDeckCountText.text,deckFormatDropdown.captionText.text,curve.text,deckArrangement.captionText.text,cost.text,type.text,shuffle.text,mainDeckCountText.fontSize,deckFormatDropdown.captionText.fontSize,cost.fontSize);
+        bool bracketVisible=deckBracketDropdown.gameObject.activeSelf;
+        var listLabel=deckBracketList.GetComponentInChildren<Text>(true);
+        var key=(width,minimumRowHeight,GamePreferences.Revision,mainDeckCountText.text,deckFormatDropdown.captionText.text,curve.text,deckArrangement.captionText.text,cost.text,type.text,shuffle.text,mainDeckCountText.fontSize,deckFormatDropdown.captionText.fontSize,cost.fontSize,bracketVisible?deckBracketDropdown.captionText.text:null,bracketVisible?listLabel.text:null);
         if(key==deckHeaderLayoutKey)return deckHeaderLayoutHeight;
         float rowHeight=Mathf.Ceil(Mathf.Max(minimumRowHeight,38,mainDeckCountText.fontSize*1.25f+6,cost.fontSize*1.25f+6,deckFormatDropdown.captionText.fontSize*1.25f+6));
         float costWidth=Mathf.Ceil(Mathf.Max(60,cost.preferredWidth+20));
@@ -76,46 +81,44 @@ public sealed partial class MainMenuController
         var arrangementText=deckArrangement.captionText;
         var arrangementSettings=arrangementText.GetGenerationSettings(Vector2.zero);
         float arrangementWidth=Mathf.Ceil(deckArrangement.options.Max(o=>arrangementText.cachedTextGeneratorForLayout.GetPreferredWidth(o.text,arrangementSettings)/arrangementText.pixelsPerUnit)+46);
-        var controls=new[]{((RectTransform)deckCurve.transform,curveWidth),((RectTransform)deckArrangement.transform,arrangementWidth),((RectTransform)deckCostSort.transform,costWidth),((RectTransform)deckTypeSort.transform,typeWidth),((RectTransform)deckShuffle.transform,shuffleWidth)};
-        float sortingWidth=controls.Sum(c=>c.Item2)+gap*(controls.Length-1);
         float countWidth=Mathf.Ceil(mainDeckCountText.preferredWidth);
         float formatWidth=Mathf.Ceil(Mathf.Max(96,deckFormatDropdown.captionText.preferredWidth+46));
-        bool secondRow=countWidth+gap*2+formatWidth+sortingWidth+8>width;
-        float formatRoom=width-countWidth-gap-(secondRow?0:sortingWidth+gap+8);
-        formatWidth=Mathf.Min(formatWidth,Mathf.Max(1,formatRoom));
-        mainDeckCountText.alignment=secondRow?TextAnchor.UpperLeft:TextAnchor.MiddleLeft;
-        void Position(RectTransform rect,bool right,float x,float y,float itemWidth){
-            rect.anchorMin=rect.anchorMax=new Vector2(right?1:0,1);rect.pivot=new Vector2(right?1:0,.5f);
-            var position=new Vector2(x,y);var size=new Vector2(itemWidth,rowHeight-4);
+        float bracketWidth=Mathf.Ceil(deckBracketDropdown.captionText.preferredWidth+48);
+        var tools=new (RectTransform rect,float width)[] {
+            ((RectTransform)deckArrangement.transform,arrangementWidth), ((RectTransform)deckCostSort.transform,costWidth),
+            ((RectTransform)deckTypeSort.transform,typeWidth), ((RectTransform)deckShuffle.transform,shuffleWidth),
+            ((RectTransform)deckCurve.transform,curveWidth)
+        };
+        int row=0;
+        float x=countWidth+gap;
+        void AddControl(RectTransform rect,float desiredWidth) {
+            float w=Mathf.Min(width,desiredWidth);
+            if(x>0 && x+w>width){row++;x=0;}
+            rect.anchorMin=rect.anchorMax=new Vector2(0,1);
+            rect.pivot=new Vector2(0,.5f);
+            var position=new Vector2(x,-rowHeight*.5f-row*(rowHeight+gap));
+            var size=new Vector2(w,rowHeight-4);
             if(rect.anchoredPosition!=position)rect.anchoredPosition=position;
             if(rect.sizeDelta!=size)rect.sizeDelta=size;
+            x+=w+gap;
         }
-        Position((RectTransform)deckFormatDropdown.transform,false,countWidth+gap,-rowHeight*.5f,formatWidth);
-        float sortY=-rowHeight*.5f-(secondRow?rowHeight+gap:0);
-        float controlX=-8-sortingWidth;
-        foreach(var control in controls){controlX+=control.Item2;Position(control.Item1,true,controlX,sortY,control.Item2);controlX+=gap;}
-        int controlRows=1;
-        if(secondRow&&sortingWidth>width-16){
-            int start=0;
-            while(start<controls.Length){
-                int end=start;float rowWidth=controls[start].Item2;
-                while(end+1<controls.Length&&rowWidth+gap+controls[end+1].Item2<=width-16)rowWidth+=gap+controls[++end].Item2;
-                float x=-8-rowWidth;
-                for(int i=start;i<=end;i++){
-                    x+=controls[i].Item2;
-                    Position(controls[i].Item1,true,x,sortY-(controlRows-1)*(rowHeight+gap),controls[i].Item2);
-                    x+=gap;
-                }
-                start=end+1;
-                if(start<controls.Length)controlRows++;
-            }
+        AddControl((RectTransform)deckFormatDropdown.transform,formatWidth);
+        if(bracketVisible){
+            AddControl((RectTransform)deckBracketDropdown.transform,bracketWidth);
+            AddControl((RectTransform)deckBracketList.transform,Mathf.Ceil(listLabel.preferredWidth+24));
+            FitDeckFormatPopup(deckBracketDropdown,width,bracketWidth);
         }
-        FitDeckFormatPopup(width,formatWidth);
+        float toolsWidth=tools.Sum(item=>item.width)+gap*(tools.Length-1);
+        if(x+toolsWidth<=width)x=width-toolsWidth;
+        else {row++;x=0;}
+        foreach(var tool in tools)AddControl(tool.rect,tool.width);
+        mainDeckCountText.alignment=row==0?TextAnchor.MiddleLeft:TextAnchor.UpperLeft;
+        FitDeckFormatPopup(deckFormatDropdown,width,formatWidth);
         var popup=deckArrangement.template;
         popup.anchorMin=popup.anchorMax=Vector2.zero;popup.pivot=new Vector2(0,1);popup.anchoredPosition=new Vector2(0,-6);
         popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,Mathf.Min(width,arrangementWidth));
         deckHeaderLayoutKey=key;
-        int rows=secondRow?1+controlRows:1;
+        int rows=1+row;
         return deckHeaderLayoutHeight=rowHeight*rows+gap*(rows-1);
     }
     private void SetDeckViewSort(DeckViewSort mode)

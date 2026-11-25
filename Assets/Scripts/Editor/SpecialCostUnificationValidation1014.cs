@@ -22,7 +22,6 @@ public static class SpecialCostUnificationValidation1014 {
  static void RightClick(ForgeBattlefieldController ui){if(probeMouse==null)probeMouse=InputSystem.AddDevice<Mouse>();InputSystem.QueueStateEvent(probeMouse,new MouseState{position=new Vector2(15,15)}.WithButton(MouseButton.Right));InputSystem.Update();probeMouse.MakeCurrent();Call(ui,"UpdateChoiceCancelShortcut");InputSystem.QueueStateEvent(probeMouse,new MouseState{position=new Vector2(15,15)});InputSystem.Update();}
  static IEnumerator Exercise(){
   while(!GamePreferences.Ready)yield return null;
-  foreach(var n in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))n.enabled=false;
   var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("CostUnificationBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;ui.GetType().GetField("service",Hidden).SetValue(ui,null);
   var counter=Read(Out+"/counter-type-scalar.json");int sent=-1;ui.Present(counter,counter.request.seat,true,i=>sent=i,null,"");yield return null;
   var menu=(RectTransform)Get(ui,"landChoiceMenu");var counterButtons=menu.GetComponentsInChildren<Button>().Where(b=>b.gameObject.activeInHierarchy).ToArray();

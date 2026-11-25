@@ -121,6 +121,11 @@ def build():
                 entry['zhHelp']=entry['zhHelp'].replace(old,zh.rstrip('！'))
         entry['zh']=zh
         entry['aliases'].append(zh.rstrip('！'))
+    by_chinese = {entry['zh']: entry for entry in entries.values()}
+    printed = json.loads((HERE / 'KeywordPrintedReminders.zh-CN.json').read_text(encoding='utf8'))
+    for keyword, source in printed.items():
+        entry = by_chinese[keyword]
+        entry['zhHelp'] = source['text']
     for e in entries.values():
         # Rules use inflected verbs such as 督励しても / 督励された.
         if e['ja'].endswith('する') and len(e['ja'])>2:

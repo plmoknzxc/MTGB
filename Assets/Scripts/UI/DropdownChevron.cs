@@ -22,6 +22,26 @@ public sealed class DropdownChevron : MaskableGraphic
         rect.pivot = new Vector2(.5f, .5f);
         rect.sizeDelta = new Vector2(16, 16);
         rect.anchoredPosition = new Vector2(-18, 0);
+        if (dropdown.GetComponentInParent<MenuThemePicker>(true) != null ||
+            (dropdown.GetComponentInParent<OnlineLobbyPanel>(true) != null &&
+             dropdown.GetComponentInParent<MenuTypography>(true) != null))
+            MenuVisualTheme.StyleArchiveDropdown(dropdown);
+        // Preference refreshes also rebind the chevron and its popup template.
+        if (dropdown.GetComponentInParent<AdvancedSearchPanel>(true) != null)
+        {
+            MenuVisualTheme.StyleArchiveDropdown(dropdown);
+            var option = dropdown.itemText.GetComponentInParent<Toggle>(true);
+            if (option.graphic == null)
+            {
+                var mark = MenuVisualTheme.Detail(option.transform, "SelectedRule", MenuVisualTheme.SideAccent);
+                mark.rectTransform.anchorMin = Vector2.zero;
+                mark.rectTransform.anchorMax = Vector2.up;
+                mark.rectTransform.offsetMin = new Vector2(1, 3);
+                mark.rectTransform.offsetMax = new Vector2(4, -3);
+                option.graphic = mark;
+            }
+            option.graphic.color = MenuVisualTheme.SideAccent;
+        }
     }
 
     static void StylePopup(Dropdown dropdown)

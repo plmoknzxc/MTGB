@@ -1,6 +1,6 @@
 # Forge 交互接口核对
 
-固定版本 `4ec5f1a2c32fa90ecb983a72b9eb47aa5c5d7676`：105 个接口声明（含重载），259 个直接调用位置。
+固定版本 `583714b8bfbd9cb04f8bc39ad95861190caf7691`：106 个接口声明（含重载），241 个直接调用位置。
 
 **接入分类不等于运行验证。** 规则断言、Unity 点击与继续结算必须分别有证据。
 
@@ -23,6 +23,10 @@
 | `default void updateDrawOffer(DrawOfferMessage.Status update)` | snapshot | 默认转发／快照展示回调 |
 | `default void updateButtons(final PlayerView owner, final boolean okEnabled, final boolean cancelEnabled, final boolean focusOk)` | state | 已有精确处理或默认转发 |
 | `void updateButtons(PlayerView owner, String label1, String label2, boolean enable1, boolean enable2, boolean focus1)` | state | 已有精确处理或默认转发 |
+| `default void updateButtons(PlayerView owner, String label1, String label2, boolean enable1, boolean enable2, boolean focus1, boolean undoAvailable)` | state | 默认转发到现有按钮状态处理 |
+| `default void showCoinFlip(boolean heads, String caption, boolean waitForTap)` | snapshot | 原生默认展示回调，结算由引擎处理 |
+| `default void showFlipOntoBattlefield(CardView flipped, CardView target, List<CardView> hit, List<CardView> battlefield, int timesFlipped)` | snapshot | 原生默认展示回调 |
+| `default void endFlipOntoBattlefield(CardView flipped)` | snapshot | 原生默认展示回调 |
 | `void flashIncorrectAction()` | snapshot | 默认转发／快照展示回调 |
 | `void alertUser()` | snapshot | 默认转发／快照展示回调 |
 | `default void updatePhase(boolean saveState)` | snapshot | 默认转发／快照展示回调 |
@@ -34,6 +38,7 @@
 | `default void showManaPool(PlayerView player)` | snapshot | 默认转发／快照展示回调 |
 | `default void hideManaPool(PlayerView player)` | snapshot | 默认转发／快照展示回调 |
 | `default void updateStack()` | snapshot | 默认转发／快照展示回调 |
+| `default void onSnapshotRestored()` | snapshot | 原生默认回调，桥接按当前快照展示 |
 | `default void notifyStackAddition(final GameEventSpellAbilityCast event)` | snapshot | 默认转发／快照展示回调 |
 | `default void notifyStackRemoval(final GameEventSpellRemovedFromStack event)` | snapshot | 默认转发／快照展示回调 |
 | `default void handleLandPlayed(CardView land)` | snapshot | 默认转发／快照展示回调 |
@@ -43,10 +48,8 @@
 | `default void updateCard(final CardView card)` | snapshot | 默认转发／快照展示回调 |
 | `default void updateCards(Iterable<CardView> cards)` | snapshot | 默认转发／快照展示回调 |
 | `default void updateCardsNetSafe(FCollectionView<CardView> cards)` | snapshot | 默认转发／快照展示回调 |
-| `void updateRevealedCards(TrackableCollection<CardView> collection)` | state | 已有精确处理或默认转发 |
 | `default void refreshCardDetails(Iterable<CardView> cards)` | snapshot | 默认转发／快照展示回调 |
 | `default void refreshField()` | snapshot | 默认转发／快照展示回调 |
-| `GameState getGamestate()` | state | 已有精确处理或默认转发 |
 | `default void updateManaPool(Iterable<PlayerView> manaPoolUpdate)` | snapshot | 默认转发／快照展示回调 |
 | `default void updateLives(Iterable<PlayerView> livesUpdate)` | snapshot | 默认转发／快照展示回调 |
 | `default void updateShards(Iterable<PlayerView> shardsUpdate)` | snapshot | 默认转发／快照展示回调 |
@@ -88,12 +91,9 @@
 | `void setCard(CardView card)` | snapshot | 默认转发／快照展示回调 |
 | `void setPlayerAvatar(LobbyPlayer player, IHasIcon ihi)` | snapshot | 默认转发／快照展示回调 |
 | `default void openZones(PlayerView controller, Collection<ZoneType> zones, Map<PlayerView, Object> players)` | state | 已有精确处理或默认转发 |
-| `void setHighlighted(Iterable<GameEntityView> entities, boolean b)` | snapshot | 默认转发／快照展示回调 |
-| `void setSelectables(Iterable<CardView> cards, int min, int max)` | state | 已有精确处理或默认转发 |
-| `void clearSelectables()` | state | 已有精确处理或默认转发 |
+| `void setSelection(Selection selection)` | state | 当前请求的选择数量、已选牌和可操作牌 |
+| `default boolean canPickStackTargets()` | default | 使用原生堆叠目标选择对话框 |
 | `boolean isSelecting()` | state | 已有精确处理或默认转发 |
-| `void setWeaklySelectable(final Iterable<CardView> cards)` | state | 已有精确处理或默认转发 |
-| `void clearWeaklySelectable()` | state | 已有精确处理或默认转发 |
 | `default void showRevealedCards(Iterable<CardView> cards)` | snapshot | 默认转发／快照展示回调 |
 | `default void hideRevealedCards()` | snapshot | 默认转发／快照展示回调 |
 | `boolean isGamePaused()` | state | 已有精确处理或默认转发 |
@@ -104,13 +104,14 @@
 | `void updateDayTime(String daytime)` | snapshot | 默认转发／快照展示回调 |
 | `void awaitNextInput()` | snapshot | 默认转发／快照展示回调 |
 | `void cancelAwaitNextInput()` | snapshot | 默认转发／快照展示回调 |
-| `void showWaitingTimer(PlayerView forPlayer, String waitingForPlayerName)` | snapshot | 默认转发／快照展示回调 |
 | `void updateAutoPassPrompt()` | snapshot | 默认转发／快照展示回调 |
 | `void setCurrentPlayer(PlayerView player)` | snapshot | 默认转发／快照展示回调 |
 | `boolean isUiSetToSkipPhase(PlayerView playerTurn, PhaseType phase)` | state | 已有精确处理或默认转发 |
 | `default void refreshYieldUi(PlayerView player)` | snapshot | 默认转发／快照展示回调 |
 | `void applyYieldUpdate(YieldUpdate update)` | unsupported | 原生 Forge yield 同步未接入 |
+| `void applyMacroState(IMacroSystem.State state)` | unsupported | Forge 原生远程宏不在 MTGB 协议内 |
 | `default void applyDelta(DeltaPacket packet)` | unsupported | 项目采用自有快照协议；原生 Forge delta 未接入 |
+| `default void awaitInput(final CountDownLatch done) throws InterruptedException` | default | 原生等待，桥接由独立线程提交 |
 | `boolean isNetGame()` | state | 已有精确处理或默认转发 |
 | `void setNetGame()` | snapshot | 默认转发／快照展示回调 |
 
@@ -128,18 +129,25 @@
 
 ## 基础界面边界
 
-48 个 IGuiBase 声明；玩家／输入／静态辅助类范围 25 个基础界面／辅助调用位置。
+55 个 IGuiBase 声明；玩家／输入／静态辅助类范围 25 个基础界面／辅助调用位置。
 
 | 方法 | 分类 | 处理 |
 |---|---|---|
 | `boolean isRunningOnDesktop()` | environment | Desktop true |
 | `boolean isLibgdxPort()` | environment | False; native desktop input branches |
 | `String getCurrentVersion()` | environment | Bridge version |
+| `String getUserAgent()` | environment | Headless bridge HTTP user agent |
 | `void invokeInEdtNow(Runnable runnable)` | thread | Synchronous dedicated UI executor |
 | `void invokeInEdtLater(Runnable runnable)` | thread | Dedicated UI executor; exceptions fatal |
 | `void invokeInEdtAndWait(Runnable proc)` | thread | Synchronous dedicated UI executor |
 | `void runBackgroundTask(String message, Runnable task)` | unsupported | Explicit UnsupportedOperationException; no fabricated choice |
 | `boolean isGuiThread()` | thread | Exact mtgb-ui thread |
+| `default boolean isMatchInProgress()` | default | Forge headless default |
+| `default boolean showCoach(final String title, final String text, final String nextLabel, final Runnable onNext)` | default | Forge headless default |
+| `default void hideCoach()` | default | Forge headless default |
+| `default boolean isTutorialBoardReady()` | default | Forge headless default |
+| `default TutorialLayout getTutorialLayout()` | default | Forge headless default |
+| `default void highlightGui(final Collection<TutorialTarget> targets)` | default | Forge headless default |
 | `String getAssetsDir()` | environment | Pinned runtime assets |
 | `ImageFetcher getImageFetcher()` | unsupported | Explicit UnsupportedOperationException; no fabricated choice |
 | `ISkinImage getSkinIcon(FSkinProp skinProp)` | unsupported | Explicit UnsupportedOperationException; no fabricated choice |

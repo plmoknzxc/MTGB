@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +8,7 @@ public sealed partial class ForgeBattlefieldController
 {
     private bool integrated;
     private Transform authored;
-    private RectTransform ownHand, otherHand, stackContent;
+    private RectTransform ownHand, otherHand, stackContent, statusMarkersRoot;
     private Button advanceButton, endTurnButton, undoManaButton;
     private RectTransform mulliganChoices;
     private Button exitSpectatorButton;
@@ -38,6 +38,7 @@ public sealed partial class ForgeBattlefieldController
         canvas = authored.GetComponent<Canvas>();
         surface = (RectTransform)authored;
         redesignProfile = authored.GetComponent<BattlefieldRedesignLayout>();
+        worldTable = authored.GetComponent<BattlefieldWorldTable>();
         if (IsRedesignLayout && service == null) previewControlMode = ForgeControlMode.On;
         foreach (var card in CardDatabaseRepository.LoadAll())
             if (!card.forgeAmbiguous && !catalog.ContainsKey(card.PrintingKey)) catalog.Add(card.PrintingKey, card);
@@ -46,8 +47,13 @@ public sealed partial class ForgeBattlefieldController
         stackContent = (RectTransform)Node("StackColumn/Viewport/Content");
         cardsRoot = Rect(authored, "ForgePermanents", Vector2.zero, new Vector2(1920, 1080));
         cardsRoot.SetSiblingIndex(Node("InspectPanel").GetSiblingIndex());
+        // Status cards are HUD objects. Keep them in a fixed Canvas layer while
+        // the physical battlefield beneath them is zoomed or panned.
+        statusMarkersRoot = Rect(authored, "PlayerStatusMarkers", Vector2.zero, new Vector2(1920, 1080));
+        statusMarkersRoot.SetSiblingIndex(Node("InspectPanel").GetSiblingIndex());
         // Runtime additions follow the existing corner and inspector anchors when the scene is edited.
         var panel = Panel(surface, "ForgeChoices", new Vector2(-60, 20), new Vector2(300, 290), Ink);
+        if(HudTheme!=null)StyleHudSurface(panel,HudInk,HudEdge);
         promptText = Label(panel, "Prompt", "", new Vector2(0, 112), new Vector2(276, 70), 16, Gold);
         actionRoot = Scroll(panel, "Choices", new Vector2(0, -30), new Vector2(286, 220));
         // Build can precede the opening projection. A real request reveals it.
@@ -58,6 +64,7 @@ public sealed partial class ForgeBattlefieldController
         advanceButton = SceneButton("CornerCluster/ControlRow/SkipCombatButton");
         endTurnButton = SceneButton("CornerCluster/ControlRow/EndTurnButton");
         undoManaButton=Button(Node("CornerCluster/ControlRow"),"UndoMana","撤回 Z",new Vector2(84,146),new Vector2(112,30),()=>{},Ink);
+        undoManaButton.gameObject.SetActive(false);
         PreferenceText.SetSize(undoManaButton.GetComponentInChildren<Text>(),12);
         Node("GearBox/ConcedeButton").gameObject.SetActive(false);
         var settings=SceneButton("GearBox/SettingsButton");settings.gameObject.SetActive(true);settings.interactable=true;
@@ -68,7 +75,11 @@ public sealed partial class ForgeBattlefieldController
         if(iconNode==null)iconNode=Rect(settings.transform,"GearIcon",Vector2.zero,new Vector2(28,28));
         iconNode.gameObject.SetActive(true);
         var icon=iconNode.GetComponent<ForgeGearIcon>()??iconNode.gameObject.AddComponent<ForgeGearIcon>();icon.color=Paper;icon.raycastTarget=false;
-        settings.onClick.AddListener(()=>GameSettingsPanel.Show(surface,concede));
+        settings.onClick.AddListener(()=>{
+            var settingsPanel=GameSettingsPanel.Show(surface,concede,archiveStyle:worldTable!=null,battlefield:true,puzzleSession:service);
+            SetOverlayLayer((RectTransform)settingsPanel.transform,InspectLayerOffset+5,true);
+        });
+        BuildBattleSidebar();
         // No rule-backed timer/settings or exile payload is currently supplied. Do not show fake state.
         Node("CornerCluster/ControlRow/DecisionTimerWidget").gameObject.SetActive(false);
         integrated = true;
@@ -106,14 +117,24 @@ public sealed partial class ForgeBattlefieldController
         PresentControlMode();
         BeginZoneMotion();
         BeginArenaPresentation();
+        bool fourPlayerScene=IsFourPlayerScene;
+        PrepareFourPlayerScene(fourPlayerScene);
         Clear(actionRoot);
         connectionText.text = status;
         phaseText.text = view == null || view.turn == 0 ? "起手选择" : Phase(view.phase);
-        SetText("CornerCluster/ControlRow/TurnChip/TurnNumber", (view?.turn ?? 0).ToString());
-        SetText("CornerCluster/ControlRow/TurnChip/TurnLabel",TapPaymentText("第 "+(view?.turn??0)+" 回合 · ","Turn "+(view?.turn??0)+" · ","ターン "+(view?.turn??0)+" · ")+(view?.turnSeat==seat?TapPaymentText("你的回合","Your turn","あなたのターン"):TapPaymentText("对手回合","Opponent turn","対戦相手のターン")));
+        int turnNumber=view?.turn??0;
+        string round=TapPaymentText("第 "+turnNumber+" 回合","Turn "+turnNumber,"ターン "+turnNumber);
+        string owner=view?.turnSeat==seat?TapPaymentText("你的回合","Your turn","あなたのターン"):TapPaymentText("对手回合","Opponent turn","対戦相手のターン");
+        SetText("CornerCluster/ControlRow/TurnChip/TurnNumber",HudTheme!=null?(turnNumber>0?round:""):turnNumber.ToString());
+        SetText("CornerCluster/ControlRow/TurnChip/TurnLabel",HudTheme!=null?(turnNumber>0?owner:""):round+" · "+owner);
+        if(fourPlayerScene&&view?.turnSeat>0&&view.turnSeat!=seat) {
+            string name=PlayerDisplayName(view.turnSeat);
+            SetNamedPlayerText(SceneText("CornerCluster/ControlRow/TurnChip/TurnLabel"),
+                TapPaymentText(name+"的回合",name+"'s turn",name+"のターン"),view.turnSeat);
+        }
         SetText("PriorityPill/Text", view?.awaitingInput==true ? view.request.kind=="InputPassPriority"?"你有优先权":"等待你完成选择" : "等待对手操作");
         if(service?.IsSpectator==true) { SetText("PriorityPill/Text","观战 · 仅公开信息"); string name=PlayerDisplayName(view?.turnSeat??0);SetNamedPlayerText(SceneText("CornerCluster/ControlRow/TurnChip/TurnLabel"),TapPaymentText(name+"的回合",name+"'s turn",name+"のターン")); }
-        if(IsDeclaringAttack)SetText("PriorityPill/Text","拖动生物选择攻击对象");
+        if(IsDeclaringAttack)SetText("PriorityPill/Text",fourPlayerScene?TapPaymentText("宣告攻击","Declare attackers","攻撃クリーチャー指定"):"拖动生物选择攻击对象");
         // The former room/status line is hidden in the compact phase dock.
         // Preserve actionable transport feedback in the existing status slot.
         if(service?.IsReconnecting==true||status=="连接中断 · 正在恢复对局")
@@ -124,6 +145,10 @@ public sealed partial class ForgeBattlefieldController
         foreach (var p in view?.players ?? Array.Empty<ForgePlayerView>())
         {
             bool own = p.seat == seat;
+            if(fourPlayerScene&&!own) {
+                PresentEmblems(p,false);
+                continue;
+            }
             string plate = own ? "PlayerPlate" : "OpponentPlate";
             var playerLabel=SceneText(plate+"/Name");
             SetNamedPlayerText(playerLabel,PlayerDisplayName(p.seat),p.seat);
@@ -135,7 +160,8 @@ public sealed partial class ForgeBattlefieldController
             // Authored zone piles can overlap the plate. The target surface must remain reachable.
             avatar.transform.SetAsLastSibling();
             int target = IsDeclaringAttack?AttackOption("player",p.targetId):OptionIndex("player:" + p.targetId); long captured = requestId;
-            avatar.interactable = target >= 0 && canAct;
+            ShowSelectedPlayer((RectTransform)avatar.transform,target);
+            avatar.interactable = target >= 0 && canAct && !FourWindowSelection;
             avatar.onClick.RemoveAllListeners();
             avatar.onClick.AddListener(() => {if(IsDeclaringAttack)ChooseAttackDestination(target,captured);else Choose(target,captured);});
             // Keep scene names stable for authoring; validation resolves the plate by seat.
@@ -152,6 +178,8 @@ public sealed partial class ForgeBattlefieldController
             var field = p.battlefield ?? Array.Empty<ForgeCardView>();
             PresentEmblems(p,own);
             PresentPlayerCounters(p,own);
+            if(fourPlayerScene)continue;
+            if(worldTable!=null)MeasureWorldField(field,own);
             IntegratedRow(cardsRoot, field.Where(c => c.creature).ToArray(), own ? "YourCreatures" : "OpponentCreatures", own ? -70 : 135, 104, 140, 8);
             IntegratedRow(cardsRoot, field.Where(c => c.land && !c.creature).ToArray(), own ? "YourLands" : "OpponentLands", own ? -230 : 295, 92, 116, 9);
             var support = field.Where(c => !c.land && !c.creature).ToArray();
@@ -160,7 +188,9 @@ public sealed partial class ForgeBattlefieldController
             IntegratedRow(cardsRoot, support.Where(c => c.battle).ToArray(), own ? "YourBattles" : "OpponentBattles", 0, 104, 140, 5);
             ArrangeSupportRegions(own);
         }
+        if(fourPlayerScene && view?.players!=null)PresentFourPlayerTable();
         PresentManaPool();
+        if(fourPlayerScene&&publicManaPoolRow!=null)publicManaPoolRow.gameObject.SetActive(false);
         PresentStackCards();
         BindIntegratedAction(advanceButton, "ok", "确认", "Label");
         StyleAdvanceButton();
@@ -170,7 +200,7 @@ public sealed partial class ForgeBattlefieldController
         endTurnButton.gameObject.SetActive(false);
         PresentManaPaymentActions();
         int undo=OptionIndex("cancel");
-        undoManaButton.gameObject.SetActive(view?.request?.kind=="InputPassPriority" && undo>=0 && view.request.options[undo].label.StartsWith("Undo"));
+        undoManaButton.gameObject.SetActive(service?.CurrentPuzzle==null && view?.request?.kind=="InputPassPriority" && undo>=0 && view.request.options[undo].label.StartsWith("Undo"));
         undoManaButton.GetComponentInChildren<Text>().text=TapPaymentText("撤回 Z","Undo Z","戻す Z");
         undoManaButton.onClick.RemoveAllListeners();undoManaButton.onClick.AddListener(()=>TryUndoPresentedAction());undoManaButton.interactable=canAct;
         SetText("CornerCluster/ControlRow/EndTurnButton/Finish", "");
@@ -183,7 +213,7 @@ public sealed partial class ForgeBattlefieldController
             if(CompletedSingleCardOption(view.request)>=0)continue;
             if(IsManaPaymentDecision && (option.id=="ok" || option.id=="cancel"))continue;
             if(view.request.selectionPurpose=="optionalReplacement")continue;
-            if(localLandChoices || HasTargetChoice)continue;
+            if(localLandChoices || HasTargetChoice || FourCombatDecision)continue;
             if(handControls&&!HasChoiceCard(option))continue;
             if(IsCardPickerRequest)continue;
             if(view.request.kind=="InputAttack" || view.request.kind=="OrderAbilities" || view.request.kind=="AssignAmount" || IsMulliganChoice)continue;
@@ -193,13 +223,14 @@ public sealed partial class ForgeBattlefieldController
             if (RepresentedOnBoard(option.id)) continue;
             int index = OptionIndex(option.id); long captured = requestId;
             var button = Button(actionRoot, "Option_" + index, RequestOptionLabel(option), Vector2.zero, new Vector2(286,48), () => Choose(index, captured), Ink);
+            if(HudTheme!=null)MenuVisualTheme.StyleDeckTool(button);
             var rect = (RectTransform)button.transform;
             rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1); rect.pivot = new Vector2(.5f, 1); rect.anchoredPosition = new Vector2(0,-count*56);count++;
             button.interactable = canAct;
         }
         actionRoot.sizeDelta = new Vector2(286, Math.Max(264, count * 56));
-        EndArenaPresentation();
         EndZoneMotion();
+        EndArenaPresentation();
         // Hand cards rise above the board, but must not cover the priority mode.
         // Modal presenters below still place their blockers above both.
         if(controlModeButton!=null)controlModeButton.transform.SetAsLastSibling();
@@ -221,7 +252,7 @@ public sealed partial class ForgeBattlefieldController
         if(DirectHandSelection && count==0)actionRoot.parent.parent.gameObject.SetActive(false);
         // Card pickers own their complete surface; an empty generic panel must
         // not remain behind their narrower confirmation window.
-        if(IsCardPickerRequest) {
+        if(IsCardPickerRequest || IsFourPlayerScene && UsesTargetWindow) {
             actionRoot.parent.parent.gameObject.SetActive(false);
             advanceButton.gameObject.SetActive(false);
         }
@@ -229,23 +260,31 @@ public sealed partial class ForgeBattlefieldController
         PresentCardSelection();
         PresentChoiceHint();
         PresentStackList();
+        PresentFourCombat();
         CompleteSelectedAttackDeclaration();
-        if(Node("InspectPanel").gameObject.activeSelf && inspectedCardId!=0) {
+        if((Node("InspectPanel").gameObject.activeSelf||sidebarHasDetail) && inspectedCardId!=0) {
             var latest=(view?.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>(p.battlefield??Array.Empty<ForgeCardView>()).Concat(p.emblems??Array.Empty<ForgeCardView>()).Concat(VisibleEffectMarkers(p))).Concat(view?.globalEffects??Array.Empty<ForgeCardView>()).FirstOrDefault(c=>c.id==inspectedCardId);
             if(latest!=null){int revision=inspectHoverRevision;InspectIntegrated(latest);inspectHoverRevision=revision;}
             else { inspectedCardId=0; Node("InspectPanel").gameObject.SetActive(false); }
         }
+        StyleWorldDock();
+        LayoutPhaseDock();
         PresentRedesignLayout();
+        if(fourPlayerScene)FinishFourPlayerScene();
+        redesignProfile?.SetHudVisible(view?.players?.Length >= 2);
     }
     private void PresentMulliganChoices()
     {
         if(mulliganChoices!=null){mulliganChoices.gameObject.SetActive(false);Clear(mulliganChoices);}
-        if(!IsMulliganChoice)return;
-        if(mulliganChoices==null)mulliganChoices=Panel(surface,"MulliganChoices",new Vector2(0,-135),new Vector2(520,154),Ink);
+        if(!IsMulliganChoice || IsFourPlayerScene && IsCardPickerRequest)return;
+        if(mulliganChoices==null)mulliganChoices=Panel(surface,"MulliganChoices",Vector2.zero,new Vector2(520,154),Ink);
+        SetOverlayLayer(mulliganChoices,DecisionLayerOffset,true);
         mulliganChoices.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(520,154,12);
+        if(HudTheme!=null)StyleHudSurface(mulliganChoices,HudInk,HudEdge);
         string prompt=view.request.kind=="InputChooseStartingHand"?TapPaymentText("选择要保留的起手；其余起手将洗回牌库。","Choose a starting hand; the other hands will be shuffled into your library.","最初の手札を選択。他の手札はライブラリーに戻して切り直します。"):Prompt(view,seat);
         var promptLabel=Label(mulliganChoices,"Prompt",prompt,Vector2.zero,new Vector2(488,60),19,Paper);
         promptLabel.raycastTarget=false;
+        if(HudTheme!=null){promptLabel.color=HudText;MenuTypography.Use(promptLabel,MenuTypography.Face.Heading);}
         float promptHeight=Mathf.Max(60,promptLabel.preferredHeight+8),panelHeight=promptHeight+94;
         mulliganChoices.sizeDelta=new Vector2(520,panelHeight);
         promptLabel.rectTransform.sizeDelta=new Vector2(488,promptHeight);
@@ -256,7 +295,8 @@ public sealed partial class ForgeBattlefieldController
             var option=options[i];int index=OptionIndex(option.id);long captured=requestId;
             var button=Button(mulliganChoices,"Mulligan_"+option.id,RequestOptionLabel(option),
                 new Vector2((i-(options.Length-1)*.5f)*238,-panelHeight*.5f+38),new Vector2(226,46),()=>Choose(index,captured),option.id=="ok"?new Color(.25f,.34f,.39f):Ink);
-            button.interactable=canAct && !submitted;
+            button.interactable=canAct && !submitted && !option.disabled;
+            if(HudTheme!=null)MenuVisualTheme.StyleDeckTool(button,option.id=="ok");
         }
         mulliganChoices.gameObject.SetActive(true);mulliganChoices.SetAsLastSibling();
     }
@@ -269,12 +309,14 @@ public sealed partial class ForgeBattlefieldController
         int index = OptionIndex(id);
         long captured = requestId;
         button.onClick.RemoveAllListeners(); button.onClick.AddListener(() => Choose(index, captured));
-        button.interactable = canAct && index >= 0;
+        button.interactable = canAct && !submitted && index >= 0 && !view.request.options[index].disabled;
         button.transform.Find(child).GetComponent<Text>().text = label;
         if(id=="ok" && index>=0) button.transform.Find(child).GetComponent<Text>().text=RequestOptionLabel(view.request.options[index]);
     }
     private void DisableIntegratedChoices()
     {
+        if(fourCombatDialog!=null)fourCombatDialog.GetComponent<CanvasGroup>().interactable=false;
+        ClearWorldActionHints();
         if(landChoiceMenu!=null)foreach(var button in landChoiceMenu.GetComponentsInChildren<Button>())button.interactable=false;
         if(handChoiceActions!=null)foreach(var button in handChoiceActions.GetComponentsInChildren<Button>())button.interactable=false;
         if(attackBatchActions!=null)foreach(var button in attackBatchActions.GetComponentsInChildren<Button>())button.interactable=false;
@@ -337,7 +379,7 @@ public sealed partial class ForgeBattlefieldController
     private void LeaveInspectCard() { if(this!=null && isActiveAndEnabled)StartCoroutine(CloseInspectWhenOutside(inspectHoverRevision)); }
     private System.Collections.IEnumerator CloseInspectWhenOutside(int revision)
     {
-        yield return new WaitForSecondsRealtime(.15f);
+        yield return new WaitForSecondsRealtime(GamePreferences.HoverCardDetails?.06f:.15f);
         var panel=(RectTransform)Node("InspectPanel");
         while(revision==inspectHoverRevision && panel.gameObject.activeSelf) {
             var mouse=UnityEngine.InputSystem.Mouse.current;
@@ -352,6 +394,8 @@ public sealed partial class ForgeBattlefieldController
     private void InspectIntegrated(ForgeCardView card)=>InspectIntegratedCore(card,true);
     private void InspectIntegratedCore(ForgeCardView card,bool showBothFaces)
     {
+        if(sidebarHistoryInspection&&(historyInspectCard==null||card.id!=historyInspectCard.id))
+            CloseHistoryInspector();
         inspectedStackTargets=null;
         if(detailCardId!=card.id){detailCardId=card.id;inspectOriginalState=false;}
         detailCard=card;
@@ -398,12 +442,16 @@ public sealed partial class ForgeBattlefieldController
         }
         SetText("InspectPanel/Header", "卡牌详情");
         SetText("InspectPanel/SetNumber", card.faceDown ? "" : card.printingKey ?? "");
+        SceneText("InspectPanel/Name").font=TemplateCardFace.DisplayNameNativeFont;
         SceneText("InspectPanel/Name").supportRichText=true;
         SetText("InspectPanel/Name", definition != null && !card.faceDown && !card.backFace && !IsPreparedSpell(card) ? GamePreferences.CardName(definition) : card.name);
         SceneText("InspectPanel/TypeLine").supportRichText=true;
         // Live land text expands subtype mana abilities and omits printed
         // reminders. Compare it only when native types or traits really changed.
-        SetText("InspectPanel/TypeLine", card.faceDown ? "面朝下" : publicCopy ? copiedType : card.hasCurrentLandState || (!string.IsNullOrEmpty(card.currentType) && card.originalType!=card.currentType) ? ChangedTypeText(card.originalType,card.currentType) : VisibleCardType(card));
+        bool typeChanged=card.originalType!=card.currentType &&
+            !string.IsNullOrWhiteSpace(card.originalType) && !string.IsNullOrWhiteSpace(card.currentType) &&
+            !CardTypeText.Parts(card.originalType).SequenceEqual(CardTypeText.Parts(card.currentType),StringComparer.OrdinalIgnoreCase);
+        SetText("InspectPanel/TypeLine", card.faceDown ? "面朝下" : publicCopy ? copiedType : typeChanged ? ChangedTypeText(card.originalType,card.currentType) : VisibleCardType(card));
         SetText("InspectPanel/Rules", publicCopy && card.hasCopyAbilityChanges ? CopyRulesText(card,copiedDefinition,copiedFeature) : card.hasAbilityChanges ? LocalizedChangedRules(card,card.originalAbilityText,card.currentAbilityText) : card.hasCurrentLandState && card.landTypesChanged || !card.hasCurrentLandState && card.originalRules!=null && card.currentRules!=card.originalRules ? LocalizedChangedRules(card,card.originalRules,card.currentRules) : publicCopy ? copiedRules : card.backFace || IsPreparedSpell(card) || card.token ? PrintedRuleText(card,card.currentRules?.Replace("\\n", "\n")) : GamePreferences.CardRules(definition));
         if(specialized && !card.hasAbilityChanges && card.currentRules==card.originalRules) {
             var nativeFace=new CardFeatureDefinition { cardName=card.name,description=(card.currentRules??"").Replace("\\n","\n") };
@@ -412,7 +460,7 @@ public sealed partial class ForgeBattlefieldController
         var meldFeature=!card.faceDown&&card.stateName=="Meld"?definition?.features?.FirstOrDefault(f=>f!=null&&f.faceIndex==1&&f.cardName==card.name):null;
         if(meldFeature!=null&&!card.hasAbilityChanges&&card.currentRules==card.originalRules) {
             SetText("InspectPanel/Name",GamePreferences.FeatureName(meldFeature));
-            SetText("InspectPanel/TypeLine",GamePreferences.FeatureType(meldFeature,card.currentType));
+            if(!typeChanged)SetText("InspectPanel/TypeLine",GamePreferences.FeatureType(meldFeature,card.currentType));
             SetText("InspectPanel/Rules",GamePreferences.FeatureRules(meldFeature));
         }
         var spellFeature=!card.faceDown&&(IsPreparedSpell(card)||card.stateName=="Secondary"&&!card.creature&&!card.land||card.zone=="Stack"&&!card.room&&card.stateName is "LeftSplit" or "RightSplit")
@@ -425,11 +473,15 @@ public sealed partial class ForgeBattlefieldController
         if(card.emblem || card.effectMarker || card.faceDown) {
             SetText("InspectPanel/TypeLine",card.emblem?TapPaymentText("徽记","Emblem","紋章"):card.effectMarker?(card.markerKind=="dungeon"?TapPaymentText("地城","Dungeon","ダンジョン"):TapPaymentText("延迟 / 持续效果","Delayed / ongoing effect","遅延／継続する効果")):"面朝下的生物");
             SetText("InspectPanel/Name",card.emblem?EmblemLocalizedName(card):card.effectMarker?MarkerName(card):"面朝下的牌");
-            SetText("InspectPanel/Rules",card.emblem?EmblemLocalizedRules(card):card.faceDown?FaceDownRules(card):MarkerRules(card));
+            SetText("InspectPanel/Rules",card.emblem?EmblemLocalizedRules(card):card.faceDown?FaceDownRules(card):DisplayMarkerRules(card));
             if(card.markerKind=="game"||card.markerKind=="player-protection"||IsSpeedMarker(card))SetText("InspectPanel/TypeLine",card.markerKind=="game"?TapPaymentText("游戏状态","Game state","ゲームの状態"):TapPaymentText("玩家状态","Player state","プレイヤーの状態"));
         }
         if(inspectOriginalState && !card.faceDown){
-            SetText("InspectPanel/TypeLine",SafeDetail((publicCopy||specialized)&&definition!=null?physicalType:CurrentLandTypeLabel(card.originalType??card.currentType)));
+            // Both views share the localized face label until its characteristics differ.
+            if((publicCopy||specialized)&&definition!=null)
+                SetText("InspectPanel/TypeLine",SafeDetail(physicalType));
+            else if(typeChanged)
+                SetText("InspectPanel/TypeLine",SafeDetail(CurrentLandTypeLabel(card.originalType)));
             SetText("InspectPanel/Rules",SafeDetail(PrintedRuleText(card,((publicCopy||specialized)&&definition!=null?physicalRules:card.originalRules??GamePreferences.CardRules(definition)).Replace("\\n","\n"))));
         }
         if(!card.faceDown&&!card.emblem&&!card.effectMarker&&(!string.IsNullOrEmpty(card.originalName)||publicCopy&&definition!=null)) {
@@ -499,6 +551,7 @@ public sealed partial class ForgeBattlefieldController
         bool displayCreature=card.creature;
         if(inspectOriginalState)displayCreature=publicCopy&&definition!=null
             ? ((physicalFeature?.cardTypes??definition.cardTypes)&CardType.Creature)!=0
+            : !string.IsNullOrEmpty(card.currentType)&&card.originalType==card.currentType?card.creature
             : !string.IsNullOrEmpty(card.originalType)?card.originalType.Split(new[]{' ','-'},StringSplitOptions.RemoveEmptyEntries).Contains("Creature")
             : definition?.HasType(CardType.Creature)??card.creature;
         string damageSuffix=card.creature&&displayCreature?" · "+TapPaymentText("伤害","Damage","ダメージ")+" "+card.damage:"";
@@ -520,7 +573,7 @@ public sealed partial class ForgeBattlefieldController
         if(card.faceDown && !string.IsNullOrEmpty(card.knownFacePrintingKey)) {
             CardImageLibrary.TryLoadPrintingKey(card.knownFacePrintingKey,out sprite);
             SetText("InspectPanel/Name",GamePreferences.CardFaceName(card.knownFaceName));
-            SetText("InspectPanel/Rules",FaceDownRules(card)+"\n\n"+TapPaymentText("仅你可见的原牌：","Original card (visible only to you):","あなたにのみ見える元のカード：")+"\n"+KnownFaceRules(card));
+            SetText("InspectPanel/Rules",FaceDownRules(card)+"\n\n"+TapPaymentText("原牌","Original card","元のカード")+"\n"+KnownFaceRules(card));
         }
         string sectorDetail = inspectOriginalState ? "" : SectorDetail(card);
         if (sectorDetail.Length > 0) SceneText("InspectPanel/Rules").text = sectorDetail + "\n\n" + SceneText("InspectPanel/Rules").text;
@@ -589,6 +642,7 @@ public sealed partial class ForgeBattlefieldController
             devotionBadge.gameObject.SetActive(!card.faceDown && card.devotionRequired>0);
             devotionBadge.Find("Value").GetComponent<Text>().text=card.devotion+"/"+card.devotionRequired;
         }
+        CaptureSidebarDetail();
     }
     private float PresentInspectCounterLegend(RectTransform content,ForgeCardView card,float width,float top)
     {
@@ -613,14 +667,8 @@ public sealed partial class ForgeBattlefieldController
             label.rectTransform.anchoredPosition=new Vector2(x+32,-y);label.rectTransform.sizeDelta=new Vector2(cell-34,rowHeight);
             var tile=Panel(legend,"CounterIcon_"+counter.kind,Vector2.zero,new Vector2(24,24),new Color(.025f,.045f,.065f,.94f));
             tile.anchorMin=tile.anchorMax=new Vector2(0,1);tile.anchoredPosition=new Vector2(x+12,-y);tile.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(24,24,6);tile.GetComponent<Image>().raycastTarget=false;
-            bool positive=counter.kind=="P1P1",negative=counter.kind=="M1M1",lore=counter.kind=="LORE";
-            if(positive||negative||lore) {
-                var sign=Label(tile,"Symbol",positive?"+":negative?"−":counter.count.ToString(),Vector2.zero,new Vector2(24,24),18,positive?new Color(.32f,.78f,1f):negative?new Color(1f,.32f,.32f):Gold);
-                sign.fontStyle=FontStyle.Bold;sign.horizontalOverflow=HorizontalWrapMode.Overflow;sign.verticalOverflow=VerticalWrapMode.Overflow;sign.raycastTarget=false;
-                if(lore)tile.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(24,24,12);
-            } else {
-                var icon=Rect(tile,"TypeIcon",Vector2.zero,new Vector2(20,20)).gameObject.AddComponent<PermanentCounterIcon>();icon.Bind(counter.kind);icon.color=counter.kind=="STUN"?new Color(.32f,.78f,1f):Paper;icon.raycastTarget=false;
-            }
+            var icon=Rect(tile,"TypeIcon",Vector2.zero,new Vector2(20,20)).gameObject.AddComponent<PermanentCounterIcon>();
+            icon.Bind(counter.kind);icon.color=Paper;icon.raycastTarget=false;
         }
         return height;
     }
@@ -640,7 +688,8 @@ public sealed partial class ForgeBattlefieldController
         LostAbilityStrikeGraphic.Attach(rules);
         rules.font=GamePreferences.TmpFont!=null?GamePreferences.TmpFont:TMPro.TMP_Settings.defaultFontAsset;
         rules.lineSpacing=IsRedesignLayout?5:4;rules.alignment=TMPro.TextAlignmentOptions.TopLeft;
-        rules.richText=true;rules.text=CardSymbolText.Format(backing.text);rules.enableAutoSizing=false;rules.fontStyle=TMPro.FontStyles.Normal;
+        catalog.TryGetValue(card.faceDown?"":card.printingKey??"",out var rulesCard);
+        DeckKeywordLinkHover.BindRules(rules,backing.text,rulesCard);rules.enableAutoSizing=false;rules.fontStyle=TMPro.FontStyles.Normal;
         rules.tintAllSprites=!inspectOriginalState&&(card.hasAbilityChanges||card.hasCurrentLandState&&card.landTypesChanged);
         (rules.GetComponent<PreferenceText>()??rules.gameObject.AddComponent<PreferenceText>()).SetBaseSize(IsRedesignLayout?20:18);
         rules.rectTransform.anchorMin=rules.rectTransform.anchorMax=rules.rectTransform.pivot=new Vector2(0,1);
@@ -664,7 +713,7 @@ public sealed partial class ForgeBattlefieldController
         LostAbilityStrikeGraphic.Attach(typeText);
         typeText.font=rules.font;typeText.richText=true;typeText.enableAutoSizing=false;
         typeText.text=typeBacking.text;typeText.alignment=TMPro.TextAlignmentOptions.TopLeft;
-        typeText.color=IsRedesignLayout?new Color(.72f,.81f,.91f):new Color(.67f,.73f,.78f);
+        typeText.color=HudMuted;
         (typeText.GetComponent<PreferenceText>()??typeText.gameObject.AddComponent<PreferenceText>()).SetBaseSize(IsRedesignLayout?18:15);
         typeText.rectTransform.anchorMin=Vector2.zero;typeText.rectTransform.anchorMax=Vector2.one;
         typeText.rectTransform.offsetMin=typeText.rectTransform.offsetMax=Vector2.zero;
@@ -699,17 +748,28 @@ public sealed partial class ForgeBattlefieldController
         if(scrollingTargets&&targetHeight>0)preferred=targetTop+targetHeight;
         float componentHeight=HasMeldComponents(card)?Mathf.Max(32,Mathf.Ceil(Node("InspectPanel/MeldComponents").GetComponentInChildren<Text>().preferredHeight)+6):0;
         float fixedHeight=16+nameHeight+originalHeight+costHeight+artHeight+12+componentHeight+(componentHeight>0?8:0)+typeHeight+12+footerHeight+16+(scrollingTargets?0:targetHeight);
-        float available=Mathf.Min((surface.rect.height-24)/detailScale,720);
-        if(fixedHeight+preferred>available){float shrink=Mathf.Min(90,fixedHeight+preferred-available);artHeight-=shrink;fixedHeight-=shrink;}
+        // The inspector has its own overlay layer and may cover the resting
+        // hand. Keep enough room for the rules instead of clipping them to a
+        // single line when the card art and hand both occupy the screen.
+        float safeHeight=InspectOpponentHandBoundaryY()-InspectHandBoundaryY();
+        float available=Mathf.Min((safeHeight-24)/detailScale,720);
+        float minimumRulesHeight=Mathf.Min(160,Mathf.Max(80,available*.28f));
+        if(fixedHeight+minimumRulesHeight>available){
+            float shrink=Mathf.Min(Mathf.Max(0,artHeight-200),fixedHeight+minimumRulesHeight-available);
+            artHeight-=shrink;fixedHeight-=shrink;
+        }
         float rulesHeight=Mathf.Clamp(preferred,28,Mathf.Max(28,available-fixedHeight));
         float height=fixedHeight+rulesHeight;
         panel.sizeDelta=new Vector2(width,height);
-        // A warm, fully framed inspector reads separately from cool decision windows.
-        var background=panel.GetComponent<Image>();background.color=new Color(.185f,.157f,.122f,1f);
-        background.sprite=IntegratedUiUtility.RoundedRect(340,500,12);background.type=Image.Type.Simple;background.material=null;
+        // The inspector and journal share graphite stock and restrained metal
+        // tooling; card colours and player identities remain independent.
+        StyleHudSurface(panel,HudInk,HudEdge);
+        panel.GetComponent<Image>().material=null;
+        var topBar=panel.Find("TopBar")?.GetComponent<Image>();
+        if(topBar!=null){topBar.color=HudAccent;topBar.raycastTarget=false;}
         var opacity=panel.GetComponent<CanvasGroup>();if(opacity!=null)opacity.alpha=1;
-        var outline=panel.GetComponent<Outline>();
-        if(outline!=null){outline.enabled=true;outline.effectColor=new Color(.76f,.61f,.36f,1);outline.effectDistance=new Vector2(2,-2);}
+        StyleHudSurface(originalButton,HudRaised,HudEdge);
+        var originalLabel=originalButton.GetComponentInChildren<Text>();if(originalLabel!=null)originalLabel.color=HudAccent;
         Node("InspectPanel/Header").gameObject.SetActive(false);
         Node("InspectPanel/SetNumber").gameObject.SetActive(false);
         float y=16;
@@ -722,7 +782,7 @@ public sealed partial class ForgeBattlefieldController
             text.verticalOverflow=VerticalWrapMode.Truncate;text.resizeTextForBestFit=false;
             (text.GetComponent<PreferenceText>()??text.gameObject.AddComponent<PreferenceText>()).SetBaseSize(name=="Name"?(IsRedesignLayout?25:22):name=="Footer"&&IsRedesignLayout?18:15);
             text.verticalOverflow=VerticalWrapMode.Truncate;text.fontStyle=IsRedesignLayout&&name=="Name"?FontStyle.Bold:FontStyle.Normal;
-            text.color=name=="TypeLine"?new Color(.67f,.73f,.78f):IsRedesignLayout&&name=="Footer"?new Color(.82f,.71f,.50f):Paper;
+            text.color=name=="TypeLine"?HudMuted:name=="Footer"?HudAccent:HudText;
         }
         if(IsRedesignLayout&&originalHeight>0){
             originalButton.anchorMin=originalButton.anchorMax=originalButton.pivot=Vector2.one;
@@ -744,7 +804,9 @@ public sealed partial class ForgeBattlefieldController
         if(!IsRedesignLayout)Place("CostRow",costHeight);
         var art=(RectTransform)Node("InspectPanel/Art");
         art.anchorMin=art.anchorMax=new Vector2(.5f,1);art.pivot=new Vector2(.5f,.5f);
-        float artWidth=inspectDualFace?(inner-12)*.5f:inner;
+        // All ordinary full scans occupy one aspect-correct card slot. A
+        // flexible 268x320 image stretched different printings unevenly.
+        float artWidth=inspectDualFace?Mathf.Min((inner-12)*.5f,artHeight*.715f):card.room?inner:Mathf.Min(inner,artHeight*.715f);
         art.anchoredPosition=new Vector2(inspectDualFace?-(artWidth+12)*.5f:0,-y-artHeight*.5f);
         art.sizeDelta=card.room?new Vector2(artHeight,inner):new Vector2(artWidth,artHeight);
         if(inspectDualFace) {
@@ -757,6 +819,7 @@ public sealed partial class ForgeBattlefieldController
         if(IsRedesignLayout&&divider==null)divider=Panel(panel,"DetailDivider",Vector2.zero,Vector2.one,new Color(.5f,.62f,.7f,.5f));
         if(divider!=null){
             divider.gameObject.SetActive(IsRedesignLayout);divider.GetComponent<Image>().raycastTarget=false;
+            divider.GetComponent<Image>().color=HudRule;
             divider.anchorMin=divider.anchorMax=divider.pivot=new Vector2(.5f,1);
             divider.anchoredPosition=new Vector2(0,-y+6);divider.sizeDelta=new Vector2(inner,1);
         }
@@ -770,8 +833,8 @@ public sealed partial class ForgeBattlefieldController
         rules.rectTransform.sizeDelta=new Vector2(inner,textHeight-rulesTop);
         rules.ForceMeshUpdate();
         var ruleScroll=viewport.GetComponent<ScrollRect>();
-        if(scrollingTargets||ruleScroll.verticalScrollbar!=null){
-            bool overflow=preferred>rulesHeight+1;
+        bool overflow=preferred>rulesHeight+1;
+        if(scrollingTargets||ruleScroll.verticalScrollbar!=null||overflow){
             ruleScroll.vertical=true;ruleScroll.horizontal=false;ruleScroll.movementType=ScrollRect.MovementType.Clamped;
             ruleScroll.StopMovement();
             if(ruleScroll.verticalScrollbar==null)AddStackScrollIndicator(content);
@@ -804,8 +867,29 @@ public sealed partial class ForgeBattlefieldController
         panel.anchorMin=panel.anchorMax=panel.pivot=new Vector2(.5f,.5f);
         p.x=Mathf.Clamp(p.x,surface.rect.xMin+displayedWidth*.5f+12,surface.rect.xMax-displayedWidth*.5f-12);
         if (IsRedesignLayout) p.x = Mathf.Min(p.x, surface.rect.xMin + 380 + RedesignHandMaximumWidth - displayedWidth * .5f - 16);
-        p.y=Mathf.Clamp(p.y,surface.rect.yMin+displayedHeight*.5f+12,surface.rect.yMax-displayedHeight*.5f-12);
+        float safeBottom=InspectHandBoundaryY();
+        float safeTop=InspectOpponentHandBoundaryY();
+        float bottomCenter=safeBottom+displayedHeight*.5f+12,topCenter=safeTop-displayedHeight*.5f-12;
+        p.y=bottomCenter<=topCenter?Mathf.Clamp(p.y,bottomCenter,topCenter):(safeBottom+safeTop)*.5f;
         panel.anchoredPosition=p;
+    }
+    private float InspectHandBoundaryY()
+    {
+        float boundary=surface.rect.yMin+12;
+        if(!IsRedesignLayout||ownHand==null||!ownHand.gameObject.activeInHierarchy)return boundary;
+        ownHand.GetWorldCorners(inspectCorners);
+        for(int i=0;i<inspectCorners.Length;i++)
+            boundary=Mathf.Max(boundary,surface.InverseTransformPoint(inspectCorners[i]).y+56);
+        return boundary;
+    }
+    private float InspectOpponentHandBoundaryY()
+    {
+        float boundary=surface.rect.yMax-12;
+        if(!IsRedesignLayout||otherHand==null||!otherHand.gameObject.activeInHierarchy)return boundary;
+        otherHand.GetWorldCorners(inspectCorners);
+        for(int i=0;i<inspectCorners.Length;i++)
+            boundary=Mathf.Min(boundary,surface.InverseTransformPoint(inspectCorners[i]).y-16);
+        return boundary;
     }
     private void ConfirmIntegratedConcede()
     {

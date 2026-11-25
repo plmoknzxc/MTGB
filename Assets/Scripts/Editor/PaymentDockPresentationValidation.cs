@@ -26,13 +26,12 @@ public static class PaymentDockPresentationValidation
     }
     static IEnumerator SourceRefundGuard(ForgeBattlefieldController ui,string output) {
         bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();bool inputs=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var states=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         string language=GamePreferences.Language;GamePreferences.SetLanguage("zh-CN");
         try {
             var work=SourceRefundSteps(ui,output);
             while(true){object next;try{if(!work.MoveNext())break;next=work.Current;}catch(Exception e){File.WriteAllText(output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(output+"/result.txt","PASS zh-CN actual native nested filter-cost -> parent payment -> cancellation priority cleanup, original indices/old-request/duplicate guards via real ray; life and sacrifice mana-source confirmation -> payment cleanup. Historical three-language payment/pool/confirmation contracts retained; no new UI first or live-network claim.");
-        } finally {ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=inputs;GamePreferences.SetLanguage(language);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=states[i];running=false;}
+        } finally {ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=inputs;GamePreferences.SetLanguage(language);running=false;}
     }
     static IEnumerator SourceRefundSteps(ForgeBattlefieldController ui,string output) {
         float deadline=Time.realtimeSinceStartup+8;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Check(GamePreferences.Ready,"Locale ready");
@@ -97,7 +96,6 @@ public static class PaymentDockPresentationValidation
     }
     static IEnumerator Guard(IEnumerator iterator){
         string original=GamePreferences.Language;
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))notice.enabled=false;
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/ui-result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/ui-result.txt","PASS: zh-CN/en-US/ja-JP native shockland yes/no and resolution payment replay; exact auto/cancel IDs with real raycasts; insufficient-cost disabled auto; stale/duplicate/nonacting/pending guards; actions replace advance in right dock, symbols instead of braces, fixed fonts/bounds, no duplicate payment window; view switching plus ordinary priority recovery; actual automatic-control invocation preserves resolution choices and local-casting payment with no duplicate retry. Native rules checked separately; no full-pool or multiplayer claim.");

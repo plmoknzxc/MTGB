@@ -57,7 +57,6 @@ public static class AttackBandPresentationValidation
     static IEnumerator GroupLabels(ForgeBattlefieldController ui)
     {
         string language=GamePreferences.Language;File.WriteAllText(Output+"group-badge-result.txt","RUNNING");
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool bannerEnabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
         foreach(string locale in new[]{"zh-CN","en-US","ja-JP"}) {
             GamePreferences.SetLanguage(locale);
             Check(GamePreferences.Language==locale,"Language silently fell back");
@@ -77,16 +76,15 @@ public static class AttackBandPresentationValidation
             Check(hint.transform.Find("BandAttacker").GetComponentInChildren<Text>().text==(locale=="en-US"?"Deselect":locale=="ja-JP"?"選択解除":"取消选组"),"Wrong control language");
             Step("new-controls-"+locale);yield return Shot("controls-"+locale);
         }
-        GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=bannerEnabled;File.WriteAllText(Output+"group-badge-result.txt","PASS six exact native group frames and three selected-band controls: both perspectives; exact zh-CN/en-US/ja-JP labels and full glyphs, opaque badge below printed title. Original full ray suite retained; replaces invalid en/ja alias checks and old group position.");
+        GamePreferences.SetLanguage(language);File.WriteAllText(Output+"group-badge-result.txt","PASS six exact native group frames and three selected-band controls: both perspectives; exact zh-CN/en-US/ja-JP labels and full glyphs, opaque badge below printed title. Original full ray suite retained; replaces invalid en/ja alias checks and old group position.");
     }
     static IEnumerator Guard(IEnumerator test)
     {
         string language=GamePreferences.Language;
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
         try {
             while(true){object next;try{if(!test.MoveNext())break;next=test.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"result.txt","PASS: exact native two-recipient requests; real card/defender and band/recall button rays, legal availability, group identity on both perspectives, zh/en/ja new label fit, stale/duplicate/nonacting/disabled guards, attacker-owned damage allocation and resolved cleanup. Six native starts reused; no full or live-network claim.");
-        } finally {running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        } finally {running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {

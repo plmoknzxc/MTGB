@@ -1,0 +1,1 @@
+PASS: actual Unity rendering captured. Only hand, stack, ControlRow, InspectPanel, PriorityPill, PriorityControlMode and PauseNextPhase hidden for replacement; battlefield uses current native rendering with support-size and left-information avoidance fixes; players, counters, mana, emblems and effect markers keep native styling and layout.

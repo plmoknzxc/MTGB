@@ -31,7 +31,6 @@ public static class CopyTraitPresentationValidation {
     static IEnumerator Guard(IEnumerator work){var tasks=new Stack<IEnumerator>();tasks.Push(work);try{while(tasks.Count>0){object next;try{var t=tasks.Peek();if(!t.MoveNext()){tasks.Pop();continue;}next=t.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}if(next is IEnumerator child)tasks.Push(child);else yield return next;}File.WriteAllText(Output+"/result.txt","PASS_BOUNDED: "+checks+" checks; current copied type,added/removed intrinsic rules,keyword exception baselines,original/return rays,three languages and exact copied recipient and same-name opposing target card rays. Only copy trait paragraphs sampled in three languages; existing keyword/state headings stay R47. No all-mechanism/live-network PASS.");}finally{while(tasks.Count>0)(tasks.Pop() as IDisposable)?.Dispose();Running=false;}}
     static IEnumerator Validate(ForgeBattlefieldController ui){
         string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             float initialUntil=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<initialUntil)yield return null;yield return Frame();
             foreach(string lang in menuOnly?new[]{"en-US","ja-JP"}:new[]{"zh-CN","en-US","ja-JP"}){
@@ -78,7 +77,7 @@ public static class CopyTraitPresentationValidation {
             Ray(GameObject.Find("Card_"+recipient.id).GetComponent<Button>());Check(calls==1&&last==ui.OptionIndex("card:"+recipient.id),"Actual copied retained destroy ability exact recipient native ID ray");
             var target=Read("evil-destroy-target-seat1");var victim=target.players[1].battlefield.Single(c=>c.name=="Grizzly Bears");calls=0;
             ui.Present(target,1,true,i=>{calls++;last=i;},null,"");yield return Frame();Clean(ui);Ray(GameObject.Find("Card_"+victim.id).GetComponent<Button>());Check(calls==1&&last==ui.OptionIndex("card:"+victim.id),"Actual retained ability correct same-name opposing target native ID ray");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetLanguage(locale);}
     }
 }
 #endif

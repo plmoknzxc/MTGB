@@ -51,7 +51,6 @@ public static class HorizontalBattlefieldPresentationValidation
         bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool physical=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         string language=GamePreferences.Language;float scale=GamePreferences.TextScale;
         try {
-            foreach(var banner in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))banner.enabled=false;
             var packet=BattlefieldStressPresentationValidation.Fixture();packet.stackItems=Array.Empty<ForgeStackItem>();packet.stack=Array.Empty<string>();packet.stackCount=0;
             ui.Present(packet,1,true,_=>{},null,"");yield return new WaitForSecondsRealtime(1);
             var canvas=GameObject.Find("Canvas").transform;

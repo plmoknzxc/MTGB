@@ -42,12 +42,11 @@ public static class ComponentCardFaceValidation
     }
     static IEnumerator Guard(ForgeBattlefieldController ui)
     {
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
         var runner=Validate(ui);
         try {
             while(true){object next;try{if(!runner.MoveNext())break;next=runner.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"result.txt","PASS: native hand/graveyard/exile/library casts and stack inputs; component glyph/bounds, independent updates, card and zone cast rays, preview/actual cost distinction. Single-card pilot, no all-card or live-network claim.");
-        }finally{running=false;GamePreferences.SetLanguage("zh-CN");if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage("zh-CN");}
     }
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {

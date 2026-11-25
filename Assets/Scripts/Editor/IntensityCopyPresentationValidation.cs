@@ -30,7 +30,6 @@ public static class IntensityCopyPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui)
     {
         string locale=GamePreferences.Language;bool enabled=ui.enabled;ui.enabled=false;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(x=>x.enabled).ToArray();foreach(var n in notices)n.enabled=false;
         try{
             var meta=JsonUtility.FromJson<Meta>(File.ReadAllText(Base+"/latest.json"));Check(meta.status=="PASS","Native producer passed");Check(meta.runtimeHash==JsonUtility.FromJson<Meta>(File.ReadAllText("ForgeRuntime/runtime.json")).runtimeHash,"Exact unchanged native runtime");
             foreach(string lang in new[]{"zh-CN","en-US","ja-JP"}){
@@ -56,7 +55,7 @@ public static class IntensityCopyPresentationValidation
             GamePreferences.SetLanguage("zh-CN");float ready=Time.realtimeSinceStartup+20;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<ready)yield return null;
             var sample=JsonUtility.FromJson<ForgeSeatView>(File.ReadAllText(meta.directory+"/cloned-start-seat1.json"));var unknown=JsonUtility.FromJson<ForgeCardView>(JsonUtility.ToJson(sample.players[0].battlefield.Single(c=>c.id==meta.copyHostId)));unknown.printingKey="MTGB/unknown";Inspect(ui,unknown);yield return new WaitForEndOfFrame();Click(Panel.Find("OriginalState").GetComponent<Button>());Check(Rules.text.Contains("强度：1"),"Adapter unavailable physical definition retains known native baseline fallback");
             unknown.faceDown=true;var method=typeof(ForgeBattlefieldController).GetMethod("IntensityDetail",BindingFlags.Static|BindingFlags.NonPublic);Check((string)method.Invoke(null,new object[]{unknown,false})=="","Adapter facedown intensity remains hidden");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
     }
 }
 #endif

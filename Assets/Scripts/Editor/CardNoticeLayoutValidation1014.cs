@@ -20,7 +20,6 @@ public static class CardNoticeLayoutValidation1014 {
  static IEnumerator Guard(IEnumerator e){while(true){bool more;object next;try{more=e.MoveNext();next=more?e.Current:null;}catch(Exception ex){checks.Add("FAIL "+ex);more=false;next=null;}if(!more)break;yield return next;}GamePreferences.SetScale(1);File.WriteAllLines(Out+"/ui-result.txt",checks);Running=false;}
  static IEnumerator Exercise(){
   while(!GamePreferences.Ready)yield return null;
-  foreach(var n in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))n.enabled=false;
   var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("CardNoticeBoard").AddComponent<ForgeBattlefieldController>();ui.enabled=false;ui.GetType().GetField("service",Hidden).SetValue(ui,null);int calls=0;
   foreach(float scale in new[]{1f,1.3f}) {
    Call(ui,"ResetNotices");GamePreferences.SetScale(scale);var forest=Read("forestcycling");ui.Present(forest,2,false,i=>calls++,null,"");yield return new WaitForSecondsRealtime(.8f);

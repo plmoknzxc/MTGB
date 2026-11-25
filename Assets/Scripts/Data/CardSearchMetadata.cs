@@ -6,9 +6,15 @@ using UnityEngine;
 
 public static class CardSearchMetadata
 {
+    [Serializable] public sealed class PrintedLoyalty
+    {
+        public string face, value;
+    }
+
     [Serializable] public sealed class Entry
     {
         public string key, name, rarity, setName, artist, layout;
+        public PrintedLoyalty[] loyaltyOverrides;
         public int colors, identity, released, games, legalityMask;
         public float manaValue;
     }

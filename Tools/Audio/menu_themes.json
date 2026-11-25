@@ -1,0 +1,16 @@
+{
+  "moon": {
+    "title": "Lost Place4",
+    "page": "https://peritune.com/blog/2017/01/11/lost_place4/",
+    "source_file": "PerituneMaterial_Lost_place4_loop.ogg",
+    "game_file": "Assets/Resources/GameAudio/MoonlitHall.ogg",
+    "gain_db": -10.3
+  },
+  "tide": {
+    "title": "Oboro",
+    "page": "https://peritune.com/blog/2019/04/08/oboro/",
+    "source_file": "PerituneMaterial_Oboro_loop.ogg",
+    "game_file": "Themes/Tidelights/audio/RainLanterns.ogg",
+    "gain_db": -11.9
+  }
+}

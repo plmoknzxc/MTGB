@@ -1,0 +1,2 @@
+FAIL System.Exception: Alchemy year import failed: 1 Key to the Archive (Y22) 59; 第 1 行：找不到或无法唯一识别 Key to the Archive (Y22) 59
+  at DeckExchangeValidation.RunAlchemyYearImport () [0x000e2] in D:\project\MTGB\Assets\Scripts\Editor\DeckExchangeValidation.cs:71 

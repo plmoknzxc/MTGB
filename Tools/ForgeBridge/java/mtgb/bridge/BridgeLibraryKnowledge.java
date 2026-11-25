@@ -10,7 +10,7 @@ import forge.game.player.Player;
 import forge.game.zone.ZoneType;
 import java.util.*;
 
-/** Seat-local knowledge of revealed cards; never a projection of a hidden zone. */
+/** Card identities observed by a seat or shared by its Loki hero teammates. */
 public final class BridgeLibraryKnowledge {
     private final Map<Integer,Map<Integer,Integer>> known = new HashMap<>();
     private final Map<Integer,Map<Integer,Set<Integer>>> hands = new HashMap<>();
@@ -31,16 +31,43 @@ public final class BridgeLibraryKnowledge {
     private static String faceIdentity(Card card) {
         return card.getGameTimestamp()+":"+card.getLayerTimestamp();
     }
+    static boolean sharesKnowledge(Player viewer,Player holder) {
+        return viewer==holder || ForgeBridge.commanderActivity!=null
+            && ForgeBridge.commanderActivity.sharesCardKnowledge(viewer,holder);
+    }
+
+    static boolean visibleTo(Card card,Player viewer) {
+        if(card.getView().canBeShownTo(viewer.getView()))return true;
+        if(ForgeBridge.commanderActivity==null || !ForgeBridge.commanderActivity.sharesHeroKnowledge(viewer))return false;
+        for(var gui:ForgeBridge.guis) {
+            Player ally=gui.controller.getPlayer();
+            if(ally!=viewer && sharesKnowledge(viewer,ally) && card.getView().canBeShownTo(ally.getView()))return true;
+        }
+        return false;
+    }
+
+    synchronized boolean canSeeFace(Card card,Player viewer) {
+        for(var gui:ForgeBridge.guis) {
+            Player holder=gui.controller.getPlayer();
+            if(sharesKnowledge(viewer,holder) && (card.getView().canFaceDownBeShownTo(holder.getView())
+                    || knowsBattlefieldFace(card,gui.seat)))return true;
+        }
+        return false;
+    }
     synchronized boolean knowsBattlefieldFace(Card card,int viewerSeat) {
         var memory=battlefieldFaces.get(viewerSeat);
         if(memory==null)return false;
-        if(!card.isFaceDown() || card.getZone().getZoneType()!=ZoneType.Battlefield
+        if(!card.isFaceDown() || !card.isInZone(ZoneType.Battlefield)
                 || !Objects.equals(memory.get(card.getId()),faceIdentity(card))) {
             memory.remove(card.getId());return false;
         }
         return true;
     }
     synchronized void remember(int seat,List<?> shown) {
+        Player observer=ForgeBridge.guis.get(seat-1).controller.getPlayer();
+        for(var gui:ForgeBridge.guis)if(sharesKnowledge(gui.controller.getPlayer(),observer))rememberFor(gui.seat,shown);
+    }
+    private void rememberFor(int seat,List<?> shown) {
         for(Object item:shown)if(item instanceof CardView cv)
             for(Player owner:ForgeBridge.game.getPlayers()) {
                 for(Card card:owner.getZone(ZoneType.Battlefield).getCards(false))
@@ -61,7 +88,9 @@ public final class BridgeLibraryKnowledge {
         if(values.isEmpty()||!(values.get(0) instanceof CardView first))return;
         for(Player owner:ForgeBridge.game.getPlayers())
             if(values.stream().allMatch(v->v instanceof CardView cv&&owner.getCardsIn(ZoneType.Library).stream().anyMatch(c->c.getId()==cv.getId())))
-                orderedTops.computeIfAbsent(seat,k->new HashMap<>()).put(owner.getId(),first.getId());
+                for(var gui:ForgeBridge.guis)
+                    if(sharesKnowledge(gui.controller.getPlayer(),ForgeBridge.guis.get(seat-1).controller.getPlayer()))
+                        orderedTops.computeIfAbsent(gui.seat,k->new HashMap<>()).put(owner.getId(),first.getId());
     }
     synchronized void arranged(int seat,List<Card> shown,List<Card> top,List<Card> bottom) {
         positions.arranged(seat,shown,top,bottom);
@@ -78,9 +107,10 @@ public final class BridgeLibraryKnowledge {
             current.add(c.getId());
             // Native viewing permissions remain authoritative. The memory only
             // retains identities this recipient already saw in this hand.
-            if(c.getView().canBeShownTo(viewer.getView())||memory.contains(c.getId())) {
+            boolean canSee=visibleTo(c,viewer);
+            if(canSee||memory.contains(c.getId())) {
                 result.add(ForgeBridge.card(c));visible.add(c.getId());
-                if(c.getView().canBeShownTo(viewer.getView()))memory.add(c.getId());
+                if(canSee)memory.add(c.getId());
             }
         }
         memory.retainAll(current);
@@ -131,7 +161,7 @@ public final class BridgeLibraryKnowledge {
             boolean returnedHand=hands.values().stream().anyMatch(m->m.getOrDefault(ownerId,Set.of()).contains(event.card().getId()));
             if(returnedHand)for(var entry:revealedHands.entrySet()) {
                 Player recipient=ForgeBridge.guis.get(entry.getKey()-1).controller.getPlayer();
-                if(recipient!=owner&&owner.getControllingPlayer()!=recipient)entry.getValue().remove(ownerId);
+                if(!sharesKnowledge(recipient,owner)&&!sharesKnowledge(recipient,owner.getControllingPlayer()))entry.getValue().remove(ownerId);
             }
             var library=owner.getCardsIn(ZoneType.Library);
             if(library.isEmpty()||library.get(0).getId()!=event.card().getId())return;
@@ -143,7 +173,7 @@ public final class BridgeLibraryKnowledge {
                 Player recipient=ForgeBridge.guis.get(entry.getKey()-1).controller.getPlayer();
                 // The opponent cannot track which formerly revealed card was
                 // returned by a hidden hand choice such as Brainstorm.
-                if((recipient==owner||owner.getControllingPlayer()==recipient)&&entry.getValue().getOrDefault(ownerId,Set.of()).contains(event.card().getId()))
+                if((sharesKnowledge(recipient,owner)||sharesKnowledge(recipient,owner.getControllingPlayer()))&&entry.getValue().getOrDefault(ownerId,Set.of()).contains(event.card().getId()))
                     known.computeIfAbsent(entry.getKey(),k->new HashMap<>()).put(ownerId,event.card().getId());
             }
         }
@@ -156,7 +186,7 @@ public final class BridgeLibraryKnowledge {
         var ownOrder=orderedTops.get(viewerSeat);Integer ordered=ownOrder==null?null:ownOrder.remove(owner.getId());
         if(Objects.equals(ordered,top.getId()))known.computeIfAbsent(viewerSeat,k->new HashMap<>()).put(owner.getId(),top.getId());
         for(var memory:known.values())if(!Objects.equals(memory.get(owner.getId()),top.getId()))memory.remove(owner.getId());
-        if(top.getView().canBeShownTo(viewer.getView()))
+        if(visibleTo(top,viewer))
             known.computeIfAbsent(viewerSeat,k->new HashMap<>()).put(owner.getId(),top.getId());
         if(!Objects.equals(known.getOrDefault(viewerSeat,Map.of()).get(owner.getId()),top.getId()))return Map.of();
         boolean publicTop=true;

@@ -5,9 +5,22 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class BattlefieldRedesignLayout : MonoBehaviour
 {
-    public const string SceneName = "IntegratedBattlefieldRedesign";
     [SerializeField] private TextAsset editorPreview;
     [SerializeField] private bool previewWhenOffline = true;
+
+#if UNITY_EDITOR
+    public ForgeSeatView ReadEditorPreview() => editorPreview == null ? null
+        : ServerSnapshotJson.Deserialize<ForgeSeatView>(editorPreview.text);
+#endif
+
+    // The scene contains editable HUD templates. Reveal them only after a seat
+    // view has populated and themed the controls for the first rendered frame.
+    public void SetHudVisible(bool visible)
+    {
+        if (!TryGetComponent<CanvasGroup>(out var group)) return;
+        group.alpha = visible ? 1 : 0;
+        group.interactable = group.blocksRaycasts = visible;
+    }
 
     private IEnumerator Start()
     {
@@ -25,9 +38,9 @@ public sealed class BattlefieldRedesignLayout : MonoBehaviour
             while (!GamePreferences.Ready) yield return null;
             var controller = FindFirstObjectByType<ForgeBattlefieldController>();
             if (controller == null) controller = new GameObject("ForgeBattlefield").AddComponent<ForgeBattlefieldController>();
-            var state = JsonUtility.FromJson<ForgeSeatView>(editorPreview.text);
+            var state = ReadEditorPreview();
             // Offline review is read-only. Native callbacks are bound when a real match attaches.
-            controller.Present(state, state.seat, false, null, null, "副本场景 · 只读布局预览");
+            controller.Present(state, state.seat, false, null, null, "战场预览");
         }
 #endif
     }

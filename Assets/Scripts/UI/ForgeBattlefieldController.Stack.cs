@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,6 +49,7 @@ public sealed partial class ForgeBattlefieldController
             var art=Node("InspectPanel/Art").GetComponent<Image>();
             PresentChosenSpellFace((RectTransform)art.transform,item.entry,art.sprite);
         }
+        CaptureSidebarDetail();
     }
     private void PresentAbilityOrder()
     {
@@ -73,9 +74,10 @@ public sealed partial class ForgeBattlefieldController
             // button that will disappear at the end of this frame.
             foreach(var child in abilityOrder.Cast<Transform>().ToArray()){child.gameObject.SetActive(false);child.SetParent(null,false);Destroy(child.gameObject);}
             abilityOrderKey=key;
+            if(HudTheme!=null)StyleZoneSheet(abilityOrder);
         }
         abilityOrder.sizeDelta=new Vector2(width,548);
-        abilityOrder.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(600,548,14);
+        if(HudTheme==null)abilityOrder.GetComponent<Image>().sprite=IntegratedUiUtility.RoundedRect(600,548,14);
         if(rebuild){
             var title=Label(abilityOrder,"Title",optional?TapPaymentText("使用替代效果？","Apply replacement effect?","置換効果を適用しますか？"):replacement?TapPaymentText("排列替代效果","Order replacement effects","置換効果の順序"):TapPaymentText("排列结算顺序","Order ability resolution","能力の解決順序"),new Vector2(0,235),new Vector2(width-24,34),25,Paper);
             var direction=Label(abilityOrder,"Direction",optional?"":replacement?TapPaymentText("先应用 → 后应用 · 选择后确认","Apply first → last · Choose, then confirm","適用順に選択 · 選択後に確認"):TapPaymentText("先结算 → 后结算 · 拖曳调整顺序","Resolve first → last · Drag to reorder","先に解決 → 後に解決 · ドラッグで並べ替え"),new Vector2(0,198),new Vector2(width-24,28),18,Paper);
@@ -119,6 +121,7 @@ public sealed partial class ForgeBattlefieldController
         }
         var confirm=BindDecisionButton(abilityOrder,"ConfirmOrder",TapPaymentText("确认","Confirm","確認"),optional?"ok":"confirm-order",new Vector2(-94,-234));
         var reset=BindDecisionButton(abilityOrder,"ResetOrder",TapPaymentText("重新排序","Reset order","順序をリセット"),optional?"cancel":"reset-order",new Vector2(94,-234));
+        if(HudTheme!=null){StyleZoneButton(confirm,true);StyleZoneButton(reset);}
         if(localOrder) {
             confirm.interactable=reset.interactable=canAct&&!submitted;
             long orderRequest=requestId;
@@ -133,22 +136,54 @@ public sealed partial class ForgeBattlefieldController
     }
     private long localAbilityOrderRequest;
     private List<int> localAbilityOrder=new List<int>();
-    private void AddStackScrollIndicator(RectTransform content)
+    private void AddStackScrollIndicator(RectTransform content, float gripExtension = 0)
     {
         var scroll=content.parent.GetComponent<ScrollRect>();
         var track=Panel(content.parent,"Scrollbar",Vector2.zero,new Vector2(5,scroll.viewport.rect.height),new Color(.12f,.18f,.21f));
         track.anchorMin=track.anchorMax=track.pivot=new Vector2(1,1);
-        var handle=Panel(track,"Handle",Vector2.zero,new Vector2(5,40),new Color(.48f,.67f,.73f));
-        handle.anchorMin=Vector2.zero;handle.anchorMax=Vector2.one;handle.offsetMin=handle.offsetMax=Vector2.zero;
-        var bar=track.gameObject.AddComponent<Scrollbar>();bar.handleRect=handle;bar.targetGraphic=handle.GetComponent<Image>();bar.direction=Scrollbar.Direction.BottomToTop;
-        scroll.verticalScrollbar=bar;scroll.verticalScrollbarVisibility=ScrollRect.ScrollbarVisibility.AutoHide;scroll.scrollSensitivity=35;
+        scroll.verticalScrollbar=CreateStackScrollbar(track,new Color(.48f,.67f,.73f),gripExtension);
+        scroll.verticalScrollbarVisibility=ScrollRect.ScrollbarVisibility.AutoHide;scroll.scrollSensitivity=35;
     }
+
+    private Scrollbar CreateStackScrollbar(RectTransform track, Color color, float gripExtension)
+    {
+        var handle = Panel(track, "Handle", Vector2.zero, Vector2.zero, color);
+        handle.anchorMin = Vector2.zero;
+        handle.anchorMax = Vector2.one;
+        handle.offsetMin = new Vector2(-gripExtension, 0);
+        handle.offsetMax = Vector2.zero;
+        var graphic = handle.GetComponent<Image>();
+        if (gripExtension > 0) {
+            // The transparent part belongs to the thumb so a near-edge drag grabs it without a page jump.
+            graphic.color = Color.clear;
+            var ink = Panel(handle, "Ink", Vector2.zero, Vector2.zero, color);
+            ink.anchorMin = Vector2.zero;
+            ink.anchorMax = Vector2.one;
+            ink.offsetMin = new Vector2(gripExtension, 0);
+            ink.offsetMax = Vector2.zero;
+            graphic = ink.GetComponent<Image>();
+            graphic.raycastTarget = false;
+            track.GetComponent<Image>().raycastPadding = new Vector4(-gripExtension, 0, 0, 0);
+        }
+        var bar = track.gameObject.AddComponent<Scrollbar>();
+        bar.direction = Scrollbar.Direction.BottomToTop;
+        bar.handleRect = handle;
+        bar.targetGraphic = graphic;
+        return bar;
+    }
+    private ForgeStackItem[] DisplayedStackEntries()
+    {
+        var entries=view?.stackItems??Array.Empty<ForgeStackItem>();
+        return PendingCastEntry() is ForgeStackItem pending?new[]{pending}.Concat(entries).ToArray():entries;
+    }
+
     private void PresentStackCards()
     {
+        bool resolvingWhileFolded=HudTheme!=null&&stackCollapsed;
         if (IsRedesignLayout) redesignStackOffset = stackContent.anchoredPosition.y;
         const float cardWidth=240,cardHeight=335,rowHeight=389;
-        var entries=view?.stackItems ?? Array.Empty<ForgeStackItem>();
-        if(PendingCastEntry() is ForgeStackItem pending)entries=new[]{pending}.Concat(entries).ToArray();
+        var entries=DisplayedStackEntries();
+        List<StackCardVisual> handArrivals=null;
         var text=view?.stack ?? Array.Empty<string>();
         int count=Math.Max(entries.Length,text.Length);
         // Keep the dock bounded. The independent overview exposes every object.
@@ -190,10 +225,8 @@ public sealed partial class ForgeBattlefieldController
         {
             var track=Panel(column,"StackScrollbar",Vector2.zero,new Vector2(6,viewportHeight-16),new Color(.15f,.2f,.24f,.8f));
             track.anchorMin=track.anchorMax=track.pivot=new Vector2(1,1);track.anchoredPosition=new Vector2(-6,-48);
-            var handle=Panel(track,"Handle",Vector2.zero,new Vector2(6,50),new Color(.52f,.64f,.7f,.9f));
-            handle.anchorMin=Vector2.zero;handle.anchorMax=Vector2.one;handle.offsetMin=handle.offsetMax=Vector2.zero;
-            stackScrollbar=track.gameObject.AddComponent<Scrollbar>();stackScrollbar.handleRect=handle;stackScrollbar.targetGraphic=handle.GetComponent<Image>();
-            stackScrollbar.direction=Scrollbar.Direction.BottomToTop;scroll.verticalScrollbar=stackScrollbar;
+            stackScrollbar=CreateStackScrollbar(track,new Color(.52f,.64f,.7f,.9f),10);
+            scroll.verticalScrollbar=stackScrollbar;
             scroll.verticalScrollbarVisibility=ScrollRect.ScrollbarVisibility.AutoHide;
         }
         ((RectTransform)stackScrollbar.transform).sizeDelta=new Vector2(6,viewportHeight-16);
@@ -229,17 +262,25 @@ public sealed partial class ForgeBattlefieldController
                 var button=item.tile.gameObject.AddComponent<Button>();button.targetGraphic=item.image;button.transition=Selectable.Transition.None;
                 var captured=item;button.onClick.AddListener(()=>{
                     if (IsRedesignLayout) { SelectRedesignStack(captured.entry); return; }
-                    if(IsTargeting && !HasStackTargetChoices && captured.entry!=null){Choose(OptionIndex("stack:"+captured.entry.id),requestId);return;}
+                    if(IsTargeting && !UsesTargetWindow && captured.entry!=null){Choose(OptionIndex("stack:"+captured.entry.id),requestId);return;}
                 });
                 item.tile.gameObject.AddComponent<ForgeBattlefieldCardPointer>().Configure(()=>{
                     hoveredStack=captured;ShowStackHover(captured);
                 },()=>{hoveredStack=null;LeaveInspectCard();},null,false);
-                item.glow=Rect(item.tile,"ActiveStackGlow",Vector2.zero,new Vector2(cardWidth,cardHeight)).gameObject.AddComponent<ForgeStackGlow>();
+                var border=Rect(IsRedesignLayout?item.row:item.tile,"ActiveStackGlow",Vector2.zero,Vector2.zero);
+                border.anchorMin=Vector2.zero;
+                border.anchorMax=Vector2.one;
+                border.offsetMin=IsRedesignLayout?Vector2.one*2:Vector2.zero;
+                border.offsetMax=-border.offsetMin;
+                item.glow=border.gameObject.AddComponent<ForgeStackGlow>();
                 item.caption=Label(item.tile,"Owner","",new Vector2(0,-cardHeight-20),new Vector2(252,26),16,Paper);
                 item.caption.rectTransform.anchorMin=item.caption.rectTransform.anchorMax=new Vector2(.5f,1);item.caption.raycastTarget=false;
                 stackCards.Add(id,item);
             }
             item.row.name="StackEntry_"+i;item.tile.name="StackCard_"+i;
+            if(IsRedesignLayout && source!=null && (created || source.id!=item.source?.id)
+                && i<entries.Length && entries[i].kind=="spell" && !entries[i].copied)
+                (handArrivals??=new List<StackCardVisual>()).Add(item);
             item.source=source;item.entry=i<entries.Length?entries[i]:null;
             bool ability=item.entry!=null && item.entry.kind!="spell";
             item.rim.sprite=ability?AbilityShape():null;
@@ -248,7 +289,7 @@ public sealed partial class ForgeBattlefieldController
             int targetOption=item.entry!=null?OptionIndex("stack:"+item.entry.id):-1;
             bool targetLegal=targetOption>=0&&!view.request.options[targetOption].disabled;
             bool targetSelected=item.entry!=null&&StackTargetSelected("stack:"+item.entry.id);
-            item.tile.GetComponent<Button>().interactable=!HasStackTargetChoices&&(!IsTargeting||targetLegal);
+            item.tile.GetComponent<Button>().interactable=!UsesTargetWindow&&(!IsTargeting||targetLegal);
             item.rim.color=targetSelected?Gold:IsTargeting && targetLegal?new Color(.1f,.9f,1):i==0?new Color(.67f,.76f,.8f,.85f):new Color(.28f,.36f,.42f,.8f);
             string printing=source!=null && !source.faceDown?source.printingKey:"";
             string artKey=printing+"/"+source?.backFace+"/"+GamePreferences.Language;
@@ -262,7 +303,7 @@ public sealed partial class ForgeBattlefieldController
             }
             item.fallback.text=IsRedesignLayout&&source?.faceDown==true?RedesignStackEffect(item.entry,""):source?.name ?? (i<text.Length?text[i]:"堆叠");
             item.fallback.gameObject.SetActive(item.image.sprite==null && !ability);
-            PresentAbilityFace(item.tile,source,item.entry?.description,item.entry?.kind,ability);
+            PresentAbilityFace(item.tile,source,item.entry?.description,item.entry?.kind,ability && !(IsRedesignLayout && HudTheme!=null));
             PresentSpentMana(item.row,source,new Vector2(0,-cardHeight-18),cardWidth);
             Sprite chosenArt=item.image.sprite;
             if(chosenArt==null&&HasSpellChoices(item.entry))TryBattlefieldArt(source,out chosenArt);
@@ -271,14 +312,10 @@ public sealed partial class ForgeBattlefieldController
             if(!ability)PresentComponentFace(item.tile,source);
             if(HasSpellChoices(item.entry))item.fallback.gameObject.SetActive(false);
             if(item.tile.Find("PreparedSpellFace")?.gameObject.activeSelf==true)item.fallback.gameObject.SetActive(false);
-            if(item.glow.transform.parent!=item.tile)item.glow.transform.SetParent(item.tile,false);
-            item.glow.Configure(ability,!IsTargeting&&i==0);
-            // Follow the actual card rectangle, including its top pivot. The
-            // highlight belongs to this face, never to a fan/row-sized overlay.
-            item.glow.rectTransform.anchorMin=Vector2.zero;
-            item.glow.rectTransform.anchorMax=Vector2.one;
-            item.glow.rectTransform.offsetMin=item.glow.rectTransform.offsetMax=Vector2.zero;
-            item.glow.transform.SetAsLastSibling();
+            if(!IsRedesignLayout){
+                item.glow.Configure(ability,!IsTargeting&&i==0);
+                item.glow.transform.SetAsLastSibling();
+            }
             item.caption.gameObject.SetActive(false);
             PresentSelectionGlow(item.row,item.tile,targetSelected);
             if(created && !IsRedesignLayout && !stackCollapsed && source?.id!=castingCardId)AnimateStackArrival(item,i<entries.Length?entries[i].controllerSeat:seat);
@@ -287,14 +324,89 @@ public sealed partial class ForgeBattlefieldController
         {
             var item=stackCards[id];
             if(hoveredStack==item){hoveredStack=null;Node("InspectPanel").gameObject.SetActive(false);}
-            if(IsRedesignLayout && view!=null)RetireRedesignStack(id,item);
+            if(IsRedesignLayout && view!=null && !resolvingWhileFolded)RetireRedesignStack(id,item);
             else {item.row.gameObject.SetActive(false);Destroy(item.row.gameObject);stackCards.Remove(id);}
         }
         if(hoveredStack!=null)ShowStackHover(hoveredStack);
         // The first resolving object stays in front. Legal targets never change
         // drawing order. The overview handles crowded stacks and target inspection.
         foreach(var item in stackCards.Values.OrderByDescending(c=>int.Parse(c.row.name.Substring("StackEntry_".Length))))item.row.SetAsLastSibling();
-        if (IsRedesignLayout) LayoutRedesignStack(entries, count);
+        if (IsRedesignLayout)
+        {
+            LayoutRedesignStack(entries, count);
+            if(handArrivals!=null)
+                foreach(var item in handArrivals) PresentHandStackArrival(item);
+            foreach(var id in handStackFlights.Keys.Where(id=>!entries.Any(e=>e.source?.id==id && e.kind=="spell" && !e.copied)).ToArray())
+                FinishHandStackFlight(id);
+        }
+    }
+
+    private sealed class HandStackFlight
+    {
+        public RectTransform ghost;
+        public CanvasGroup art;
+    }
+    private readonly Dictionary<int,HandStackFlight> handStackFlights=new();
+    private int animatedPendingHand;
+
+    private void FinishHandStackFlight(int id)
+    {
+        if(!handStackFlights.TryGetValue(id,out var flight))return;
+        handStackFlights.Remove(id);
+        if(flight.art!=null)flight.art.alpha=1;
+        if(flight.ghost!=null){flight.ghost.gameObject.SetActive(false);Destroy(flight.ghost.gameObject);}
+    }
+
+    private void PresentHandStackArrival(StackCardVisual item)
+    {
+        if(!Application.isPlaying || !hasPreviousZoneView)return;
+        int id=item.source.id;
+        if(id<=0)return;
+        bool pending=item.entry.id==PendingCastId;
+        bool announced=animatedPendingHand==id && !pending;
+        if(announced)animatedPendingHand=0;
+        if(!handStackFlights.TryGetValue(id,out var flight))
+        {
+            // The pending row already received this card before payment finished.
+            if(announced)return;
+            Vector2 start,size;
+            float angle;
+            var handCard=pending?arenaCards.Values.FirstOrDefault(c=>c.card?.id==id && c.root!=null && c.root.parent==ownHand):null;
+            if(castingHandPose?.card.id==id){
+                start=castingHandPose.position;size=castingHandPose.size;angle=castingHandPose.angle;
+            }else if(handCard!=null){
+                ForgeUiMotion.Pose(handCard.face,surface,out start,out size,out angle);
+            }else if(zonePoses.TryGetValue(id,out var pose) && pose.zone=="Hand" && pose.size.sqrMagnitude>0){
+                start=pose.position;size=pose.size;angle=pose.angle;
+                if(size.x>size.y)size=new Vector2(124,172); // Concealed hand lane rather than an individual card.
+            }else{
+                // A hidden opponent hand supplies no object IDs. Only use the public cast event.
+                var notice=view?.notices?.LastOrDefault(n=>n.kind=="cast" && (n.stackId>0?n.stackId==item.entry.id:n.sourceCard?.id==id));
+                if(pending || notice?.fromZone!="Hand")return;
+                var hand=item.entry.controllerSeat==DisplayedHandSeat?ownHand:otherHand;
+                ForgeUiMotion.Pose(hand,surface,out start,out _,out angle);
+                size=new Vector2(124,172);
+            }
+            var ghost=Panel(surface,"HandToStack_"+id,start,size,Color.white);
+            ghost.localRotation=Quaternion.Euler(0,0,angle);
+            var image=ghost.GetComponent<Image>();
+            var sprite=item.image.sprite;
+            if(sprite==null)CardImageLibrary.TryLoadCardBack(out sprite);
+            image.sprite=sprite;image.preserveAspect=true;image.raycastTarget=false;
+            if(sprite==null){
+                image.color=HudRaised;
+                Label(ghost,"Name",item.fallback.text,Vector2.zero,size,16,HudText).raycastTarget=false;
+            }
+            SetOverlayLayer(ghost,ReadingLayerOffset+1);
+            flight=new HandStackFlight{ghost=ghost};
+            handStackFlights.Add(id,flight);
+        }
+        if(pending)animatedPendingHand=id;
+        if(flight.art!=null)flight.art.alpha=1;
+        if(!item.tile.TryGetComponent(out flight.art))flight.art=item.tile.gameObject.AddComponent<CanvasGroup>();
+        flight.art.alpha=0;
+        var target=stackCollapsed?(RectTransform)stackCollapseButton.transform:item.tile;
+        ForgeUiMotion.On(flight.ghost).Follow(target,.40f,()=>FinishHandStackFlight(id),continueFlight:true);
     }
 
     private void AnimateStackArrival(StackCardVisual item,int controllerSeat)

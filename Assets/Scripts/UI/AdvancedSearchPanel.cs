@@ -22,7 +22,7 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     public static void Show(Canvas canvas, Dropdown dropdownTemplate, AdvancedCardSearch state, Action<AdvancedCardSearch> submit, bool commanderAvailable = false, bool companionAvailable = false)
     {
         if (!Application.isPlaying) return;
-        var overlay = ReplayWidgets.Panel(canvas.transform, "AdvancedSearch", 0, 0, 0, 0, new Color(0, 0, 0, .8f));
+        var overlay = ReplayWidgets.Panel(canvas.transform, "AdvancedSearch", 0, 0, 0, 0, MenuVisualTheme.DialogShade);
         overlay.gameObject.hideFlags = HideFlags.DontSaveInEditor;
         overlay.anchorMin = Vector2.zero; overlay.anchorMax = Vector2.one; overlay.offsetMin = overlay.offsetMax = Vector2.zero;
         var view = overlay.gameObject.AddComponent<AdvancedSearchPanel>();
@@ -34,22 +34,24 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     {
         colorLabels.Clear();
         draft = state;
-        var panel = ReplayWidgets.Panel(transform, "SearchPanel", 0, 0, 1120, 940, MenuVisualTheme.Panel);
-        ReplayWidgets.Label(panel, "高级搜索", 0, 424, 1032, 48, 28);
+        var panel = ReplayWidgets.Panel(transform, "SearchPanel", 0, 0, 1120, 940, Color.white);
+        var heading = ReplayWidgets.Label(panel, "高级搜索", 0, 424, 1032, 48, 31);
+        MenuVisualTheme.StyleDeckDialogSurface(panel, heading);
         ReplayWidgets.Label(panel, "条件同时生效；留空表示不限", 0, 378, 1032, 38, 17);
-        var viewport = ReplayWidgets.Panel(panel, "Viewport", 0, 0, 1040, 700, MenuVisualTheme.Panel);
+        var viewport = ReplayWidgets.Panel(panel, "Viewport", 0, 0, 1040, 700, MenuVisualTheme.ArchivePanel);
         viewport.gameObject.AddComponent<RectMask2D>();
         var scroll = viewport.gameObject.AddComponent<ScrollRect>();
         content = ReplayWidgets.Rect(viewport, "Fields", 0, 0, 1020, 1472);
         content.anchorMin = content.anchorMax = new Vector2(.5f, 1); content.pivot = new Vector2(.5f, 1);
         scroll.viewport = viewport; scroll.content = content; scroll.horizontal = false;
         scroll.movementType = ScrollRect.MovementType.Clamped; scroll.scrollSensitivity = 45;
-        var track = ReplayWidgets.Panel(panel, "ScrollTrack", 534, 0, 10, 700, MenuVisualTheme.Ink);
+        var track = ReplayWidgets.Panel(panel, "ScrollTrack", 534, 0, 20, 700, MenuVisualTheme.Recess);
         var bar = track.gameObject.AddComponent<Scrollbar>();
-        var handle = ReplayWidgets.Panel(track, "Handle", 0, 0, 0, 0, MenuVisualTheme.Muted);
+        var handle = ReplayWidgets.Panel(track, "Handle", 0, 0, 0, 0, MenuVisualTheme.Stone);
         handle.anchorMin = Vector2.zero; handle.anchorMax = Vector2.one; handle.offsetMin = handle.offsetMax = Vector2.zero;
         bar.handleRect = handle; bar.targetGraphic = handle.GetComponent<Image>(); bar.direction = Scrollbar.Direction.BottomToTop;
         scroll.verticalScrollbar = bar;
+        MenuVisualTheme.StyleDeckScrollThumb(bar);
         Field(0, 0, "卡名", draft.Name, v => draft.Name = v);
         Field(1, 0, "效果文本", draft.Rules, v => draft.Rules = v);
         Field(0, 1, "类别与副类别", draft.Type, v => draft.Type = v, false);
@@ -71,6 +73,7 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
         var setsRect=(RectTransform)sets.transform;setsRect.sizeDelta=new Vector2(328,52);setsRect.anchoredPosition+=new Vector2(-82,0);
         sets.textComponent.rectTransform.sizeDelta=new Vector2(304,46);
         var browse=ReplayWidgets.Button(content,"系列一览",X(0)+170,-7*112-70,152,()=>OpenSets(sets));
+        MenuVisualTheme.StyleDeckTool(browse);
         ((RectTransform)browse.transform).anchorMin=((RectTransform)browse.transform).anchorMax=new Vector2(.5f,1);
         Field(1, 7, "画师", draft.Artist, v => draft.Artist = v);
         Field(0, 8, "发行起日（YYYY-MM-DD）", draft.From, v => draft.From = v);
@@ -84,9 +87,10 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
         PlatformRow(12);
         message = ReplayWidgets.Label(panel, "正在读取筛选资料…", 0, -378, 1032, 42, 16);
         apply = ReplayWidgets.Button(panel, "查看结果", -358, -432, 240, Apply, true);
-        ReplayWidgets.Button(panel, "重置条件", 0, -432, 240, () =>
-        { Destroy(panel.gameObject); read.Clear(); Build(new AdvancedCardSearch()); });
-        ReplayWidgets.Button(panel, "取消", 358, -432, 240, () => Destroy(gameObject));
+        MenuVisualTheme.StyleDeckTool(apply,true);
+        MenuVisualTheme.StyleDeckTool(ReplayWidgets.Button(panel, "重置条件", 0, -432, 240, () =>
+        { Destroy(panel.gameObject); read.Clear(); Build(new AdvancedCardSearch()); }));
+        MenuVisualTheme.StyleDeckTool(ReplayWidgets.Button(panel, "取消", 358, -432, 240, () => Destroy(gameObject)));
         apply.interactable = false;
         GamePreferences.BindScene();
         Load();
@@ -117,19 +121,29 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     static float X(int col) => col == 0 ? -260 : 260;
     void ConstructionToggle(string name,string label,float x,bool selected,bool available,Action<bool> assign)
     {
-        var rect=ReplayWidgets.Rect(content,name,x,-182,236,52);
-        rect.anchorMin=rect.anchorMax=new Vector2(.5f,1);
-        rect.gameObject.AddComponent<Image>().color=Color.clear;
-        var toggle=rect.gameObject.AddComponent<Toggle>();
-        var box=ReplayWidgets.Panel(rect,"Box",-102,0,28,28,MenuVisualTheme.Ink);
-        ObsidianArenaTheme.EnsureOutline(box.GetComponent<Image>(),MenuVisualTheme.Muted,Vector2.one);
-        var check=ReplayWidgets.Panel(box,"Check",0,0,16,16,MenuVisualTheme.Accent);
-        var text=ReplayWidgets.Label(rect,label,20,0,192,52,17);
-        text.GetComponent<PreferenceText>().Literal=true;
-        text.color=available?MenuVisualTheme.Paper:MenuVisualTheme.Muted;
-        toggle.targetGraphic=box.GetComponent<Image>();toggle.graphic=check.GetComponent<Image>();
-        toggle.SetIsOnWithoutNotify(selected&&available);toggle.interactable=available;
+        var toggle = FilterToggle(name, label, x, -182, 236, selected && available, available, literalLabel: true);
         read.Add(()=>assign(toggle.isOn&&available));
+    }
+    Toggle FilterToggle(string name, string label, float x, float y, float width, bool selected, bool available, bool literalLabel = false)
+    {
+        var rect = ReplayWidgets.Panel(content, name, x, y, width, 46, MenuVisualTheme.Panel);
+        rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1);
+        var toggle = rect.gameObject.AddComponent<Toggle>();
+        toggle.interactable = available;
+        MenuVisualTheme.StyleArchiveControl(toggle);
+        var box = ReplayWidgets.Panel(rect, "Box", 24 - width / 2, 0, 22, 22, MenuVisualTheme.Recess);
+        box.GetComponent<Image>().raycastTarget = false;
+        ObsidianArenaTheme.EnsureOutline(box.GetComponent<Image>(), MenuVisualTheme.MistBlue, Vector2.one);
+        var check = ReplayWidgets.Label(box, "✓", 0, 0, 28, 32, 21, TextAnchor.MiddleCenter);
+        MenuTypography.Use(check, MenuTypography.Face.Control);
+        check.color = MenuVisualTheme.Silver;
+        toggle.graphic = check;
+        var text = ReplayWidgets.Label(rect, label, 20, 0, width - 58, 44, 17);
+        MenuTypography.Use(text, MenuTypography.Face.Control);
+        text.GetComponent<PreferenceText>().Literal = literalLabel;
+        text.color=available?MenuVisualTheme.ArchivePaper:MenuVisualTheme.Stone;
+        toggle.SetIsOnWithoutNotify(selected);
+        return toggle;
     }
     void PlatformRow(int row)
     {
@@ -139,18 +153,8 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
         for(int i=0;i<3;i++)
         {
             int bit=1<<i;
-            var rect=ReplayWidgets.Rect(content,"Platform_"+names[i],-330+i*330,-row*112-70,300,44);
-            rect.gameObject.AddComponent<Image>().color=Color.clear;
-            var toggle=rect.gameObject.AddComponent<Toggle>();
-            var box=ReplayWidgets.Panel(rect,"Box",-130,0,28,28,MenuVisualTheme.Raised);
-            var check=ReplayWidgets.Panel(box,"Check",0,0,16,16,MenuVisualTheme.Accent);
-            toggle.targetGraphic=box.GetComponent<Image>(); toggle.graphic=check.GetComponent<Image>();
-            ReplayWidgets.Label(rect,names[i],32,0,230,44,19);
-            toggle.gameObject.name="Platform_"+names[i];
-            rect.anchorMin=rect.anchorMax=new Vector2(.5f,1);
-            rect.anchoredPosition=new Vector2(-330+i*330,-row*112-70);
-            rect.sizeDelta=new Vector2(300,44);
-            toggle.SetIsOnWithoutNotify((mask&bit)!=0);
+            var toggle = FilterToggle("Platform_" + names[i], names[i],
+                -330 + i * 330, -row * 112 - 70, 300, (mask & bit) != 0, true);
             toggle.onValueChanged.AddListener(on=>mask=on?mask|bit:mask&~bit);
         }
         read.Add(()=>draft.Games=mask);
@@ -158,6 +162,8 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     void Heading(int col, int row, string title)
     {
         var label = ReplayWidgets.Label(content, title, X(col), -row * 112 - 24, 492, 34, 17);
+        MenuTypography.Use(label, MenuTypography.Face.Control);
+        label.color = MenuVisualTheme.MistBlue;
         label.rectTransform.anchorMin = label.rectTransform.anchorMax = new Vector2(.5f, 1);
         label.horizontalOverflow = HorizontalWrapMode.Overflow;
     }
@@ -165,6 +171,7 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
     {
         Heading(col, row, title);
         var input = ReplayWidgets.Input(content, value, X(col), -row * 112 - 70, 492);
+        MenuVisualTheme.StyleSearchInput(input);
         input.gameObject.name = "Search_" + title;
         var rect = (RectTransform)input.transform; rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1);
         if (manaInsertion.HasValue)
@@ -172,11 +179,12 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
             rect.sizeDelta = new Vector2(328, 52); rect.anchoredPosition += new Vector2(-82, 0);
             input.textComponent.rectTransform.sizeDelta = new Vector2(304, 46);
             var insert = ReplayWidgets.Button(content, "插入", X(col) + 170, -row * 112 - 70, 152, null);
+            MenuVisualTheme.StyleDeckTool(insert);
             var insertRect = (RectTransform)insert.transform;
             insertRect.anchorMin = insertRect.anchorMax = new Vector2(.5f, 1);
             var chevron = ReplayWidgets.Rect(insertRect, "Chevron", 60, 0, 14, 14);
             chevron.gameObject.AddComponent<CanvasRenderer>();
-            chevron.gameObject.AddComponent<DropdownChevron>().color = MenuVisualTheme.Paper;
+            chevron.gameObject.AddComponent<DropdownChevron>().color = MenuVisualTheme.ArchivePaper;
             var menu = input.gameObject.AddComponent<SearchInsertionMenu>();
             menu.Initialize(input, insert, transform, manaInsertion.Value);
         }
@@ -198,6 +206,7 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
         rect.anchoredPosition = new Vector2(X(col), -row * 112 - 44); rect.sizeDelta = new Vector2(492, 52);
         dropdown.ClearOptions(); dropdown.AddOptions(options.Select(GamePreferences.T).ToList());
         dropdown.SetValueWithoutNotify(selected); dropdown.RefreshShownValue();
+        MenuVisualTheme.StyleArchiveDropdown(dropdown);
         dropdown.captionText.resizeTextForBestFit = false;
         dropdown.captionText.GetComponent<PreferenceText>()?.SetBaseSize(18);
         dropdown.itemText.GetComponent<PreferenceText>()?.SetBaseSize(18);
@@ -233,7 +242,7 @@ public sealed class AdvancedSearchPanel : MonoBehaviour
             for(int i=0;i<6;i++)buttons[i].GetComponentInChildren<Text>().text=captions[i];
         }
         colorLabels.Add(RefreshLabels);RefreshLabels();
-        void Refresh() { for (int i = 0; i < 6; i++) buttons[i].GetComponent<Image>().color = (mask & (1 << i)) != 0 ? MenuVisualTheme.Primary : MenuVisualTheme.Raised; }
+        void Refresh() { for (int i = 0; i < 6; i++) MenuVisualTheme.StyleDeckTool(buttons[i],(mask & (1 << i)) != 0); }
         Refresh(); read.Add(() => assign(mask));
     }
 }

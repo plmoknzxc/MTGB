@@ -50,10 +50,12 @@ def build():
             if len(fields) >= 4 and fields[3]:
                 japanese_rules[fields[0]] = fields[3]
     translations = {}
-    for line in (ROOT / 'Assets/StreamingAssets/CardTranslations/zh-CN.txt').read_text(encoding='utf-8-sig').splitlines():
-        fields = line.split('|')
-        if len(fields) >= 3:
-            translations[fields[0]] = fields[2]
+    for filename in ('zh-CN.txt', 'zh-CN.supplement.txt', 'zh-CN.notes.txt', 'zh-CN.review.txt'):
+        path = ROOT / 'Assets/StreamingAssets/CardTranslations' / filename
+        for line in path.read_text(encoding='utf-8-sig').splitlines():
+            fields = line.split('|', 3)
+            if len(fields) >= 3 and fields[2] and not translations.get(fields[0]):
+                translations[fields[0]] = fields[2]
     votes = collections.defaultdict(collections.Counter)
     japanese_votes = collections.defaultdict(collections.Counter)
     seen = set()
@@ -105,6 +107,10 @@ def build():
                 value, count = choices.most_common(1)[0]
                 if count / sum(choices.values()) >= .8:
                     entry[language] = value
+        # Published TRK token 19 names the type explicitly; ordinary cards
+        # alternate between 博格 and 博格人 and don't reach the voting threshold.
+        if en == 'Borg':
+            entry['zh'] = '博格人'
         aliases = set(JAPANESE_TOKEN_NAMES.get(en, [])) | named.get(en, set())
         if entry.get('ja'):
             aliases.add(entry['ja'])

@@ -31,11 +31,11 @@ public static class CombatDamageBoundaryPresentationValidation
     }
     static IEnumerator Guard(IEnumerator work)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try {
             while(true){object next;try{if(!work.MoveNext())break;next=work.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"result.txt","PASS "+checks+" assertions: actual native skip/shared-lethal and divided assignment requests; exact source/recipient IDs, three locales, pointer actions, same-context gate updates, fresh context/source transitions, stale/duplicate/nonacting guards, resolved overlay cleanup. Native results separate; no live network/all combat claim.");
-        } finally {running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        } finally {running=false;GamePreferences.SetLanguage(language);}
     }
     static ForgeWireMessage[] Read(string name)
     {

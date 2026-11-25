@@ -67,7 +67,7 @@ public static class AttachmentPresentationValidation
     }
     public static void Run(bool resume=false){Check(Application.isPlaying&&!running,"Play/runner state");running=true;Directory.CreateDirectory(Output);File.WriteAllText(Output+"/result.txt","RUNNING");if(!resume)File.WriteAllText(Output+"/steps.log","");var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()??new GameObject("AttachmentValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(ui));}
     static IEnumerator Guard(ForgeBattlefieldController ui){var stack=new Stack<IEnumerator>();stack.Push(Validate(ui));try{while(stack.Count>0){object current;try{var e=stack.Peek();if(!e.MoveNext()){(e as IDisposable)?.Dispose();stack.Pop();continue;}current=e.Current;if(current is IEnumerator child){stack.Push(child);continue;}}catch(Exception error){File.WriteAllText(Output+"/result.txt","FAIL "+error);throw;}yield return current;}File.WriteAllText(Output+"/result.txt","PASS three-language real attachment snapshots: exact hover rays and read-only link endpoints/inverse host, same-ID retarget, removal cleanup, cross-controller host, copied weapon/aura, player target, detail labels and hidden-face adapter. Existing R21 grouping/target and payment contracts reused; no new UI first/network claim.");}finally{while(stack.Count>0)(stack.Pop() as IDisposable)?.Dispose();running=false;}}
-    static IEnumerator Validate(ForgeBattlefieldController ui){bool enabled=ui.enabled;ui.enabled=false;string locale=GamePreferences.Language;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;var notices=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=notices.Select(n=>n.enabled).ToArray();foreach(var n in notices)n.enabled=false;
+    static IEnumerator Validate(ForgeBattlefieldController ui){bool enabled=ui.enabled;ui.enabled=false;string locale=GamePreferences.Language;var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
         try{foreach(string language in new[]{"zh-CN","en-US","ja-JP"}){
             GamePreferences.SetLanguage(language);float until=Time.realtimeSinceStartup+15;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<until)yield return null;Check(GamePreferences.Ready,"Locale ready");
             string prefix=language=="zh-CN"?"附着于：":language=="ja-JP"?"エンチャント／装備先：":"Attached to: ";
@@ -108,7 +108,7 @@ public static class AttachmentPresentationValidation
                 var copy=Cards(snapshot).Single(c=>c.copy);Hover(ui,copy.id);yield return Frame();yield return CopyDetail(ui,copy,name);Panel.gameObject.SetActive(false);Call(ui,"RefreshAttachmentLinks");
                 File.AppendAllText(Output+"/steps.log",language+" "+name+" current/physical copy detail regression PASS\n");
             }
-        }}finally{ui.Present(null,1,false,null,null,"");Call(ui,"RefreshAttachmentLinks");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;for(int i=0;i<notices.Length;i++)if(notices[i]!=null)notices[i].enabled=flags[i];}
+        }}finally{ui.Present(null,1,false,null,null,"");Call(ui,"RefreshAttachmentLinks");ui.enabled=enabled;GamePreferences.SetLanguage(locale);if(module!=null)module.enabled=input;}
     }
 }
 #endif

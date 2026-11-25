@@ -33,7 +33,7 @@ public static class KnowledgeLifecyclePresentationValidation
         IEnumerator Guard() {
             try {
                 var run=Validate();while(true) {object next;try{if(!run.MoveNext())break;next=run.Current;}catch(Exception e){File.WriteAllText(Output+"/hover-result.txt","FAIL "+e);throw;}yield return next;}
-                File.WriteAllText(Output+"/hover-result.txt","PASS actual private Peek direct opponent hand: both authorized card faces hover fully inside viewport with full artwork and enlarged scale. Separate UI increment; background migration banner excluded.");
+                File.WriteAllText(Output+"/hover-result.txt","PASS actual private Peek direct opponent hand: both authorized card faces hover fully inside viewport with full artwork and enlarged scale.");
             } finally {ui.Present(null,1,false,null,null,"");ui.enabled=enabled;running=false;}
         }
         ui.StartCoroutine(Guard());

@@ -5,12 +5,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public static class ForgeBuildMenu
 {
     private static bool building;
+    internal static string[] ClientScenes() => EditorBuildSettings.scenes
+        .Where(scene => scene.enabled).Select(scene => scene.path).ToArray();
+    internal static BuildReport BuildWindowsClient(string executable, BuildOptions options)
+    {
+        const BuildTarget target = BuildTarget.StandaloneWindows64;
+        if (EditorUserBuildSettings.activeBuildTarget != target &&
+            !EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone,target))
+            throw new InvalidOperationException("Could not activate the Windows client build target.");
+        UnityEngine.AddressableAssets.Initialization.AddressablesRuntimeProperties.ClearCachedPropertyValues();
+        var settings = AddressableAssetSettingsDefaultObject.Settings;
+        var previous = settings.BuildAddressablesWithPlayerBuild;
+        try
+        {
+            settings.BuildAddressablesWithPlayerBuild = AddressableAssetSettings.PlayerBuildOption.BuildWithPlayer;
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                scenes = ClientScenes(), locationPathName = executable, target = target,
+                subtarget = (int)StandaloneBuildSubtarget.Player, options = options
+            });
+            if (report.summary.result == BuildResult.Succeeded) {
+                string root = Path.GetDirectoryName(Path.GetFullPath(executable));
+                CopyClientNotices(root);
+                string examples=Path.Combine(root,"Puzzles","Examples");
+                Directory.CreateDirectory(examples);
+                foreach(string file in Directory.GetFiles(Path.Combine("Puzzles","Examples")))
+                    File.Copy(file,Path.Combine(examples,Path.GetFileName(file)),true);
+                string data=Path.Combine(Path.GetDirectoryName(Path.GetFullPath(executable)),Path.GetFileNameWithoutExtension(executable)+"_Data");
+                File.WriteAllText(Path.Combine(data,"mtgb-version.txt"),PlayerSettings.bundleVersion);
+            }
+            return report;
+        }
+        finally { settings.BuildAddressablesWithPlayerBuild = previous; }
+    }
     // Release output is separate from the development/validation player.
     public static void BuildReleaseFromCommandLine()
     {
@@ -26,16 +60,11 @@ public static class ForgeBuildMenu
         if (Directory.Exists(root) && Directory.EnumerateFileSystemEntries(root).Any())
             throw new InvalidOperationException("Release output must be empty.");
         Directory.CreateDirectory(root);
-        BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefieldRedesign.unity" },
-            locationPathName = Path.Combine(root, "MTGB.exe"), target = BuildTarget.StandaloneWindows64,
-            subtarget = (int)StandaloneBuildSubtarget.Player, options = BuildOptions.None
-        });
+        BuildReport report = BuildWindowsClient(Path.Combine(root,"MTGB.exe"),BuildOptions.None);
         if (report.summary.result != BuildResult.Succeeded)
             throw new InvalidOperationException("Forge release player build failed.");
         // The client hosts the same headless Forge engine as the dedicated server.
         CopyRuntimeTo(root, dedicatedServer: true);
-        CopyClientNotices(root);
         CopyVideoToolsTo(root);
         ReplayVideoExportJob.EditorWorkerExecutable=Path.Combine(root,"MTGB.exe");
         Debug.Log("MTGB release player built: " + root);
@@ -71,12 +100,7 @@ public static class ForgeBuildMenu
     {
         string root = Path.GetFullPath("Builds/ForgeValidation");
         Directory.CreateDirectory(root);
-        BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-            scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/IntegratedBattlefieldRedesign.unity" },
-            locationPathName = Path.Combine(root, "MTGB.exe"), target = BuildTarget.StandaloneWindows64,
-            subtarget = (int)StandaloneBuildSubtarget.Player,
-            options = BuildOptions.Development
-        });
+        BuildReport report = BuildWindowsClient(Path.Combine(root,"MTGB.exe"),BuildOptions.Development);
         if (report.summary.result != BuildResult.Succeeded) throw new InvalidOperationException("Forge validation player build failed.");
         CopyRuntimeTo(root);
         CopyVideoToolsTo(root);

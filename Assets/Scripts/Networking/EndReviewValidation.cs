@@ -13,7 +13,8 @@ using UnityEngine;
 public sealed partial class EndReviewValidation : MonoBehaviour
 {
     public static bool AutomaticCase;
-    static string Output=>ReconnectCase?".tools/bo3-room-1021/native-network-result.txt":".tools/room-browser/end-review-"+(AutomaticCase?"auto":"manual")+"-result.txt";
+    static bool defaultDeparture;
+    static string Output=>ReconnectCase?".tools/bo3-room-1021/native-network-result.txt":".tools/room-browser/end-review-"+(defaultDeparture?"skip":AutomaticCase?"auto":"manual")+"-result.txt";
     readonly List<Probe> probes=new List<Probe>();
     OnlineMatchService service;
     sealed class Probe
@@ -23,7 +24,7 @@ public sealed partial class EndReviewValidation : MonoBehaviour
         public OnlineLobbyState lobby;
         public OnlinePlayerViewState view; public OnlineMatchEndedMessage ended;
         public string rejection,error;
-        public bool replay;
+        public bool replay, syncConfirmed;
         public void Send<T>(string type,T payload)
         {
             string json=JsonUtility.ToJson(new OnlineEnvelope{type=type,payload=JsonUtility.ToJson(payload)});
@@ -33,6 +34,11 @@ public sealed partial class EndReviewValidation : MonoBehaviour
     }
     bool previousAutoSave;
     static bool running;
+    public static void RunDefaultDeparture()
+    {
+        if(running)return;
+        defaultDeparture=true;AutomaticCase=false;Run();
+    }
     public static void Run()
     {
         if(running)return;running=true;
@@ -59,7 +65,7 @@ public sealed partial class EndReviewValidation : MonoBehaviour
         service?.Disconnect();
         while(service!=null&&service.IsDisconnecting) yield return null;
         if(ReconnectCase)UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
-        running=false;Destroy(gameObject);
+        defaultDeparture=false;running=false;Destroy(gameObject);
     }
     Probe Connect(string name,string action,string token="")
     {
@@ -74,13 +80,14 @@ public sealed partial class EndReviewValidation : MonoBehaviour
                 reader.ReadValueSafe(out string json);var e=JsonUtility.FromJson<OnlineEnvelope>(json);OnlineEnvelopeCodec.Decode(e);
                 if(e.type==OnlineProtocol.Welcome)p.welcome=JsonUtility.FromJson<OnlineWelcomeMessage>(e.payload);
                 if(e.type==OnlineProtocol.Lobby)p.lobby=JsonUtility.FromJson<OnlineLobbyState>(e.payload);
-                if(e.type==OnlineProtocol.MatchEnded)p.ended=JsonUtility.FromJson<OnlineMatchEndedMessage>(e.payload);
+                if(e.type==OnlineProtocol.MatchEnded)p.ended=ServerSnapshotJson.Deserialize<OnlineMatchEndedMessage>(e.payload);
                 if(e.type==OnlineProtocol.Error)p.error=e.payload;
                 if(e.type==OnlineProtocol.ActionRejected)p.rejection=e.payload;
                 if(e.type==OnlineProtocol.ReplayChunk)p.replay=true;
-                if(e.type==OnlineProtocol.StartMatch)p.view=JsonUtility.FromJson<OnlineStartMatchMessage>(e.payload).view;
-                if(e.type==OnlineProtocol.StateUpdate)p.view=JsonUtility.FromJson<OnlineStateUpdateMessage>(e.payload).view;
-                if(e.type==OnlineProtocol.ResyncState)p.view=JsonUtility.FromJson<OnlineResyncMessage>(e.payload).view;
+                if(e.type==OnlineProtocol.SyncConfirmed)p.syncConfirmed=true;
+                if(e.type==OnlineProtocol.StartMatch)p.view=ServerSnapshotJson.Deserialize<OnlineStartMatchMessage>(e.payload).view;
+                if(e.type==OnlineProtocol.StateUpdate)p.view=ServerSnapshotJson.Deserialize<OnlineStateUpdateMessage>(e.payload).view;
+                if(e.type==OnlineProtocol.ResyncState)p.view=ServerSnapshotJson.Deserialize<OnlineResyncMessage>(e.payload).view;
                 if(p.view!=null&&(e.type==OnlineProtocol.StartMatch||e.type==OnlineProtocol.ResyncState))
                     p.Send(OnlineProtocol.HashReport,new OnlineHashReportMessage{appliedSequence=p.view.appliedSequence,stateHash=p.view.viewHash});
             });
@@ -97,6 +104,7 @@ public sealed partial class EndReviewValidation : MonoBehaviour
     IEnumerator Validate()
     {
         previousAutoSave=GamePreferences.AutoSaveReplays;GamePreferences.SetAutoSaveReplays(AutomaticCase);
+        var existingFiles=defaultDeparture ? ReplayRepository.ListFiles().ToHashSet() : null;
         service=OnlineMatchService.EnsureInstance();
         Check(service.StartLanHost(18791,"你","end-review-validation","spectator-test",new OnlineRoomConfig{bestOf=AutomaticCase?1:3}),"Host failed");
         yield return Wait(()=>service.HasJoinedLobby);
@@ -117,14 +125,35 @@ public sealed partial class EndReviewValidation : MonoBehaviour
             else second.Send(OnlineProtocol.ChoosePlayDraw,new OnlinePlayDrawMessage{firstPlayerSeat=1});
         }
         yield return Wait(()=>service.ForgeView?.forge?.players?.Length==2&&UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>()!=null,65);
-        yield return Wait(()=>service.InteractionState==OnlineClientInteractionState.Idle);
+        yield return Wait(()=>second.syncConfirmed && service.InteractionState==OnlineClientInteractionState.Idle);
         Check(service.ForgeView?.forge?.players?.Length==2,"No live view");
+        Check(second.syncConfirmed && service.InteractionState==OnlineClientInteractionState.Idle,"Players did not finish initial scene synchronization");
         Check(service.ForgeView.forge.players.All(p=>(p.reviewLibrary?.Length??0)==0),"Library exposed before game ended");
         service.Concede();
         yield return Wait(()=>service.EndReview!=null,20);
         Check(service.EndReview!=null,"No end review");
+        if(defaultDeparture){
+            string id=service.EndReview.matchId;
+            yield return Wait(()=>GameObject.Find("MatchResult/Result/前往换备")!=null);
+            var panel=GameObject.Find("MatchResult/Result").transform;
+            Check(panel.Find("ReplayChoice").GetComponentsInChildren<UnityEngine.UI.Text>()
+                .Any(t=>t.text.Contains("直接离开结算将不保存")),"Missing default-save hint");
+            panel.Find("前往换备").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return Wait(()=>OnlineLobbyPanel.HasBattlefieldLobby && service.EndReview==null);
+            Check(OnlineLobbyPanel.HasBattlefieldLobby && service.EndReview==null,"Default departure did not enter sideboarding");
+            string archive=Path.Combine(ReplayRepository.Root,"Server");
+            yield return Wait(()=>Directory.GetFiles(archive,"*"+id+".mtgbr").Length==1);
+            Check(Directory.GetFiles(archive,"*"+id+".mtgbr").Length==1,"Missing separate LAN server copy");
+            var waiting=(HashSet<string>)typeof(OnlineMatchService).GetField("expectedReplays",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(service);
+            var decoding=(HashSet<string>)typeof(OnlineMatchService).GetField("decodingReplays",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(service);
+            yield return Wait(()=>!waiting.Contains(id)&&!decoding.Contains(id));
+            Check(!waiting.Contains(id)&&!decoding.Contains(id),"Host replay still in flight");
+            Check(existingFiles.SetEquals(ReplayRepository.ListFiles()) && GameObject.Find("SaveReplay")==null,"Default departure added a personal recording or opened a save prompt");
+            File.WriteAllText(Output,"PASS: manual choice left untouched, hint visible, direct sideboard transition, no personal recording; server archive "+id);
+            yield break;
+        }
         yield return new WaitForSecondsRealtime(1);
-        Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName,"Auto-left battlefield");
+        Check(ForgeBattlefieldController.IsBattlefieldSceneActive,"Auto-left battlefield");
         Check(!service.IsInMatch&&service.EndReview.winnerSeat==2,"Wrong result");
         Check(!service.CanSubmitRuleAction,"Result screen permits rule actions");
         if(ReconnectCase){var tail=ValidateSeriesReconnect(second,observer,own,other);while(tail.MoveNext())yield return tail.Current;yield break;}
@@ -165,7 +194,7 @@ public sealed partial class EndReviewValidation : MonoBehaviour
         leave.onClick.Invoke();
         if(!AutomaticCase)service.DecideEndReplay(true);yield return Wait(()=>service.EndReplayStatus=="录像已保存",20);
         Check(service.EndReplayStatus=="录像已保存","Replay save failed: "+service.EndReplayStatus);
-        Check(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name==ForgeBattlefieldController.SceneName,"Saving replay left review");
+        Check(ForgeBattlefieldController.IsBattlefieldSceneActive,"Saving replay left review");
         service.LeaveEndReview(AutomaticCase);yield return new WaitForSecondsRealtime(1);
         Check(AutomaticCase?UnityEngine.SceneManagement.SceneManager.GetActiveScene().name=="Main"&&!service.IsOnline:OnlineLobbyPanel.HasBattlefieldLobby&&service.LobbyState.series.betweenGames,"Manual exit/sideboard transition failed");
         File.WriteAllText(Output,"PASS: real host + opponent + observer; real Forge concession; centered result retained in battlefield; own hand/library/deck; opponent/observer privacy; read-only result; "+(AutomaticCase?"automatic replay save and explicit room exit":"manual replay save and explicit sideboard transition"));

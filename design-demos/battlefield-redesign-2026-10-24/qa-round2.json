@@ -1,0 +1,223 @@
+{
+  "scope": "用户校正：视频仅参考横排手牌，重新设计战场材质与空间",
+  "entries": [
+    {
+      "label": "B-round2-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "B-round2-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "A-round2-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "A-round2-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "C-round2-normal-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "C-round2-final-normal-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "C-round2-material-final-1280",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 720,
+      "width": 1280
+    },
+    {
+      "label": "C-round2-material-final-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "A-round2-material-final-1600",
+      "boardCount": 13,
+      "brokenImages": [],
+      "coveredBoardBottom": [],
+      "fonts": "loaded",
+      "handBoardOverlaps": [],
+      "handCount": 5,
+      "handRotations": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "height": 900,
+      "width": 1600
+    },
+    {
+      "label": "A-round2-dense-final",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 28,
+      "visibleHand": 5,
+      "width": 1600
+    },
+    {
+      "label": "B-round2-dense-final",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 16,
+      "visibleHand": 7,
+      "width": 1600
+    },
+    {
+      "label": "C-round2-dense-final",
+      "brokenImages": [],
+      "height": 792,
+      "overlaps": [],
+      "visibleBoard": 15,
+      "visibleHand": 5,
+      "width": 1600
+    },
+    {
+      "label": "A-round2-dense-final-1280",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 28,
+      "visibleHand": 5,
+      "width": 1280
+    },
+    {
+      "label": "B-round2-dense-final-1280",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 16,
+      "visibleHand": 7,
+      "width": 1280
+    },
+    {
+      "label": "C-round2-dense-final-1280",
+      "brokenImages": [],
+      "height": 612,
+      "overlaps": [],
+      "visibleBoard": 15,
+      "visibleHand": 5,
+      "width": 1280
+    }
+  ],
+  "backgroundFix": "A/C原内嵌背景未实际应用，改为未修改内容的本地PNG引用，已从实际DOM和截图确认材质显示",
+  "productionChanged": false
+}

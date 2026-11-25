@@ -23,14 +23,17 @@ public sealed partial class ForgeBattlefieldController
     private void PresentGenericChoices(long captured)
     {
         var request=view.request;
-        float width=Mathf.Min(640,surface.rect.width-48),height=Mathf.Min(490,surface.rect.height-48);
+        bool lokiTricks = view.commanderEvent == OnlineRoomConfig.Loki && request.sourceCard?.name == "洛基的诡计" && request.message == "选择洛基的诡计";
+        float width=Mathf.Min(lokiTricks?1000:640,surface.rect.width-48);
+        int trickCount=lokiTricks?request.options.Count(o=>o.id.StartsWith("select:",StringComparison.Ordinal)):0;
+        float height=Mathf.Min(lokiTricks?Mathf.Clamp(230+trickCount*68,380,910):490,surface.rect.height-48);
         landChoiceMenu.sizeDelta=new Vector2(width,height);
         landChoiceMenu.anchoredPosition=Vector2.zero;
-        landChoiceMenu.GetComponent<Image>().color=Ink;
+        if(HudTheme==null)landChoiceMenu.GetComponent<Image>().color=Ink;
         bool playerVote=request.votingPlayerSeat>0&&request.options.Any(o=>o.id.StartsWith("player:",StringComparison.Ordinal));
         var selections=request.options.Where(o=>o.id.StartsWith("select:",StringComparison.Ordinal)||(playerVote&&o.id.StartsWith("player:",StringComparison.Ordinal))).ToArray();
         bool colors=selections.Length>0&&selections.All(o=>ChoiceManaSymbols(o.label)!=null);
-        string heading=VoteChoiceTitle()??(colors?TapPaymentText("选择颜色","Choose colors","色を選択"):
+        string heading=lokiTricks ? TapPaymentText("洛基的诡计","Loki’s Tricks","ロキの策略") : VoteChoiceTitle()??(colors?TapPaymentText("选择颜色","Choose colors","色を選択"):
             request.sourceCard!=null&&!string.IsNullOrEmpty(request.sourceCard.name)?TapPaymentText("选择效果","Choose effects","効果を選択"):
             AuxiliaryPrompt(request.message)??System.Text.RegularExpressions.Regex.Replace(request.message??"",@"\s*\(click, then CTRL/CMD \+ click\)",""));
         if(request.message?.StartsWith("Choose rolls to reroll?")==true)heading=TapPaymentText("选择要重掷的骰子；也可以直接确认保留。","Select dice to reroll, or confirm to keep them.","振り直すサイコロを選択。そのまま確定して維持することもできます。");
@@ -53,7 +56,7 @@ public sealed partial class ForgeBattlefieldController
         float optionsBottom=-height/2+77;
         float viewportWidth=width-30,viewportHeight=Mathf.Max(60,optionsTop-optionsBottom);
         var clip=Panel(landChoiceMenu,"GenericOptions",new Vector2(0,(optionsTop+optionsBottom)/2),new Vector2(viewportWidth,viewportHeight),Color.clear);
-        clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;
+        clip.gameObject.AddComponent<RectMask2D>();var scroll=clip.gameObject.AddComponent<BattlefieldHorizontalScroll>();scroll.hidePartialChildren=true;scroll.DecisionTheme=HudTheme;
         var content=Rect(clip,"Content",Vector2.zero,new Vector2(viewportWidth,viewportHeight));
         content.anchorMin=content.anchorMax=content.pivot=new Vector2(0,1);scroll.viewport=clip;scroll.content=content;scroll.Configure(viewportWidth);
         var options=selections;
@@ -77,14 +80,38 @@ public sealed partial class ForgeBattlefieldController
                 label=!string.IsNullOrEmpty(request.sourceCard?.name)&&label.StartsWith(prefix,StringComparison.Ordinal)
                     ?GamePreferences.CardFaceName(request.sourceCard.name)+" — "+NamedAbilityEffectText(request.sourceCard,label.Substring(prefix.Length))
                     :GamePreferences.NativeText(label);
+                if(source=="Davros, Dalek Creator"&&request.message?.StartsWith("Villainous Choice by ",StringComparison.Ordinal)==true) {
+                    string effect=option.label==source+" — You draw a card."
+                        ?TapPaymentText("戴沃斯的操控者抓一张牌。","You draw a card.","ダヴロスのコントローラーはカード１枚を引く。")
+                        :option.label==source+" — Opponent that lost 3 or more life discards 1 card."
+                            ?TapPaymentText("本回合失去至少 3 点生命的这位对手弃一张牌。","Opponent that lost 3 or more life discards 1 card.","このターンに３点以上のライフを失ったその対戦相手はカード１枚を捨てる。"):null;
+                    if(effect!=null)label=GamePreferences.CardFaceName(source)+" — "+effect;
+                }
             }
             string buttonLabel=(option.selected?"●  ":"○  ")+label;
+            if (lokiTricks) {
+                string prefix=request.sourceCard.name+" — ";
+                string trick=option.label.StartsWith(prefix,StringComparison.Ordinal)?option.label.Substring(prefix.Length):option.label;
+                buttonLabel=trick;
+            }
             float requiredHeight=Mathf.Max(48,new TextGenerator().GetPreferredHeight(buttonLabel,measure)+18);
             float rowHeight=Mathf.Min(viewportHeight,requiredHeight);
             var button=Button(content,"GenericOption_"+index,buttonLabel,
                 Vector2.zero,new Vector2(width-58,rowHeight),()=>Choose(index,captured),option.selected?new Color(.18f,.38f,.55f):new Color(.13f,.19f,.25f));
+            if(HudTheme!=null)StyleZoneButton(button,option.selected);
             var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=rect.pivot=new Vector2(0,1);tiles.Add(rect);tallest=Mathf.Max(tallest,rowHeight);
             var text=button.GetComponentInChildren<Text>();PreferenceText.SetSize(text,18);text.resizeTextForBestFit=false;text.supportRichText=false;
+            if (lokiTricks) {
+                text.alignment=TextAnchor.MiddleLeft;
+                text.rectTransform.anchorMin=Vector2.zero;
+                text.rectTransform.anchorMax=Vector2.one;
+                text.rectTransform.offsetMin=new Vector2(42,2);
+                text.rectTransform.offsetMax=new Vector2(-18,-2);
+                var mark=Label((RectTransform)button.transform,"Selection",option.selected?"●":"○",Vector2.zero,new Vector2(26,32),18,Paper);
+                mark.rectTransform.anchorMin=mark.rectTransform.anchorMax=new Vector2(0,.5f);
+                mark.rectTransform.anchoredPosition=new Vector2(22,0);
+                mark.raycastTarget=false;
+            }
             if(playerVote)SetNamedPlayerText(text,buttonLabel);
             text.horizontalOverflow=HorizontalWrapMode.Wrap;text.verticalOverflow=VerticalWrapMode.Overflow;
             if(requiredHeight>rowHeight) {
@@ -101,15 +128,27 @@ public sealed partial class ForgeBattlefieldController
             button.interactable=canAct&&!submitted&&!option.disabled&&(option.selected||request.selectedCount<request.maxCount);
         }
         int visibleRows=tallest+8<=viewportHeight/2?2:1;
-        content.sizeDelta=new Vector2(Mathf.Max(viewportWidth,Mathf.CeilToInt(tiles.Count/(float)visibleRows)*viewportWidth),Mathf.Max(viewportHeight,tallest));
+        int page=0;
+        float rowTop=0;
+        for(int i=0;i<tiles.Count;i++){
+            if(lokiTricks){
+                if(rowTop>0 && rowTop+tiles[i].rect.height>viewportHeight){page++;rowTop=0;}
+                tiles[i].anchoredPosition=new Vector2(page*viewportWidth+14,-rowTop);
+                rowTop+=tiles[i].rect.height+8;
+            }else{
+                page=i/visibleRows;
+                tiles[i].anchoredPosition=new Vector2(page*viewportWidth+14,-i%visibleRows*(tallest+8));
+            }
+        }
+        content.sizeDelta=new Vector2((page+1)*viewportWidth,Mathf.Max(viewportHeight,tallest));
         clip.sizeDelta=new Vector2(viewportWidth,content.sizeDelta.y);
-        for(int i=0;i<tiles.Count;i++)tiles[i].anchoredPosition=new Vector2(i/visibleRows*viewportWidth+14,-i%visibleRows*(tallest+8));
         content.anchoredPosition=new Vector2(-choiceScrollOffset,0);scroll.Configure(viewportWidth);
         if(request.paymentMode=="manual") {
             var actions=request.options.Where(o=>o.id is "ok" or "confirm-cards" or "reset-cards" or "cancel").OrderBy(ChoiceActionOrder).ToArray();
             for(int i=0;i<actions.Length;i++) {
                 var option=actions[i];int index=OptionIndex(option.id);
                 var button=Button(landChoiceMenu,"CostChoiceAction_"+index,ChoiceActionLabel(option),new Vector2((i-(actions.Length-1)*.5f)*166,-height/2+35),new Vector2(156,44),()=>Choose(index,captured),new Color(.18f,.32f,.49f));
+                if(HudTheme!=null)StyleZoneButton(button,option.id is "ok" or "confirm-cards");
                 button.interactable=canAct&&!submitted&&!option.disabled;
             }
             landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();return;
@@ -119,6 +158,7 @@ public sealed partial class ForgeBattlefieldController
         {
             int index=OptionIndex(item.Item1);
             var button=Button(landChoiceMenu,item.Item2,item.Item3,new Vector2(item.Item4,-height/2+35),new Vector2(145,44),()=>Choose(index,captured),new Color(.18f,.32f,.49f));
+            if(HudTheme!=null)StyleZoneButton(button,item.Item2=="GenericConfirm");
             button.interactable=index>=0&&canAct&&!submitted&&!request.options[index].disabled;
         }
         landChoiceMenu.gameObject.SetActive(true);landChoiceMenu.SetAsLastSibling();

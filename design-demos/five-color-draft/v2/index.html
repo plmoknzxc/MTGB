@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><base href="../"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#202e28"><title>五色战棋 · 铜门邀请赛</title><link rel="stylesheet" href="table.css"><link rel="stylesheet" href="chess.css"><script defer src="v2/chess.js"></script><script defer src="v2/duel.js"></script><script defer src="v2/desk.js"></script></head>
+<body><header class="mast"><div class="mast-inner"><div class="brand"><span class="crest" aria-hidden="true">✦</span><b>五色战棋</b><span class="project">MTGB</span></div><nav aria-label="对局导航"><button data-act="standings">赛程积分</button><button data-act="rules">玩法手册</button></nav><button class="reset" data-act="reset">重新开局</button></div></header>
+<main><header class="meet"><div><div class="eyebrow"><i></i>四席双循环</div><h1>铜门邀请赛</h1></div><div id="round"></div></header>
+<div class="worktable">
+<div class="left-col"><section class="arena-box" id="arena"><header><div><span class="kicker">阵容</span><h2>备战棋盘</h2></div><span id="pop"></span></header><div id="battlefield"></div><div id="traits"></div></section>
+<section class="reserve-box"><div class="sectionline"><strong>备战席</strong><small id="reserve-count"></small></div><div id="reserve"></div><div id="piece-actions"></div></section>
+<section class="market-box" id="market"><div class="sectionline"><h2>棋子商店</h2><div id="shop-tools"></div></div><div id="offers"></div></section></div>
+<aside class="right-col"><section class="mana-box" id="mana"><div class="sectionline"><h2>地与法术</h2><button data-act="lands" class="linkish">调整地</button></div><div id="sources"></div><div id="spellbook"></div><div id="orders"></div></section>
+<section class="bank-box"><div class="sectionline"><h2>经济与人口</h2><strong id="coins"></strong></div><div id="economy"></div></section>
+<section class="rival-box"><div id="rival"></div><div class="battle-actions"><button class="outline" data-act="trial">免费试战</button><button class="primary" data-act="fight">正式交战 →</button></div></section></aside></div>
+<div class="mobile-jump"><a href="#arena">棋盘</a><a href="#market">商店</a><a href="#mana">法术</a><button data-act="fight">对战 →</button></div>
+<footer><span>MTGB · 五色战棋</span><span>本地试玩　02</span></footer></main><dialog id="dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span>铜门邀请赛</span><button data-act="close" aria-label="关闭窗口">×</button></div><div id="dialog-content" class="dialog-content"></div></dialog><div id="toast" role="status" aria-live="polite"></div></body></html>

@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public sealed partial class ForgeBattlefieldController
 {
     private RectTransform attackBatchActions;
+    private Text duelAttackRequirement;
+    private bool HasAttackIssue => HasAttackDecision && !string.IsNullOrEmpty(view.request.combatDeclaration?.issue);
     private long attackConfirmRequest,attackConfirmContext;
     private int attackConfirmSeat,attackConfirmTurn,attackConfirmRestart,attackConfirmDefender;
     private string attackConfirmDefenderKind;
     private int[] attackConfirmMembers;
-    private bool HasAttackDecision => integrated&&view?.awaitingInput==true&&view.request.seat==seat&&view.request.kind=="InputAttack";
+    private bool HasAttackDecision => integrated&&!IsFourPlayerScene&&view?.awaitingInput==true&&view.request.seat==seat&&view.request.kind=="InputAttack";
     private int[] AssignedAttackers()=>view.request.options.Where(o=>o.id.StartsWith("attack-remove:",StringComparison.Ordinal)).Select(o=>o.attackerId).Distinct().ToArray();
     private int DefaultAttackDestination()
     {
@@ -54,7 +56,7 @@ public sealed partial class ForgeBattlefieldController
         int accept=OptionIndex("ok");
         // Confirm only after Forge has assigned the exact requested group. Taxes,
         // mandatory attacks and new decisions retain their native input contract.
-        if(confirmed&&accept>=0&&!view.request.options[accept].disabled)Choose(accept,requestId);
+        if(confirmed&&!HasAttackIssue&&accept>=0&&!view.request.options[accept].disabled)Choose(accept,requestId);
     }
     private void PresentAttackBatchActions()
     {
@@ -66,6 +68,20 @@ public sealed partial class ForgeBattlefieldController
             DockAction(attackBatchActions,"Primary","",new Vector2(-73,0),140,()=>{},false);
             DockAction(attackBatchActions,"EndPhase","",new Vector2(73,0),140,()=>{},true);
             foreach(var label in attackBatchActions.GetComponentsInChildren<Text>())PreferenceText.SetSize(label,16);
+            var hint=Panel(attackBatchActions,"DeclarationRequirement",new Vector2(0,174),new Vector2(284,68),Ink);
+            hint.GetComponent<Image>().raycastTarget=false;
+            duelAttackRequirement=Label(hint,"Reason","",Vector2.zero,new Vector2(268,62),17,Paper);
+            duelAttackRequirement.alignment=TextAnchor.MiddleCenter;
+            duelAttackRequirement.horizontalOverflow=HorizontalWrapMode.Wrap;
+            duelAttackRequirement.resizeTextForBestFit=true;
+            duelAttackRequirement.resizeTextMinSize=12;
+            duelAttackRequirement.raycastTarget=false;
+        }
+        duelAttackRequirement.transform.parent.gameObject.SetActive(HasAttackIssue);
+        if(HasAttackIssue){
+            var rules=view.request.combatDeclaration;
+            var subject=view.players.SelectMany(p=>p.battlefield??Array.Empty<ForgeCardView>()).FirstOrDefault(c=>c.id==rules.cardId);
+            duelAttackRequirement.text=CombatDeclarationHint(rules,subject==null?null:CombatCardName(subject),0);
         }
         var assigned=AssignedAttackers();
         bool hasAttackers=selectedAttackers.Count>0||assigned.Length>0;
@@ -76,7 +92,7 @@ public sealed partial class ForgeBattlefieldController
             :TapPaymentText("全部攻击","Attack all","全て攻撃");
         left.interactable=IsDeclaringAttack&&(selectedAttackers.Count>0
             ?DefaultAttackDestination()>=0&&(selectedAttackers.Count==1||submitOrder!=null)
-            :primary>=0&&!view.request.options[primary].disabled);
+            :primary>=0&&!view.request.options[primary].disabled&&(!hasAttackers||!HasAttackIssue));
         left.onClick.RemoveAllListeners();left.onClick.AddListener(()=>{
             if(!IsDeclaringAttack||captured!=requestId)return;
             if(hasAttackers)ConfirmSelectedAttackers(captured);
@@ -87,7 +103,7 @@ public sealed partial class ForgeBattlefieldController
         right.GetComponentInChildren<Text>().text=hasAttackers?TapPaymentText("全部取消","Recall all","全て取消")
             :TapPaymentText("结束阶段","End phase","フェイズ終了");
         right.interactable=IsDeclaringAttack&&(hasAttackers&&assigned.Length==0
-            ||secondary>=0&&!view.request.options[secondary].disabled);
+            ||secondary>=0&&!view.request.options[secondary].disabled&&(hasAttackers||!HasAttackIssue));
         right.onClick.RemoveAllListeners();right.onClick.AddListener(()=>{
             if(!IsDeclaringAttack||captured!=requestId)return;
             ClearAttackSelection();

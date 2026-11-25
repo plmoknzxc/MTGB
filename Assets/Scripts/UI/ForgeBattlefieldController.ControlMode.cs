@@ -46,7 +46,7 @@ public sealed partial class ForgeBattlefieldController
                 controlModeButton.onClick.RemoveAllListeners();controlModeButton.onClick.AddListener(CycleControlMode);
             } else controlModeButton=Button(surface,"PriorityControlMode","",Vector2.zero,new Vector2(80,41),CycleControlMode,Ink);
             var toggle=controlModeButton.transform.Find("Switch");
-            if(toggle!=null){toggle.gameObject.SetActive(false);Destroy(toggle.gameObject);}
+            if(toggle!=null){toggle.gameObject.SetActive(false);if(Application.isPlaying)Destroy(toggle.gameObject);}
         }
         if(pauseNextPhaseButton==null)pauseNextPhaseButton=Button(surface,"PauseNextPhase","",Vector2.zero,new Vector2(142,41),ToggleNextPhasePause,Ink);
         controlModeButton.gameObject.SetActive(true);pauseNextPhaseButton.gameObject.SetActive(true);
@@ -54,8 +54,9 @@ public sealed partial class ForgeBattlefieldController
         float modeWidth=LayoutControlPill(controlModeButton,ControlMode==ForgeControlMode.On?manual:ControlMode==ForgeControlMode.Off?skip:auto,new[]{manual,auto,skip},80);
         string pause=TapPaymentText("下阶段暂停","Pause next","次で停止");
         float pauseWidth=LayoutControlPill(pauseNextPhaseButton,pause,new[]{pause},130);
-        ((RectTransform)controlModeButton.transform).anchoredPosition=new Vector2(-46-modeWidth*.5f,58.5f);
-        ((RectTransform)pauseNextPhaseButton.transform).anchoredPosition=new Vector2(-46-modeWidth-10-pauseWidth*.5f,58.5f);
+        float settingsReserve=worldTable!=null?54:0;
+        ((RectTransform)controlModeButton.transform).anchoredPosition=new Vector2(-46-settingsReserve-modeWidth*.5f,58.5f);
+        ((RectTransform)pauseNextPhaseButton.transform).anchoredPosition=new Vector2(-46-settingsReserve-modeWidth-10-pauseWidth*.5f,58.5f);
         controlModeButton.GetComponent<Image>().color=new Color(.09f,.153f,.196f);
         var outline=controlModeButton.GetComponent<Outline>();if(outline!=null)outline.effectColor=ControlMode==ForgeControlMode.Off?new Color(.57f,.66f,.69f,.55f):new Color(.55f,.87f,.93f,.85f);
         // Only the explicit one-shot appointment owns the selected appearance.
@@ -71,6 +72,11 @@ public sealed partial class ForgeBattlefieldController
         pauseOutline.effectColor=pauseNextPhase?Gold:new Color(.4f,.48f,.52f,.5f);pauseOutline.effectDistance=new Vector2(1,-1);
         pauseNextPhaseButton.interactable=pauseNextPhase||view!=null&&view.turn>0&&!string.IsNullOrEmpty(view.phase);
         controlModeButton.interactable=true;
+        if (HudTheme != null)
+        {
+            MenuVisualTheme.StyleDeckTool(controlModeButton);
+            MenuVisualTheme.StyleDeckTool(pauseNextPhaseButton,pauseNextPhase);
+        }
     }
     private void SetControlMode(ForgeControlMode mode)
     {
@@ -109,13 +115,16 @@ public sealed partial class ForgeBattlefieldController
     private int AutomaticPriorityOption()
     {
         if(view?.request?.kind!="InputPassPriority")return -1;
+        if(service?.CurrentPuzzle!=null && ControlMode!=ForgeControlMode.Off && service.PuzzleManaUndoIndex>=0)return -1;
         int option=ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,false);
         return option>=0&&!view.request.options[option].disabled?option:-1;
     }
     private void RefreshPriorityAdvanceVisibility()
     {
         if(advanceButton==null || view?.request?.kind!="InputPassPriority")return;
-        advanceButton.gameObject.SetActive(!submitted&&OptionIndex("ok")>=0&&AutomaticPriorityOption()<0);
+        // Confirming the step already hands an empty-stack window to the next hero.
+        bool teamVote = view.heroVoteWindow > 0 && seat != view.lokiSeat;
+        advanceButton.gameObject.SetActive(!teamVote && !submitted && OptionIndex("ok")>=0 && AutomaticPriorityOption()<0);
     }
     private void ObserveStackReadWindow(ForgeSeatView state,int localSeat)
     {
@@ -143,7 +152,7 @@ public sealed partial class ForgeBattlefieldController
     {
         if(viewingBattlefield || service==null || !canAct || submitted || GameSettingsPanel.IsOpen || view?.awaitingInput!=true)return;
         int completed=CompletedSingleCardOption(view.request);
-        if(completed>=0){Choose(completed,requestId);return;}
+        if(completed>=0){ChooseAutomatic(completed);return;}
         // Resolution-time/reconnected payments need an explicit decision, even
         // when ordinary casting has automatic payment enabled.
         if(IsManaPaymentDecision)return;
@@ -157,6 +166,14 @@ public sealed partial class ForgeBattlefieldController
         int option=view.request.kind=="InputPassPriority"?AutomaticPriorityOption():ForgeControlPolicy.AutomaticOption(view,seat,ControlMode,attemptedPaymentContext==context);
         if(option<0)return;
         if(view.request.kind.Contains("PayMana"))attemptedPaymentContext=context;
-        Choose(option,requestId);
+        ChooseAutomatic(option);
+    }
+
+    private void ChooseAutomatic(int option)
+    {
+        if(service.CurrentPuzzle==null){Choose(option,requestId);return;}
+        service.AutomaticPuzzleChoice=true;
+        try {Choose(option,requestId);}
+        finally {service.AutomaticPuzzleChoice=false;}
     }
 }

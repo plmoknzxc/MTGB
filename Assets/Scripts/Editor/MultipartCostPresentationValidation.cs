@@ -49,7 +49,6 @@ public static class MultipartCostPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui) {
         var locale=GamePreferences.Language;var enabled=ui.enabled;ui.enabled=false;
         var module=EventSystem.current.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();var input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try {
             GamePreferences.SetLanguage("zh-CN");float end=Time.realtimeSinceStartup+8;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<end)yield return null;Check(GamePreferences.Ready,"Language not ready");
             foreach(var test in new[]{"discard-before-sacrifice","spell-discard-before-sacrifice","replacement-discard-before-sacrifice","exile-before-mana","sacrifice-before-mana","return-before-mana"}) {
@@ -85,7 +84,7 @@ public static class MultipartCostPresentationValidation
             }
         } finally {
             ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;
-            GamePreferences.SetLanguage(locale);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];
+            GamePreferences.SetLanguage(locale);
         }
     }
 }

@@ -364,6 +364,11 @@ public static class DeckRepository
                 deck.format = line.Substring(8).Trim().ToLowerInvariant();
                 continue;
             }
+            if (line.StartsWith("#bracket ", StringComparison.OrdinalIgnoreCase))
+            {
+                int.TryParse(line.Substring(9).Trim(), out deck.commanderBracket);
+                continue;
+            }
             if (line.StartsWith("#banlist ", StringComparison.OrdinalIgnoreCase))
             {
                 deck.banlist = line.Substring(9).Trim();
@@ -424,6 +429,8 @@ public static class DeckRepository
             "#banlist " + (string.IsNullOrWhiteSpace(deck.banlist) ? "current" : deck.banlist.Trim())
         };
 
+        int bracket = DeckCommander.EffectiveBracket(deck.format, deck.commanderBracket);
+        if (bracket > 0) lines.Add("#bracket " + bracket);
         if (deck.mainOrder != null && deck.mainOrder.Count > 0) lines.Add("#main-order " + string.Join(",", deck.mainOrder));
         if (deck.sideboardOrder != null && deck.sideboardOrder.Count > 0) lines.Add("#sideboard-order " + string.Join(",", deck.sideboardOrder));
         if (deck.commanders != null && deck.commanders.Count > 0)
@@ -750,6 +757,7 @@ public static class DeckRepository
 
     private static void Normalize(DeckDefinition deck)
     {
+        deck.commanderBracket = DeckCommander.EffectiveBracket(deck.format, deck.commanderBracket);
         NormalizeEntries(GetEntryList(deck, DeckSection.Commander));
         NormalizeEntries(GetEntryList(deck, false));
         NormalizeEntries(GetEntryList(deck, true));

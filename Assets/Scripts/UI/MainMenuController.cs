@@ -30,6 +30,8 @@ public sealed partial class MainMenuController : MonoBehaviour
     [SerializeField] private Button onlineMatchButton;
     [SerializeField] private Button deckEditorButton;
     [SerializeField] private Button settingsButton;
+    private Button startSettingsButton;
+    private Button startUpdateButton;
     [SerializeField] private Button backToTitleButton;
     [SerializeField] private Button advancedSearchButton;
     [SerializeField] private Button newDeckButton;
@@ -134,11 +136,10 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         if(ReplayExportWorker.IsWorker){enabled=false;return;}
         BindSceneReferences();
+        if (ReturningToPuzzlePage) SetScreenVisible(startScreenGroup, false);
         CreateCollectionSearchToolbar();
-        CreateDialogButton(deckDropdown.transform.parent, "RenameDeckButton", "重命名",
-            new Vector2(-100f, 482f), MenuVisualTheme.Panel, BeginRenameDeck);
         MenuVisualTheme.ApplyMain(startScreenGroup.transform.parent);
-        CreateLocalAiEntry();
+        CreateLocalModesEntry();
         CreateCardPreviewChrome();
         CreateDeckCollapseControls();
         CreateDeckExchangeToolbar();
@@ -147,7 +148,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         CreateDeckFormatControl();
         CreateDeckSortControls();
         RegisterListeners();
-        ShowStartScreen();
+        if (!ReturningToPuzzlePage) ShowStartScreen();
         loadingStatus = AddText(startScreenGroup.transform, "LoadingStatus", "正在准备卡牌…", 20,
             MenuVisualTheme.Muted, TextAnchor.MiddleLeft);
         Place(loadingStatus.rectTransform, new Vector2(-595f, -350f), new Vector2(520f, 62f));
@@ -166,12 +167,29 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         _ = LoadDataAsync(false);
         SetScreenVisible(startMenuContent, false);
-        while (!GamePreferences.Ready || dataLoading) yield return null;
+        while (!GamePreferences.Ready || dataLoading || (ReturningToPuzzlePage && !dataReady)) yield return null;
         GamePreferences.BindScene();
         SetScreenVisible(startMenuContent, true);
+        var match = OnlineMatchService.Instance;
+        if (match?.EditingCurrentPuzzle is bool modify)
+        {
+            SetScreenVisible(startScreenGroup, false);
+            OpenPuzzleEditor(modify ? match.PuzzleEditorSource : null, match);
+            PuzzleSceneTransition.Ready(PuzzleSceneTransition.Destination.Menu);
+            yield break;
+        }
+        if (OnlineMatchService.TakeReturningPuzzle(out bool retry) is LocalPuzzle puzzle)
+        {
+            OpenPuzzleLibrary(puzzle.LibraryKey, retry ? puzzle : null);
+            PuzzleSceneTransition.Ready(PuzzleSceneTransition.Destination.Menu);
+            yield break;
+        }
         Debug.Log($"[Startup] Localized menu ready: {startupTimer.ElapsedMilliseconds} ms; locale={GamePreferences.Language}");
-        if (ReplayBrowser.ReopenOnReturn) { ReplayBrowser.ReopenOnReturn = false; ReplayBrowser.Show(); }
+        if (ReplayBrowser.ReopenOnReturn) { ReplayBrowser.ReopenOnReturn = false; OnReplays(); }
     }
+
+    private static bool ReturningToPuzzlePage => OnlineMatchService.Instance?.EditingCurrentPuzzle.HasValue == true
+        || OnlineMatchService.ReturnPuzzle != null;
 
     private void EnableMenuEntrypoints()
     {
@@ -309,6 +327,10 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (onlineMatchButton != null) onlineMatchButton.onClick.AddListener(OnOnlineMatch);
         if (deckEditorButton != null) deckEditorButton.onClick.AddListener(ShowDeckBuilder);
         if (settingsButton != null) settingsButton.onClick.AddListener(OnReplays);
+        startSettingsButton = startScreenGroup.transform.Find("StartMenuContent/StartSettingsButton").GetComponent<Button>();
+        startSettingsButton.onClick.AddListener(OpenStartSettings);
+        startUpdateButton = startScreenGroup.transform.Find("StartMenuContent/StartUpdateButton").GetComponent<Button>();
+        startUpdateButton.onClick.AddListener(OpenClientUpdate);
         if (backToTitleButton != null) backToTitleButton.onClick.AddListener(ShowStartScreen);
         if (advancedSearchButton != null) advancedSearchButton.onClick.AddListener(OnAdvancedSearch);
         if (newDeckButton != null) newDeckButton.onClick.AddListener(OnNewDeck);
@@ -329,6 +351,8 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (onlineMatchButton != null) onlineMatchButton.onClick.RemoveListener(OnOnlineMatch);
         if (deckEditorButton != null) deckEditorButton.onClick.RemoveListener(ShowDeckBuilder);
         if (settingsButton != null) settingsButton.onClick.RemoveListener(OnReplays);
+        if (startSettingsButton != null) startSettingsButton.onClick.RemoveListener(OpenStartSettings);
+        if (startUpdateButton != null) startUpdateButton.onClick.RemoveListener(OpenClientUpdate);
         if (backToTitleButton != null) backToTitleButton.onClick.RemoveListener(ShowStartScreen);
         if (advancedSearchButton != null) advancedSearchButton.onClick.RemoveListener(OnAdvancedSearch);
         if (newDeckButton != null) newDeckButton.onClick.RemoveListener(OnNewDeck);
@@ -338,6 +362,9 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (addSideboardButton != null) addSideboardButton.onClick.RemoveListener(OnAddSelectedToSideboard);
         if (startButton != null) startButton.onClick.RemoveListener(OnStartMatch);
     }
+
+    private void OpenStartSettings() => GameSettingsPanel.Show(startScreenGroup.transform, archiveStyle: true);
+    private void OpenClientUpdate() => ClientUpdateDialog.Show(startScreenGroup.transform);
 
     private void ReloadData()
     {
@@ -352,7 +379,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         dataReady = false;
         retryLoadButton.gameObject.SetActive(false);
         loadingStatus.gameObject.SetActive(false);
-        ShowStartScreenNow();
+        if (!ReturningToPuzzlePage) ShowStartScreenNow();
         var timer = System.Diagnostics.Stopwatch.StartNew();
         try
         {
@@ -375,13 +402,18 @@ public sealed partial class MainMenuController : MonoBehaviour
             Debug.Log($"[Startup] Data ready: {timer.ElapsedMilliseconds} ms; cards={cards.Count}; catalog tiles={collectionContent.childCount}");
             if (reopenDeck) ShowDeckBuilder();
             OnlineMatchService service = OnlineMatchService.Instance;
-            if (service != null && service.IsConnected && !service.IsInMatch)
+            if (service != null && service.IsConnected && !service.IsInMatch && !service.EditingCurrentPuzzle.HasValue)
                 OnlineLobbyPanel.Show(this, currentDeck);
         }
         catch (OperationCanceledException) { }
         catch (Exception exception)
         {
             if (this == null) return;
+            if (ReturningToPuzzlePage)
+            {
+                PuzzleSceneTransition.Ready(PuzzleSceneTransition.Destination.Menu);
+                SetScreenVisible(startScreenGroup,true);
+            }
             loadingStatus.text = "加载失败：" + exception.Message;
             loadingStatus.gameObject.SetActive(true);
             retryLoadButton.gameObject.SetActive(true);
@@ -395,6 +427,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void ApplyLoadedData(IReadOnlyList<CardDefinition> loadedCards)
     {
+        puzzlePool=null;puzzleNames=null;puzzleDefinitions=null;puzzleSearchTerms=null;
         deckExchange=null;
         CardImageLibrary.ClearCache();
 
@@ -464,12 +497,12 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         pendingDataEntry = null;
         loadingStatus.gameObject.SetActive(false);
-        ReplayBrowser.Show();
+        ReplayBrowser.Show(startScreenGroup.gameObject);
     }
 
     private void RefreshLocalizedDetails()
     {
-        RefreshLocalAiEntry();
+        RefreshLocalModesEntry();
         RefreshAuxiliaryDeckLocale();
         RefreshCompanionEntry();
         RefreshCommanderEntry();
@@ -486,29 +519,10 @@ public sealed partial class MainMenuController : MonoBehaviour
             if(repaintArtwork)
             {
                 var face=tile.transform.Find("CardFace")?.GetComponent<Image>();
-                bool hasArt=CardImageLibrary.TryLoadFullCard(tile.Card,out var localizedArt);
-                if(face!=null)
-                {
-                    face.sprite=hasArt?localizedArt:CardVisualStyle.LoadFrame(tile.Card);
-                    face.color=face.sprite==null?GetFallbackColor(tile.Card):Color.white;
-                }
-                foreach(string name in new[]{"FallbackText","FallbackOverlay"})
-                {
-                    var label=tile.transform.Find(name);
-                    if(label!=null)label.gameObject.SetActive(!hasArt);
-                }
-                if(!hasArt && tile.transform.Find("FallbackText")==null && tile.transform.Find("FallbackOverlay")==null)
-                {
-                    Text missing=AddText(tile.transform,"FallbackOverlay",GamePreferences.CardName(tile.Card)+"\n"+GamePreferences.CardType(tile.Card),11,Color.white,TextAnchor.UpperCenter);
-                    Stretch(missing.rectTransform,10f,10f,10f,10f);
-                }
+                if(face!=null) BindTileArt(face,tile.Card,true);
             }
-            var fallback=tile.transform.Find("FallbackText")?.GetComponent<Text>();
-            if(fallback!=null) fallback.text=GamePreferences.CardName(tile.Card)+"\n"+tile.Card.manaCost;
-            var overlay=tile.transform.Find("FallbackOverlay")?.GetComponent<Text>();
-            if(overlay!=null) overlay.text=GamePreferences.CardName(tile.Card)+"\n"+GamePreferences.CardType(tile.Card);
             AddDeckRole(tile);
-            if(tile.Zone!=MainMenuCardTileZone.Collection) ApplyLegality(tile);
+            ApplyLegality(tile);
         }
         if(repaintArtwork&&IsDeckBuilderVisible()){cachedCollectionQuery=null;RefreshCollectionGrid();}
     }
@@ -523,26 +537,30 @@ public sealed partial class MainMenuController : MonoBehaviour
         collectionSearchInput.textComponent = AddText(go.transform, "Text", string.Empty, 18, Color.white, TextAnchor.MiddleLeft);
         collectionSearchInput.textComponent.supportRichText = false;
         collectionSearchInput.textComponent.verticalOverflow = VerticalWrapMode.Overflow;
-        Stretch(collectionSearchInput.textComponent.rectTransform, 12f, 4f, 12f, 4f);
+        Stretch(collectionSearchInput.textComponent.rectTransform, 12f, 12f, 4f, 4f);
         Text placeholder = AddText(go.transform, "Placeholder", "搜索卡名 / 规则文字", 18, MenuVisualTheme.Muted, TextAnchor.MiddleLeft);
         placeholder.verticalOverflow = VerticalWrapMode.Overflow;
-        Stretch(placeholder.rectTransform, 12f, 4f, 12f, 4f);
+        // Leave room for the native caret while the empty field still shows its hint.
+        Stretch(placeholder.rectTransform, 18f, 12f, 4f, 4f);
         collectionSearchInput.placeholder = placeholder;
         collectionSearchInput.lineType = UnityEngine.UI.InputField.LineType.SingleLine;
         collectionSearchInput.onSubmit.AddListener(ApplyCollectionQuery);
         CreateDialogButton(parent, "CollectionSearchButton", "搜索", Vector2.zero,
             MenuVisualTheme.Panel, () => ApplyCollectionQuery(collectionSearchInput.text));
-        CreateDialogButton(parent, "CollectionSearchResetButton", "重置条件", Vector2.zero,
+        CreateDialogButton(parent, "CollectionSearchResetButton", "重置", Vector2.zero,
             MenuVisualTheme.Panel, ResetCollectionSearch);
     }
 
     private void ResetCollectionSearch()
     {
-        advancedSearch = new AdvancedCardSearch();
-        advancedPredicate = null;
-        collectionContentFilter = 0;
-        cachedCollectionQuery = null;
-        ApplyCollectionQuery(string.Empty);
+        ApplyAdvancedSearch(new AdvancedCardSearch());
+    }
+
+    private void RefreshAdvancedSearchButton()
+    {
+        if (advancedSearchButton == null) return;
+        MenuVisualTheme.StyleSearchButton(advancedSearchButton,
+            advancedSearch.HasSearchOptions || advancedSearch.CommanderFit || advancedSearch.CompanionFit);
     }
 
     private void ApplyCollectionQuery(string value)
@@ -559,17 +577,30 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         if (!Application.isPlaying || !IsDeckBuilderVisible()) return;
         if (GetRootCanvas().transform.Find("AdvancedSearch") != null) return;
+        AdvancedSearchPanel.Show(GetRootCanvas(), deckDropdown, CollectionSearchDraft(), ApplyAdvancedSearch,
+            constructionHasCommander, constructionCompanion >= 0);
+    }
+
+    private AdvancedCardSearch CollectionSearchDraft()
+    {
         var draft = advancedSearch.Copy();
         draft.Query = collectionSearchInput != null ? collectionSearchInput.text.Trim() : collectionQuery;
         draft.Source = collectionContentFilter;
-        AdvancedSearchPanel.Show(GetRootCanvas(), deckDropdown, draft, next =>
-        {
-            var predicate = next.Copy(); predicate.Query = ""; predicate.Source = 0;
-            var compiled = predicate.Compile(cards);
-            advancedSearch = next; advancedPredicate = compiled;
-            collectionContentFilter = next.Source; cachedCollectionQuery = null;
-            ApplyCollectionQuery(next.Query);
-        }, constructionHasCommander, constructionCompanion >= 0);
+        return draft;
+    }
+
+    private void ApplyAdvancedSearch(AdvancedCardSearch next)
+    {
+        var predicate = next.Copy();
+        predicate.Query = "";
+        predicate.Source = 0;
+        // The collection handles quick search and source even when there are no printing filters.
+        advancedPredicate = predicate.HasPrintingFilters ? predicate.Compile(cards) : null;
+        advancedSearch = next;
+        collectionContentFilter = next.Source;
+        cachedCollectionQuery = null;
+        RefreshAdvancedSearchButton();
+        ApplyCollectionQuery(next.Query);
     }
 
     private void CloseAdvancedSearch()
@@ -627,7 +658,11 @@ public sealed partial class MainMenuController : MonoBehaviour
         int start = collectionPage * CollectionPageSize;
         collectionLoad = StartCoroutine(LoadCollectionPage(matches.GetRange(start, Mathf.Min(CollectionPageSize, matches.Count - start))));
         RefreshCollectionPagination(pages);
-        SetText(collectionCountText, $"卡牌 {matches.Count} / {cards.Count}");
+        string section = DeckCompanion.Text("卡库", "Collection", "カード一覧");
+        string count = matches.Count == cards.Count ? cards.Count.ToString("N0") : $"{matches.Count:N0} / {cards.Count:N0}";
+        collectionCountText.supportRichText=true;
+        int countSize=Mathf.RoundToInt(16*GamePreferences.TextScale);
+        SetText(collectionCountText, $"{section}  <size={countSize}><color=#AEC0C5>{count}</color></size>");
         var scroll = collectionContent.GetComponentInParent<ScrollRect>(true);
         if (scroll != null)
         {
@@ -657,25 +692,39 @@ public sealed partial class MainMenuController : MonoBehaviour
             var bar = new GameObject("CollectionPagination", typeof(RectTransform), typeof(Image));
             bar.transform.SetParent(collectionContent.GetComponentInParent<ScrollRect>(true).transform.parent, false);
             var barRect = bar.GetComponent<RectTransform>();
-            barRect.anchorMin = new Vector2(.755f, .01f);
-            barRect.anchorMax = new Vector2(.99f, .07f);
+            barRect.anchorMin = new Vector2(.016f, .004f);
+            barRect.anchorMax = new Vector2(.986f, .062f);
             barRect.offsetMin = barRect.offsetMax = Vector2.zero;
-            bar.GetComponent<Image>().color = MenuVisualTheme.Panel;
-            previousCollectionPageButton = CreateDialogButton(bar.transform, "PreviousPage", "‹  上一页",
+            var footer = bar.GetComponent<Image>();
+            footer.color = Color.clear;
+            footer.raycastTarget = false;
+            previousCollectionPageButton = CreateDialogButton(bar.transform, "PreviousPage", "上一页",
                 Vector2.zero, MenuVisualTheme.Panel, () => ChangeCollectionPage(-1));
-            nextCollectionPageButton = CreateDialogButton(bar.transform, "NextPage", "下一页  ›",
+            nextCollectionPageButton = CreateDialogButton(bar.transform, "NextPage", "下一页",
                 Vector2.zero, MenuVisualTheme.Panel, () => ChangeCollectionPage(1));
+            foreach (var button in new[] { previousCollectionPageButton, nextCollectionPageButton })
+            {
+                MenuVisualTheme.StyleDeckTool(button);
+                var caption = button.GetComponentInChildren<Text>();
+                PreferenceText.SetSize(caption, 15);
+                caption.resizeTextForBestFit = true;
+                caption.resizeTextMinSize = 12;
+                caption.resizeTextMaxSize = caption.fontSize;
+            }
             var previousRect = previousCollectionPageButton.GetComponent<RectTransform>();
             previousRect.anchorMin = previousRect.anchorMax = new Vector2(0, .5f);
-            previousRect.anchoredPosition = new Vector2(52, 0);
-            previousRect.sizeDelta = new Vector2(100, 42);
+            previousRect.anchoredPosition = new Vector2(40, 0);
+            previousRect.sizeDelta = new Vector2(76, 38);
             var nextRect = nextCollectionPageButton.GetComponent<RectTransform>();
             nextRect.anchorMin = nextRect.anchorMax = new Vector2(1, .5f);
-            nextRect.anchoredPosition = new Vector2(-52, 0);
-            nextRect.sizeDelta = new Vector2(100, 42);
-            collectionPageText = AddText(bar.transform, "PageNumber", string.Empty, 17,
-                MenuVisualTheme.Paper, TextAnchor.MiddleCenter);
-            Place(collectionPageText.rectTransform, Vector2.zero, new Vector2(190f, 42f));
+            nextRect.anchoredPosition = new Vector2(-40, 0);
+            nextRect.sizeDelta = new Vector2(76, 38);
+            collectionPageText = AddText(bar.transform, "PageNumber", string.Empty, 14,
+                MenuVisualTheme.Stone, TextAnchor.MiddleCenter);
+            Stretch(collectionPageText.rectTransform,79,79,0,0);
+            collectionPageText.resizeTextForBestFit=true;
+            collectionPageText.resizeTextMinSize=11;
+            collectionPageText.resizeTextMaxSize=collectionPageText.fontSize;
             collectionPageText.raycastTarget = false;
         }
         previousCollectionPageButton.interactable = collectionPage > 0;
@@ -762,36 +811,28 @@ public sealed partial class MainMenuController : MonoBehaviour
         rect.sizeDelta = size;
 
         Image background = tileObject.GetComponent<Image>();
-        background.color = zone == MainMenuCardTileZone.Collection
-            ? MenuVisualTheme.Raised
-            : MenuVisualTheme.Panel;
+        bool owned = zone != MainMenuCardTileZone.Collection;
+        background.color = owned
+            ? (zone==MainMenuCardTileZone.MainDeck ? MenuThemeCatalog.Current.MainWell : MenuThemeCatalog.Current.SideWell)
+            : MenuThemeCatalog.Current.LibraryWell;
         background.raycastTarget = true;
 
-        Outline outline = tileObject.GetComponent<Outline>();
-        outline.effectColor = MenuVisualTheme.Line;
-        outline.effectDistance = new Vector2(1.5f, -1.5f);
-
         Image face = AddImage(tileObject.transform, "CardFace", Color.white);
-        Stretch(face.rectTransform, 4f, 4f, 4f, 4f);
-        // Deck tiles must have their local artwork before the first paint.
-        // Collection pages already create a bounded number of tiles per frame.
-        face.sprite = LoadCardSprite(card,true);
+        Stretch(face.rectTransform, 1, 1, 1, 1);
         face.preserveAspect = true;
-
-        if (face.sprite == null)
-        {
-            face.color = GetFallbackColor(card);
-            Text fallback = AddText(tileObject.transform, "FallbackText", $"{GamePreferences.CardName(card)}\n{card.manaCost}", 13, Color.white, TextAnchor.MiddleCenter);
-            Stretch(fallback.rectTransform, 8f, 8f, 8f, 8f);
-        }
+        BindTileArt(face,card);
         GameObject countBadge = null;
-        if (count > 0)
+        if (owned)
         {
-            Image countBackground = AddImage(tileObject.transform, "CountBackground", new Color(0f, 0f, 0f, 0.76f));
+            Image countBackground = AddImage(tileObject.transform, "CountBackground", MenuVisualTheme.Recess);
             countBadge = countBackground.gameObject;
-            Place(countBackground.rectTransform, new Vector2(size.x * 0.34f, -size.y * 0.37f), new Vector2(size.x * 0.32f, 28f));
-
-            Text countText = AddText(countBackground.transform, "CountText", $"x{count}", 18, Color.white, TextAnchor.MiddleCenter);
+            var badgeRect = countBackground.rectTransform;
+            badgeRect.anchorMin = badgeRect.anchorMax = badgeRect.pivot = new Vector2(1,0);
+            badgeRect.anchoredPosition = new Vector2(-4,4); badgeRect.sizeDelta = new Vector2(46,26);
+            Text countText = AddText(countBackground.transform, "CountText", $"×{count}", 16, MenuVisualTheme.ArchivePaper, TextAnchor.MiddleCenter);
+            countText.resizeTextForBestFit=true;
+            countText.resizeTextMinSize=11;
+            countText.resizeTextMaxSize=countText.fontSize;
             Stretch(countText.rectTransform, 0f, 0f, 0f, 0f);
         }
 
@@ -799,9 +840,9 @@ public sealed partial class MainMenuController : MonoBehaviour
         tile.Configure(this, card, zone);
         tile.SetSingleCopyDisplay(singleDeckCards&&zone is MainMenuCardTileZone.MainDeck or MainMenuCardTileZone.Sideboard);
         AddDeckRole(tile);
-        CreateQuantityControls(tile, size, countBadge);
+        CreateQuantityControls(tile, countBadge);
         tile.SetCount(count);
-        if (zone != MainMenuCardTileZone.Collection) ApplyLegality(tile);
+        ApplyLegality(tile);
         if (!singleDeckCards && ReferenceEquals(quantityCard, card) && quantityZone == zone)
         {
             quantityTile = tile;
@@ -811,16 +852,26 @@ public sealed partial class MainMenuController : MonoBehaviour
         }
     }
 
-    private void CreateQuantityControls(MainMenuCardTile tile, Vector2 size, GameObject countBadge)
+    private void CreateQuantityControls(MainMenuCardTile tile, GameObject countBadge)
     {
         var controls = new GameObject("QuantityControls", typeof(RectTransform));
         controls.transform.SetParent(tile.transform, false);
-        Place((RectTransform)controls.transform, new Vector2(0, size.y * .5f - 54f), new Vector2(size.x - 10f, 58f));
-        Button minus = CreateQuantityButton(controls.transform, "Decrease", "−", -size.x * .30f);
-        Button plus = CreateQuantityButton(controls.transform, "Increase", "+", size.x * .30f);
-        Image countBackground = AddImage(controls.transform, "QuantityCountBackground", new Color(.015f, .045f, .065f, .83f));
+        var rect=(RectTransform)controls.transform;
+        rect.anchorMin=new Vector2(0,.65f); rect.anchorMax=new Vector2(1,.65f);
+        rect.offsetMin=new Vector2(3,-21); rect.offsetMax=new Vector2(-3,21);
+        Button At(float x,string name,string symbol)
+        {
+            var button=CreateQuantityButton(rect,name,symbol,0);
+            var target=(RectTransform)button.transform;
+            target.anchorMin=target.anchorMax=new Vector2(x,.5f);
+            target.sizeDelta=new Vector2(42,42);
+            return button;
+        }
+        Button minus = At(.18f,"Decrease","−");
+        Button plus = At(.82f,"Increase","+");
+        Image countBackground = AddImage(controls.transform, "QuantityCountBackground", MenuVisualTheme.Recess);
         countBackground.sprite = IntegratedUiUtility.RoundedRect(54, 42, 9);
-        Place(countBackground.rectTransform, Vector2.zero, new Vector2(52f, 42f));
+        Place(countBackground.rectTransform, Vector2.zero, new Vector2(42f,36f));
         Text countText = AddText(countBackground.transform, "QuantityCount", "x0", 20, Color.white, TextAnchor.MiddleCenter);
         countText.fontStyle = FontStyle.Bold;
         Stretch(countText.rectTransform, 0f, 0f, 0f, 0f);
@@ -1046,6 +1097,7 @@ public sealed partial class MainMenuController : MonoBehaviour
                 int count = CountTileCopies(tile.Card, tile.Zone);
                 tile.SetCount(count);
                 tile.SetQuantityControls(tile.QuantityControlsVisible, count, canIncrease);
+                ApplyLegality(tile);
             }
         }
     }
@@ -1136,11 +1188,25 @@ public sealed partial class MainMenuController : MonoBehaviour
             if (d < distance) { distance = d; nearest = tile; nearestPoint = center; }
         }
         if (nearest == null || nearest == source || nearest.Zone != source.Zone) return;
+        var grid = content.GetComponent<GridLayoutGroup>();
+        bool insertBelow = grid.constraintCount > 1 ? pointer.position.x >= nearestPoint.x : pointer.position.y <= nearestPoint.y;
         if (singleDeckCards)
         {
             var order = DeckCopyOrder.Expand(entries, CopyOrderFor(entries)).Select(DeckCopyOrder.Key).ToList();
             from = source.CopyOrderIndex;
-            int to = nearest.CopyOrderIndex + (pointer.position.x >= nearestPoint.x ? 1 : 0);
+            int to = nearest.CopyOrderIndex;
+            if (deckViewSort != DeckViewSort.Original)
+            {
+                var visible = content.GetComponentsInChildren<MainMenuCardTile>().Where(tile => tile.Zone == source.Zone).ToList();
+                var indices = visible.Select(tile => tile.CopyOrderIndex).ToList();
+                var rendered = new HashSet<int>(indices);
+                // Older decks can contain printings absent from the current catalogue.
+                indices.AddRange(Enumerable.Range(0,order.Count).Where(i => !rendered.Contains(i)));
+                order = indices.Select(i => order[i]).ToList();
+                from = visible.IndexOf(source);
+                to = visible.IndexOf(nearest);
+            }
+            if (insertBelow) to++;
             if (from < 0 || from >= order.Count || to < 0 || to > order.Count) return;
             if (from < to) to--;
             if (from == to) return;
@@ -1153,17 +1219,21 @@ public sealed partial class MainMenuController : MonoBehaviour
         }
         // A previous individual move can change the first occurrence of a group
         // without changing the grouped quantity rows. Drag against visible order.
-        var groups = DeckCopyOrder.Expand(entries, CopyOrderFor(entries)).Distinct().ToList();
+        var groups = DeckDisplayEntries(entries).ToList();
         from = groups.FindIndex(e => DeckRepository.ResolveCard(e, cards) == source.Card);
         int insertion = groups.FindIndex(e => DeckRepository.ResolveCard(e, cards) == nearest.Card);
         if (insertion < 0) return;
-        if (pointer.position.x >= nearestPoint.x) insertion++;
+        if (insertBelow) insertion++;
         if (from < insertion) insertion--;
         if (from == insertion) return;
         var entry = groups[from]; groups.RemoveAt(from); groups.Insert(insertion, entry);
         entries.Clear(); entries.AddRange(groups);
         var savedOrder = CopyOrderFor(entries);
-        if (savedOrder != null && savedOrder.Count > 0)
+        if (deckViewSort != DeckViewSort.Original && savedOrder != null && savedOrder.Count > 0)
+        {
+            SetCopyOrderFor(entries,groups.SelectMany(group => Enumerable.Repeat(DeckCopyOrder.Key(group),group.count)).ToList());
+        }
+        else if (savedOrder != null && savedOrder.Count > 0)
         {
             string key = DeckCopyOrder.Key(entry);
             var moving = savedOrder.Where(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -1309,7 +1379,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         if (canvas == null) return;
 
         RectTransform sourceRect = tile.GetComponent<RectTransform>();
-        Vector2 size = sourceRect != null ? sourceRect.rect.size * 1.08f : new Vector2(126f, 176f);
+        Vector2 size = sourceRect != null ? sourceRect.rect.size * 1.08f : new Vector2(132f,185f);
 
         dragGhost = new GameObject("CardDragGhost", typeof(RectTransform), typeof(CanvasGroup), typeof(Image), typeof(Outline));
         dragGhost.transform.SetParent(canvas.transform, false);
@@ -1332,7 +1402,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         image.raycastTarget = false;
 
         Outline outline = dragGhost.GetComponent<Outline>();
-        outline.effectColor = ObsidianArenaTheme.Blue;
+        outline.effectColor = MenuVisualTheme.MistBlue;
         outline.effectDistance = new Vector2(4f, -4f);
 
         Text label = AddText(dragGhost.transform, "DragLabel", tile.Card.cardName, 13, Color.white, TextAnchor.UpperCenter);
@@ -1423,7 +1493,7 @@ public sealed partial class MainMenuController : MonoBehaviour
         return content.parent.parent as RectTransform;
     }
 
-    private Canvas GetRootCanvas()
+    internal Canvas GetRootCanvas()
     {
         if (collectionContent != null) return collectionContent.GetComponentInParent<Canvas>();
         if (mainDeckContent != null) return mainDeckContent.GetComponentInParent<Canvas>();
@@ -1741,6 +1811,8 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         if (cardArtPanel != null && cardArtPanel.gameObject.activeInHierarchy) return;
         if (draggedTile != null || tile == null || tile.Card == null) return;
+        // Reach the inspector from the library without crossing rows replacing a clicked card.
+        if (!detailsCollapsed && quantityTile != null && quantityTile != tile && quantityTile.QuantityControlsVisible) return;
         if(detailsCollapsed)floatingDeckDetails=false;
         hoveredTile = tile;
         selectedCard = tile.Card;
@@ -1799,7 +1871,7 @@ public sealed partial class MainMenuController : MonoBehaviour
 
     private void StartMatchCore()
     {
-        OnLocalAi();
+        OpenLocalPlayPage();
     }
 
     private void RefreshDeckDropdown(string selectedName = null)
@@ -1837,7 +1909,7 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         if (cardDetailsView == null && cardInfoText != null)
             cardDetailsView = new DeckCardDetailsView(cardInfoText, OpenCardArt, OnDeckLegalitySelectionChanged, deckDropdown,
-                ShowDetailsRelatedHover);
+                ShowDetailsRelatedHover,previewHeading,previewGallery);
         if (cardPreviewGroup != null)
         {
             bool visible=!detailsCollapsed;
@@ -1848,10 +1920,12 @@ public sealed partial class MainMenuController : MonoBehaviour
 
         if (!ReferenceEquals(previewFaceCard, card))
         {
+            CancelPreviewFlip();
             previewFaceCard = card;
+            previewFacePosition = 0;
             RefreshAvailablePreviewFaces(card);
         }
-        cardDetailsView?.Show(card);
+        cardDetailsView?.Show(card, CurrentPreviewFace, previewFaceIndexes.Contains(1));
         if(!ReferenceEquals(detailTokenArtCard,card))
         {
             if(detailsArtHover!=null)detailsArtHover.Hide();
@@ -1885,24 +1959,19 @@ public sealed partial class MainMenuController : MonoBehaviour
     {
         selectedCard = card;
         hoveredTile = null;
-        if (cardArtPanel == null) cardArtPanel = CardArtPanel.CreateEmbedded(host);
+        if (cardArtPanel == null) cardArtPanel = CardArtPanel.CreateEmbedded(host,previewDetailsRect.GetComponent<ScrollRect>().verticalScrollbar);
         cardArtPanel.Show(card, RefreshArtwork);
     }
 
     private void RefreshArtwork()
     {
+        RefreshAvailablePreviewFaces(previewFaceCard);
         // Repaint existing tiles instead of rebuilding the grids (which causes flicker).
         foreach (var tile in deckBuilderGroup.GetComponentsInChildren<MainMenuCardTile>(true))
         {
             var face = tile.transform.Find("CardFace")?.GetComponent<UnityEngine.UI.Image>();
             if (face == null) continue;
-            face.sprite = LoadCardSprite(tile.Card,true);
-            if (face.sprite != null) face.color = Color.white;
-            foreach (string name in new[] { "FallbackText", "FallbackOverlay" })
-            {
-                var fallback = tile.transform.Find(name);
-                if (fallback != null && CardImageLibrary.TryLoadFullCard(tile.Card, out _)) fallback.gameObject.SetActive(false);
-            }
+            BindTileArt(face,tile.Card);
         }
         RefreshSelectedCardInfo();
     }
@@ -2060,6 +2129,7 @@ public sealed partial class MainMenuController : MonoBehaviour
             name = source.name,
             sourcePath = source.sourcePath,
             format = source.format,
+            commanderBracket = source.commanderBracket,
             banlist = source.banlist,
             commanders = CloneEntries(source.commanders),
             cards = CloneEntries(source.cards),

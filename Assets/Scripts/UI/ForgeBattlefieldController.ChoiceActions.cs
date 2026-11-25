@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,9 +31,9 @@ public sealed partial class ForgeBattlefieldController
 
     public bool TryCancelPresentedChoice()
     {
-        if (!canAct || submitted) return false;
+        if (GameSettingsPanel.IsOpen || !canAct || submitted) return false;
         int index = PresentedCancelOption;
-        if (index < 0) return false;
+        if (index < 0 || FourWindowSelection && viewingBattlefield) return false;
         if (viewingBattlefield) RestoreBattlefieldWindows();
         return TrySubmitPresentedOption(index, requestId);
     }
@@ -49,7 +49,7 @@ public sealed partial class ForgeBattlefieldController
 
     private void PresentTargetChoiceActions()
     {
-        if (!HasTargetChoice || HasStackTargetChoices || IsCardPickerRequest) {
+        if (!HasTargetChoice || UsesTargetWindow || IsCardPickerRequest) {
             if (targetChoiceActions != null) targetChoiceActions.gameObject.SetActive(false);
             return;
         }

@@ -367,7 +367,7 @@ public class CostAdjustment {
             }
             cost.decreaseShard(conv.getValue(), 1);
             if (!test) {
-                if (c.tap(true, sa, payer)) {
+                if (c.tap(sa, payer)) {
                     tapped.add(c);
                     sa.setSVar("MTGBNonmanaTapped", sa.getSVar("MTGBNonmanaTapped") + c.getId() + ",");
                 }

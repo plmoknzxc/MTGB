@@ -11,12 +11,12 @@ public sealed partial class ForgeBattlefieldController
     private long blockRequest;
     private RectTransform blockHint;
     private ForgeTargetArrow blockArrow;
-    private readonly List<ForgeTargetArrow> blockLines=new List<ForgeTargetArrow>();
-    private bool IsBlockingChoice=>integrated&&canAct&&!submitted&&view?.awaitingInput==true&&view.request.kind=="InputBlock";
-    private bool BlockCandidate(int id)=>IsBlockingChoice&&view.request.options.Any(o=>o.id.StartsWith("block:")&&(o.defenderId==id || selectedBlocker==o.defenderId&&o.attackerId==id));
+    private readonly List<CombatLink> blockLines=new();
+    private bool IsBlockingChoice=>integrated&&!IsFourPlayerScene&&canAct&&!submitted&&view?.awaitingInput==true&&view.request.kind=="InputBlock" && view.request.seat==seat && !GameSettingsPanel.IsOpen && !viewingBattlefield;
+    private bool BlockCandidate(int id)=>IsBlockingChoice&&view.request.options.Any(o=>!o.disabled && o.id.StartsWith("block:")&&(o.defenderId==id || selectedBlocker==o.defenderId&&o.attackerId==id));
     private bool BeginBlock(int id,long expected)
     {
-        if(!IsBlockingChoice || expected!=requestId || !view.request.options.Any(o=>o.id.StartsWith("block:")&&o.defenderId==id))return false;
+        if(!IsBlockingChoice || expected!=requestId || !view.request.options.Any(o=>!o.disabled && o.id.StartsWith("block:")&&o.defenderId==id))return false;
         selectedBlocker=id;blockRequest=requestId;PresentIntegrated(connectionText.text);return true;
     }
     private void ClickBlockCard(int id,long expected)
@@ -28,18 +28,29 @@ public sealed partial class ForgeBattlefieldController
     private bool DropBlock(Vector2 position,long expected)
     {
         if(!IsBlockingChoice||expected!=requestId)return false;
-        var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current){position=position},hits);
-        var button=hits.Count>0?hits[0].gameObject.GetComponentInParent<Button>():null;
-        int option=button!=null&&button.name.StartsWith("Card_")?OptionIndex("block:"+selectedBlocker+":"+button.name.Substring(5)):-1;
+        int option=BlockOptionAt(position);
         if(option>=0)return TrySubmitPresentedOption(option,expected);
         selectedBlocker=-1;PresentIntegrated(connectionText.text);return false;
     }
+    private int BlockOptionAt(Vector2 position)
+    {
+        var button=ChoiceButtonAt(position);
+        if(button==null || !button.name.StartsWith("Card_"))return -1;
+        int option=OptionIndex("block:"+selectedBlocker+":"+button.name.Substring(5));
+        return option>=0 && !view.request.options[option].disabled?option:-1;
+    }
     private void UpdateBlockArrow(Vector2 position)
     {
-        if(blockArrow==null||!IsBlockingChoice||selectedBlocker<0)return;
-        var source=AttackEntity("card",selectedBlocker);if(source==null)return;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,position,null,out var end);
-        blockArrow.SetEndpoints(surface.InverseTransformPoint(source.position),end,new Color(.3f,.72f,1));
+        if(blockArrow==null)return;
+        if(!IsBlockingChoice || selectedBlocker<0 || !canvas.pixelRect.Contains(position)){blockArrow.SetVisible(false);return;}
+        var source=AttackEntity("card",selectedBlocker);
+        if(source==null){blockArrow.SetVisible(false);return;}
+        int option=BlockOptionAt(position);
+        var target=option>=0?AttackEntity("card",view.request.options[option].attackerId):null;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(surface,position,canvas.worldCamera,out var end);
+        if(target!=null)end=surface.InverseTransformPoint(target.TransformPoint(target.rect.center));
+        blockArrow.SetVisible(true);
+        blockArrow.SetEndpoints(surface.InverseTransformPoint(source.position),end,target!=null?BlockInk:new Color(.28f,.56f,.76f),target!=null,true,target);
     }
     private void PresentBlocking()
     {
@@ -47,24 +58,26 @@ public sealed partial class ForgeBattlefieldController
         bool selecting=IsBlockingChoice&&selectedBlocker>=0;
         if(blockHint==null&&selecting) {
             blockHint=Rect(surface,"BlockHint",Vector2.zero,new Vector2(280,72));
-            Label(blockHint,"Hint","选择要阻挡的攻击生物",new Vector2(0,20),new Vector2(280,28),18,Paper);
+            Label(blockHint,"Hint","选择要阻挡的攻击生物",new Vector2(0,20),new Vector2(280,28),18,Paper).raycastTarget=false;
             Button(blockHint,"Remove","取消此生物的阻挡",new Vector2(0,-20),new Vector2(190,32),()=>Choose(OptionIndex("block-remove:"+selectedBlocker),requestId),Ink);
         }
-        if(blockHint!=null){blockHint.gameObject.SetActive(selecting);if(selecting){var from=AttackEntity("card",selectedBlocker);blockHint.anchoredPosition=(Vector2)surface.InverseTransformPoint(from.position)+new Vector2(0,from.rect.height/2+50);blockHint.Find("Remove").gameObject.SetActive(OptionIndex("block-remove:"+selectedBlocker)>=0);}}
+        if(blockHint!=null){
+            var from=selecting?AttackEntity("card",selectedBlocker):null;
+            blockHint.gameObject.SetActive(from!=null);
+            if(from!=null){
+                blockHint.anchoredPosition=(Vector2)surface.InverseTransformPoint(from.position)+new Vector2(0,from.rect.height/2+50);
+                blockHint.Find("Remove").gameObject.SetActive(OptionIndex("block-remove:"+selectedBlocker)>=0);
+            }
+        }
         if(blockArrow==null&&selecting) {
             blockArrow=NewAttackArrow("BlockDraftArrow");
-            SetOverlayLayer(blockArrow.rectTransform,DragArrowLayerOffset);
         }
-        if(blockArrow!=null)blockArrow.gameObject.SetActive(selecting);
-        int used=0;
+        if(selecting)UpdateBlockArrow(Input.mousePosition);
+        else if(blockArrow!=null)blockArrow.SetVisible(false);
         foreach(var blocker in (view?.players??Array.Empty<ForgePlayerView>()).SelectMany(p=>p.battlefield??Array.Empty<ForgeCardView>()))
-            foreach(int attacker in blocker.blockedAttackerIds??Array.Empty<int>()) {
-                var from=AttackEntity("card",blocker.id);var to=AttackEntity("card",attacker);if(from==null||to==null)continue;
-                if(used==blockLines.Count)blockLines.Add(NewAttackArrow("BlockAssignment_"+used));
-                var line=blockLines[used++];line.gameObject.SetActive(true);line.transform.SetSiblingIndex(cardsRoot.GetSiblingIndex());
-                line.SetEndpoints(surface.InverseTransformPoint(from.position),surface.InverseTransformPoint(to.position),new Color(.3f,.7f,1));
-            }
-        for(int i=used;i<blockLines.Count;i++)blockLines[i].gameObject.SetActive(false);
+            foreach(int attacker in blocker.blockedAttackerIds??Array.Empty<int>())
+                ShowCombatLink(blockLines,"BlockAssignment_",blocker.id,"card",attacker,BlockInk);
+        FinishCombatLinks(blockLines);
         if(IsBlockingChoice)SetText("PriorityPill/Text",selecting?"选择攻击生物 · 点击或拖动":"选择阻挡生物 · 完成后确认");
     }
 }

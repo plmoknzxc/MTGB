@@ -54,10 +54,9 @@ with tempfile.TemporaryDirectory(prefix='mtgb-shock-') as temp:
                 kind = req['kind']
                 pick = next((o for o in options if o['id'] == 'ok'), options[0])
                 if view['players'][1]['life'] == 18:
-                    assert stage == 'paid' and passes == [1], passes
-                    assert '[auto-pass] seat=2' in (out / 'shock-engine.log').read_text(encoding='utf-8')
+                    assert stage == 'paid' and passes == [1, 2], passes
                     assert any('Shock' in c for c in own['graveyard'])
-                    result = 'PASS: zero-land Shock not offered; target/payment remain manual; caster passes, opponent with no actions auto-passes; real resolution 20 -> 18.'
+                    result = 'PASS: zero-land Shock not offered; target/payment remain manual; both seats pass priority; real resolution 20 -> 18.'
                     (out / 'shock-result.txt').write_text(result, encoding='utf-8'); print(result); break
                 assert all(p['life'] == 20 for p in view['players']), 'Unexpected life change'
                 if kind == 'InputPassPriority' and view['stackCount']:
@@ -74,7 +73,7 @@ with tempfile.TemporaryDirectory(prefix='mtgb-shock-') as temp:
                         else:
                             pick = next(o for o in options if o['label'] == 'Shock [Hand]')
                             attempted = True
-                    elif kind == 'InputSelectTargets':
+                    elif kind == 'InputSelectTargets' and not req.get('selectedCount'):
                         assert attempted
                         pick = next(o for o in options if o['id'] == 'player:' + str(view['players'][1]['targetId']))
                     elif kind.startswith('InputPayMana'):

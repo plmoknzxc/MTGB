@@ -25,13 +25,11 @@ public static class RandomFacesPresentationValidation
     static IEnumerator Guard()
     {
         string original=GamePreferences.Language;
-        var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;
-        if(banner!=null)banner.enabled=false;
         var iterator=Validate();
         try {
             while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}
             File.WriteAllText(Output+"/result.txt","PASS: zh-CN/en-US/ja-JP heads/tails engraved marks, fixed font, native win/lose kept separate, die 20 and modified 0 preserved; visible numbered-face meshes and rolling/settled screenshots; all result graphics nonblocking. Actual native blue pool request count/index/raycast and paid-state decrement. 1560x898. Replay evidence only; no new rules, RNG, all dice types or network claim.");
-        }finally{running=false;GamePreferences.SetLanguage(original);if(banner!=null)banner.enabled=enabled;}
+        }finally{running=false;GamePreferences.SetLanguage(original);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

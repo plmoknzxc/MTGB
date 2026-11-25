@@ -201,14 +201,17 @@ public class CardStorageReader {
         try (DataInputStream data = new DataInputStream(new BufferedInputStream(new FileInputStream(path)))) {
             if (data.readInt() != 0x4d494458 || data.readInt() != 1) throw new IOException("Invalid card-name index version");
             int sources = data.readInt(), count = data.readInt();
-            if (sources <= 0 || sources > 200000 || count < sources || count > 2000000
-                    || collectCardFiles(new ArrayList<>(), cardsfolder).size() != sources)
+            // The packager validates this index and the explicit runtime manifest
+            // verifies installed scripts. Opening each match must not enumerate/stat
+            // the whole card library again; loadCard still fails on a missing or
+            // unreadable script when that card is actually requested.
+            if (sources <= 0 || sources > 200000 || count < sources || count > 2000000)
                 throw new IOException("Card-name index does not match installed scripts");
             for (int i = 0; i < count; i++) {
                 String name = data.readUTF(), relative = data.readUTF();
                 java.nio.file.Path file = root.resolve(relative).normalize();
                 if (name.isEmpty() || relative.contains("\\") || !file.startsWith(root)
-                        || !relative.endsWith(".txt") || !file.toFile().isFile()
+                        || !relative.endsWith(".txt")
                         || index.putIfAbsent(name, file.toFile()) != null)
                     throw new IOException("Invalid card-name index entry");
             }

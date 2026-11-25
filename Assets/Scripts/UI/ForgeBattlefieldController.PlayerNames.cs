@@ -6,7 +6,15 @@ using UnityEngine.UI;
 public sealed partial class ForgeBattlefieldController
 {
     // Presentation only. All selection and ownership continue to use native IDs.
-    private string PlayerNickname(int playerSeat)=>service?.LobbyState?.players?.FirstOrDefault(p=>p!=null&&p.seat==playerSeat)?.displayName;
+    private string[] replayPlayerNames;
+    private string PlayerNickname(int playerSeat)
+    {
+        if(replayPlayerNames!=null&&playerSeat>0&&playerSeat<=replayPlayerNames.Length)return replayPlayerNames[playerSeat-1];
+        var player=service?.LobbyState?.players?.FirstOrDefault(p=>p!=null&&p.seat==playerSeat);
+        if(player?.displayName=="Forge AI" && (player.isAi || (service.IsLocalAiMatch && playerSeat==2)))
+            return TapPaymentText("电脑对手","Forge AI","コンピューター");
+        return player?.displayName;
+    }
     private string PlayerIdentityName(int playerSeat)
     {
         string name=PlayerNickname(playerSeat);
@@ -23,7 +31,7 @@ public sealed partial class ForgeBattlefieldController
             return TapPaymentText("对手","Opponent","対戦相手");
         return TapPaymentText("玩家 ","Player ","プレイヤー ")+playerSeat;
     }
-    private readonly System.Collections.Generic.List<(bool exists,int seat,string name,bool connected,bool hasDeck,bool ready)> nameInputs=new();
+    private readonly System.Collections.Generic.List<(bool exists,int seat,string name,bool connected,bool hasDeck,bool ready,string avatar)> nameInputs=new();
     private string playerNamesKey=string.Empty;
     private string PlayerNamesKey()
     {
@@ -32,12 +40,12 @@ public sealed partial class ForgeBattlefieldController
         bool changed=count!=nameInputs.Count;
         for(int i=0;!changed&&i<count;i++) {
             var p=players[i];
-            changed=nameInputs[i]!=(p!=null,p?.seat??0,p?.displayName,p?.connected??false,p?.hasDeck??false,p?.ready??false);
+            changed=nameInputs[i]!=(p!=null,p?.seat??0,p?.displayName,p?.connected??false,p?.hasDeck??false,p?.ready??false,p?.avatarId);
         }
         if(!changed)return playerNamesKey;
         nameInputs.Clear();
         for(int i=0;i<count;i++) {
-            var p=players[i];nameInputs.Add((p!=null,p?.seat??0,p?.displayName,p?.connected??false,p?.hasDeck??false,p?.ready??false));
+            var p=players[i];nameInputs.Add((p!=null,p?.seat??0,p?.displayName,p?.connected??false,p?.hasDeck??false,p?.ready??false,p?.avatarId));
         }
         // Serialize only when lobby values change, retaining the exact original
         // identity for nicknames containing separators and updates made in place.
@@ -60,9 +68,10 @@ public sealed partial class ForgeBattlefieldController
     private string PlayerNamesRichText(string value,int exactSeat=0)
     {
         value=value??"";
-        bool colors=service?.IsSpectator!=true&&(view?.players?.Length??0)==2;
-        string Color(int player)=>player==seat?"#5DB9F5":"#F17C7C";
-        if(exactSeat>0)return colors&&!string.IsNullOrWhiteSpace(PlayerNickname(exactSeat))?ColoredDetail(value,Color(exactSeat)):SafeDetail(value);
+        bool four=IsFourPlayerScene && view?.players!=null;
+        bool colors=four || service?.IsSpectator!=true&&(view?.players?.Length??0)==2;
+        string Color(int player)=>four?"#"+ColorUtility.ToHtmlStringRGB(FourSeatColor(player)):player==seat?"#5DB9F5":"#F17C7C";
+        if(exactSeat>0)return colors&&(four || !string.IsNullOrWhiteSpace(PlayerNickname(exactSeat)))?ColoredDetail(value,Color(exactSeat)):SafeDetail(value);
         var references=System.Text.RegularExpressions.Regex.Matches(value,"\uE000([0-9]+)\uE001");
         if(references.Count>0) {
             var resolved=new System.Text.StringBuilder();int from=0;
@@ -98,7 +107,7 @@ public sealed partial class ForgeBattlefieldController
         if(playerSeat>0) {
             // Marquee truncation operates on literal text elements, not tags.
             label.supportRichText=false;label.text=SafeDetail(value);
-            label.color=service?.IsSpectator==true||(view?.players?.Length??0)!=2?Paper:
+            label.color=IsFourPlayerScene?FourSeatColor(playerSeat):service?.IsSpectator==true||(view?.players?.Length??0)!=2?Paper:
                 playerSeat==seat?new Color(93/255f,185/255f,245/255f):new Color(241/255f,124/255f,124/255f);
         } else {label.supportRichText=true;label.text=PlayerNamesRichText(value);}
         binding.Apply();

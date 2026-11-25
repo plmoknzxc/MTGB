@@ -113,7 +113,7 @@ public static partial class ReplayRepository
     {
         if(metadata==null||metadata.version!=1||string.IsNullOrWhiteSpace(metadata.matchId)
             ||!DateTime.TryParse(metadata.startedUtc,CultureInfo.InvariantCulture,DateTimeStyles.RoundtripKind,out _)
-            ||metadata.players==null||metadata.players.Length!=2||metadata.winnerSeat<0||metadata.winnerSeat>2
+            ||metadata.players==null||metadata.players.Length is not (2 or 4)||metadata.winnerSeat<0||metadata.winnerSeat>metadata.players.Length
             ||frameCount<1||frameCount>100000)throw new InvalidDataException("录像缺失内容或版本不受支持。");
         using var output = new MemoryStream();
         output.Write(Magic,0,Magic.Length);
@@ -186,7 +186,7 @@ public static partial class ReplayRepository
                                 if(reader.TokenType!=JsonToken.StartArray)throw new InvalidDataException("录像玩家视图无效。");
                                 var views=new List<ForgeSeatView>();
                                 while(reader.Read()&&reader.TokenType!=JsonToken.EndArray){
-                                    if(views.Count>=2||reader.TokenType!=JsonToken.StartObject)throw new InvalidDataException("录像玩家视图无效。");
+                                    if(views.Count>=4||reader.TokenType!=JsonToken.StartObject)throw new InvalidDataException("录像玩家视图无效。");
                                     var view=new ForgeSeatView();
                                     ReadSummaryFields(reader,key=>{
                                         if(key=="seat")view.seat=Convert.ToInt32(reader.Value,CultureInfo.InvariantCulture);
@@ -236,16 +236,16 @@ public static partial class ReplayRepository
     {
         if (replay == null || replay.version != 1 || string.IsNullOrWhiteSpace(replay.matchId)
             || !DateTime.TryParse(replay.startedUtc, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out _)
-            || replay.players == null || replay.players.Length != 2 || replay.frames == null
-            || replay.frames.Count == 0 || replay.frames.Count > 100000 || replay.winnerSeat < 0 || replay.winnerSeat > 2)
+            || replay.players == null || replay.players.Length is not (2 or 4) || replay.frames == null
+            || replay.frames.Count == 0 || replay.frames.Count > 100000 || replay.winnerSeat < 0 || replay.winnerSeat > replay.players.Length)
             throw new InvalidDataException("录像缺失内容或版本不受支持。");
         double previous = -1;
         foreach (var frame in replay.frames)
         {
             if (frame == null || double.IsNaN(frame.time) || double.IsInfinity(frame.time) || frame.time < previous
-                || frame.time < 0 || frame.time > 86400 || frame.views == null || frame.views.Length != 2)
+                || frame.time < 0 || frame.time > 86400 || frame.views == null || frame.views.Length != replay.players.Length)
                 throw new InvalidDataException("录像时间轴无效。");
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < frame.views.Length; i++)
                 if (frame.views[i]?.seat != i + 1 || frame.views[i].players == null)
                     throw new InvalidDataException("录像玩家视图无效。");
             previous = frame.time;

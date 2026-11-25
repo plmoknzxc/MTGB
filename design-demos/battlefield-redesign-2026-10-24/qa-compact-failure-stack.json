@@ -1,0 +1,9 @@
+{
+ "status":"FAIL then repaired",
+ "scope":"HTML prototype stack pressure switch",
+ "trigger":"Selecting stack counts 0,1,2,4,5,12,30 retained two rendered items and produced ReferenceError: renderStack is not defined",
+ "cause":"The original prototype renderer and selectedStack are inside its closure; the new external script tried to call them directly",
+ "repair":"Export a narrow updatePreviewStack(items) function inside the original closure; use it from the pressure switch",
+ "priorActionLayoutEvidence":"207 action layouts remained measurable because action layout happened before the failed stack update; no clean-console conclusion from that run",
+ "verification":"Record fresh stack, console and action checks after rebuilding"
+}

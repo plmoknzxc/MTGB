@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fbaa0d2880e1945a5855876691ef86, type: 3}
+  m_Name: CardArtLayouts
+  m_EditorClassIdentifier: Assembly-CSharp::BattlefieldCardArtLayouts
+  entries:
+  - printingKey: MH2/337
+    backFace: 0
+    keepFullScan: 0
+    illustration:
+      serializedVersion: 2
+      x: 0.08
+      y: 0.46
+      width: 0.84
+      height: 0.42
+    rotateClockwise: 0
+    focus: {x: 0.5, y: 1}
+  - printingKey: SLD/1878
+    backFace: 0
+    keepFullScan: 0
+    illustration:
+      serializedVersion: 2
+      x: 0.02
+      y: 0.46
+      width: 0.96
+      height: 0.42
+    rotateClockwise: 0
+    focus: {x: 0.5, y: 1}

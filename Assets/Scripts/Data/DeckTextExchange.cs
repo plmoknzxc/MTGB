@@ -17,7 +17,38 @@ public sealed class DeckTextExchange
     readonly Dictionary<string,List<CardDefinition>> names=new Dictionary<string,List<CardDefinition>>(StringComparer.OrdinalIgnoreCase);
     readonly Dictionary<string,CardDefinition> printings=new Dictionary<string,CardDefinition>(StringComparer.OrdinalIgnoreCase);
     readonly Dictionary<int,List<CardDefinition>> legacy=new Dictionary<int,List<CardDefinition>>();
+    // MTGA exports an Alchemy release year (Y22), while Forge identifies each expansion (YMID).
+    static readonly Dictionary<string,HashSet<string>> alchemyYearSets=new Dictionary<string,HashSet<string>>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Y22"]=new HashSet<string>(StringComparer.OrdinalIgnoreCase){"YMID","YNEO","YSNC"},
+        ["Y23"]=new HashSet<string>(StringComparer.OrdinalIgnoreCase){"YDMU","YBRO","YONE"},
+        ["Y24"]=new HashSet<string>(StringComparer.OrdinalIgnoreCase){"YWOE","YLCI","YMKM","YOTJ","YBLB"},
+        ["Y25"]=new HashSet<string>(StringComparer.OrdinalIgnoreCase){"YDSK","YDFT","YTDM","YEOE"},
+        ["Y26"]=new HashSet<string>(StringComparer.OrdinalIgnoreCase){"YECL","YSOS"},
+        ["Y27"]=new HashSet<string>(StringComparer.OrdinalIgnoreCase){"YFRA"}
+    };
     static string Key(string name)=>Regex.Replace((name??"").Normalize(NormalizationForm.FormKC).Replace('’','\''),@"\s+"," ").Trim();
+    CardDefinition NumberedPrinting(string set,string number,List<CardDefinition> candidates)
+    {
+        if(candidates==null || string.IsNullOrEmpty(number))return null;
+        if(printings.TryGetValue(set+"/"+number,out var exact) && candidates.Contains(exact))return exact;
+
+        alchemyYearSets.TryGetValue(set,out var yearSets);
+        var inSet=candidates.Where(c=>yearSets!=null ? yearSets.Contains(c.setCode) :
+                string.Equals(c.setCode,set,StringComparison.OrdinalIgnoreCase) || string.Equals(c.forgeSet,set,StringComparison.OrdinalIgnoreCase))
+            .GroupBy(c=>c.PrintingKey,StringComparer.OrdinalIgnoreCase).Select(g=>g.First()).ToList();
+        var matches=inSet.Where(c=>string.Equals(c.CollectorNumber,number,StringComparison.OrdinalIgnoreCase)).ToList();
+        if(matches.Count>0)return matches.Count==1?matches[0]:null;
+
+        // Arena can export 0 for an alphanumeric collector number. Only recover it
+        // when the supplied name and set identify a single printing.
+        if(number=="0")
+            return inSet.Count==1 && Regex.IsMatch(inSet[0].CollectorNumber,@"[0-9]") &&
+                Regex.IsMatch(inSet[0].CollectorNumber,@"[a-zA-Z]") ? inSet[0] : null;
+        if(!Regex.IsMatch(number,@"^[0-9]+$"))return null;
+        matches=inSet.Where(c=>Regex.Replace(c.CollectorNumber,@"[a-zA-Z]+$","")==number).ToList();
+        return matches.Count==1?matches[0]:null;
+    }
     public DeckTextExchange(IEnumerable<CardDefinition> cards)
     {
         foreach(var card in cards.Where(c=>c!=null && !c.forgeAmbiguous).OrderBy(c=>c.PrintingKey,StringComparer.OrdinalIgnoreCase))
@@ -61,6 +92,13 @@ public sealed class DeckTextExchange
                 else deck.format=value;
                 continue;
             }
+            if(line.StartsWith("#bracket ",StringComparison.OrdinalIgnoreCase))
+            {
+                if(!int.TryParse(line.Substring(9).Trim(),out int bracket) || bracket<0 || bracket>DeckCommander.MaxBracket)
+                    result.Errors.Add($"第 {i+1} 行：指挥官分级须为 0 至 {DeckCommander.MaxBracket}");
+                else deck.commanderBracket=bracket;
+                continue;
+            }
             if(line.StartsWith("#banlist ",StringComparison.OrdinalIgnoreCase))
             {
                 string value=line.Substring(9).Trim();
@@ -95,8 +133,8 @@ public sealed class DeckTextExchange
                 names.TryGetValue(Key(name),out var candidates);
                 if(printing.Success)
                 {
-                    string key=printing.Groups[2].Value+"/"+printing.Groups[3].Value;
-                    if(printings.TryGetValue(key,out var version) && candidates!=null && candidates.Contains(version))card=version;
+                    string set=printing.Groups[2].Value,number=printing.Groups[3].Value;
+                    card=NumberedPrinting(set,number,candidates);
                 }
                 else if(bracket.Success && candidates!=null)
                 {
@@ -107,12 +145,15 @@ public sealed class DeckTextExchange
                         case "UZ":case "US":set="USG";break;
                         case "MI":set="MIR";break;
                     }
-                    var matches=candidates.Where(c=>(string.Equals(c.setCode,set,StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(c.forgeSet,set,StringComparison.OrdinalIgnoreCase))
-                        && (number.Length==0 || string.Equals(c.CollectorNumber,number,StringComparison.OrdinalIgnoreCase))).ToList();
-                    if(matches.Count==0 && number.Length==0 && set.Equals("MB1",StringComparison.OrdinalIgnoreCase))
-                        matches=candidates.Where(c=>c.forgeSet=="PLST").ToList();
-                    if(matches.Count>0 && matches.Select(c=>Key(c.cardName)).Distinct(StringComparer.OrdinalIgnoreCase).Count()==1)card=matches[0];
+                    if(number.Length>0)card=NumberedPrinting(set,number,candidates);
+                    else
+                    {
+                        var matches=candidates.Where(c=>string.Equals(c.setCode,set,StringComparison.OrdinalIgnoreCase)
+                            || string.Equals(c.forgeSet,set,StringComparison.OrdinalIgnoreCase)).ToList();
+                        if(matches.Count==0 && set.Equals("MB1",StringComparison.OrdinalIgnoreCase))
+                            matches=candidates.Where(c=>c.forgeSet=="PLST").ToList();
+                        if(matches.Count>0 && matches.Select(c=>Key(c.cardName)).Distinct(StringComparer.OrdinalIgnoreCase).Count()==1)card=matches[0];
+                    }
                 }
                 else if(candidates!=null)
                 {
@@ -135,6 +176,7 @@ public sealed class DeckTextExchange
         if(DeckCompanion.Has(deck)&&!deck.sideboard.Any(e=>e.PrintingKey==deck.companion.PrintingKey))deck.sideboard.Add(DeckCompanion.Copy(deck.companion));
         if(total==0 && result.Errors.Count==0)result.Errors.Add("未找到卡牌条目。");
         // Preserve quantities, including draft/casual lists. Format legality belongs to match validation.
+        deck.commanderBracket=DeckCommander.EffectiveBracket(deck.format,deck.commanderBracket);
         if(result.Errors.Count==0)result.Deck=deck;
         return result;
     }

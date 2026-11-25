@@ -41,6 +41,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private bool browsingHand,handFanVisible=true;
     public bool IsCastingDrag=>dragging;
     public bool IsHovered=>hovering&&!dragging;
+    public bool LeftHandCardOnTop=>handHitLayout?.LeftOnTop==true;
     public event Action VisualStateChanged;
     public void ConfigureHandNavigation(ForgeHandFanNavigation navigation)=>handNavigation=navigation;
     public void SetHandFanExposure(bool visible){if(handFanVisible!=visible){handFanVisible=visible;handHitLayout?.Invalidate();}}
@@ -63,11 +64,19 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     private UnityEngine.UI.ScrollRect scrollDrag, scrollParent;
     public bool AllowHandHover { get; set; } = true;
     public void ConfigureScrollParent(UnityEngine.UI.ScrollRect scroll) => scrollParent = scroll;
-    private RectTransform playRegion,dragSpace;
+    private RectTransform playRegion,dragSpace,handJournal;
     private Rect dragSourceBounds;
+    private Vector2 dragGrip;
+    private const float DragScale=1.12f;
     private Action activePlay;
     public void ConfigurePlayRegion(RectTransform region)=>playRegion=region;
+    public void ConfigureHandJournal(RectTransform journal)=>handJournal=journal;
     public void DisableActions(){draggable=false;play=null;ConfigureCombat(null,null,null);}
+    public void InspectOnClick()
+    {
+        detailShown=true;
+        enter?.Invoke();
+    }
     public void ResetHover()
     {
         hovering=false;detailShown=false;
@@ -86,11 +95,27 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
             if(graphic.name=="Border")hoverSurface=graphic;
         if(!initialized) {root.anchoredPosition=position+new Vector2(0,isHand?-32:12); initialized=true;}
     }
+    // Existing field card moved with its window. Keep the input anchor under its mesh.
+    public void ResizeFieldSlot(Vector2 position, Vector2 size)
+    {
+        if(hand || root==null || face==null)return;
+        destination=root.anchoredPosition=position;
+        root.sizeDelta=face.sizeDelta=size;
+    }
+
     private void LateUpdate()
     {
-        if(hovering&&!dragging&&!combatDragging&&!detailShown&&Time.unscaledTime-hoverStartedAt>=.75f){detailShown=true;enter?.Invoke();}
-        if(!animated || dragging || root==null || face==null)return;
-        float speed=1-Mathf.Exp(-18*Time.unscaledDeltaTime);
+        if(hovering&&!dragging&&!combatDragging&&!detailShown&&Time.unscaledTime-hoverStartedAt>=(animated&&!hand ? .35f : .75f)){detailShown=true;enter?.Invoke();}
+        if(!animated || root==null || face==null)return;
+        if(dragging){
+            float pickup=1-Mathf.Exp(-20*Mathf.Min(Time.unscaledDeltaTime,.05f));
+            face.localPosition=Vector3.Lerp(face.localPosition,Vector3.zero,pickup);
+            face.localScale=Vector3.Lerp(face.localScale,Vector3.one*DragScale,pickup);
+            face.localRotation=Quaternion.Slerp(face.localRotation,Quaternion.identity,pickup);
+            return;
+        }
+        float step=hand?Time.unscaledDeltaTime:Mathf.Min(Time.unscaledDeltaTime,.05f);
+        float speed=1-Mathf.Exp(-(hand?18:12)*step);
         root.anchoredPosition=Vector2.Lerp(root.anchoredPosition,destination,speed);
         // Overlay Canvas has no perspective camera. X/Y rotation shears/compresses its
         // artwork rather than placing it on a real table; use only in-plane rotation.
@@ -104,6 +129,17 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         // Resting fans may tuck outward to clear the battlefield; hover still lifts fully into view.
         float restingInset=hand?((RectTransform)root.parent).anchoredPosition.y:0;
         var lift=Quaternion.Inverse(tableRotation)*new Vector3(0,(topHand?-184-extraLift:154+extraLift)-restingInset,0);
+        if(hovering && hand && handJournal!=null && handJournal.gameObject.activeInHierarchy){
+            var center=root.TransformPoint(lift);
+            var half=Vector2.Scale(face.rect.size,root.lossyScale)*(.5f*hoverScale);
+            var min=handJournal.TransformPoint(handJournal.rect.min);
+            var max=handJournal.TransformPoint(handJournal.rect.max);
+            if(center.y+half.y>min.y && center.y-half.y<max.y){
+                float gap=10*handJournal.lossyScale.x;
+                float offset=Mathf.Max(0,max.x+gap+half.x-center.x);
+                lift+=root.InverseTransformVector(Vector3.right*offset);
+            }
+        }
         face.localPosition=Vector3.Lerp(face.localPosition,hovering && hand?lift:Vector3.zero,speed);
         face.localScale=Vector3.Lerp(face.localScale,Vector3.one*(hovering && hand?hoverScale:1),speed);
         // Hover straightens a fanned hand card, but must preserve a permanent's tapped orientation.
@@ -129,13 +165,16 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
     {if(hand)RestoreHandOrder(transform.parent);else transform.SetSiblingIndex(sibling);}
     public void OnBeginDrag(PointerEventData eventData)
     {
+        // Unity dispatches the click before end-drag when the pressed button
+        // also owns the drag. A gesture beyond the threshold has claimed it.
+        if(eventData.button==PointerEventData.InputButton.Left)eventData.eligibleForClick=false;
         if(eventData.button==PointerEventData.InputButton.Left && combatBegin!=null)
         {
             combatDragging=true;activeCombatEnd=combatEnd;ResetHover();exit?.Invoke();
             combatBegin(eventData.position);return;
         }
         var delta=eventData.position-eventData.pressPosition;
-        if(handNavigation!=null&&handNavigation.CanPan&&(eventData.button==PointerEventData.InputButton.Middle
+        if(handNavigation!=null&&handNavigation.CanBrowse&&(eventData.button==PointerEventData.InputButton.Middle
             ||eventData.button==PointerEventData.InputButton.Left&&Mathf.Abs(delta.x)>=Mathf.Abs(delta.y))) {
             browsingHand=true;ResetHover();exit?.Invoke();handNavigation.OnBeginDrag(eventData);return;
         }
@@ -149,10 +188,28 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         var bounds=RectTransformUtility.CalculateRelativeRectTransformBounds(dragSpace,playRegion!=null?playRegion:root);
         dragSourceBounds=new Rect(bounds.min,bounds.size);
         activePlay=play;
-        dragging=true; hovering=false; initial=transform.position; transform.SetAsLastSibling(); exit?.Invoke();
-        if(face!=null){face.localPosition=Vector3.zero;face.localRotation=Quaternion.identity;face.localScale=Vector3.one*1.12f;}
-        transform.localRotation=Quaternion.identity;
+        dragging=true; hovering=false; initial=transform.position; transform.SetAsLastSibling();
+        dragGrip=Vector2.zero;
+        if(face!=null){
+            // The resting slot and its raised illustration are both valid hit surfaces.
+            // Keep the visible pose on pickup, then settle into the same grip on the smaller card.
+            var center=face.position;
+            var rotation=face.rotation;
+            if(!RectTransformUtility.ScreenPointToLocalPointInRectangle(face,eventData.pressPosition,eventData.pressEventCamera,out dragGrip)
+                ||!face.rect.Contains(dragGrip))
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(root,eventData.pressPosition,eventData.pressEventCamera,out dragGrip);
+            dragGrip=Vector2.Min(face.rect.max,Vector2.Max(face.rect.min,dragGrip));
+            transform.localRotation=Quaternion.identity;
+            MoveDraggedCard(eventData.pressPosition,eventData.pressEventCamera);
+            face.SetPositionAndRotation(center,rotation);
+        }
+        exit?.Invoke();
         VisualStateChanged?.Invoke();
+    }
+    private void MoveDraggedCard(Vector2 screen,Camera camera)
+    {
+        if(RectTransformUtility.ScreenPointToWorldPointInRectangle((RectTransform)transform.parent,screen,camera,out var point))
+            transform.position=point-transform.TransformVector((Vector3)dragGrip*DragScale);
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -160,7 +217,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         if(combatDragging){combatMove?.Invoke(eventData.position);return;}
         if(scrollDrag!=null){scrollDrag.OnDrag(eventData);return;}
         if(!dragging)return;
-        if(RectTransformUtility.ScreenPointToWorldPointInRectangle((RectTransform)transform.parent,eventData.position,eventData.pressEventCamera,out var point))transform.position=point;
+        MoveDraggedCard(eventData.position,eventData.pressEventCamera);
     }
     public void OnEndDrag(PointerEventData eventData)
     {
@@ -172,6 +229,7 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
             var finish=activeCombatEnd;activeCombatEnd=null;finish?.Invoke(eventData.position);return;
         }
         if(!dragging)return;
+        MoveDraggedCard(eventData.position,eventData.pressEventCamera);
         dragging=false;eventData.eligibleForClick=false;
         VisualStateChanged?.Invoke();
         bool releasedOnBoard=eventData.position.y>Screen.height*.28f && eventData.position.y<Screen.height*.88f
@@ -186,5 +244,16 @@ public sealed class ForgeBattlefieldCardPointer : MonoBehaviour, IPointerEnterHa
         if(!animated)transform.position=initial;
         RestoreOrder();
         if(draggable&&releasedOnBoard&&clearOfSource)playAction?.Invoke();
+        else if(IsOverRestingHandSlot(eventData))OnPointerEnter(eventData);
+    }
+    private bool IsOverRestingHandSlot(PointerEventData data)
+    {
+        if(!hand||!animated||data.pointerCurrentRaycast.gameObject?.GetComponentInParent<ForgeBattlefieldCardPointer>()!=this)return false;
+        if(!RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)root.parent,data.position,data.pressEventCamera,out var point))return false;
+        // The dragged root is still under the cursor. Hit-test its resting pose
+        // so releasing above a neighbouring card won't reopen this one's hover.
+        Vector2 restingPivot=(Vector2)root.localPosition+(destination-root.anchoredPosition);
+        Vector3 local=Quaternion.Euler(0,0,-angle)*(point-restingPivot);
+        return root.rect.Contains(new Vector2(local.x/root.localScale.x,local.y/root.localScale.y));
     }
 }

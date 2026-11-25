@@ -33,6 +33,7 @@ public sealed partial class ForgeBattlefieldController
         Clear(cardSelectionOverlay);cardSelectionOverlay.gameObject.SetActive(true);cardSelectionOverlay.SetAsLastSibling();SetOverlayLayer(cardSelectionOverlay,DecisionLayerOffset,true);
         float width=Mathf.Min(1000,surface.rect.width-40),height=Mathf.Min(690,surface.rect.height-40);
         selectionPanel=Panel(cardSelectionOverlay,"PileSelection",Vector2.zero,new Vector2(width,height),Ink);
+        if(HudTheme!=null)StyleZoneSheet(selectionPanel);
         Label(selectionPanel,"Title",TapPaymentText("选择一堆牌","Choose a pile","束を選択"),new Vector2(0,height/2-29),new Vector2(width-40,52),24,Paper);
         Label(selectionPanel,"Instruction",TapPaymentText("选择整堆，再确认。","Select a whole pile, then confirm.","束全体を選んでから確定。"),new Vector2(0,height/2-74),new Vector2(width-40,40),18,Paper);
         long captured=request.requestId;float columnWidth=(width-56)/2,columnHeight=height-160;
@@ -98,9 +99,10 @@ public sealed partial class ForgeBattlefieldController
         foreach(var button in selectionPanel.GetComponentsInChildren<Button>()) {
             if(!button.name.StartsWith("SelectPile_"))continue;
             int index=int.Parse(button.name.Substring(11));button.interactable=canAct&&!submitted&&IsAvailablePile(index);
-            button.GetComponent<Image>().color=index==selectedPileIndex?new Color(.30f,.48f,.27f):new Color(.18f,.32f,.49f);
+            if(HudTheme!=null)StyleZoneButton(button,index==selectedPileIndex);
+            else button.GetComponent<Image>().color=index==selectedPileIndex?new Color(.30f,.48f,.27f):new Color(.18f,.32f,.49f);
             button.GetComponentInChildren<Text>().text=index==selectedPileIndex?TapPaymentText("已选这堆","Selected pile","選択済み"):TapPaymentText("选择这堆","Select pile","この束を選択");
         }
-        if(pileConfirm!=null)pileConfirm.interactable=canAct&&!submitted&&IsAvailablePile(selectedPileIndex);
+        if(pileConfirm!=null){pileConfirm.interactable=canAct&&!submitted&&IsAvailablePile(selectedPileIndex);if(HudTheme!=null)StyleZoneButton(pileConfirm,true);}
     }
 }

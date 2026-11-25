@@ -2,6 +2,19 @@
 
 MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目，当前主要面向 Windows 双人对局。本仓库同时维护 Unity 客户端和专用服务端源码，共用网络协议与 Forge 桥接，分别构建、交付。
 
+[按界面查找实机截图与动图](Captures/README.md)
+
+## 项目目录
+
+| 要找的内容 | 位置 |
+| --- | --- |
+| Unity 场景、脚本和界面素材 | [Assets](Assets/) |
+| 玩家卡组、残局、外置主题和录像 | [Decks](Decks/) · [Puzzles](Puzzles/) · [Themes](Themes/) · [Replays](Replays/) |
+| 卡牌图片与本地缓存说明 | [CardImages](CardImages/README.txt) |
+| Forge 桥接与运行环境 | [桥接工具](Tools/ForgeBridge/) · [Forge 源码与许可说明](ThirdParty/Forge/README.md)。本地运行文件在 `ForgeRuntime/`。 |
+| 当前 Windows 试玩客户端 | 本机构建后运行 `Builds/Updates/v2.0.0/MTGB/MTGB.exe`。 |
+| 界面截图、对局验证记录与复测工具 | [截图索引](Captures/README.md) · [对局界面验证记录](Docs/GameplayAuditProgress.zh-CN.md) · [验证工具](Tools/Validation/) |
+
 ## 当前功能
 
 - **组卡与搜索**：按具体印刷版本浏览卡牌，保存主牌、备牌、行侣及辅助牌组；支持主牌费用曲线与类型张数统计、费用／类别排序和打乱，以及卡名、效果文本、颜色、费用、系列、合法性和平台筛选。指挥官卡组编辑支持统帅区、共同主将及可选的主将／行侣适配搜索，当前不开放指挥官对局。
@@ -39,7 +52,7 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 
 ## 开源与第三方许可
 
-自有 Unity 客户端／服务端代码采用 [MIT](LICENSE)，Forge 桥接及原生修改采用 GPLv3；字体、卡牌资料、卡图和 Unity 的许可保持独立。完整 Forge 对应源码通过[源码下载页](https://github.com/plmoknzxc/MTGB/releases/tag/forge-source-20261016)提供。
+自有 Unity 客户端／服务端代码采用 [MIT](LICENSE)，Forge 桥接及原生修改采用 GPLv3；字体、卡牌资料、卡图和 Unity 的许可保持独立。当前版本的 Forge 对应源码和构建说明见 [ThirdParty/Forge](ThirdParty/Forge/README.md)。
 
 参阅[第三方声明](THIRD_PARTY_NOTICES.md)和[源码交付／发行边界](Docs/OpenSourceAndDistribution.zh-CN.md)。重绘模板已换用附带许可的开源字体；旧模板字体已移除，并由导入、构建及 CI 校验阻止重新引入。
 
@@ -56,6 +69,8 @@ MTGB 是使用 Unity 6 和 Forge 制作的万智牌组卡与联机对战项目�
 ### 客户端与服务端的划分
 
 源码放在同一个 Unity 项目中，修改共享协议与对局逻辑时可以一并提交。构建结果分别发布，服务端无需客户端更新包。
+
+Windows 客户端从主菜单齿轮左侧检查更新。发布新版时，在 Unity 的 Player Settings 中设置三段式版本号，使用项目的 Windows 客户端构建入口，并配齐 Forge 运行环境。在项目根目录执行 `python Tools/Release/Pack-ClientUpdate.py <完整客户端目录> <输出目录>`。将生成的 `MTGB-Windows-x64.zip` 附到本仓库同版本的 GitHub 正式 Release（例如 `v2.0.1`）。更新包包含完整程序文件，可从较早版本直接升级。卡图、卡组、录像、残局和外置主题保存在包外。玩家确认后，客户端会下载、校验 SHA-256 并重启安装。
 
 | 产物 | Unity 构建菜单 | 默认输出 |
 | --- | --- | --- |

@@ -70,10 +70,16 @@ def main():
                     "-cp", str(RUNTIME / "classes") + ";" + str(RUNTIME / "lib/*"),
                     "mtgb.bridge.ForgeCardNameIndex", str(assets / "res/cardsfolder")],
                    check=True, creationflags=subprocess.CREATE_NO_WINDOW)
+    # The catalog and the game must see the same reviewed resource tree.
+    catalog = RUNTIME / "catalog.jsonl"
+    with (RUNTIME / "catalog-build.log").open("wb") as log:
+        subprocess.run([str(RUNTIME / "jre/bin/java.exe"), "-Djava.awt.headless=true",
+                        "-cp", str(RUNTIME / "classes") + ";" + str(RUNTIME / "lib/*"),
+                        "mtgb.bridge.ForgeCatalog", str(assets), str(catalog)],
+                       cwd=assets, stderr=log, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
     for name in ("LICENSE.txt", "README.txt"):
         shutil.copy2(UPSTREAM / "forge-gui" / name, assets / name)
-    config_path = RUNTIME / "runtime.json"
-    config = json.loads(config_path.read_text(encoding="utf-8-sig"))
+    config = {"protocol": 1, "revision": (ROOT / "Tools/ForgeProof/forge-version.txt").read_text().strip()}
     source = RUNTIME / "source"
     source.mkdir(parents=True, exist_ok=True)
     forge_source = source / ("forge-" + config["revision"] + ".zip")
@@ -82,6 +88,7 @@ def main():
         subprocess.run(["git", "-C", str(UPSTREAM), "archive", "--format=zip", "--output=" + str(forge_source),
                         config["revision"]], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
     shutil.copytree(ROOT / "Tools/ForgeBridge/java", source / "bridge", dirs_exist_ok=True)
+    shutil.copytree(ROOT / "Tools/ForgeBridge/card-scripts", source / "card-scripts", dirs_exist_ok=True)
     native_source=ROOT/".tools/native-patches/src"
     if native_source.exists():shutil.copytree(native_source,source/"native-patches",dirs_exist_ok=True)
     for name in ("NativePatches.json","Apply-NativePatches.py"):
@@ -98,7 +105,7 @@ def main():
         "nativePatchedSources": [{"path": p.relative_to(native_source).as_posix(), "sha256": sha(p)}
                                  for p in sorted(native_source.rglob("*.java"))]
     }, indent=2), encoding="utf-8")
-    config.update(java="jre/bin/java.exe", assets="assets", javaVersion=JRE_VERSION)
+    config.update(catalogHash=sha(catalog), java="jre/bin/java.exe", assets="assets", javaVersion=JRE_VERSION)
     count = refresh_manifest(config)
     print(f"Portable runtime prepared: {count} verified files", flush=True)
 

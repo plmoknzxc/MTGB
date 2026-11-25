@@ -1,8 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed partial class MainMenuController
 {
+    private static void BindTileArt(Image face,CardDefinition card,bool fullSize=false)
+    {
+        Sprite art;
+        bool hasArt=fullSize ? CardImageLibrary.TryLoadFullCard(card,out art) : CardImageLibrary.TryLoadThumbnail(card,out art);
+        face.sprite=hasArt ? art : CardVisualStyle.LoadFrame(card);
+        face.color=face.sprite==null ? GetFallbackColor(card) : Color.white;
+        var label=face.transform.Find("FallbackText")?.GetComponent<Text>();
+        if (!hasArt)
+        {
+            if(label==null)
+            {
+                label=AddText(face.transform,"FallbackText","",14,Color.white,TextAnchor.MiddleCenter);
+                Stretch(label.rectTransform,8,8,8,8);
+            }
+            label.text=GamePreferences.CardName(card)+"\n"+card.manaCost;
+        }
+        if(label!=null) label.gameObject.SetActive(!hasArt);
+    }
+
     readonly Dictionary<(MainMenuCardTileZone,string),Queue<MainMenuCardTile>> reusableDeckTiles=new();
     void BeginDeckTileReuse()
     {
@@ -24,14 +44,7 @@ public sealed partial class MainMenuController
         tile.SetSingleCopyDisplay(singleDeckCards&&zone is MainMenuCardTileZone.MainDeck or MainMenuCardTileZone.Sideboard);tile.SetCount(count);
         var face=tile.transform.Find("CardFace")?.GetComponent<UnityEngine.UI.Image>();
         bool rebind=!ReferenceEquals(tile.Card,card);
-        if(face!=null){
-            // A reload can invalidate sprites while their tile survives. Reuse
-            // only current art; otherwise replace it before the next paint.
-            bool full=CardImageLibrary.TryLoadThumbnail(card,out var art);
-            face.sprite=full?art:CardVisualStyle.LoadFrame(card);
-            face.color=face.sprite!=null?Color.white:GetFallbackColor(card);
-            foreach(string name in new[]{"FallbackText","FallbackOverlay"}){var label=tile.transform.Find(name);if(label!=null)label.gameObject.SetActive(!full);}
-        }
+        if(face!=null) BindTileArt(face,card);
         if(rebind)tile.Configure(this,card,zone);
         bool selected=ReferenceEquals(quantityCard,card)&&quantityZone==zone&&(!singleDeckCards||ReferenceEquals(quantityTile,tile));
         tile.SetQuantityControls(selected,CountTileCopies(card,zone),zone!=MainMenuCardTileZone.Commander&&DeckRepository.GetAllowedCopiesToAdd(currentDeck,card)>0);

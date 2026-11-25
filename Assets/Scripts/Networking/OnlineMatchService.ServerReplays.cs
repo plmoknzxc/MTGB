@@ -12,7 +12,9 @@ public sealed partial class OnlineMatchService
 
     private void InitializeServerReplayArchive()
     {
-        serverReplayDirectory=ReplayRepository.Root;
+        // A LAN host also has a personal replay browser. Keep its server copy
+        // out of that list when the player leaves without saving.
+        serverReplayDirectory=IsClient ? Path.Combine(ReplayRepository.Root,"Server") : ReplayRepository.Root;
         try { Directory.CreateDirectory(serverReplayDirectory); }
         catch(Exception error) { Debug.LogError("无法创建服务器录像目录："+error.Message); }
     }
@@ -43,7 +45,7 @@ public sealed partial class OnlineMatchService
         if(!IsServer)return;
         foreach(var room in roomRegistry.Rooms.Where(r=>r.match!=null)){
             try {
-                string[] players=Enumerable.Range(1,2).Select(seat=>room.members.TryGetValue(seat,out var member)?member.displayName:"Player "+seat).ToArray();
+                string[] players=Enumerable.Range(1,room.config.PlayerCapacity).Select(seat=>room.members.TryGetValue(seat,out var member)?member.displayName:"Player "+seat).ToArray();
                 var replay=room.match.CompleteReplay(players,room.series?.gameNumber??1,room.series?.bestOf??1,0,"服务器停止，保存未完成对局。");
                 if(replay.FrameCount>0)QueueServerReplayArchive(replay.Metadata,Task.Run(()=>{using(replay)return replay.Encode();}));
                 else replay.Dispose();

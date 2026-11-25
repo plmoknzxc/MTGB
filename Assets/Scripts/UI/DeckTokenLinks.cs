@@ -170,6 +170,7 @@ public static class DeckTokenLinks
         if(GamePreferences.Language=="en-US"||!name.EndsWith(" Token",StringComparison.Ordinal))return null;
         string type=name.Substring(0,name.Length-6);
         string translated=GamePreferences.Language=="ja-JP"?TranslateJapanese(type):Translate(type);
+        if(translated==type&&GamePreferences.IsCardIdentity(type))translated=GamePreferences.CardFaceName(type);
         return translated==type?null:translated+(GamePreferences.Language=="ja-JP"?"・トークン":"衍生物");
     }
     private static string Translate(string name,bool legacy=false)

@@ -1,5 +1,13 @@
 [
   {
+    "localName": "All Good Things . . .",
+    "sourceName": "All Good Things...",
+    "oracleID": "61dc9770-1e29-49fa-a31b-b63b5f0496fb",
+    "evidenceKey": "TRK/226",
+    "validation": "Identical names apart from the spacing of the terminal ellipsis.",
+    "source": "Academy Ruins TRK/226"
+  },
+  {
     "localName": "Mind Flayer, the Shadow",
     "sourceName": "Arvinox, the Mind Flail",
     "oracleID": "9abecd23-a2d9-43c7-8d01-f8afdc53026e",

@@ -14,7 +14,6 @@ public static class StackInteractionValidation
     public static void Run()
     {
         if(running)return;running=true;
-        foreach(var notice in UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None))UnityEngine.Object.Destroy(notice);
         var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();
         if(ui==null)ui=new GameObject("StackValidation").AddComponent<ForgeBattlefieldController>();
         ui.StartCoroutine(Guard(Validate(ui)));

@@ -29,10 +29,9 @@ public static class TemplateCardTypographyValidation
     }
     static IEnumerator Guard()
     {
-        var notice=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool prior=notice!=null&&notice.enabled;if(notice!=null)notice.enabled=false;
         var work=Validate();
         try{while(true){object next;try{if(!work.MoveNext())break;next=work.Current;}catch(Exception e){File.WriteAllText(Output+"result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"result.txt","PASS "+checks+" focused typography checks; no effect or network claim.");}
-        finally{GamePreferences.SetLanguage("zh-CN");var shelf=GameObject.Find("TypographyComparison");if(shelf!=null)UnityEngine.Object.Destroy(shelf);if(notice!=null)notice.enabled=prior;}
+        finally{GamePreferences.SetLanguage("zh-CN");var shelf=GameObject.Find("TypographyComparison");if(shelf!=null)UnityEngine.Object.Destroy(shelf);}
     }
     static IEnumerator Validate()
     {

@@ -25,7 +25,7 @@ public sealed class BattlefieldHandPanelTint : BaseMeshEffect
         }
         rect.anchorMin=Vector2.zero;rect.anchorMax=Vector2.one;rect.offsetMin=rect.offsetMax=Vector2.zero;
         var frame=rect.GetComponent<BattlefieldStackFrameGraphic>();
-        frame.Radius=8;frame.Thickness=1.2f;frame.color=caption?new Color(.4f,.62f,.75f,.85f):new Color(.34f,.54f,.66f,.85f);
+        frame.Radius=8;frame.Thickness=1.2f;frame.color=caption?new Color(.52f,.58f,.58f,.72f):new Color(.53f,.57f,.55f,.64f);
         frame.raycastTarget=false;frame.SetVerticesDirty();
         var oldOutline=image.GetComponent<Outline>();if(oldOutline!=null)oldOutline.enabled=false;
     }

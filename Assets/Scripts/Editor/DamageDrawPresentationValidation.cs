@@ -19,9 +19,9 @@ public static class DamageDrawPresentationValidation
     public static void Run(){if(running)return;Check(Application.isPlaying,"Enter IntegratedBattlefield Play Mode.");running=true;Directory.CreateDirectory(Output);File.WriteAllText(Output+"/result.txt","RUNNING");var ui=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldController>();if(ui==null)ui=new GameObject("DamageDrawValidation").AddComponent<ForgeBattlefieldController>();ui.StartCoroutine(Guard(Validate(ui)));}
     static IEnumerator Guard(IEnumerator iterator)
     {
-        string language=GamePreferences.Language;var banner=UnityEngine.Object.FindFirstObjectByType<ForgeBattlefieldMigrationNotice>();bool enabled=banner!=null&&banner.enabled;if(banner!=null)banner.enabled=false;
+        string language=GamePreferences.Language;
         try{while(true){object next;try{if(!iterator.MoveNext())break;next=iterator.Current;}catch(Exception e){File.WriteAllText(Output+"/result.txt","FAIL "+e);throw;}yield return next;}File.WriteAllText(Output+"/result.txt","PASS: real native damage/draw requests replayed in zh-CN/en-US/ja-JP at current text scale; typed optional source/affected player and accept/decline, localized fixed-size headers and exact unchanged body paragraphs including Dredge, complete body height, wheel/end checks when overflowing, replacement order IDs, source picker without heading cards and exact pointer/confirm indices, private looked-at cards absent from other seat UI, independent stale/duplicate/nonacting guards, stable panel/card/font identity; exact life/damage/token end-state display. Native effect proof separate; not all replacements, devices, animation or live network.");}
-        finally{running=false;GamePreferences.SetLanguage(language);if(banner!=null)banner.enabled=enabled;}
+        finally{running=false;GamePreferences.SetLanguage(language);}
     }
     static IEnumerator Rendered(){yield return new WaitForEndOfFrame();yield return null;Canvas.ForceUpdateCanvases();}
     static IEnumerator Shot(string name){yield return new WaitForSecondsRealtime(.2f);yield return Rendered();ScreenCapture.CaptureScreenshot(Output+"/"+name+".png");yield return new WaitForEndOfFrame();}

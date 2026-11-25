@@ -35,7 +35,6 @@ public static class CostOrderPresentationValidation
     static IEnumerator Validate(ForgeBattlefieldController ui){
         var locale=GamePreferences.Language;var enabled=ui.enabled;ui.enabled=false;float scale=GamePreferences.TextScale;
         var module=EventSystem.current.currentInputModule;bool input=module!=null&&module.enabled;if(module!=null)module.enabled=false;
-        var banners=UnityEngine.Object.FindObjectsByType<ForgeBattlefieldMigrationNotice>(FindObjectsSortMode.None);var flags=banners.Select(b=>b.enabled).ToArray();foreach(var b in banners)b.enabled=false;
         try{
             float deadline=Time.realtimeSinceStartup+15;while(!GamePreferences.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Check(GamePreferences.Ready,"Initial preferences ready");
             foreach(string language in new[]{"zh-CN","en-US","ja-JP"}){
@@ -83,7 +82,7 @@ public static class CostOrderPresentationValidation
             var corners=new Vector3[4];longRow.rectTransform.GetWorldCorners(corners);var viewport=scroll.viewport;var bottom=viewport.InverseTransformPoint(corners[0]);Check(bottom.y>=viewport.rect.yMin-1,"ADAPTER last text end reachable");
             ScreenCapture.CaptureScreenshot(Output+"/adapter-long.png");yield return Frame();Click(menu.transform.Find("CostOrderConfirm").GetComponent<Button>());Check(adapterCalls==1,"ADAPTER footer remains reachable");
             var ordinary=Read("return-before-mana-0");ordinary.request.message="Order cards";ui.Present(null,ordinary.seat,false,null,null,"");ui.Present(ordinary,ordinary.seat,true,_=>{},null,"");yield return Frame();Check(GameObject.Find("CostOrderTitle")==null,"Other string OrderCards retains previous route");
-        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetScale(scale);GamePreferences.SetLanguage(locale);for(int i=0;i<banners.Length;i++)if(banners[i]!=null)banners[i].enabled=flags[i];}
+        }finally{ui.Present(null,1,false,null,null,"");ui.enabled=enabled;if(module!=null)module.enabled=input;GamePreferences.SetScale(scale);GamePreferences.SetLanguage(locale);}
     }
 }
 #endif

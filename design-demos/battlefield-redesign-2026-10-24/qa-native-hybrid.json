@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "scope": "Static native Unity composition with interactive HTML replacement UI; no engine outcome claims",
+  "viewports": [[1600, 1000], [1280, 800]],
+  "nativeProjectionCases": 8,
+  "nativeProjectionAssertions": 1058,
+  "checks": {
+    "leftLandInformationAvoidance": true,
+    "loweredHandAndProtectedRegionsDisjoint": true,
+    "raisedHandMayCoverBattlefield": true,
+    "clickBattlefieldLowersHand": true,
+    "clickHandRaisesHand": true,
+    "ownManaBoundsIdenticalAcrossHandStates": true,
+    "ownManaAndRightmostHandHoverDisjoint": true,
+    "opponentManaNavigationClearOfStack": true,
+    "hoverFullCardWithPrintedCostAndSeparateDynamicCost": true,
+    "historyHoverRetainsHistoryTab": true,
+    "historyClickOpensCardDetails": true,
+    "pauseFixedLabelWithAppearanceToggle": true,
+    "modeCycle": ["自动", "略过", "手动"],
+    "browserErrors": [],
+    "unityRestoredMainCleanNotPlaying": true
+  },
+  "limitations": ["Native base is static", "Explicit composition is not a played match", "No rules, networking or arbitrary field-size verification"]
+}
